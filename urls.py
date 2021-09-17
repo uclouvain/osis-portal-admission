@@ -23,7 +23,59 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.urls import include, path
+from django.views.generic import RedirectView
+
+from .contrib import views
 
 app_name = "admission"
 
-urlpatterns = ()
+
+def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, detail_only=False):
+    """Generates tab urls for a each action, views must exists"""
+    pattern_names = ["project"]
+    # pattern_names = ["person", "details", "education", "curriculum", "project"]
+    if not create_only:
+        pattern_names += [
+            # "supervision",
+            # "confirm",
+            # "confirm-paper",
+            # "training",
+            # "jury",
+            # "private-defense",
+            # "public-defense",
+        ]
+    if detail_only:
+        pattern_names.append('messages')
+
+    # Add pattern for each tab
+    includes = [
+        path(pattern_name, getattr(views, 'DoctorateAdmission{}{}'.format(
+            pattern_name.title().replace('-', ''),
+            view_suffix,
+        )).as_view(), name=pattern_name)
+        for pattern_name in pattern_names
+    ]
+
+    return [
+        # Add a pattern that redirects to the default tab
+        # TODO change from 'project' to 'person'
+        path(pattern_prefix, RedirectView.as_view(pattern_name='admission:{}:project'.format(name)), name=name),
+        path(pattern_prefix, include((includes, name))),
+    ]
+
+
+urlpatterns = [
+    path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
+    path("autocomplete/", include((
+        [
+            # path("candidate/", views.CandidateAutocomplete.as_view(), name="candidate"),
+            path("sector/", views.SectorAutocomplete.as_view(), name="sector"),
+            path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
+        ],
+        "autocomplete",
+    ))),
+    *generate_tab_urls('doctorates/create/', 'FormView', 'doctorate-create', create_only=True),
+    *generate_tab_urls('doctorates/<uuid:pk>/update/', 'FormView', 'doctorate-update'),
+    # *generate_tab_urls('doctorates/<pk>/', 'DetailView', 'doctorate-detail', detail_only=True)
+]
