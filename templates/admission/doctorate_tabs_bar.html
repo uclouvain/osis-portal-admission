@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="form-group">
+  <ul class="nav nav-tabs nav-justified">
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="person" is_valid=valid_tabs.person tab_label=_("Identification") %}
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="details" is_valid=valid_tabs.contact_details tab_label=_("Contact details") %}
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="education" is_valid=valid_tabs.secondary_studies tab_label=_("Secondary studies") %}
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="curriculum" is_valid=valid_tabs.curriculum tab_label=_("Curriculum") %}
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="project" is_valid=valid_tabs.project tab_label=_("Doctoral project") %}
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="supervision" is_valid=valid_tabs.supervision tab_label=_("Supervision") %}
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="confirm" is_valid=valid_tabs.confirm tab_label=_("Confirmation") %}
+  </ul>
+
+  {% if admission.is_valid %}
+    <ul class="nav nav-tabs">
+      {% include 'admission/doctorate_tab_entry.html' with tab_name="confirm-paper" is_valid=valid_tabs.confirm_paper tab_label=_("Confirmation paper") %}
+      {% include 'admission/doctorate_tab_entry.html' with tab_name="training" is_valid=valid_tabs.training tab_label=_("Doctoral training") %}
+      {% include 'admission/doctorate_tab_entry.html' with tab_name="jury" is_valid=valid_tabs.jury tab_label=_("Jury") %}
+      {% include 'admission/doctorate_tab_entry.html' with tab_name="private-defense" is_valid=valid_tabs.private_defense tab_label=_("Private defense") %}
+      {% include 'admission/doctorate_tab_entry.html' with tab_name="public-defense" is_valid=valid_tabs.public_defense tab_label=_("Public defense") %}
+    </ul>
+  {% endif %}
+
+  <ul class="nav nav-tabs">
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") %}
+  </ul>
+</div>

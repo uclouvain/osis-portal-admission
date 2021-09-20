@@ -1,0 +1,20 @@
+{% load i18n %}
+{% if detail_view %}
+  {% url 'admission:doctorate-detail:'|add:tab_name admission.pk as tab_url %}
+{% elif not admission %}
+  {% url 'admission:doctorate-create:'|add:tab_name as tab_url %}
+{% else %}
+  {% url 'admission:doctorate-update:'|add:tab_name admission.pk as tab_url %}
+{% endif %}
+<li role="presentation" class="text-nowrap{% if request.full_path == tab_url %} active{% elif not tab_url %} disabled{% endif %}">
+  <a {% if tab_url %}href="{{ tab_url }}"{% endif %}>
+    {% if icon %}
+      <span class="fa fa-{{ icon }}"></span>
+    {% elif is_valid %}
+      <span class="fa fa-check"></span>
+    {% else %}
+      <span class="fa fa-exclamation-triangle"></span>
+    {% endif %}
+    {{ tab_label }}
+  </a>
+</li>
