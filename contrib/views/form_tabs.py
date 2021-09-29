@@ -25,12 +25,12 @@
 # ##############################################################################
 from django.urls import reverse_lazy
 from django.views.generic import FormView
-from osis_document.api.utils import get_remote_token
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
 from admission.contrib.forms.projet import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
-from admission.services.proposition import AdmissionPropositionService
-from osis_admission_sdk.exceptions import ApiException
+from admission.services.mixins import ApiExceptionErrorMappingMixin
+from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
+from osis_document.api.utils import get_remote_token
 
 __all__ = [
     # "DoctorateAdmissionConfirmFormView",
@@ -44,10 +44,17 @@ __all__ = [
 ]
 
 
-class DoctorateAdmissionProjectFormView(FormView):
+class DoctorateAdmissionProjectFormView(ApiExceptionErrorMappingMixin, FormView):
     template_name = 'admission/doctorate/form_tab_project.html'
     success_url = reverse_lazy('admission:doctorate-list')
     proposition = None
+    error_mapping = {
+        PropositionBusinessException.JustificationRequiseException: 'justification',
+        PropositionBusinessException.BureauCDEInconsistantException: 'bureau_cde',
+        PropositionBusinessException.ContratTravailInconsistantException: 'type_contrat_travail',
+        PropositionBusinessException.DoctoratNonTrouveException: 'doctorate',
+        PropositionBusinessException.InstitutionInconsistanteException: 'institution',
+    }
 
     @property
     def is_update_form(self):
@@ -81,9 +88,7 @@ class DoctorateAdmissionProjectFormView(FormView):
             return initial
         return super().get_initial()
 
-    def form_valid(self, form):
-        data = dict(**form.cleaned_data)
-
+    def prepare_data(self, data):
         # Process the form data to match API
         data['bureau_cde'] = data['bureau_cde'] or None
         data['type_contrat_travail'] = (
@@ -98,22 +103,7 @@ class DoctorateAdmissionProjectFormView(FormView):
         del data['type_contrat_travail_other']
         del data['bourse_recherche_other']
 
-        try:
-            self.call_webservice(data)
-        except ApiException as e:
-            # Put errors on the correct fields
-            if e.status == 400:
-                import json
-                error_mapping = json.loads(e.body)
-                for field, errors in error_mapping.items():
-                    if field == 'non_field_errors':
-                        field = None
-                    for error in errors:
-                        form.add_error(field, error['detail'])
-                return self.form_invalid(form)
-            else:
-                raise e
-        return super().form_valid(form)
+        return data
 
     def call_webservice(self, data):
         if not self.is_update_form:
