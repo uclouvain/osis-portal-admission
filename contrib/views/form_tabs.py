@@ -25,6 +25,7 @@
 # ##############################################################################
 from django.urls import reverse_lazy
 from django.views.generic import FormView
+from osis_document.api.utils import get_remote_token
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
 from admission.contrib.forms.projet import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
@@ -60,15 +61,24 @@ class DoctorateAdmissionProjectFormView(FormView):
     def get_initial(self):
         if self.is_update_form:
             self.proposition = AdmissionPropositionService.get_proposition(uuid=str(self.kwargs['pk']))
-            return {
+            initial = {
                 **self.proposition.to_dict(),
                 'sector': self.proposition.code_secteur_formation,
                 'doctorate': "{sigle}-{annee}".format(
                     sigle=self.proposition.sigle_doctorat,
                     annee=self.proposition.annee_doctorat,
                 ),
-                # TODO transform uuid in tokens for document fields
             }
+            document_fields = [
+                'documents_projet',
+                'graphe_gantt',
+                'proposition_programme_doctoral',
+                'projet_formation_complementaire',
+            ]
+            for field in document_fields:
+                initial[field] = [get_remote_token(document, write_token=True)
+                                  for document in getattr(self.proposition, field)]
+            return initial
         return super().get_initial()
 
     def form_valid(self, form):
