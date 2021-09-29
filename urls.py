@@ -45,8 +45,8 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
             # "private-defense",
             # "public-defense",
         ]
-    if detail_only:
-        pattern_names.append('messages')
+    # if detail_only:
+    #     pattern_names.append('messages')
 
     # Add pattern for each tab
     includes = [
@@ -77,5 +77,5 @@ urlpatterns = [
     ))),
     *generate_tab_urls('doctorates/create/', 'FormView', 'doctorate-create', create_only=True),
     *generate_tab_urls('doctorates/<uuid:pk>/update/', 'FormView', 'doctorate-update'),
-    # *generate_tab_urls('doctorates/<pk>/', 'DetailView', 'doctorate-detail', detail_only=True)
+    *generate_tab_urls('doctorates/<pk>/', 'DetailView', 'doctorate-detail', detail_only=True),
 ]

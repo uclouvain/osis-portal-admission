@@ -67,6 +67,7 @@ class DoctorateAdmissionProjectFormView(FormView):
                     sigle=self.proposition.sigle_doctorat,
                     annee=self.proposition.annee_doctorat,
                 ),
+                # TODO transform uuid in tokens for document fields
             }
         return super().get_initial()
 
