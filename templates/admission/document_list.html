@@ -1,0 +1,12 @@
+{% load osis_document %}
+<ul>
+    {% for file_uuid in files %}
+        {% get_metadata file_uuid as metadata %}
+        <li>
+            <a href="{{ metadata.url }}">
+                {{ metadata.name }} ({{ metadata.mimetype }}
+                - {{ metadata.size|filesizeformat }})
+            </a>
+        </li>
+    {% endfor %}
+</ul>
