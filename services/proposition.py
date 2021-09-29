@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from enum import Enum
+
 from frontoffice.settings.osis_sdk.utils import api_exception_handler
 from osis_admission_sdk import ApiClient, ApiException
 
@@ -58,3 +60,22 @@ class AdmissionPropositionService:
     @classmethod
     def get_propositions(cls):
         return AdmissionPropositionAPIClient().list_propositions()
+
+
+class PropositionBusinessException(Enum):
+    MaximumPropositionsAtteintException = "PROPOSITION-1"
+    DoctoratNonTrouveException = "PROPOSITION-2"
+    PropositionNonTrouveeException = "PROPOSITION-3"
+    GroupeDeSupervisionNonTrouveException = "PROPOSITION-4"
+    BureauCDEInconsistantException = "PROPOSITION-5"
+    ContratTravailInconsistantException = "PROPOSITION-6"
+    InstitutionInconsistanteException = "PROPOSITION-7"
+    MembreGroupeDeSupervisionNonTrouveException = "PROPOSITION-8"
+    PromoteurNonTrouveException = "PROPOSITION-9"
+    MembreCANonTrouveException = "PROPOSITION-10"
+    SignataireNonTrouveException = "PROPOSITION-11"
+    SignataireDejaInviteException = "PROPOSITION-12"
+    SignatairePasInviteException = "PROPOSITION-13"
+    DejaPromoteurException = "PROPOSITION-14"
+    DejaMembreCAException = "PROPOSITION-15"
+    JustificationRequiseException = "PROPOSITION-16"
