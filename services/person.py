@@ -26,24 +26,20 @@
 from osis_admission_sdk import ApiClient
 
 from frontoffice.settings.osis_sdk import admission as admission_sdk
-from osis_admission_sdk.api import autocomplete_api
+from osis_admission_sdk.api import person_api
 
 
-class AdmissionAutocompleteAPIClient:
+class AdmissionPersonAPIClient:
     def __new__(cls):
         api_config = admission_sdk.build_configuration()
-        return autocomplete_api.AutocompleteApi(ApiClient(configuration=api_config))
+        return person_api.PersonApi(ApiClient(configuration=api_config))
 
 
-class AdmissionAutocompleteService:
+class AdmissionPersonService:
     @classmethod
-    def autocomplete_sectors(cls):
-        return AdmissionAutocompleteAPIClient().list_sector_dtos()
-
-    @classmethod
-    def autocomplete_doctorates(cls, sigle):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle)
+    def retrieve_person(cls):
+        return AdmissionPersonAPIClient().retrieve_person_identification()
 
     @classmethod
-    def autocomplete_countries(cls):
-        return AdmissionAutocompleteAPIClient().list_countries()
+    def update_person(cls, **data):
+        return AdmissionPersonAPIClient().update_person_identification(person_identification=data)

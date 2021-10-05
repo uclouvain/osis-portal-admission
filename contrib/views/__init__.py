@@ -28,4 +28,4 @@ from .autocomplete import *
 from .detail_tabs import *
 from .form_tabs import *
 from .doctorate import *
-# from .person import *
+from .person import *

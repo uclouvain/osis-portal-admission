@@ -33,7 +33,7 @@ app_name = "admission"
 
 def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, detail_only=False):
     """Generates tab urls for a each action, views must exists"""
-    tab_names = ["project"]
+    tab_names = ["project", "person"]
     # pattern_names = ["person", "details", "education", "curriculum", "project"]
     if not create_only:
         tab_names += [
@@ -69,7 +69,6 @@ urlpatterns = (
         [
             path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
             path("autocomplete/", include(([
-                # path("candidate/", views.CandidateAutocomplete.as_view(), name="candidate"),
                 path("sector/", views.SectorAutocomplete.as_view(), name="sector"),
                 path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
             ], "autocomplete"))),

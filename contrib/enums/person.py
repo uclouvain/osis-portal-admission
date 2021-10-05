@@ -23,27 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_admission_sdk import ApiClient
 
-from frontoffice.settings.osis_sdk import admission as admission_sdk
-from osis_admission_sdk.api import autocomplete_api
+from django.utils.translation import pgettext_lazy, gettext_lazy as _
 
-
-class AdmissionAutocompleteAPIClient:
-    def __new__(cls):
-        api_config = admission_sdk.build_configuration()
-        return autocomplete_api.AutocompleteApi(ApiClient(configuration=api_config))
-
-
-class AdmissionAutocompleteService:
-    @classmethod
-    def autocomplete_sectors(cls):
-        return AdmissionAutocompleteAPIClient().list_sector_dtos()
-
-    @classmethod
-    def autocomplete_doctorates(cls, sigle):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle)
-
-    @classmethod
-    def autocomplete_countries(cls):
-        return AdmissionAutocompleteAPIClient().list_countries()
+GENDER_CHOICES = (
+    ('F', pgettext_lazy("female gender", "Female")),
+    ('H', pgettext_lazy("gender male", "Male")),
+    ('X', _('Other'))
+)
+SEX_CHOICES = (
+    ('F', _('Female')),
+    ('M', _('Male'))
+)
