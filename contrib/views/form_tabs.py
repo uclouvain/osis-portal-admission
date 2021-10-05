@@ -90,7 +90,6 @@ class DoctorateAdmissionProjectFormView(ApiExceptionErrorMappingMixin, FormView)
 
     def prepare_data(self, data):
         # Process the form data to match API
-        data['bureau_cde'] = data['bureau_cde'] or None
         data['type_contrat_travail'] = (
             data['type_contrat_travail_other']
             if data['type_contrat_travail'] == ChoixTypeContratTravail.OTHER.name
