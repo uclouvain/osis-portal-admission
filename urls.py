@@ -33,10 +33,10 @@ app_name = "admission"
 
 def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, detail_only=False):
     """Generates tab urls for a each action, views must exists"""
-    pattern_names = ["project"]
+    tab_names = ["project"]
     # pattern_names = ["person", "details", "education", "curriculum", "project"]
     if not create_only:
-        pattern_names += [
+        tab_names += [
             # "supervision",
             # "confirm",
             # "confirm-paper",
@@ -50,11 +50,11 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
 
     # Add pattern for each tab
     includes = [
-        path(pattern_name, getattr(views, 'DoctorateAdmission{}{}'.format(
-            pattern_name.title().replace('-', ''),
+        path(tab_name, getattr(views, 'DoctorateAdmission{}{}'.format(
+            tab_name.title().replace('-', ''),
             view_suffix,
-        )).as_view(), name=pattern_name)
-        for pattern_name in pattern_names
+        )).as_view(), name=tab_name)
+        for tab_name in tab_names
     ]
 
     return [
@@ -75,7 +75,21 @@ urlpatterns = [
         ],
         "autocomplete",
     ))),
-    *generate_tab_urls('doctorates/create/', 'FormView', 'doctorate-create', create_only=True),
-    *generate_tab_urls('doctorates/<uuid:pk>/update/', 'FormView', 'doctorate-update'),
-    *generate_tab_urls('doctorates/<pk>/', 'DetailView', 'doctorate-detail', detail_only=True),
+    *generate_tab_urls(
+        pattern_prefix='doctorates/create/',
+        view_suffix='FormView',
+        name='doctorate-create',
+        create_only=True,
+    ),
+    *generate_tab_urls(
+        pattern_prefix='doctorates/<uuid:pk>/update/',
+        view_suffix='FormView',
+        name='doctorate-update',
+    ),
+    *generate_tab_urls(
+        pattern_prefix='doctorates/<pk>/',
+        view_suffix='DetailView',
+        name='doctorate-detail',
+        detail_only=True,
+    ),
 ]
