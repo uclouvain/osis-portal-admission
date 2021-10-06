@@ -79,6 +79,7 @@ def doctorate_tabs(context, admission=None):
         'admission': admission,
         'detail_view': not isinstance(context['view'], FormView),
         'admission_uuid': context['view'].kwargs.get('pk', ''),
+        'request': context['request'],
     }
 
 
