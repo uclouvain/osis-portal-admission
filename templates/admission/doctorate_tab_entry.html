@@ -6,7 +6,7 @@
 {% else %}
   {% url 'admission:doctorate-update:'|add:tab_name admission_uuid as tab_url %}
 {% endif %}
-<li role="presentation" class="text-nowrap{% if request.full_path == tab_url %} active{% elif not tab_url %} disabled{% endif %}">
+<li role="presentation" class="text-nowrap{% if request.path == tab_url %} active{% elif not tab_url %} disabled{% endif %}">
   <a {% if tab_url %}href="{{ tab_url }}"{% endif %}>
     {% if icon %}
       <span class="fa fa-{{ icon }}"></span>
