@@ -2,7 +2,7 @@
 <div class="form-group">
   <ul class="nav nav-tabs nav-justified">
     {% include 'admission/doctorate_tab_entry.html' with tab_name="person" is_valid=valid_tabs.person tab_label=_("Identification") %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="details" is_valid=valid_tabs.contact_details tab_label=_("Contact details") %}
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="coordonnees" is_valid=valid_tabs.contact_coordonnees tab_label=_("Contact details") %}
     {% include 'admission/doctorate_tab_entry.html' with tab_name="education" is_valid=valid_tabs.secondary_studies tab_label=_("Secondary studies") %}
     {% include 'admission/doctorate_tab_entry.html' with tab_name="curriculum" is_valid=valid_tabs.curriculum tab_label=_("Curriculum") %}
     {% include 'admission/doctorate_tab_entry.html' with tab_name="project" is_valid=valid_tabs.project tab_label=_("Doctoral project") %}

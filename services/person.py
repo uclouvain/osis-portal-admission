@@ -43,3 +43,11 @@ class AdmissionPersonService:
     @classmethod
     def update_person(cls, **data):
         return AdmissionPersonAPIClient().update_person_identification(person_identification=data)
+
+    @classmethod
+    def retrieve_person_coordonnees(cls):
+        return AdmissionPersonAPIClient().retrieve_coordonnees()
+
+    @classmethod
+    def update_person_coordonnees(cls, **data):
+        return AdmissionPersonAPIClient().update_coordonnees(coordonnees=data)

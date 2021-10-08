@@ -1,0 +1,54 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}
+{% load bootstrap3 i18n static admission %}
+
+{% block form %}
+    {% bootstrap_form_errors form %}
+
+    {% panel _("Residential address") %}
+        <div class="row">
+          <div class="col-md-3">{% bootstrap_field form.residential_street_number %}</div>
+          <div class="col-md-3">{% bootstrap_field form.residential_street %}</div>
+            <div class="col-md-3">{% bootstrap_field form.residential_box %}</div>
+            <div class="col-md-3">{% bootstrap_field form.residential_location %}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">{% bootstrap_field form.residential_country %}</div>
+            <div class="col-md-4">{% bootstrap_field form.residential_postal_code %}</div>
+            <div class="col-md-4">{% bootstrap_field form.residential_city %}</div>
+        </div>
+        <div>{% bootstrap_field form.show_contact %}</div>
+    {% endpanel %}
+
+    {% panel _("Contact address") id="contact_address" %}
+        <div class="row">
+            <div class="col-md-3">{% bootstrap_field form.contact_street_number %}</div>
+            <div class="col-md-3">{% bootstrap_field form.contact_street %}</div>
+            <div class="col-md-3">{% bootstrap_field form.contact_box %}</div>
+            <div class="col-md-3">{% bootstrap_field form.contact_location %}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">{% bootstrap_field form.contact_country %}</div>
+            <div class="col-md-4">{% bootstrap_field form.contact_postal_code %}</div>
+            <div class="col-md-4">{% bootstrap_field form.contact_city %}</div>
+        </div>
+    {% endpanel %}
+
+    {% panel _("Contact") %}
+        <div class="row">
+          <div class="col-md-6">{% bootstrap_field form.phone_mobile %}</div>
+          <div class="col-md-6">{% bootstrap_field form.email %}</div>
+        </div>
+    {% endpanel %}
+{% endblock %}
+
+{% block script %}
+    {{ form.media }}
+    <script type="application/javascript">
+    $(function () {
+        // Justification depends on pre-admission
+        $('#contact_address').dependsOn({
+            '#id_show_contact': { checked: true },
+        }, { valueOnDisable: '' });
+    });
+    </script>
+{% endblock %}

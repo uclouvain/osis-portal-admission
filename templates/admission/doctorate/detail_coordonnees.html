@@ -1,0 +1,23 @@
+{% extends "admission/doctorate/detail_tab_layout.html" %}
+{% load i18n static admission index %}
+
+{% block tab_content %}
+    {% panel _("Residential address") %}
+        {% field_data _("Country") countries|index:coordonnees.residential.country %}
+        {% field_data _("Postal code") coordonnees.residential.postal_code %}
+        {% field_data _("City") coordonnees.residential.city %}
+        {% field_data _("Location") coordonnees.residential.location %}
+    {% endpanel %}
+    {% if show_contact %}
+      {% panel _("Contact address") %}
+        {% field_data _("Country") countries|index:coordonnees.contact.country %}
+        {% field_data _("Postal code") coordonnees.contact.postal_code %}
+        {% field_data _("City") coordonnees.contact.city %}
+        {% field_data _("Location") coordonnees.contact.location %}
+      {% endpanel %}
+    {% endif %}
+    {% panel _("Contact") %}
+      {% field_data _("Email") coordonnees.email %}
+      {% field_data _("Mobile phone") coordonnees.phone_mobile %}
+    {% endpanel %}
+{% endblock %}
