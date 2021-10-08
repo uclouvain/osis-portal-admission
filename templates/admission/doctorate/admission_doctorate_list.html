@@ -1,0 +1,49 @@
+{% extends "layout.html" %}{% load bootstrap3 i18n static admission %}
+
+{% block breadcrumb %}
+    <li class="active">{% trans "Doctorate admissions" %}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    {% trans "Doctorate admissions" %}
+                    <a
+                        href="{% url 'admission:doctorate-create' %}"
+                        class="btn btn-primary pull-right"
+                    >
+                        <span class="glyphicon glyphicon-plus"></span>
+                        {% trans "Create new doctorate admission" %}
+                    </a>
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    {% for admission in admissions %}
+        {% panel %}
+            <span class="h3">{{ admission.intitule_doctorat_fr }}</span>
+            <em>{{ admission.created_at }}</em>
+            <a
+                class="btn btn-default pull-right"
+                href="{% url "admission:doctorate-update" admission.uuid %}"
+            >
+                <span class="glyphicon glyphicon-pencil"></span>
+                {% trans "Edit" %}
+            </a>
+            <a
+                class="btn btn-default pull-right"
+                href="{% url "admission:doctorate-detail" admission.uuid %}"
+            >
+                <span class="glyphicon glyphicon-eye-open"></span>
+                {% trans "View" %}
+            </a>
+            <dl class="dl-horizontal">
+                <dt>{% trans "Sector" %}</dt>
+                <dd>{{ admission.code_secteur_formation }}</dd>
+            </dl>
+        {% endpanel %}
+    {% endfor %}
+{% endblock %}
