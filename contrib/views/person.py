@@ -32,6 +32,7 @@ from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.api.utils import get_remote_token
 
 from admission.contrib.forms.person import (
+    DoctorateAdmissionAddressForm,
     DoctorateAdmissionCoordonneesForm,
     DoctorateAdmissionPersonForm,
 )
@@ -67,39 +68,54 @@ class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormV
     template_name = 'admission/doctorate/form_tab_coordonnees.html'
     success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionCoordonneesForm
+    forms = None
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update(self.get_forms())
+        return context_data
+
+    def post(self, request, *args, **kwargs):
+        forms = self.get_forms()
+        if all(form.is_valid() for form in forms.values()):
+            return self.form_valid(forms['main_form'])
+        else:
+            return self.form_invalid(forms['main_form'])
 
     def get_initial(self):
-        data = AdmissionPersonService.retrieve_person_coordonnees()
-        initial = {
-            "phone_mobile": data["phone_mobile"],
-            "email": data["email"],
-        }
-        if data["residential"]:
-            initial.update({
-                "residential_" + k: data["residential"][k]
-                for k in data["residential"].attribute_map
-            })
-        if data["contact"]:
-            initial.update({
-                "contact_" + k: data["contact"][k]
-                for k in data["contact"].attribute_map
-            })
-        return initial
+        return AdmissionPersonService.retrieve_person_coordonnees()
 
-    def prepare_data(self, data):
+    def prepare_data(self, main_form_data):
         # Process the form data to match API
-        data['residential'] = {k[12:]: v for k, v in data.items() if k.startswith("residential_")}
-        data['contact'] = {k[8:]: v for k, v in data.items() if k.startswith("contact_")}
-        keys = data.keys()
-        for k in list(keys):
-            if k.startswith("contact_") or k.startswith("residential_"):
-                del data[k]
-        del data["show_contact"]
-        del data["email"]
+        forms = self.get_forms()
+        for form in forms.values():
+            form.is_valid()
+        data = forms['main_form'].cleaned_data
+        data['residential'] = forms['residential'].cleaned_data
+        data['contact'] = forms['contact'].cleaned_data
+        del data['show_contact']
+        del data['email']
         return data
 
     def call_webservice(self, data):
         AdmissionPersonService.update_person_coordonnees(**data)
+
+    def get_forms(self):
+        if not self.forms:
+            kwargs = self.get_form_kwargs()
+            del kwargs['prefix']
+            initial = kwargs['initial']
+            del kwargs['initial']
+            self.forms = {
+                'main_form': self.get_form(),
+                'contact': DoctorateAdmissionAddressForm(
+                    prefix='contact', initial=initial['contact'], **kwargs
+                ),
+                'residential': DoctorateAdmissionAddressForm(
+                    prefix='residential', initial=initial['residential'], **kwargs
+                ),
+            }
+        return self.forms
 
 
 class DoctorateAdmissionPersonDetailView(TemplateView):

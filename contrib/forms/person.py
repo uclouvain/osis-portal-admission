@@ -23,17 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from functools import lru_cache
+
 from dal import autocomplete
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.utils.translation import get_language, gettext_lazy as _
+from osis_document.contrib.forms import FileUploadField
 
 from admission.contrib.enums.person import GENDER_CHOICES, SEX_CHOICES
 from admission.services.autocomplete import AdmissionAutocompleteService
 from base.models.academic_year import AcademicYear
-from osis_document.contrib.forms import FileUploadField
+
+
+@lru_cache
+def get_countries_choices():
+    return [('', '')] + [(
+        result.pk,
+        result.name if get_language() == settings.LANGUAGE_CODE else result.name_en,
+    ) for result in AdmissionAutocompleteService().autocomplete_countries()]
 
 
 class DoctorateAdmissionPersonForm(forms.Form):
@@ -104,45 +114,14 @@ class DoctorateAdmissionPersonForm(forms.Form):
         if self.initial.get('last_registration_year', None):
             self.initial['already_registered'] = '1'
 
-        countries = [('', '')] + [(
-            result.pk,
-            result.name if get_language() == settings.LANGUAGE_CODE else result.name_en,
-        ) for result in AdmissionAutocompleteService().autocomplete_countries()]
-        self.fields['birth_country'].widget.choices = countries
-        self.fields['country_of_citizenship'].widget.choices = countries
+        self.fields['birth_country'].widget.choices = get_countries_choices()
+        self.fields['country_of_citizenship'].widget.choices = get_countries_choices()
 
 
 class DoctorateAdmissionCoordonneesForm(forms.Form):
-    residential_street = forms.CharField(required=False, label=_("Street"))
-    residential_street_number = forms.CharField(
-        required=False,
-        label=_("Street number"),
-    )
-    residential_box = forms.CharField(required=False, label=_("Box"))
-    residential_location = forms.CharField(required=False, label=_("Location"))
-    residential_postal_code = forms.CharField(required=False, label=_("Postal code"))
-    residential_city = forms.CharField(required=False, label=_("City"))
-    residential_country = forms.IntegerField(
-        required=False,
-        label=_("Country"),
-        widget=autocomplete.ListSelect2,
-    )
-
     show_contact = forms.BooleanField(
         required=False,
         label=_("Is your contact address different from your residential address?"),
-    )
-
-    contact_street = forms.CharField(required=False, label=_("Street"))
-    contact_street_number = forms.CharField(required=False, label=_("Street number"))
-    contact_box = forms.CharField(required=False, label=_("Box"))
-    contact_location = forms.CharField(required=False, label=_("Location"))
-    contact_postal_code = forms.CharField(required=False, label=_("Postal code"))
-    contact_city = forms.CharField(required=False, label=_("City"))
-    contact_country = forms.IntegerField(
-        required=False,
-        label=_("Country"),
-        widget=autocomplete.ListSelect2,
     )
 
     email = forms.EmailField(disabled=True, label=_("Email"))
@@ -153,72 +132,48 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        countries = [('', '')] + [(
-            result.pk,
-            result.name if get_language() == settings.LANGUAGE_CODE else result.name_en,
-        ) for result in AdmissionAutocompleteService().autocomplete_countries()]
-        self.fields['residential_country'].widget.choices = countries
-        self.fields['contact_country'].widget.choices = countries
-
-        # Tick the show contact checkbox only if there is data with "contact_" prefix
-        if any(v for k, v in self.initial.items() if k.startswith("contact_")):
+        # Tick the show contact checkbox only if there is data in contact
+        if any(self.initial['contact'][k] for k in self.initial['contact'].attribute_map):
             self.fields["show_contact"].initial = True
+
+
+class DoctorateAdmissionAddressForm(forms.Form):
+    street = forms.CharField(required=False, label=_("Street"))
+    street_number = forms.CharField(required=False, label=_("Street number"))
+    box = forms.CharField(required=False, label=_("Box"))
+    location = forms.CharField(required=False, label=_("Location"))
+    postal_code = forms.CharField(required=False, label=_("Postal code"))
+    city = forms.CharField(required=False, label=_("City"))
+    country = forms.IntegerField(
+        required=False,
+        label=_("Country"),
+        widget=autocomplete.ListSelect2,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['country'].widget.choices = get_countries_choices()
 
     def clean(self):
         cleaned_data = super().clean()
-        validation_errors = []
 
-        contact_street = cleaned_data.get("contact_street", None)
-        contact_box = cleaned_data.get("contact_box", None)
-
-        if not any([contact_box, contact_street]):
-            error_message = _("please set either contact_street or contact_box")
-            self.add_error('contact_box', error_message)
-            self.add_error('contact_street', error_message)
-
-        contact_street_number = cleaned_data.get("contact_street_number", None)
-        contact_location = cleaned_data.get("contact_location", None)
-        contact_postal_code = cleaned_data.get("contact_postal_code", None)
-        contact_city = cleaned_data.get("contact_city", None)
-        contact_country = cleaned_data.get("contact_country", None)
-
-        contact_address_fields = [
-            contact_street_number,
-            contact_location,
-            contact_postal_code,
-            contact_city,
-            contact_country,
+        mandatory_address_fields = [
+            "street_number",
+            "location",
+            "postal_code",
+            "city",
+            "country",
         ]
-        if any(contact_address_fields) and not all(contact_address_fields):
-            validation_errors.append(ValidationError("Please fill all the contact address fields"))
+        if any(cleaned_data.get(f, None) for f in mandatory_address_fields):
+            if not all(cleaned_data.get(f, None) for f in mandatory_address_fields):
+                raise ValidationError("Please fill all the address fields")
+            else:
+                street = cleaned_data.get("street", None)
+                box = cleaned_data.get("box", None)
 
-        residential_box = cleaned_data.get("residential_box", None)
-        residential_street = cleaned_data.get("residential_street", None)
-
-        if not any([residential_box, residential_street]):
-            error_message = _("please set either residential_street or residential_box")
-            self.add_error('residential_box', error_message)
-            self.add_error('residential_street', error_message)
-
-        residential_street_number = cleaned_data.get("residential_street_number", None)
-        residential_location = cleaned_data.get("residential_location", None)
-        residential_postal_code = cleaned_data.get("residential_postal_code", None)
-        residential_city = cleaned_data.get("residential_city", None)
-        residential_country = cleaned_data.get("residential_country", None)
-
-        residential_address_fields = [
-            residential_street_number,
-            residential_location,
-            residential_postal_code,
-            residential_city,
-            residential_country,
-        ]
-        if any(residential_address_fields) and not all(residential_address_fields):
-            validation_errors.append(ValidationError("Please fill all the residential address fields"))
-
-        if len(validation_errors) > 0:
-            raise ValidationError(validation_errors)
+                if not any([box, street]):
+                    error_message = _("please set either street or box")
+                    self.add_error('box', error_message)
+                    self.add_error('street', error_message)
 
         return cleaned_data
-
-
