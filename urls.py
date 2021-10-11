@@ -71,6 +71,7 @@ urlpatterns = (
             path("autocomplete/", include(([
                 path("sector/", views.SectorAutocomplete.as_view(), name="sector"),
                 path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
+                path("city/", views.CityAutocomplete.as_view(), name="city"),
             ], "autocomplete"))),
         ]
         + generate_tab_urls(pattern_prefix='doctorates/create/', view_suffix='FormView', name='doctorate-create', create_only=True)

@@ -34,6 +34,7 @@ from admission.services.autocomplete import AdmissionAutocompleteService
 __all__ = [
     "SectorAutocomplete",
     "DoctorateAutocomplete",
+    "CityAutocomplete",
 ]
 
 
@@ -77,4 +78,25 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         return [x for x in results if self.q.lower() in "{sigle} - {intitule}".format(
             sigle=x.sigle,
             intitule=x.intitule_fr if get_language() == settings.LANGUAGE_CODE else x.intitule_en,
+        ).lower()]
+
+
+class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return AdmissionAutocompleteService().autocomplete_zip_codes()
+
+    def results(self, results):
+        """Return the result dictionary."""
+        return [dict(
+            name=city.name,
+            country_iso_code=city.country_iso_code,
+            zip_code=city.zip_code,
+        ) for city in results]
+
+    def autocomplete_results(self, results):
+        """Return list of strings that match the autocomplete query."""
+        return [city for city in results if self.q.lower() in "{name} - {country_iso_code} - {zip_code}".format(
+            name=city.name,
+            country_iso_code=city.country_iso_code,
+            zip_code=city.zip_code,
         ).lower()]
