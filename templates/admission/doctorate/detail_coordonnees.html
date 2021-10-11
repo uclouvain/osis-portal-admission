@@ -3,17 +3,31 @@
 
 {% block tab_content %}
     {% panel _("Residential address") %}
-        {% field_data _("Country") countries|index:coordonnees.residential.country %}
-        {% field_data _("Postal code") coordonnees.residential.postal_code %}
-        {% field_data _("City") coordonnees.residential.city %}
-        {% field_data _("Location") coordonnees.residential.location %}
+        <div class="row">
+          <div class="col-md-3">{% field_data _("Street number") coordonnees.residential.street_number %}</div>
+          <div class="col-md-3">{% field_data _("Street") coordonnees.residential.street %}</div>
+            <div class="col-md-3">{% field_data _("Box") coordonnees.residential.postal_box %}</div>
+            <div class="col-md-3">{% field_data _("Location") coordonnees.residential.location %}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">{% field_data _("Country") countries|index:coordonnees.residential.country %}</div>
+            <div class="col-md-4">{% field_data _("Postal code") coordonnees.residential.postal_code %}</div>
+            <div class="col-md-4">{% field_data _("City") coordonnees.residential.city %}</div>
+        </div>
     {% endpanel %}
     {% if show_contact %}
       {% panel _("Contact address") %}
-        {% field_data _("Country") countries|index:coordonnees.contact.country %}
-        {% field_data _("Postal code") coordonnees.contact.postal_code %}
-        {% field_data _("City") coordonnees.contact.city %}
-        {% field_data _("Location") coordonnees.contact.location %}
+        <div class="row">
+          <div class="col-md-3">{% field_data _("Street number") coordonnees.contact.street_number %}</div>
+          <div class="col-md-3">{% field_data _("Street") coordonnees.contact.street %}</div>
+            <div class="col-md-3">{% field_data _("Box") coordonnees.contact.postal_box %}</div>
+            <div class="col-md-3">{% field_data _("Location") coordonnees.contact.location %}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">{% field_data _("Country") countries|index:coordonnees.contact.country %}</div>
+            <div class="col-md-4">{% field_data _("Postal code") coordonnees.contact.postal_code %}</div>
+            <div class="col-md-4">{% field_data _("City") coordonnees.contact.city %}</div>
+        </div>
       {% endpanel %}
     {% endif %}
     {% panel _("Contact") %}

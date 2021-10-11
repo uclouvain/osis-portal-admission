@@ -140,7 +140,7 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
 class DoctorateAdmissionAddressForm(forms.Form):
     street = forms.CharField(required=False, label=_("Street"))
     street_number = forms.CharField(required=False, label=_("Street number"))
-    box = forms.CharField(required=False, label=_("Box"))
+    postal_box = forms.CharField(required=False, label=_("Box"))
     location = forms.CharField(required=False, label=_("Location"))
     postal_code = forms.CharField(required=False, label=_("Postal code"))
     city = forms.CharField(required=False, label=_("City"))
@@ -169,11 +169,11 @@ class DoctorateAdmissionAddressForm(forms.Form):
                 raise ValidationError("Please fill all the address fields")
             else:
                 street = cleaned_data.get("street", None)
-                box = cleaned_data.get("box", None)
+                postal_box = cleaned_data.get("postal_box", None)
 
-                if not any([box, street]):
-                    error_message = _("please set either street or box")
-                    self.add_error('box', error_message)
+                if not any([postal_box, street]):
+                    error_message = _("please set either street or postal_box")
+                    self.add_error('postal_box', error_message)
                     self.add_error('street', error_message)
 
         return cleaned_data
