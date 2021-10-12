@@ -143,7 +143,13 @@ class DoctorateAdmissionAddressForm(forms.Form):
     postal_box = forms.CharField(required=False, label=_("Box"))
     location = forms.CharField(required=False, label=_("Location"))
     postal_code = forms.CharField(required=False, label=_("Postal code"))
-    city = forms.CharField(required=False, label=_("City"))
+    city = forms.CharField(
+        required=False,
+        label=_("City"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:city", forward=["postal_code"]
+        ),
+    )
     country = forms.IntegerField(
         required=False,
         label=_("Country"),

@@ -83,20 +83,12 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
 class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return AdmissionAutocompleteService().autocomplete_zip_codes()
+        return AdmissionAutocompleteService().autocomplete_zip_codes(self.forwarded['postal_code'])
 
     def results(self, results):
         """Return the result dictionary."""
-        return [dict(
-            name=city.name,
-            country_iso_code=city.country_iso_code,
-            zip_code=city.zip_code,
-        ) for city in results]
+        return [dict(id=city.name, text=city.name) for city in results]
 
     def autocomplete_results(self, results):
         """Return list of strings that match the autocomplete query."""
-        return [city for city in results if self.q.lower() in "{name} - {country_iso_code} - {zip_code}".format(
-            name=city.name,
-            country_iso_code=city.country_iso_code,
-            zip_code=city.zip_code,
-        ).lower()]
+        return [city for city in results if self.q.lower() in city.name.lower()]

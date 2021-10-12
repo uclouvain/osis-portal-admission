@@ -49,5 +49,5 @@ class AdmissionAutocompleteService:
         return AdmissionAutocompleteAPIClient().list_countries()
 
     @classmethod
-    def autocomplete_zip_codes(cls):
-        return AdmissionAutocompleteAPIClient().list_zip_codes().results
+    def autocomplete_zip_codes(cls, postal_code):
+        return AdmissionAutocompleteAPIClient().list_zip_codes(zip_code=postal_code).results
