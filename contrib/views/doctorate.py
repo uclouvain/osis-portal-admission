@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 __all__ = [
@@ -33,10 +33,10 @@ __all__ = [
 from admission.services.proposition import AdmissionPropositionService
 
 
-class DoctorateAdmissionListView(TemplateView):
+class DoctorateAdmissionListView(LoginRequiredMixin, TemplateView):
     template_name = "admission/doctorate/admission_doctorate_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["admissions"] = AdmissionPropositionService().get_propositions()
+        context["admissions"] = AdmissionPropositionService().get_propositions(self.request.user.person)
         return context

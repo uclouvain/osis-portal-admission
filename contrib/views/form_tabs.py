@@ -67,7 +67,10 @@ class DoctorateAdmissionProjectFormView(ApiExceptionErrorMappingMixin, FormView)
 
     def get_initial(self):
         if self.is_update_form:
-            self.proposition = AdmissionPropositionService.get_proposition(uuid=str(self.kwargs['pk']))
+            self.proposition = AdmissionPropositionService.get_proposition(
+                person=self.request.user.person,
+                uuid=str(self.kwargs['pk']),
+            )
             initial = {
                 **self.proposition.to_dict(),
                 'sector': self.proposition.code_secteur_formation,
@@ -114,10 +117,10 @@ class DoctorateAdmissionProjectFormView(ApiExceptionErrorMappingMixin, FormView)
                 matricule_candidat=self.request.user.person.global_id,
             )
             del data['sector']
-            AdmissionPropositionService.create_proposition(**data)
+            AdmissionPropositionService.create_proposition(person=self.request.user.person, **data)
         else:
             data['uuid'] = str(self.kwargs['pk'])
-            AdmissionPropositionService.update_proposition(**data)
+            AdmissionPropositionService.update_proposition(person=self.request.user.person, **data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
