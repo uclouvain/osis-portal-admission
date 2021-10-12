@@ -159,6 +159,12 @@ class DoctorateAdmissionAddressForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_countries_choices()
+        if self.initial["postal_code"]:
+            self.fields['city'].widget.choices = [('', '')] + [
+                (city.name, city.name)
+                for city
+                in AdmissionAutocompleteService().autocomplete_zip_codes(self.initial["postal_code"])
+            ]
 
     def clean(self):
         cleaned_data = super().clean()

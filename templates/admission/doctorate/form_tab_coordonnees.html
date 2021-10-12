@@ -51,10 +51,11 @@
         // "city" depends on "postal code" that depends on "country"
         $('#id_residential-postal_code').dependsOn({
           '#id_residential-country': { not: [''] },
-        }, { valueOnDisable: '', hide: false});
+        }, { valueOnDisable: '', hide: false });
         $('#id_residential-city').dependsOn({
+          '#id_residential-country': { not: [''] },
           '#id_residential-postal_code': { not: [''] },
-        }, { valueOnDisable: '', hide: false});
+        }, { valueOnDisable: '', hide: false });
         // Activate the contact form if the 'show_contact' box is checked
         $('#contact_address').dependsOn({
             '#id_show_contact': { checked: true },
@@ -63,11 +64,12 @@
         $('#id_contact-postal_code').dependsOn({
           '#id_show_contact': { checked: true },
           '#id_contact-country': { not: [''] },
-        }, { valueOnDisable: '', hide: false});
+        }, { valueOnDisable: '', hide: false });
         $('#id_contact-city').dependsOn({
           '#id_show_contact': { checked: true },
+          '#id_contact-country': { not: [''] },
           '#id_contact-postal_code': { not: [''] },
-        }, { valueOnDisable: '', hide: false});
+        }, { valueOnDisable: '', hide: false });
     });
     </script>
 {% endblock %}
