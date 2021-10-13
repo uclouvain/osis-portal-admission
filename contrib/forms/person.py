@@ -161,9 +161,10 @@ class DoctorateAdmissionAddressForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        be_iso_code = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_countries_choices()
-        if self.initial["country"] == 88:
+        if self.initial["country"] == be_iso_code:
             self.initial["be_postal_code"] = self.initial["postal_code"]
             self.initial["be_city"] = self.initial["city"]
             self.fields['be_city'].widget.choices = [('', '')] + [

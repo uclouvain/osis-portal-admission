@@ -63,17 +63,18 @@
         //-------------------------------------------------------------------------------
         // Activate belgian or not belgian fields for postal code and city autocompletion
         //-------------------------------------------------------------------------------
+        let beIsoCode = '{{BE_ISO_CODE}}';
         $('#be-residential-address').dependsOn({
-          '#id_residential-country': { values: ['88'] },
+          '#id_residential-country': { values: [beIsoCode] },
         });
         $('#not-be-residential-address').dependsOn({
-          '#id_residential-country': { not: ['88'] },
+          '#id_residential-country': { not: [beIsoCode] },
         });
         $('#be-contact-address').dependsOn({
-          '#id_contact-country': { values: ['88'] },
+          '#id_contact-country': { values: [beIsoCode] },
         });
         $('#not-be-contact-address').dependsOn({
-          '#id_contact-country': { not: ['88'] },
+          '#id_contact-country': { not: [beIsoCode] },
         });
         //-------------------------------------------------------------------------------
 

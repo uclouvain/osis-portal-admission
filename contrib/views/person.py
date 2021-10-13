@@ -35,6 +35,7 @@ from admission.contrib.forms.person import (
     DoctorateAdmissionAddressForm,
     DoctorateAdmissionCoordonneesForm,
     DoctorateAdmissionPersonForm,
+    get_countries_choices,
 )
 from admission.services.mixins import ApiExceptionErrorMappingMixin
 from admission.services.person import AdmissionPersonService
@@ -69,10 +70,12 @@ class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormV
     success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionCoordonneesForm
     forms = None
+    BE_ISO_CODE = None
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update(self.get_forms())
+        context_data["BE_ISO_CODE"] = self.BE_ISO_CODE
         return context_data
 
     def post(self, request, *args, **kwargs):
@@ -85,6 +88,15 @@ class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormV
     def get_initial(self):
         return AdmissionPersonService.retrieve_person_coordonnees()
 
+    @staticmethod
+    def prepare_be_city(form_cleaned_data):
+        """Check if a belgian postal code / city has been passed and update the form."""
+        if form_cleaned_data['be_postal_code']:
+            form_cleaned_data['postal_code'] = form_cleaned_data['be_postal_code']
+            form_cleaned_data['city'] = form_cleaned_data['be_city']
+            del form_cleaned_data['be_postal_code']
+            del form_cleaned_data['be_city']
+
     def prepare_data(self, main_form_data):
         # Process the form data to match API
         forms = self.get_forms()
@@ -92,19 +104,9 @@ class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormV
             form.is_valid()
         data = forms['main_form'].cleaned_data
         data['residential'] = forms['residential'].cleaned_data
-        # Check if a belgian postal code / city has been passed
-        if data['residential']['be_postal_code']:
-            data['residential']['postal_code'] = data['residential']['be_postal_code']
-            data['residential']['city'] = data['residential']['be_city']
-            del data['residential']['be_postal_code']
-            del data['residential']['be_city']
+        self.prepare_be_city(data['residential'])
         data['contact'] = forms['contact'].cleaned_data
-        # Check if a belgian postal code / city has been passed
-        if data['contact']['be_postal_code']:
-            data['contact']['postal_code'] = data['contact']['be_postal_code']
-            data['contact']['city'] = data['contact']['be_city']
-            del data['contact']['be_postal_code']
-            del data['contact']['be_city']
+        self.prepare_be_city(data['contact'])
         del data['show_contact']
         del data['email']
         return data
@@ -114,6 +116,12 @@ class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormV
 
     def get_forms(self):
         if not self.forms:
+            self.BE_ISO_CODE = (next(
+                iso_code
+                for iso_code, name
+                in get_countries_choices()
+                if name == "Belgique"
+            ))
             kwargs = self.get_form_kwargs()
             del kwargs['prefix']
             initial = kwargs['initial']
@@ -121,10 +129,16 @@ class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormV
             self.forms = {
                 'main_form': self.get_form(),
                 'contact': DoctorateAdmissionAddressForm(
-                    prefix='contact', initial=initial['contact'], **kwargs
+                    prefix='contact',
+                    initial=initial['contact'],
+                    be_iso_code=self.BE_ISO_CODE,
+                    **kwargs,
                 ),
                 'residential': DoctorateAdmissionAddressForm(
-                    prefix='residential', initial=initial['residential'], **kwargs
+                    prefix='residential',
+                    initial=initial['residential'],
+                    be_iso_code=self.BE_ISO_CODE,
+                    **kwargs,
                 ),
             }
         return self.forms
