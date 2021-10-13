@@ -159,12 +159,13 @@ class DoctorateAdmissionAddressForm(forms.Form):
             forward=(forward.Field('be_postal_code', 'postal_code'),),
         ),
     )
+    BE_ISO_CODE = None
 
     def __init__(self, *args, **kwargs):
-        be_iso_code = kwargs.pop("be_iso_code", None)
+        self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_countries_choices()
-        if self.initial["country"] == be_iso_code:
+        if self.initial["country"] == self.BE_ISO_CODE:
             self.initial["be_postal_code"] = self.initial["postal_code"]
             self.initial["be_city"] = self.initial["city"]
             self.fields['be_city'].widget.choices = [('', '')] + [
@@ -179,10 +180,16 @@ class DoctorateAdmissionAddressForm(forms.Form):
         mandatory_address_fields = [
             "street_number",
             "location",
-            # "postal_code",
-            # "city",
             "country",
         ]
+
+        # Either one of following data couple is mandatory :
+        # (postal_code / city) or (be_postal_code / be_city)
+        if cleaned_data.get("country") == self.BE_ISO_CODE:
+            mandatory_address_fields.extend(["be_postal_code", "be_city"])
+        else:
+            mandatory_address_fields.extend(["postal_code", "city"])
+
         if any(cleaned_data.get(f, None) for f in mandatory_address_fields):
             if not all(cleaned_data.get(f, None) for f in mandatory_address_fields):
                 raise ValidationError("Please fill all the address fields")
