@@ -15,8 +15,14 @@
         </div>
         <div class="row">
             <div class="col-md-4">{% bootstrap_field residential.country %}</div>
-            <div class="col-md-4">{% bootstrap_field residential.postal_code %}</div>
-            <div class="col-md-4">{% bootstrap_field residential.city %}</div>
+            <div id="not-be-residential-address">
+              <div class="col-md-4">{% bootstrap_field residential.postal_code %}</div>
+              <div class="col-md-4">{% bootstrap_field residential.city %}</div>
+            </div>
+            <div id="be-residential-address">
+              <div class="col-md-4">{% bootstrap_field residential.be_postal_code %}</div>
+              <div class="col-md-4">{% bootstrap_field residential.be_city %}</div>
+            </div>
         </div>
         <div>{% bootstrap_field main_form.show_contact %}</div>
     {% endpanel %}
@@ -30,8 +36,14 @@
         </div>
         <div class="row">
             <div class="col-md-4">{% bootstrap_field contact.country %}</div>
-            <div class="col-md-4">{% bootstrap_field contact.postal_code %}</div>
-            <div class="col-md-4">{% bootstrap_field contact.city %}</div>
+            <div id="not-be-contact-address">
+              <div class="col-md-4">{% bootstrap_field contact.postal_code %}</div>
+              <div class="col-md-4">{% bootstrap_field contact.city %}</div>
+            </div>
+            <div id="be-contact-address">
+              <div class="col-md-4">{% bootstrap_field contact.be_postal_code %}</div>
+              <div class="col-md-4">{% bootstrap_field contact.be_city %}</div>
+            </div>
         </div>
     {% endpanel %}
 
@@ -48,7 +60,27 @@
     {{ residential.media }}
     <script type="application/javascript">
     $(function () {
+        //-------------------------------------------------------------------------------
+        // Activate belgian or not belgian fields for postal code and city autocompletion
+        //-------------------------------------------------------------------------------
+        $('#be-residential-address').dependsOn({
+          '#id_residential-country': { values: ['88'] },
+        });
+        $('#not-be-residential-address').dependsOn({
+          '#id_residential-country': { not: ['88'] },
+        });
+        $('#be-contact-address').dependsOn({
+          '#id_contact-country': { values: ['88'] },
+        });
+        $('#not-be-contact-address').dependsOn({
+          '#id_contact-country': { not: ['88'] },
+        });
+        //-------------------------------------------------------------------------------
+
+
+        //**********************************************************
         // "city" depends on "postal code" that depends on "country"
+        //**********************************************************
         $('#id_residential-postal_code').dependsOn({
           '#id_residential-country': { not: [''] },
         }, { valueOnDisable: '', hide: false });
@@ -70,6 +102,7 @@
           '#id_contact-country': { not: [''] },
           '#id_contact-postal_code': { not: [''] },
         }, { valueOnDisable: '', hide: false });
+        //**********************************************************
     });
     </script>
 {% endblock %}

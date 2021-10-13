@@ -25,7 +25,7 @@
 # ##############################################################################
 from functools import lru_cache
 
-from dal import autocomplete
+from dal import autocomplete, forward
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -143,24 +143,30 @@ class DoctorateAdmissionAddressForm(forms.Form):
     postal_box = forms.CharField(required=False, label=_("Box"))
     location = forms.CharField(required=False, label=_("Location"))
     postal_code = forms.CharField(required=False, label=_("Postal code"))
-    city = forms.CharField(
-        required=False,
-        label=_("City"),
-        widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:city", forward=["postal_code"]
-        ),
-    )
+    city = forms.CharField(required=False, label=_("City"))
     country = forms.IntegerField(
         required=False,
         label=_("Country"),
         widget=autocomplete.ListSelect2,
     )
+    # autocompletion enable only for Belgium postal codes
+    be_postal_code = forms.CharField(required=False, label=_("Postal code"))
+    be_city = forms.CharField(
+        required=False,
+        label=_("City"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:city",
+            forward=(forward.Field('be_postal_code', 'postal_code'),),
+        ),
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_countries_choices()
-        if self.initial["postal_code"]:
-            self.fields['city'].widget.choices = [('', '')] + [
+        if self.initial["country"] == 88:
+            self.initial["be_postal_code"] = self.initial["postal_code"]
+            self.initial["be_city"] = self.initial["city"]
+            self.fields['be_city'].widget.choices = [('', '')] + [
                 (city.name, city.name)
                 for city
                 in AdmissionAutocompleteService().autocomplete_zip_codes(self.initial["postal_code"])
@@ -172,8 +178,8 @@ class DoctorateAdmissionAddressForm(forms.Form):
         mandatory_address_fields = [
             "street_number",
             "location",
-            "postal_code",
-            "city",
+            # "postal_code",
+            # "city",
             "country",
         ]
         if any(cleaned_data.get(f, None) for f in mandatory_address_fields):

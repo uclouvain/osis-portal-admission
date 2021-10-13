@@ -92,7 +92,19 @@ class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormV
             form.is_valid()
         data = forms['main_form'].cleaned_data
         data['residential'] = forms['residential'].cleaned_data
+        # Check if a belgian postal code / city has been passed
+        if data['residential']['be_postal_code']:
+            data['residential']['postal_code'] = data['residential']['be_postal_code']
+            data['residential']['city'] = data['residential']['be_city']
+            del data['residential']['be_postal_code']
+            del data['residential']['be_city']
         data['contact'] = forms['contact'].cleaned_data
+        # Check if a belgian postal code / city has been passed
+        if data['contact']['be_postal_code']:
+            data['contact']['postal_code'] = data['contact']['be_postal_code']
+            data['contact']['city'] = data['contact']['be_city']
+            del data['contact']['be_postal_code']
+            del data['contact']['be_city']
         del data['show_contact']
         del data['email']
         return data
