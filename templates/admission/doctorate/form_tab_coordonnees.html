@@ -63,7 +63,7 @@
         //-------------------------------------------------------------------------------
         // Activate belgian or not belgian fields for postal code and city autocompletion
         //-------------------------------------------------------------------------------
-        let beIsoCode = '{{BE_ISO_CODE}}';
+        var beIsoCode = '{{BE_ISO_CODE}}';
         $('#be-residential-address').dependsOn({
           '#id_residential-country': { values: [beIsoCode] },
         });
