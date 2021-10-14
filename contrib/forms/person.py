@@ -34,16 +34,17 @@ from django.utils.translation import get_language, gettext_lazy as _
 from osis_document.contrib.forms import FileUploadField
 
 from admission.contrib.enums.person import GENDER_CHOICES, SEX_CHOICES
+from admission.contrib.forms import EMPTY_CHOICE
 from admission.services.autocomplete import AdmissionAutocompleteService
 from base.models.academic_year import AcademicYear
 
 
 @lru_cache
 def get_countries_choices():
-    return [('', '')] + [(
+    return EMPTY_CHOICE + tuple((
         result.pk,
         result.name if get_language() == settings.LANGUAGE_CODE else result.name_en,
-    ) for result in AdmissionAutocompleteService().autocomplete_countries()]
+    ) for result in AdmissionAutocompleteService().autocomplete_countries())
 
 
 class DoctorateAdmissionPersonForm(forms.Form):
@@ -54,12 +55,12 @@ class DoctorateAdmissionPersonForm(forms.Form):
     sex = forms.ChoiceField(
         required=False,
         label=_("Sex"),
-        choices=(('', ' - '),) + SEX_CHOICES,
+        choices=EMPTY_CHOICE + SEX_CHOICES,
     )
     gender = forms.ChoiceField(
         required=False,
         label=_("Gender"),
-        choices=(('', ' - '),) + GENDER_CHOICES,
+        choices=EMPTY_CHOICE + GENDER_CHOICES,
     )
 
     birth_date = forms.DateField(required=False, label=_("Birth date"))
@@ -108,7 +109,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['last_registration_year'].choices = [('', '')]
+        self.fields['last_registration_year'].choices = EMPTY_CHOICE
         for academic_year in AcademicYear.objects.order_by('-year').filter(end_date__year__lte=now().year):
             self.fields['last_registration_year'].choices.append((academic_year.pk, academic_year))
         if self.initial.get('last_registration_year', None):
@@ -149,7 +150,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
         label=_("Country"),
         widget=autocomplete.ListSelect2,
     )
-    # autocompletion enable only for Belgium postal codes
+    # Enable autocompletion only for Belgium postal codes
     be_postal_code = forms.CharField(required=False, label=_("Postal code"))
     be_city = forms.CharField(
         required=False,
@@ -168,11 +169,9 @@ class DoctorateAdmissionAddressForm(forms.Form):
         if self.initial["country"] == self.BE_ISO_CODE:
             self.initial["be_postal_code"] = self.initial["postal_code"]
             self.initial["be_city"] = self.initial["city"]
-            self.fields['be_city'].widget.choices = [('', '')] + [
-                (city.name, city.name)
-                for city
-                in AdmissionAutocompleteService().autocomplete_zip_codes(self.initial["postal_code"])
-            ]
+            initial_choice_needed = self.data.get('be_city', self.initial.get("be_city", None))
+            if initial_choice_needed:
+                self.fields['be_city'].widget.choices = [(initial_choice_needed, initial_choice_needed)]
 
     def clean(self):
         cleaned_data = super().clean()
