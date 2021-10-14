@@ -65,16 +65,32 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
     ]
 
 
-urlpatterns = (
+urlpatterns = [
+    path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
+    path("autocomplete/", include((
         [
-            path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
-            path("autocomplete/", include(([
-                path("sector/", views.SectorAutocomplete.as_view(), name="sector"),
-                path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
-                path("city/", views.CityAutocomplete.as_view(), name="city"),
-            ], "autocomplete"))),
-        ]
-        + generate_tab_urls(pattern_prefix='doctorates/create/', view_suffix='FormView', name='doctorate-create', create_only=True)
-        + generate_tab_urls(pattern_prefix='doctorates/<uuid:pk>/update/', view_suffix='FormView', name='doctorate-update')
-        + generate_tab_urls(pattern_prefix='doctorates/<pk>/', view_suffix='DetailView', name='doctorate-detail', detail_only=True)
-)
+            # path("candidate/", views.CandidateAutocomplete.as_view(), name="candidate"),
+            path("sector/", views.SectorAutocomplete.as_view(), name="sector"),
+            path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
+            path("city/", views.CityAutocomplete.as_view(), name="city"),
+        ],
+        "autocomplete",
+    ))),
+    *generate_tab_urls(
+        pattern_prefix='doctorates/create/',
+        view_suffix='FormView',
+        name='doctorate-create',
+        create_only=True,
+    ),
+    *generate_tab_urls(
+        pattern_prefix='doctorates/<uuid:pk>/update/',
+        view_suffix='FormView',
+        name='doctorate-update',
+    ),
+    *generate_tab_urls(
+        pattern_prefix='doctorates/<pk>/',
+        view_suffix='DetailView',
+        name='doctorate-detail',
+        detail_only=True,
+    ),
+]

@@ -37,6 +37,7 @@ from admission.contrib.enums.financement import (
     ChoixTypeContratTravail,
     ChoixTypeFinancement,
 )
+from admission.contrib.forms import EMPTY_CHOICE
 from admission.services.autocomplete import AdmissionAutocompleteAPIClient
 from osis_document.contrib import FileUploadField
 
@@ -57,18 +58,18 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     bureau_cde = forms.ChoiceField(
         label=_("Bureau"),
-        choices=(('', ' - '),) + ChoixBureauCDE.choices(),
+        choices=EMPTY_CHOICE + ChoixBureauCDE.choices(),
         required=False,
     )
 
     type_financement = forms.ChoiceField(
         label=_("Financing type"),
-        choices=(('', ' - '),) + ChoixTypeFinancement.choices(),
+        choices=EMPTY_CHOICE + ChoixTypeFinancement.choices(),
         required=False,
     )
     type_contrat_travail = forms.ChoiceField(
         label=_("Work contract type"),
-        choices=(('', ' - '),) + ChoixTypeContratTravail.choices(),
+        choices=EMPTY_CHOICE + ChoixTypeContratTravail.choices(),
         required=False,
     )
     type_contrat_travail_other = forms.CharField(
@@ -83,7 +84,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     bourse_recherche = forms.ChoiceField(
         label=_("Scholarship grant"),
-        choices=(('', ' - '),) + BourseRecherche.choices(),
+        choices=EMPTY_CHOICE + BourseRecherche.choices(),
         required=False,
     )
     bourse_recherche_other = forms.CharField(
