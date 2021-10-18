@@ -1,57 +1,68 @@
-{% extends "layout.html" %}
-{% load bootstrap3 i18n static admission %}
+{% extends "layout.html" %}{% load bootstrap3 i18n static admission %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'admission:doctorate-list' %}">{% trans "Doctorate admissions" %}</a></li>
-  {% if admission %}
-    <li class="active">{{ admission }}</li>
-  {% else %}
-    <li class="active">{% trans "Create new doctorate admission" %}</li>
-  {% endif %}
+    <li>
+        <a href="{% url 'admission:doctorate-list' %}">{% trans "Doctorate admissions" %}</a>
+    </li>
+    {% if admission %}
+        <li class="active">{{ admission }}</li>
+    {% else %}
+        <li class="active">{% trans "Create new doctorate admission" %}</li>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-  <div class="page-header h3">
-    <span class="d-inline-block">{% trans "Create new doctorate admission" %}</span>
-    <a href="{% url 'admission:doctorate-list' %}" class="pull-right h5 text-primary">
-      <span class="fa fa-stream"></span>
-      {% trans "Back to my requests" %}
-    </a>
-  </div>
-
-  <div class="well">
-    <div>
-      {% trans "Reference:" %}
-      {% if not admission %}{% trans "No reference yet - Go to Project tab" %}
-      {% else %}{{ admission.uuid }}{% endif %}
-    </div>
-    <div>
-      {% trans "Status:" %}
-      {% if not admission or admission.status == ADMISSION_NOT_SUBMITTED %}{% trans "Not submitted" %}
-      {% else %}{{ admission.status }}{% endif %}
+    <div class="page-header h3">
+        <span class="d-inline-block">{% trans "Create new doctorate admission" %}</span>
+        <a
+            href="{% url 'admission:doctorate-list' %}"
+            class="pull-right h5 text-primary"
+        >
+            <span class="fa fa-stream"></span>
+            {% trans "Back to my requests" %}
+        </a>
     </div>
 
-  </div>
+    <div class="well">
+        <div>
+            {% trans "Reference:" %}
+            {% if not admission %}
+                {% trans "No reference yet - Go to Project tab" %}
+            {% else %}{{ admission.uuid }}{% endif %}
+        </div>
+        <div>
+            {% trans "Status:" %}
+            {% if not admission or admission.status == ADMISSION_NOT_SUBMITTED %}
+                {% trans "Not submitted" %}
+            {% else %}{{ admission.status }}{% endif %}
+        </div>
 
-  <p><em>
-    {% blocktrans %}
-      The online enrolment request procedure is split up into several sheet. The enrolment request can only be
-      validated as soon as all sheets have been duly completed. The icons will remind you of the state of progress
-      of your enrolment request which you can interrupt and resume at any moment.
-    {% endblocktrans %}
-  </em></p>
-
-  {% doctorate_tabs admission %}
-
-  {% url 'admission:doctorate-update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
-  {% if change_url %}
-    <div class="form-group">
-      <a href="{{ change_url }}" class="btn btn-primary">
-        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-        {% trans 'Change my submission' %}
-      </a>
     </div>
-  {% endif %}
 
-  {% block tab_content %}{% endblock %}
+    <p><em>
+        {% blocktrans %}
+            The online enrolment request procedure is split up into several
+            sheet. The enrolment request can only be validated as soon as all
+            sheets have been duly completed. The icons will remind you of the
+            state of progress of your enrolment request which you can interrupt
+            and resume at any moment.
+        {% endblocktrans %}
+    </em></p>
+
+    {% doctorate_tabs admission %}
+
+    {% url 'admission:doctorate-update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
+    {% if change_url %}
+        <div class="form-group">
+            <a href="{{ change_url }}" class="btn btn-primary">
+                <span
+                    class="glyphicon glyphicon-floppy-save"
+                    aria-hidden="true"
+                ></span>
+                {% trans 'Change my submission' %}
+            </a>
+        </div>
+    {% endif %}
+
+    {% block tab_content %}{% endblock %}
 {% endblock %}

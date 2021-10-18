@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-15 12:21+0200\n"
+"POT-Creation-Date: 2021-10-18 17:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,31 +20,20 @@ msgstr ""
 msgid ""
 "\n"
 "            The online enrolment request procedure is split up into several\n"
-"            sheet. The enrolment request can only be\n"
-"            validated as soon as all sheets have been duly completed. The "
-"icons\n"
-"            will remind you of the state of progress\n"
-"            of your enrolment request which you can interrupt and resume at "
-"any\n"
-"            moment.\n"
+"            sheet. The enrolment request can only be validated as soon as "
+"all\n"
+"            sheets have been duly completed. The icons will remind you of "
+"the\n"
+"            state of progress of your enrolment request which you can "
+"interrupt\n"
+"            and resume at any moment.\n"
 "        "
-msgstr ""
-
-msgid ""
-"\n"
-"      The online enrolment request procedure is split up into several sheet. "
-"The enrolment request can only be\n"
-"      validated as soon as all sheets have been duly completed. The icons "
-"will remind you of the state of progress\n"
-"      of your enrolment request which you can interrupt and resume at any "
-"moment.\n"
-"    "
 msgstr ""
 
 msgid "ARC - Action de Recherche Concertée"
 msgstr ""
 
-msgid "ARES -  Coopération au développement"
+msgid "ARES - Coopération au développement"
 msgstr ""
 
 msgid "Admission"
@@ -106,9 +95,6 @@ msgid "Doctoral project proposition"
 msgstr ""
 
 msgid "Doctoral training"
-msgstr ""
-
-msgid "Doctorat"
 msgstr ""
 
 msgid "Doctorate"
@@ -249,9 +235,6 @@ msgstr ""
 msgid "Secondary studies"
 msgstr ""
 
-msgid "Secteur"
-msgstr ""
-
 msgid "Sector"
 msgstr ""
 
@@ -292,91 +275,4 @@ msgid "Work contract type"
 msgstr ""
 
 msgid "YES"
-msgstr ""
-
-msgid "Access type"
-msgstr ""
-
-msgid "Bad file upload mimetype"
-msgstr ""
-
-msgid "Created at"
-msgstr ""
-
-msgid "Documents"
-msgstr ""
-
-msgid "Expires at"
-msgstr ""
-
-msgid "File"
-msgstr ""
-
-msgid "File upload is either non-existent or has expired"
-msgstr ""
-
-msgid "File upload is too large"
-msgstr ""
-
-msgid "MD5 check failed"
-msgstr ""
-
-msgid "MD5 checksum mismatch"
-msgstr ""
-
-msgid "MIME Type"
-msgstr ""
-
-msgid "Metadata"
-msgstr ""
-
-msgid "Missing OSIS_DOCUMENT_BASE_URL setting"
-msgstr ""
-
-msgid "Modified at"
-msgstr ""
-
-msgid "Read"
-msgstr ""
-
-msgid "Requested"
-msgstr ""
-
-msgid "Resource not found"
-msgstr ""
-
-msgid "Size"
-msgstr ""
-
-msgid "Size (in bytes)"
-msgstr ""
-
-msgid "Status"
-msgstr ""
-
-msgid "Token"
-msgstr ""
-
-msgid "Token non-existent or expired"
-msgstr ""
-
-msgid "Too few files uploaded"
-msgstr ""
-
-msgid "Too many files uploaded"
-msgstr ""
-
-msgid "UUID"
-msgstr ""
-
-msgid "Upload"
-msgstr ""
-
-msgid "Uploaded"
-msgstr ""
-
-msgid "Uploaded at"
-msgstr ""
-
-msgid "Write"
 msgstr ""

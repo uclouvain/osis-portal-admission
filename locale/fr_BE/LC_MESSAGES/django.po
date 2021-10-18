@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-15 12:21+0200\n"
+"POT-Creation-Date: 2021-10-18 17:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,32 +20,25 @@ msgstr ""
 msgid ""
 "\n"
 "            The online enrolment request procedure is split up into several\n"
-"            sheet. The enrolment request can only be\n"
-"            validated as soon as all sheets have been duly completed. The "
-"icons\n"
-"            will remind you of the state of progress\n"
-"            of your enrolment request which you can interrupt and resume at "
-"any\n"
-"            moment.\n"
+"            sheet. The enrolment request can only be validated as soon as "
+"all\n"
+"            sheets have been duly completed. The icons will remind you of "
+"the\n"
+"            state of progress of your enrolment request which you can "
+"interrupt\n"
+"            and resume at any moment.\n"
 "        "
 msgstr ""
-
-msgid ""
-"\n"
-"      The online enrolment request procedure is split up into several sheet. "
-"The enrolment request can only be\n"
-"      validated as soon as all sheets have been duly completed. The icons "
-"will remind you of the state of progress\n"
-"      of your enrolment request which you can interrupt and resume at any "
-"moment.\n"
-"    "
-msgstr ""
+"La procédure d'inscription en ligne est divisée en plusieurs onglets. La "
+"demande d'inscription ne peut être validée que lorsque tous les onglets ont "
+"été complétés avec succès. Les icônes indiquent la progression de votre "
+"demande qui peut interrompue et reprise et reprise à tout moment"
 
 msgid "ARC - Action de Recherche Concertée"
-msgstr ""
+msgstr "ARC - Action de Recherche Concertée"
 
-msgid "ARES -  Coopération au développement"
-msgstr ""
+msgid "ARES - Coopération au développement"
+msgstr "ARES - Coopération au développement"
 
 msgid "Admission"
 msgstr "Admission"
@@ -57,7 +50,7 @@ msgid "Allocated time"
 msgstr "Temps consacré"
 
 msgid "Back to my requests"
-msgstr ""
+msgstr "Retour à mes demandes"
 
 msgid "Brief justification"
 msgstr "Justification succincte"
@@ -66,35 +59,31 @@ msgid "Bureau"
 msgstr "Bureau"
 
 msgid "CSC - China Scholarship Council"
-msgstr ""
+msgstr "CSC - China Scholarship Council"
 
 msgid "Change my submission"
-msgstr ""
+msgstr "Modifier ma soumission"
 
 msgid "Complementary training project"
 msgstr "Projet de formation complémentaire"
 
-#, fuzzy
-#| msgid "Confirm"
 msgid "Confirmation"
-msgstr "Confirmer"
+msgstr "Confirmation"
 
-#, fuzzy
-#| msgid "Can approve confirmation paper"
 msgid "Confirmation paper"
-msgstr "Peut approuver la lettre de confirmation"
+msgstr "Lettre de confirmation"
 
 msgid "Contact details"
-msgstr ""
+msgstr "Coordonnées"
 
 msgid "Cotutelle"
-msgstr ""
+msgstr "Cotutelle"
 
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
 
 msgid "Curriculum"
-msgstr ""
+msgstr "Curriculum"
 
 msgid "Defense date"
 msgstr "Date de soutenance"
@@ -122,10 +111,10 @@ msgid "ECONOMY"
 msgstr "Economie"
 
 msgid "ERC - European Research Council"
-msgstr ""
+msgstr "ERC - European Research Council"
 
 msgid "Edit"
-msgstr ""
+msgstr "Modifier"
 
 msgid "English"
 msgstr "Anglais"
@@ -134,19 +123,19 @@ msgid "Estimated time"
 msgstr "Temps estimé"
 
 msgid "Exchange with UCLouvain"
-msgstr ""
+msgstr "Échanges avec l'UCLouvain"
 
 msgid "FNRS"
-msgstr ""
+msgstr "FNRS"
 
 msgid "FRESH"
-msgstr ""
+msgstr "FRESH"
 
 msgid "FRIA"
-msgstr ""
+msgstr "FRIA"
 
 msgid "FSR - Fonds Spéciaux de Recherche"
-msgstr ""
+msgstr "FSR - Fonds Spéciaux de Recherche"
 
 msgid "Financing"
 msgstr "Financement"
@@ -155,13 +144,13 @@ msgid "Financing type"
 msgstr "Type de financement"
 
 msgid "Fondation Mont Godinne"
-msgstr ""
+msgstr "Fondation Mont Godinne"
 
 msgid "Fondation St Luc"
-msgstr ""
+msgstr "Fondation St Luc"
 
 msgid "Fonds de recherche clinique"
-msgstr ""
+msgstr "Fonds de recherche clinique"
 
 msgid "French"
 msgstr "Français"
@@ -179,7 +168,7 @@ msgid "Institution"
 msgstr "Institution"
 
 msgid "Jury"
-msgstr ""
+msgstr "Jury"
 
 msgid "MANAGEMENT"
 msgstr "Gestion"
@@ -191,13 +180,13 @@ msgid "No defense reason"
 msgstr "Raison de non-soutenance"
 
 msgid "No reference yet - Go to Project tab"
-msgstr ""
+msgstr "Pas de reference pour le moment - Voir l'onglet projet"
 
 msgid "Not submitted"
 msgstr "Non soumis"
 
 msgid "OTHER"
-msgstr ""
+msgstr "Autre"
 
 msgid "PARTIAL"
 msgstr "Partiel"
@@ -209,10 +198,10 @@ msgid "Pre-Admission"
 msgstr "Pré-Admission"
 
 msgid "Previous research experience"
-msgstr ""
+msgstr "Expérience précédente de recherche"
 
 msgid "Private defense"
-msgstr ""
+msgstr "Soutenance privée"
 
 msgid "Project"
 msgstr "Projet"
@@ -227,10 +216,10 @@ msgid "Project title"
 msgstr "Titre du projet"
 
 msgid "Public defense"
-msgstr ""
+msgstr "Soutenance publique"
 
 msgid "Reference:"
-msgstr ""
+msgstr "Référence :"
 
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Bourse de recherche"
@@ -239,23 +228,16 @@ msgid "SELF_FUNDING"
 msgstr "Auto-financement"
 
 msgid "Save my submission"
-msgstr ""
+msgstr "Enregistrer ma soumission"
 
-#, fuzzy
-#| msgid "Scholarship grant"
 msgid "Scholarship"
-msgstr "Bourse de recherche"
+msgstr "Bourse"
 
 msgid "Scholarship grant"
 msgstr "Bourse de recherche"
 
 msgid "Secondary studies"
-msgstr ""
-
-#, fuzzy
-#| msgid "Sector"
-msgid "Secteur"
-msgstr "Secteur"
+msgstr "Études secondaires"
 
 msgid "Sector"
 msgstr "Secteur"
@@ -267,135 +249,34 @@ msgid "Specify work contract"
 msgstr "Spécifier le contrat de travail"
 
 msgid "Status:"
-msgstr ""
+msgstr "Statut :"
 
 msgid "Supervision"
-msgstr ""
+msgstr "Supervision"
 
 msgid "Thesis redacting language"
 msgstr "Langue de rédaction de la thèse"
 
 msgid "UCLOUVAIN_ASSISTANT"
-msgstr ""
+msgstr "Assistant UCLouvain"
 
 msgid "Undecided"
 msgstr "Non décidé"
 
 msgid "View"
-msgstr ""
+msgstr "Voir"
 
 msgid "WORK_CONTRACT"
 msgstr "Contrat de travail"
 
 msgid "Wallonie Bruxelles International"
-msgstr ""
+msgstr "Wallonie Bruxelles International"
 
-#, fuzzy
-#| msgid "Work contract type"
 msgid "Work contract"
-msgstr "Type de contrat de travail"
+msgstr "Contrat de travail"
 
 msgid "Work contract type"
 msgstr "Type de contrat de travail"
 
 msgid "YES"
 msgstr "Oui"
-
-#, fuzzy
-#| msgid "Admission type"
-msgid "Access type"
-msgstr "Type d'admission"
-
-msgid "Bad file upload mimetype"
-msgstr ""
-
-#, fuzzy
-#| msgid "Created"
-msgid "Created at"
-msgstr "Créé"
-
-#, fuzzy
-#| msgid "Project documents"
-msgid "Documents"
-msgstr "Documents de projet"
-
-msgid "Expires at"
-msgstr ""
-
-msgid "File"
-msgstr ""
-
-msgid "File upload is either non-existent or has expired"
-msgstr ""
-
-msgid "File upload is too large"
-msgstr ""
-
-msgid "MD5 check failed"
-msgstr ""
-
-msgid "MD5 checksum mismatch"
-msgstr ""
-
-#, fuzzy
-#| msgid "Type"
-msgid "MIME Type"
-msgstr "Type"
-
-msgid "Metadata"
-msgstr ""
-
-msgid "Missing OSIS_DOCUMENT_BASE_URL setting"
-msgstr ""
-
-#, fuzzy
-#| msgid "Modified"
-msgid "Modified at"
-msgstr "Modifée"
-
-msgid "Read"
-msgstr ""
-
-msgid "Requested"
-msgstr ""
-
-#, fuzzy
-#| msgid "Membre CA not found."
-msgid "Resource not found"
-msgstr "Membre du CA non trouvé"
-
-msgid "Size"
-msgstr ""
-
-msgid "Size (in bytes)"
-msgstr ""
-
-msgid "Status"
-msgstr ""
-
-msgid "Token"
-msgstr ""
-
-msgid "Token non-existent or expired"
-msgstr ""
-
-msgid "Too few files uploaded"
-msgstr ""
-
-msgid "Too many files uploaded"
-msgstr ""
-
-msgid "UUID"
-msgstr "UUID"
-
-msgid "Upload"
-msgstr ""
-
-msgid "Uploaded"
-msgstr ""
-
-msgid "Uploaded at"
-msgstr ""
-
-msgid "Write"
-msgstr ""
