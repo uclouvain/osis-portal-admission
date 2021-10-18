@@ -32,35 +32,13 @@ from django.utils.translation import get_language
 from admission.services.autocomplete import AdmissionAutocompleteService
 
 __all__ = [
-    "SectorAutocomplete",
     "DoctorateAutocomplete",
 ]
 
 
-class SectorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
-    def get_list(self):
-        return AdmissionAutocompleteService().autocomplete_sectors()
-
-    def results(self, results):
-        return [dict(
-            id=result.sigle,
-            text="{sigle} - {intitule}".format(
-                sigle=result.sigle,
-                intitule=result.intitule_fr if get_language() == settings.LANGUAGE_CODE else result.intitule_en,
-            )
-        ) for result in results]
-
-    def autocomplete_results(self, results):
-        """Return list of strings that match the autocomplete query."""
-        return [x for x in results if self.q.lower() in "{sigle} - {intitule}".format(
-            sigle=x.sigle,
-            intitule=x.intitule_fr if get_language() == settings.LANGUAGE_CODE else x.intitule_en,
-        ).lower()]
-
-
 class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return AdmissionAutocompleteService().autocomplete_doctorates(self.forwarded['sector'])
+        return AdmissionAutocompleteService().get_doctorates(self.forwarded['sector'])
 
     def results(self, results):
         return [dict(

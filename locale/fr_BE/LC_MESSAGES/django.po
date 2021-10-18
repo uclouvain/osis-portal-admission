@@ -1,0 +1,401 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-15 12:21+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid ""
+"\n"
+"            The online enrolment request procedure is split up into several\n"
+"            sheet. The enrolment request can only be\n"
+"            validated as soon as all sheets have been duly completed. The "
+"icons\n"
+"            will remind you of the state of progress\n"
+"            of your enrolment request which you can interrupt and resume at "
+"any\n"
+"            moment.\n"
+"        "
+msgstr ""
+
+msgid ""
+"\n"
+"      The online enrolment request procedure is split up into several sheet. "
+"The enrolment request can only be\n"
+"      validated as soon as all sheets have been duly completed. The icons "
+"will remind you of the state of progress\n"
+"      of your enrolment request which you can interrupt and resume at any "
+"moment.\n"
+"    "
+msgstr ""
+
+msgid "ARC - Action de Recherche Concertée"
+msgstr ""
+
+msgid "ARES -  Coopération au développement"
+msgstr ""
+
+msgid "Admission"
+msgstr "Admission"
+
+msgid "Admission type"
+msgstr "Type d'admission"
+
+msgid "Allocated time"
+msgstr "Temps consacré"
+
+msgid "Back to my requests"
+msgstr ""
+
+msgid "Brief justification"
+msgstr "Justification succincte"
+
+msgid "Bureau"
+msgstr "Bureau"
+
+msgid "CSC - China Scholarship Council"
+msgstr ""
+
+msgid "Change my submission"
+msgstr ""
+
+msgid "Complementary training project"
+msgstr "Projet de formation complémentaire"
+
+#, fuzzy
+#| msgid "Confirm"
+msgid "Confirmation"
+msgstr "Confirmer"
+
+#, fuzzy
+#| msgid "Can approve confirmation paper"
+msgid "Confirmation paper"
+msgstr "Peut approuver la lettre de confirmation"
+
+msgid "Contact details"
+msgstr ""
+
+msgid "Cotutelle"
+msgstr ""
+
+msgid "Create new doctorate admission"
+msgstr "Créer une nouvelle admission en doctorat"
+
+msgid "Curriculum"
+msgstr ""
+
+msgid "Defense date"
+msgstr "Date de soutenance"
+
+msgid ""
+"Detail here the reasons which justify the recourse to a provisory admission."
+msgstr "Détaillez ici les raisons justifiant une admission provisoire"
+
+msgid "Doctoral project"
+msgstr "Projet doctoral"
+
+msgid "Doctoral project proposition"
+msgstr "Proposition de projet doctoral"
+
+msgid "Doctoral training"
+msgstr "Formation doctorale"
+
+msgid "Doctorate"
+msgstr "Doctorat"
+
+msgid "Doctorate admissions"
+msgstr "Admissions en doctorat"
+
+msgid "ECONOMY"
+msgstr "Economie"
+
+msgid "ERC - European Research Council"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "English"
+msgstr "Anglais"
+
+msgid "Estimated time"
+msgstr "Temps estimé"
+
+msgid "Exchange with UCLouvain"
+msgstr ""
+
+msgid "FNRS"
+msgstr ""
+
+msgid "FRESH"
+msgstr ""
+
+msgid "FRIA"
+msgstr ""
+
+msgid "FSR - Fonds Spéciaux de Recherche"
+msgstr ""
+
+msgid "Financing"
+msgstr "Financement"
+
+msgid "Financing type"
+msgstr "Type de financement"
+
+msgid "Fondation Mont Godinne"
+msgstr ""
+
+msgid "Fondation St Luc"
+msgstr ""
+
+msgid "Fonds de recherche clinique"
+msgstr ""
+
+msgid "French"
+msgstr "Français"
+
+msgid "Full-time equivalent"
+msgstr "Équivalent full-time"
+
+msgid "Gantt graph"
+msgstr "Graphe de Gantt"
+
+msgid "Identification"
+msgstr "Identification"
+
+msgid "Institution"
+msgstr "Institution"
+
+msgid "Jury"
+msgstr ""
+
+msgid "MANAGEMENT"
+msgstr "Gestion"
+
+msgid "NO"
+msgstr "Non"
+
+msgid "No defense reason"
+msgstr "Raison de non-soutenance"
+
+msgid "No reference yet - Go to Project tab"
+msgstr ""
+
+msgid "Not submitted"
+msgstr "Non soumis"
+
+msgid "OTHER"
+msgstr ""
+
+msgid "PARTIAL"
+msgstr "Partiel"
+
+msgid "PhD already done"
+msgstr "Doctorat déjà réalisé"
+
+msgid "Pre-Admission"
+msgstr "Pré-Admission"
+
+msgid "Previous research experience"
+msgstr ""
+
+msgid "Private defense"
+msgstr ""
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Project documents"
+msgstr "Documents de projet"
+
+msgid "Project resume"
+msgstr "Résumé du projet"
+
+msgid "Project title"
+msgstr "Titre du projet"
+
+msgid "Public defense"
+msgstr ""
+
+msgid "Reference:"
+msgstr ""
+
+msgid "SEARCH_SCHOLARSHIP"
+msgstr "Bourse de recherche"
+
+msgid "SELF_FUNDING"
+msgstr "Auto-financement"
+
+msgid "Save my submission"
+msgstr ""
+
+#, fuzzy
+#| msgid "Scholarship grant"
+msgid "Scholarship"
+msgstr "Bourse de recherche"
+
+msgid "Scholarship grant"
+msgstr "Bourse de recherche"
+
+msgid "Secondary studies"
+msgstr ""
+
+#, fuzzy
+#| msgid "Sector"
+msgid "Secteur"
+msgstr "Secteur"
+
+msgid "Sector"
+msgstr "Secteur"
+
+msgid "Specify scholarship grant"
+msgstr "Spécifier la bourse de recherche"
+
+msgid "Specify work contract"
+msgstr "Spécifier le contrat de travail"
+
+msgid "Status:"
+msgstr ""
+
+msgid "Supervision"
+msgstr ""
+
+msgid "Thesis redacting language"
+msgstr "Langue de rédaction de la thèse"
+
+msgid "UCLOUVAIN_ASSISTANT"
+msgstr ""
+
+msgid "Undecided"
+msgstr "Non décidé"
+
+msgid "View"
+msgstr ""
+
+msgid "WORK_CONTRACT"
+msgstr "Contrat de travail"
+
+msgid "Wallonie Bruxelles International"
+msgstr ""
+
+#, fuzzy
+#| msgid "Work contract type"
+msgid "Work contract"
+msgstr "Type de contrat de travail"
+
+msgid "Work contract type"
+msgstr "Type de contrat de travail"
+
+msgid "YES"
+msgstr "Oui"
+
+#, fuzzy
+#| msgid "Admission type"
+msgid "Access type"
+msgstr "Type d'admission"
+
+msgid "Bad file upload mimetype"
+msgstr ""
+
+#, fuzzy
+#| msgid "Created"
+msgid "Created at"
+msgstr "Créé"
+
+#, fuzzy
+#| msgid "Project documents"
+msgid "Documents"
+msgstr "Documents de projet"
+
+msgid "Expires at"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "File upload is either non-existent or has expired"
+msgstr ""
+
+msgid "File upload is too large"
+msgstr ""
+
+msgid "MD5 check failed"
+msgstr ""
+
+msgid "MD5 checksum mismatch"
+msgstr ""
+
+#, fuzzy
+#| msgid "Type"
+msgid "MIME Type"
+msgstr "Type"
+
+msgid "Metadata"
+msgstr ""
+
+msgid "Missing OSIS_DOCUMENT_BASE_URL setting"
+msgstr ""
+
+#, fuzzy
+#| msgid "Modified"
+msgid "Modified at"
+msgstr "Modifée"
+
+msgid "Read"
+msgstr ""
+
+msgid "Requested"
+msgstr ""
+
+#, fuzzy
+#| msgid "Membre CA not found."
+msgid "Resource not found"
+msgstr "Membre du CA non trouvé"
+
+msgid "Size"
+msgstr ""
+
+msgid "Size (in bytes)"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Token"
+msgstr ""
+
+msgid "Token non-existent or expired"
+msgstr ""
+
+msgid "Too few files uploaded"
+msgstr ""
+
+msgid "Too many files uploaded"
+msgstr ""
+
+msgid "UUID"
+msgstr "UUID"
+
+msgid "Upload"
+msgstr ""
+
+msgid "Uploaded"
+msgstr ""
+
+msgid "Uploaded at"
+msgstr ""
+
+msgid "Write"
+msgstr ""

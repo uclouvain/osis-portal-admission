@@ -31,14 +31,14 @@ from django.utils.translation import get_language, gettext_lazy as _
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.bureau_CDE import ChoixBureauCDE
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
-from admission.contrib.enums.projet import ChoixLangueRedactionThese
 from admission.contrib.enums.financement import (
     BourseRecherche,
     ChoixTypeContratTravail,
     ChoixTypeFinancement,
 )
+from admission.contrib.enums.projet import ChoixLangueRedactionThese
 from admission.contrib.forms import EMPTY_CHOICE
-from admission.services.autocomplete import AdmissionAutocompleteAPIClient
+from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
 
 
@@ -202,7 +202,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                         intitule=sector.intitule_fr if get_language() == settings.LANGUAGE_CODE
                         else sector.intitule_en,
                     ))
-                    for sector in AdmissionAutocompleteAPIClient().list_sector_dtos()
+                    for sector in AdmissionAutocompleteService.get_sectors()
                 ]
         )
 
@@ -229,8 +229,8 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
 
     @staticmethod
     def get_selected_doctorate(sector, doctorat):
-        doctorats = AdmissionAutocompleteAPIClient().list_doctorat_dtos(sector)
-        return next(
+        doctorats = AdmissionAutocompleteService.get_doctorates(sector)
+        return next(  # pragma: no branch
             d for d in doctorats
             if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
         )
