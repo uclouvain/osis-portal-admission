@@ -82,8 +82,7 @@ class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormV
         forms = self.get_forms()
         if all(form.is_valid() for form in forms.values()):
             return self.form_valid(forms['main_form'])
-        else:
-            return self.form_invalid(forms['main_form'])
+        return self.form_invalid(forms['main_form'])
 
     def get_initial(self):
         return AdmissionPersonService.retrieve_person_coordonnees()

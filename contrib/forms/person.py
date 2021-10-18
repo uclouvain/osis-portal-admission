@@ -39,6 +39,10 @@ from admission.services.autocomplete import AdmissionAutocompleteService
 from base.models.academic_year import AcademicYear
 
 
+YES = '1'
+NO = '0'
+
+
 @lru_cache
 def get_countries_choices():
     return EMPTY_CHOICE + tuple((
@@ -98,8 +102,8 @@ class DoctorateAdmissionPersonForm(forms.Form):
     already_registered = forms.BooleanField(
         required=False,
         widget=forms.RadioSelect(choices=[
-            ('0', _("No")),
-            ('1', _("Yes")),
+            (NO, _("No")),
+            (YES, _("Yes")),
         ]),
         label="",
     )
@@ -112,8 +116,8 @@ class DoctorateAdmissionPersonForm(forms.Form):
         self.fields['last_registration_year'].choices = EMPTY_CHOICE
         for academic_year in AcademicYear.objects.order_by('-year').filter(end_date__year__lte=now().year):
             self.fields['last_registration_year'].choices.append((academic_year.pk, academic_year))
-        if self.initial.get('last_registration_year', None):
-            self.initial['already_registered'] = '1'
+        if self.initial.get('last_registration_year'):
+            self.initial['already_registered'] = YES
 
         self.fields['birth_country'].widget.choices = get_countries_choices()
         self.fields['country_of_citizenship'].widget.choices = get_countries_choices()
@@ -169,7 +173,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
         if self.initial["country"] == self.BE_ISO_CODE:
             self.initial["be_postal_code"] = self.initial["postal_code"]
             self.initial["be_city"] = self.initial["city"]
-            initial_choice_needed = self.data.get('be_city', self.initial.get("be_city", None))
+            initial_choice_needed = self.data.get('be_city', self.initial.get("be_city"))
             if initial_choice_needed:
                 self.fields['be_city'].widget.choices = [(initial_choice_needed, initial_choice_needed)]
 
@@ -186,19 +190,18 @@ class DoctorateAdmissionAddressForm(forms.Form):
         # (postal_code / city) or (be_postal_code / be_city)
         if cleaned_data.get("country") == self.BE_ISO_CODE:
             mandatory_address_fields.extend(["be_postal_code", "be_city"])
-        else:
-            mandatory_address_fields.extend(["postal_code", "city"])
+        mandatory_address_fields.extend(["postal_code", "city"])
 
-        if any(cleaned_data.get(f, None) for f in mandatory_address_fields):
-            if not all(cleaned_data.get(f, None) for f in mandatory_address_fields):
+        if any(cleaned_data.get(f) for f in mandatory_address_fields):
+            if not all(cleaned_data.get(f) for f in mandatory_address_fields):
                 raise ValidationError("Please fill all the address fields")
-            else:
-                street = cleaned_data.get("street", None)
-                postal_box = cleaned_data.get("postal_box", None)
 
-                if not any([postal_box, street]):
-                    error_message = _("please set either street or postal_box")
-                    self.add_error('postal_box', error_message)
-                    self.add_error('street', error_message)
+            street = cleaned_data.get("street")
+            postal_box = cleaned_data.get("postal_box")
+
+            if not any([postal_box, street]):
+                error_message = _("please set either street or postal_box")
+                self.add_error('postal_box', error_message)
+                self.add_error('street', error_message)
 
         return cleaned_data
