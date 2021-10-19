@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from functools import lru_cache
+import functools
 
 from dal import autocomplete, forward
 from django import forms
@@ -31,19 +31,18 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.utils.translation import get_language, gettext_lazy as _
-from osis_document.contrib.forms import FileUploadField
 
 from admission.contrib.enums.person import GENDER_CHOICES, SEX_CHOICES
 from admission.contrib.forms import EMPTY_CHOICE
 from admission.services.autocomplete import AdmissionAutocompleteService
 from base.models.academic_year import AcademicYear
-
+from osis_document.contrib.forms import FileUploadField
 
 YES = '1'
 NO = '0'
 
 
-@lru_cache
+@functools.lru_cache()
 def get_countries_choices():
     return EMPTY_CHOICE + tuple((
         result.pk,
