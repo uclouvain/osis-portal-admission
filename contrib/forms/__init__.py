@@ -32,6 +32,7 @@ EMPTY_CHOICE = (('', ' - '),)
 
 
 def get_country_initial_choices(iso_code, person):
+    """Return the unique initial choice for a country when data is either set from initial or from webservice."""
     if not iso_code:
         return EMPTY_CHOICE
     country = CountriesService.get_country(iso_code=iso_code, person=person)

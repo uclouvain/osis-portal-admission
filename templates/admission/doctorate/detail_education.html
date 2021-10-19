@@ -1,0 +1,73 @@
+{% extends "admission/doctorate/detail_tab_layout.html" %}
+{% load i18n static admission index %}
+
+{% block tab_content %}
+  {% if belgian_diploma %}
+
+    <div class="row">
+      <div class="col-md-12">{% field_data _("Academic graduation year") belgian_diploma.academic_graduation_year %}</div>
+    </div>
+
+    {% panel _("Belgian diploma") %}
+
+      {% panel _("Community of education") %}
+        {% field_data _("Community of education") belgian_diploma.community %}
+      {% endpanel %}
+
+      {% if belgian_diploma.community == "FRENCH_SPEAKING" %}
+        {% panel _("Type of education") %}
+          <strong>{% trans "What type of education did (do) you follow?" %}</strong>
+
+          {% if belgian_diploma.educational_transition %}
+            {% field_data _("Educational transition") belgian_diploma.educational_transition %}
+          {% elif belgian_diploma.educational_qualification %}
+            {% field_data _("Educational qualification") belgian_diploma.educational_transition %}
+          {% else %}
+            {% field_data _("Other education, to specify") belgian_diploma.educational_other %}
+          {% endif %}
+
+        {% endpanel %}
+      {% endif %}
+
+      {% panel _("Course") %}
+        {% field_data _("Did you repeat certain study years during your studies?") belgian_diploma.course_repeat %}
+        {% field_data _("Did you change of orientation during your studies?") belgian_diploma.course_orientation %}
+      {% endpanel %}
+
+      {% panel _("At which result level do you consider yourself?") %}
+        {% field_data belgian_diploma.result %}
+      {% endpanel %}
+
+      {% panel _("Institute") %}
+        {% if belgian_diploma.institute %}
+          {% field_data _("Institute") belgian_diploma.institute %}
+        {% else %}
+          {% field_data _("Another institute") belgian_diploma.other_institute %}
+        {% endif %}
+      {% endpanel %}
+
+    {% endpanel %}
+
+  {% else %}
+
+    <div class="row">
+      <div class="col-md-12">{% field_data _("Academic graduation year") foreign_diploma.academic_graduation_year %}</div>
+    </div>
+
+    {% panel _("Foreign diploma") %}
+
+      {% field_data _("What diploma did you get (or will you get)?") foreign_diploma.foreign_diploma_type %}
+      {% if foreign_diploma.linguistic_regime %}
+        {% field_data _("Linguistic regime") foreign_diploma.linguistic_regime %}
+      {% else %}
+        {% field_data _("Linguistic regime") foreign_diploma.other_linguistic_regime %}
+      {% endif %}
+
+      {% panel _("At which result level do you consider yourself?") %}
+        {% field_data foreign_diploma.result %}
+      {% endpanel %}
+
+    {% endpanel %}
+
+  {% endif %}
+{% endblock %}

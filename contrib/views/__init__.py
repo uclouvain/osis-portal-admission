@@ -32,6 +32,8 @@ from .form_tabs.coordonnes import *
 from .detail_tabs.person import *
 from .form_tabs.person import *
 from .list import *
+from .form_tabs.secondary_studies import *
+from .detail_tabs.secondary_studies import *
 
 __all__ = [
     "DoctorateAutocomplete",
@@ -42,4 +44,6 @@ __all__ = [
     "DoctorateAdmissionPersonDetailView",
     "DoctorateAdmissionCoordonneesFormView",
     "DoctorateAdmissionCoordonneesDetailView",
+    "DoctorateAdmissionEducationDetailView",
+    "DoctorateAdmissionEducationFormView",
 ]
