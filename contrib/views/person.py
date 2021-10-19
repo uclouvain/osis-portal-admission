@@ -37,7 +37,7 @@ from admission.contrib.forms.person import (
     DoctorateAdmissionPersonForm,
     get_countries_choices,
 )
-from admission.services.mixins import ApiExceptionErrorMappingMixin
+from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 
 __all__ = [
@@ -65,7 +65,7 @@ class DoctorateAdmissionCoordonneesDetailView(TemplateView):
         return context_data
 
 
-class DoctorateAdmissionCoordonneesFormView(ApiExceptionErrorMappingMixin, FormView):
+class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_coordonnees.html'
     success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionCoordonneesForm
@@ -156,7 +156,7 @@ class DoctorateAdmissionPersonDetailView(TemplateView):
         return context_data
 
 
-class DoctorateAdmissionPersonFormView(ApiExceptionErrorMappingMixin, FormView):
+class DoctorateAdmissionPersonFormView(WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_person.html'
     success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionPersonForm
