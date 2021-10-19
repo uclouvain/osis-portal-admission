@@ -23,23 +23,36 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_admission_sdk import ApiClient
+from osis_reference_sdk import ApiClient
+from osis_reference_sdk.api import countries_api, cities_api
 
-from frontoffice.settings.osis_sdk import admission as admission_sdk
-from osis_admission_sdk.api import autocomplete_api
-
-
-class AdmissionAutocompleteAPIClient:
-    def __new__(cls):
-        api_config = admission_sdk.build_configuration()
-        return autocomplete_api.AutocompleteApi(ApiClient(configuration=api_config))
+from base.models.person import Person
+from frontoffice.settings.osis_sdk import reference as reference_sdk
 
 
-class AdmissionAutocompleteService:
+class CountriesAPIClient:
+    def __new__(cls, person: Person = None):
+        api_config = reference_sdk.build_configuration(person)
+        return countries_api.CountriesApi(ApiClient(configuration=api_config))
+
+
+class CountriesService:
     @classmethod
-    def get_sectors(cls):
-        return AdmissionAutocompleteAPIClient().list_sector_dtos()
+    def get_countries(cls, *args, **kwargs):
+        return CountriesAPIClient().countries_list(*args, **kwargs).results
 
     @classmethod
-    def get_doctorates(cls, sigle):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle)
+    def get_country(cls, *args, **kwargs):
+        return CountriesAPIClient().countries_list(*args, **kwargs).results[0]
+
+
+class CitiesAPIClient:
+    def __new__(cls, person: Person = None):
+        api_config = reference_sdk.build_configuration(person)
+        return cities_api.CitiesApi(ApiClient(configuration=api_config))
+
+
+class CitiesService:
+    @classmethod
+    def get_cities(cls, *args, **kwargs):
+        return CitiesAPIClient().cities_list(*args, **kwargs)

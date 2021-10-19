@@ -23,18 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import functools
 
 from dal import autocomplete, forward
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.person import GENDER_CHOICES, SEX_CHOICES
 from admission.contrib.forms import EMPTY_CHOICE
-from admission.services.autocomplete import AdmissionAutocompleteService
+from admission.services.reference import CountriesService
 from base.models.academic_year import AcademicYear
 from osis_document.contrib.forms import FileUploadField
 
@@ -42,12 +41,13 @@ YES = '1'
 NO = '0'
 
 
-@functools.lru_cache()
-def get_countries_choices():
-    return EMPTY_CHOICE + tuple((
-        result.pk,
-        result.name if get_language() == settings.LANGUAGE_CODE else result.name_en,
-    ) for result in AdmissionAutocompleteService().autocomplete_countries())
+def get_country_initial_choices(iso_code):
+    if not iso_code:
+        return EMPTY_CHOICE
+    country = CountriesService.get_country(iso_code=iso_code)
+    return EMPTY_CHOICE + (
+        (country.iso_code, country.name_en if settings.LANGUAGE_CODE == 'en' else country.name),
+    )
 
 
 class DoctorateAdmissionPersonForm(forms.Form):
@@ -71,13 +71,13 @@ class DoctorateAdmissionPersonForm(forms.Form):
     birth_country = forms.CharField(
         required=False,
         label=_("Birth country"),
-        widget=autocomplete.ListSelect2,
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
     )
     birth_place = forms.CharField(required=False, label=_("Birth place"))
     country_of_citizenship = forms.CharField(
         required=False,
         label=_("Country of citizenship"),
-        widget=autocomplete.ListSelect2,
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
     )
 
     language = forms.ChoiceField(
@@ -118,8 +118,12 @@ class DoctorateAdmissionPersonForm(forms.Form):
         if self.initial.get('last_registration_year'):
             self.initial['already_registered'] = YES
 
-        self.fields['birth_country'].widget.choices = get_countries_choices()
-        self.fields['country_of_citizenship'].widget.choices = get_countries_choices()
+        self.fields['birth_country'].widget.choices = get_country_initial_choices(
+            self.initial.get('birth_country')
+        )
+        self.fields['country_of_citizenship'].widget.choices = get_country_initial_choices(
+            self.initial.get('country_of_citizenship')
+        )
 
 
 class DoctorateAdmissionCoordonneesForm(forms.Form):
@@ -148,10 +152,10 @@ class DoctorateAdmissionAddressForm(forms.Form):
     location = forms.CharField(required=False, label=_("Location"))
     postal_code = forms.CharField(required=False, label=_("Postal code"))
     city = forms.CharField(required=False, label=_("City"))
-    country = forms.IntegerField(
+    country = forms.CharField(
         required=False,
         label=_("Country"),
-        widget=autocomplete.ListSelect2,
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
     )
     # Enable autocompletion only for Belgium postal codes
     be_postal_code = forms.CharField(required=False, label=_("Postal code"))
@@ -168,7 +172,9 @@ class DoctorateAdmissionAddressForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
-        self.fields['country'].widget.choices = get_countries_choices()
+        self.fields['country'].widget.choices = get_country_initial_choices(
+            self.initial["country"]
+        )
         if self.initial["country"] == self.BE_ISO_CODE:
             self.initial["be_postal_code"] = self.initial["postal_code"]
             self.initial["be_city"] = self.initial["city"]

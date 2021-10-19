@@ -23,23 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_admission_sdk import ApiClient
 
-from frontoffice.settings.osis_sdk import admission as admission_sdk
-from osis_admission_sdk.api import autocomplete_api
+from django.conf import settings
+from django.views.generic import TemplateView
 
-
-class AdmissionAutocompleteAPIClient:
-    def __new__(cls):
-        api_config = admission_sdk.build_configuration()
-        return autocomplete_api.AutocompleteApi(ApiClient(configuration=api_config))
+from admission.services.person import AdmissionPersonService
+from admission.services.reference import CountriesService
 
 
-class AdmissionAutocompleteService:
-    @classmethod
-    def get_sectors(cls):
-        return AdmissionAutocompleteAPIClient().list_sector_dtos()
+class DoctorateAdmissionPersonDetailView(TemplateView):
+    template_name = 'admission/doctorate/detail_person.html'
 
-    @classmethod
-    def get_doctorates(cls, sigle):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle)
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        person = AdmissionPersonService.retrieve_person()
+        context_data['person'] = person
+        translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
+        if person.birth_country:
+            birth_country = CountriesService.get_country(iso_code=person.birth_country)
+            context_data['birth_country'] = getattr(birth_country, translated_field)
+        if person.country_of_citizenship:
+            country_of_citizenship = CountriesService.get_country(iso_code=person.country_of_citizenship)
+            context_data['country_of_citizenship'] = getattr(country_of_citizenship, translated_field)
+        return context_data

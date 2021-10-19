@@ -27,8 +27,11 @@
 from .autocomplete import *
 from .detail_tabs.project import *
 from .form_tabs.project import *
+from .detail_tabs.coordonnes import *
+from .form_tabs.coordonnes import *
+from .detail_tabs.person import *
+from .form_tabs.person import *
 from .list import *
-from .person import *
 
 __all__ = [
     "DoctorateAutocomplete",

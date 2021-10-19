@@ -10,7 +10,7 @@
             <div class="col-md-3">{% field_data _("Location") coordonnees.residential.location %}</div>
         </div>
         <div class="row">
-            <div class="col-md-4">{% field_data _("Country") countries|index:coordonnees.residential.country %}</div>
+            <div class="col-md-4">{% field_data _("Country") residential_country %}</div>
             <div class="col-md-4">{% field_data _("Postal code") coordonnees.residential.postal_code %}</div>
             <div class="col-md-4">{% field_data _("City") coordonnees.residential.city %}</div>
         </div>
@@ -24,7 +24,7 @@
             <div class="col-md-3">{% field_data _("Location") coordonnees.contact.location %}</div>
         </div>
         <div class="row">
-            <div class="col-md-4">{% field_data _("Country") countries|index:coordonnees.contact.country %}</div>
+            <div class="col-md-4">{% field_data _("Country") contact_country %}</div>
             <div class="col-md-4">{% field_data _("Postal code") coordonnees.contact.postal_code %}</div>
             <div class="col-md-4">{% field_data _("City") coordonnees.contact.city %}</div>
         </div>

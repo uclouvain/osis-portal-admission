@@ -23,46 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.conf import settings
+
 from django.urls import reverse_lazy
-from django.utils.translation import get_language
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView
 
-from admission.services.autocomplete import AdmissionAutocompleteService
-from osis_document.api.utils import get_remote_token
-
-from admission.contrib.forms.person import (
-    DoctorateAdmissionAddressForm,
-    DoctorateAdmissionCoordonneesForm,
-    DoctorateAdmissionPersonForm,
-    get_countries_choices,
-)
+from admission.contrib.forms.person import DoctorateAdmissionAddressForm, DoctorateAdmissionCoordonneesForm
 from admission.services.mixins import WebServiceFormMixin
+
 from admission.services.person import AdmissionPersonService
-
-__all__ = [
-    "DoctorateAdmissionPersonFormView",
-    "DoctorateAdmissionPersonDetailView",
-    "DoctorateAdmissionCoordonneesFormView",
-    "DoctorateAdmissionCoordonneesDetailView",
-]
-
-
-class DoctorateAdmissionCoordonneesDetailView(TemplateView):
-    template_name = 'admission/doctorate/detail_coordonnees.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        coordonnees = AdmissionPersonService.retrieve_person_coordonnees()
-        context_data['coordonnees'] = coordonnees
-        context_data['countries'] = {
-            c.pk: (c.name if get_language() == settings.LANGUAGE_CODE else c.name_en)
-            for c in AdmissionAutocompleteService().autocomplete_countries()
-        }
-        # check if there is at least one data into contact
-        for k in coordonnees["contact"].attribute_map:
-            context_data["show_contact"] = True if coordonnees["contact"][k] else False
-        return context_data
+from admission.services.reference import CountriesService
 
 
 class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
@@ -115,12 +84,7 @@ class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
 
     def get_forms(self):
         if not self.forms:
-            self.BE_ISO_CODE = (next(
-                iso_code
-                for iso_code, name
-                in get_countries_choices()
-                if name == "Belgique"
-            ))
+            self.BE_ISO_CODE = CountriesService.get_country(name="Belgique")
             kwargs = self.get_form_kwargs()
             del kwargs['prefix']
             initial = kwargs['initial']
@@ -141,49 +105,3 @@ class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
                 ),
             }
         return self.forms
-
-
-class DoctorateAdmissionPersonDetailView(TemplateView):
-    template_name = 'admission/doctorate/detail_person.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['person'] = AdmissionPersonService.retrieve_person()
-        context_data['countries'] = {
-            c.pk: (c.name if get_language() == settings.LANGUAGE_CODE else c.name_en)
-            for c in AdmissionAutocompleteService().autocomplete_countries()
-        }
-        return context_data
-
-
-class DoctorateAdmissionPersonFormView(WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_person.html'
-    success_url = reverse_lazy('admission:doctorate-list')
-    form_class = DoctorateAdmissionPersonForm
-
-    def get_initial(self):
-        person = AdmissionPersonService.retrieve_person()
-        initial = person.to_dict()
-        document_fields = [
-            'id_card',
-            'passport',
-            'id_photo',
-        ]
-        for field in document_fields:
-            initial[field] = [get_remote_token(document, write_token=True)
-                              for document in person.get(field)]
-        return initial
-
-    def prepare_data(self, data):
-        # Process the form data to match API
-        data['birth_country'] = int(data['birth_country']) if data['birth_country'] else None
-        data['country_of_citizenship'] = (
-            int(data['country_of_citizenship']) if data['country_of_citizenship'] else None
-        )
-        data['last_registration_year'] = (
-            int(data['last_registration_year']) if data['last_registration_year'] else None
-        )
-        return data
-
-    def call_webservice(self, data):
-        AdmissionPersonService.update_person(**data)

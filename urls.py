@@ -70,6 +70,7 @@ urlpatterns = [
     path("autocomplete/", include((
         [
             path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
+            path("country/", views.CountryAutocomplete.as_view(), name="country"),
             path("city/", views.CityAutocomplete.as_view(), name="city"),
         ],
         "autocomplete",

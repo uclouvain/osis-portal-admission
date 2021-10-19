@@ -23,23 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_admission_sdk import ApiClient
 
-from frontoffice.settings.osis_sdk import admission as admission_sdk
-from osis_admission_sdk.api import autocomplete_api
+from django.urls import reverse_lazy
+from django.views.generic import FormView
 
-
-class AdmissionAutocompleteAPIClient:
-    def __new__(cls):
-        api_config = admission_sdk.build_configuration()
-        return autocomplete_api.AutocompleteApi(ApiClient(configuration=api_config))
+from admission.contrib.forms.person import DoctorateAdmissionPersonForm
+from admission.services.mixins import WebServiceFormMixin
+from admission.services.person import AdmissionPersonService
+from osis_document.api.utils import get_remote_token
 
 
-class AdmissionAutocompleteService:
-    @classmethod
-    def get_sectors(cls):
-        return AdmissionAutocompleteAPIClient().list_sector_dtos()
+class DoctorateAdmissionPersonFormView(WebServiceFormMixin, FormView):
+    template_name = 'admission/doctorate/form_tab_person.html'
+    success_url = reverse_lazy('admission:doctorate-list')
+    form_class = DoctorateAdmissionPersonForm
 
-    @classmethod
-    def get_doctorates(cls, sigle):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle)
+    def get_initial(self):
+        person = AdmissionPersonService.retrieve_person()
+        initial = person.to_dict()
+        document_fields = [
+            'id_card',
+            'passport',
+            'id_photo',
+        ]
+        for field in document_fields:
+            initial[field] = [get_remote_token(document, write_token=True)
+                              for document in person.get(field)]
+        return initial
+
+    def call_webservice(self, data):
+        AdmissionPersonService.update_person(**data)
