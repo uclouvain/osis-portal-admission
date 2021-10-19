@@ -23,31 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_admission_sdk import ApiClient
+from unittest.mock import Mock, patch
 
-from frontoffice.settings.osis_sdk import admission as admission_sdk
-from osis_admission_sdk.api import autocomplete_api
+from django.test import TestCase
+from django.urls import reverse
 
-
-class AdmissionAutocompleteAPIClient:
-    def __new__(cls):
-        api_config = admission_sdk.build_configuration()
-        return autocomplete_api.AutocompleteApi(ApiClient(configuration=api_config))
+from base.tests.factories.person import PersonFactory
 
 
-class AdmissionAutocompleteService:
-    @classmethod
-    def get_sectors(cls):
-        return AdmissionAutocompleteAPIClient().list_sector_dtos()
-
-    @classmethod
-    def get_doctorates(cls, sigle):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle)
-
-    @classmethod
-    def autocomplete_countries(cls):
-        return AdmissionAutocompleteAPIClient().list_countries()
-
-    @classmethod
-    def autocomplete_zip_codes(cls, postal_code):
-        return AdmissionAutocompleteAPIClient().list_zip_codes(zip_code=postal_code).results
+class ListTestCase(TestCase):
+    @patch('frontoffice.settings.osis_sdk.utils.get_user_token', return_value='foobar')
+    @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
+    def test_list(self, api, *args):
+        self.client.force_login(PersonFactory().user)
+        api.return_value.list_propositions.return_value = [
+            Mock(uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876'),
+            Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad'),
+        ]
+        url = reverse('admission:doctorate-list')
+        response = self.client.get(url)
+        self.assertContains(response, "")

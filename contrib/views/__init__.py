@@ -25,7 +25,18 @@
 # ##############################################################################
 
 from .autocomplete import *
-from .detail_tabs import *
-from .form_tabs import *
-from .doctorate import *
+from .detail_tabs.project import *
+from .form_tabs.project import *
+from .list import *
 from .person import *
+
+__all__ = [
+    "DoctorateAutocomplete",
+    "DoctorateAdmissionListView",
+    "DoctorateAdmissionProjectFormView",
+    "DoctorateAdmissionProjectDetailView",
+    "DoctorateAdmissionPersonFormView",
+    "DoctorateAdmissionPersonDetailView",
+    "DoctorateAdmissionCoordonneesFormView",
+    "DoctorateAdmissionCoordonneesDetailView",
+]

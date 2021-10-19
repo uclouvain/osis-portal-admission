@@ -1,0 +1,283 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-18 17:48+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid ""
+"\n"
+"            The online enrolment request procedure is split up into several\n"
+"            sheet. The enrolment request can only be validated as soon as "
+"all\n"
+"            sheets have been duly completed. The icons will remind you of "
+"the\n"
+"            state of progress of your enrolment request which you can "
+"interrupt\n"
+"            and resume at any moment.\n"
+"        "
+msgstr ""
+"\n"
+"La procédure d'inscription en ligne est divisée en plusieurs onglets. La "
+"demande d'inscription ne peut être validée que lorsque tous les onglets ont "
+"été complétés avec succès. Les icônes indiquent la progression de votre "
+"demande qui peut interrompue et reprise et reprise à tout moment"
+
+msgid "ARC - Action de Recherche Concertée"
+msgstr "ARC - Action de Recherche Concertée"
+
+msgid "ARES - Coopération au développement"
+msgstr "ARES - Coopération au développement"
+
+msgid "Admission"
+msgstr "Admission"
+
+msgid "Admission type"
+msgstr "Type d'admission"
+
+msgid "Allocated time"
+msgstr "Temps consacré"
+
+msgid "Back to my requests"
+msgstr "Retour à mes demandes"
+
+msgid "Brief justification"
+msgstr "Justification succincte"
+
+msgid "Bureau"
+msgstr "Bureau"
+
+msgid "CSC - China Scholarship Council"
+msgstr "CSC - China Scholarship Council"
+
+msgid "Change my submission"
+msgstr "Modifier ma soumission"
+
+msgid "Complementary training project"
+msgstr "Projet de formation complémentaire"
+
+msgid "Confirmation"
+msgstr "Confirmation"
+
+msgid "Confirmation paper"
+msgstr "Lettre de confirmation"
+
+msgid "Contact details"
+msgstr "Coordonnées"
+
+msgid "Cotutelle"
+msgstr "Cotutelle"
+
+msgid "Create new doctorate admission"
+msgstr "Créer une nouvelle admission en doctorat"
+
+msgid "Curriculum"
+msgstr "Curriculum"
+
+msgid "Defense date"
+msgstr "Date de soutenance"
+
+msgid ""
+"Detail here the reasons which justify the recourse to a provisory admission."
+msgstr "Détaillez ici les raisons justifiant une admission provisoire"
+
+msgid "Doctoral project"
+msgstr "Projet doctoral"
+
+msgid "Doctoral project proposition"
+msgstr "Proposition de projet doctoral"
+
+msgid "Doctoral training"
+msgstr "Formation doctorale"
+
+msgid "Doctorate"
+msgstr "Doctorat"
+
+msgid "Doctorate admissions"
+msgstr "Admissions en doctorat"
+
+msgid "ECONOMY"
+msgstr "Economie"
+
+msgid "ERC - European Research Council"
+msgstr "ERC - European Research Council"
+
+msgid "Edit"
+msgstr "Modifier"
+
+msgid "English"
+msgstr "Anglais"
+
+msgid "Estimated time"
+msgstr "Temps estimé"
+
+msgid "Exchange with UCLouvain"
+msgstr "Échanges avec l'UCLouvain"
+
+msgid "FNRS"
+msgstr "FNRS"
+
+msgid "FRESH"
+msgstr "FRESH"
+
+msgid "FRIA"
+msgstr "FRIA"
+
+msgid "FSR - Fonds Spéciaux de Recherche"
+msgstr "FSR - Fonds Spéciaux de Recherche"
+
+msgid "Financing"
+msgstr "Financement"
+
+msgid "Financing type"
+msgstr "Type de financement"
+
+msgid "Fondation Mont Godinne"
+msgstr "Fondation Mont Godinne"
+
+msgid "Fondation St Luc"
+msgstr "Fondation St Luc"
+
+msgid "Fonds de recherche clinique"
+msgstr "Fonds de recherche clinique"
+
+msgid "French"
+msgstr "Français"
+
+msgid "Full-time equivalent"
+msgstr "Équivalent full-time"
+
+msgid "Gantt graph"
+msgstr "Graphe de Gantt"
+
+msgid "Identification"
+msgstr "Identification"
+
+msgid "Institution"
+msgstr "Institution"
+
+msgid "Jury"
+msgstr "Jury"
+
+msgid "MANAGEMENT"
+msgstr "Gestion"
+
+msgid "NO"
+msgstr "Non"
+
+msgid "No defense reason"
+msgstr "Raison de non-soutenance"
+
+msgid "No reference yet - Go to Project tab"
+msgstr "Pas de reference pour le moment - Voir l'onglet projet"
+
+msgid "Not submitted"
+msgstr "Non soumis"
+
+msgid "OTHER"
+msgstr "Autre"
+
+msgid "PARTIAL"
+msgstr "Partiel"
+
+msgid "PhD already done"
+msgstr "Doctorat déjà réalisé"
+
+msgid "Pre-Admission"
+msgstr "Pré-Admission"
+
+msgid "Previous research experience"
+msgstr "Expérience précédente de recherche"
+
+msgid "Private defense"
+msgstr "Soutenance privée"
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Project documents"
+msgstr "Documents de projet"
+
+msgid "Project resume"
+msgstr "Résumé du projet"
+
+msgid "Project title"
+msgstr "Titre du projet"
+
+msgid "Public defense"
+msgstr "Soutenance publique"
+
+msgid "Reference:"
+msgstr "Référence :"
+
+msgid "SEARCH_SCHOLARSHIP"
+msgstr "Bourse de recherche"
+
+msgid "SELF_FUNDING"
+msgstr "Auto-financement"
+
+msgid "Save my submission"
+msgstr "Enregistrer ma soumission"
+
+msgid "Scholarship"
+msgstr "Bourse"
+
+msgid "Scholarship grant"
+msgstr "Bourse de recherche"
+
+msgid "Secondary studies"
+msgstr "Études secondaires"
+
+msgid "Sector"
+msgstr "Secteur"
+
+msgid "Specify scholarship grant"
+msgstr "Spécifier la bourse de recherche"
+
+msgid "Specify work contract"
+msgstr "Spécifier le contrat de travail"
+
+msgid "Status:"
+msgstr "Statut :"
+
+msgid "Supervision"
+msgstr "Supervision"
+
+msgid "Thesis redacting language"
+msgstr "Langue de rédaction de la thèse"
+
+msgid "UCLOUVAIN_ASSISTANT"
+msgstr "Assistant UCLouvain"
+
+msgid "Undecided"
+msgstr "Non décidé"
+
+msgid "View"
+msgstr "Voir"
+
+msgid "WORK_CONTRACT"
+msgstr "Contrat de travail"
+
+msgid "Wallonie Bruxelles International"
+msgstr "Wallonie Bruxelles International"
+
+msgid "Work contract"
+msgstr "Contrat de travail"
+
+msgid "Work contract type"
+msgstr "Type de contrat de travail"
+
+msgid "YES"
+msgstr "Oui"

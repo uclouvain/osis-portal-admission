@@ -24,15 +24,10 @@
 #
 # ##############################################################################
 
-from django.views.generic import TemplateView
-
-from admission.services.proposition import AdmissionPropositionService
-
 __all__ = [
     # "DoctorateAdmissionTrainingDetailView",
     # "DoctorateAdmissionDetailsDetailView",
     # "DoctorateAdmissionCurriculumDetailView",
-    "DoctorateAdmissionProjectDetailView",
     # "DoctorateAdmissionCotutelleDetailView",
     # "DoctorateAdmissionSupervisionDetailView",
     # "DoctorateAdmissionConfirmDetailView",
@@ -77,14 +72,6 @@ __all__ = [
 #         kwargs['admission'] = self.get_object()
 #         return super().get_context_data(**kwargs)
 
-
-class DoctorateAdmissionProjectDetailView(TemplateView):
-    template_name = 'admission/doctorate/detail_project.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = AdmissionPropositionService.get_proposition(self.kwargs['pk'])
-        return context_data
 
 #
 # class DoctorateAdmissionCotutelleDetailView(TemplateView):

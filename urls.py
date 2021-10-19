@@ -69,8 +69,6 @@ urlpatterns = [
     path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
     path("autocomplete/", include((
         [
-            # path("candidate/", views.CandidateAutocomplete.as_view(), name="candidate"),
-            path("sector/", views.SectorAutocomplete.as_view(), name="sector"),
             path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
             path("city/", views.CityAutocomplete.as_view(), name="city"),
         ],

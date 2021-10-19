@@ -26,7 +26,7 @@
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
-class ApiExceptionErrorMappingMixin:
+class WebServiceFormMixin:
     error_mapping = {}
 
     def __init__(self, *args, **kwargs):

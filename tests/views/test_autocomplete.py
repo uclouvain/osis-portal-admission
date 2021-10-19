@@ -23,31 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_admission_sdk import ApiClient
+import json
+from unittest.mock import Mock, patch
 
-from frontoffice.settings.osis_sdk import admission as admission_sdk
-from osis_admission_sdk.api import autocomplete_api
+from django.test import TestCase
+from django.urls import reverse
 
-
-class AdmissionAutocompleteAPIClient:
-    def __new__(cls):
-        api_config = admission_sdk.build_configuration()
-        return autocomplete_api.AutocompleteApi(ApiClient(configuration=api_config))
+from base.tests.factories.user import UserFactory
 
 
-class AdmissionAutocompleteService:
-    @classmethod
-    def get_sectors(cls):
-        return AdmissionAutocompleteAPIClient().list_sector_dtos()
-
-    @classmethod
-    def get_doctorates(cls, sigle):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle)
-
-    @classmethod
-    def autocomplete_countries(cls):
-        return AdmissionAutocompleteAPIClient().list_countries()
-
-    @classmethod
-    def autocomplete_zip_codes(cls, postal_code):
-        return AdmissionAutocompleteAPIClient().list_zip_codes(zip_code=postal_code).results
+class AutocompleteTestCase(TestCase):
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_doctorate(self, api):
+        self.client.force_login(UserFactory())
+        api.return_value.list_doctorat_dtos.return_value = [
+            Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE"),
+            Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
+        ]
+        url = reverse('admission:autocomplete:doctorate')
+        response = self.client.get(url, {'forward': json.dumps({'sector': 'SSH'}), 'q': 'foo'})
+        self.assertEqual(response.json(), {'results': [{
+            'id': 'FOOBAR-2021',
+            'sigle_entite_gestion': 'CDE',
+            'text': 'FOOBAR - Foobar'
+        }]})
