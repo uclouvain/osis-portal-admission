@@ -23,28 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
-from admission.contrib.forms.projet import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
-from admission.services.mixins import ApiExceptionErrorMappingMixin
+from admission.contrib.forms.project import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
+from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
 from osis_document.api.utils import get_remote_token
 
-__all__ = [
-    # "DoctorateAdmissionConfirmFormView",
-    # "DoctorateAdmissionConfirmPaperFormView",
-    # "DoctorateAdmissionJuryFormView",
-    # "DoctorateAdmissionPrivateDefenseFormView",
-    "DoctorateAdmissionProjectFormView",
-    # "DoctorateAdmissionPublicDefenseFormView",
-    # "DoctorateAdmissionSupervisionFormView",
-    # "DoctorateAdmissionTrainingFormView",
-]
 
-
-class DoctorateAdmissionProjectFormView(ApiExceptionErrorMappingMixin, FormView):
+class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_project.html'
     success_url = reverse_lazy('admission:doctorate-list')
     proposition = None
@@ -67,7 +57,10 @@ class DoctorateAdmissionProjectFormView(ApiExceptionErrorMappingMixin, FormView)
 
     def get_initial(self):
         if self.is_update_form:
-            self.proposition = AdmissionPropositionService.get_proposition(uuid=str(self.kwargs['pk']))
+            self.proposition = AdmissionPropositionService.get_proposition(
+                person=self.request.user.person,
+                uuid=str(self.kwargs['pk']),
+            )
             initial = {
                 **self.proposition.to_dict(),
                 'sector': self.proposition.code_secteur_formation,
@@ -114,75 +107,13 @@ class DoctorateAdmissionProjectFormView(ApiExceptionErrorMappingMixin, FormView)
                 matricule_candidat=self.request.user.person.global_id,
             )
             del data['sector']
-            AdmissionPropositionService.create_proposition(**data)
+            AdmissionPropositionService.create_proposition(person=self.request.user.person, **data)
         else:
             data['uuid'] = str(self.kwargs['pk'])
-            AdmissionPropositionService.update_proposition(**data)
+            AdmissionPropositionService.update_proposition(person=self.request.user.person, **data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.is_update_form:
             context['admission'] = self.proposition
         return context
-
-# class DoctorateAdmissionSupervisionFormView(UpdateView):
-#     model = DoctorateAdmission
-#     form_class = DoctorateAdmissionProjectForm
-#     template_name = 'admission/doctorate/form_tab_project.html'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user.person
-#
-#
-# class DoctorateAdmissionJuryFormView(UpdateView):
-#     model = DoctorateAdmission
-#     form_class = DoctorateAdmissionProjectForm
-#     template_name = 'admission/doctorate/form_tab_project.html'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user.person
-#
-#
-# class DoctorateAdmissionConfirmFormView(UpdateView):
-#     model = DoctorateAdmission
-#     form_class = DoctorateAdmissionProjectForm
-#     template_name = 'admission/doctorate/form_tab_project.html'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user.person
-#
-#
-# class DoctorateAdmissionConfirmPaperFormView(UpdateView):
-#     model = DoctorateAdmission
-#     form_class = DoctorateAdmissionProjectForm
-#     template_name = 'admission/doctorate/form_tab_project.html'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user.person
-#
-#
-# class DoctorateAdmissionTrainingFormView(UpdateView):
-#     model = DoctorateAdmission
-#     form_class = DoctorateAdmissionProjectForm
-#     template_name = 'admission/doctorate/form_tab_project.html'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user.person
-#
-#
-# class DoctorateAdmissionPrivateDefenseFormView(UpdateView):
-#     model = DoctorateAdmission
-#     form_class = DoctorateAdmissionProjectForm
-#     template_name = 'admission/doctorate/form_tab_project.html'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user.person
-#
-#
-# class DoctorateAdmissionPublicDefenseFormView(UpdateView):
-#     model = DoctorateAdmission
-#     form_class = DoctorateAdmissionProjectForm
-#     template_name = 'admission/doctorate/form_tab_project.html'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user.person

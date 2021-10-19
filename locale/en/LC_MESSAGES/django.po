@@ -1,0 +1,278 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-18 17:48+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid ""
+"\n"
+"            The online enrolment request procedure is split up into several\n"
+"            sheet. The enrolment request can only be validated as soon as "
+"all\n"
+"            sheets have been duly completed. The icons will remind you of "
+"the\n"
+"            state of progress of your enrolment request which you can "
+"interrupt\n"
+"            and resume at any moment.\n"
+"        "
+msgstr ""
+
+msgid "ARC - Action de Recherche Concertée"
+msgstr ""
+
+msgid "ARES - Coopération au développement"
+msgstr ""
+
+msgid "Admission"
+msgstr ""
+
+msgid "Admission type"
+msgstr ""
+
+msgid "Allocated time"
+msgstr ""
+
+msgid "Back to my requests"
+msgstr ""
+
+msgid "Brief justification"
+msgstr ""
+
+msgid "Bureau"
+msgstr ""
+
+msgid "CSC - China Scholarship Council"
+msgstr ""
+
+msgid "Change my submission"
+msgstr ""
+
+msgid "Complementary training project"
+msgstr ""
+
+msgid "Confirmation"
+msgstr ""
+
+msgid "Confirmation paper"
+msgstr ""
+
+msgid "Contact details"
+msgstr ""
+
+msgid "Cotutelle"
+msgstr ""
+
+msgid "Create new doctorate admission"
+msgstr ""
+
+msgid "Curriculum"
+msgstr ""
+
+msgid "Defense date"
+msgstr ""
+
+msgid ""
+"Detail here the reasons which justify the recourse to a provisory admission."
+msgstr ""
+
+msgid "Doctoral project"
+msgstr ""
+
+msgid "Doctoral project proposition"
+msgstr ""
+
+msgid "Doctoral training"
+msgstr ""
+
+msgid "Doctorate"
+msgstr ""
+
+msgid "Doctorate admissions"
+msgstr ""
+
+msgid "ECONOMY"
+msgstr ""
+
+msgid "ERC - European Research Council"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Estimated time"
+msgstr ""
+
+msgid "Exchange with UCLouvain"
+msgstr ""
+
+msgid "FNRS"
+msgstr ""
+
+msgid "FRESH"
+msgstr ""
+
+msgid "FRIA"
+msgstr ""
+
+msgid "FSR - Fonds Spéciaux de Recherche"
+msgstr ""
+
+msgid "Financing"
+msgstr ""
+
+msgid "Financing type"
+msgstr ""
+
+msgid "Fondation Mont Godinne"
+msgstr ""
+
+msgid "Fondation St Luc"
+msgstr ""
+
+msgid "Fonds de recherche clinique"
+msgstr ""
+
+msgid "French"
+msgstr ""
+
+msgid "Full-time equivalent"
+msgstr ""
+
+msgid "Gantt graph"
+msgstr ""
+
+msgid "Identification"
+msgstr ""
+
+msgid "Institution"
+msgstr ""
+
+msgid "Jury"
+msgstr ""
+
+msgid "MANAGEMENT"
+msgstr ""
+
+msgid "NO"
+msgstr ""
+
+msgid "No defense reason"
+msgstr ""
+
+msgid "No reference yet - Go to Project tab"
+msgstr ""
+
+msgid "Not submitted"
+msgstr ""
+
+msgid "OTHER"
+msgstr ""
+
+msgid "PARTIAL"
+msgstr ""
+
+msgid "PhD already done"
+msgstr ""
+
+msgid "Pre-Admission"
+msgstr ""
+
+msgid "Previous research experience"
+msgstr ""
+
+msgid "Private defense"
+msgstr ""
+
+msgid "Project"
+msgstr ""
+
+msgid "Project documents"
+msgstr ""
+
+msgid "Project resume"
+msgstr ""
+
+msgid "Project title"
+msgstr ""
+
+msgid "Public defense"
+msgstr ""
+
+msgid "Reference:"
+msgstr ""
+
+msgid "SEARCH_SCHOLARSHIP"
+msgstr ""
+
+msgid "SELF_FUNDING"
+msgstr ""
+
+msgid "Save my submission"
+msgstr ""
+
+msgid "Scholarship"
+msgstr ""
+
+msgid "Scholarship grant"
+msgstr ""
+
+msgid "Secondary studies"
+msgstr ""
+
+msgid "Sector"
+msgstr ""
+
+msgid "Specify scholarship grant"
+msgstr ""
+
+msgid "Specify work contract"
+msgstr ""
+
+msgid "Status:"
+msgstr ""
+
+msgid "Supervision"
+msgstr ""
+
+msgid "Thesis redacting language"
+msgstr ""
+
+msgid "UCLOUVAIN_ASSISTANT"
+msgstr ""
+
+msgid "Undecided"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "WORK_CONTRACT"
+msgstr ""
+
+msgid "Wallonie Bruxelles International"
+msgstr ""
+
+msgid "Work contract"
+msgstr ""
+
+msgid "Work contract type"
+msgstr ""
+
+msgid "YES"
+msgstr ""

@@ -23,14 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.models.person import Person
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+
+__all__ = [
+    "DoctorateAdmissionListView",
+]
+
+from admission.services.proposition import AdmissionPropositionService
 
 
-def admission_profile_valid_tabs(candidate: Person):
-    # TODO fetch that from API
-    return {
-        "person": False,
-        "details": True,
-        "education": True,
-        "curriculum": True,
-    }
+class DoctorateAdmissionListView(LoginRequiredMixin, TemplateView):
+    template_name = "admission/doctorate/admission_doctorate_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["admissions"] = AdmissionPropositionService().get_propositions(self.request.user.person)
+        return context

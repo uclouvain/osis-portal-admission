@@ -29,8 +29,6 @@ from inspect import getfullargspec
 from django import template
 from django.views.generic import FormView
 
-from admission.utils import admission_profile_valid_tabs
-
 register = template.Library()
 
 
@@ -70,10 +68,7 @@ def register_inclusion_with_body(filename, takes_context=None, name=None, contex
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
 def doctorate_tabs(context, admission=None):
-    if admission:
-        valid_tabs = {}  # FIXME
-    else:
-        valid_tabs = admission_profile_valid_tabs(context['user'].person)
+    valid_tabs = {}  # FIXME
     return {
         'valid_tabs': valid_tabs,
         'admission': admission,
@@ -108,6 +103,5 @@ def panel(context, title=''):
     :param title: the panel title
     :type context: django.template.context.RequestContext
     """
-    context.setdefault('faq_counter', 0)
     context['title'] = title
     return context
