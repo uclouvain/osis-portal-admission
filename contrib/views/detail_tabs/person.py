@@ -37,7 +37,7 @@ class DoctorateAdmissionPersonDetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        person = AdmissionPersonService.retrieve_person()
+        person = AdmissionPersonService.retrieve_person(self.request.user.person)
         context_data['person'] = person
         context_data['admission'] = AdmissionPropositionService.get_proposition(
             person=self.request.user.person, uuid=self.kwargs['pk'],

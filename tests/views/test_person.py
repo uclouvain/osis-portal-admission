@@ -81,7 +81,7 @@ class PersonViewTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.mock_person_api.return_value.retrieve_person_identification.assert_called_with()
+        self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.mock_proposition_api.assert_not_called()
 
         response = self.client.post(url, {
@@ -111,7 +111,7 @@ class PersonViewTestCase(TestCase):
         self.assertContains(response, "John")
         self.assertContains(response, "FR")
         self.assertContains(response, "BE")
-        self.mock_person_api.return_value.retrieve_person_identification.assert_called_with()
+        self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.assertIn('admission', response.context)
 
         response = self.client.post(url, {
@@ -132,7 +132,7 @@ class PersonViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Joe")
-        self.mock_person_api.return_value.retrieve_person_identification.assert_called_with()
+        self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.assertIn('admission', response.context)
 
         self.mock_person_api.return_value.retrieve_person_identification.return_value = Mock(
@@ -146,5 +146,5 @@ class PersonViewTestCase(TestCase):
         self.assertContains(response, "John")
         self.assertContains(response, "Belgique")
         self.assertContains(response, "France")
-        self.mock_person_api.return_value.retrieve_person_identification.assert_called_with()
+        self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.assertIn('admission', response.context)

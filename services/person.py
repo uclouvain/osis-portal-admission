@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient
 
 from frontoffice.settings.osis_sdk import admission as admission_sdk
@@ -37,17 +38,27 @@ class AdmissionPersonAPIClient:
 
 class AdmissionPersonService:
     @classmethod
-    def retrieve_person(cls):
-        return AdmissionPersonAPIClient().retrieve_person_identification()
+    def retrieve_person(cls, person):
+        return AdmissionPersonAPIClient().retrieve_person_identification(
+            **build_mandatory_auth_headers(person),
+        )
 
     @classmethod
-    def update_person(cls, **data):
-        return AdmissionPersonAPIClient().update_person_identification(person_identification=data)
+    def update_person(cls, person, **data):
+        return AdmissionPersonAPIClient().update_person_identification(
+            person_identification=data,
+            **build_mandatory_auth_headers(person),
+        )
 
     @classmethod
-    def retrieve_person_coordonnees(cls):
-        return AdmissionPersonAPIClient().retrieve_coordonnees()
+    def retrieve_person_coordonnees(cls, person):
+        return AdmissionPersonAPIClient().retrieve_coordonnees(
+            **build_mandatory_auth_headers(person),
+        )
 
     @classmethod
-    def update_person_coordonnees(cls, **data):
-        return AdmissionPersonAPIClient().update_coordonnees(coordonnees=data)
+    def update_person_coordonnees(cls, person, **data):
+        return AdmissionPersonAPIClient().update_coordonnees(
+            coordonnees=data,
+            **build_mandatory_auth_headers(person),
+        )

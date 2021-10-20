@@ -24,15 +24,14 @@
 #
 # ##############################################################################
 from osis_reference_sdk import ApiClient
-from osis_reference_sdk.api import countries_api, cities_api, academic_years_api
+from osis_reference_sdk.api import academic_years_api, cities_api, countries_api
 
-from base.models.person import Person
 from frontoffice.settings.osis_sdk import reference as reference_sdk
 
 
 class CountriesAPIClient:
-    def __new__(cls, person: Person = None):
-        api_config = reference_sdk.build_configuration(person)
+    def __new__(cls):
+        api_config = reference_sdk.build_configuration()
         return countries_api.CountriesApi(ApiClient(configuration=api_config))
 
 
@@ -47,8 +46,8 @@ class CountriesService:
 
 
 class CitiesAPIClient:
-    def __new__(cls, person: Person = None):
-        api_config = reference_sdk.build_configuration(person)
+    def __new__(cls):
+        api_config = reference_sdk.build_configuration()
         return cities_api.CitiesApi(ApiClient(configuration=api_config))
 
 
@@ -59,8 +58,8 @@ class CitiesService:
 
 
 class AcademicYearAPIClient:
-    def __new__(cls, person: Person = None):
-        api_config = reference_sdk.build_configuration(person)
+    def __new__(cls):
+        api_config = reference_sdk.build_configuration()
         return academic_years_api.AcademicYearsApi(ApiClient(configuration=api_config))
 
 

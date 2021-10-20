@@ -26,7 +26,7 @@
 from enum import Enum
 
 from base.models.person import Person
-from frontoffice.settings.osis_sdk.utils import api_exception_handler
+from frontoffice.settings.osis_sdk.utils import api_exception_handler, build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 
 from frontoffice.settings.osis_sdk import admission as admission_sdk
@@ -35,8 +35,8 @@ from osis_admission_sdk.model.proposition_dto import PropositionDTO
 
 
 class AdmissionPropositionAPIClient:
-    def __new__(cls, person: Person = None):
-        api_config = admission_sdk.build_configuration(person)
+    def __new__(cls):
+        api_config = admission_sdk.build_configuration()
         return propositions_api.PropositionsApi(ApiClient(configuration=api_config))
 
 
@@ -44,25 +44,32 @@ class AdmissionPropositionService:
     @classmethod
     @api_exception_handler(api_exception_cls=ApiException)
     def create_proposition(cls, person: Person, **kwargs):
-        return AdmissionPropositionAPIClient(person).create_proposition(
+        return AdmissionPropositionAPIClient().create_proposition(
             initier_proposition_command=kwargs,
+            **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     @api_exception_handler(api_exception_cls=ApiException)
     def update_proposition(cls, person: Person, **kwargs):
-        return AdmissionPropositionAPIClient(person).update_proposition(
+        return AdmissionPropositionAPIClient().update_proposition(
             uuid=kwargs['uuid'],
             completer_proposition_command=kwargs,
+            **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def get_proposition(cls, person: Person, uuid) -> PropositionDTO:
-        return AdmissionPropositionAPIClient(person).retrieve_proposition(uuid=uuid)
+        return AdmissionPropositionAPIClient().retrieve_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
 
     @classmethod
     def get_propositions(cls, person: Person):
-        return AdmissionPropositionAPIClient(person).list_propositions()
+        return AdmissionPropositionAPIClient().list_propositions(
+            **build_mandatory_auth_headers(person),
+        )
 
 
 class PropositionBusinessException(Enum):
