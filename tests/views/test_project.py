@@ -26,7 +26,7 @@
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import ChoixTypeFinancement
@@ -35,6 +35,7 @@ from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 
 
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class ProjectViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):

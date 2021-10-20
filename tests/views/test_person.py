@@ -26,12 +26,13 @@
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
 
 
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class PersonViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
