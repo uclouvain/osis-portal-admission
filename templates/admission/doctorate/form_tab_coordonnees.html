@@ -8,20 +8,19 @@
 
     {% panel _("Residential address") %}
         <div class="row">
-          <div class="col-md-3">{% bootstrap_field residential.street_number %}</div>
-          <div class="col-md-3">{% bootstrap_field residential.street %}</div>
-            <div class="col-md-3">{% bootstrap_field residential.postal_box %}</div>
-            <div class="col-md-3">{% bootstrap_field residential.location %}</div>
+            <div class="col-md-4">{% bootstrap_field residential.street_number %}</div>
+            <div class="col-md-4">{% bootstrap_field residential.street %}</div>
+            <div class="col-md-4">{% bootstrap_field residential.postal_box %}</div>
         </div>
         <div class="row">
             <div class="col-md-4">{% bootstrap_field residential.country %}</div>
             <div id="not-be-residential-address">
-              <div class="col-md-4">{% bootstrap_field residential.postal_code %}</div>
-              <div class="col-md-4">{% bootstrap_field residential.city %}</div>
+                <div class="col-md-4">{% bootstrap_field residential.postal_code %}</div>
+                <div class="col-md-4">{% bootstrap_field residential.city %}</div>
             </div>
             <div id="be-residential-address">
-              <div class="col-md-4">{% bootstrap_field residential.be_postal_code %}</div>
-              <div class="col-md-4">{% bootstrap_field residential.be_city %}</div>
+                <div class="col-md-4">{% bootstrap_field residential.be_postal_code %}</div>
+                <div class="col-md-4">{% bootstrap_field residential.be_city %}</div>
             </div>
         </div>
         <div>{% bootstrap_field main_form.show_contact %}</div>
@@ -29,28 +28,27 @@
 
     {% panel _("Contact address") id="contact_address" %}
         <div class="row">
-            <div class="col-md-3">{% bootstrap_field contact.street_number %}</div>
-            <div class="col-md-3">{% bootstrap_field contact.street %}</div>
-            <div class="col-md-3">{% bootstrap_field contact.postal_box %}</div>
-            <div class="col-md-3">{% bootstrap_field contact.location %}</div>
+            <div class="col-md-4">{% bootstrap_field contact.street_number %}</div>
+            <div class="col-md-4">{% bootstrap_field contact.street %}</div>
+            <div class="col-md-4">{% bootstrap_field contact.postal_box %}</div>
         </div>
         <div class="row">
             <div class="col-md-4">{% bootstrap_field contact.country %}</div>
             <div id="not-be-contact-address">
-              <div class="col-md-4">{% bootstrap_field contact.postal_code %}</div>
-              <div class="col-md-4">{% bootstrap_field contact.city %}</div>
+                <div class="col-md-4">{% bootstrap_field contact.postal_code %}</div>
+                <div class="col-md-4">{% bootstrap_field contact.city %}</div>
             </div>
             <div id="be-contact-address">
-              <div class="col-md-4">{% bootstrap_field contact.be_postal_code %}</div>
-              <div class="col-md-4">{% bootstrap_field contact.be_city %}</div>
+                <div class="col-md-4">{% bootstrap_field contact.be_postal_code %}</div>
+                <div class="col-md-4">{% bootstrap_field contact.be_city %}</div>
             </div>
         </div>
     {% endpanel %}
 
     {% panel _("Contact") %}
         <div class="row">
-          <div class="col-md-6">{% bootstrap_field main_form.phone_mobile %}</div>
-          <div class="col-md-6">{% bootstrap_field main_form.email %}</div>
+            <div class="col-md-6">{% bootstrap_field main_form.phone_mobile %}</div>
+            <div class="col-md-6">{% bootstrap_field main_form.email %}</div>
         </div>
     {% endpanel %}
 {% endblock %}

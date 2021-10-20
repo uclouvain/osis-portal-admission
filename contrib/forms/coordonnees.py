@@ -54,7 +54,6 @@ class DoctorateAdmissionAddressForm(forms.Form):
     street = forms.CharField(required=False, label=_("Street"))
     street_number = forms.CharField(required=False, label=_("Street number"))
     postal_box = forms.CharField(required=False, label=_("Box"))
-    location = forms.CharField(required=False, label=_("Location"))
     postal_code = forms.CharField(required=False, label=_("Postal code"))
     city = forms.CharField(required=False, label=_("City"))
     country = forms.CharField(
@@ -92,7 +91,6 @@ class DoctorateAdmissionAddressForm(forms.Form):
 
         mandatory_address_fields = [
             "street_number",
-            "location",
             "country",
         ]
 
@@ -110,7 +108,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
             postal_box = cleaned_data.get("postal_box")
 
             if not any([postal_box, street]):
-                error_message = _("please set either street or postal_box")
+                error_message = _("Please set either street or postal_box")
                 self.add_error('postal_box', error_message)
                 self.add_error('street', error_message)
 
