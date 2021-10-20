@@ -23,17 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from admission.contrib.forms.person import DoctorateAdmissionPersonForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
+from admission.services.proposition import AdmissionPropositionService
 from osis_document.api.utils import get_remote_token
 
 
-class DoctorateAdmissionPersonFormView(WebServiceFormMixin, FormView):
+class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_person.html'
     success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionPersonForm
@@ -48,8 +49,16 @@ class DoctorateAdmissionPersonFormView(WebServiceFormMixin, FormView):
         ]
         for field in document_fields:
             initial[field] = [get_remote_token(document, write_token=True)
-                              for document in person.get(field)]
+                              for document in initial.get(field)]
         return initial
 
     def call_webservice(self, data):
         AdmissionPersonService.update_person(**data)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if 'pk' in self.kwargs:
+            context_data['admission'] = AdmissionPropositionService.get_proposition(
+                person=self.request.user.person, uuid=self.kwargs['pk'],
+            )
+        return context_data

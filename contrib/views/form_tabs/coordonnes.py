@@ -27,7 +27,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
-from admission.contrib.forms.person import DoctorateAdmissionAddressForm, DoctorateAdmissionCoordonneesForm
+from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm, DoctorateAdmissionCoordonneesForm
 from admission.services.mixins import WebServiceFormMixin
 
 from admission.services.person import AdmissionPersonService

@@ -23,31 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
-from dal import autocomplete, forward
+from dal import autocomplete
 from django import forms
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.person import GENDER_CHOICES, SEX_CHOICES
-from admission.contrib.forms import EMPTY_CHOICE
-from admission.services.reference import CountriesService
-from base.models.academic_year import AcademicYear
+from admission.contrib.forms import EMPTY_CHOICE, get_country_initial_choices
+from admission.services.reference import AcademicYearService
 from osis_document.contrib.forms import FileUploadField
 
 YES = '1'
 NO = '0'
-
-
-def get_country_initial_choices(iso_code):
-    if not iso_code:
-        return EMPTY_CHOICE
-    country = CountriesService.get_country(iso_code=iso_code)
-    return EMPTY_CHOICE + (
-        (country.iso_code, country.name_en if settings.LANGUAGE_CODE == 'en' else country.name),
-    )
 
 
 class DoctorateAdmissionPersonForm(forms.Form):
@@ -112,9 +99,11 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['last_registration_year'].choices = EMPTY_CHOICE
-        for academic_year in AcademicYear.objects.order_by('-year').filter(end_date__year__lte=now().year):
-            self.fields['last_registration_year'].choices.append((academic_year.pk, academic_year))
+        year_choices = tuple(
+            (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
+            for academic_year in AcademicYearService.get_academic_years()
+        )
+        self.fields['last_registration_year'].choices = EMPTY_CHOICE + year_choices
         if self.initial.get('last_registration_year'):
             self.initial['already_registered'] = YES
 
@@ -124,89 +113,3 @@ class DoctorateAdmissionPersonForm(forms.Form):
         self.fields['country_of_citizenship'].widget.choices = get_country_initial_choices(
             self.initial.get('country_of_citizenship')
         )
-
-
-class DoctorateAdmissionCoordonneesForm(forms.Form):
-    show_contact = forms.BooleanField(
-        required=False,
-        label=_("Is your contact address different from your residential address?"),
-    )
-
-    email = forms.EmailField(disabled=True, label=_("Email"))
-    phone_mobile = forms.CharField(required=False, label=_("Mobile phone"))
-
-    class Media:
-        js = ('dependsOn.min.js',)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Tick the show contact checkbox only if there is data in contact
-        if any(self.initial['contact'][k] for k in self.initial['contact'].attribute_map):
-            self.fields["show_contact"].initial = True
-
-
-class DoctorateAdmissionAddressForm(forms.Form):
-    street = forms.CharField(required=False, label=_("Street"))
-    street_number = forms.CharField(required=False, label=_("Street number"))
-    postal_box = forms.CharField(required=False, label=_("Box"))
-    location = forms.CharField(required=False, label=_("Location"))
-    postal_code = forms.CharField(required=False, label=_("Postal code"))
-    city = forms.CharField(required=False, label=_("City"))
-    country = forms.CharField(
-        required=False,
-        label=_("Country"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
-    )
-    # Enable autocompletion only for Belgium postal codes
-    be_postal_code = forms.CharField(required=False, label=_("Postal code"))
-    be_city = forms.CharField(
-        required=False,
-        label=_("City"),
-        widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:city",
-            forward=(forward.Field('be_postal_code', 'postal_code'),),
-        ),
-    )
-    BE_ISO_CODE = None
-
-    def __init__(self, *args, **kwargs):
-        self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
-        super().__init__(*args, **kwargs)
-        self.fields['country'].widget.choices = get_country_initial_choices(
-            self.initial["country"]
-        )
-        if self.initial["country"] == self.BE_ISO_CODE:
-            self.initial["be_postal_code"] = self.initial["postal_code"]
-            self.initial["be_city"] = self.initial["city"]
-            initial_choice_needed = self.data.get('be_city', self.initial.get("be_city"))
-            if initial_choice_needed:
-                self.fields['be_city'].widget.choices = [(initial_choice_needed, initial_choice_needed)]
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        mandatory_address_fields = [
-            "street_number",
-            "location",
-            "country",
-        ]
-
-        # Either one of following data couple is mandatory :
-        # (postal_code / city) or (be_postal_code / be_city)
-        if cleaned_data.get("country") == self.BE_ISO_CODE:
-            mandatory_address_fields.extend(["be_postal_code", "be_city"])
-        mandatory_address_fields.extend(["postal_code", "city"])
-
-        if any(cleaned_data.get(f) for f in mandatory_address_fields):
-            if not all(cleaned_data.get(f) for f in mandatory_address_fields):
-                raise ValidationError("Please fill all the address fields")
-
-            street = cleaned_data.get("street")
-            postal_box = cleaned_data.get("postal_box")
-
-            if not any([postal_box, street]):
-                error_message = _("please set either street or postal_box")
-                self.add_error('postal_box', error_message)
-                self.add_error('street', error_message)
-
-        return cleaned_data

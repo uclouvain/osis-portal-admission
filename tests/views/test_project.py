@@ -47,6 +47,9 @@ class ProjectViewTestCase(TestCase):
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")
         self.mock_autocomplete_api = autocomplete_api_patcher.start()
         self.addCleanup(autocomplete_api_patcher.stop)
+        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
+        self.mock_countries_api = countries_api_patcher.start()
+        self.addCleanup(countries_api_patcher.stop)
         autocomplete_api_patcher = patch("frontoffice.settings.osis_sdk.utils.get_user_token")
         mock_user_token = autocomplete_api_patcher.start()
         mock_user_token.return_value = 'foobar'

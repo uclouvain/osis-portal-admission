@@ -28,6 +28,7 @@ from django.conf import settings
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
+from admission.services.proposition import AdmissionPropositionService
 from admission.services.reference import CountriesService
 
 
@@ -38,6 +39,10 @@ class DoctorateAdmissionPersonDetailView(TemplateView):
         context_data = super().get_context_data(**kwargs)
         person = AdmissionPersonService.retrieve_person()
         context_data['person'] = person
+        context_data['admission'] = AdmissionPropositionService.get_proposition(
+            person=self.request.user.person, uuid=self.kwargs['pk'],
+        )
+
         translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
         if person.birth_country:
             birth_country = CountriesService.get_country(iso_code=person.birth_country)
