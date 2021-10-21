@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
@@ -31,10 +31,11 @@ from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm, D
 from admission.services.mixins import WebServiceFormMixin
 
 from admission.services.person import AdmissionPersonService
+from admission.services.proposition import AdmissionPropositionService
 from admission.services.reference import CountriesService
 
 
-class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
+class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_coordonnees.html'
     success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionCoordonneesForm
@@ -45,6 +46,10 @@ class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
         context_data = super().get_context_data(**kwargs)
         context_data.update(self.get_forms())
         context_data["BE_ISO_CODE"] = self.BE_ISO_CODE
+        if 'pk' in self.kwargs:
+            context_data['admission'] = AdmissionPropositionService.get_proposition(
+                person=self.request.user.person, uuid=self.kwargs['pk'],
+            )
         return context_data
 
     def post(self, request, *args, **kwargs):
@@ -54,7 +59,7 @@ class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
         return self.form_invalid(forms['main_form'])
 
     def get_initial(self):
-        return AdmissionPersonService.retrieve_person_coordonnees()
+        return AdmissionPersonService.retrieve_person_coordonnees(self.request.user.person)
 
     @staticmethod
     def prepare_be_city(form_cleaned_data):
@@ -80,11 +85,11 @@ class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
         return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_person_coordonnees(**data)
+        AdmissionPersonService.update_person_coordonnees(person=self.request.user.person, **data)
 
     def get_forms(self):
         if not self.forms:
-            self.BE_ISO_CODE = CountriesService.get_country(name="Belgique")
+            self.BE_ISO_CODE = CountriesService.get_country(name="Belgique").iso_code
             kwargs = self.get_form_kwargs()
             kwargs.pop('prefix')
             initial = kwargs.pop('initial')

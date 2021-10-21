@@ -25,18 +25,19 @@
 # ##############################################################################
 
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
 from admission.services.reference import CountriesService
 
 
-class DoctorateAdmissionCoordonneesDetailView(TemplateView):
+class DoctorateAdmissionCoordonneesDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'admission/doctorate/detail_coordonnees.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        coordonnees = AdmissionPersonService.retrieve_person_coordonnees()
+        coordonnees = AdmissionPersonService.retrieve_person_coordonnees(self.request.user.person)
         context_data['coordonnees'] = coordonnees
         translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
         if coordonnees.residential.country:
@@ -46,6 +47,6 @@ class DoctorateAdmissionCoordonneesDetailView(TemplateView):
             contact_country = CountriesService.get_country(iso_code=coordonnees.contact.country)
             context_data['contact_country'] = getattr(contact_country, translated_field)
         # check if there is at least one data into contact
-        for k in coordonnees["contact"].attribute_map:
-            context_data["show_contact"] = True if coordonnees["contact"][k] else False
+        for k in coordonnees.contact.attribute_map:
+            context_data["show_contact"] = True if getattr(coordonnees.contact, k) else False
         return context_data

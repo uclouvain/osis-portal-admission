@@ -25,7 +25,6 @@
 # ##############################################################################
 from dal import autocomplete, forward
 from django import forms
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.forms import get_country_initial_choices
@@ -77,7 +76,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
         self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_country_initial_choices(
-            self.initial["country"]
+            self.initial.get("country")
         )
         if self.initial["country"] == self.BE_ISO_CODE:
             self.initial["be_postal_code"] = self.initial["postal_code"]
@@ -98,11 +97,13 @@ class DoctorateAdmissionAddressForm(forms.Form):
         # (postal_code / city) or (be_postal_code / be_city)
         if cleaned_data.get("country") == self.BE_ISO_CODE:
             mandatory_address_fields.extend(["be_postal_code", "be_city"])
-        mandatory_address_fields.extend(["postal_code", "city"])
+        else:
+            mandatory_address_fields.extend(["postal_code", "city"])
 
         if any(cleaned_data.get(f) for f in mandatory_address_fields):
-            if not all(cleaned_data.get(f) for f in mandatory_address_fields):
-                raise ValidationError("Please fill all the address fields")
+            for field in mandatory_address_fields:
+                if not cleaned_data.get(field):
+                    self.add_error(field, _("Please fill all the address fields"))
 
             street = cleaned_data.get("street")
             postal_box = cleaned_data.get("postal_box")
