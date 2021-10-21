@@ -114,7 +114,7 @@ msgid "Country"
 msgstr "Pays"
 
 msgid "Country of citizenship"
-msgstr "NationalitéP"
+msgstr "Nationalité"
 
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
@@ -182,7 +182,7 @@ msgstr "Féminin"
 
 msgctxt "female gender"
 msgid "Female"
-msgstr "Féminin"
+msgstr "Femme"
 
 msgid "Financing"
 msgstr "Financement"
@@ -254,7 +254,7 @@ msgstr "Masculin"
 
 msgctxt "gender male"
 msgid "Male"
-msgstr "Masculin"
+msgstr "Homme"
 
 msgid "Mobile phone"
 msgstr "Téléphone portable"

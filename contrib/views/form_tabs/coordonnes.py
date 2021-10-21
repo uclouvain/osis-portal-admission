@@ -62,8 +62,8 @@ class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
         if form_cleaned_data['be_postal_code']:
             form_cleaned_data['postal_code'] = form_cleaned_data['be_postal_code']
             form_cleaned_data['city'] = form_cleaned_data['be_city']
-            del form_cleaned_data['be_postal_code']
-            del form_cleaned_data['be_city']
+            form_cleaned_data.pop('be_postal_code')
+            form_cleaned_data.pop('be_city')
 
     def prepare_data(self, main_form_data):
         # Process the form data to match API
@@ -75,8 +75,8 @@ class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
         self.prepare_be_city(data['residential'])
         data['contact'] = forms['contact'].cleaned_data
         self.prepare_be_city(data['contact'])
-        del data['show_contact']
-        del data['email']
+        data.pop('show_contact')
+        data.pop('email')
         return data
 
     def call_webservice(self, data):
@@ -86,9 +86,8 @@ class DoctorateAdmissionCoordonneesFormView(WebServiceFormMixin, FormView):
         if not self.forms:
             self.BE_ISO_CODE = CountriesService.get_country(name="Belgique")
             kwargs = self.get_form_kwargs()
-            del kwargs['prefix']
-            initial = kwargs['initial']
-            del kwargs['initial']
+            kwargs.pop('prefix')
+            initial = kwargs.pop('initial')
             self.forms = {
                 'main_form': self.get_form(),
                 'contact': DoctorateAdmissionAddressForm(

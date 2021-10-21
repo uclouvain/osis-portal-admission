@@ -92,8 +92,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             data['bourse_recherche_other'] if data['bourse_recherche'] == BourseRecherche.OTHER.name
             else data['bourse_recherche']
         )
-        del data['type_contrat_travail_other']
-        del data['bourse_recherche_other']
+        data.pop('type_contrat_travail_other')
+        data.pop('bourse_recherche_other')
 
         return data
 
@@ -106,7 +106,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 annee_formation=int(doctorate_value.split('-')[-1]),
                 matricule_candidat=self.request.user.person.global_id,
             )
-            del data['sector']
+            data.pop('sector')
             AdmissionPropositionService.create_proposition(person=self.request.user.person, **data)
         else:
             data['uuid'] = str(self.kwargs['pk'])
