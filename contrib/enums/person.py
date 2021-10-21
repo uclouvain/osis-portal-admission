@@ -24,22 +24,14 @@
 #
 # ##############################################################################
 
-from .autocomplete import *
-from .detail_tabs.project import *
-from .form_tabs.project import *
-from .detail_tabs.coordonnes import *
-from .form_tabs.coordonnes import *
-from .detail_tabs.person import *
-from .form_tabs.person import *
-from .list import *
+from django.utils.translation import pgettext_lazy, gettext_lazy as _
 
-__all__ = [
-    "DoctorateAutocomplete",
-    "DoctorateAdmissionListView",
-    "DoctorateAdmissionProjectFormView",
-    "DoctorateAdmissionProjectDetailView",
-    "DoctorateAdmissionPersonFormView",
-    "DoctorateAdmissionPersonDetailView",
-    "DoctorateAdmissionCoordonneesFormView",
-    "DoctorateAdmissionCoordonneesDetailView",
-]
+GENDER_CHOICES = (
+    ('F', pgettext_lazy("female gender", "Female")),
+    ('H', pgettext_lazy("gender male", "Male")),
+    ('X', _('Other'))
+)
+SEX_CHOICES = (
+    ('F', _('Female')),
+    ('M', _('Male'))
+)

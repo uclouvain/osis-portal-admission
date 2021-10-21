@@ -23,23 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from collections import namedtuple
 
-from .autocomplete import *
-from .detail_tabs.project import *
-from .form_tabs.project import *
-from .detail_tabs.coordonnes import *
-from .form_tabs.coordonnes import *
-from .detail_tabs.person import *
-from .form_tabs.person import *
-from .list import *
-
-__all__ = [
-    "DoctorateAutocomplete",
-    "DoctorateAdmissionListView",
-    "DoctorateAdmissionProjectFormView",
-    "DoctorateAdmissionProjectDetailView",
-    "DoctorateAdmissionPersonFormView",
-    "DoctorateAdmissionPersonDetailView",
-    "DoctorateAdmissionCoordonneesFormView",
-    "DoctorateAdmissionCoordonneesDetailView",
-]
+# Can't use Mock because 'name' property is reserved
+MockCountry = namedtuple('MockCountry', ['iso_code', 'name', 'name_en'])
+MockCity = namedtuple('MockCity', ['name'])

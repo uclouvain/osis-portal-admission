@@ -97,11 +97,12 @@ def field_data(name, data=None, css_class=None):
 
 
 @register_inclusion_with_body('panel.html', takes_context=True, context_name='panel_body')
-def panel(context, title=''):
+def panel(context, title='', **kwargs):
     """
     Template tag for panel
     :param title: the panel title
     :type context: django.template.context.RequestContext
     """
     context['title'] = title
+    context['attributes'] = kwargs
     return context

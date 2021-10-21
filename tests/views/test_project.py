@@ -26,7 +26,7 @@
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import ChoixTypeFinancement
@@ -35,20 +35,26 @@ from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 
 
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class ProjectViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
+
+    def setUp(self):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
-        cls.mock_proposition_api = propositions_api_patcher.start()
-        cls.addClassCleanup(propositions_api_patcher.stop)
+        self.mock_proposition_api = propositions_api_patcher.start()
+        self.addCleanup(propositions_api_patcher.stop)
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")
-        cls.mock_autocomplete_api = autocomplete_api_patcher.start()
-        cls.addClassCleanup(autocomplete_api_patcher.stop)
+        self.mock_autocomplete_api = autocomplete_api_patcher.start()
+        self.addCleanup(autocomplete_api_patcher.stop)
+        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
+        self.mock_countries_api = countries_api_patcher.start()
+        self.addCleanup(countries_api_patcher.stop)
         autocomplete_api_patcher = patch("frontoffice.settings.osis_sdk.utils.get_user_token")
         mock_user_token = autocomplete_api_patcher.start()
         mock_user_token.return_value = 'foobar'
-        cls.addClassCleanup(mock_user_token.stop)
+        self.addCleanup(mock_user_token.stop)
 
     def test_create(self):
         url = resolve_url('admission:doctorate-create:project')

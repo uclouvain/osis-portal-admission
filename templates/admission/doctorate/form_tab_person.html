@@ -1,0 +1,75 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
+
+{% block form %}
+    {% bootstrap_form_errors form %}
+
+    {% panel _("Personal information") %}
+        <div class="row">
+            <div class="col-md-4">{% bootstrap_field form.last_name %}</div>
+            <div class="col-md-4">{% bootstrap_field form.first_name %}</div>
+            <div class="col-md-4">{% bootstrap_field form.first_name_in_use %}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">{% bootstrap_field form.middle_name %}</div>
+            <div class="col-md-4">{% bootstrap_field form.sex %}</div>
+            <div class="col-md-4">{% bootstrap_field form.gender %}</div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">{% bootstrap_field form.birth_date %}</div>
+            <div class="col-md-4">{% bootstrap_field form.unknown_birth_date %}</div>
+            <div class="col-md-4" id="birth_year">
+                {% bootstrap_field form.birth_year %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">{% bootstrap_field form.birth_country %}</div>
+            <div class="col-md-4">{% bootstrap_field form.birth_place %}</div>
+            <div class="col-md-4">{% bootstrap_field form.country_of_citizenship %}</div>
+        </div>
+
+        {% bootstrap_field form.id_photo %}
+
+        <div class="row">
+            <div class="col-md-4">{% bootstrap_field form.language %}</div>
+        </div>
+    {% endpanel %}
+
+    {% panel _("Identification") %}
+        <div class="row">
+            <div class="col-md-6">{% bootstrap_field form.national_number %}</div>
+            <div class="col-md-6">{% bootstrap_field form.id_card_number %}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">{% bootstrap_field form.passport_number %}</div>
+            <div class="col-md-6">{% bootstrap_field form.passport_expiration_date %}</div>
+        </div>
+
+        {% bootstrap_field form.id_card %}
+        {% bootstrap_field form.passport %}
+    {% endpanel %}
+
+    {% panel _("Already registered to UCLouvain?") %}
+        {% bootstrap_field form.already_registered %}
+        {% bootstrap_field form.last_registration_year %}
+    {% endpanel %}
+{% endblock %}
+
+{% block script %}
+    {{ form.media }}
+    <script type="application/javascript">
+    $(function () {
+        // Justification depends on pre-admission
+        $('#birth_year').dependsOn({
+            '#id_unknown_birth_date': { checked: true },
+        }, { valueOnDisable: '' });
+
+        $('#id_birth_date').dependsOn({
+            '#id_unknown_birth_date': { checked: false },
+        }, { valueOnDisable: '', hide: false });
+        $('#id_last_registration_year').dependsOn({
+            'input[name=already_registered]': { values: ['1'] },
+        }, { valueOnDisable: '' });
+    });
+    </script>
+{% endblock %}

@@ -30,9 +30,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import get_language
 
 from admission.services.autocomplete import AdmissionAutocompleteService
+from admission.services.reference import CitiesService, CountriesService
 
 __all__ = [
     "DoctorateAutocomplete",
+    "CountryAutocomplete",
+    "CityAutocomplete",
 ]
 
 
@@ -56,3 +59,30 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             sigle=x.sigle,
             intitule=x.intitule_fr if get_language() == settings.LANGUAGE_CODE else x.intitule_en,
         ).lower()]
+
+
+class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return CountriesService.get_countries()
+
+    def autocomplete_results(self, results):
+        return CountriesService.get_countries(search=self.q)
+
+    def results(self, results):
+        return [dict(
+            id=country.iso_code,
+            text=country.name_en if settings.LANGUAGE_CODE == 'en' else country.name,
+        ) for country in results]
+
+
+class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return CitiesService.get_cities(zip_code=self.forwarded['postal_code'])
+
+    def autocomplete_results(self, results):
+        """Return list of strings that match the autocomplete query."""
+        return CitiesService.get_cities(zip_code=self.forwarded['postal_code'], search=self.q)
+
+    def results(self, results):
+        """Return the result dictionary."""
+        return [dict(id=city.name, text=city.name) for city in results]

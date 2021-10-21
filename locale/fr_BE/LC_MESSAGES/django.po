@@ -50,8 +50,26 @@ msgstr "Type d'admission"
 msgid "Allocated time"
 msgstr "Temps consacré"
 
+msgid "Already registered to UCLouvain?"
+msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
+
 msgid "Back to my requests"
 msgstr "Retour à mes demandes"
+
+msgid "Birth country"
+msgstr "Pays de naissance"
+
+msgid "Birth date"
+msgstr "Date de naissance"
+
+msgid "Birth place"
+msgstr "Lieu de naissance"
+
+msgid "Birth year"
+msgstr "Année de naissance"
+
+msgid "Box"
+msgstr "Boîte"
 
 msgid "Brief justification"
 msgstr "Justification succincte"
@@ -65,6 +83,9 @@ msgstr "CSC - China Scholarship Council"
 msgid "Change my submission"
 msgstr "Modifier ma soumission"
 
+msgid "City"
+msgstr "Ville"
+
 msgid "Complementary training project"
 msgstr "Projet de formation complémentaire"
 
@@ -74,11 +95,26 @@ msgstr "Confirmation"
 msgid "Confirmation paper"
 msgstr "Lettre de confirmation"
 
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Contact address"
+msgstr "Adresse de correspondance"
+
 msgid "Contact details"
 msgstr "Coordonnées"
 
+msgid "Contact language"
+msgstr "Langue de contact"
+
 msgid "Cotutelle"
 msgstr "Cotutelle"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "Country of citizenship"
+msgstr "Nationalité"
 
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
@@ -117,6 +153,9 @@ msgstr "ERC - European Research Council"
 msgid "Edit"
 msgstr "Modifier"
 
+msgid "Email"
+msgstr "E-mail"
+
 msgid "English"
 msgstr "Anglais"
 
@@ -138,11 +177,24 @@ msgstr "FRIA"
 msgid "FSR - Fonds Spéciaux de Recherche"
 msgstr "FSR - Fonds Spéciaux de Recherche"
 
+msgid "Female"
+msgstr "Féminin"
+
+msgctxt "female gender"
+msgid "Female"
+msgstr "Femme"
+
 msgid "Financing"
 msgstr "Financement"
 
 msgid "Financing type"
 msgstr "Type de financement"
+
+msgid "First name"
+msgstr "Prénom"
+
+msgid "First name in use"
+msgstr "Prénom d'usage"
 
 msgid "Fondation Mont Godinne"
 msgstr "Fondation Mont Godinne"
@@ -162,19 +214,58 @@ msgstr "Équivalent full-time"
 msgid "Gantt graph"
 msgstr "Graphe de Gantt"
 
+msgid "Gender"
+msgstr "Genre"
+
+msgid "ID card"
+msgstr "Carte d'identité"
+
+msgid "ID card number"
+msgstr "Numéro de carte d'identité"
+
+msgid "ID photo"
+msgstr "Photo d'identité"
+
 msgid "Identification"
 msgstr "Identification"
 
 msgid "Institution"
 msgstr "Institution"
 
+msgid "Is your contact address different from your residential address?"
+msgstr ""
+"Souhaitez vous recevoir votre courrier à une autre adresse que votre "
+"domicile légal ?"
+
 msgid "Jury"
 msgstr "Jury"
+
+msgid "Last name"
+msgstr "Nom"
+
+msgid "Last registration year"
+msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
 
 msgid "MANAGEMENT"
 msgstr "Gestion"
 
+msgid "Male"
+msgstr "Masculin"
+
+msgctxt "gender male"
+msgid "Male"
+msgstr "Homme"
+
+msgid "Mobile phone"
+msgstr "Téléphone portable"
+
 msgid "NO"
+msgstr "Non"
+
+msgid "National number"
+msgstr "Numéro national"
+
+msgid "No"
 msgstr "Non"
 
 msgid "No defense reason"
@@ -189,11 +280,38 @@ msgstr "Non soumis"
 msgid "OTHER"
 msgstr "Autre"
 
+msgid "Other"
+msgstr "Autre"
+
+msgid "Other names"
+msgstr "Autres noms"
+
 msgid "PARTIAL"
 msgstr "Partiel"
 
+msgid "Passport"
+msgstr "Passeport"
+
+msgid "Passport expiration date"
+msgstr "Date d'expiration du passeport"
+
+msgid "Passport number"
+msgstr "Numéro de passeport"
+
+msgid "Personal information"
+msgstr "Coordonnées"
+
 msgid "PhD already done"
 msgstr "Doctorat déjà réalisé"
+
+msgid "Please fill all the address fields"
+msgstr "Veuillez remplir tous les champs de l'adresse"
+
+msgid "Please set either street or postal_box"
+msgstr "Veuillez définir la rue ou la boîte postale"
+
+msgid "Postal code"
+msgstr "Code postal"
 
 msgid "Pre-Admission"
 msgstr "Pré-Admission"
@@ -222,6 +340,9 @@ msgstr "Soutenance publique"
 msgid "Reference:"
 msgstr "Référence :"
 
+msgid "Residential address"
+msgstr "Domicile légal"
+
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Bourse de recherche"
 
@@ -243,6 +364,9 @@ msgstr "Études secondaires"
 msgid "Sector"
 msgstr "Secteur"
 
+msgid "Sex"
+msgstr "Sexe"
+
 msgid "Specify scholarship grant"
 msgstr "Spécifier la bourse de recherche"
 
@@ -251,6 +375,12 @@ msgstr "Spécifier le contrat de travail"
 
 msgid "Status:"
 msgstr "Statut :"
+
+msgid "Street"
+msgstr "Rue"
+
+msgid "Street number"
+msgstr "Numéro de rue"
 
 msgid "Supervision"
 msgstr "Supervision"
@@ -263,6 +393,9 @@ msgstr "Assistant UCLouvain"
 
 msgid "Undecided"
 msgstr "Non décidé"
+
+msgid "Unknown birth date"
+msgstr "Date de naissance inconnue"
 
 msgid "View"
 msgstr "Voir"
@@ -280,4 +413,7 @@ msgid "Work contract type"
 msgstr "Type de contrat de travail"
 
 msgid "YES"
+msgstr "Oui"
+
+msgid "Yes"
 msgstr "Oui"

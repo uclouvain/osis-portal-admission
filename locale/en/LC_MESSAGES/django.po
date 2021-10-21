@@ -45,7 +45,25 @@ msgstr ""
 msgid "Allocated time"
 msgstr ""
 
+msgid "Already registered to UCLouvain?"
+msgstr ""
+
 msgid "Back to my requests"
+msgstr ""
+
+msgid "Birth country"
+msgstr ""
+
+msgid "Birth date"
+msgstr ""
+
+msgid "Birth place"
+msgstr ""
+
+msgid "Birth year"
+msgstr ""
+
+msgid "Box"
 msgstr ""
 
 msgid "Brief justification"
@@ -60,6 +78,9 @@ msgstr ""
 msgid "Change my submission"
 msgstr ""
 
+msgid "City"
+msgstr ""
+
 msgid "Complementary training project"
 msgstr ""
 
@@ -69,10 +90,25 @@ msgstr ""
 msgid "Confirmation paper"
 msgstr ""
 
+msgid "Contact"
+msgstr ""
+
+msgid "Contact address"
+msgstr ""
+
 msgid "Contact details"
 msgstr ""
 
+msgid "Contact language"
+msgstr ""
+
 msgid "Cotutelle"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Country of citizenship"
 msgstr ""
 
 msgid "Create new doctorate admission"
@@ -112,6 +148,9 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgid "Email"
+msgstr ""
+
 msgid "English"
 msgstr ""
 
@@ -133,10 +172,23 @@ msgstr ""
 msgid "FSR - Fonds Spéciaux de Recherche"
 msgstr ""
 
+msgid "Female"
+msgstr ""
+
+msgctxt "female gender"
+msgid "Female"
+msgstr ""
+
 msgid "Financing"
 msgstr ""
 
 msgid "Financing type"
+msgstr ""
+
+msgid "First name"
+msgstr ""
+
+msgid "First name in use"
 msgstr ""
 
 msgid "Fondation Mont Godinne"
@@ -157,19 +209,56 @@ msgstr ""
 msgid "Gantt graph"
 msgstr ""
 
+msgid "Gender"
+msgstr ""
+
+msgid "ID card"
+msgstr ""
+
+msgid "ID card number"
+msgstr ""
+
+msgid "ID photo"
+msgstr ""
+
 msgid "Identification"
 msgstr ""
 
 msgid "Institution"
 msgstr ""
 
+msgid "Is your contact address different from your residential address?"
+msgstr ""
+
 msgid "Jury"
+msgstr ""
+
+msgid "Last name"
+msgstr ""
+
+msgid "Last registration year"
 msgstr ""
 
 msgid "MANAGEMENT"
 msgstr ""
 
+msgid "Male"
+msgstr ""
+
+msgctxt "gender male"
+msgid "Male"
+msgstr ""
+
+msgid "Mobile phone"
+msgstr ""
+
 msgid "NO"
+msgstr ""
+
+msgid "National number"
+msgstr ""
+
+msgid "No"
 msgstr ""
 
 msgid "No defense reason"
@@ -184,10 +273,37 @@ msgstr ""
 msgid "OTHER"
 msgstr ""
 
+msgid "Other"
+msgstr ""
+
+msgid "Other names"
+msgstr ""
+
 msgid "PARTIAL"
 msgstr ""
 
+msgid "Passport"
+msgstr ""
+
+msgid "Passport expiration date"
+msgstr ""
+
+msgid "Passport number"
+msgstr ""
+
+msgid "Personal information"
+msgstr ""
+
 msgid "PhD already done"
+msgstr ""
+
+msgid "Please fill all the address fields"
+msgstr ""
+
+msgid "Please set either street or postal_box"
+msgstr ""
+
+msgid "Postal code"
 msgstr ""
 
 msgid "Pre-Admission"
@@ -217,6 +333,9 @@ msgstr ""
 msgid "Reference:"
 msgstr ""
 
+msgid "Residential address"
+msgstr ""
+
 msgid "SEARCH_SCHOLARSHIP"
 msgstr ""
 
@@ -238,6 +357,9 @@ msgstr ""
 msgid "Sector"
 msgstr ""
 
+msgid "Sex"
+msgstr ""
+
 msgid "Specify scholarship grant"
 msgstr ""
 
@@ -245,6 +367,12 @@ msgid "Specify work contract"
 msgstr ""
 
 msgid "Status:"
+msgstr ""
+
+msgid "Street"
+msgstr ""
+
+msgid "Street number"
 msgstr ""
 
 msgid "Supervision"
@@ -257,6 +385,9 @@ msgid "UCLOUVAIN_ASSISTANT"
 msgstr ""
 
 msgid "Undecided"
+msgstr ""
+
+msgid "Unknown birth date"
 msgstr ""
 
 msgid "View"
@@ -275,4 +406,7 @@ msgid "Work contract type"
 msgstr ""
 
 msgid "YES"
+msgstr ""
+
+msgid "Yes"
 msgstr ""
