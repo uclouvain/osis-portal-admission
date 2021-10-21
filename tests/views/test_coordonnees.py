@@ -135,9 +135,9 @@ class CoordonneesTestCase(TestCase):
             "residential-street_number": "1",
         })
         self.assertEqual(response.status_code, 302)
-        last_call = self.mock_person_api.return_value.update_coordonnees.mock_calls[-1]
-        self.assertEqual(last_call.kwargs['coordonnees']['residential']['postal_code'], "1111")
-        self.assertEqual(last_call.kwargs['coordonnees']['residential']['city'], "Louvain-La-Neuve")
+        last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
+        self.assertEqual(last_call_kwargs['coordonnees']['residential']['postal_code'], "1111")
+        self.assertEqual(last_call_kwargs['coordonnees']['residential']['city'], "Louvain-La-Neuve")
 
     def test_update(self):
         url = resolve_url('admission:doctorate-update:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

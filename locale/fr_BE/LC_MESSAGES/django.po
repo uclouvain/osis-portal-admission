@@ -304,6 +304,9 @@ msgstr "Coordonnées"
 msgid "PhD already done"
 msgstr "Doctorat déjà réalisé"
 
+msgid "Please fill all the address fields"
+msgstr "Veuillez remplir tous les champs de l'adresse"
+
 msgid "Please set either street or postal_box"
 msgstr "Veuillez définir la rue ou la boîte postale"
 
