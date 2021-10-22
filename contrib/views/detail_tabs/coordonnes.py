@@ -41,10 +41,16 @@ class DoctorateAdmissionCoordonneesDetailView(LoginRequiredMixin, TemplateView):
         context_data['coordonnees'] = coordonnees
         translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
         if coordonnees.residential.country:
-            residential_country = CountriesService.get_country(iso_code=coordonnees.residential.country)
+            residential_country = CountriesService.get_country(
+                iso_code=coordonnees.residential.country,
+                person=self.request.user.person,
+            )
             context_data['residential_country'] = getattr(residential_country, translated_field)
         if coordonnees.contact.country:
-            contact_country = CountriesService.get_country(iso_code=coordonnees.contact.country)
+            contact_country = CountriesService.get_country(
+                iso_code=coordonnees.contact.country,
+                person=self.request.user.person,
+            )
             context_data['contact_country'] = getattr(contact_country, translated_field)
         # check if there is at least one data into contact
         for k in coordonnees.contact.attribute_map:

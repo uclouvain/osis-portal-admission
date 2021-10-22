@@ -160,6 +160,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         js = ('dependsOn.min.js',)
 
     def __init__(self, hide_bureau_field=True, *args, **kwargs):
+        kwargs.pop('person', None)
         super().__init__(*args, **kwargs)
         # Set type_contrat_travail to OTHER if value is not from enum
         if (
@@ -192,7 +193,8 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
         widget=autocomplete.ListSelect2(url="admission:autocomplete:doctorate", forward=['sector']),
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, person=None, *args, **kwargs):
+        self.person = person
         super().__init__(hide_bureau_field=False, *args, **kwargs)
         self.fields['sector'].widget.choices = (
                 [('', '-')]
@@ -202,7 +204,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                         intitule=sector.intitule_fr if get_language() == settings.LANGUAGE_CODE
                         else sector.intitule_en,
                     ))
-                    for sector in AdmissionAutocompleteService.get_sectors()
+                    for sector in AdmissionAutocompleteService.get_sectors(person)
                 ]
         )
 
@@ -227,9 +229,8 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                 sigle_entite_gestion=doctorate.sigle_entite_gestion,
             )
 
-    @staticmethod
-    def get_selected_doctorate(sector, doctorat):
-        doctorats = AdmissionAutocompleteService.get_doctorates(sector)
+    def get_selected_doctorate(self, sector, doctorat):
+        doctorats = AdmissionAutocompleteService.get_doctorates(self.person, sector)
         return next(  # pragma: no branch
             d for d in doctorats
             if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)

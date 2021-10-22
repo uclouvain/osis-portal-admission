@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient
 
 from frontoffice.settings.osis_sdk import admission as admission_sdk
@@ -37,9 +38,9 @@ class AdmissionAutocompleteAPIClient:
 
 class AdmissionAutocompleteService:
     @classmethod
-    def get_sectors(cls):
-        return AdmissionAutocompleteAPIClient().list_sector_dtos()
+    def get_sectors(cls, person=None):
+        return AdmissionAutocompleteAPIClient().list_sector_dtos(**build_mandatory_auth_headers(person))
 
     @classmethod
-    def get_doctorates(cls, sigle):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle)
+    def get_doctorates(cls, person=None, sigle=""):
+        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle, **build_mandatory_auth_headers(person))

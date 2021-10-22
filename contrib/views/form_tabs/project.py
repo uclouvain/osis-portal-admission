@@ -55,6 +55,11 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             return DoctorateAdmissionProjectForm
         return DoctorateAdmissionProjectCreateForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['person'] = self.request.user.person
+        return kwargs
+
     def get_initial(self):
         if self.is_update_form:
             self.proposition = AdmissionPropositionService.get_proposition(

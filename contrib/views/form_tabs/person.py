@@ -39,6 +39,11 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
     success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionPersonForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['person'] = self.request.user.person
+        return kwargs
+
     def get_initial(self):
         person = AdmissionPersonService.retrieve_person(self.request.user.person)
         initial = person.to_dict()
@@ -59,6 +64,6 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
         context_data = super().get_context_data(**kwargs)
         if 'pk' in self.kwargs:
             context_data['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person, uuid=self.kwargs['pk'],
+                person=self.request.user.person, uuid=str(self.kwargs['pk']),
             )
         return context_data

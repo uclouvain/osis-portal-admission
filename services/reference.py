@@ -27,6 +27,7 @@ from osis_reference_sdk import ApiClient
 from osis_reference_sdk.api import academic_years_api, cities_api, countries_api
 
 from frontoffice.settings.osis_sdk import reference as reference_sdk
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
 
 class CountriesAPIClient:
@@ -37,12 +38,20 @@ class CountriesAPIClient:
 
 class CountriesService:
     @classmethod
-    def get_countries(cls, *args, **kwargs):
-        return CountriesAPIClient().countries_list(*args, **kwargs).results
+    def get_countries(cls, person=None, *args, **kwargs):
+        return CountriesAPIClient().countries_list(
+            *args,
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        ).results
 
     @classmethod
-    def get_country(cls, *args, **kwargs):
-        return CountriesAPIClient().countries_list(*args, **kwargs).results[0]
+    def get_country(cls, person=None, *args, **kwargs):
+        return CountriesAPIClient().countries_list(
+            *args,
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        ).results[0]
 
 
 class CitiesAPIClient:
@@ -53,8 +62,11 @@ class CitiesAPIClient:
 
 class CitiesService:
     @classmethod
-    def get_cities(cls, *args, **kwargs):
-        return CitiesAPIClient().cities_list(*args, **kwargs).results
+    def get_cities(cls, person: None, *args, **kwargs):
+        return CitiesAPIClient().cities_list(
+            *args, **kwargs,
+            **build_mandatory_auth_headers(person),
+        ).results
 
 
 class AcademicYearAPIClient:
@@ -65,5 +77,8 @@ class AcademicYearAPIClient:
 
 class AcademicYearService:
     @classmethod
-    def get_academic_years(cls):
-        return AcademicYearAPIClient().get_academic_years(limit=100).results
+    def get_academic_years(cls, person):
+        return AcademicYearAPIClient().get_academic_years(
+            limit=100,
+            **build_mandatory_auth_headers(person),
+        ).results
