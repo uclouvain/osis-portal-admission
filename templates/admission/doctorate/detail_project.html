@@ -2,26 +2,28 @@
 
 {% block tab_content %}
     {% panel _("Project") %}
-        {% field_data _("Admission type") admission.type_admission %}
-        {% if admission.justification %}
-            {% field_data _("Brief justification") admission.justification %}
-        {% endif %}
-        {% field_data _("Sector") admission.code_secteur_formation %}
-        {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
+        <div class="row">
+            {% field_data _("Admission type") admission.type_admission "col-md-4" %}
+            {% field_data _("Sector") admission.code_secteur_formation "col-md-4" %}
+            {% field_data _("Doctorate") admission.intitule_doctorat_fr "col-md-4" %}
+        </div>
         {% if admission.bureau_cde %}
             {% field_data _("Bureau") admission.bureau_cde %}
+        {% endif %}
+        {% if admission.justification %}
+            {% field_data _("Brief justification") admission.justification %}
         {% endif %}
     {% endpanel %}
 
     {% panel _("Financing") %}
         {% if admission.type_financement %}
-            {% field_data _("Financing type") admission.type_financement %}
+            {% field_data _("Financing type") admission.type_financement|enum_display:'ChoixTypeFinancement' %}
             {% if admission.type_financement == "WORK_CONTRACT" %}
-                {% field_data _("Work contract") admission.type_contrat_travail %}
+                {% field_data _("Work contract") admission.type_contrat_travail|enum_display:'ChoixTypeContratTravail' %}
                 {% field_data _("Full-time equivalent") admission.eft %}
             {% endif %}
         {% elif admission.type_financement == "SCHOLARSHIP" %}
-            {% field_data _("Scholarship") admission.bourse_recherche %}
+            {% field_data _("Scholarship") admission.bourse_recherche|enum_display:'BourseRecherche' %}
         {% endif %}
         {% field_data _("Estimated time") admission.duree_prevue %}
         {% field_data _("Allocated time") admission.temps_consacre %}
@@ -30,7 +32,7 @@
     {% panel _("Doctoral project") %}
         {% field_data _("Project title") admission.titre_projet %}
         {% field_data _("Project resume") admission.resume_projet %}
-        {% field_data _("Thesis redacting language") admission.langue_redaction_these %}
+        {% field_data _("Thesis redacting language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
         {% field_data _("Project documents") admission.documents_projet %}
         {% field_data _("Gantt graph") admission.graphe_gantt %}
         {% field_data _("Doctoral project proposition") admission.proposition_programme_doctoral %}

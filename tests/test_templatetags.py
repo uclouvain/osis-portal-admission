@@ -30,6 +30,8 @@ from django.template import Context, Template
 from django.test import TestCase
 from django.views.generic import FormView
 
+from base.models.utils.utils import ChoiceEnum
+
 
 class TemplateTagsTestCase(TestCase):
     def test_normal_panel(self):
@@ -44,6 +46,32 @@ class TemplateTagsTestCase(TestCase):
         rendered = template.render(Context())
         self.assertNotIn('<h4 class="panel-title">', rendered)
         self.assertIn('<div class="panel-body">', rendered)
+
+    def test_enum_value(self):
+        class TestEnum(ChoiceEnum):
+            FOO = "Bar"
+
+        template = Template("{% load admission %}{{ value|enum_display:'TestEnum' }}")
+        rendered = template.render(Context({
+            'value': "TEST",
+        }))
+        self.assertEqual('TEST', rendered)
+
+        rendered = template.render(Context({
+            'value': "",
+        }))
+        self.assertEqual('', rendered)
+
+        rendered = template.render(Context({
+            'value': "FOO",
+        }))
+        self.assertEqual('Bar', rendered)
+
+        template = Template("{% load admission %}{{ value|enum_display:'InexistantEnum' }}")
+        rendered = template.render(Context({
+            'value': "TEST",
+        }))
+        self.assertEqual('TEST', rendered)
 
     def test_tabs(self):
         class MockedFormView(FormView):

@@ -29,6 +29,8 @@ from inspect import getfullargspec
 from django import template
 from django.views.generic import FormView
 
+from base.models.utils.utils import ChoiceEnum
+
 register = template.Library()
 
 
@@ -85,7 +87,7 @@ def document_list(files):
 
 @register.inclusion_tag('admission/field_data.html')
 def field_data(name, data=None, css_class=None):
-    if isinstance(data, list) and data:
+    if isinstance(data, list):
         template_string = "{% load admission %}{% document_list files %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
@@ -106,3 +108,12 @@ def panel(context, title='', **kwargs):
     context['title'] = title
     context['attributes'] = kwargs
     return context
+
+
+@register.filter
+def enum_display(value, enum_name):
+    if value:
+        for enum in ChoiceEnum.__subclasses__():
+            if enum.__name__ == enum_name:
+                return enum.get_value(value)
+    return value
