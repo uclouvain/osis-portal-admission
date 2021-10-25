@@ -23,10 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from django.utils.translation import pgettext_lazy, gettext_lazy as _
-
-from base.models.utils.utils import ChoiceEnum
 
 GENDER_CHOICES = (
     ('F', pgettext_lazy("female gender", "Female")),
@@ -37,42 +34,3 @@ SEX_CHOICES = (
     ('F', _('Female')),
     ('M', _('Male'))
 )
-
-
-class DiplomaTypes(ChoiceEnum):
-    BELGIAN = _("belgian")
-    FOREIGN = _("foreign")
-
-
-class DiplomaResults(ChoiceEnum):
-    NOT_KNOWN_YET_RESULT = _("Not known yet")
-    LT_65_RESULT = _("Less than 65%")
-    BTW_65_AND_75_RESULT = _("Between 65 and 75%")
-    GT_75_RESULT = _("More than 75%")
-
-
-class BelgianCommunitiesOfEducation(ChoiceEnum):
-    FRENCH_SPEAKING = _("French-speaking Community of Belgium")
-    FLEMISH_SPEAKING = _("Flemish-speaking Community")
-    GERMAN_SPEAKING = _("German-speaking Community")
-
-
-class EducationalTransition(ChoiceEnum):
-    TEACHING_OF_GENERAL_EDUCATION = _("Teaching of general education")
-    TRANSITION_METHOD = _("Transition method")
-    ARTISTIC_TRANSITION = _("Artistic transition")
-
-
-class EducationalQualification(ChoiceEnum):
-    QUALIFICATION_METHOD = _("Qualification method")
-    ARTISTIC_QUALIFICATION = _("Artistic qualification")
-    PROFESSIONAL_EDUCATION = _("Professional education")
-    PROFESSIONAL_EDUCATION_AND_MATURITY_EXAM = _(
-        "Professional education + Maturity exam"
-    )
-
-
-class ForeignDiplomaTypes(ChoiceEnum):
-    NATIONAL_BACHELOR = _("National Bachelor (or government diploma, ...)")
-    EUROPEAN_BACHELOR = _("European Bachelor (Schola Europaea)")
-    INTERNATIONAL_BACCALAUREATE = _("International Baccalaureate")
