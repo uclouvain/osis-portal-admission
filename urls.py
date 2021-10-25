@@ -72,6 +72,7 @@ urlpatterns = [
             path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
             path("country/", views.CountryAutocomplete.as_view(), name="country"),
             path("city/", views.CityAutocomplete.as_view(), name="city"),
+            path("language/", views.LanguageAutocomplete.as_view(), name="language"),
         ],
         "autocomplete",
     ))),
