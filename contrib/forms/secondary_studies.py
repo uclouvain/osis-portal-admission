@@ -27,23 +27,20 @@ from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from admission.contrib.enums.person import (
+from admission.contrib.enums.secondary_studies import (
+    BelgianCommunitiesOfEducation,
     DiplomaTypes,
     DiplomaResults,
-    BelgianCommunitiesOfEducation,
-    EducationalTransition,
-    EducationalQualification,
+    EducationalType,
     ForeignDiplomaTypes,
 )
-from admission.contrib.forms import get_country_initial_choices
+from admission.contrib.forms import get_country_initial_choices, EMPTY_CHOICE, get_language_initial_choices
+from admission.services.reference import AcademicYearService
 
 
 class DoctorateAdmissionEducationForm(forms.Form):
     got_diploma = forms.BooleanField(
-        label=_(
-            "Did you obtain a high school diploma or will you receive this kind of "
-            "diploma still this year? "
-        ),
+        label=_("Did you obtain a high school diploma or will you receive this kind of diploma still this year?"),
         widget=forms.RadioSelect(
             choices=[
                 (True, _('Yes')),
@@ -69,8 +66,15 @@ class DoctorateAdmissionEducationForm(forms.Form):
     class Media:
         js = ("dependsOn.min.js",)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        year_choices = tuple(
+            (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
+            for academic_year in AcademicYearService.get_academic_years(person)
+        )
+        self.fields["academic_graduation_year"].choices = EMPTY_CHOICE + year_choices
+
         diploma = None
         if self.initial.get("belgian_diploma"):
             diploma = "BELGIAN"
@@ -91,8 +95,8 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         required=False,
     )
     educational_type = forms.ChoiceField(
-        label=_(">> Educational type"),
-        choices=EducationalTransition.choices() + EducationalQualification.choices(),
+        label=_("What type of education did (do) you follow?"),
+        choices=EducationalType.choices(),
         widget=forms.RadioSelect,
         required=False,
     )
@@ -165,7 +169,7 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     )
     linguistic_regime = forms.ChoiceField(
         label=_("Linguistic regime"),
-        widget=autocomplete.ListSelect2,
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:language"),
     )
     other_linguistic_regime = forms.CharField(
         label=_("If other linguistic regime, please clarify"),
@@ -176,6 +180,7 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['country'].widget.choices = get_country_initial_choices(self.initial.get('country'))
+        self.fields['country'].choices = get_country_initial_choices(self.initial.get('country'), person)
+        self.fields['linguistic_regime'].choices = get_language_initial_choices(self.initial.get('linguistic_regime'), person)
