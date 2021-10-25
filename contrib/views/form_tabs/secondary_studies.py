@@ -26,7 +26,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
-from admission.contrib.enums.person import DiplomaTypes
+from admission.contrib.enums.secondary_studies import DiplomaTypes
 from admission.contrib.forms.secondary_studies import (
     DoctorateAdmissionEducationForm,
     DoctorateAdmissionEducationForeignDiplomaForm,
@@ -40,7 +40,6 @@ from admission.services.person import AdmissionPersonService
 class DoctorateAdmissionEducationFormView(WebServiceFormMixin, FormView):
     template_name = "admission/doctorate/form_tab_education.html"
     success_url = reverse_lazy("admission:doctorate-list")
-    form_class = DoctorateAdmissionEducationForm
     forms = None
 
     def get_context_data(self, **kwargs):
@@ -58,8 +57,12 @@ class DoctorateAdmissionEducationFormView(WebServiceFormMixin, FormView):
         else:
             return self.form_invalid(forms["main_form"])
 
+    def get_form(self, form_class=None):
+        return DoctorateAdmissionEducationForm(person=self.request.user.person)
+
     def get_forms(self):
         if not self.forms:
+            person = self.request.user.person
             kwargs = self.get_form_kwargs()
             del kwargs["prefix"]
             initial = kwargs["initial"]
@@ -78,6 +81,7 @@ class DoctorateAdmissionEducationFormView(WebServiceFormMixin, FormView):
                     initial=initial["foreign_diploma"],
                     empty_permitted=True,
                     use_required_attribute=False,
+                    person=person,
                     **kwargs,
                 ),
                 "schedule_form": DoctorateAdmissionEducationScheduleForm(
