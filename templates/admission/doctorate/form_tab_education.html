@@ -29,10 +29,12 @@
       {% panel _("Type of education") id="education-type" %}
         <div class="form-group">
           <div>
-            {% bootstrap_label belgian_diploma_form.educational_type.label_tag %}
+            <p>{% bootstrap_label belgian_diploma_form.educational_type.label_tag %}</p>
             {% for radio in belgian_diploma_form.educational_type %}
-              {% if radio.data.value == "QUALIFICATION_METHOD" %}
-                {% bootstrap_label ">> Educational  qualification" %}
+              {% if radio.data.value == "TEACHING_OF_GENERAL_EDUCATION" %}
+                {% bootstrap_label _(">> Educational transition :") %}
+              {% elif radio.data.value == "QUALIFICATION_METHOD" %}
+                {% bootstrap_label _(">> Educational  qualification :") %}
               {% endif %}
               <div class="radio">
                 {{ radio }}
@@ -110,7 +112,6 @@
   <script type="application/javascript">
     $(function () {
       function setNullValue(selector) {
-        console.log(arguments);
         $("select,textarea,input[type!=radio]", selector).val(null).trigger('change');
         $("input[type=radio]", selector).prop('checked', false);
       }
