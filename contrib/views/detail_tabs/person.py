@@ -45,9 +45,15 @@ class DoctorateAdmissionPersonDetailView(TemplateView):
 
         translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
         if person.birth_country:
-            birth_country = CountriesService.get_country(iso_code=person.birth_country)
+            birth_country = CountriesService.get_country(
+                iso_code=person.birth_country,
+                person=self.request.user.person,
+            )
             context_data['birth_country'] = getattr(birth_country, translated_field)
         if person.country_of_citizenship:
-            country_of_citizenship = CountriesService.get_country(iso_code=person.country_of_citizenship)
+            country_of_citizenship = CountriesService.get_country(
+                iso_code=person.country_of_citizenship,
+                person=self.request.user.person,
+            )
             context_data['country_of_citizenship'] = getattr(country_of_citizenship, translated_field)
         return context_data

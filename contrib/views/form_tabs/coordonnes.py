@@ -48,7 +48,7 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         context_data["BE_ISO_CODE"] = self.BE_ISO_CODE
         if 'pk' in self.kwargs:
             context_data['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person, uuid=self.kwargs['pk'],
+                person=self.request.user.person, uuid=str(self.kwargs['pk']),
             )
         return context_data
 
@@ -89,19 +89,21 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
 
     def get_forms(self):
         if not self.forms:
-            self.BE_ISO_CODE = CountriesService.get_country(name="Belgique").iso_code
+            self.BE_ISO_CODE = CountriesService.get_country(person=self.request.user.person, name="Belgique").iso_code
             kwargs = self.get_form_kwargs()
             kwargs.pop('prefix')
             initial = kwargs.pop('initial')
             self.forms = {
                 'main_form': self.get_form(),
                 'contact': DoctorateAdmissionAddressForm(
+                    person=self.request.user.person,
                     prefix='contact',
                     initial=initial['contact'],
                     be_iso_code=self.BE_ISO_CODE,
                     **kwargs,
                 ),
                 'residential': DoctorateAdmissionAddressForm(
+                    person=self.request.user.person,
                     prefix='residential',
                     initial=initial['residential'],
                     be_iso_code=self.BE_ISO_CODE,

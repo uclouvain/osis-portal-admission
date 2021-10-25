@@ -133,6 +133,7 @@ class ProjectViewTestCase(TestCase):
         url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            langue_redaction_these="",
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
             type_contrat_travail="Something",
         )

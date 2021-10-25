@@ -10,7 +10,7 @@
         {% endif %}
         {% if person.birth_date %}
             {% field_data _("Birth date") person.birth_date %}
-        {% else %}
+        {% elif person.birth_year %}
             {% field_data _("Birth year") person.birth_year %}
         {% endif %}
         {% field_data _("Birth country") birth_country %}

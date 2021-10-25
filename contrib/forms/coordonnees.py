@@ -45,7 +45,7 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Tick the show contact checkbox only if there is data in contact
-        if any(self.initial['contact'][k] for k in self.initial['contact'].attribute_map):
+        if self.initial['contact'] and any(self.initial['contact'][k] for k in self.initial['contact'].attribute_map):
             self.fields["show_contact"].initial = True
 
 
@@ -72,13 +72,14 @@ class DoctorateAdmissionAddressForm(forms.Form):
     )
     BE_ISO_CODE = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, person=None, *args, **kwargs):
         self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_country_initial_choices(
-            self.initial.get("country")
+            self.initial.get("country"),
+            person,
         )
-        if self.initial["country"] == self.BE_ISO_CODE:
+        if self.initial and self.initial["country"] == self.BE_ISO_CODE:
             self.initial["be_postal_code"] = self.initial["postal_code"]
             self.initial["be_city"] = self.initial["city"]
             initial_choice_needed = self.data.get('be_city', self.initial.get("be_city"))

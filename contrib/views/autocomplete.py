@@ -41,7 +41,7 @@ __all__ = [
 
 class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return AdmissionAutocompleteService().get_doctorates(self.forwarded['sector'])
+        return AdmissionAutocompleteService().get_doctorates(self.request.user.person, self.forwarded['sector'])
 
     def results(self, results):
         return [dict(
@@ -63,10 +63,10 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
 class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return CountriesService.get_countries()
+        return CountriesService.get_countries(person=self.request.user.person)
 
     def autocomplete_results(self, results):
-        return CountriesService.get_countries(search=self.q)
+        return CountriesService.get_countries(person=self.request.user.person, search=self.q)
 
     def results(self, results):
         return [dict(
@@ -77,11 +77,18 @@ class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
 class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return CitiesService.get_cities(zip_code=self.forwarded['postal_code'])
+        return CitiesService.get_cities(
+            person=self.request.user.person,
+            zip_code=self.forwarded['postal_code'],
+        )
 
     def autocomplete_results(self, results):
         """Return list of strings that match the autocomplete query."""
-        return CitiesService.get_cities(zip_code=self.forwarded['postal_code'], search=self.q)
+        return CitiesService.get_cities(
+            person=self.request.user.person,
+            zip_code=self.forwarded['postal_code'],
+            search=self.q,
+        )
 
     def results(self, results):
         """Return the result dictionary."""

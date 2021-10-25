@@ -36,6 +36,6 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['admission'] = AdmissionPropositionService.get_proposition(
-            self.request.user.person, self.kwargs['pk'],
+            person=self.request.user.person, uuid=str(self.kwargs['pk']),
         )
         return context_data

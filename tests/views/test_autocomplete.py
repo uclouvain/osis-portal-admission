@@ -30,13 +30,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 from admission.tests.utils import MockCity, MockCountry
-from base.tests.factories.user import UserFactory
+from base.tests.factories.person import PersonFactory
 
 
 class AutocompleteTestCase(TestCase):
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
-        self.client.force_login(UserFactory())
+        self.client.force_login(PersonFactory().user)
         api.return_value.list_doctorat_dtos.return_value = [
             Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE"),
             Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
@@ -50,11 +50,11 @@ class AutocompleteTestCase(TestCase):
                 'text': 'FOOBAR - Foobar'
             }],
         })
-        api.return_value.list_doctorat_dtos.assert_called_with("SSH")
+        self.assertEqual(api.return_value.list_doctorat_dtos.call_args[0], ('SSH',))
 
     @patch('osis_reference_sdk.api.countries_api.CountriesApi')
     def test_autocomplete_country(self, api):
-        self.client.force_login(UserFactory())
+        self.client.force_login(PersonFactory().user)
         api.return_value.countries_list.return_value = Mock(results=[
             MockCountry(iso_code='FR', name='France', name_en='France'),
             MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
@@ -70,7 +70,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Belgique'
             }]
         })
-        api.return_value.countries_list.assert_called_with()
+        api.return_value.countries_list.assert_called()
 
         api.return_value.countries_list.return_value = Mock(results=[
             MockCountry(iso_code='FR', name='France', name_en='France'),
@@ -82,11 +82,11 @@ class AutocompleteTestCase(TestCase):
                 'text': 'France'
             }]
         })
-        api.return_value.countries_list.assert_called_with(search="F")
+        self.assertEqual(api.return_value.countries_list.call_args[1]['search'], 'F')
 
     @patch('osis_reference_sdk.api.cities_api.CitiesApi')
     def test_autocomplete_city(self, api):
-        self.client.force_login(UserFactory())
+        self.client.force_login(PersonFactory().user)
         api.return_value.cities_list.return_value = Mock(results=[
             MockCity(name='Pintintin-les-Creumeuil'),
             MockCity(name='Montreuil-les-Sardouille'),
@@ -102,7 +102,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Montreuil-les-Sardouille'
             }]
         })
-        api.return_value.cities_list.assert_called_with(zip_code='1111')
+        self.assertEqual(api.return_value.cities_list.call_args[1]['zip_code'], '1111')
 
         api.return_value.cities_list.return_value = Mock(results=[
             MockCity(name='Montreuil-les-Sardouille'),
@@ -114,4 +114,5 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Montreuil-les-Sardouille'
             }]
         })
-        api.return_value.cities_list.assert_called_with(zip_code='1111', search="Mont")
+        self.assertEqual(api.return_value.cities_list.call_args[1]['zip_code'], '1111')
+        self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')

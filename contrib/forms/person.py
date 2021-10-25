@@ -97,19 +97,21 @@ class DoctorateAdmissionPersonForm(forms.Form):
     class Media:
         js = ('dependsOn.min.js',)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         year_choices = tuple(
             (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
-            for academic_year in AcademicYearService.get_academic_years()
+            for academic_year in AcademicYearService.get_academic_years(person)
         )
         self.fields['last_registration_year'].choices = EMPTY_CHOICE + year_choices
         if self.initial.get('last_registration_year'):
             self.initial['already_registered'] = YES
 
         self.fields['birth_country'].widget.choices = get_country_initial_choices(
-            self.initial.get('birth_country')
+            self.initial.get('birth_country'),
+            person
         )
         self.fields['country_of_citizenship'].widget.choices = get_country_initial_choices(
-            self.initial.get('country_of_citizenship')
+            self.initial.get('country_of_citizenship'),
+            person
         )
