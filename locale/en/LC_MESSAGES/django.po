@@ -30,6 +30,27 @@ msgid ""
 "        "
 msgstr ""
 
+msgid "(e.g. +32 490 00 00 00)"
+msgstr ""
+
+msgid "(e.g.: 1234)"
+msgstr ""
+
+msgid "(e.g.: Frédéric) <del>frederic FREDERIC</del>)"
+msgstr ""
+
+msgid "(e.g.: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"
+msgstr ""
+
+msgid "(e.g.: Louvain-la-Neuve) louvain-la-neuve)"
+msgstr ""
+
+msgid "(e.g.: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
+msgstr ""
+
+msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
+msgstr ""
+
 msgid "ARC - Action de Recherche Concertée"
 msgstr ""
 
@@ -73,6 +94,9 @@ msgid "Bureau"
 msgstr ""
 
 msgid "CSC - China Scholarship Council"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Change my submission"
@@ -215,13 +239,13 @@ msgstr ""
 msgid "ID card"
 msgstr ""
 
-msgid "ID card number"
-msgstr ""
-
 msgid "ID photo"
 msgstr ""
 
 msgid "Identification"
+msgstr ""
+
+msgid "Identity card number"
 msgstr ""
 
 msgid "Institution"
@@ -255,7 +279,7 @@ msgstr ""
 msgid "NO"
 msgstr ""
 
-msgid "National number"
+msgid "National registry number"
 msgstr ""
 
 msgid "No"
@@ -271,6 +295,12 @@ msgid "Not submitted"
 msgstr ""
 
 msgid "OTHER"
+msgstr ""
+
+msgid ""
+"Only to provide if you are in possession of a Belgian document of identity. "
+"If you are of Belgian nationality and you live in Belgium this field is "
+"mandatory (11 digits length without space, hyphen or dot (Ex:79682312345))."
 msgstr ""
 
 msgid "Other"

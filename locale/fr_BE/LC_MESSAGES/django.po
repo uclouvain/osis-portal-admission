@@ -35,6 +35,27 @@ msgstr ""
 "été complétés avec succès. Les icônes indiquent la progression de votre "
 "demande qui peut interrompue et reprise et reprise à tout moment"
 
+msgid "(e.g. +32 490 00 00 00)"
+msgstr "(ex: +32 490 00 00 00)"
+
+msgid "(e.g.: 1234)"
+msgstr "(ex: 1234)"
+
+msgid "(e.g.: Frédéric) <del>frederic FREDERIC</del>)"
+msgstr "(ex: Frédéric) <del>frederic FREDERIC</del>)"
+
+msgid "(e.g.: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"
+msgstr "(ex: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"
+
+msgid "(e.g.: Louvain-la-Neuve) louvain-la-neuve)"
+msgstr "(ex: Louvain-la-Neuve) louvain-la-neuve)"
+
+msgid "(e.g.: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
+msgstr "(ex: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
+
+msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
+msgstr "(ex: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
+
 msgid "ARC - Action de Recherche Concertée"
 msgstr "ARC - Action de Recherche Concertée"
 
@@ -79,6 +100,9 @@ msgstr "Bureau"
 
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
+
+msgid "Cancel"
+msgstr "Annuler"
 
 msgid "Change my submission"
 msgstr "Modifier ma soumission"
@@ -127,7 +151,7 @@ msgstr "Date de soutenance"
 
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
-msgstr "Détaillez ici les raisons justifiant une admission provisoire"
+msgstr "Détaillez ici les raisons justifiant une admission provisoire."
 
 msgid "Doctoral project"
 msgstr "Projet doctoral"
@@ -220,14 +244,14 @@ msgstr "Genre"
 msgid "ID card"
 msgstr "Carte d'identité"
 
-msgid "ID card number"
-msgstr "Numéro de carte d'identité"
-
 msgid "ID photo"
 msgstr "Photo d'identité"
 
 msgid "Identification"
 msgstr "Identification"
+
+msgid "Identity card number"
+msgstr "Numéro de carte d'identité"
 
 msgid "Institution"
 msgstr "Institution"
@@ -262,8 +286,8 @@ msgstr "Téléphone portable"
 msgid "NO"
 msgstr "Non"
 
-msgid "National number"
-msgstr "Numéro national"
+msgid "National registry number"
+msgstr "Numéro de registre national"
 
 msgid "No"
 msgstr "Non"
@@ -279,6 +303,15 @@ msgstr "Non soumis"
 
 msgid "OTHER"
 msgstr "Autre"
+
+msgid ""
+"Only to provide if you are in possession of a Belgian document of identity. "
+"If you are of Belgian nationality and you live in Belgium this field is "
+"mandatory (11 digits length without space, hyphen or dot (Ex:79682312345))."
+msgstr ""
+"À ne fournir que si vous êtes en possession d'une pièce d'identité belge. Si "
+"vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
+"obligatoire (11 chiffres sans espace, ni tiret, ni point (Ex:79682312345))."
 
 msgid "Other"
 msgstr "Autre"

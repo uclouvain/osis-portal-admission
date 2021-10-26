@@ -38,9 +38,21 @@ NO = '0'
 
 
 class DoctorateAdmissionPersonForm(forms.Form):
-    first_name = forms.CharField(required=False, label=_("First name"))
-    middle_name = forms.CharField(required=False, label=_("Other names"))
-    last_name = forms.CharField(required=False, label=_("Last name"))
+    first_name = forms.CharField(
+        required=False,
+        label=_("First name"),
+        help_text=_("(e.g.: Frédéric) <del>frederic FREDERIC</del>)"),
+    )
+    middle_name = forms.CharField(
+        required=False,
+        label=_("Other names"),
+        help_text=_("(e.g.: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"),
+    )
+    last_name = forms.CharField(
+        required=False,
+        label=_("Last name"),
+        help_text=_("(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"),
+    )
     first_name_in_use = forms.CharField(required=False, label=_("First name in use"))
     sex = forms.ChoiceField(
         required=False,
@@ -53,14 +65,26 @@ class DoctorateAdmissionPersonForm(forms.Form):
         choices=EMPTY_CHOICE + GENDER_CHOICES,
     )
 
-    birth_date = forms.DateField(required=False, label=_("Birth date"))
-    birth_year = forms.IntegerField(required=False, label=_("Birth year"))
+    birth_date = forms.DateField(
+        required=False,
+        label=_("Birth date"),
+        widget=forms.DateInput(attrs={'placeholder': "dd/mm/yyyy"}),
+    )
+    birth_year = forms.IntegerField(
+        required=False,
+        label=_("Birth year"),
+        widget=forms.NumberInput(attrs={'placeholder': "yyyy"}),
+    )
     birth_country = forms.CharField(
         required=False,
         label=_("Birth country"),
         widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
     )
-    birth_place = forms.CharField(required=False, label=_("Birth place"))
+    birth_place = forms.CharField(
+        required=False,
+        label=_("Birth place"),
+        help_text=_("(e.g.: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"),
+    )
     country_of_citizenship = forms.CharField(
         required=False,
         label=_("Country of citizenship"),
@@ -81,10 +105,20 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     passport = FileUploadField(required=False, label=_("Passport"))
 
-    national_number = forms.CharField(required=False, label=_("National number"))
-    id_card_number = forms.CharField(required=False, label=_("ID card number"))
+    national_number = forms.CharField(
+        required=False,
+        label=_("National registry number"),
+        help_text=_("Only to provide if you are in possession of a Belgian document of identity. If "
+                    "you are of Belgian nationality and you live in Belgium this field is mandatory "
+                    "(11 digits length without space, hyphen or dot (Ex:79682312345))."),
+    )
+    id_card_number = forms.CharField(required=False, label=_("Identity card number"))
     passport_number = forms.CharField(required=False, label=_("Passport number"))
-    passport_expiration_date = forms.DateField(required=False, label=_("Passport expiration date"))
+    passport_expiration_date = forms.DateField(
+        required=False,
+        label=_("Passport expiration date"),
+        widget=forms.DateInput(attrs={'placeholder': "dd/mm/yyyy"}),
+    )
     id_photo = FileUploadField(required=False, label=_("ID photo"))
 
     last_registration_year = forms.ChoiceField(required=False, label=_("Last registration year"))
