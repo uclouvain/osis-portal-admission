@@ -3,12 +3,12 @@
 {% block tab_content %}
     {% panel _("Project") %}
         <div class="row">
-            {% field_data _("Admission type") admission.type_admission "col-md-4" %}
+            {% field_data _("Admission type") admission.type_admission|enum_display:'AdmissionType' "col-md-4" %}
             {% field_data _("Sector") admission.code_secteur_formation "col-md-4" %}
             {% field_data _("Doctorate") admission.intitule_doctorat_fr "col-md-4" %}
         </div>
         {% if admission.bureau_cde %}
-            {% field_data _("Bureau") admission.bureau_cde %}
+            {% field_data _("Bureau") admission.bureau_cde|enum_display:'ChoixBureauCDE' %}
         {% endif %}
         {% if admission.justification %}
             {% field_data _("Brief justification") admission.justification %}
@@ -40,7 +40,7 @@
     {% endpanel %}
 
     {% panel _("Previous research experience") %}
-        {% field_data _("PhD already done") admission.doctorat_deja_realise %}
+        {% field_data _("PhD already done") admission.doctorat_deja_realise|enum_display:'ChoixDoctoratDejaRealise' %}
         {% if admission.doctorat_deja_realise != "NO" %}
             {% field_data _("Institution") admission.institution %}
             {% field_data _("Defense date") admission.date_soutenance %}

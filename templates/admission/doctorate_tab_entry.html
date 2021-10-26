@@ -6,20 +6,18 @@
 {% else %}
     {% url 'admission:doctorate-update:'|add:tab_name admission_uuid as tab_url %}
 {% endif %}
-{% if tab_url %}
-    <li
-        role="presentation"
-        class="text-nowrap{% if request.path == tab_url %} active{% elif not tab_url %} disabled{% endif %}"
-    >
-        <a href="{{ tab_url }}">
-            {% if icon %}
-                <span class="fa fa-{{ icon }}"></span>
-            {% elif is_valid %}
-                <span class="fa fa-check"></span>
-            {% else %}
-                <span class="fa fa-exclamation-triangle"></span>
-            {% endif %}
-            {{ tab_label }}
-        </a>
-    </li>
-{% endif %}
+<li
+    role="presentation"
+    class="text-nowrap{% if request.path == tab_url %} active{% elif not tab_url %} disabled{% endif %}"
+>
+    <a href="{{ tab_url }}">
+        {% if icon %}
+            <span class="fa fa-{{ icon }}"></span>
+        {% elif is_valid %}
+            <span class="fa fa-check"></span>
+        {% else %}
+            <span class="fa fa-exclamation-triangle"></span>
+        {% endif %}
+        {{ tab_label }}
+    </a>
+</li>

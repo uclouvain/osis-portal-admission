@@ -53,6 +53,5 @@ class DoctorateAdmissionCoordonneesDetailView(LoginRequiredMixin, TemplateView):
             )
             context_data['contact_country'] = getattr(contact_country, translated_field)
         # check if there is at least one data into contact
-        for k in coordonnees.contact.attribute_map:
-            context_data["show_contact"] = True if getattr(coordonnees.contact, k) else False
+        context_data["show_contact"] = any(getattr(coordonnees.contact, k) for k in coordonnees.contact.attribute_map)
         return context_data

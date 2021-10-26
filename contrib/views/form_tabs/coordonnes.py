@@ -24,12 +24,10 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm, DoctorateAdmissionCoordonneesForm
 from admission.services.mixins import WebServiceFormMixin
-
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
 from admission.services.reference import CountriesService
@@ -37,7 +35,6 @@ from admission.services.reference import CountriesService
 
 class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_coordonnees.html'
-    success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionCoordonneesForm
     forms = None
     BE_ISO_CODE = None

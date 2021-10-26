@@ -72,7 +72,12 @@ class DoctorateAdmissionPersonForm(forms.Form):
         required=False,
         choices=settings.LANGUAGES,
     )
-    id_card = FileUploadField(required=False, label=_("ID card"))
+    id_card = FileUploadField(
+        required=False,
+        label=_("ID card"),
+        max_files=2,
+        min_files=0,
+    )
 
     passport = FileUploadField(required=False, label=_("Passport"))
 
