@@ -63,6 +63,18 @@ class TemplateTagsTestCase(TestCase):
         self.assertEqual('', rendered)
 
         rendered = template.render(Context({
+            'value': None,
+        }))
+        self.assertEqual('None', rendered)
+
+        obj = Mock()
+        obj.__str__ = lambda _: "obj"
+        rendered = template.render(Context({
+            'value': obj,
+        }))
+        self.assertEqual('obj', rendered)
+
+        rendered = template.render(Context({
             'value': "FOO",
         }))
         self.assertEqual('Bar', rendered)
@@ -86,20 +98,6 @@ class TemplateTagsTestCase(TestCase):
         self.assertNotIn('confirm-paper', rendered)
         self.assertIn('/doctorates/create/', rendered)
 
-    def test_document_list_empty(self):
-        template = Template("{% load admission %}{% document_list docs %}")
-        rendered = template.render(Context({'docs': []}))
-        self.assertNotIn('<li>', rendered)
-
-    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
-    def test_document_list(self, *args):
-        template = Template("{% load admission %}{% document_list docs %}")
-        rendered = template.render(Context({'docs': ['55375049-9d61-4c11-9f41-7460463a5ae3']}))
-        self.assertIn('<li>', rendered)
-        self.assertNotIn('<li>', '55375049-9d61-4c11-9f41-7460463a5ae3')
-        self.assertIn('myfile', rendered)
-
     def test_field_data(self):
         template = Template("{% load admission %}{% field_data 'title' data 'col-md-12' %}")
         rendered = template.render(Context({'data': "content"}))
@@ -113,6 +111,6 @@ class TemplateTagsTestCase(TestCase):
     def test_field_data_with_list(self, *args):
         template = Template("{% load admission %}{% field_data 'title' data %}")
         rendered = template.render(Context({'data': ['55375049-9d61-4c11-9f41-7460463a5ae3']}))
-        self.assertIn('<li>', rendered)
-        self.assertNotIn('<li>', '55375049-9d61-4c11-9f41-7460463a5ae3')
-        self.assertIn('myfile', rendered)
+        self.assertIn('document-visualizer', rendered)
+        self.assertNotIn('55375049-9d61-4c11-9f41-7460463a5ae3', rendered)
+        self.assertIn('foobar', rendered)

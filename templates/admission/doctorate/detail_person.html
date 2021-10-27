@@ -1,30 +1,37 @@
-{% extends "admission/doctorate/detail_tab_layout.html" %}
-{% load i18n static admission index %}
+{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission index %}
 
 {% block tab_content %}
     {% panel _("Personal information") %}
-        {% field_data _("First name") person.first_name %}
-        {% field_data _("Last name") person.last_name %}
-        {% if person.middle_name %}
-            {% field_data _("Other names") person.middle_name %}
-        {% endif %}
-        {% if person.birth_date %}
-            {% field_data _("Birth date") person.birth_date %}
-        {% elif person.birth_year %}
-            {% field_data _("Birth year") person.birth_year %}
-        {% endif %}
-        {% field_data _("Birth country") birth_country %}
-        {% field_data _("Birth place") person.birth_place %}
+        <div class="row">
+            {% field_data _("First name") person.first_name "col-md-4" %}
+            {% field_data _("Last name") person.last_name "col-md-4" %}
+            {% if person.middle_name %}
+                {% field_data _("Other names") person.middle_name "col-md-4" %}
+            {% endif %}
+        </div>
+        <div class="row">
+            {% if person.birth_date %}
+                {% field_data _("Birth date") person.birth_date "col-md-4" %}
+            {% elif person.birth_year %}
+                {% field_data _("Birth year") person.birth_year "col-md-4" %}
+            {% endif %}
+            {% field_data _("Birth country") birth_country "col-md-4" %}
+            {% field_data _("Birth place") person.birth_place "col-md-4" %}
+        </div>
         {% field_data _("Country of citizenship") country_of_citizenship %}
         {% field_data _("ID photo") person.id_photo %}
         {% field_data _("Contact language") contact_language %}
     {% endpanel %}
 
     {% panel _("Identification") %}
-        {% field_data _("National registry number") person.national_number %}
-        {% field_data _("Identity card number") person.id_card_number %}
-        {% field_data _("Passport number") person.passport_number %}
-        {% field_data _("Passport expiration date") person.passport_expiration_date %}
+        <div class="row">
+            {% field_data _("National registry number") person.national_number "col-md-6" %}
+            {% field_data _("Identity card number") person.id_card_number "col-md-6" %}
+        </div>
+        <div class="row">
+            {% field_data _("Passport number") person.passport_number "col-md-6" %}
+            {% field_data _("Passport expiration date") person.passport_expiration_date "col-md-6" %}
+        </div>
         {% field_data _("ID card") person.id_card %}
         {% field_data _("Passport") person.passport %}
     {% endpanel %}

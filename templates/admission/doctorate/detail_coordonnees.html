@@ -1,12 +1,15 @@
-{% extends "admission/doctorate/detail_tab_layout.html" %}
-{% load i18n static admission index %}
+{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission index %}
 
 {% block tab_content %}
     {% panel _("Residential address") %}
         <div class="row">
             <div class="col-md-4">{% field_data _("Street number") coordonnees.residential.street_number %}</div>
-            <div class="col-md-4">{% field_data _("Street") coordonnees.residential.street %}</div>
-            <div class="col-md-4">{% field_data _("Box") coordonnees.residential.postal_box %}</div>
+            {% if coordonnees.contact.street %}
+                <div class="col-md-4">{% field_data _("Street") coordonnees.residential.street %}</div>
+            {% endif %}
+            {% if coordonnees.contact.postal_box %}
+                <div class="col-md-4">{% field_data _("Box") coordonnees.residential.postal_box %}</div>
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-4">{% field_data _("Country") residential_country %}</div>
@@ -18,8 +21,12 @@
         {% panel _("Contact address") %}
             <div class="row">
                 <div class="col-md-4">{% field_data _("Street number") coordonnees.contact.street_number %}</div>
-                <div class="col-md-4">{% field_data _("Street") coordonnees.contact.street %}</div>
-                <div class="col-md-4">{% field_data _("Box") coordonnees.contact.postal_box %}</div>
+                {% if coordonnees.contact.street %}
+                    <div class="col-md-4">{% field_data _("Street") coordonnees.contact.street %}</div>
+                {% endif %}
+                {% if coordonnees.contact.postal_box %}
+                    <div class="col-md-4">{% field_data _("Box") coordonnees.contact.postal_box %}</div>
+                {% endif %}
             </div>
             <div class="row">
                 <div class="col-md-4">{% field_data _("Country") contact_country %}</div>
@@ -29,7 +36,9 @@
         {% endpanel %}
     {% endif %}
     {% panel _("Contact") %}
-        {% field_data _("Email") coordonnees.email %}
-        {% field_data _("Mobile phone") coordonnees.phone_mobile %}
+        <div class="row">
+            {% field_data _("Email") coordonnees.email "col-md-6" %}
+            {% field_data _("Mobile phone") coordonnees.phone_mobile "col-md-6" %}
+        </div>
     {% endpanel %}
 {% endblock %}

@@ -206,7 +206,7 @@ msgstr "Féminin"
 
 msgctxt "female gender"
 msgid "Female"
-msgstr "Femme"
+msgstr "Féminin"
 
 msgid "Financing"
 msgstr "Financement"
@@ -278,7 +278,7 @@ msgstr "Masculin"
 
 msgctxt "gender male"
 msgid "Male"
-msgstr "Homme"
+msgstr "Masculin"
 
 msgid "Mobile phone"
 msgstr "Téléphone portable"

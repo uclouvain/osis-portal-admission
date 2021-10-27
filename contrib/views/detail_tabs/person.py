@@ -40,7 +40,7 @@ class DoctorateAdmissionPersonDetailView(TemplateView):
         person = AdmissionPersonService.retrieve_person(self.request.user.person)
         context_data['person'] = person
         context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person, uuid=self.kwargs['pk'],
+            person=self.request.user.person, uuid=str(self.kwargs['pk']),
         )
         context_data['contact_language'] = dict(settings.LANGUAGES).get(person.language)
 
