@@ -37,7 +37,11 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
     )
 
     email = forms.EmailField(disabled=True, label=_("Email"))
-    phone_mobile = forms.CharField(required=False, label=_("Mobile phone"))
+    phone_mobile = forms.CharField(
+        required=False,
+        label=_("Mobile phone"),
+        help_text=_("(e.g. +32 490 00 00 00)"),
+    )
 
     class Media:
         js = ('dependsOn.min.js',)
@@ -53,8 +57,16 @@ class DoctorateAdmissionAddressForm(forms.Form):
     street = forms.CharField(required=False, label=_("Street"))
     street_number = forms.CharField(required=False, label=_("Street number"))
     postal_box = forms.CharField(required=False, label=_("Box"))
-    postal_code = forms.CharField(required=False, label=_("Postal code"))
-    city = forms.CharField(required=False, label=_("City"))
+    postal_code = forms.CharField(
+        required=False,
+        label=_("Postal code"),
+        help_text=_("(e.g.: 1234)"),
+    )
+    city = forms.CharField(
+        required=False,
+        label=_("City"),
+        help_text=_("(e.g.: Louvain-la-Neuve) louvain-la-neuve)"),
+    )
     country = forms.CharField(
         required=False,
         label=_("Country"),

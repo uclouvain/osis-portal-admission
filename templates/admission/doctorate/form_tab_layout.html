@@ -1,16 +1,18 @@
 {% extends "layout.html" %}{% load bootstrap3 i18n static admission %}
 
 {% block breadcrumb %}
-    <li>
-        <a href="{% url 'admission:doctorate-list' %}">
-            {% trans "Doctorate admissions" %}
-        </a>
-    </li>
-    {% if admission %}
-        <li class="active">{{ admission.intitule_doctorat_fr }}</li>
-    {% else %}
-        <li class="active">{% trans "Create new doctorate admission" %}</li>
-    {% endif %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'admission:doctorate-list' %}">
+                {% trans "Doctorate admissions" %}
+            </a>
+        </li>
+        {% if admission %}
+            <li class="active">{{ admission.intitule_doctorat_fr }}</li>
+        {% else %}
+            <li class="active">{% trans "Create new doctorate admission" %}</li>
+        {% endif %}
+    </ol>
 {% endblock %}
 
 {% block content %}
@@ -61,6 +63,7 @@
     </em></p>
 
     {% doctorate_tabs admission %}
+    {% url "admission:doctorate-detail:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
     <form class="osis-form" method="post" action="">
         {% csrf_token %}
@@ -72,6 +75,7 @@
                 ></span>
                 {% trans 'Save my submission' %}
             </button>
+            {% if cancel_url %}<a href="{{ cancel_url }}" class="text-danger">{% trans "Cancel" %}</a>{% endif %}
         </div>
 
         {% block form %}{% endblock %}
@@ -83,6 +87,7 @@
                 ></span>
                 {% trans 'Save my submission' %}
             </button>
+            {% if cancel_url %}<a href="{{ cancel_url }}" class="text-danger">{% trans "Cancel" %}</a>{% endif %}
         </div>
 
     </form>

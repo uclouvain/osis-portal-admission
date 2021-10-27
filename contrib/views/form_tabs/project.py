@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
@@ -36,7 +35,6 @@ from osis_document.api.utils import get_remote_token
 
 class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_project.html'
-    success_url = reverse_lazy('admission:doctorate-list')
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',

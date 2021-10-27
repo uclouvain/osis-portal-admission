@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from admission.contrib.forms.person import DoctorateAdmissionPersonForm
@@ -36,7 +35,6 @@ from osis_document.api.utils import get_remote_token
 
 class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_person.html'
-    success_url = reverse_lazy('admission:doctorate-list')
     form_class = DoctorateAdmissionPersonForm
 
     def get_form_kwargs(self):
@@ -56,6 +54,10 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
             initial[field] = [get_remote_token(document, write_token=True)
                               for document in initial.get(field)]
         return initial
+
+    def prepare_data(self, data):
+        data['last_registration_year'] = int(data['last_registration_year']) if data['last_registration_year'] else None
+        return data
 
     def call_webservice(self, data):
         AdmissionPersonService.update_person(person=self.request.user.person, **data)

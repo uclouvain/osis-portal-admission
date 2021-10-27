@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.shortcuts import resolve_url
+
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
@@ -52,3 +54,10 @@ class WebServiceFormMixin:
 
     def call_webservice(self, data):
         raise NotImplementedError
+
+    def get_success_url(self):
+        pk = self.kwargs.get('pk')
+        if pk:
+            tab_name = self.request.resolver_match.url_name
+            return resolve_url('admission:doctorate-detail:' + tab_name, pk=pk)
+        return resolve_url('admission:doctorate-list')

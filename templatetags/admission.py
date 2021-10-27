@@ -80,15 +80,10 @@ def doctorate_tabs(context, admission=None):
     }
 
 
-@register.inclusion_tag('admission/document_list.html')
-def document_list(files):
-    return {'files': files}
-
-
 @register.inclusion_tag('admission/field_data.html')
 def field_data(name, data=None, css_class=None):
     if isinstance(data, list):
-        template_string = "{% load admission %}{% document_list files %}"
+        template_string = "{% load osis_document %}{% document_visualizer files %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
     return {
@@ -112,7 +107,7 @@ def panel(context, title='', **kwargs):
 
 @register.filter
 def enum_display(value, enum_name):
-    if value:
+    if value and isinstance(value, str):
         for enum in ChoiceEnum.__subclasses__():
             if enum.__name__ == enum_name:
                 return enum.get_value(value)

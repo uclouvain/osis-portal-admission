@@ -165,7 +165,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         # Set type_contrat_travail to OTHER if value is not from enum
         if (
                 self.initial.get('type_contrat_travail')
-                and self.initial['type_contrat_travail'] not in ChoixTypeContratTravail.choices()
+                and self.initial['type_contrat_travail'] not in ChoixTypeContratTravail.get_names()
         ):
             self.initial['type_contrat_travail_other'] = self.initial['type_contrat_travail']
             self.initial['type_contrat_travail'] = ChoixTypeContratTravail.OTHER.name
@@ -173,7 +173,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         # Set bourse_recherche to OTHER if value is not from enum
         if (
                 self.initial.get('bourse_recherche')
-                and self.initial['bourse_recherche'] not in BourseRecherche.choices()
+                and self.initial['bourse_recherche'] not in BourseRecherche.get_names()
         ):
             self.initial['bourse_recherche_other'] = self.initial['bourse_recherche']
             self.initial['bourse_recherche'] = BourseRecherche.OTHER.name

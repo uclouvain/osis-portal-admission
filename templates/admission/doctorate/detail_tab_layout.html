@@ -1,19 +1,34 @@
 {% extends "layout.html" %}{% load bootstrap3 i18n static admission %}
 
-{% block breadcrumb %}
-    <li>
-        <a href="{% url 'admission:doctorate-list' %}">{% trans "Doctorate admissions" %}</a>
-    </li>
-    {% if admission %}
-        <li class="active">{{ admission }}</li>
-    {% else %}
-        <li class="active">{% trans "Create new doctorate admission" %}</li>
-    {% endif %}
+{% block breadcrumb_area %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'admission:doctorate-list' %}">{% trans "Doctorate admissions" %}</a>
+        </li>
+        {% if admission %}
+            <li class="active">
+                {{ admission.intitule_doctorat_fr }} (21-300001)
+            </li>
+        {% else %}
+            <li class="active">{% trans "Create new doctorate admission" %}</li>
+        {% endif %}
+    </ol>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
 {% endblock %}
 
 {% block content %}
     <div class="page-header h3">
-        <span class="d-inline-block">{% trans "Create new doctorate admission" %}</span>
+        <span class="d-inline-block">
+        {% if admission %}
+            {{ admission.intitule_doctorat_fr }} (21-300001)
+        {% else %}
+            {% trans "Create new doctorate admission" %}
+        {% endif %}
+        </span>
         <a
             href="{% url 'admission:doctorate-list' %}"
             class="pull-right h5 text-primary"
@@ -28,7 +43,10 @@
             {% trans "Reference:" %}
             {% if not admission %}
                 {% trans "No reference yet - Go to Project tab" %}
-            {% else %}{{ admission.uuid }}{% endif %}
+            {% else %}
+                21-300001
+                {{ admission.reference }}
+            {% endif %}
         </div>
         <div>
             {% trans "Status:" %}
@@ -56,8 +74,7 @@
         <div class="form-group">
             <a href="{{ change_url }}" class="btn btn-primary">
                 <span
-                    class="glyphicon glyphicon-floppy-save"
-                    aria-hidden="true"
+                    class="glyphicon glyphicon-floppy-save" aria-hidden="true"
                 ></span>
                 {% trans 'Change my submission' %}
             </a>

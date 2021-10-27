@@ -74,6 +74,9 @@
         $('#not-be-contact-address').dependsOn({
           '#id_contact-country': { not: [beIsoCode] },
         });
+        $('#id_contact-be_postal_code').on("keydown", function(){
+            $("#id_contact-be_city").val('').trigger('change');
+        });
         //-------------------------------------------------------------------------------
 
 

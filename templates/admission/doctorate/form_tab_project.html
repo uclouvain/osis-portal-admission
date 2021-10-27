@@ -146,12 +146,15 @@
             $('#bureau').dependsOn({
                 '#id_doctorate': {
                     changed: function () {
-                        var data = $('#id_doctorate').select2('data')
-                        if (initialData && data[0].id === initialData.id) {
-                            data = [initialData];
-                        }
-                        if (data.length && data[0].sigle_entite_gestion === 'CDE') {
-                            return true;
+                        var $doctorate = $('#id_doctorate');
+                        if ($doctorate.hasClass('select2-hidden-accessible')) {
+                            var data = $doctorate.select2('data')
+                            if (initialData && data[0].id === initialData.id) {
+                                data = [initialData];
+                            }
+                            if (data.length && data[0].sigle_entite_gestion === 'CDE') {
+                                return true;
+                            }
                         }
                     },
                 },

@@ -24,26 +24,73 @@
 
     {% for admission in admissions %}
         {% panel %}
-            <span class="h3">{{ admission.intitule_doctorat_fr }}</span>
-            <em>{{ admission.created_at }}</em>
-            <a
-                class="btn btn-default pull-right"
-                href="{% url "admission:doctorate-update" admission.uuid %}"
-            >
-                <span class="glyphicon glyphicon-pencil"></span>
-                {% trans "Edit" %}
-            </a>
-            <a
-                class="btn btn-default pull-right"
-                href="{% url "admission:doctorate-detail" admission.uuid %}"
-            >
-                <span class="glyphicon glyphicon-eye-open"></span>
-                {% trans "View" %}
-            </a>
-            <dl class="dl-horizontal">
-                <dt>{% trans "Sector" %}</dt>
-                <dd>{{ admission.code_secteur_formation }}</dd>
-            </dl>
+            <span class="h3">{{ admission.intitule_doctorat_fr }} (21-300001)</span>
+            <em>Créée le {{ admission.creee_le }}</em>
+
+            <div class="dropdown pull-right">
+                <button
+                    type="button"
+                    class="btn btn-default dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                >
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    {% trans "Edit" %}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="person" tab_label=_("Identification") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="coordonnees" tab_label=_("Contact details") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="education" tab_label=_("Secondary studies") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="curriculum" tab_label=_("Curriculum") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="project" tab_label=_("Doctoral project") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="cotutelle" tab_label=_("Cotutelle") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="supervision" tab_label=_("Supervision") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="confirm" tab_label=_("Confirmation") %}
+                    {% if admission.is_valid %}
+                        <li role="separator" class="divider"></li>
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="confirm-paper" tab_label=_("Confirmation paper") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="training" tab_label=_("Doctoral training") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="jury" tab_label=_("Jury") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="private-defense" tab_label=_("Private defense") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="public-defense" tab_label=_("Public defense") %}
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="dropdown pull-right">
+                <button
+                    type="button"
+                    class="btn btn-default dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                >
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                    {% trans "View" %}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="person" tab_label=_("Identification") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="coordonnees" tab_label=_("Contact details") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="education" tab_label=_("Secondary studies") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="curriculum" tab_label=_("Curriculum") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="project" tab_label=_("Doctoral project") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="cotutelle" tab_label=_("Cotutelle") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="supervision" tab_label=_("Supervision") %}
+                    {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="confirm" tab_label=_("Confirmation") %}
+                    {% if admission.is_valid %}
+                        <li role="separator" class="divider"></li>
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="confirm-paper" tab_label=_("Confirmation paper") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="training" tab_label=_("Doctoral training") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="jury" tab_label=_("Jury") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="private-defense" tab_label=_("Private defense") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="public-defense" tab_label=_("Public defense") %}
+                    {% endif %}
+                </ul>
+            </div>
+            <div>{{ admission.intitule_secteur_formation }}</div>
         {% endpanel %}
     {% endfor %}
 {% endblock %}
