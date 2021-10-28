@@ -45,7 +45,5 @@ def get_language_initial_choices(language, person):
     """Return the unique initial choice for a language when data is either set from initial or from webservice."""
     if not language:
         return EMPTY_CHOICE
-    language = LanguageService.get_language(language=language, person=person)
-    return EMPTY_CHOICE + (
-        (language.language, language.name_en if settings.LANGUAGE_CODE == 'en' else language.name),
-    )
+    language = LanguageService.get_language(search=language, person=person)
+    return EMPTY_CHOICE + ((language.code, language.name),)
