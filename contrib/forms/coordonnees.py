@@ -88,7 +88,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
         self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_country_initial_choices(
-            self.initial.get("country"),
+            self.data.get("country", self.initial.get("country")),
             person,
         )
         if self.initial and self.initial["country"] == self.BE_ISO_CODE:
