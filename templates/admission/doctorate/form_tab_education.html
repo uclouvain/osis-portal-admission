@@ -2,7 +2,9 @@
 {% load bootstrap3 i18n static admission %}
 
 {% block form %}
-  {% bootstrap_form_errors form %}
+  {% bootstrap_form_errors main_form %}
+  {% bootstrap_form_errors foreign_diploma_form %}
+  {% bootstrap_form_errors belgian_diploma_form %}
 
   <div class="row">
     <div class="col-md-12">{% bootstrap_field main_form.got_diploma %}</div>
@@ -62,40 +64,58 @@
         <p>Please complete here below the schedule of your last year of high school,<br>
         indicating for each domain the number of hours of education followed per week (h/w).</p>
 
-        {% panel _("Ancient languages") %}
-          {% bootstrap_field schedule_form.latin %}
-          {% bootstrap_field schedule_form.greek %}
-        {% endpanel %}
+        <div class="row">
+          <div class="col-md-4">
+            {% panel _("Ancient languages") %}
+              {% bootstrap_field schedule_form.latin addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.greek addon_after=_("h/w") %}
+            {% endpanel %}
 
-        {% panel _("Sciences") %}
-          {% bootstrap_field schedule_form.chemistry %}
-          {% bootstrap_field schedule_form.physic %}
-          {% bootstrap_field schedule_form.biology %}
-        {% endpanel %}
-
-        {% panel _("Modern languages") %}
-          {% bootstrap_field schedule_form.german %}
-          {% bootstrap_field schedule_form.dutch %}
-          {% bootstrap_field schedule_form.english %}
-          {% bootstrap_field schedule_form.french %}
-          <div class="row">
-            <div class="col-sm-6">{% bootstrap_field schedule_form.modern_languages_other_label %}</div>
-            <div class="col-sm-6">{% bootstrap_field schedule_form.modern_languages_other_hours %}</div>
+            {% panel _("Sciences") %}
+              {% bootstrap_field schedule_form.chemistry addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.physic addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.biology addon_after=_("h/w") %}
+            {% endpanel %}
           </div>
-        {% endpanel %}
 
-        {% panel "" %}
-          {% bootstrap_field schedule_form.mathematics %}
-          {% bootstrap_field schedule_form.it %}
-          {% bootstrap_field schedule_form.social_sciences %}
-          {% bootstrap_field schedule_form.economic_sciences %}
+          <div class="col-md-4">
+            {% panel _("Modern languages") %}
+              {% bootstrap_field schedule_form.german addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.dutch addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.english addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.french addon_after=_("h/w") %}
 
-          <div class="row">
-            <div class="col-sm-6">{% bootstrap_field schedule_form.other_label %}</div>
-            <div class="col-sm-6">{% bootstrap_field schedule_form.other_hours %}</div>
+              <div class="form-group">
+                {% bootstrap_label schedule_form.modern_languages_other_label.label label_for=schedule_form.modern_languages_other_label.id_for_label %}
+                <div class="input-group">
+                  <input type="text" name="schedule-modern_languages_other_label" class="form-control" title="" id="id_schedule-modern_languages_other_label"/>
+                  <span class="input-group-addon">:</span>
+                  <input type="number" name="schedule-modern_languages_other_hours" class="form-control" title="" id="id_schedule-modern_languages_other_hours">
+                  <div class="input-group-addon">{% trans "h/w" %}</div>
+                </div>
+              </div>
+            {% endpanel %}
           </div>
-        {% endpanel %}
 
+          <div class="col-md-4">
+            {% panel _("Others") %}
+              {% bootstrap_field schedule_form.mathematics addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.it addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.social_sciences addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.economic_sciences addon_after=_("h/w") %}
+
+              <div class="form-group">
+                {% bootstrap_label schedule_form.other_label.label label_for=schedule_form.other_label.id_for_label %}
+                <div class="input-group">
+                  <input type="text" name="schedule-other_label" class="form-control" title="" id="id_schedule-other_label"/>
+                  <span class="input-group-addon">:</span>
+                  <input type="number" name="schedule-other_hours" class="form-control" title="" id="id_schedule-other_hours">
+                  <div class="input-group-addon">{% trans "h/w" %}</div>
+                </div>
+              </div>
+            {% endpanel %}
+          </div>
+        </div>
       {% endpanel %}
     {% endpanel %}
 
@@ -119,7 +139,10 @@
       $('#got-diploma').dependsOn({
         'input[name=got_diploma]': { values: ["True"] },
       },{ onDisable: function () {
-        setNullValue("#got-diploma")
+        setNullValue("#got-diploma");
+        setNullValue("#foreign-diploma");
+        setNullValue("#belgian-diploma");
+        setNullValue("#schedule");
       }});
 
       $('#foreign-diploma').dependsOn({

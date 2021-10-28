@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
@@ -37,9 +38,10 @@ from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 
 
-class DoctorateAdmissionEducationFormView(WebServiceFormMixin, FormView):
+class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = "admission/doctorate/form_tab_education.html"
     success_url = reverse_lazy("admission:doctorate-list")
+    form_class = DoctorateAdmissionEducationForm
     forms = None
 
     def get_context_data(self, **kwargs):
@@ -52,21 +54,24 @@ class DoctorateAdmissionEducationFormView(WebServiceFormMixin, FormView):
 
     def post(self, request, *args, **kwargs):
         forms = self.get_forms()
-        if all(form.is_valid() for form in forms.values()):
+        if all(not form.is_bound or form.is_valid() for form in forms.values()):
             return self.form_valid(forms["main_form"])
-        else:
-            return self.form_invalid(forms["main_form"])
+        return self.form_invalid(forms["main_form"])
 
-    def get_form(self, form_class=None):
-        return DoctorateAdmissionEducationForm(person=self.request.user.person)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["person"] = self.request.user.person
+        return kwargs
 
     def get_forms(self):
         if not self.forms:
-            person = self.request.user.person
             kwargs = self.get_form_kwargs()
-            del kwargs["prefix"]
-            initial = kwargs["initial"]
-            del kwargs["initial"]
+            data = kwargs.pop("data", None)
+            # we don't work we files on those forms
+            kwargs.pop("files", None)
+            person = kwargs.pop("person")
+            kwargs.pop("prefix")
+            initial = kwargs.pop("initial")
             self.forms = {
                 "main_form": self.get_form(),
                 "belgian_diploma_form": DoctorateAdmissionEducationBelgianDiplomaForm(
@@ -74,6 +79,8 @@ class DoctorateAdmissionEducationFormView(WebServiceFormMixin, FormView):
                     initial=initial["belgian_diploma"],
                     empty_permitted=True,
                     use_required_attribute=False,
+                    # don't send data to prevent validation
+                    data=data if data and data.get("diploma_type") == DiplomaTypes.BELGIAN.name else None,
                     **kwargs,
                 ),
                 "foreign_diploma_form": DoctorateAdmissionEducationForeignDiplomaForm(
@@ -82,30 +89,28 @@ class DoctorateAdmissionEducationFormView(WebServiceFormMixin, FormView):
                     empty_permitted=True,
                     use_required_attribute=False,
                     person=person,
+                    data=data if data and data.get("diploma_type") == DiplomaTypes.FOREIGN.name else None,
                     **kwargs,
                 ),
                 "schedule_form": DoctorateAdmissionEducationScheduleForm(
                     prefix="schedule",
-                    initial=initial["belgian_diploma"]["schedule"] if initial["belgian_diploma"] else None,
+                    initial=initial["belgian_diploma"].get("schedule") if initial["belgian_diploma"] else None,
+                    data=data if data and data.get("diploma_type") == DiplomaTypes.BELGIAN.name else None,
                     empty_permitted=True,
-                    use_required_attribute=False,
+                    use_required_attribute=False,  # for number input that can't be empty
                     **kwargs,
                 )
             }
         return self.forms
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_high_school_diploma(person=self.request.user.person, **data)
+        AdmissionPersonService.update_high_school_diploma(self.request.user.person, data)
 
     @staticmethod
     def prepare_diploma(data, forms, diploma):
         data[diploma] = forms["{}_form".format(diploma)].cleaned_data
-        data[diploma]["academic_graduation_year"] = data["academic_graduation_year"]
-        data[diploma]["result"] = data["result"]
-        del data["got_diploma"]
-        del data["diploma_type"]
-        del data["academic_graduation_year"]
-        del data["result"]
+        data[diploma]["academic_graduation_year"] = data.pop("academic_graduation_year")
+        data[diploma]["result"] = data.pop("result")
 
     def prepare_data(self, main_form_data):
         # Process the form data to match API
@@ -115,14 +120,16 @@ class DoctorateAdmissionEducationFormView(WebServiceFormMixin, FormView):
 
         data = forms["main_form"].cleaned_data
 
-        if data.get("got_diploma"):
-            if data.get("diploma_type") == DiplomaTypes.BELGIAN.name:
+        got_diploma = data.pop("got_diploma", None)
+        if got_diploma:
+            diploma_type = data.pop("diploma_type", None)
+            if diploma_type == DiplomaTypes.BELGIAN.name:
                 self.prepare_diploma(data, forms, "belgian_diploma")
-                if main_form_data.get("schedule"):
-                    data["belgian_diploma"]["schedule"] = data["schedule"]
-                    del data["schedule"]
+                schedule = forms.get("schedule_form")
+                if schedule:
+                    data["belgian_diploma"]["schedule"] = schedule.cleaned_data
 
-            if data.get("diploma_type") == DiplomaTypes.FOREIGN.name:
+            if diploma_type == DiplomaTypes.FOREIGN.name:
                 self.prepare_diploma(data, forms, "foreign_diploma")
 
         return data
