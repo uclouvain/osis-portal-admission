@@ -2,6 +2,7 @@
 {% load i18n static admission index %}
 
 {% block tab_content %}
+  {% if belgian_diploma or foreign_diploma %}
   {% if belgian_diploma %}
 
     <div class="row">
@@ -11,17 +12,15 @@
     {% panel _("Belgian diploma") %}
 
       {% panel _("Community of education") %}
-        {% field_data _("Community of education") belgian_diploma.community %}
+        {% field_data _("Community of education") belgian_diploma.community|enum_display:'BelgianCommunitiesOfEducation' %}
       {% endpanel %}
 
       {% if belgian_diploma.community == "FRENCH_SPEAKING" %}
         {% panel _("Type of education") %}
           <strong>{% trans "What type of education did (do) you follow?" %}</strong>
 
-          {% if belgian_diploma.educational_transition %}
-            {% field_data _("Educational transition") belgian_diploma.educational_transition %}
-          {% elif belgian_diploma.educational_qualification %}
-            {% field_data _("Educational qualification") belgian_diploma.educational_transition %}
+          {% if belgian_diploma.educational_type %}
+            {% field_data "" belgian_diploma.educational_type|enum_display:'EducationalType' %}
           {% else %}
             {% field_data _("Other education, to specify") belgian_diploma.educational_other %}
           {% endif %}
@@ -30,12 +29,8 @@
       {% endif %}
 
       {% panel _("Course") %}
-        {% field_data _("Did you repeat certain study years during your studies?") belgian_diploma.course_repeat %}
-        {% field_data _("Did you change of orientation during your studies?") belgian_diploma.course_orientation %}
-      {% endpanel %}
-
-      {% panel _("At which result level do you consider yourself?") %}
-        {% field_data belgian_diploma.result %}
+        {% field_data _("Did you repeat certain study years during your studies?") belgian_diploma.course_repeat|yesno %}
+        {% field_data _("Did you change of orientation during your studies?") belgian_diploma.course_orientation|yesno %}
       {% endpanel %}
 
       {% panel _("Institute") %}
@@ -44,6 +39,56 @@
         {% else %}
           {% field_data _("Another institute") belgian_diploma.other_institute %}
         {% endif %}
+      {% endpanel %}
+
+      {% if belgian_diploma.schedule %}
+        {% panel _("Schedule") %}
+          <div class="row">
+            <div class="col-md-4">
+              {% panel _("Ancient languages") %}
+                {% field_data _("Latin (h/w)") belgian_diploma.schedule.latin %}
+                {% field_data _("Greek (h/w)") belgian_diploma.schedule.greek %}
+              {% endpanel %}
+              {% panel _("Sciences (h/w)") %}
+                {% field_data _("Chemistry (h/w)") belgian_diploma.schedule.chemistry %}
+                {% field_data _("Physic (h/w)") belgian_diploma.schedule.physic %}
+                {% field_data _("Biology (h/w)") belgian_diploma.schedule.biology %}
+              {% endpanel %}
+            </div>
+            <div class="col-md-4">
+              {% panel _("Modern languages (h/w)") %}
+                {% field_data _("German (h/w)") belgian_diploma.schedule.german %}
+                {% field_data _("Dutch (h/w)") belgian_diploma.schedule.dutch %}
+                {% field_data _("English (h/w)") belgian_diploma.schedule.english %}
+                {% field_data _("french (h/w)") belgian_diploma.schedule.french %}
+                {% if belgian_diploma.schedule.modern_languages_other_label %}
+                  <dl>
+                    <dt>{% trans "Other" %}: {{ belgian_diploma.schedule.modern_languages_other_label }}</dt>
+                    <dd>{{ belgian_diploma.schedule.modern_languages_other_hours }}</dd>
+                  </dl>
+                {% endif %}
+              {% endpanel %}
+            </div>
+            <div class="col-md-4">
+              {% panel _("Others") %}
+                {% field_data _("Mathematics (h/w)") belgian_diploma.schedule.mathematics %}
+                {% field_data _("IT (h/w)") belgian_diploma.schedule.it %}
+                {% field_data _("Social sciences (h/w)") belgian_diploma.schedule.social_sciences %}
+                {% field_data _("Economic sciences (h/w)") belgian_diploma.schedule.economic_sciences %}
+                {% if belgian_diploma.schedule.other_label %}
+                  <dl>
+                    <dt>{% trans "Other" %}: {{ belgian_diploma.schedule.other_label }}</dt>
+                    <dd>{{ belgian_diploma.schedule.other_hours }}</dd>
+                  </dl>
+                {% endif %}
+              {% endpanel %}
+            </div>
+          </div>
+        {% endpanel %}
+      {% endif %}
+
+      {% panel _("At which result level do you consider yourself?") %}
+        {% field_data "" belgian_diploma.result|enum_display:'DiplomaResults' %}
       {% endpanel %}
 
     {% endpanel %}
@@ -56,18 +101,23 @@
 
     {% panel _("Foreign diploma") %}
 
-      {% field_data _("What diploma did you get (or will you get)?") foreign_diploma.foreign_diploma_type %}
+      {% field_data _("What diploma did you get (or will you get)?") foreign_diploma.foreign_diploma_type|enum_display:'ForeignDiplomaTypes' %}
       {% if foreign_diploma.linguistic_regime %}
         {% field_data _("Linguistic regime") foreign_diploma.linguistic_regime %}
       {% else %}
-        {% field_data _("Linguistic regime") foreign_diploma.other_linguistic_regime %}
+        {% field_data _("Other linguistic regime") foreign_diploma.other_linguistic_regime %}
       {% endif %}
 
+      {% field_data _("Country") foreign_diploma.country %}
+
       {% panel _("At which result level do you consider yourself?") %}
-        {% field_data foreign_diploma.result %}
+        {% field_data "" foreign_diploma.result|enum_display:'DiplomaResults' %}
       {% endpanel %}
 
     {% endpanel %}
 
+  {% endif %}
+  {% else %}
+    <p>Pas de diplôme renseigné</p>
   {% endif %}
 {% endblock %}

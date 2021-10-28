@@ -28,7 +28,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
-from admission.services.reference import CountriesService
+from admission.services.reference import CountriesService, LanguageService
 
 
 class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
@@ -39,11 +39,23 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
         high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(person=self.request.user.person)
         translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
 
-        if high_school_diploma.get('belgian_diploma'):
+        belgian_diploma = high_school_diploma.get('belgian_diploma')
+        foreign_diploma = high_school_diploma.get('foreign_diploma')
+        if belgian_diploma:
             context_data["belgian_diploma"] = high_school_diploma["belgian_diploma"]
-        else:
+        elif foreign_diploma:
             context_data["foreign_diploma"] = high_school_diploma["foreign_diploma"]
             if context_data["foreign_diploma"].get("country"):
-                contact_country = CountriesService.get_country(iso_code=context_data["foreign_diploma"].get("country"))
-                context_data['contact_country'] = getattr(contact_country, translated_field)
+                country = CountriesService.get_country(
+                    iso_code=context_data["foreign_diploma"]["country"],
+                    person=self.request.user.person,
+                )
+                context_data["foreign_diploma"]['country'] = getattr(country, translated_field)
+            if context_data["foreign_diploma"].get("linguistic_regime"):
+                linguistic_regime = LanguageService.get_language(
+                    search=context_data["foreign_diploma"]["linguistic_regime"],
+                    person=self.request.user.person,
+                )
+                context_data["foreign_diploma"]['linguistic_regime'] = getattr(linguistic_regime, translated_field)
+
         return context_data
