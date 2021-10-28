@@ -180,6 +180,9 @@ msgstr ""
 msgid "Contact language"
 msgstr ""
 
+msgid "Convention"
+msgstr ""
+
 msgid "Cotutelle"
 msgstr ""
 
@@ -378,6 +381,9 @@ msgstr ""
 msgid "Is your contact address different from your residential address?"
 msgstr ""
 
+msgid "Is your thesis joint with another secondary institute?"
+msgstr ""
+
 msgid "Jury"
 msgstr ""
 
@@ -418,6 +424,9 @@ msgstr ""
 msgid "More than 75%"
 msgstr ""
 
+msgid "Motivation"
+msgstr ""
+
 msgid "NO"
 msgstr ""
 
@@ -428,6 +437,9 @@ msgid "National registry number"
 msgstr ""
 
 msgid "No"
+msgstr ""
+
+msgid "No cotutelle"
 msgstr ""
 
 msgid "No defense reason"
@@ -454,10 +466,16 @@ msgid ""
 "mandatory (11 digits length without space, hyphen or dot (Ex:79682312345))."
 msgstr ""
 
+msgid "Opening request"
+msgstr ""
+
 msgid "Organizing country"
 msgstr ""
 
 msgid "Other"
+msgstr ""
+
+msgid "Other documents"
 msgstr ""
 
 msgid "Other education, to specify"

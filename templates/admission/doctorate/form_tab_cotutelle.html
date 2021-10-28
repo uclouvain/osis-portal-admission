@@ -1,0 +1,32 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
+
+{% block form %}
+    {% bootstrap_form_errors form %}
+
+    {% panel _("Cotutelle") %}
+        {% bootstrap_field form.cotutelle %}
+        <div id="cotutelle">
+            {% bootstrap_field form.motivation %}
+            <div class="row">
+                <div class="col-md-5">
+                    {% bootstrap_field form.institution %}
+                </div>
+            </div>
+            {% bootstrap_field form.demande_ouverture %}
+            {% bootstrap_field form.convention %}
+            {% bootstrap_field form.autres_documents %}
+        </div>
+    {% endpanel %}
+
+{% endblock %}
+
+{% block script %}
+    {{ form.media }}
+    <script type="application/javascript">
+    $(function () {
+        $('#cotutelle').dependsOn({
+            'input[name=cotutelle]': { values: ['YES'] },
+        }, { valueOnDisable: '' });
+    });
+    </script>
+{% endblock %}

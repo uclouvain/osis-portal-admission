@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.urls import include, path
+from django.utils.module_loading import import_string
 from django.views.generic import RedirectView
 
 from .contrib import views
@@ -37,6 +38,7 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
     # pattern_names = ["person", "details", "education", "curriculum", "project"]
     if not create_only:
         tab_names += [
+            "cotutelle",
             # "supervision",
             # "confirm",
             # "confirm-paper",
@@ -48,11 +50,14 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
     # if detail_only:
     #     pattern_names.append('messages')
 
+    # Determine module file to import
+    module_path = 'admission.contrib.views.{}_tabs.{{tab}}.{{view}}'.format('detail' if detail_only else 'form')
+
     # Add pattern for each tab
     includes = [
-        path(tab_name, getattr(views, 'DoctorateAdmission{}{}'.format(
-            tab_name.title().replace('-', ''),
-            view_suffix,
+        path(tab_name, import_string(module_path.format(
+            tab=tab_name,
+            view='DoctorateAdmission{}{}'.format(tab_name.title().replace('-', ''), view_suffix),
         )).as_view(), name=tab_name)
         for tab_name in tab_names
     ]

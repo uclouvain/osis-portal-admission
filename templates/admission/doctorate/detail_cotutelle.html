@@ -1,0 +1,15 @@
+{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission %}
+
+{% block tab_content %}
+    {% panel _("Cotutelle") %}
+        {% if cotutelle.motivation %}
+            {% field_data _("Motivation") cotutelle.motivation %}
+            {% field_data _("Institution") cotutelle.institution %}
+            {% field_data _("Opening request") cotutelle.demande_ouverture %}
+            {% field_data _("Convention") cotutelle.convention %}
+            {% field_data _("Other documents") cotutelle.autres_documents %}
+        {% else %}
+            {% trans "No cotutelle" %}
+        {% endif %}
+    {% endpanel %}
+{% endblock %}

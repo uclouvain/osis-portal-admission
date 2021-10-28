@@ -191,6 +191,9 @@ msgstr "Coordonnées"
 msgid "Contact language"
 msgstr "Langue de contact"
 
+msgid "Convention"
+msgstr "Convention"
+
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
@@ -399,6 +402,11 @@ msgstr ""
 "Souhaitez vous recevoir votre courrier à une autre adresse que votre "
 "domicile légal ?"
 
+msgid "Is your thesis joint with another secondary institute?"
+msgstr ""
+"Votre thèse est-elle réalisée en cotutelle avec une autre institution "
+"d'enseignement supérieur?"
+
 msgid "Jury"
 msgstr "Jury"
 
@@ -439,6 +447,9 @@ msgstr "Langues modernes"
 msgid "More than 75%"
 msgstr "plus de 75%"
 
+msgid "Motivation"
+msgstr "Motivation"
+
 msgid "NO"
 msgstr "Non"
 
@@ -450,6 +461,9 @@ msgstr "Numéro de registre national"
 
 msgid "No"
 msgstr "Non"
+
+msgid "No cotutelle"
+msgstr "Pas de cotutelle"
 
 msgid "No defense reason"
 msgstr "Raison de non-soutenance"
@@ -478,11 +492,17 @@ msgstr ""
 "vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
 "obligatoire (11 chiffres sans espace, ni tiret, ni point (Ex:79682312345))."
 
+msgid "Opening request"
+msgstr "Demande d'ouverture"
+
 msgid "Organizing country"
 msgstr "Pays organisateur"
 
 msgid "Other"
 msgstr "Autre"
+
+msgid "Other documents"
+msgstr "Autres documents"
 
 msgid "Other education, to specify"
 msgstr "Autre éducation, précisez"

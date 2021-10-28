@@ -26,11 +26,11 @@
 from enum import Enum
 
 from base.models.person import Person
+from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import api_exception_handler, build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
-
-from frontoffice.settings.osis_sdk import admission as admission_sdk
 from osis_admission_sdk.api import propositions_api
+from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
 from osis_admission_sdk.model.proposition_dto import PropositionDTO
 
 
@@ -89,3 +89,23 @@ class PropositionBusinessException(Enum):
     DejaPromoteurException = "PROPOSITION-14"
     DejaMembreCAException = "PROPOSITION-15"
     JustificationRequiseException = "PROPOSITION-16"
+
+
+class AdmissionCotutelleService:
+    @classmethod
+    @api_exception_handler(api_exception_cls=ApiException)
+    def update_cotutelle(cls, person, **kwargs):
+        uuid = str(kwargs.pop('uuid'))
+        kwargs['uuid_proposition'] = uuid
+        return AdmissionPropositionAPIClient().update_cotutelle(
+            uuid=uuid,
+            definir_cotutelle_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_cotutelle(cls, person, uuid) -> CotutelleDTO:
+        return AdmissionPropositionAPIClient().retrieve_cotutelle(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
