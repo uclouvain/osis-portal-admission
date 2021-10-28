@@ -37,6 +37,8 @@ __all__ = [
     "CountryAutocomplete",
     "CityAutocomplete",
     "LanguageAutocomplete",
+    "TutorAutocomplete",
+    "PersonAutocomplete",
 ]
 
 
@@ -105,3 +107,32 @@ class LanguageAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
     def results(self, results):
         return [dict(id=language.code, text=language.name) for language in results]
+
+
+class TutorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return AdmissionAutocompleteService().autocomplete_tutors(
+            person=self.request.user.person,
+            search=(self.request.GET.get('q', '')),
+        )['results']
+
+    def results(self, results):
+        return [dict(
+            id=result.global_id,
+            text="{result.first_name} {result.last_name}".format(result=result)
+        ) for result in results]
+
+    def autocomplete_results(self, results):
+        """Return list of strings that match the autocomplete query."""
+        return [
+            x for x in results
+            if self.q.lower() in "{result.first_name} {result.last_name}".format(result=x).lower()
+        ]
+
+
+class PersonAutocomplete(TutorAutocomplete):
+    def get_list(self):
+        return AdmissionAutocompleteService().autocomplete_persons(
+            person=self.request.user.person,
+            search=self.request.GET.get('q', ''),
+        )['results']

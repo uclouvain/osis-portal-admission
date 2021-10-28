@@ -44,3 +44,11 @@ class AdmissionAutocompleteService:
     @classmethod
     def get_doctorates(cls, person=None, sigle=""):
         return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle, **build_mandatory_auth_headers(person))
+
+    @classmethod
+    def autocomplete_tutors(cls, person, **kwargs):
+        return AdmissionAutocompleteAPIClient().list_tutors(**kwargs, **build_mandatory_auth_headers(person)) or []
+
+    @classmethod
+    def autocomplete_persons(cls, person, **kwargs):
+        return AdmissionAutocompleteAPIClient().list_persons(**kwargs, **build_mandatory_auth_headers(person)) or []

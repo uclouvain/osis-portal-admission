@@ -17,6 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#, python-format
+msgid ""
+"\n"
+"            Are you sure you want to remove %(prenom)s\n"
+"            %(nom)s as %(role)s\n"
+"            ?\n"
+"        "
+msgstr ""
+
 msgid ""
 "\n"
 "            The online enrolment request procedure is split up into several\n"
@@ -72,6 +81,9 @@ msgstr ""
 msgid ">> Other education, to specify"
 msgstr ""
 
+msgid "APPROVED"
+msgstr ""
+
 msgid "ARC - Action de Recherche Concertée"
 msgstr ""
 
@@ -79,6 +91,9 @@ msgid "ARES - Coopération au développement"
 msgstr ""
 
 msgid "Academic graduation year"
+msgstr ""
+
+msgid "Add promoter or a CA member"
 msgstr ""
 
 msgid "Admission"
@@ -141,6 +156,12 @@ msgstr ""
 msgid "Bureau"
 msgstr ""
 
+msgid "CA Member"
+msgstr ""
+
+msgid "CA members"
+msgstr ""
+
 msgid "CSC - China Scholarship Council"
 msgstr ""
 
@@ -160,6 +181,9 @@ msgid "Community of education"
 msgstr ""
 
 msgid "Complementary training project"
+msgstr ""
+
+msgid "Confirm"
 msgstr ""
 
 msgid "Confirmation"
@@ -343,6 +367,9 @@ msgstr ""
 msgid "ID photo"
 msgstr ""
 
+msgid "INVITED"
+msgstr ""
+
 msgid "IT"
 msgstr ""
 
@@ -415,6 +442,9 @@ msgstr ""
 msgid "Mathematics"
 msgstr ""
 
+msgid "Member not found"
+msgstr ""
+
 msgid "Mobile phone"
 msgstr ""
 
@@ -430,6 +460,9 @@ msgstr ""
 msgid "NO"
 msgstr ""
 
+msgid "NOT_INVITED"
+msgstr ""
+
 msgid "National Bachelor (or government diploma, ...)"
 msgstr ""
 
@@ -443,6 +476,9 @@ msgid "No cotutelle"
 msgstr ""
 
 msgid "No defense reason"
+msgstr ""
+
+msgid "No one invited"
 msgstr ""
 
 msgid "No reference yet - Go to Project tab"
@@ -559,10 +595,19 @@ msgstr ""
 msgid "Project title"
 msgstr ""
 
+msgid "Promoter"
+msgstr ""
+
+msgid "Promoters"
+msgstr ""
+
 msgid "Public defense"
 msgstr ""
 
 msgid "Qualification method"
+msgstr ""
+
+msgid "REFUSED"
 msgstr ""
 
 msgid "Reference:"
@@ -590,6 +635,12 @@ msgid "Scholarship grant"
 msgstr ""
 
 msgid "Sciences"
+msgstr ""
+
+msgid "Search a person by name"
+msgstr ""
+
+msgid "Search a tutor by name"
 msgstr ""
 
 msgid "Secondary studies"
@@ -626,6 +677,9 @@ msgid "Teaching of general education"
 msgstr ""
 
 msgid "Thesis redacting language"
+msgstr ""
+
+msgid "This field is required"
 msgstr ""
 
 msgid "This field is required."

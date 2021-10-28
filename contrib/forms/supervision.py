@@ -23,13 +23,39 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from dal import autocomplete
+from django import forms
+from django.utils.translation import gettext_lazy as _
 
-from .autocomplete import *
-from .list import *
-from .form_tabs.supervision import DoctorateAdmissionRemoveActorView
+from admission.contrib.enums.actor import ActorType
 
-__all__ = [
-    "DoctorateAutocomplete",
-    "DoctorateAdmissionListView",
-    "DoctorateAdmissionRemoveActorView",
-]
+
+class DoctorateAdmissionSupervisionForm(forms.Form):
+    type = forms.ChoiceField(
+        label="",
+        choices=ActorType.choices(),
+        widget=forms.RadioSelect(),
+    )
+    tutor = forms.CharField(
+        label=_("Search a tutor by name"),
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:tutor"),
+        required=False,
+    )
+    person = forms.CharField(
+        label=_("Search a person by name"),
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:person"),
+        required=False,
+    )
+
+    def clean(self):
+        data = self.cleaned_data
+        if data['type'] == ActorType.CA_MEMBER.name:
+            if not data['person']:
+                self.add_error('person', _("This field is required"))
+        else:
+            if not data['tutor']:
+                self.add_error('tutor', _("This field is required"))
+        return super().clean()
+
+    class Media:
+        js = ('dependsOn.min.js',)

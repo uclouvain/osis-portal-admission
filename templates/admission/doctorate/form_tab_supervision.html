@@ -1,0 +1,33 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
+
+{% block form %}
+    {% bootstrap_form_errors form %}
+    {% panel _("Add promoter or a CA member") %}
+        <div class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.type %}
+                <div id="person">
+                    {% bootstrap_field form.person %}
+                </div>
+                <div id="tutor">
+                    {% bootstrap_field form.tutor %}
+                </div>
+            </div>
+        </div>
+    {% endpanel %}
+{% endblock %}
+
+{% block script %}
+    {{ form.media }}
+    <script type="application/javascript">
+    $(function () {
+        // Justification depends on pre-admission
+        $('#person').dependsOn({
+            'input[name=type]': { values: ['CA_MEMBER'] },
+        }, { valueOnDisable: '', duration: 0 });
+        $('#tutor').dependsOn({
+            'input[name=type]': { values: ['MAIN_PROMOTER', 'PROMOTER'] },
+        }, { valueOnDisable: '', duration: 0 });
+    });
+    </script>
+{% endblock %}

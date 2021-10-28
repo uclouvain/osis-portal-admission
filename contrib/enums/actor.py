@@ -23,13 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from base.models.utils.utils import ChoiceEnum
+from django.utils.translation import gettext_lazy as _
 
-from .autocomplete import *
-from .list import *
-from .form_tabs.supervision import DoctorateAdmissionRemoveActorView
 
-__all__ = [
-    "DoctorateAutocomplete",
-    "DoctorateAdmissionListView",
-    "DoctorateAdmissionRemoveActorView",
-]
+class ActorType(ChoiceEnum):
+    PROMOTER = _("Promoter")
+    CA_MEMBER = _("CA Member")
+
+
+class ChoixEtatSignature(ChoiceEnum):
+    NOT_INVITED = _('NOT_INVITED')  # Pas encore envoyée au signataire
+    INVITED = _('INVITED')  # Envoyée au signataire
+    APPROVED = _('APPROVED')  # Approuvée par le signataire
+    REFUSED = _('REFUSED')  # Refusée par le signataire
