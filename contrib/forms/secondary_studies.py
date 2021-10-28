@@ -135,7 +135,7 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
                 (False, _('No')),
             ],
         ),
-        required=False,
+        required=False,  # FIXME How to get this field required?
     )
     course_orientation = forms.BooleanField(
         label=_("Did you change of orientation during your studies?"),
@@ -145,7 +145,7 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
                 (False, _('No')),
             ],
         ),
-        required=False,
+        required=False,  # FIXME How to get this field required?
     )
     # TODO institute & other_institute
     institute = forms.CharField()

@@ -27,7 +27,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
-from admission.contrib.enums.secondary_studies import DiplomaTypes
+from admission.contrib.enums.secondary_studies import DiplomaTypes, EducationalType
 from admission.contrib.forms.secondary_studies import (
     DoctorateAdmissionEducationForm,
     DoctorateAdmissionEducationForeignDiplomaForm,
@@ -126,7 +126,13 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
             if diploma_type == DiplomaTypes.BELGIAN.name:
                 self.prepare_diploma(data, forms, "belgian_diploma")
                 schedule = forms.get("schedule_form")
-                if schedule:
+                educational_type = forms.get("belgian_diploma_form").cleaned_data.get("educational_type")
+                educational_types_that_require_schedule = [
+                    EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
+                    EducationalType.TRANSITION_METHOD.name,
+                    EducationalType.ARTISTIC_TRANSITION.name,
+                ]
+                if schedule and educational_type in educational_types_that_require_schedule:
                     data["belgian_diploma"]["schedule"] = schedule.cleaned_data
 
             if diploma_type == DiplomaTypes.FOREIGN.name:
