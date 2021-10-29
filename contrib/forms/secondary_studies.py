@@ -127,29 +127,49 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         label=_(">> Other education, to specify"),
         required=False,
     )
-    course_repeat = forms.BooleanField(
+    course_repeat = forms.NullBooleanField(
         label=_("Did you repeat certain study years during your studies?"),
         widget=forms.RadioSelect(
             choices=[
-                (True, _('Yes')),
-                (False, _('No')),
+                (1, _('Yes')),
+                (0, _('No')),
             ],
         ),
-        required=False,  # FIXME How to get this field required?
+        required=False,
     )
-    course_orientation = forms.BooleanField(
+    course_orientation = forms.NullBooleanField(
         label=_("Did you change of orientation during your studies?"),
         widget=forms.RadioSelect(
             choices=[
-                (True, _('Yes')),
-                (False, _('No')),
+                (1, _('Yes')),
+                (0, _('No')),
             ],
         ),
-        required=False,  # FIXME How to get this field required?
+        required=False,
     )
     # TODO institute & other_institute
     institute = forms.CharField()
     other_institute = forms.CharField(required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        community = cleaned_data.get("community")
+        educational_type = cleaned_data.get("educational_type")
+
+        # FIXME those two following fields are required, but can't be validated without `required=False`
+        course_repeat = cleaned_data.get("course_repeat")
+        course_orientation = cleaned_data.get("course_orientation")
+        required_field_error_msg = _("This field is required.")
+        if course_repeat is None:
+            self.add_error("course_repeat", required_field_error_msg)
+        if course_orientation is None:
+            self.add_error("course_orientation", required_field_error_msg)
+
+        if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name and not educational_type:
+            educational_type_error_msg = _("Educational type is required with this community of education")
+            self.add_error("educational_type", educational_type_error_msg)
+
+        return cleaned_data
 
 
 class DoctorateAdmissionEducationScheduleForm(forms.Form):
@@ -182,6 +202,28 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
         required=False,
     )
     other_hours = forms.IntegerField(required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        label_required_error_msg = "label is required"
+        hours_required_error_msg = "hours are required"
+
+        modern_languages_other_label = cleaned_data.get("modern_languages_other_label")
+        modern_languages_other_hours = cleaned_data.get("modern_languages_other_hours")
+        if modern_languages_other_label and not modern_languages_other_hours:
+            self.add_error("modern_languages_other_hours", hours_required_error_msg)
+        if not modern_languages_other_label and modern_languages_other_hours:
+            self.add_error("modern_languages_other_label", label_required_error_msg)
+
+        other_label = cleaned_data.get("other_label")
+        other_hours = cleaned_data.get("other_hours")
+        if other_label and not other_hours:
+            self.add_error("other_hours", hours_required_error_msg)
+        if not other_label and other_hours:
+            self.add_error("other_label", label_required_error_msg)
+
+        return cleaned_data
 
 
 class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
