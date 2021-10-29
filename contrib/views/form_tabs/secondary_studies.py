@@ -52,8 +52,31 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
     def get_initial(self):
         return AdmissionPersonService.retrieve_high_school_diploma(person=self.request.user.person)
 
+    @staticmethod
+    def check_bound_and_set_required_attr(form):
+        """Check if the passed form is bound. If it is, it means that we can set the use_required_attribute to False
+        for form validation."""
+        if form.is_bound:
+            form.empty_permitted = False
+            form.use_required_attribute = False
+
     def post(self, request, *args, **kwargs):
         forms = self.get_forms()
+        self.check_bound_and_set_required_attr(forms["belgian_diploma_form"])
+        self.check_bound_and_set_required_attr(forms["foreign_diploma_form"])
+
+        if forms["belgian_diploma_form"].is_valid():
+            educational_types_that_require_schedule = [
+                EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
+                EducationalType.TRANSITION_METHOD.name,
+                EducationalType.ARTISTIC_TRANSITION.name,
+            ]
+            educational_type_data = forms["belgian_diploma_form"].cleaned_data.get("educational_type")
+            if educational_type_data in educational_types_that_require_schedule:
+                self.check_bound_and_set_required_attr(forms["schedule_form"])
+            else:
+                forms["schedule_form"].is_bound = False
+
         if all(not form.is_bound or form.is_valid() for form in forms.values()):
             return self.form_valid(forms["main_form"])
         return self.form_invalid(forms["main_form"])
