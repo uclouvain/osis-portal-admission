@@ -96,7 +96,6 @@ class AdmissionCotutelleService:
     @api_exception_handler(api_exception_cls=ApiException)
     def update_cotutelle(cls, person, **kwargs):
         uuid = str(kwargs.pop('uuid'))
-        kwargs['uuid_proposition'] = uuid
         return AdmissionPropositionAPIClient().update_cotutelle(
             uuid=uuid,
             definir_cotutelle_command=kwargs,
