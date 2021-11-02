@@ -38,6 +38,7 @@ class CotutelleTestCase(TestCase):
         cls.person = PersonFactory()
 
     def setUp(self):
+        self.url = resolve_url("admission:doctorate-update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
         api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -55,19 +56,16 @@ class CotutelleTestCase(TestCase):
         )
 
     def test_cotutelle_get(self):
-        url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertContains(response, "Foobar")
 
     @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
     def test_cotutelle_get_form(self):
-        url = resolve_url("admission:doctorate-update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertContains(response, "Foobar")
 
     def test_cotutelle_update_with_data(self):
-        url = resolve_url("admission:doctorate-update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        response = self.client.post(url, {
+        response = self.client.post(self.url, {
             'cotutelle': "YES",
             'motivation': "Barbaz",
             'demande_ouverture': [],
@@ -81,8 +79,7 @@ class CotutelleTestCase(TestCase):
         self.assertEqual(last_call_kwargs['definir_cotutelle_command']['motivation'], "Barbaz")
 
     def test_cotutelle_update_without_data(self):
-        url = resolve_url("admission:doctorate-update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        response = self.client.post(url, {
+        response = self.client.post(self.url, {
             "cotutelle": "NO",
             "motivation": "Barbaz",
         })
