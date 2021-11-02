@@ -56,7 +56,8 @@ class CotutelleTestCase(TestCase):
         )
 
     def test_cotutelle_get(self):
-        response = self.client.get(self.url)
+        url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.get(url)
         self.assertContains(response, "Foobar")
 
     @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
