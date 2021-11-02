@@ -131,8 +131,8 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         label=_("Did you repeat certain study years during your studies?"),
         widget=forms.RadioSelect(
             choices=[
-                (1, _('Yes')),
-                (0, _('No')),
+                (True, _('Yes')),
+                (False, _('No')),
             ],
         ),
         required=False,
@@ -141,8 +141,8 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         label=_("Did you change of orientation during your studies?"),
         widget=forms.RadioSelect(
             choices=[
-                (1, _('Yes')),
-                (0, _('No')),
+                (True, _('Yes')),
+                (False, _('No')),
             ],
         ),
         required=False,
