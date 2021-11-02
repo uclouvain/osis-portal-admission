@@ -148,13 +148,14 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         required=False,
     )
     # TODO institute & other_institute
-    institute = forms.CharField()
+    institute = forms.CharField(required=False)
     other_institute = forms.CharField(required=False)
 
     def clean(self):
         cleaned_data = super().clean()
         community = cleaned_data.get("community")
         educational_type = cleaned_data.get("educational_type")
+        educational_other = cleaned_data.get("educational_other")
 
         # FIXME those two following fields are required, but can't be validated without `required=False`
         course_repeat = cleaned_data.get("course_repeat")
@@ -165,9 +166,16 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         if course_orientation is None:
             self.add_error("course_orientation", required_field_error_msg)
 
-        if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name and not educational_type:
+        if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name and not (educational_type or educational_other):
             educational_type_error_msg = _("Educational type is required with this community of education")
             self.add_error("educational_type", educational_type_error_msg)
+
+        institute = cleaned_data.get("institute")
+        other_institute = cleaned_data.get("other_institute")
+        institute_error_msg = _("Please set one of institute or other institute fields")
+        if institute == "" and other_institute == "":
+            self.add_error("institute", institute_error_msg)
+            self.add_error("other_institute", institute_error_msg)
 
         return cleaned_data
 

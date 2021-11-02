@@ -191,6 +191,28 @@
         setNullValue("#schedule")
       }});
 
+      var context = $('.osis-form');
+
+      var institute = context.find('input[name=belgian_diploma-institute]');
+      var otherInstitute = context.find('input[name=belgian_diploma-other_institute]');
+
+      otherInstitute.on('focus', function () {
+        institute.val(null);
+      });
+      institute.on('focus', function () {
+        otherInstitute.val(null);
+      });
+
+      var education = context.find('input[name=belgian_diploma-educational_type]');
+      var otherEducation = context.find('input[name=belgian_diploma-educational_other]');
+
+      otherEducation.on('focus', function () {
+        education.prop('checked', false);
+        {# FIXME Schedule must be hidden when other education is focused #}
+      });
+      education.on('focus', function () {
+        otherEducation.val(null);
+      });
     });
   </script>
 {% endblock %}
