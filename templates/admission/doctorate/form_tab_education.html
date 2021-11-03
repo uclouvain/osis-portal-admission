@@ -213,6 +213,16 @@
       education.on('focus', function () {
         otherEducation.val(null);
       });
+
+      var linguistic_regime = context.find('select[name=foreign_diploma-linguistic_regime]');
+      var other_linguistic_regime = context.find('input[name=foreign_diploma-other_linguistic_regime]');
+
+      other_linguistic_regime.on('focus', function () {
+        linguistic_regime.val(null).change();
+      });
+      linguistic_regime.on('select2:select', function () {
+        other_linguistic_regime.val(null);
+      });
     });
   </script>
 {% endblock %}

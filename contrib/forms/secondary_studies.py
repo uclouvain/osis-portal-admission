@@ -243,6 +243,7 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     linguistic_regime = forms.CharField(
         label=_("Linguistic regime"),
         widget=autocomplete.ListSelect2(url="admission:autocomplete:language"),
+        required=False,
     )
     other_linguistic_regime = forms.CharField(
         label=_("If other linguistic regime, please clarify"),
@@ -263,3 +264,15 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
             self.data.get(self.add_prefix("linguistic_regime"), self.initial.get("linguistic_regime")),
             person,
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        linguistic_regime = cleaned_data.get("linguistic_regime")
+        other_linguistic_regime = cleaned_data.get("other_linguistic_regime")
+        if not linguistic_regime and not other_linguistic_regime:
+            linguistic_error_msg = _("Please set either the linguistic regime or other field.")
+            self.add_error(linguistic_regime, linguistic_error_msg)
+            self.add_error(other_linguistic_regime, linguistic_error_msg)
+        return cleaned_data
+
+
