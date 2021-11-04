@@ -1,12 +1,12 @@
 {% extends "admission/doctorate/detail_tab_layout.html" %}
-{% load i18n static admission index %}
+{% load i18n static admission index academic_year_display %}
 
 {% block tab_content %}
   {% if belgian_diploma or foreign_diploma %}
   {% if belgian_diploma %}
 
     <div class="row">
-      <div class="col-md-12">{% field_data _("Academic graduation year") belgian_diploma.academic_graduation_year %}</div>
+      <div class="col-md-12">{% field_data _("Academic graduation year") belgian_diploma.academic_graduation_year|display_as_academic_year %}</div>
     </div>
 
     {% panel _("Belgian diploma") %}
@@ -96,7 +96,7 @@
   {% else %}
 
     <div class="row">
-      <div class="col-md-12">{% field_data _("Academic graduation year") foreign_diploma.academic_graduation_year %}</div>
+      <div class="col-md-12">{% field_data _("Academic graduation year") foreign_diploma.academic_graduation_year|display_as_academic_year %}</div>
     </div>
 
     {% panel _("Foreign diploma") %}
