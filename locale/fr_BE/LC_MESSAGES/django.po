@@ -106,7 +106,7 @@ msgstr "ARES - Coopération au développement"
 msgid "Academic graduation year"
 msgstr "Année d'obtention du diplôme universitaire"
 
-msgid "Add promoter or a CA member"
+msgid "Add a promoter or a CA member"
 msgstr "Ajouter un promoteur ou un membre du CA"
 
 msgid "Admission"

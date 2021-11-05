@@ -44,7 +44,7 @@ __all__ = [
 
 class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return AdmissionAutocompleteService().get_doctorates(self.request.user.person, self.forwarded['sector'])
+        return AdmissionAutocompleteService.get_doctorates(self.request.user.person, self.forwarded['sector'])
 
     def results(self, results):
         return [dict(
@@ -111,10 +111,10 @@ class LanguageAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
 class TutorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return AdmissionAutocompleteService().autocomplete_tutors(
+        return AdmissionAutocompleteService.autocomplete_tutors(
             person=self.request.user.person,
             search=(self.request.GET.get('q', '')),
-        )['results']
+        )
 
     def results(self, results):
         return [dict(
@@ -123,16 +123,12 @@ class TutorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         ) for result in results]
 
     def autocomplete_results(self, results):
-        """Return list of strings that match the autocomplete query."""
-        return [
-            x for x in results
-            if self.q.lower() in "{result.first_name} {result.last_name}".format(result=x).lower()
-        ]
+        return results
 
 
 class PersonAutocomplete(TutorAutocomplete):
     def get_list(self):
-        return AdmissionAutocompleteService().autocomplete_persons(
+        return AdmissionAutocompleteService.autocomplete_persons(
             person=self.request.user.person,
             search=self.request.GET.get('q', ''),
-        )['results']
+        )

@@ -48,14 +48,12 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
     )
 
     def clean(self):
-        data = self.cleaned_data
-        if data['type'] == ActorType.CA_MEMBER.name:
-            if not data['person']:
-                self.add_error('person', _("This field is required"))
-        else:
-            if not data['tutor']:
-                self.add_error('tutor', _("This field is required"))
-        return super().clean()
+        data = super().clean()
+        if data['type'] == ActorType.CA_MEMBER.name and not data['person']:
+            self.add_error('person', _("This field is required"))
+        elif data['type'] == ActorType.PROMOTER.name and not data['tutor']:
+            self.add_error('tutor', _("This field is required"))
+        return data
 
     class Media:
         js = ('dependsOn.min.js',)

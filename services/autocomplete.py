@@ -47,8 +47,14 @@ class AdmissionAutocompleteService:
 
     @classmethod
     def autocomplete_tutors(cls, person, **kwargs):
-        return AdmissionAutocompleteAPIClient().list_tutors(**kwargs, **build_mandatory_auth_headers(person)) or []
+        return AdmissionAutocompleteAPIClient().list_tutors(
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        )['results']
 
     @classmethod
     def autocomplete_persons(cls, person, **kwargs):
-        return AdmissionAutocompleteAPIClient().list_persons(**kwargs, **build_mandatory_auth_headers(person)) or []
+        return AdmissionAutocompleteAPIClient().list_persons(
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        )['results']

@@ -93,7 +93,7 @@ msgstr ""
 msgid "Academic graduation year"
 msgstr ""
 
-msgid "Add promoter or a CA member"
+msgid "Add a promoter or a CA member"
 msgstr ""
 
 msgid "Admission"

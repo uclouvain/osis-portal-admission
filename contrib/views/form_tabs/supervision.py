@@ -83,12 +83,18 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
                 ActorType.PROMOTER.name: ('signatures_promoteurs', 'promoteur'),
                 ActorType.CA_MEMBER.name: ('signatures_membres_ca', 'membre_ca'),
             }
-            match = type_mapping[self.kwargs['type']]
-            signature = next(m for m in getattr(supervision, match[0]))
-            context['member'] = getattr(signature, match[1])
-        except (ApiException, AttributeError):
+            context['member'] = self.get_member(supervision, type_mapping)
+        except (ApiException, AttributeError, KeyError):
             raise Http404(_('Member not found'))
         return context
+
+    def get_member(self, supervision, type_mapping):
+        collection_name, attr_name = type_mapping[self.kwargs['type']]
+        for signature in getattr(supervision, collection_name):
+            person = getattr(signature, attr_name)
+            if person.matricule == self.kwargs['matricule']:
+                return person
+        raise AttributeError
 
     def prepare_data(self, data):
         return {

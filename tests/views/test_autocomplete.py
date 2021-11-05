@@ -34,9 +34,11 @@ from base.tests.factories.person import PersonFactory
 
 
 class AutocompleteTestCase(TestCase):
+    def setUp(self):
+        self.client.force_login(PersonFactory().user)
+
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
-        self.client.force_login(PersonFactory().user)
         api.return_value.list_doctorat_dtos.return_value = [
             Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE"),
             Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
@@ -54,7 +56,6 @@ class AutocompleteTestCase(TestCase):
 
     @patch('osis_reference_sdk.api.countries_api.CountriesApi')
     def test_autocomplete_country(self, api):
-        self.client.force_login(PersonFactory().user)
         api.return_value.countries_list.return_value = Mock(results=[
             MockCountry(iso_code='FR', name='France', name_en='France'),
             MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
@@ -86,7 +87,6 @@ class AutocompleteTestCase(TestCase):
 
     @patch('osis_reference_sdk.api.cities_api.CitiesApi')
     def test_autocomplete_city(self, api):
-        self.client.force_login(PersonFactory().user)
         api.return_value.cities_list.return_value = Mock(results=[
             MockCity(name='Pintintin-les-Creumeuil'),
             MockCity(name='Montreuil-les-Sardouille'),
@@ -116,3 +116,39 @@ class AutocompleteTestCase(TestCase):
         })
         self.assertEqual(api.return_value.cities_list.call_args[1]['zip_code'], '1111')
         self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')
+
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_tutors(self, api):
+        api.return_value.list_tutors.return_value = {'results': [
+            Mock(first_name='Michel', last_name='Screugnette', global_id="0123456987"),
+            Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213"),
+        ]}
+        url = reverse('admission:autocomplete:tutor')
+        response = self.client.get(url, {'q': 'm'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': '0123456987',
+                'text': 'Michel Screugnette',
+            }, {
+                'id': '789654213',
+                'text': 'Marie-Odile Troufignon',
+            }],
+        })
+
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_persons(self, api):
+        api.return_value.list_persons.return_value = {'results': [
+            Mock(first_name='Ripolin', last_name='Trolapois', global_id="0123456987"),
+            Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213"),
+        ]}
+        url = reverse('admission:autocomplete:person')
+        response = self.client.get(url, {'q': 'm'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': '0123456987',
+                'text': 'Ripolin Trolapois',
+            }, {
+                'id': '789654213',
+                'text': 'Marie-Odile Troufignon',
+            }],
+        })
