@@ -46,4 +46,6 @@ def get_language_initial_choices(language, person):
     if not language:
         return EMPTY_CHOICE
     language = LanguageService.get_language(search=language, person=person)
-    return EMPTY_CHOICE + ((language.code, language.name),)
+    return EMPTY_CHOICE + (
+        (language.code, language.name_en if settings.LANGUAGE_CODE == 'en' else language.name),
+    )
