@@ -102,9 +102,4 @@ class LanguageService:
 
     @classmethod
     def get_language(cls, person=None, *args, **kwargs):
-        return LanguagesAPIClient().languages_list(
-            limit=100,
-            *args,
-            **kwargs,
-            **build_mandatory_auth_headers(person),
-        ).results[0]
+        return cls.get_languages(person, *args, **kwargs)[0]
