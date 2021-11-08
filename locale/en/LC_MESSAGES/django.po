@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-18 17:48+0200\n"
+"POT-Creation-Date: 2021-11-08 17:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,10 +51,22 @@ msgstr ""
 msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
 msgstr ""
 
+msgid ">> Educational  qualification :"
+msgstr ""
+
+msgid ">> Educational transition :"
+msgstr ""
+
+msgid ">> Other education, to specify"
+msgstr ""
+
 msgid "ARC - Action de Recherche Concertée"
 msgstr ""
 
 msgid "ARES - Coopération au développement"
+msgstr ""
+
+msgid "Academic graduation year"
 msgstr ""
 
 msgid "Admission"
@@ -69,7 +81,34 @@ msgstr ""
 msgid "Already registered to UCLouvain?"
 msgstr ""
 
+msgid "Ancient languages"
+msgstr ""
+
+msgid "Another institute"
+msgstr ""
+
+msgid "Artistic qualification"
+msgstr ""
+
+msgid "Artistic transition"
+msgstr ""
+
+msgid "At which result level do you consider yourself?"
+msgstr ""
+
 msgid "Back to my requests"
+msgstr ""
+
+msgid "Belgian diploma"
+msgstr ""
+
+msgid "Between 65 and 75%"
+msgstr ""
+
+msgid "Biology"
+msgstr ""
+
+msgid "Biology (h/w)"
 msgstr ""
 
 msgid "Birth country"
@@ -102,7 +141,16 @@ msgstr ""
 msgid "Change my submission"
 msgstr ""
 
+msgid "Chemistry"
+msgstr ""
+
+msgid "Chemistry (h/w)"
+msgstr ""
+
 msgid "City"
+msgstr ""
+
+msgid "Community of education"
 msgstr ""
 
 msgid "Complementary training project"
@@ -135,6 +183,9 @@ msgstr ""
 msgid "Country of citizenship"
 msgstr ""
 
+msgid "Course"
+msgstr ""
+
 msgid "Create new doctorate admission"
 msgstr ""
 
@@ -146,6 +197,17 @@ msgstr ""
 
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
+msgstr ""
+
+msgid "Did you change of orientation during your studies?"
+msgstr ""
+
+msgid ""
+"Did you obtain a high school diploma or will you receive this kind of "
+"diploma still this year?"
+msgstr ""
+
+msgid "Did you repeat certain study years during your studies?"
 msgstr ""
 
 msgid "Doctoral project"
@@ -163,13 +225,28 @@ msgstr ""
 msgid "Doctorate admissions"
 msgstr ""
 
+msgid "Dutch"
+msgstr ""
+
+msgid "Dutch (h/w)"
+msgstr ""
+
 msgid "ECONOMY"
 msgstr ""
 
 msgid "ERC - European Research Council"
 msgstr ""
 
+msgid "Economic sciences"
+msgstr ""
+
+msgid "Economic sciences (h/w)"
+msgstr ""
+
 msgid "Edit"
+msgstr ""
+
+msgid "Educational type is required with this community of education"
 msgstr ""
 
 msgid "Email"
@@ -178,7 +255,13 @@ msgstr ""
 msgid "English"
 msgstr ""
 
+msgid "English (h/w)"
+msgstr ""
+
 msgid "Estimated time"
+msgstr ""
+
+msgid "European Bachelor (Schola Europaea)"
 msgstr ""
 
 msgid "Exchange with UCLouvain"
@@ -215,6 +298,9 @@ msgstr ""
 msgid "First name in use"
 msgstr ""
 
+msgid "Flemish-speaking Community"
+msgstr ""
+
 msgid "Fondation Mont Godinne"
 msgstr ""
 
@@ -224,7 +310,13 @@ msgstr ""
 msgid "Fonds de recherche clinique"
 msgstr ""
 
+msgid "Foreign diploma"
+msgstr ""
+
 msgid "French"
+msgstr ""
+
+msgid "French-speaking Community of Belgium"
 msgstr ""
 
 msgid "Full-time equivalent"
@@ -236,10 +328,31 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
+msgid "German"
+msgstr ""
+
+msgid "German (h/w)"
+msgstr ""
+
+msgid "German-speaking Community"
+msgstr ""
+
+msgid "Greek"
+msgstr ""
+
+msgid "Greek (h/w)"
+msgstr ""
+
 msgid "ID card"
 msgstr ""
 
 msgid "ID photo"
+msgstr ""
+
+msgid "IT"
+msgstr ""
+
+msgid "IT (h/w)"
 msgstr ""
 
 msgid "Identification"
@@ -248,7 +361,25 @@ msgstr ""
 msgid "Identity card number"
 msgstr ""
 
+msgid "If other language, please specify"
+msgstr ""
+
+msgid "If other linguistic regime, please clarify"
+msgstr ""
+
+msgid "If other optional domains, please specify"
+msgstr ""
+
+msgid "In what Community did (do) you follow last year of high school?"
+msgstr ""
+
+msgid "Institute"
+msgstr ""
+
 msgid "Institution"
+msgstr ""
+
+msgid "International Baccalaureate"
 msgstr ""
 
 msgid "Is your contact address different from your residential address?"
@@ -263,6 +394,18 @@ msgstr ""
 msgid "Last registration year"
 msgstr ""
 
+msgid "Latin"
+msgstr ""
+
+msgid "Latin (h/w)"
+msgstr ""
+
+msgid "Less than 65%"
+msgstr ""
+
+msgid "Linguistic regime"
+msgstr ""
+
 msgid "MANAGEMENT"
 msgstr ""
 
@@ -273,10 +416,28 @@ msgctxt "gender male"
 msgid "Male"
 msgstr ""
 
+msgid "Mathematics"
+msgstr ""
+
+msgid "Mathematics (h/w)"
+msgstr ""
+
 msgid "Mobile phone"
 msgstr ""
 
+msgid "Modern languages"
+msgstr ""
+
+msgid "Modern languages (h/w)"
+msgstr ""
+
+msgid "More than 75%"
+msgstr ""
+
 msgid "NO"
+msgstr ""
+
+msgid "National Bachelor (or government diploma, ...)"
 msgstr ""
 
 msgid "National registry number"
@@ -291,6 +452,12 @@ msgstr ""
 msgid "No reference yet - Go to Project tab"
 msgstr ""
 
+msgid "No secondary studies provided."
+msgstr ""
+
+msgid "Not known yet"
+msgstr ""
+
 msgid "Not submitted"
 msgstr ""
 
@@ -303,10 +470,22 @@ msgid ""
 "mandatory (11 digits length without space, hyphen or dot (Ex:79682312345))."
 msgstr ""
 
+msgid "Organizing country"
+msgstr ""
+
 msgid "Other"
 msgstr ""
 
+msgid "Other education, to specify"
+msgstr ""
+
+msgid "Other linguistic regime"
+msgstr ""
+
 msgid "Other names"
+msgstr ""
+
+msgid "Others"
 msgstr ""
 
 msgid "PARTIAL"
@@ -327,10 +506,25 @@ msgstr ""
 msgid "PhD already done"
 msgstr ""
 
+msgid "Physic"
+msgstr ""
+
+msgid "Physic (h/w)"
+msgstr ""
+
 msgid "Please fill all the address fields"
 msgstr ""
 
+msgid "Please mention the academic graduation year"
+msgstr ""
+
 msgid "Please set either street or postal_box"
+msgstr ""
+
+msgid "Please set either the linguistic regime or other field."
+msgstr ""
+
+msgid "Please set one of institute or other institute fields"
 msgstr ""
 
 msgid "Postal code"
@@ -343,6 +537,12 @@ msgid "Previous research experience"
 msgstr ""
 
 msgid "Private defense"
+msgstr ""
+
+msgid "Professional education"
+msgstr ""
+
+msgid "Professional education + Maturity exam"
 msgstr ""
 
 msgid "Project"
@@ -360,6 +560,9 @@ msgstr ""
 msgid "Public defense"
 msgstr ""
 
+msgid "Qualification method"
+msgstr ""
+
 msgid "Reference:"
 msgstr ""
 
@@ -375,10 +578,19 @@ msgstr ""
 msgid "Save my submission"
 msgstr ""
 
+msgid "Schedule"
+msgstr ""
+
 msgid "Scholarship"
 msgstr ""
 
 msgid "Scholarship grant"
+msgstr ""
+
+msgid "Sciences"
+msgstr ""
+
+msgid "Sciences (h/w)"
 msgstr ""
 
 msgid "Secondary studies"
@@ -388,6 +600,12 @@ msgid "Sector"
 msgstr ""
 
 msgid "Sex"
+msgstr ""
+
+msgid "Social sciences"
+msgstr ""
+
+msgid "Social sciences (h/w)"
 msgstr ""
 
 msgid "Specify scholarship grant"
@@ -408,7 +626,25 @@ msgstr ""
 msgid "Supervision"
 msgstr ""
 
+msgid "Teaching of general education"
+msgstr ""
+
 msgid "Thesis redacting language"
+msgstr ""
+
+msgid "This field is required"
+msgstr ""
+
+msgid "This field is required."
+msgstr ""
+
+msgid "Transition method"
+msgstr ""
+
+msgid "Type of education"
+msgstr ""
+
+msgid "Type of high school diploma"
 msgstr ""
 
 msgid "UCLOUVAIN_ASSISTANT"
@@ -429,6 +665,15 @@ msgstr ""
 msgid "Wallonie Bruxelles International"
 msgstr ""
 
+msgid "What diploma did you get (or will you get) ?"
+msgstr ""
+
+msgid "What diploma did you get (or will you get)?"
+msgstr ""
+
+msgid "What type of education did (do) you follow?"
+msgstr ""
+
 msgid "Work contract"
 msgstr ""
 
@@ -439,4 +684,19 @@ msgid "YES"
 msgstr ""
 
 msgid "Yes"
+msgstr ""
+
+msgid "belgian"
+msgstr ""
+
+msgid "foreign"
+msgstr ""
+
+msgid "french"
+msgstr ""
+
+msgid "french (h/w)"
+msgstr ""
+
+msgid "h/w"
 msgstr ""
