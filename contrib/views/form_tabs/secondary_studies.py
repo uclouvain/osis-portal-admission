@@ -38,6 +38,13 @@ from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 
 
+educational_types_that_require_schedule = [
+    EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
+    EducationalType.TRANSITION_METHOD.name,
+    EducationalType.ARTISTIC_TRANSITION.name,
+]
+
+
 class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = "admission/doctorate/form_tab_education.html"
     success_url = reverse_lazy("admission:doctorate-list")
@@ -66,11 +73,6 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         self.check_bound_and_set_required_attr(forms["foreign_diploma_form"])
 
         if forms["belgian_diploma_form"].is_valid():
-            educational_types_that_require_schedule = [
-                EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
-                EducationalType.TRANSITION_METHOD.name,
-                EducationalType.ARTISTIC_TRANSITION.name,
-            ]
             educational_type_data = forms["belgian_diploma_form"].cleaned_data.get("educational_type")
             if educational_type_data in educational_types_that_require_schedule:
                 self.check_bound_and_set_required_attr(forms["schedule_form"])
@@ -150,11 +152,6 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
                 self.prepare_diploma(data, forms, "belgian_diploma")
                 schedule = forms.get("schedule_form")
                 educational_type = forms.get("belgian_diploma_form").cleaned_data.get("educational_type")
-                educational_types_that_require_schedule = [
-                    EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
-                    EducationalType.TRANSITION_METHOD.name,
-                    EducationalType.ARTISTIC_TRANSITION.name,
-                ]
                 if schedule and educational_type in educational_types_that_require_schedule:
                     data["belgian_diploma"]["schedule"] = schedule.cleaned_data
 
