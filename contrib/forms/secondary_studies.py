@@ -166,7 +166,10 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         if course_orientation is None:
             self.add_error("course_orientation", required_field_error_msg)
 
-        if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name and not (educational_type or educational_other):
+        if (
+            community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name
+            and not (educational_type or educational_other)
+        ):
             educational_type_error_msg = _("Educational type is required with this community of education")
             self.add_error("educational_type", educational_type_error_msg)
 
@@ -274,5 +277,3 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
             self.add_error(linguistic_regime, linguistic_error_msg)
             self.add_error(other_linguistic_regime, linguistic_error_msg)
         return cleaned_data
-
-
