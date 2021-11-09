@@ -46,39 +46,39 @@
           <div class="row">
             <div class="col-md-4">
               {% panel _("Ancient languages") %}
-                {% field_data _("Latin (h/w)") belgian_diploma.schedule.latin %}
-                {% field_data _("Greek (h/w)") belgian_diploma.schedule.greek %}
+                {% field_data _("Latin") belgian_diploma.schedule.latin suffix=_("h/w") %}
+                {% field_data _("Greek") belgian_diploma.schedule.greek suffix=_("h/w") %}
               {% endpanel %}
-              {% panel _("Sciences (h/w)") %}
-                {% field_data _("Chemistry (h/w)") belgian_diploma.schedule.chemistry %}
-                {% field_data _("Physic (h/w)") belgian_diploma.schedule.physic %}
-                {% field_data _("Biology (h/w)") belgian_diploma.schedule.biology %}
+              {% panel _("Sciences") %}
+                {% field_data _("Chemistry") belgian_diploma.schedule.chemistry suffix=_("h/w") %}
+                {% field_data _("Physic") belgian_diploma.schedule.physic suffix=_("h/w") %}
+                {% field_data _("Biology") belgian_diploma.schedule.biology suffix=_("h/w") %}
               {% endpanel %}
             </div>
             <div class="col-md-4">
-              {% panel _("Modern languages (h/w)") %}
-                {% field_data _("German (h/w)") belgian_diploma.schedule.german %}
-                {% field_data _("Dutch (h/w)") belgian_diploma.schedule.dutch %}
-                {% field_data _("English (h/w)") belgian_diploma.schedule.english %}
-                {% field_data _("french (h/w)") belgian_diploma.schedule.french %}
+              {% panel _("Modern languages") %}
+                {% field_data _("German") belgian_diploma.schedule.german suffix=_("h/w") %}
+                {% field_data _("Dutch") belgian_diploma.schedule.dutch suffix=_("h/w") %}
+                {% field_data _("English") belgian_diploma.schedule.english suffix=_("h/w") %}
+                {% field_data _("french") belgian_diploma.schedule.french suffix=_("h/w") %}
                 {% if belgian_diploma.schedule.modern_languages_other_label %}
                   <dl>
                     <dt>{% trans "Other" %}: {{ belgian_diploma.schedule.modern_languages_other_label }}</dt>
-                    <dd>{{ belgian_diploma.schedule.modern_languages_other_hours }}</dd>
+                    <dd>{{ belgian_diploma.schedule.modern_languages_other_hours }} {% trans "h/w" %}</dd>
                   </dl>
                 {% endif %}
               {% endpanel %}
             </div>
             <div class="col-md-4">
               {% panel _("Others") %}
-                {% field_data _("Mathematics (h/w)") belgian_diploma.schedule.mathematics %}
-                {% field_data _("IT (h/w)") belgian_diploma.schedule.it %}
-                {% field_data _("Social sciences (h/w)") belgian_diploma.schedule.social_sciences %}
-                {% field_data _("Economic sciences (h/w)") belgian_diploma.schedule.economic_sciences %}
+                {% field_data _("Mathematics") belgian_diploma.schedule.mathematics suffix=_("h/w") %}
+                {% field_data _("IT") belgian_diploma.schedule.it suffix=_("h/w") %}
+                {% field_data _("Social sciences") belgian_diploma.schedule.social_sciences suffix=_("h/w") %}
+                {% field_data _("Economic sciences") belgian_diploma.schedule.economic_sciences suffix=_("h/w") %}
                 {% if belgian_diploma.schedule.other_label %}
                   <dl>
                     <dt>{% trans "Other" %}: {{ belgian_diploma.schedule.other_label }}</dt>
-                    <dd>{{ belgian_diploma.schedule.other_hours }}</dd>
+                    <dd>{{ belgian_diploma.schedule.other_hours }} {% trans "h/w" %}</dd>
                   </dl>
                 {% endif %}
               {% endpanel %}

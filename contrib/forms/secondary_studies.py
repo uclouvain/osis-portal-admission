@@ -148,8 +148,8 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         required=False,
     )
     # TODO institute & other_institute
-    institute = forms.CharField(required=False)
-    other_institute = forms.CharField(required=False)
+    institute = forms.CharField(label=_("Institute"), required=False)
+    other_institute = forms.CharField(label=_("Other institute"), required=False)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -217,8 +217,7 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        label_required_error_msg = "label is required"
-        hours_required_error_msg = "hours are required"
+        label_required_error_msg, hours_required_error_msg = _("label is required"), _("hours are required")
 
         modern_languages_other_label = cleaned_data.get("modern_languages_other_label")
         modern_languages_other_hours = cleaned_data.get("modern_languages_other_hours")
