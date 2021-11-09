@@ -176,7 +176,7 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         institute = cleaned_data.get("institute")
         other_institute = cleaned_data.get("other_institute")
         institute_error_msg = _("Please set one of institute or other institute fields")
-        if institute == "" and other_institute == "":
+        if not institute and not other_institute:
             self.add_error("institute", institute_error_msg)
             self.add_error("other_institute", institute_error_msg)
 
