@@ -92,7 +92,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         if not self.forms:
             kwargs = self.get_form_kwargs()
             data = kwargs.pop("data", None)
-            # we don't work we files on those forms
+            # We don't work with files on those forms
             kwargs.pop("files", None)
             person = kwargs.pop("person")
             kwargs.pop("prefix")
