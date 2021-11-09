@@ -207,8 +207,9 @@
       var otherEducation = context.find('input[name=belgian_diploma-educational_other]');
 
       otherEducation.on('focus', function () {
+        {# Set the value of education to hide the schedule panel and then disable it #}
         education.prop('checked', false);
-        {# FIXME Schedule must be hidden when other education is focused #}
+        education.val("TEACHING_OF_GENERAL_EDUCATION").trigger('change');
       });
       education.on('focus', function () {
         otherEducation.val(null);
