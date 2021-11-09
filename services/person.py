@@ -62,3 +62,16 @@ class AdmissionPersonService:
             coordonnees=data,
             **build_mandatory_auth_headers(person),
         )
+
+    @classmethod
+    def retrieve_curriculum(cls, person):
+        return AdmissionPersonAPIClient().retrieve_curriculum(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_curriculum(cls, person, **data):
+        return AdmissionPersonAPIClient().update_curriculum(
+            curriculum=data,
+            **build_mandatory_auth_headers(person),
+        )
