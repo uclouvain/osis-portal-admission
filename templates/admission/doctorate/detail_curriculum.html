@@ -1,0 +1,26 @@
+{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission index %}
+
+{% block tab_content %}
+
+  {% if curriculum_years %}
+    {% for curriculum_year in curriculum_years %}
+      {% panel curriculum_year.academic_graduation_year %}
+        {% for experience in curriculum_year.experiences %}
+         {% panel experience.course_type|enum_display:"CourseTypes" css_class=experience.valuated_from|yesno:"panel panel-info,panel panel-default" %}
+            {{ experience.course_type|enum_display:"CourseTypes" }}
+            {% if experience.valuated_from %}
+              <p>
+                <a href="{% url "admission:doctorate-detail" experience.valuated_from %}">
+                  {% trans "Experience valuated from this admission" %}
+                </a>
+              </p>
+            {% endif %}
+          {% endpanel %}
+        {% endfor %}
+      {% endpanel %}
+    {% endfor %}
+  {% else %}
+    {% trans "Please fullfil your curriculum" %}
+  {% endif %}
+
+{% endblock %}

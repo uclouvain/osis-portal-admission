@@ -23,25 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 
-from .autocomplete import *
-from .detail_tabs.project import *
-from .form_tabs.project import *
-from .detail_tabs.coordonnes import *
-from .form_tabs.coordonnes import *
-from .detail_tabs.person import *
-from .form_tabs.person import *
-from .list import *
-from .detail_tabs.curriculum import *
+# Do not remove the following import as it is used by enum_display templatetag
+from admission.contrib.enums.curriculum import CourseTypes
+from admission.services.person import AdmissionPersonService
+from admission.services.proposition import AdmissionPropositionService
 
-__all__ = [
-    "DoctorateAutocomplete",
-    "DoctorateAdmissionListView",
-    "DoctorateAdmissionProjectFormView",
-    "DoctorateAdmissionProjectDetailView",
-    "DoctorateAdmissionPersonFormView",
-    "DoctorateAdmissionPersonDetailView",
-    "DoctorateAdmissionCoordonneesFormView",
-    "DoctorateAdmissionCoordonneesDetailView",
-    "DoctorateAdmissionCurriculumDetailView",
-]
+
+class DoctorateAdmissionCurriculumDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "admission/doctorate/detail_curriculum.html"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data["admission"] = AdmissionPropositionService.get_proposition(
+            person=self.request.user.person, uuid=str(self.kwargs["pk"]),
+        )
+        curriculum = AdmissionPersonService.retrieve_curriculum(self.request.user.person)
+        context_data["curriculum_years"] = curriculum.get("curriculum_years")
+        return context_data
