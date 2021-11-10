@@ -1,4 +1,4 @@
-<div class="panel panel-default"{% for name, value in attributes.items %} {{ name }}="{{ value|stringformat:'s' }}"{% endfor %}>
+<div {% for name, value in attributes.items %} {{ name }}="{{ value|stringformat:'s' }}"{% endfor %}>
     {% if title %}
     <div class="panel-heading">
         <h4 class="panel-title">
