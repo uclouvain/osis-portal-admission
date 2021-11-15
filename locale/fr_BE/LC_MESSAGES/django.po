@@ -127,6 +127,9 @@ msgstr "Langues anciennes"
 msgid "Another institute"
 msgstr "Autre établissement"
 
+msgid "Are you sure you want to cancel this request?"
+msgstr "Êtes vous sûr de vouloir supprimer cette demande ?"
+
 msgid "Artistic qualification"
 msgstr "Artistique de qualification"
 
@@ -174,6 +177,9 @@ msgstr "Membre du CA"
 
 msgid "CA members"
 msgstr "Membres du CA"
+
+msgid "CANCELLED"
+msgstr "Annulée"
 
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
@@ -240,6 +246,9 @@ msgstr "Curriculum"
 
 msgid "Defense date"
 msgstr "Date de soutenance"
+
+msgid "Delete"
+msgstr "Supprimer"
 
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
@@ -386,6 +395,9 @@ msgstr "Photo d'identité"
 
 msgid "INVITED"
 msgstr "Invité"
+
+msgid "IN_PROGRESS"
+msgstr "En cours"
 
 msgid "IT"
 msgstr "Informatique"
@@ -649,6 +661,9 @@ msgstr "Bourse de recherche"
 
 msgid "SELF_FUNDING"
 msgstr "Auto-financement"
+
+msgid "SUBMITTED"
+msgstr "Soumis"
 
 msgid "Save my submission"
 msgstr "Enregistrer ma soumission"

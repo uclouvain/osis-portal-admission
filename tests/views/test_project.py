@@ -30,6 +30,7 @@ from django.test import TestCase, override_settings
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import ChoixTypeFinancement
+from admission.contrib.enums.projet import ChoixStatusProposition
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
@@ -140,3 +141,17 @@ class ProjectViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Something")
+
+    def test_cancel(self):
+        url = resolve_url('admission:doctorate-cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.client.force_login(self.person.user)
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            statut=ChoixStatusProposition.IN_PROGRESS.name,
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, ChoixStatusProposition.IN_PROGRESS.value)
+        self.mock_proposition_api.return_value.destroy_proposition.assert_not_called()
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, 302)
+        self.mock_proposition_api.return_value.destroy_proposition.assert_called()

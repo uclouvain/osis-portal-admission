@@ -32,3 +32,9 @@ class ChoixLangueRedactionThese(ChoiceEnum):
     FRENCH = _('French')
     ENGLISH = _('English')
     UNDECIDED = _('Undecided')
+
+
+class ChoixStatusProposition(ChoiceEnum):
+    CANCELLED = _('CANCELLED')
+    IN_PROGRESS = _('IN_PROGRESS')
+    SUBMITTED = _('SUBMITTED')

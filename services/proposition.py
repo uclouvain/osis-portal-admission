@@ -72,6 +72,13 @@ class AdmissionPropositionService:
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def cancel_proposition(cls, person: Person, uuid):
+        return AdmissionPropositionAPIClient().destroy_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
