@@ -23,11 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 
-from .autocomplete import *
-from .list import *
+from admission.services.proposition import AdmissionCotutelleService, AdmissionPropositionService
 
-__all__ = [
-    "DoctorateAutocomplete",
-    "DoctorateAdmissionListView",
-]
+
+class DoctorateAdmissionCotutelleDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'admission/doctorate/detail_cotutelle.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['admission'] = AdmissionPropositionService.get_proposition(
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
+        )
+        context_data['cotutelle'] = AdmissionCotutelleService.get_cotutelle(
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
+        )
+        return context_data

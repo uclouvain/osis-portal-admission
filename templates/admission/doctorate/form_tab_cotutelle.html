@@ -1,4 +1,4 @@
-{% load i18n %}
+{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -24,25 +24,33 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% if detail_view %}
-    {% url 'admission:doctorate-detail:'|add:tab_name admission_uuid as tab_url %}
-{% elif not admission %}
-    {% url 'admission:doctorate-create:'|add:tab_name as tab_url %}
-{% else %}
-    {% url 'admission:doctorate-update:'|add:tab_name admission_uuid as tab_url %}
-{% endif %}
-<li
-    role="presentation"
-    class="text-nowrap{% if request.path == tab_url %} active{% elif not tab_url %} disabled{% endif %}"
->
-    <a href="{{ tab_url }}">
-        {% if icon %}
-            <span class="fa fa-{{ icon }}"></span>
-        {% elif is_valid %}
-            <span class="fa fa-check"></span>
-        {% else %}
-            <span class="fa fa-exclamation-triangle"></span>
-        {% endif %}
-        {{ tab_label }}
-    </a>
-</li>
+{% block form %}
+    {% bootstrap_form_errors form %}
+
+    {% panel _("Cotutelle") %}
+        {% bootstrap_field form.cotutelle %}
+        <div id="cotutelle">
+            {% bootstrap_field form.motivation %}
+            <div class="row">
+                <div class="col-md-5">
+                    {% bootstrap_field form.institution %}
+                </div>
+            </div>
+            {% bootstrap_field form.demande_ouverture %}
+            {% bootstrap_field form.convention %}
+            {% bootstrap_field form.autres_documents %}
+        </div>
+    {% endpanel %}
+
+{% endblock %}
+
+{% block script %}
+    {{ form.media }}
+    <script type="application/javascript">
+    $(function () {
+        $('#cotutelle').dependsOn({
+            'input[name=cotutelle]': { values: ['YES'] },
+        }, { valueOnDisable: '' });
+    });
+    </script>
+{% endblock %}

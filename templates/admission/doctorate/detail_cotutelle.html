@@ -1,4 +1,4 @@
-{% load i18n %}
+{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -24,25 +24,16 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% if detail_view %}
-    {% url 'admission:doctorate-detail:'|add:tab_name admission_uuid as tab_url %}
-{% elif not admission %}
-    {% url 'admission:doctorate-create:'|add:tab_name as tab_url %}
-{% else %}
-    {% url 'admission:doctorate-update:'|add:tab_name admission_uuid as tab_url %}
-{% endif %}
-<li
-    role="presentation"
-    class="text-nowrap{% if request.path == tab_url %} active{% elif not tab_url %} disabled{% endif %}"
->
-    <a href="{{ tab_url }}">
-        {% if icon %}
-            <span class="fa fa-{{ icon }}"></span>
-        {% elif is_valid %}
-            <span class="fa fa-check"></span>
+{% block tab_content %}
+    {% panel _("Cotutelle") %}
+        {% if cotutelle.motivation %}
+            {% field_data _("Motivation") cotutelle.motivation %}
+            {% field_data _("Institution") cotutelle.institution %}
+            {% field_data _("Opening request") cotutelle.demande_ouverture %}
+            {% field_data _("Convention") cotutelle.convention %}
+            {% field_data _("Other documents") cotutelle.autres_documents %}
         {% else %}
-            <span class="fa fa-exclamation-triangle"></span>
+            {% trans "No cotutelle" %}
         {% endif %}
-        {{ tab_label }}
-    </a>
-</li>
+    {% endpanel %}
+{% endblock %}

@@ -83,7 +83,7 @@ def doctorate_tabs(context, admission=None):
 @register.inclusion_tag('admission/field_data.html')
 def field_data(name, data=None, css_class=None):
     if isinstance(data, list):
-        template_string = "{% load osis_document %}{% document_visualizer files %}"
+        template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
     return {

@@ -23,11 +23,43 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django import forms
+from django.utils.translation import gettext_lazy as _
 
-from .autocomplete import *
-from .list import *
+from osis_document.contrib import FileUploadField
 
-__all__ = [
-    "DoctorateAutocomplete",
-    "DoctorateAdmissionListView",
-]
+
+class DoctorateAdmissionCotutelleForm(forms.Form):
+    cotutelle = forms.ChoiceField(
+        label=_("Is your thesis joint with another secondary institute?"),
+        choices=[
+            ('YES', _("Yes")),
+            ('NO', _("No")),
+        ],
+        widget=forms.RadioSelect,
+    )
+    motivation = forms.CharField(
+        label=_("Motivation"),
+        required=False,
+    )
+    institution = forms.CharField(
+        label=_("Institution"),
+        required=False,
+    )
+    demande_ouverture = FileUploadField(
+        label=_("Opening request"),
+        required=False,
+        max_files=1,
+    )
+    convention = FileUploadField(
+        label=_("Convention"),
+        required=False,
+        max_files=1,
+    )
+    autres_documents = FileUploadField(
+        label=_("Other documents"),
+        required=False,
+    )
+
+    class Media:
+        js = ('dependsOn.min.js',)
