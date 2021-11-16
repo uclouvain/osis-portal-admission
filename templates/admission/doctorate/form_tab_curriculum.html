@@ -1,0 +1,32 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}
+{% load bootstrap3 i18n static admission %}
+
+{% block form %}
+    {% blocktrans %}
+      <p>
+        Please complete below for each year mentioned what were your activities. Every study year (successful or
+        unsuccessful) or activity has to be completed.
+      </p>
+
+      <p>
+        In case of accumulation of higher education and activities during the same academic year, I declare to have
+        indicated below the undertaken studies.
+      </p>
+
+      <p>Please use, if needed, the 'Duplicate' button for a study course of several years within the same institute.</p>
+    {% endblocktrans %}
+
+    {% bootstrap_formset_errors form %}
+
+    {% panel _("Curriculum") %}
+        {% for diploma_form in form %}
+          {% panel _("Add a diploma") %}
+            {% bootstrap_form diploma_form %}
+          {% endpanel %}
+        {% endfor %}
+    {% endpanel %}
+{% endblock %}
+
+{% block script %}
+    {{ form.media }}
+{% endblock %}
