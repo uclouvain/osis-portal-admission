@@ -26,8 +26,6 @@
 
 from .autocomplete import *
 from .list import *
-from .form_tabs.secondary_studies import *
-from .detail_tabs.secondary_studies import *
 
 __all__ = [
     "DoctorateAutocomplete",

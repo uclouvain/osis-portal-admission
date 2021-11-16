@@ -28,7 +28,7 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from admission.contrib.enums.secondary_studies import DiplomaTypes, EducationalType
-from admission.contrib.forms.secondary_studies import (
+from admission.contrib.forms.education import (
     DoctorateAdmissionEducationForm,
     DoctorateAdmissionEducationForeignDiplomaForm,
     DoctorateAdmissionEducationBelgianDiplomaForm,
