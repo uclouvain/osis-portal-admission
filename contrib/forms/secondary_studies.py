@@ -72,7 +72,7 @@ class DoctorateAdmissionEducationForm(forms.Form):
         got_diploma = cleaned_data.get("got_diploma")
 
         if got_diploma:
-            field_required_msg = _("This field is required")
+            field_required_msg = _("This field is required.")
             academic_graduation_year = cleaned_data.get("academic_graduation_year")
             diploma_type = cleaned_data.get("diploma_type")
             result = cleaned_data.get("result")

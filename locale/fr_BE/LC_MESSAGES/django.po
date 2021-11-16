@@ -634,9 +634,6 @@ msgstr "Enseignement de formation générale"
 msgid "Thesis redacting language"
 msgstr "Langue de rédaction de la thèse"
 
-msgid "This field is required"
-msgstr "Ce champ est requis"
-
 msgid "This field is required."
 msgstr "Ce champ est requis."
 
