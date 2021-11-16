@@ -67,6 +67,10 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
 class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     form_class = forms.Form
     template_name = 'admission/doctorate/form_tab_remove_actor.html'
+    actor_type_mapping = {
+        ActorType.PROMOTER.name: ('signatures_promoteurs', 'promoteur'),
+        ActorType.CA_MEMBER.name: ('signatures_membres_ca', 'membre_ca'),
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -79,17 +83,13 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
                 person=self.request.user.person,
                 uuid=str(self.kwargs['pk']),
             )
-            type_mapping = {
-                ActorType.PROMOTER.name: ('signatures_promoteurs', 'promoteur'),
-                ActorType.CA_MEMBER.name: ('signatures_membres_ca', 'membre_ca'),
-            }
-            context['member'] = self.get_member(supervision, type_mapping)
+            context['member'] = self.get_member(supervision)
         except (ApiException, AttributeError, KeyError):
             raise Http404(_('Member not found'))
         return context
 
-    def get_member(self, supervision, type_mapping):
-        collection_name, attr_name = type_mapping[self.kwargs['type']]
+    def get_member(self, supervision):
+        collection_name, attr_name = self.actor_type_mapping[self.kwargs['type']]
         for signature in getattr(supervision, collection_name):
             person = getattr(signature, attr_name)
             if person.matricule == self.kwargs['matricule']:
