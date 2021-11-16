@@ -26,15 +26,26 @@
 
 from django.conf import settings
 
-from admission.services.reference import CountriesService
+from admission.services.reference import CountriesService, LanguageService
 
 EMPTY_CHOICE = (('', ' - '),)
 
 
 def get_country_initial_choices(iso_code, person):
+    """Return the unique initial choice for a country when data is either set from initial or from webservice."""
     if not iso_code:
         return EMPTY_CHOICE
     country = CountriesService.get_country(iso_code=iso_code, person=person)
     return EMPTY_CHOICE + (
         (country.iso_code, country.name_en if settings.LANGUAGE_CODE == 'en' else country.name),
+    )
+
+
+def get_language_initial_choices(language, person):
+    """Return the unique initial choice for a language when data is either set from initial or from webservice."""
+    if not language:
+        return EMPTY_CHOICE
+    language = LanguageService.get_language(search=language, person=person)
+    return EMPTY_CHOICE + (
+        (language.code, language.name_en if settings.LANGUAGE_CODE == 'en' else language.name),
     )

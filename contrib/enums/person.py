@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from django.utils.translation import pgettext_lazy, gettext_lazy as _
 
 GENDER_CHOICES = (

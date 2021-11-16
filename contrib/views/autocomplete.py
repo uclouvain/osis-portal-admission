@@ -30,12 +30,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import get_language
 
 from admission.services.autocomplete import AdmissionAutocompleteService
-from admission.services.reference import CitiesService, CountriesService
+from admission.services.reference import CitiesService, CountriesService, LanguageService
 
 __all__ = [
     "DoctorateAutocomplete",
     "CountryAutocomplete",
     "CityAutocomplete",
+    "LanguageAutocomplete",
 ]
 
 
@@ -93,3 +94,14 @@ class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def results(self, results):
         """Return the result dictionary."""
         return [dict(id=city.name, text=city.name) for city in results]
+
+
+class LanguageAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return LanguageService.get_languages(person=self.request.user.person)
+
+    def autocomplete_results(self, results):
+        return LanguageService.get_languages(person=self.request.user.person, search=self.q)
+
+    def results(self, results):
+        return [dict(id=language.code, text=language.name) for language in results]

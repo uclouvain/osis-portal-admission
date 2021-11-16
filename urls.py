@@ -33,7 +33,7 @@ app_name = "admission"
 
 def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, detail_only=False):
     """Generates tab urls for a each action, views must exists"""
-    tab_names = ["project", "person", "coordonnees"]
+    tab_names = ["project", "person", "coordonnees", "education"]
     # pattern_names = ["person", "details", "education", "curriculum", "project"]
     if not create_only:
         tab_names += [
@@ -72,6 +72,7 @@ urlpatterns = [
             path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
             path("country/", views.CountryAutocomplete.as_view(), name="country"),
             path("city/", views.CityAutocomplete.as_view(), name="city"),
+            path("language/", views.LanguageAutocomplete.as_view(), name="language"),
         ],
         "autocomplete",
     ))),

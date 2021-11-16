@@ -62,3 +62,14 @@ class AdmissionPersonService:
             coordonnees=data,
             **build_mandatory_auth_headers(person),
         )
+
+    @classmethod
+    def retrieve_high_school_diploma(cls, person):
+        return AdmissionPersonAPIClient().retrieve_high_school_diploma(**build_mandatory_auth_headers(person))
+
+    @classmethod
+    def update_high_school_diploma(cls, person, data):
+        return AdmissionPersonAPIClient().update_high_school_diploma(
+            high_school_diploma=data,
+            **build_mandatory_auth_headers(person),
+        )
