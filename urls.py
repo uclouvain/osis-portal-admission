@@ -39,7 +39,7 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
     if not create_only:
         tab_names += [
             "cotutelle",
-            # "supervision",
+            "supervision",
             # "confirm",
             # "confirm-paper",
             # "training",
@@ -62,9 +62,18 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
         for tab_name in tab_names
     ]
 
+    # Some extra actions
+    if not create_only:
+        includes.append(
+            path(
+                'remove-member/<type>/<matricule>',
+                views.DoctorateAdmissionRemoveActorView.as_view(),
+                name='remove-actor'
+            )
+        )
+
     return [
         # Add a pattern that redirects to the default tab
-        # TODO change from 'project' to 'person'
         path(pattern_prefix, RedirectView.as_view(pattern_name='admission:{}:project'.format(name)), name=name),
         path(pattern_prefix, include((includes, name))),
     ]
@@ -74,6 +83,8 @@ urlpatterns = [
     path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
     path("autocomplete/", include((
         [
+            path("tutor/", views.TutorAutocomplete.as_view(), name="tutor"),
+            path("person/", views.PersonAutocomplete.as_view(), name="person"),
             path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
             path("country/", views.CountryAutocomplete.as_view(), name="country"),
             path("city/", views.CityAutocomplete.as_view(), name="city"),

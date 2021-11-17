@@ -32,6 +32,7 @@ from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
 from osis_admission_sdk.model.proposition_dto import PropositionDTO
+from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
 
 class AdmissionPropositionAPIClient:
@@ -106,5 +107,29 @@ class AdmissionCotutelleService:
     def get_cotutelle(cls, person, uuid) -> CotutelleDTO:
         return AdmissionPropositionAPIClient().retrieve_cotutelle(
             uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class AdmissionSupervisionService:
+    @classmethod
+    def get_supervision(cls, person, uuid) -> SupervisionDTO:
+        return AdmissionPropositionAPIClient().retrieve_supervision(uuid=uuid, **build_mandatory_auth_headers(person))
+
+    @classmethod
+    @api_exception_handler(api_exception_cls=ApiException)
+    def add_member(cls, person, uuid, **kwargs):
+        return AdmissionPropositionAPIClient().add_member(
+            uuid=uuid,
+            supervision_actor=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    @api_exception_handler(api_exception_cls=ApiException)
+    def remove_member(cls, person, uuid, **kwargs):
+        return AdmissionPropositionAPIClient().remove_member(
+            uuid=uuid,
+            supervision_actor=kwargs,
             **build_mandatory_auth_headers(person),
         )

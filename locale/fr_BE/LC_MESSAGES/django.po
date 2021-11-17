@@ -17,6 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#, python-format
+msgid ""
+"\n"
+"            Are you sure you want to remove %(prenom)s\n"
+"            %(nom)s as %(role)s\n"
+"            ?\n"
+"        "
+msgstr ""
+"\n"
+"Êtes-vous sûr de vouloir supprimer %(prenom)s %(nom)s en tant que %(role)s ?"
+
 msgid ""
 "\n"
 "            The online enrolment request procedure is split up into several\n"
@@ -83,6 +94,9 @@ msgstr ">> Enseignement de transition :"
 msgid ">> Other education, to specify"
 msgstr ">> Autre enseignement, à préciser"
 
+msgid "APPROVED"
+msgstr "Approuvé"
+
 msgid "ARC - Action de Recherche Concertée"
 msgstr "ARC - Action de Recherche Concertée"
 
@@ -91,6 +105,9 @@ msgstr "ARES - Coopération au développement"
 
 msgid "Academic graduation year"
 msgstr "Année d'obtention du diplôme universitaire"
+
+msgid "Add a promoter or a CA member"
+msgstr "Ajouter un promoteur ou un membre du CA"
 
 msgid "Admission"
 msgstr "Admission"
@@ -152,6 +169,12 @@ msgstr "Justification succincte"
 msgid "Bureau"
 msgstr "Bureau"
 
+msgid "CA Member"
+msgstr "Membre du CA"
+
+msgid "CA members"
+msgstr "Membres du CA"
+
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
 
@@ -172,6 +195,9 @@ msgstr "Communauté d'enseignement"
 
 msgid "Complementary training project"
 msgstr "Projet de formation complémentaire"
+
+msgid "Confirm"
+msgstr "Confirmer"
 
 msgid "Confirmation"
 msgstr "Confirmation"
@@ -358,6 +384,9 @@ msgstr "Carte d'identité"
 msgid "ID photo"
 msgstr "Photo d'identité"
 
+msgid "INVITED"
+msgstr "Invité"
+
 msgid "IT"
 msgstr "Informatique"
 
@@ -438,6 +467,9 @@ msgstr "Masculin"
 msgid "Mathematics"
 msgstr "Mathématiques"
 
+msgid "Member not found"
+msgstr "Membre non trouvé"
+
 msgid "Mobile phone"
 msgstr "Téléphone portable"
 
@@ -453,6 +485,9 @@ msgstr "Motivation"
 msgid "NO"
 msgstr "Non"
 
+msgid "NOT_INVITED"
+msgstr "Non invité"
+
 msgid "National Bachelor (or government diploma, ...)"
 msgstr "Baccalauréat national (ou diplôme d'état, ...)"
 
@@ -467,6 +502,9 @@ msgstr "Pas de cotutelle"
 
 msgid "No defense reason"
 msgstr "Raison de non-soutenance"
+
+msgid "No one invited"
+msgstr "Aucun invité"
 
 msgid "No reference yet - Go to Project tab"
 msgstr "Pas de reference pour le moment - Voir l'onglet projet"
@@ -585,11 +623,20 @@ msgstr "Résumé du projet"
 msgid "Project title"
 msgstr "Titre du projet"
 
+msgid "Promoter"
+msgstr "Promoteur"
+
+msgid "Promoters"
+msgstr "Promoteurs"
+
 msgid "Public defense"
 msgstr "Soutenance publique"
 
 msgid "Qualification method"
 msgstr "Technique de qualification"
+
+msgid "REFUSED"
+msgstr "Refusé"
 
 msgid "Reference:"
 msgstr "Référence :"
@@ -617,6 +664,12 @@ msgstr "Bourse de recherche"
 
 msgid "Sciences"
 msgstr "Sciences"
+
+msgid "Search a person by name"
+msgstr "Rechercher une personne par son nom"
+
+msgid "Search a tutor by name"
+msgstr "Rechercher un tuteur par son nom"
 
 msgid "Secondary studies"
 msgstr "Études secondaires"
@@ -653,6 +706,9 @@ msgstr "Enseignement de formation générale"
 
 msgid "Thesis redacting language"
 msgstr "Langue de rédaction de la thèse"
+
+msgid "This field is required"
+msgstr "Ce champ est requis"
 
 msgid "This field is required."
 msgstr "Ce champ est requis."

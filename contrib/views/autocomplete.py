@@ -37,12 +37,14 @@ __all__ = [
     "CountryAutocomplete",
     "CityAutocomplete",
     "LanguageAutocomplete",
+    "TutorAutocomplete",
+    "PersonAutocomplete",
 ]
 
 
 class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return AdmissionAutocompleteService().get_doctorates(self.request.user.person, self.forwarded['sector'])
+        return AdmissionAutocompleteService.get_doctorates(self.request.user.person, self.forwarded['sector'])
 
     def results(self, results):
         return [dict(
@@ -105,3 +107,28 @@ class LanguageAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
     def results(self, results):
         return [dict(id=language.code, text=language.name) for language in results]
+
+
+class TutorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return AdmissionAutocompleteService.autocomplete_tutors(
+            person=self.request.user.person,
+            search=(self.request.GET.get('q', '')),
+        )
+
+    def results(self, results):
+        return [dict(
+            id=result.global_id,
+            text="{result.first_name} {result.last_name}".format(result=result)
+        ) for result in results]
+
+    def autocomplete_results(self, results):
+        return results
+
+
+class PersonAutocomplete(TutorAutocomplete):
+    def get_list(self):
+        return AdmissionAutocompleteService.autocomplete_persons(
+            person=self.request.user.person,
+            search=self.request.GET.get('q', ''),
+        )

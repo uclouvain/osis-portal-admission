@@ -1,0 +1,76 @@
+{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block tab_content %}
+
+    {% panel _("Promoters") %}
+        {% for signature in supervision.signatures_promoteurs %}
+            {% url 'admission:doctorate-update:remove-actor' view.kwargs.pk 'PROMOTER' signature.promoteur.matricule as remove_url %}
+            <div class="row">
+                <div class="col-md-8">
+                    <strong>{{ signature.promoteur.prenom }} {{ signature.promoteur.nom }}</strong>
+                    {{ signature.status|enum_display:'ChoixEtatSignature' }}
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ remove_url }}" class="btn btn-danger">
+                        <i class="glyphicon glyphicon-trash"></i>
+                        Retirer
+                    </a>
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr/>
+            {% endif %}
+        {% empty %}
+            {% trans "No one invited" %}
+        {% endfor %}
+    {% endpanel %}
+
+    {% panel _("CA members") %}
+        {% for signature in supervision.signatures_membres_ca %}
+            {% url 'admission:doctorate-update:remove-actor' view.kwargs.pk 'CA_MEMBER' signature.membre_ca.matricule as remove_url %}
+            <div class="row">
+
+                <div class="col-md-8">
+                    <strong>{{ signature.membre_ca.prenom }} {{ signature.membre_ca.nom }}</strong>
+                    {{ signature.status|enum_display:'ChoixEtatSignature' }}
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ remove_url }}" class="btn btn-danger">
+                        <i class="glyphicon glyphicon-trash"></i>
+                        Retirer
+                    </a>
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr/>
+            {% endif %}
+        {% empty %}
+            {% trans "No one invited" %}
+        {% endfor %}
+    {% endpanel %}
+
+{% endblock %}

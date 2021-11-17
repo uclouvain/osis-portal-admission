@@ -92,6 +92,7 @@
     <form class="osis-form" method="post" action="">
         {% csrf_token %}
 
+        {% block form_content %}
         <div class="form-group">
             <button type="submit" class="btn btn-primary">
                 <span
@@ -113,6 +114,7 @@
             </button>
             {% if cancel_url %}<a href="{{ cancel_url }}" class="text-danger">{% trans "Cancel" %}</a>{% endif %}
         </div>
+        {% endblock form_content %}
 
     </form>
 {% endblock %}
