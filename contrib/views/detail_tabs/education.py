@@ -36,7 +36,9 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(person=self.request.user.person)
+        high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
+            person=self.request.user.person
+        ).to_dict()
         translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
 
         belgian_diploma = high_school_diploma.get('belgian_diploma')

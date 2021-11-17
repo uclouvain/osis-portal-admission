@@ -36,7 +36,7 @@ from admission.contrib.forms.education import (
 )
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
-
+from admission.services.proposition import AdmissionPropositionService
 
 educational_types_that_require_schedule = [
     EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
@@ -54,10 +54,14 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update(self.get_forms())
+        if 'pk' in self.kwargs:
+            context_data['admission'] = AdmissionPropositionService.get_proposition(
+                person=self.request.user.person, uuid=str(self.kwargs['pk']),
+            )
         return context_data
 
     def get_initial(self):
-        return AdmissionPersonService.retrieve_high_school_diploma(person=self.request.user.person)
+        return AdmissionPersonService.retrieve_high_school_diploma(person=self.request.user.person).to_dict()
 
     @staticmethod
     def check_bound_and_set_required_attr(form):
@@ -65,7 +69,6 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         for form validation."""
         if form.is_bound:
             form.empty_permitted = False
-            form.use_required_attribute = False
 
     def post(self, request, *args, **kwargs):
         forms = self.get_forms()
@@ -101,7 +104,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
                 "main_form": self.get_form(),
                 "belgian_diploma_form": DoctorateAdmissionEducationBelgianDiplomaForm(
                     prefix="belgian_diploma",
-                    initial=initial["belgian_diploma"],
+                    initial=initial.get("belgian_diploma"),
                     empty_permitted=True,
                     use_required_attribute=False,
                     # don't send data to prevent validation
@@ -110,7 +113,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
                 ),
                 "foreign_diploma_form": DoctorateAdmissionEducationForeignDiplomaForm(
                     prefix="foreign_diploma",
-                    initial=initial["foreign_diploma"],
+                    initial=initial.get("foreign_diploma"),
                     empty_permitted=True,
                     use_required_attribute=False,
                     person=person,
@@ -119,7 +122,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
                 ),
                 "schedule_form": DoctorateAdmissionEducationScheduleForm(
                     prefix="schedule",
-                    initial=initial["belgian_diploma"].get("schedule") if initial["belgian_diploma"] else None,
+                    initial=initial.get("belgian_diploma", {}).get("schedule"),
                     data=data if data and data.get("diploma_type") == DiplomaTypes.BELGIAN.name else None,
                     empty_permitted=True,
                     use_required_attribute=False,  # for number input that can't be empty
@@ -157,5 +160,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
 
             if diploma_type == DiplomaTypes.FOREIGN.name:
                 self.prepare_diploma(data, forms, "foreign_diploma")
+        else:
+            return None
 
         return data
