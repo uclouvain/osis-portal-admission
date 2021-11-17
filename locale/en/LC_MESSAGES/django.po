@@ -114,6 +114,9 @@ msgstr ""
 msgid "Another institute"
 msgstr ""
 
+msgid "Are you sure you want to cancel this request?"
+msgstr ""
+
 msgid "Artistic qualification"
 msgstr ""
 
@@ -161,6 +164,9 @@ msgstr ""
 
 msgid "CA members"
 msgstr ""
+
+msgid "CANCELLED"
+msgstr "Cancelled"
 
 msgid "CSC - China Scholarship Council"
 msgstr ""
@@ -226,6 +232,9 @@ msgid "Curriculum"
 msgstr ""
 
 msgid "Defense date"
+msgstr ""
+
+msgid "Delete"
 msgstr ""
 
 msgid ""
@@ -369,6 +378,9 @@ msgstr ""
 
 msgid "INVITED"
 msgstr ""
+
+msgid "IN_PROGRESS"
+msgstr "In progress"
 
 msgid "IT"
 msgstr ""
@@ -621,6 +633,9 @@ msgstr ""
 
 msgid "SELF_FUNDING"
 msgstr ""
+
+msgid "SUBMITTED"
+msgstr "Submitted"
 
 msgid "Save my submission"
 msgstr ""

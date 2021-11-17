@@ -68,10 +68,10 @@
         </div>
         <div>
             {% trans "Status:" %}
-            {% if not admission or admission.status == ADMISSION_NOT_SUBMITTED %}
+            {% if not admission %}
                 {% trans "Not submitted" %}
             {% else %}
-                {{ admission.status }}
+                {{ admission.statut|enum_display:'ChoixStatusProposition' }}
             {% endif %}
         </div>
     </div>
