@@ -26,7 +26,9 @@
 
 {% block tab_content %}
     {% panel _("Cotutelle") %}
-        {% if cotutelle.motivation %}
+        {% if cotutelle.cotutelle is None %}
+            {% trans "Cotutelle is not defined yet" %}
+        {% elif cotutelle.motivation %}
             {% field_data _("Motivation") cotutelle.motivation %}
             {% field_data _("Institution") cotutelle.institution %}
             {% field_data _("Opening request") cotutelle.demande_ouverture %}

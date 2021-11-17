@@ -229,6 +229,9 @@ msgstr "Convention"
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
+msgid "Cotutelle is not defined yet"
+msgstr "Le choix de la cotutelle n'est pas encore défini"
+
 msgid "Country"
 msgstr "Pays"
 
