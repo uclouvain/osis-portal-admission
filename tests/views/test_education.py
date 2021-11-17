@@ -53,8 +53,10 @@ class EducationTestCase(TestCase):
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = person_api_patcher.start()
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = dict(
-        )
+        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+            'belgian_diploma': None,
+            'foreign_diploma': None,
+        }
         self.addCleanup(person_api_patcher.stop)
 
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")

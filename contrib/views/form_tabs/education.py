@@ -122,7 +122,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
                 ),
                 "schedule_form": DoctorateAdmissionEducationScheduleForm(
                     prefix="schedule",
-                    initial=initial.get("belgian_diploma", {}).get("schedule"),
+                    initial=initial.get("belgian_diploma") and initial["belgian_diploma"].get("schedule"),
                     data=data if data and data.get("diploma_type") == DiplomaTypes.BELGIAN.name else None,
                     empty_permitted=True,
                     use_required_attribute=False,  # for number input that can't be empty
