@@ -37,6 +37,8 @@ from admission.contrib.enums.secondary_studies import (
 from admission.contrib.forms import get_country_initial_choices, EMPTY_CHOICE, get_language_initial_choices
 from admission.services.reference import AcademicYearService
 
+FIELD_REQUIRED_MESSAGE = _("This field is required.")
+
 
 class DoctorateAdmissionEducationForm(forms.Form):
     got_diploma = forms.BooleanField(
@@ -67,24 +69,6 @@ class DoctorateAdmissionEducationForm(forms.Form):
         required=False,
     )
 
-    def clean(self):
-        cleaned_data = super().clean()
-        got_diploma = cleaned_data.get("got_diploma")
-
-        if got_diploma:
-            field_required_msg = _("This field is required.")
-            academic_graduation_year = cleaned_data.get("academic_graduation_year")
-            diploma_type = cleaned_data.get("diploma_type")
-            result = cleaned_data.get("result")
-            if not academic_graduation_year:
-                self.add_error('academic_graduation_year', field_required_msg)
-            if not diploma_type:
-                self.add_error('diploma_type', field_required_msg)
-            if not result:
-                self.add_error('result', field_required_msg)
-
-        return cleaned_data
-
     class Media:
         js = ("dependsOn.min.js",)
 
@@ -109,6 +93,19 @@ class DoctorateAdmissionEducationForm(forms.Form):
             )
             self.fields["academic_graduation_year"].initial = diploma.get("academic_graduation_year")
             self.fields["result"].initial = diploma.get("result")
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get("got_diploma"):
+            if not cleaned_data.get("academic_graduation_year"):
+                self.add_error('academic_graduation_year', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get("diploma_type"):
+                self.add_error('diploma_type', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get("result"):
+                self.add_error('result', FIELD_REQUIRED_MESSAGE)
+
+        return cleaned_data
 
 
 class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
@@ -157,26 +154,21 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         educational_type = cleaned_data.get("educational_type")
         educational_other = cleaned_data.get("educational_other")
 
-        # FIXME those two following fields are required, but can't be validated without `required=False`
         course_repeat = cleaned_data.get("course_repeat")
         course_orientation = cleaned_data.get("course_orientation")
-        required_field_error_msg = _("This field is required.")
         if course_repeat is None:
-            self.add_error("course_repeat", required_field_error_msg)
+            self.add_error("course_repeat", FIELD_REQUIRED_MESSAGE)
         if course_orientation is None:
-            self.add_error("course_orientation", required_field_error_msg)
+            self.add_error("course_orientation", FIELD_REQUIRED_MESSAGE)
 
         if (
             community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name
             and not (educational_type or educational_other)
         ):
-            educational_type_error_msg = _("Educational type is required with this community of education")
-            self.add_error("educational_type", educational_type_error_msg)
+            self.add_error("educational_type", _("Educational type is required with this community of education"))
 
-        institute = cleaned_data.get("institute")
-        other_institute = cleaned_data.get("other_institute")
-        institute_error_msg = _("Please set one of institute or other institute fields")
-        if not institute and not other_institute:
+        if not cleaned_data.get("institute") and not cleaned_data.get("other_institute"):
+            institute_error_msg = _("Please set one of institute or other institute fields")
             self.add_error("institute", institute_error_msg)
             self.add_error("other_institute", institute_error_msg)
 
@@ -217,21 +209,18 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        label_required_error_msg, hours_required_error_msg = _("label is required"), _("hours are required")
+        dependent_fields = [
+            ("modern_languages_other_label", "modern_languages_other_hours"),
+            ("other_label", "other_hours"),
+        ]
 
-        modern_languages_other_label = cleaned_data.get("modern_languages_other_label")
-        modern_languages_other_hours = cleaned_data.get("modern_languages_other_hours")
-        if modern_languages_other_label and not modern_languages_other_hours:
-            self.add_error("modern_languages_other_hours", hours_required_error_msg)
-        if not modern_languages_other_label and modern_languages_other_hours:
-            self.add_error("modern_languages_other_label", label_required_error_msg)
-
-        other_label = cleaned_data.get("other_label")
-        other_hours = cleaned_data.get("other_hours")
-        if other_label and not other_hours:
-            self.add_error("other_hours", hours_required_error_msg)
-        if not other_label and other_hours:
-            self.add_error("other_label", label_required_error_msg)
+        for label_field, hours_field in dependent_fields:
+            label = cleaned_data.get(label_field)
+            hours = cleaned_data.get(hours_field)
+            if label and not hours:
+                self.add_error(hours_field, _("label is required"))
+            if not label and hours:
+                self.add_error(label_field, _("hours are required"))
 
         return cleaned_data
 
@@ -269,10 +258,6 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        linguistic_regime = cleaned_data.get("linguistic_regime")
-        other_linguistic_regime = cleaned_data.get("other_linguistic_regime")
-        if not linguistic_regime and not other_linguistic_regime:
-            linguistic_error_msg = _("Please set either the linguistic regime or other field.")
-            self.add_error(linguistic_regime, linguistic_error_msg)
-            self.add_error(other_linguistic_regime, linguistic_error_msg)
+        if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
+            self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))
         return cleaned_data

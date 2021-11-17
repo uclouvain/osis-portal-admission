@@ -32,7 +32,6 @@ from base.tests.factories.person import PersonFactory
 
 
 class ListTestCase(TestCase):
-    @patch('frontoffice.settings.osis_sdk.utils.get_user_token', return_value='foobar')
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
     def test_list(self, api, *args):
         self.client.force_login(PersonFactory().user)

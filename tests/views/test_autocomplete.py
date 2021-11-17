@@ -29,7 +29,7 @@ from unittest.mock import Mock, patch
 from django.test import TestCase
 from django.urls import reverse
 
-from admission.tests.utils import MockCity, MockCountry
+from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
 
 
@@ -84,6 +84,37 @@ class AutocompleteTestCase(TestCase):
             }]
         })
         self.assertEqual(api.return_value.countries_list.call_args[1]['search'], 'F')
+
+    @patch('osis_reference_sdk.api.languages_api.LanguagesApi')
+    def test_autocomplete_languages(self, api):
+        api.return_value.languages_list.return_value = Mock(results=[
+            MockLanguage(code='FR', name='Français', name_en='French'),
+            MockLanguage(code='EN', name='Anglais', name_en='English'),
+        ])
+        url = reverse('admission:autocomplete:language')
+        response = self.client.get(url, {'q': ''})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': 'FR',
+                'text': 'Français'
+            }, {
+                'id': 'EN',
+                'text': 'Anglais'
+            }]
+        })
+        api.return_value.languages_list.assert_called()
+
+        api.return_value.languages_list.return_value = Mock(results=[
+            MockLanguage(code='FR', name='Français', name_en='French'),
+        ])
+        response = self.client.get(url, {'q': 'F'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': 'FR',
+                'text': 'Français'
+            }]
+        })
+        self.assertEqual(api.return_value.languages_list.call_args[1]['search'], 'F')
 
     @patch('osis_reference_sdk.api.cities_api.CitiesApi')
     def test_autocomplete_city(self, api):

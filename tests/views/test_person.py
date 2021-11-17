@@ -65,10 +65,6 @@ class PersonViewTestCase(TestCase):
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
         self.addCleanup(academic_year_api_patcher.stop)
-        autocomplete_api_patcher = patch("frontoffice.settings.osis_sdk.utils.get_user_token")
-        mock_user_token = autocomplete_api_patcher.start()
-        mock_user_token.return_value = 'foobar'
-        self.addCleanup(mock_user_token.stop)
 
     def test_form(self):
         url = resolve_url('admission:doctorate-create:person')
