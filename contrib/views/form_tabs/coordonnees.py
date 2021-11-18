@@ -56,7 +56,7 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         return self.form_invalid(forms['main_form'])
 
     def get_initial(self):
-        return AdmissionPersonService.retrieve_person_coordonnees(self.request.user.person)
+        return AdmissionPersonService.retrieve_person_coordonnees(self.request.user.person).to_dict()
 
     @staticmethod
     def prepare_be_city(form_cleaned_data):
