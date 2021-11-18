@@ -41,5 +41,5 @@ class DoctorateAdmissionCotutelleDetailView(LoginRequiredMixin, TemplateView):
         context_data['cotutelle'] = AdmissionCotutelleService.get_cotutelle(
             person=self.request.user.person,
             uuid=str(self.kwargs['pk']),
-        )
+        ).to_dict()
         return context_data

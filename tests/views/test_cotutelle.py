@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
@@ -32,6 +32,7 @@ from rest_framework import status
 from base.tests.factories.person import PersonFactory
 
 
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
 class CotutelleTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -45,10 +46,8 @@ class CotutelleTestCase(TestCase):
         self.mock_api = api_patcher.start()
         self.addCleanup(api_patcher.stop)
 
-        self.mock_api.return_value.retrieve_cotutelle.return_value = Mock(
-            motivation="Foobar",
-        )
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
+            cotutelle=True,
             motivation="Foobar",
             demande_ouverture=[],
             convention=[],
@@ -60,10 +59,32 @@ class CotutelleTestCase(TestCase):
         response = self.client.get(url)
         self.assertContains(response, "Foobar")
 
-    @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
     def test_cotutelle_get_form(self):
         response = self.client.get(self.url)
         self.assertContains(response, "Foobar")
+        self.assertEqual(response.context['form'].initial['cotutelle'], 'YES')
+
+    def test_cotutelle_get_form_no_cotutelle(self):
+        self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
+            cotutelle=False,
+            motivation="",
+            demande_ouverture=[],
+            convention=[],
+            autres_documents=[],
+        )
+        response = self.client.get(self.url)
+        self.assertEqual(response.context['form'].initial['cotutelle'], 'NO')
+
+    def test_cotutelle_get_form_cotutelle_undefined(self):
+        self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
+            cotutelle=None,
+            motivation="",
+            demande_ouverture=[],
+            convention=[],
+            autres_documents=[],
+        )
+        response = self.client.get(self.url)
+        self.assertEqual(response.context['form'].initial['cotutelle'], None)
 
     def test_cotutelle_update_with_data(self):
         response = self.client.post(self.url, {
