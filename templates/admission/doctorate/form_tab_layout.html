@@ -86,35 +86,31 @@
         {% endblocktrans %}
     </em></p>
 
-    {% doctorate_tabs admission %}
     {% url "admission:doctorate-detail:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
     <form class="osis-form" method="post" action="">
         {% csrf_token %}
-
         {% block form_content %}
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">
-                <span
-                    class="glyphicon glyphicon-floppy-save" aria-hidden="true"
-                ></span>
-                {% trans 'Save my submission' %}
-            </button>
-            {% if cancel_url %}<a href="{{ cancel_url }}" class="text-danger">{% trans "Cancel" %}</a>{% endif %}
-        </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary">
+                    <span
+                        class="glyphicon glyphicon-floppy-save"
+                        aria-hidden="true"
+                    ></span>
+                    {% trans 'Save my submission' %}
+                </button>
+                {% if cancel_url %}<a
+                    href="{{ cancel_url }}" class="text-danger"
+                >{% trans "Cancel" %}</a>{% endif %}
+            </div>
 
-        {% block form %}{% endblock %}
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">
-                <span
-                    class="glyphicon glyphicon-floppy-save" aria-hidden="true"
-                ></span>
-                {% trans 'Save my submission' %}
-            </button>
-            {% if cancel_url %}<a href="{{ cancel_url }}" class="text-danger">{% trans "Cancel" %}</a>{% endif %}
-        </div>
+            {% doctorate_tabs admission %}
+            <div class="row">
+                {% doctorate_subtabs admission %}
+                <div class="col-md-10">
+                    {% block form %}{% endblock %}
+                </div>
+            </div>
         {% endblock form_content %}
-
     </form>
 {% endblock %}

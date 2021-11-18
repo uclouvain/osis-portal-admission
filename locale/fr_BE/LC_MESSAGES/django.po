@@ -584,6 +584,9 @@ msgstr "Date d'expiration du passeport"
 msgid "Passport number"
 msgstr "Numéro de passeport"
 
+msgid "Personal data"
+msgstr "Données personnelles"
+
 msgid "Personal information"
 msgstr "Coordonnées"
 
@@ -613,6 +616,9 @@ msgstr "Code postal"
 
 msgid "Pre-Admission"
 msgstr "Pré-Admission"
+
+msgid "Previous experience"
+msgstr "Parcours antérieur"
 
 msgid "Previous research experience"
 msgstr "Expérience précédente de recherche"

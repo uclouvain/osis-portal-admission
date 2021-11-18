@@ -24,10 +24,12 @@
 #
 # ##############################################################################
 import functools
+from collections import namedtuple
 from inspect import getfullargspec
 
 from django import template
 from django.views.generic import FormView
+from django.utils.translation import gettext_lazy as _
 
 from base.models.utils.utils import ChoiceEnum
 
@@ -65,7 +67,23 @@ def register_inclusion_with_body(filename, takes_context=None, name=None, contex
 
         register.tag(function_name, compile_func)
         return func
+
     return dec
+
+
+ParentTab = namedtuple('ParentTab', ['label', 'icon'])
+PERSONAL = ParentTab(_('Personal data'), 'user')
+TAB_TREE = {
+    PERSONAL: ['person', 'coordonnees'],
+    ParentTab(_('Previous experience'), 'list-alt'): ['education', 'curriculum'],
+    ParentTab(_('Doctorate'), 'graduation-cap'): ['project', 'cotutelle', 'supervision'],
+}
+
+
+def get_active_parent(tab_name):
+    for parent, children in TAB_TREE.items():
+        if tab_name in children:
+            return parent
 
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
@@ -73,6 +91,35 @@ def doctorate_tabs(context, admission=None):
     valid_tabs = {}  # FIXME
     return {
         'valid_tabs': valid_tabs,
+        'tab_tree': TAB_TREE,
+        'active_parent': get_active_parent(context['request'].resolver_match.url_name),
+        'admission': admission,
+        'detail_view': not isinstance(context['view'], FormView),
+        'admission_uuid': context['view'].kwargs.get('pk', ''),
+        'request': context['request'],
+    }
+
+
+@register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
+def doctorate_subtabs(context, admission=None):
+    subtab_labels = {
+        'person': _("Identification"),
+        'coordonnees': _("Contact details"),
+        'education': _("Secondary studies"),
+        'curriculum': _("Curriculum"),
+        'project': _("Doctoral project"),
+        'cotutelle': _("Cotutelle"),
+        'supervision': _("Supervision"),
+        'confirm': _("Confirmation"),
+        'confirm_paper': _("Confirmation paper"),
+        'training': _("Doctoral training"),
+        'jury': _("Jury"),
+        'private_defense': _("Private defense"),
+        'public_defense': _("Public defense"),
+    }
+    return {
+        'subtabs': TAB_TREE.get(get_active_parent(context['request'].resolver_match.url_name), []),
+        'subtab_labels': subtab_labels,
         'admission': admission,
         'detail_view': not isinstance(context['view'], FormView),
         'admission_uuid': context['view'].kwargs.get('pk', ''),
@@ -112,3 +159,8 @@ def enum_display(value, enum_name):
             if enum.__name__ == enum_name:
                 return enum.get_value(value)
     return value
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

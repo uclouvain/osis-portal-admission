@@ -33,15 +33,11 @@
 {% endif %}
 <li
     role="presentation"
-    class="text-nowrap{% if request.path == tab_url %} active{% elif not tab_url %} disabled{% endif %}"
+    class="text-nowrap{% if request.path == tab_url or is_active %} active{% elif not tab_url %} disabled{% endif %}"
 >
     <a href="{{ tab_url }}">
         {% if icon %}
             <span class="fa fa-{{ icon }}"></span>
-        {% elif is_valid %}
-            <span class="fa fa-check"></span>
-        {% else %}
-            <span class="fa fa-exclamation-triangle"></span>
         {% endif %}
         {{ tab_label }}
     </a>

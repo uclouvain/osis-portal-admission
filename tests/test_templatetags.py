@@ -25,9 +25,10 @@
 # ##############################################################################
 from unittest.mock import Mock, patch
 
-from django.http import HttpRequest
 from django.template import Context, Template
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
+from django.urls import resolve
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from base.models.utils.utils import ChoiceEnum
@@ -90,13 +91,37 @@ class TemplateTagsTestCase(TestCase):
             def __new__(cls, *args, **kwargs):
                 return Mock(kwargs={}, spec=cls)
 
+        person_tab_url = '/admission/doctorates/create/person'
         template = Template("{% load admission %}{% doctorate_tabs %}")
+
+        request = RequestFactory().get(person_tab_url)
+        request.resolver_match = resolve(person_tab_url)
         rendered = template.render(Context({
             'view': MockedFormView(),
-            'request': HttpRequest()
+            'request': request,
         }))
         self.assertNotIn('confirm-paper', rendered)
-        self.assertIn('/doctorates/create/', rendered)
+        self.assertInHTML("""<li role="presentation" class="text-nowrap active">
+            <a href="/admission/doctorates/create/person">
+                <span class="fa fa-user"></span>
+                {}
+            </a>
+        </li>""".format(_("Personal data")), rendered)
+
+        # Should work on non-tab urls
+        another_tab_url = '/admission/doctorates/55375049-9d61-4c11-9f41-7460463a5ae3/remove-member/type/matricule'
+        request = RequestFactory().get(another_tab_url)
+        request.resolver_match = resolve(another_tab_url)
+        rendered = template.render(Context({
+            'view': MockedFormView(),
+            'request': request,
+        }))
+        self.assertInHTML("""<li role="presentation" class="text-nowrap">
+            <a href="/admission/doctorates/create/person">
+                <span class="fa fa-user"></span>
+                {}
+            </a>
+        </li>""".format(_("Personal data")), rendered)
 
     def test_field_data(self):
         template = Template("{% load admission %}{% field_data 'title' data 'col-md-12' %}")

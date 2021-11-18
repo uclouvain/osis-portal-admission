@@ -24,15 +24,10 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="form-group">
-    <ul class="nav nav-tabs">
-        {% for parent, children in tab_tree.items %}
-            {% if parent == active_parent %}
-                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon %}
-            {% else %}
-                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon %}
-            {% endif %}
+<div class="col-md-2">
+    <ul class="nav nav-pills nav-stacked">
+        {% for child in subtabs %}
+            {% include 'admission/doctorate_tab_entry.html' with tab_name=child tab_label=subtab_labels|get_item:child %}
         {% endfor %}
-        {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") %}
     </ul>
 </div>

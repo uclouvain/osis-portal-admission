@@ -93,11 +93,9 @@
         {% endblocktrans %}
     </em></p>
 
-    {% doctorate_tabs admission %}
-
     {% url 'admission:doctorate-update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
     {% if change_url %}
-        <div class="form-group">
+        <div class="text-right">
             <a href="{{ change_url }}" class="btn btn-primary">
                 <span
                     class="glyphicon glyphicon-floppy-save" aria-hidden="true"
@@ -107,5 +105,11 @@
         </div>
     {% endif %}
 
-    {% block tab_content %}{% endblock %}
+    {% doctorate_tabs admission %}
+    <div class="row">
+        {% doctorate_subtabs admission %}
+        <div class="col-md-10">
+            {% block tab_content %}{% endblock %}
+        </div>
+    </div>
 {% endblock %}
