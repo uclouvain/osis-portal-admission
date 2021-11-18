@@ -216,6 +216,9 @@ msgstr ""
 msgid "Cotutelle"
 msgstr ""
 
+msgid "Cotutelle is not defined yet"
+msgstr ""
+
 msgid "Country"
 msgstr ""
 
