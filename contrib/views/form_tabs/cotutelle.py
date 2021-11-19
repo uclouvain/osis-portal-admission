@@ -41,7 +41,8 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
             uuid=str(self.kwargs['pk']),
         )
         initial = cotutelle.to_dict()
-        initial['cotutelle'] = 'YES' if cotutelle.motivation else None
+        if initial['cotutelle'] is not None:
+            initial['cotutelle'] = 'YES' if initial['cotutelle'] else 'NO'
         document_fields = [
             'demande_ouverture',
             'convention',
