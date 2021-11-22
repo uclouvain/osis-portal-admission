@@ -556,6 +556,9 @@ msgstr ""
 msgid "Passport number"
 msgstr ""
 
+msgid "Personal data"
+msgstr ""
+
 msgid "Personal information"
 msgstr ""
 
@@ -584,6 +587,9 @@ msgid "Postal code"
 msgstr ""
 
 msgid "Pre-Admission"
+msgstr ""
+
+msgid "Previous experience"
 msgstr ""
 
 msgid "Previous research experience"
