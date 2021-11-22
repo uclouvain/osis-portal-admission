@@ -565,7 +565,7 @@ msgstr ""
 msgid "Physic"
 msgstr ""
 
-msgid "Please fill all the address fields"
+msgid "Place"
 msgstr ""
 
 msgid "Please mention the academic graduation year"

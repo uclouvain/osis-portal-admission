@@ -32,9 +32,10 @@
 
     {% panel _("Residential address") %}
         <div class="row">
-            <div class="col-md-4">{% bootstrap_field residential.street_number %}</div>
+            <div class="col-md-2">{% bootstrap_field residential.street_number %}</div>
             <div class="col-md-4">{% bootstrap_field residential.street %}</div>
-            <div class="col-md-4">{% bootstrap_field residential.postal_box %}</div>
+            <div class="col-md-4">{% bootstrap_field residential.place %}</div>
+            <div class="col-md-2">{% bootstrap_field residential.postal_box %}</div>
         </div>
         <div class="row">
             <div class="col-md-4">{% bootstrap_field residential.country %}</div>
@@ -52,9 +53,10 @@
 
     {% panel _("Contact address") id="contact_address" %}
         <div class="row">
-            <div class="col-md-4">{% bootstrap_field contact.street_number %}</div>
+            <div class="col-md-2">{% bootstrap_field contact.street_number %}</div>
             <div class="col-md-4">{% bootstrap_field contact.street %}</div>
-            <div class="col-md-4">{% bootstrap_field contact.postal_box %}</div>
+            <div class="col-md-4">{% bootstrap_field contact.place %}</div>
+            <div class="col-md-2">{% bootstrap_field contact.postal_box %}</div>
         </div>
         <div class="row">
             <div class="col-md-4">{% bootstrap_field contact.country %}</div>
@@ -87,48 +89,54 @@
         //-------------------------------------------------------------------------------
         var beIsoCode = '{{BE_ISO_CODE}}';
         $('#be-residential-address').dependsOn({
-          '#id_residential-country': { values: [beIsoCode] },
+            '#id_residential-country': { values: [beIsoCode] },
         });
         $('#not-be-residential-address').dependsOn({
-          '#id_residential-country': { not: [beIsoCode] },
+            '#id_residential-country': { not: [beIsoCode] },
         });
         $('#be-contact-address').dependsOn({
-          '#id_contact-country': { values: [beIsoCode] },
+            '#id_contact-country': { values: [beIsoCode] },
         });
         $('#not-be-contact-address').dependsOn({
-          '#id_contact-country': { not: [beIsoCode] },
+            '#id_contact-country': { not: [beIsoCode] },
         });
-        $('#id_contact-be_postal_code').on("keydown", function(){
-            $("#id_contact-be_city").val('').trigger('change');
+
+        // Residential = BE city depends on postal code
+        var cityResidentialCheck = $('#id_residential-be_city').dependsOn({
+            '#id_residential-country': { values: [beIsoCode] },
+            '#id_residential-be_postal_code': { not: [''] },
+        }, { valueOnDisable: '', hide: false });
+        $('#id_residential-be_postal_code').on('keydown', function () {
+            cityResidentialCheck.check()
+            $('#id_residential-be_city').val('').trigger('change');
+        });
+
+        // Contact = BE city depends on postal code
+        var cityContactCheck = $('#id_contact-be_city').dependsOn({
+            '#id_contact-country': { values: [beIsoCode] },
+            '#id_contact-be_postal_code': { not: [''] },
+        }, { valueOnDisable: '', hide: false });
+        $('#id_contact-be_postal_code').on('keydown', function () {
+            cityContactCheck.check()
+            $('#id_contact-be_city').val('').trigger('change');
         });
         //-------------------------------------------------------------------------------
 
+        // "city" and "postal code" depends on "country" for residential
+        $('#id_residential-city, #id_residential-postal_code').dependsOn({
+            '#id_residential-country': { not: [null] },
+        }, { valueOnDisable: '', hide: false });
 
-        //**********************************************************
-        // "city" depends on "postal code" that depends on "country"
-        //**********************************************************
-        $('#id_residential-postal_code').dependsOn({
-          '#id_residential-country': { not: [''] },
-        }, { valueOnDisable: '', hide: false });
-        $('#id_residential-city').dependsOn({
-          '#id_residential-country': { not: [''] },
-          '#id_residential-postal_code': { not: [''] },
-        }, { valueOnDisable: '', hide: false });
         // Activate the contact form if the 'show_contact' box is checked
         $('#contact_address').dependsOn({
             '#id_show_contact': { checked: true },
         }, { valueOnDisable: '' });
-        // "city" depends on "postal code" that depends on "country"
-        $('#id_contact-postal_code').dependsOn({
-          '#id_show_contact': { checked: true },
-          '#id_contact-country': { not: [''] },
+
+        // "city" and "postal code" depends on "country" for contact
+        $('#id_contact-city, #id_contact-postal_code').dependsOn({
+            '#id_show_contact': { checked: true },
+            '#id_contact-country': { not: [null] },
         }, { valueOnDisable: '', hide: false });
-        $('#id_contact-city').dependsOn({
-          '#id_show_contact': { checked: true },
-          '#id_contact-country': { not: [''] },
-          '#id_contact-postal_code': { not: [''] },
-        }, { valueOnDisable: '', hide: false });
-        //**********************************************************
     });
     </script>
 {% endblock %}
