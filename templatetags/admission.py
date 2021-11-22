@@ -81,9 +81,7 @@ TAB_TREE = {
 
 
 def get_active_parent(tab_name):
-    for parent, children in TAB_TREE.items():
-        if tab_name in children:
-            return parent
+    return next((parent for parent, children in TAB_TREE.items() if tab_name in children), None)
 
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
