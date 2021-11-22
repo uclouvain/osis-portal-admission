@@ -17,6 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid ""
+"\n"
+"                Please refer to your identity document in order to complete "
+"the\n"
+"                form. If you have a Belgian national register number, "
+"please\n"
+"                indicate it as a priority.\n"
+"            "
+msgstr ""
+"\n"
+"Veuillez fournir au moins un numéro d'identité. Si vous avez un numéro de "
+"registre national belge, merci de l'indiquer en priorité."
+
 #, python-format
 msgid ""
 "\n"
@@ -44,7 +57,7 @@ msgstr ""
 "La procédure d'inscription en ligne est divisée en plusieurs onglets. La "
 "demande d'inscription ne peut être validée que lorsque tous les onglets ont "
 "été complétés avec succès. Les icônes indiquent la progression de votre "
-"demande qui peut interrompue et reprise et reprise à tout moment"
+"demande qui peut être interrompue et reprise à tout moment."
 
 msgid ""
 "\n"
@@ -117,9 +130,6 @@ msgstr "Type d'admission"
 
 msgid "Allocated time"
 msgstr "Temps consacré"
-
-msgid "Already registered to UCLouvain?"
-msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
 
 msgid "Ancient languages"
 msgstr "Langues anciennes"
@@ -236,7 +246,7 @@ msgid "Country"
 msgstr "Pays"
 
 msgid "Country of citizenship"
-msgstr "Nationalité"
+msgstr "Pays de nationalité"
 
 msgid "Course"
 msgstr "Parcours"
@@ -390,6 +400,9 @@ msgstr "Communauté germanophone"
 msgid "Greek"
 msgstr "Grec"
 
+msgid "Have you previously been registered at UCLouvain?"
+msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
+
 msgid "ID card"
 msgstr "Carte d'identité"
 
@@ -408,8 +421,14 @@ msgstr "Informatique"
 msgid "Identification"
 msgstr "Identification"
 
+msgid "Identity card (both sides)"
+msgstr "Carte d'identité (recto/verso)"
+
 msgid "Identity card number"
 msgstr "Numéro de carte d'identité"
+
+msgid "Identity picture"
+msgstr "Photo d'identité"
 
 msgid "If other language, please specify"
 msgstr "Si autre langue, précisez"
@@ -458,7 +477,7 @@ msgid "Last name"
 msgstr "Nom"
 
 msgid "Last registration year"
-msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
+msgstr "Dernière année d'inscription"
 
 msgid "Latin"
 msgstr "Latin"
@@ -567,7 +586,7 @@ msgid "Other linguistic regime"
 msgstr "Autre régime linguistique"
 
 msgid "Other names"
-msgstr "Autres noms"
+msgstr "Autres prénoms"
 
 msgid "Others"
 msgstr "Autres"
@@ -643,6 +662,9 @@ msgstr "Promoteur"
 
 msgid "Promoters"
 msgstr "Promoteurs"
+
+msgid "Proof of identity"
+msgstr "Pièce d'identité"
 
 msgid "Public defense"
 msgstr "Soutenance publique"
@@ -747,7 +769,7 @@ msgid "Undecided"
 msgstr "Non décidé"
 
 msgid "Unknown birth date"
-msgstr "Date de naissance inconnue"
+msgstr "Date de naissance exacte inconnue"
 
 msgid "View"
 msgstr "Voir"
@@ -774,6 +796,9 @@ msgstr ""
 msgid "What type of education did (do) you follow?"
 msgstr "Quel type d'enseignement avez-vous suivi (ou suivez-vous) ?"
 
+msgid "What was your last year of UCLouvain enrollment?"
+msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
+
 msgid "Work contract"
 msgstr "Contrat de travail"
 
@@ -789,6 +814,9 @@ msgstr "Oui"
 msgid "belgian"
 msgstr "belge"
 
+msgid "dd/mm/yyyy"
+msgstr "jj/mm/aaaa"
+
 msgid "foreign"
 msgstr "étranger"
 
@@ -803,3 +831,6 @@ msgstr "les heures sont requises"
 
 msgid "label is required"
 msgstr "un label est requis"
+
+msgid "yyyy"
+msgstr "aaaa"
