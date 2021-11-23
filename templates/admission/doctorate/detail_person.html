@@ -29,9 +29,14 @@
         <div class="row">
             {% field_data _("First name") person.first_name "col-md-4" %}
             {% field_data _("Last name") person.last_name "col-md-4" %}
+            {% if person.first_name_in_use %}
+                {% field_data _("First name in use") person.first_name_in_use "col-md-4" %}
+            {% endif %}
             {% if person.middle_name %}
                 {% field_data _("Other names") person.middle_name "col-md-4" %}
             {% endif %}
+            {% field_data _("Sex") person.sex|enum_display:'SexEnum' "col-md-4" %}
+            {% field_data _("Gender") person.gender|enum_display:'GenderEnum' "col-md-4" %}
         </div>
         <div class="row">
             {% if person.birth_date %}
@@ -43,21 +48,23 @@
             {% field_data _("Birth place") person.birth_place "col-md-4" %}
         </div>
         {% field_data _("Country of citizenship") country_of_citizenship %}
-        {% field_data _("ID photo") person.id_photo %}
+        {% field_data _("Identity picture") person.id_photo hide_empty=True %}
         {% field_data _("Contact language") contact_language %}
     {% endpanel %}
 
-    {% panel _("Identification") %}
+    {% panel _("Proof of identity") %}
         <div class="row">
             {% field_data _("National registry number") person.national_number "col-md-6" %}
             {% field_data _("Identity card number") person.id_card_number "col-md-6" %}
         </div>
-        <div class="row">
-            {% field_data _("Passport number") person.passport_number "col-md-6" %}
-            {% field_data _("Passport expiration date") person.passport_expiration_date "col-md-6" %}
-        </div>
-        {% field_data _("ID card") person.id_card %}
-        {% field_data _("Passport") person.passport %}
+        {% if person.passport_number %}
+            <div class="row">
+                {% field_data _("Passport number") person.passport_number "col-md-6" %}
+                {% field_data _("Passport expiration date") person.passport_expiration_date "col-md-6" %}
+            </div>
+        {% endif %}
+        {% field_data _("Identity card (both sides)") person.id_card hide_empty=True %}
+        {% field_data _("Passport") person.passport hide_empty=True %}
     {% endpanel %}
 
     {% panel _("Have you previously been registered at UCLouvain?") %}
