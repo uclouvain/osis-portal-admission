@@ -27,6 +27,8 @@ from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
+from django.utils.translation import gettext_lazy as _
+from rest_framework import status
 
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
@@ -71,20 +73,25 @@ class PersonViewTestCase(TestCase):
         self.client.force_login(self.person.user)
 
         self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name="John",
+            last_name="Doe",
             id_card=[],
             passport=[],
             id_photo=[],
+            birth_year="1990",
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.context['form'].initial['unknown_birth_date'], True)
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.mock_proposition_api.assert_not_called()
 
         response = self.client.post(url, {
             'first_name': "Joe",
+            'last_name': "Doe",
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification.assert_called()
 
     def test_update(self):
@@ -93,6 +100,7 @@ class PersonViewTestCase(TestCase):
 
         values = dict(
             first_name="John",
+            last_name="Doe",
             id_card=[],
             passport=[],
             id_photo=[],
@@ -104,7 +112,7 @@ class PersonViewTestCase(TestCase):
         self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = values
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "John")
         self.assertContains(response, "FR")
         self.assertContains(response, "BE")
@@ -114,8 +122,29 @@ class PersonViewTestCase(TestCase):
 
         response = self.client.post(url, {
             'first_name': "Joe",
+            'last_name': "Doe",
+            'unknown_birth_date': True,
+            'already_registered': 'YES',
+            'passport_number': 'ABC123',
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
+        self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
+        self.assertFormError(response, 'form', 'passport_expiration_date', _("This field is required."))
+
+        response = self.client.post(url, {
+            'first_name': "Joe",
+            'last_name': "Doe",
+            'passport_expiration_date': '22/11/2021',
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'passport_number', _("This field is required."))
+
+        response = self.client.post(url, {
+            'first_name': "Joe",
+            'last_name': "Doe",
+        })
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):
         url = resolve_url('admission:doctorate-detail:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -128,7 +157,7 @@ class PersonViewTestCase(TestCase):
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Joe")
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.assertIn('admission', response.context)
@@ -140,7 +169,7 @@ class PersonViewTestCase(TestCase):
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "John")
         self.assertContains(response, "Belgique")
         self.assertContains(response, "France")
