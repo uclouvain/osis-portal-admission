@@ -148,19 +148,18 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
 
         data = forms["main_form"].cleaned_data
 
-        got_diploma = data.pop("got_diploma", None)
-        if got_diploma:
-            diploma_type = data.pop("diploma_type", None)
-            if diploma_type == DiplomaTypes.BELGIAN.name:
-                self.prepare_diploma(data, forms, "belgian_diploma")
-                schedule = forms.get("schedule_form")
-                educational_type = forms.get("belgian_diploma_form").cleaned_data.get("educational_type")
-                if schedule and educational_type in educational_types_that_require_schedule:
-                    data["belgian_diploma"]["schedule"] = schedule.cleaned_data
+        if not data.pop("got_diploma"):
+            return {}
 
-            if diploma_type == DiplomaTypes.FOREIGN.name:
-                self.prepare_diploma(data, forms, "foreign_diploma")
-        else:
-            return None
+        diploma_type = data.pop("diploma_type", None)
+        if diploma_type == DiplomaTypes.BELGIAN.name:
+            self.prepare_diploma(data, forms, "belgian_diploma")
+            schedule = forms.get("schedule_form")
+            educational_type = forms.get("belgian_diploma_form").cleaned_data.get("educational_type")
+            if schedule and educational_type in educational_types_that_require_schedule:
+                data["belgian_diploma"]["schedule"] = schedule.cleaned_data
+
+        if diploma_type == DiplomaTypes.FOREIGN.name:
+            self.prepare_diploma(data, forms, "foreign_diploma")
 
         return data

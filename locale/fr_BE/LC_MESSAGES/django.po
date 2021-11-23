@@ -19,6 +19,20 @@ msgstr ""
 
 msgid ""
 "\n"
+"                    Please complete here below the schedule of your last "
+"year\n"
+"                    of high school, indicating for each domain the number "
+"of\n"
+"                    hours of education followed per week (h/w).\n"
+"                "
+msgstr ""
+"\n"
+"Veuillez compléter ci-dessous la grille horaire de votre dernière année "
+"d'études secondaires, en indiquant en regard de chaque matière, le nombre "
+"d'heures suivies par semaine (h/s)."
+
+msgid ""
+"\n"
 "                Please refer to your identity document in order to complete "
 "the\n"
 "                form. If you have a Belgian national register number, "
@@ -59,21 +73,6 @@ msgstr ""
 "été complétés avec succès. Les icônes indiquent la progression de votre "
 "demande qui peut être interrompue et reprise à tout moment."
 
-msgid ""
-"\n"
-"          Please complete here below the schedule of your last year of high "
-"school,\n"
-"          indicating for each domain the number of hours of education "
-"followed per week (h/w).\n"
-"        "
-msgstr ""
-"\n"
-"          Veuillez compléter ci-dessous la grille horaire de votre dernière "
-"année d'études secondaires,\n"
-"          en indiquant en regard de chaque matière, le nombre d'heures "
-"suivies par semaine (h/s).\n"
-"        "
-
 msgid " (h/w)"
 msgstr " (h/s)"
 
@@ -106,6 +105,9 @@ msgstr ">> Enseignement de transition :"
 
 msgid ">> Other education, to specify"
 msgstr ">> Autre enseignement, à préciser"
+
+msgid "A field of the schedule must at least be set."
+msgstr "Au moins un champ de la grille horaire doit être complété."
 
 msgid "APPROVED"
 msgstr "Approuvé"
@@ -248,6 +250,7 @@ msgstr "Pays"
 msgid "Country of citizenship"
 msgstr "Pays de nationalité"
 
+msgctxt "trajectory"
 msgid "Course"
 msgstr "Parcours"
 
@@ -483,7 +486,7 @@ msgid "Latin"
 msgstr "Latin"
 
 msgid "Less than 65%"
-msgstr "moins de 65%"
+msgstr "Moins de 65%"
 
 msgid "Linguistic regime"
 msgstr "Régime linguistique"
@@ -511,7 +514,7 @@ msgid "Modern languages"
 msgstr "Langues modernes"
 
 msgid "More than 75%"
-msgstr "plus de 75%"
+msgstr "Plus de 75%"
 
 msgid "Motivation"
 msgstr "Motivation"
@@ -825,9 +828,6 @@ msgstr "jj/mm/aaaa"
 
 msgid "foreign"
 msgstr "étranger"
-
-msgid "french"
-msgstr "français"
 
 msgid "h/w"
 msgstr "h/s"
