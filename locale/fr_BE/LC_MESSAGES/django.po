@@ -204,7 +204,7 @@ msgid "Chemistry"
 msgstr "Chimie"
 
 msgid "City"
-msgstr "Ville"
+msgstr "Localité"
 
 msgid "Community of education"
 msgstr "Communauté d'enseignement"
@@ -505,7 +505,7 @@ msgid "Member not found"
 msgstr "Membre non trouvé"
 
 msgid "Mobile phone"
-msgstr "Téléphone portable"
+msgstr "Téléphone mobile"
 
 msgid "Modern languages"
 msgstr "Langues modernes"
@@ -615,8 +615,8 @@ msgstr "Doctorat déjà réalisé"
 msgid "Physic"
 msgstr "Physique"
 
-msgid "Please fill all the address fields"
-msgstr "Veuillez remplir tous les champs de l'adresse"
+msgid "Place"
+msgstr "Lieu-dit"
 
 msgid "Please mention the academic graduation year"
 msgstr "Veuillez indiquer l'année académique d'obtention"

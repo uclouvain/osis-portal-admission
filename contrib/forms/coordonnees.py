@@ -56,6 +56,7 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
 class DoctorateAdmissionAddressForm(forms.Form):
     street = forms.CharField(required=False, label=_("Street"))
     street_number = forms.CharField(required=False, label=_("Street number"))
+    place = forms.CharField(required=False, label=_("Place"))
     postal_box = forms.CharField(required=False, label=_("Box"))
     postal_code = forms.CharField(
         required=False,
@@ -88,13 +89,13 @@ class DoctorateAdmissionAddressForm(forms.Form):
         self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_country_initial_choices(
-            self.data.get("country", self.initial.get("country")),
+            self.data.get(self.add_prefix("country"), self.initial.get("country")),
             person,
         )
         if self.initial and self.initial["country"] == self.BE_ISO_CODE:
             self.initial["be_postal_code"] = self.initial["postal_code"]
             self.initial["be_city"] = self.initial["city"]
-            initial_choice_needed = self.data.get('be_city', self.initial.get("be_city"))
+            initial_choice_needed = self.data.get(self.add_prefix('be_city'), self.initial.get("be_city"))
             if initial_choice_needed:
                 self.fields['be_city'].widget.choices = [(initial_choice_needed, initial_choice_needed)]
 
@@ -113,10 +114,12 @@ class DoctorateAdmissionAddressForm(forms.Form):
         else:
             mandatory_address_fields.extend(["postal_code", "city"])
 
-        if any(cleaned_data.get(f) for f in mandatory_address_fields):
+        all_fields = mandatory_address_fields + ["street", "postal_box", "place"]
+
+        if any(cleaned_data.get(f) for f in all_fields):
             for field in mandatory_address_fields:
                 if not cleaned_data.get(field):
-                    self.add_error(field, _("Please fill all the address fields"))
+                    self.add_error(field, _("This field is required."))
 
             street = cleaned_data.get("street")
             postal_box = cleaned_data.get("postal_box")
