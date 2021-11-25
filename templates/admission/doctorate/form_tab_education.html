@@ -265,11 +265,11 @@
         var institute = context.find('input[name=belgian_diploma-institute]');
         var otherInstitute = context.find('input[name=belgian_diploma-other_institute]');
 
-        otherInstitute.on('focus', function () {
-            institute.val(null);
+        otherInstitute.on('keyup', function () {
+            otherInstitute.val() && institute.val(null);
         });
-        institute.on('focus', function () {
-            otherInstitute.val(null);
+        institute.on('keyup', function () {
+            institute.val() && otherInstitute.val(null);
         });
 
         var education = context.find('input[name=belgian_diploma-educational_type]');
