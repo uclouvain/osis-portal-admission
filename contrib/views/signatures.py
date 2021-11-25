@@ -24,17 +24,21 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import Form
+from django.http import JsonResponse
 from django.shortcuts import resolve_url
+from django.utils.translation import gettext as _
 from django.views.generic import FormView
 
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
 
 
-class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, SuccessMessageMixin, WebServiceFormMixin, FormView):
     template_name = "admission/doctorate/request_signatures.html"
     form_class = Form
+    success_message = _("Signatures requests sent")
 
     def call_webservice(self, data):
         AdmissionPropositionService.request_signatures(person=self.person, uuid=str(self.kwargs.get('pk')))
@@ -47,7 +51,12 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceForm
         }
         context_data["admission"] = AdmissionPropositionService.get_proposition(**service_kwargs)
         context_data["errors"] = AdmissionPropositionService.verify_proposition(**service_kwargs)
-        return context_data
+
+    def form_invalid(self, form):
+        return JsonResponse({
+            "success": False,
+            "errors": dict(form.errors),
+        })
 
     def get_success_url(self):
         return resolve_url("admission:doctorate-list")

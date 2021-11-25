@@ -216,6 +216,9 @@ msgstr ""
 msgid "City"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Community of education"
 msgstr ""
 
@@ -745,6 +748,9 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
+msgid "Request signatures"
+msgstr ""
+
 msgid "Residential address"
 msgstr ""
 
@@ -782,6 +788,9 @@ msgid "Sector"
 msgstr ""
 
 msgid "Sex"
+msgstr ""
+
+msgid "Signatures requests sent"
 msgstr ""
 
 msgid "Social sciences"

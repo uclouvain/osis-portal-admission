@@ -94,6 +94,11 @@
     {% url 'admission:doctorate-update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
     {% if change_url and admission|can_update_tab:request.resolver_match.url_name %}
         <div class="text-right">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#request-signatures-modal">
+              {% trans "Request signatures" %}
+            </button>
+          {% include "admission/doctorate/request_signatures.html" %}
             <a href="{{ change_url }}" class="btn btn-primary">
                 <span
                     class="glyphicon glyphicon-floppy-save" aria-hidden="true"

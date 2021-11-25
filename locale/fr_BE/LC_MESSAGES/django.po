@@ -233,6 +233,9 @@ msgstr "Chimie"
 msgid "City"
 msgstr "Localité"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Community of education"
 msgstr "Communauté d'enseignement"
 
@@ -813,6 +816,9 @@ msgstr "Référence :"
 msgid "Remove"
 msgstr "Retirer"
 
+msgid "Request signatures"
+msgstr "Demander les signatures"
+
 msgid "Residential address"
 msgstr "Domicile légal"
 
@@ -851,6 +857,9 @@ msgstr "Secteur"
 
 msgid "Sex"
 msgstr "Sexe"
+
+msgid "Signatures requests sent"
+msgstr "Demandes de signature envoyées"
 
 msgid "Social sciences"
 msgstr "Sciences sociales"
