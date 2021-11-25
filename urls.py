@@ -93,6 +93,11 @@ urlpatterns = [
         "autocomplete",
     ))),
     path("doctorates/<uuid:pk>/cancel/", views.DoctorateAdmissionCancelView.as_view(), name="doctorate-cancel"),
+    path(
+        "doctorates/<uuid:pk>/request_signatures/",
+        views.DoctorateAdmissionRequestSignaturesView.as_view(),
+        name="doctorate-request-signatures",
+    ),
     *generate_tab_urls(
         pattern_prefix='doctorates/create/',
         view_suffix='FormView',
