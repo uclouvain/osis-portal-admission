@@ -101,7 +101,7 @@ class TemplateTagsTestCase(TestCase):
             'request': request,
         }))
         self.assertNotIn('confirm-paper', rendered)
-        self.assertInHTML("""<li role="presentation" class="text-nowrap active">
+        self.assertInHTML("""<li role="presentation" class="active">
             <a href="/admission/doctorates/create/person">
                 <span class="fa fa-user"></span>
                 {}
@@ -116,7 +116,7 @@ class TemplateTagsTestCase(TestCase):
             'view': MockedFormView(),
             'request': request,
         }))
-        self.assertInHTML("""<li role="presentation" class="text-nowrap">
+        self.assertInHTML("""<li role="presentation">
             <a href="/admission/doctorates/create/person">
                 <span class="fa fa-user"></span>
                 {}

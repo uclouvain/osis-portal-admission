@@ -76,6 +76,9 @@ msgstr ""
 msgid " (h/w)"
 msgstr " (h/s)"
 
+msgid " (template downloadable on the CDD site)"
+msgstr " (fichier-type à télécharger sur le site de la CDD)"
+
 msgid "(e.g. +32 490 00 00 00)"
 msgstr "(ex: +32 490 00 00 00)"
 
@@ -130,8 +133,8 @@ msgstr "Admission"
 msgid "Admission type"
 msgstr "Type d'admission"
 
-msgid "Allocated time"
-msgstr "Temps consacré"
+msgid "Allocated time for the thesis (in EFT)"
+msgstr "Temps consacré à la thèse (en EFT)"
 
 msgid "Ancient languages"
 msgstr "Langues anciennes"
@@ -254,6 +257,9 @@ msgctxt "trajectory"
 msgid "Course"
 msgstr "Parcours"
 
+msgid "Course choice"
+msgstr "Choix de la formation"
+
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
 
@@ -324,8 +330,8 @@ msgstr "E-mail"
 msgid "English"
 msgstr "Anglais"
 
-msgid "Estimated time"
-msgstr "Temps estimé"
+msgid "Estimated time to complete the doctorate (in months)"
+msgstr "Durée prévue pour la réalisation du doctorat (en mois)"
 
 msgid "European Bachelor (Schola Europaea)"
 msgstr "Baccalauréat européen (Schola Europaea)"
@@ -335,6 +341,9 @@ msgstr "Échanges avec l'UCLouvain"
 
 msgid "FNRS"
 msgstr "FNRS"
+
+msgid "FRC - Fonds de recherche clinique"
+msgstr "FRC - Fonds de recherche clinique"
 
 msgid "FRESH"
 msgstr "FRESH"
@@ -373,9 +382,6 @@ msgstr "Fondation Mont Godinne"
 msgid "Fondation St Luc"
 msgstr "Fondation St Luc"
 
-msgid "Fonds de recherche clinique"
-msgstr "Fonds de recherche clinique"
-
 msgid "Foreign diploma"
 msgstr "Diplôme étranger"
 
@@ -385,11 +391,12 @@ msgstr "Français"
 msgid "French-speaking Community of Belgium"
 msgstr "Communauté française de Belgique"
 
-msgid "Full-time equivalent"
-msgstr "Équivalent full-time"
+#, no-python-format
+msgid "Full-time equivalent (as %)"
+msgstr "Équivalent temps plein (en %)"
 
 msgid "Gantt graph"
-msgstr "Graphe de Gantt"
+msgstr "Graphe de Gantt à quatre ans"
 
 msgid "Gender"
 msgstr "Genre"
@@ -654,11 +661,10 @@ msgstr "Enseignement professionnel"
 msgid "Professional education + Maturity exam"
 msgstr "Enseignement professionnel + Examen de maturité"
 
-msgid "Project"
-msgstr "Projet"
-
 msgid "Project documents"
-msgstr "Documents de projet"
+msgstr ""
+"Projet (question de recherche, état de l'art, objectifs, méthodes, "
+"chronologie, références bibliographiques)"
 
 msgid "Project resume"
 msgstr "Résumé du projet"
@@ -684,6 +690,9 @@ msgstr "Technique de qualification"
 msgid "REFUSED"
 msgstr "Refusé"
 
+msgid "Recommendation letters"
+msgstr "Lettres de recommandation"
+
 msgid "Reference:"
 msgstr "Référence :"
 
@@ -694,13 +703,13 @@ msgid "SEARCH_SCHOLARSHIP"
 msgstr "Bourse de recherche"
 
 msgid "SELF_FUNDING"
-msgstr "Auto-financement"
+msgstr "Fonds propres"
 
 msgid "SUBMITTED"
 msgstr "Soumis"
 
-msgid "Save my submission"
-msgstr "Enregistrer ma soumission"
+msgid "Save"
+msgstr "Enregistrer"
 
 msgid "Schedule"
 msgstr "Grille horaire"
@@ -753,6 +762,12 @@ msgstr "Supervision"
 msgid "Teaching of general education"
 msgstr "Enseignement de formation générale"
 
+msgid "Thesis institute"
+msgstr "Institut de la thèse"
+
+msgid "Thesis location"
+msgstr "Lieu de la thèse"
+
 msgid "Thesis redacting language"
 msgstr "Langue de rédaction de la thèse"
 
@@ -783,11 +798,11 @@ msgstr "Date de naissance exacte inconnue"
 msgid "View"
 msgstr "Voir"
 
+msgid "WBI - Wallonie Bruxelles International"
+msgstr "WBI - Wallonie Bruxelles International"
+
 msgid "WORK_CONTRACT"
 msgstr "Contrat de travail"
-
-msgid "Wallonie Bruxelles International"
-msgstr "Wallonie Bruxelles International"
 
 msgid "What diploma did you get (or will you get) ?"
 msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"

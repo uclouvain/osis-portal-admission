@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from functools import partial
 
 from dal import autocomplete
 from django import forms
@@ -32,18 +31,12 @@ from django.core import validators
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.person import GenderEnum, SexEnum
-from admission.contrib.forms import EMPTY_CHOICE, get_country_initial_choices
+from admission.contrib.forms import CustomDateInput, EMPTY_CHOICE, get_country_initial_choices
 from admission.services.reference import AcademicYearService
 from osis_document.contrib.forms import FileUploadField
 
 YES = '1'
 NO = '0'
-
-CustomDateInput = partial(
-    forms.DateInput,
-    attrs={'placeholder': _("dd/mm/yyyy")},
-    format='%d/%m/%Y',
-)
 
 
 class DoctorateAdmissionPersonForm(forms.Form):

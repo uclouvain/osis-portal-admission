@@ -26,7 +26,7 @@
 from dal import autocomplete
 from django import forms
 from django.conf import settings
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import get_language, gettext as _
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.bureau_CDE import ChoixBureauCDE
@@ -37,7 +37,7 @@ from admission.contrib.enums.financement import (
     ChoixTypeFinancement,
 )
 from admission.contrib.enums.projet import ChoixLangueRedactionThese
-from admission.contrib.forms import EMPTY_CHOICE
+from admission.contrib.forms import CustomDateInput, EMPTY_CHOICE
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
 
@@ -77,7 +77,8 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     eft = forms.IntegerField(
-        label=_("Full-time equivalent"),
+        # xgettext:no-python-format
+        label=_("Full-time equivalent (as %)"),
         min_value=0,
         max_value=100,
         required=False,
@@ -93,18 +94,30 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     duree_prevue = forms.IntegerField(
-        label=_("Estimated time"),
+        label=_("Estimated time to complete the doctorate (in months)"),
         min_value=0,
+        max_value=100,
         required=False,
     )
     temps_consacre = forms.IntegerField(
-        label=_("Allocated time"),
+        label=_("Allocated time for the thesis (in EFT)"),
         min_value=0,
+        max_value=1000,
         required=False,
     )
 
     titre_projet = forms.CharField(
         label=_("Project title"),
+        required=False,
+    )
+    institut_these = forms.CharField(
+        label=_("Thesis institute"),
+        # TODO autocomplete when available
+        required=False,
+    )
+    lieu_these = forms.CharField(
+        label=_("Thesis location"),
+        # TODO autocomplete when available
         required=False,
     )
     resume_projet = forms.CharField(
@@ -121,11 +134,15 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     proposition_programme_doctoral = FileUploadField(
-        label=_("Doctoral project proposition"),
+        label=_("Doctoral project proposition") + _(" (template downloadable on the CDD site)"),
         required=False,
     )
     projet_formation_complementaire = FileUploadField(
         label=_("Complementary training project"),
+        required=False,
+    )
+    lettres_recommandation = FileUploadField(
+        label=_("Recommendation letters"),
         required=False,
     )
     langue_redaction_these = forms.ChoiceField(
@@ -146,6 +163,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     date_soutenance = forms.DateField(
         label=_("Defense date"),
+        widget=CustomDateInput(),
         required=False,
     )
     raison_non_soutenue = forms.CharField(
@@ -181,6 +199,29 @@ class DoctorateAdmissionProjectForm(forms.Form):
         # Remove Bureau if doctoral commission is not CDE
         if hide_bureau_field:
             self.fields['bureau_cde'].widget = forms.HiddenInput()
+
+    def clean(self):
+        data = super().clean()
+
+        # Some consistency checks
+        if data.get('type_financement') == ChoixTypeFinancement.WORK_CONTRACT.name:
+            if not data.get('type_contrat_travail') and not data.get('type_contrat_travail_other'):
+                self.add_error('type_contrat_travail', _("This field is required."))
+            elif (data.get('type_contrat_travail') == ChoixTypeContratTravail.OTHER.name
+                  and not data.get('type_contrat_travail_other')):
+                self.add_error('type_contrat_travail_other', _("This field is required."))
+
+            if not data.get('eft'):
+                self.add_error('eft', _("This field is required."))
+
+        elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
+            if not data.get('bourse_recherche') and not data.get('bourse_recherche_other'):
+                self.add_error('bourse_recherche', _("This field is required."))
+            elif (data.get('bourse_recherche') == BourseRecherche.OTHER.name
+                  and not data.get('bourse_recherche_other')):
+                self.add_error('bourse_recherche_other', _("This field is required."))
+
+        return data
 
 
 class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
@@ -228,6 +269,14 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                 id="{result.sigle}-{result.annee}".format(result=doctorate),
                 sigle_entite_gestion=doctorate.sigle_entite_gestion,
             )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if self.doctorate_data['sigle_entite_gestion'] == 'CDE' and not cleaned_data.get('bureau_cde'):
+            self.add_error('bureau_cde', _("This field is required."))
+
+        return cleaned_data
 
     def get_selected_doctorate(self, sector, doctorat):
         doctorats = AdmissionAutocompleteService.get_doctorates(self.person, sector)
