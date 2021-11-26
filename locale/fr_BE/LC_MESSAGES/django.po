@@ -135,7 +135,7 @@ msgid "Are you sure you want to cancel this request?"
 msgstr "Êtes vous sûr de vouloir supprimer cette demande ?"
 
 msgid "Are you sure you want to request signatures for this admission?"
-msgstr "Êtes vous sûr de vouloir requérir les signatures cette demande ?"
+msgstr "Êtes vous sûr de vouloir requérir les signatures pour cette demande ?"
 
 msgid "Artistic qualification"
 msgstr "Artistique de qualification"
