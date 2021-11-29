@@ -29,12 +29,16 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
-    DiplomaTypes,
     DiplomaResults,
+    DiplomaTypes,
     EducationalType,
     ForeignDiplomaTypes,
 )
-from admission.contrib.forms import get_country_initial_choices, EMPTY_CHOICE, get_language_initial_choices
+from admission.contrib.forms import (
+    EMPTY_CHOICE,
+    get_country_initial_choices,
+    get_language_initial_choices,
+)
 from admission.services.reference import AcademicYearService
 
 FIELD_REQUIRED_MESSAGE = _("This field is required.")
@@ -93,6 +97,8 @@ class DoctorateAdmissionEducationForm(forms.Form):
             )
             self.fields["academic_graduation_year"].initial = diploma.get("academic_graduation_year")
             self.fields["result"].initial = diploma.get("result")
+        else:
+            self.fields["got_diploma"].initial = False
 
     def clean(self):
         cleaned_data = super().clean()
@@ -175,39 +181,55 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         return cleaned_data
 
 
+class HourField(forms.IntegerField):
+    def __init__(self, *, max_value=None, min_value=0, **kwargs):
+        kwargs.setdefault('required', False)
+        super().__init__(max_value=max_value, min_value=min_value, **kwargs)
+
+
 class DoctorateAdmissionEducationScheduleForm(forms.Form):
     # ancient language
-    latin = forms.IntegerField(label=_("Latin"), min_value=0)
-    greek = forms.IntegerField(label=_("Greek"), min_value=0)
+    latin = HourField(label=_("Latin"))
+    greek = HourField(label=_("Greek"))
     # sciences
-    chemistry = forms.IntegerField(label=_("Chemistry"), min_value=0)
-    physic = forms.IntegerField(label=_("Physic"), min_value=0)
-    biology = forms.IntegerField(label=_("Biology"), min_value=0)
+    chemistry = HourField(label=_("Chemistry"))
+    physic = HourField(label=_("Physic"))
+    biology = HourField(label=_("Biology"))
     # modern languages
-    german = forms.IntegerField(label=_("German"), min_value=0)
-    dutch = forms.IntegerField(label=_("Dutch"), min_value=0)
-    english = forms.IntegerField(label=_("English"), min_value=0)
-    french = forms.IntegerField(label=_("french"), min_value=0)
+    german = HourField(label=_("German"))
+    dutch = HourField(label=_("Dutch"))
+    english = HourField(label=_("English"))
+    french = HourField(label=_("French"))
     modern_languages_other_label = forms.CharField(
         label=_("Other"),
         help_text=_("If other language, please specify"),
         required=False,
     )
-    modern_languages_other_hours = forms.IntegerField(required=False)
+    modern_languages_other_hours = HourField()
     # other disciplines
-    mathematics = forms.IntegerField(label=_("Mathematics"), min_value=0)
-    it = forms.IntegerField(label=_("IT"), min_value=0)
-    social_sciences = forms.IntegerField(label=_("Social sciences"), min_value=0)
-    economic_sciences = forms.IntegerField(label=_("Economic sciences"), min_value=0)
+    mathematics = HourField(label=_("Mathematics"))
+    it = HourField(label=_("IT"))
+    social_sciences = HourField(label=_("Social sciences"))
+    economic_sciences = HourField(label=_("Economic sciences"))
     other_label = forms.CharField(
         label=_("Other"),
         help_text=_("If other optional domains, please specify"),
         required=False,
     )
-    other_hours = forms.IntegerField(required=False)
+    other_hours = HourField()
+
+    def get_initial_for_field(self, field, field_name):
+        # Set all hours fields to None if initial is 0, so that nothing is displayed in field
+        if isinstance(field, HourField) and not self.initial.get(field_name):
+            return None
+        return super().get_initial_for_field(field, field_name)
 
     def clean(self):
         cleaned_data = super().clean()
+
+        # At least a field is required
+        if not any(cleaned_data.get(f) for f in self.fields):
+            self.add_error(None, _("A field of the schedule must at least be set."))
 
         dependent_fields = [
             ("modern_languages_other_label", "modern_languages_other_hours"),
@@ -218,9 +240,14 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
             label = cleaned_data.get(label_field)
             hours = cleaned_data.get(hours_field)
             if label and not hours:
-                self.add_error(hours_field, _("label is required"))
+                self.add_error(hours_field, _("hours are required"))
             if not label and hours:
-                self.add_error(label_field, _("hours are required"))
+                self.add_error(label_field, _("label is required"))
+
+        # Set all hours fields to 0 if they have no value, because API rejects None
+        for field in self.fields:
+            if isinstance(self.fields[field], HourField) and not cleaned_data.get(field):
+                cleaned_data[field] = 0
 
         return cleaned_data
 

@@ -25,6 +25,7 @@
 # ##############################################################################
 
 from django.conf import settings
+from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
@@ -44,7 +45,7 @@ class DoctorateAdmissionPersonDetailView(TemplateView):
         )
         context_data['contact_language'] = dict(settings.LANGUAGES).get(person.language)
 
-        translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
+        translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
         if person.birth_country:
             birth_country = CountriesService.get_country(
                 iso_code=person.birth_country,

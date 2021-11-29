@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from django.conf import settings
+from django.utils.translation import get_language
 
 from admission.services.reference import CountriesService, LanguageService
 
@@ -37,15 +37,15 @@ def get_country_initial_choices(iso_code, person):
         return EMPTY_CHOICE
     country = CountriesService.get_country(iso_code=iso_code, person=person)
     return EMPTY_CHOICE + (
-        (country.iso_code, country.name_en if settings.LANGUAGE_CODE == 'en' else country.name),
+        (country.iso_code, country.name if get_language() == settings.LANGUAGE_CODE else country.name_en),
     )
 
 
-def get_language_initial_choices(language, person):
+def get_language_initial_choices(code, person):
     """Return the unique initial choice for a language when data is either set from initial or from webservice."""
-    if not language:
+    if not code:
         return EMPTY_CHOICE
-    language = LanguageService.get_language(search=language, person=person)
+    language = LanguageService.get_language(code=code, person=person)
     return EMPTY_CHOICE + (
-        (language.code, language.name_en if settings.LANGUAGE_CODE == 'en' else language.name),
+        (language.code, language.name if get_language() == settings.LANGUAGE_CODE else language.name_en),
     )

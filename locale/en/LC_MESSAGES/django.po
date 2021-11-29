@@ -19,6 +19,16 @@ msgstr ""
 
 msgid ""
 "\n"
+"                    Please complete here below the schedule of your last "
+"year\n"
+"                    of high school, indicating for each domain the number "
+"of\n"
+"                    hours of education followed per week (h/w).\n"
+"                "
+msgstr ""
+
+msgid ""
+"\n"
 "                Please refer to your identity document in order to complete "
 "the\n"
 "                form. If you have a Belgian national register number, "
@@ -46,15 +56,6 @@ msgid ""
 "            state of progress of your enrolment request which you can "
 "interrupt\n"
 "            and resume at any moment.\n"
-"        "
-msgstr ""
-
-msgid ""
-"\n"
-"          Please complete here below the schedule of your last year of high "
-"school,\n"
-"          indicating for each domain the number of hours of education "
-"followed per week (h/w).\n"
 "        "
 msgstr ""
 
@@ -89,6 +90,9 @@ msgid ">> Educational transition :"
 msgstr ""
 
 msgid ">> Other education, to specify"
+msgstr ""
+
+msgid "A field of the schedule must at least be set."
 msgstr ""
 
 msgid "APPROVED"
@@ -232,6 +236,7 @@ msgstr ""
 msgid "Country of citizenship"
 msgstr ""
 
+msgctxt "trajectory"
 msgid "Course"
 msgstr ""
 
@@ -791,9 +796,6 @@ msgid "dd/mm/yyyy"
 msgstr ""
 
 msgid "foreign"
-msgstr ""
-
-msgid "french"
 msgstr ""
 
 msgid "h/w"

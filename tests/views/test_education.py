@@ -103,7 +103,7 @@ class EducationTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_high_school_diploma.assert_called()
         sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
-        self.assertIsNone(sent)
+        self.assertEqual(sent, {})
 
     def test_form_belgian(self):
         response = self.client.post(self.form_url, {
@@ -149,7 +149,6 @@ class EducationTestCase(TestCase):
             "belgian_diploma-course_repeat": False,
             "belgian_diploma-course_orientation": False,
             "schedule-latin": 5,
-            "schedule-greek": 5,
             "schedule-chemistry": 5,
             "schedule-physic": 5,
             "schedule-biology": 5,
@@ -186,19 +185,37 @@ class EducationTestCase(TestCase):
                     'english': 5,
                     'french': 5,
                     'german': 5,
-                    'greek': 5,
+                    'greek': 0,
                     'it': 5,
                     'latin': 5,
                     'mathematics': 5,
-                    'modern_languages_other_hours': None,
+                    'modern_languages_other_hours': 0,
                     'modern_languages_other_label': '',
-                    'other_hours': None,
+                    'other_hours': 0,
                     'other_label': '',
                     'physic': 5,
                     'social_sciences': 5
                 }
             }
         })
+
+    def test_form_belgian_bad_schedule(self):
+        response = self.client.post(self.form_url, {
+            "got_diploma": True,
+            "diploma_type": "BELGIAN",
+            "academic_graduation_year": 2020,
+            "result": "NOT_KNOWN_YET_RESULT",
+            "belgian_diploma-community": "FRENCH_SPEAKING",
+            "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
+            "belgian_diploma-other_institute": "Special school",
+            "belgian_diploma-course_repeat": False,
+            "belgian_diploma-course_orientation": False,
+            # Even if we send data for foreign diploma, it should be stripped from data sent to WS
+            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'schedule_form', None, _("A field of the schedule must at least be set."))
+        self.mock_person_api.return_value.update_high_school_diploma.assert_not_called()
 
     def test_form_foreign(self):
         response = self.client.post(self.form_url, {
