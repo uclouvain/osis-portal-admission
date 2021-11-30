@@ -27,9 +27,11 @@ from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
+from django.utils.translation import gettext_lazy as _
+from rest_framework import status
 
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.financement import ChoixTypeFinancement
+from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.enums.projet import ChoixStatusProposition
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
@@ -45,9 +47,20 @@ class ProjectViewTestCase(TestCase):
     def setUp(self):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            code_secteur_formation="SSH",
+            documents_projet=[],
+            graphe_gantt=[],
+            proposition_programme_doctoral=[],
+            projet_formation_complementaire=[],
+        )
         self.addCleanup(propositions_api_patcher.stop)
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")
         self.mock_autocomplete_api = autocomplete_api_patcher.start()
+        self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = [
+            Mock(sigle='SSH', intitule_fr='Foobar', intitule_en='Foobar'),
+            Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
+        ]
         self.addCleanup(autocomplete_api_patcher.stop)
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
         self.mock_countries_api = countries_api_patcher.start()
@@ -56,24 +69,28 @@ class ProjectViewTestCase(TestCase):
     def test_create(self):
         url = resolve_url('admission:doctorate-create:project')
         self.client.force_login(self.person.user)
-        self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = [
-            Mock(sigle='SSH', intitule_fr='Foobar', intitule_en='Foobar'),
-            Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
-        ]
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
             Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE"),
             Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
         ]
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'SSH')
+
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sector': 'SSH',
+            'doctorate': 'FOOBAR-2021',
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'bureau_cde', _("This field is required."))
 
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'BARBAZ-2021',
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
         self.mock_proposition_api.return_value.create_proposition.side_effect = MultipleApiBusinessException(
             exceptions={
@@ -92,39 +109,88 @@ class ProjectViewTestCase(TestCase):
             'sector': 'SSH',
             'doctorate': 'BARBAZ-2021',
         })
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Something wrong on a field")
         self.assertContains(response, "Something went wrong globally")
 
     def test_update(self):
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
-        self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = [
-            Mock(sigle='SSH', intitule_fr='Foobar', intitule_en='Foobar'),
-            Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
-        ]
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
-            documents_projet=[],
-            graphe_gantt=[],
-            proposition_programme_doctoral=[],
-            projet_formation_complementaire=[],
-        )
+
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+            'code_secteur_formation': "SST",
             'type_contrat_travail': "Something",
         }
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+            'code_secteur_formation': "SST",
             'bourse_recherche': "Something other"
         }
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+    def test_update_consistency_errors(self):
+        self.client.force_login(self.person.user)
+        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+            'code_secteur_formation': "SST",
+        }
+
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
+        })
+        self.assertFormError(response, 'form', 'type_contrat_travail', _("This field is required."))
+        self.assertFormError(response, 'form', 'eft', _("This field is required."))
+
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
+            'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
+        })
+        self.assertFormError(response, 'form', 'eft', _("This field is required."))
+
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
+            'type_contrat_travail': ChoixTypeContratTravail.OTHER.name,
+        })
+        self.assertFormError(response, 'form', 'type_contrat_travail_other', _("This field is required."))
+
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
+            'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
+            'eft': 80,
+        })
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
+        })
+        self.assertFormError(response, 'form', 'bourse_recherche', _("This field is required."))
+
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
+            'bourse_recherche': BourseRecherche.OTHER.name,
+        })
+        self.assertFormError(response, 'form', 'bourse_recherche_other', _("This field is required."))
+
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
+            'bourse_recherche': BourseRecherche.ARES.name,
+        })
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):
         url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -133,9 +199,10 @@ class ProjectViewTestCase(TestCase):
             langue_redaction_these="",
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
             type_contrat_travail="Something",
+            code_secteur_formation="SST",
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Something")
 
     def test_cancel(self):
@@ -145,9 +212,9 @@ class ProjectViewTestCase(TestCase):
             statut=ChoixStatusProposition.IN_PROGRESS.name,
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, ChoixStatusProposition.IN_PROGRESS.value)
         self.mock_proposition_api.return_value.destroy_proposition.assert_not_called()
         response = self.client.post(url, {})
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_proposition_api.return_value.destroy_proposition.assert_called()

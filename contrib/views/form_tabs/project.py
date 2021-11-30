@@ -23,11 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import resolve_url
+from django.utils.translation import get_language
 from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
 from admission.contrib.forms.project import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
+from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
 from osis_document.api.utils import get_remote_token
@@ -110,7 +114,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 matricule_candidat=self.request.user.person.global_id,
             )
             data.pop('sector')
-            AdmissionPropositionService.create_proposition(person=self.request.user.person, **data)
+            self.response = AdmissionPropositionService.create_proposition(person=self.request.user.person, **data)
         else:
             data['uuid'] = str(self.kwargs['pk'])
             AdmissionPropositionService.update_proposition(person=self.request.user.person, **data)
@@ -119,4 +123,15 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
         context = super().get_context_data(**kwargs)
         if self.is_update_form:
             context['admission'] = self.proposition
+            # Lookup sector label from API
+            attr_name = 'intitule_fr' if get_language() == settings.LANGUAGE_CODE else 'intitule_en'
+            context['sector_label'] = [
+                getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
+                if s.sigle == self.proposition.code_secteur_formation
+            ][0]
         return context
+
+    def get_success_url(self):
+        if hasattr(self, 'response'):
+            return resolve_url('admission:doctorate-detail:project', pk=self.response.uuid)
+        return super().get_success_url()

@@ -23,8 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from functools import partial
+
+from django import forms
 from django.conf import settings
 from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 
 from admission.services.reference import CountriesService, LanguageService
 
@@ -49,3 +53,10 @@ def get_language_initial_choices(code, person):
     return EMPTY_CHOICE + (
         (language.code, language.name if get_language() == settings.LANGUAGE_CODE else language.name_en),
     )
+
+
+CustomDateInput = partial(
+    forms.DateInput,
+    attrs={'placeholder': _("dd/mm/yyyy")},
+    format='%d/%m/%Y',
+)
