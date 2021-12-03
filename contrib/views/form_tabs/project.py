@@ -28,6 +28,7 @@ from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
 from admission.contrib.forms.project import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
+from admission.services.action_links import AdmissionLinksService
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
 from osis_document.api.utils import get_remote_token
@@ -119,4 +120,11 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
         context = super().get_context_data(**kwargs)
         if self.is_update_form:
             context['admission'] = self.proposition
+        else:
+            # Check the user can create a new proposition
+            links = AdmissionLinksService.get_action_links(
+                person=self.request.user.person,
+            )["links"]
+            context['can_save'] = 'url' in links['create_proposition']
+
         return context

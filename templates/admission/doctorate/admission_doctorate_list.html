@@ -34,13 +34,15 @@
             <div class="col-md-12">
                 <h2>
                     {% trans "Doctorate admissions" %}
-                    <a
-                        href="{% url 'admission:doctorate-create' %}"
-                        class="btn btn-primary pull-right"
-                    >
-                        <span class="glyphicon glyphicon-plus"></span>
-                        {% trans "Create new doctorate admission" %}
-                    </a>
+                    {% if global_links.create_proposition.url %}
+                        <a
+                            href="{% url 'admission:doctorate-create' %}"
+                            class="btn btn-primary pull-right"
+                        >
+                            <span class="glyphicon glyphicon-plus"></span>
+                            {% trans "Create new doctorate admission" %}
+                        </a>
+                    {% endif %}
                 </h2>
             </div>
         </div>
@@ -53,9 +55,11 @@
             <em>Statut : {{ admission.statut|enum_display:'ChoixStatusProposition' }}</em>
 
             {% if admission.statut != 'CANCELLED' %}
-                <a class="btn btn-danger" href="{% url "admission:doctorate-cancel" admission.uuid %}">
-                    {% trans "Delete" %}
-                </a>
+                {% if admission|can_make_action:'destroy_proposition' %}
+                    <a class="btn btn-danger" href="{% url "admission:doctorate-cancel" admission.uuid %}">
+                        {% trans "Delete" %}
+                    </a>
+                {% endif %}
 
                 <div class="dropdown pull-right">
                     <button
@@ -70,13 +74,27 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="person" tab_label=_("Identification") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="coordonnees" tab_label=_("Contact details") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="education" tab_label=_("Secondary studies") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="curriculum" tab_label=_("Curriculum") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="project" tab_label=_("Doctoral project") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="cotutelle" tab_label=_("Cotutelle") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="supervision" tab_label=_("Supervision") %}
+                        {% if admission|can_update_tab:'person' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="person" tab_label=_("Identification") %}
+                        {% endif %}
+                        {% if admission|can_update_tab:'coordonnees' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="coordonnees" tab_label=_("Contact details") %}
+                        {% endif %}
+                        {% if admission|can_update_tab:'education' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="education" tab_label=_("Secondary studies") %}
+                        {% endif %}
+                        {% if admission|can_update_tab:'curriculum' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="curriculum" tab_label=_("Curriculum") %}
+                        {% endif %}
+                        {% if admission|can_update_tab:'project' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="project" tab_label=_("Doctoral project") %}
+                        {% endif %}
+                        {% if admission|can_update_tab:'cotutelle' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="cotutelle" tab_label=_("Cotutelle") %}
+                        {% endif %}
+                        {% if admission|can_update_tab:'supervision' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="supervision" tab_label=_("Supervision") %}
+                        {% endif %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="confirm" tab_label=_("Confirmation") %}
                         {% if admission.is_valid %}
                             <li role="separator" class="divider"></li>
@@ -102,13 +120,27 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="person" tab_label=_("Identification") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="coordonnees" tab_label=_("Contact details") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="education" tab_label=_("Secondary studies") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="curriculum" tab_label=_("Curriculum") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="project" tab_label=_("Doctoral project") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="cotutelle" tab_label=_("Cotutelle") %}
-                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="supervision" tab_label=_("Supervision") %}
+                        {% if admission|can_read_tab:'person' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="person" tab_label=_("Identification") %}
+                        {% endif %}
+                        {% if admission|can_read_tab:'coordonnees' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="coordonnees" tab_label=_("Contact details") %}
+                        {% endif %}
+                        {% if admission|can_read_tab:'education' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="education" tab_label=_("Secondary studies") %}
+                        {% endif %}
+                        {% if admission|can_read_tab:'curriculum' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="curriculum" tab_label=_("Curriculum") %}
+                        {% endif %}
+                        {% if admission|can_read_tab:'project' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="project" tab_label=_("Doctoral project") %}
+                        {% endif %}
+                        {% if admission|can_read_tab:'cotutelle' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="cotutelle" tab_label=_("Cotutelle") %}
+                        {% endif %}
+                        {% if admission|can_read_tab:'supervision' %}
+                            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="supervision" tab_label=_("Supervision") %}
+                        {% endif %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="confirm" tab_label=_("Confirmation") %}
                         {% if admission.is_valid %}
                             <li role="separator" class="divider"></li>

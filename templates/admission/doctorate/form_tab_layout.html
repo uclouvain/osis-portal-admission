@@ -92,14 +92,20 @@
         {% csrf_token %}
         {% block form_content %}
             <div class="text-right">
-                <button type="submit" class="btn btn-primary">
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    {% if can_save == False or not admission|can_update_tab:request.resolver_match.url_name %}
+                    disabled
+                    {% endif %}
+                >
                     <span
                         class="glyphicon glyphicon-floppy-save"
                         aria-hidden="true"
                     ></span>
                     {% trans 'Save my submission' %}
                 </button>
-                {% if cancel_url %}<a
+                {% if cancel_url and admission|can_read_tab:request.resolver_match.url_name %}<a
                     href="{{ cancel_url }}" class="text-danger"
                 >{% trans "Cancel" %}</a>{% endif %}
             </div>
