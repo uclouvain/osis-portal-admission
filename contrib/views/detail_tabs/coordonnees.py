@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
@@ -43,7 +43,7 @@ class DoctorateAdmissionCoordonneesDetailView(LoginRequiredMixin, TemplateView):
         )
         coordonnees = AdmissionPersonService.retrieve_person_coordonnees(self.request.user.person).to_dict()
         context_data['coordonnees'] = coordonnees
-        translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
+        translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
         if coordonnees['residential'] and coordonnees['residential']['country']:
             residential_country = CountriesService.get_country(
                 iso_code=coordonnees['residential']['country'],

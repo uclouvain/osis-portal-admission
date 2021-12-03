@@ -101,5 +101,7 @@ class LanguageService:
         ).results
 
     @classmethod
-    def get_language(cls, person=None, *args, **kwargs):
-        return cls.get_languages(person, *args, **kwargs)[0]
+    def get_language(cls, code, person=None):
+        # Search is only on name and name_en so we need to iter on whole list to search on code
+        languages = cls.get_languages(person)
+        return next((lang for lang in languages if lang.code == code), None)  # pragma: no branch

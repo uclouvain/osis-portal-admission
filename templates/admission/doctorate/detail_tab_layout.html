@@ -106,7 +106,9 @@
 
     {% doctorate_tabs admission %}
     <div class="row">
-        {% doctorate_subtabs admission %}
+        <div class="col-md-2">
+            {% doctorate_subtabs admission %}
+        </div>
         <div class="col-md-10">
             {% block tab_content %}{% endblock %}
         </div>

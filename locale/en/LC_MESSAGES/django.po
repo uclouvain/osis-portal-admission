@@ -19,6 +19,16 @@ msgstr ""
 
 msgid ""
 "\n"
+"                    Please complete here below the schedule of your last "
+"year\n"
+"                    of high school, indicating for each domain the number "
+"of\n"
+"                    hours of education followed per week (h/w).\n"
+"                "
+msgstr ""
+
+msgid ""
+"\n"
 "                Please refer to your identity document in order to complete "
 "the\n"
 "                form. If you have a Belgian national register number, "
@@ -49,16 +59,10 @@ msgid ""
 "        "
 msgstr ""
 
-msgid ""
-"\n"
-"          Please complete here below the schedule of your last year of high "
-"school,\n"
-"          indicating for each domain the number of hours of education "
-"followed per week (h/w).\n"
-"        "
+msgid " (h/w)"
 msgstr ""
 
-msgid " (h/w)"
+msgid " (template downloadable on the CDD site)"
 msgstr ""
 
 msgid "(e.g. +32 490 00 00 00)"
@@ -91,8 +95,11 @@ msgstr ""
 msgid ">> Other education, to specify"
 msgstr ""
 
-msgid "APPROVED"
+msgid "A field of the schedule must at least be set."
 msgstr ""
+
+msgid "APPROVED"
+msgstr "Approved"
 
 msgid "ARC - Action de Recherche Concertée"
 msgstr ""
@@ -112,7 +119,7 @@ msgstr ""
 msgid "Admission type"
 msgstr ""
 
-msgid "Allocated time"
+msgid "Allocated time for the thesis (in EFT)"
 msgstr ""
 
 msgid "Ancient languages"
@@ -232,7 +239,11 @@ msgstr ""
 msgid "Country of citizenship"
 msgstr ""
 
+msgctxt "trajectory"
 msgid "Course"
+msgstr ""
+
+msgid "Course choice"
 msgstr ""
 
 msgid "Create new doctorate admission"
@@ -281,7 +292,7 @@ msgid "Dutch"
 msgstr ""
 
 msgid "ECONOMY"
-msgstr ""
+msgstr "Economy"
 
 msgid "ERC - European Research Council"
 msgstr ""
@@ -301,7 +312,7 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-msgid "Estimated time"
+msgid "Estimated time to complete the doctorate (in months)"
 msgstr ""
 
 msgid "European Bachelor (Schola Europaea)"
@@ -311,6 +322,9 @@ msgid "Exchange with UCLouvain"
 msgstr ""
 
 msgid "FNRS"
+msgstr ""
+
+msgid "FRC - Fonds de recherche clinique"
 msgstr ""
 
 msgid "FRESH"
@@ -350,9 +364,6 @@ msgstr ""
 msgid "Fondation St Luc"
 msgstr ""
 
-msgid "Fonds de recherche clinique"
-msgstr ""
-
 msgid "Foreign diploma"
 msgstr ""
 
@@ -362,11 +373,12 @@ msgstr ""
 msgid "French-speaking Community of Belgium"
 msgstr ""
 
-msgid "Full-time equivalent"
-msgstr ""
+#, no-python-format
+msgid "Full-time equivalent (as %)"
+msgstr "Full-time equivalent (as %)"
 
 msgid "Gantt graph"
-msgstr ""
+msgstr "4-year gantt graph"
 
 msgid "Gender"
 msgstr ""
@@ -461,7 +473,7 @@ msgid "Linguistic regime"
 msgstr ""
 
 msgid "MANAGEMENT"
-msgstr ""
+msgstr "Management"
 
 msgid "Male"
 msgstr ""
@@ -489,10 +501,10 @@ msgid "Motivation"
 msgstr ""
 
 msgid "NO"
-msgstr ""
+msgstr "No"
 
 msgid "NOT_INVITED"
-msgstr ""
+msgstr "Not invited"
 
 msgid "National Bachelor (or government diploma, ...)"
 msgstr ""
@@ -525,7 +537,7 @@ msgid "Not submitted"
 msgstr ""
 
 msgid "OTHER"
-msgstr ""
+msgstr "Other"
 
 msgid ""
 "Only to provide if you are in possession of a Belgian document of identity. "
@@ -561,7 +573,7 @@ msgid "Others"
 msgstr ""
 
 msgid "PARTIAL"
-msgstr ""
+msgstr "Partial"
 
 msgid "Passport"
 msgstr ""
@@ -620,11 +632,10 @@ msgstr ""
 msgid "Professional education + Maturity exam"
 msgstr ""
 
-msgid "Project"
-msgstr ""
-
 msgid "Project documents"
 msgstr ""
+"Project (research questions, state of the art, objectives, methods, "
+"chronology, bibliography)"
 
 msgid "Project resume"
 msgstr ""
@@ -648,6 +659,9 @@ msgid "Qualification method"
 msgstr ""
 
 msgid "REFUSED"
+msgstr "Refused"
+
+msgid "Recommendation letters"
 msgstr ""
 
 msgid "Reference:"
@@ -657,15 +671,15 @@ msgid "Residential address"
 msgstr ""
 
 msgid "SEARCH_SCHOLARSHIP"
-msgstr ""
+msgstr "Research scholarship"
 
 msgid "SELF_FUNDING"
-msgstr ""
+msgstr "Self-funding"
 
 msgid "SUBMITTED"
 msgstr "Submitted"
 
-msgid "Save my submission"
+msgid "Save"
 msgstr ""
 
 msgid "Schedule"
@@ -719,6 +733,12 @@ msgstr ""
 msgid "Teaching of general education"
 msgstr ""
 
+msgid "Thesis institute"
+msgstr ""
+
+msgid "Thesis location"
+msgstr ""
+
 msgid "Thesis redacting language"
 msgstr ""
 
@@ -738,7 +758,7 @@ msgid "Type of high school diploma"
 msgstr ""
 
 msgid "UCLOUVAIN_ASSISTANT"
-msgstr ""
+msgstr "Uclouvain assistant"
 
 msgid "Undecided"
 msgstr ""
@@ -749,11 +769,11 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-msgid "WORK_CONTRACT"
+msgid "WBI - Wallonie Bruxelles International"
 msgstr ""
 
-msgid "Wallonie Bruxelles International"
-msgstr ""
+msgid "WORK_CONTRACT"
+msgstr "Work contract"
 
 msgid "What diploma did you get (or will you get) ?"
 msgstr ""
@@ -779,7 +799,7 @@ msgid "Work contract type"
 msgstr ""
 
 msgid "YES"
-msgstr ""
+msgstr "Yes"
 
 msgid "Yes"
 msgstr ""
@@ -791,9 +811,6 @@ msgid "dd/mm/yyyy"
 msgstr ""
 
 msgid "foreign"
-msgstr ""
-
-msgid "french"
 msgstr ""
 
 msgid "h/w"

@@ -27,7 +27,7 @@
 {% block form %}
     {% bootstrap_form_errors form %}
 
-    {% panel _("Doctoral project") %}
+    {% panel _("Course choice") %}
         <div class="row">
             <div class="col-md-12">
                 {% bootstrap_field form.type_admission %}
@@ -54,14 +54,12 @@
                 </div>
             </div>
         {% else %}
-            <div class="form-group">
-                <label>{% trans "Sector" %}</label>
-                <span>{{ admission.code_secteur_formation }}</span>
-            </div>
-            <div class="form-group">
-                <label>{% trans "Doctorate" %}</label>
-                <span>{{ admission.intitule_doctorat_fr }}</span>
-            </div>
+            {% field_data _("Sector") sector_label %}
+            {% if LANGUAGE_CODE == 'en' %}
+                {% field_data _("Doctorate") admission.intitule_doctorat_en %}
+            {% else %}
+                {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
+            {% endif %}
         {% endif %}
         <div class="row" id="bureau">
             <div class="col-md-4">
@@ -95,13 +93,17 @@
                 {% bootstrap_field form.bourse_recherche_other %}
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
+        <div class="row" id="financing-details">
+            <div class="col-md-6">
+                {% bootstrap_field form.institut_these %}
+            </div>
+            <div class="col-md-6">
+                {% bootstrap_field form.lieu_these %}
+            </div>
+            <div class="col-md-6">
                 {% bootstrap_field form.duree_prevue %}
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 {% bootstrap_field form.temps_consacre %}
             </div>
         </div>
@@ -119,6 +121,7 @@
         {% bootstrap_field form.graphe_gantt %}
         {% bootstrap_field form.proposition_programme_doctoral %}
         {% bootstrap_field form.projet_formation_complementaire %}
+        {% bootstrap_field form.lettres_recommandation %}
     {% endpanel %}
 
     {% panel _("Previous research experience") %}
@@ -189,6 +192,9 @@
         }, { valueOnDisable: '' });
         $('#scholarship').dependsOn({
             '#id_type_financement': { values: ['SEARCH_SCHOLARSHIP'] },
+        }, { valueOnDisable: '' });
+        $('#financing-details').dependsOn({
+            '#id_type_financement': { not: [''] },
         }, { valueOnDisable: '' });
         $('#type_contrat_travail_other').dependsOn({
             '#id_type_contrat_travail': { values: ['OTHER'] },

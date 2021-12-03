@@ -74,7 +74,7 @@ class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def results(self, results):
         return [dict(
             id=country.iso_code,
-            text=country.name_en if settings.LANGUAGE_CODE == 'en' else country.name,
+            text=country.name if get_language() == settings.LANGUAGE_CODE else country.name_en,
         ) for country in results]
 
 
@@ -106,7 +106,10 @@ class LanguageAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         return LanguageService.get_languages(person=self.request.user.person, search=self.q)
 
     def results(self, results):
-        return [dict(id=language.code, text=language.name) for language in results]
+        return [dict(
+            id=language.code,
+            text=language.name if get_language() == settings.LANGUAGE_CODE else language.name_en,
+        ) for language in results]
 
 
 class TutorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):

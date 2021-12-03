@@ -170,7 +170,7 @@ def doctorate_subtabs(context, admission=None):
 
 
 @register.inclusion_tag('admission/field_data.html')
-def field_data(name, data=None, css_class=None):
+def field_data(name, data=None, css_class=None, hide_empty=False):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
@@ -179,6 +179,7 @@ def field_data(name, data=None, css_class=None):
         'name': name,
         'data': data,
         'css_class': css_class,
+        'hide_empty': hide_empty,
     }
 
 

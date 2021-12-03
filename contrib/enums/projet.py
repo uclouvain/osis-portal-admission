@@ -31,6 +31,7 @@ from base.models.utils.utils import ChoiceEnum
 class ChoixLangueRedactionThese(ChoiceEnum):
     FRENCH = _('French')
     ENGLISH = _('English')
+    OTHER = _('Other')
     UNDECIDED = _('Undecided')
 
 

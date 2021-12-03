@@ -24,10 +24,8 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="col-md-2">
-    <ul class="nav nav-pills nav-stacked">
-        {% for child in subtabs %}
-            {% include 'admission/doctorate_tab_entry.html' with tab_name=child tab_label=subtab_labels|get_item:child %}
-        {% endfor %}
-    </ul>
-</div>
+<ul class="nav nav-pills nav-stacked">
+    {% for child in subtabs %}
+        {% include 'admission/doctorate_tab_entry.html' with tab_name=child tab_label=subtab_labels|get_item:child %}
+    {% endfor %}
+</ul>

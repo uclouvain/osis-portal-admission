@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.translation import get_language
 from django.views.generic import TemplateView
+from django.utils.translation import gettext_lazy as _
 
+from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.proposition import AdmissionPropositionService
 
 
@@ -38,4 +41,14 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
         context_data['admission'] = AdmissionPropositionService.get_proposition(
             person=self.request.user.person, uuid=str(self.kwargs['pk']),
         )
+        # There is a bug with translated strings with percent signs
+        # https://docs.djangoproject.com/en/3.2/topics/i18n/translation/#troubleshooting-gettext-incorrectly-detects-python-format-in-strings-with-percent-signs
+        # xgettext:no-python-format
+        context_data['fte_label'] = _("Full-time equivalent (as %)")
+        # Lookup sector label from API
+        attr_name = 'intitule_fr' if get_language() == settings.LANGUAGE_CODE else 'intitule_en'
+        context_data['sector_label'] = [
+            getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
+            if s.sigle == context_data['admission'].code_secteur_formation
+        ][0]
         return context_data

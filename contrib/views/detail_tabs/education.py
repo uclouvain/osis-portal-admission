@@ -25,6 +25,7 @@
 # ##############################################################################
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
@@ -45,7 +46,7 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
         high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
             person=self.request.user.person
         ).to_dict()
-        translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
+        translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
 
         belgian_diploma = high_school_diploma.get('belgian_diploma')
         foreign_diploma = high_school_diploma.get('foreign_diploma')
@@ -61,7 +62,7 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
                 context_data["foreign_diploma"]['country'] = getattr(country, translated_field)
             if context_data["foreign_diploma"].get("linguistic_regime"):
                 linguistic_regime = LanguageService.get_language(
-                    search=context_data["foreign_diploma"]["linguistic_regime"],
+                    code=context_data["foreign_diploma"]["linguistic_regime"],
                     person=self.request.user.person,
                 )
                 context_data["foreign_diploma"]['linguistic_regime'] = getattr(linguistic_regime, translated_field)
