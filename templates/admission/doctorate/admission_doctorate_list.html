@@ -34,7 +34,7 @@
             <div class="col-md-12">
                 <h2>
                     {% trans "Doctorate admissions" %}
-                    {% if global_links.create_proposition.url %}
+                    {% if 'url' in global_links.create_proposition %}
                         <a
                             href="{% url 'admission:doctorate-create' %}"
                             class="btn btn-primary pull-right"

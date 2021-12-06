@@ -31,7 +31,6 @@ from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
 from admission.contrib.forms.project import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
-from admission.services.action_links import ActionLinksService
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
@@ -130,12 +129,6 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
                 if s.sigle == self.proposition.code_secteur_formation
             ][0]
-        else:
-            # Check the user can create a new proposition
-            links = ActionLinksService.get_action_links(
-                person=self.request.user.person,
-            )["links"]
-            context['can_save'] = 'url' in links['create_proposition']
         return context
 
     def get_success_url(self):

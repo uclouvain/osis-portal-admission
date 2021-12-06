@@ -30,7 +30,6 @@ __all__ = [
     "DoctorateAdmissionListView",
 ]
 
-from admission.services.action_links import AdmissionLinksService
 from admission.services.proposition import AdmissionPropositionService
 
 
@@ -39,10 +38,7 @@ class DoctorateAdmissionListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Get the admissions
-        context["admissions"] = AdmissionPropositionService().get_propositions(self.request.user.person)
-        # Get the links
-        # context["global_links"] = AdmissionLinksService.get_action_links(
-        #     person=self.request.user.person,
-        # )["links"]
+        result = AdmissionPropositionService().get_propositions(self.request.user.person)
+        context["admissions"] = result['propositions']
+        context["global_links"] = result['links']
         return context

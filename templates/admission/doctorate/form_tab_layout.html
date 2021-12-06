@@ -101,7 +101,7 @@
                             <button
                                 type="submit"
                                 class="btn btn-primary"
-                                {% if can_save == False or not admission|can_update_tab:request.resolver_match.url_name %}
+                                {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
                                 disabled
                                 {% endif %}
                             >
