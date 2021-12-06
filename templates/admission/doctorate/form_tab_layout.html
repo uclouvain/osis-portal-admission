@@ -112,7 +112,7 @@
                                 {% trans 'Save' %}
                             </button>
                         </div>
-                        {% if cancel_url and admission|can_read_tab:request.resolver_match.url_name %}%}
+                        {% if cancel_url and admission|can_read_tab:request.resolver_match.url_name %}
                             <a href="{{ cancel_url }}" class="text-danger btn">
                                 {% trans "Cancel" %}
                             </a>
