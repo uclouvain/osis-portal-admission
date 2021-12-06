@@ -41,5 +41,5 @@ UPDATE_ACTIONS_BY_TAB = {
     'education': 'update_secondary_studies',
     'person': 'update_person',
     'project': 'update_proposition',
-    'supervision': 'update_supervision',
+    'supervision': 'add_member',
 }

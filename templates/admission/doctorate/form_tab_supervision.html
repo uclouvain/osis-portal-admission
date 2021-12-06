@@ -27,7 +27,7 @@
 {% block form %}
     {% bootstrap_form_errors form %}
     {% panel _("Add a promoter or a CA member") %}
-        {% if not admission|can_make_action:'add_member' %}
+        {% if admission|can_make_action:'add_member' %}
             <div class="row">
                 <div class="col-md-6">
                     {% bootstrap_field form.type %}
