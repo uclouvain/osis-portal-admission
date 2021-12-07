@@ -824,3 +824,6 @@ msgstr ""
 
 msgid "yyyy"
 msgstr ""
+
+msgid "You aren't allowed to add a new member to the supervision group."
+msgstr ""

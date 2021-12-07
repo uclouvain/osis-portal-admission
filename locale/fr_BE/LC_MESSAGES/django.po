@@ -855,3 +855,6 @@ msgstr "un label est requis"
 
 msgid "yyyy"
 msgstr "aaaa"
+
+msgid "You aren't allowed to add a new member to the supervision group."
+msgstr "Vous n'êtes pas autorisé à ajouter un nouveau membre au groupe de supervision."
