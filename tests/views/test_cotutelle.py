@@ -23,8 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import uuid
 from unittest.mock import patch
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from rest_framework import status
@@ -86,11 +88,14 @@ class CotutelleTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.context['form'].initial['cotutelle'], None)
 
-    def test_cotutelle_update_with_data(self):
+    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    def test_cotutelle_update_with_data(self, *args):
         response = self.client.post(self.url, {
             'cotutelle': "YES",
             'motivation': "Barbaz",
-            'demande_ouverture': [],
+            'institution': "Bazbar",
+            'demande_ouverture_0': "foobar2000",
             'convention': [],
             'autres_documents': [],
         })
