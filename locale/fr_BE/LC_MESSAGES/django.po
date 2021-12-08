@@ -233,8 +233,20 @@ msgstr "Convention"
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
+msgid "Cotutelle convention"
+msgstr "Convention de cotutelle"
+
+msgid "Cotutelle institution"
+msgstr "Institution de la cotutelle"
+
 msgid "Cotutelle is not defined yet"
 msgstr "Le choix de la cotutelle n'est pas encore défini"
+
+msgid "Cotutelle motivation"
+msgstr "Motivation de la cotutelle"
+
+msgid "Cotutelle opening request"
+msgstr "Demande d'ouverture de cotutelle"
 
 msgid "Country"
 msgstr "Pays"
