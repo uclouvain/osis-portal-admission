@@ -28,6 +28,8 @@ from django.utils.translation import gettext_lazy as _
 
 from osis_document.contrib import FileUploadField
 
+FIELD_REQUIRED_MESSAGE = _("This field is required.")
+
 
 class DoctorateAdmissionCotutelleForm(forms.Form):
     cotutelle = forms.ChoiceField(
@@ -63,3 +65,16 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
 
     class Media:
         js = ('dependsOn.min.js',)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get("cotutelle") == "YES":
+            if not cleaned_data.get("motivation"):
+                self.add_error('motivation', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get("institution"):
+                self.add_error('institution', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get("demande_ouverture"):
+                self.add_error('demande_ouverture', FIELD_REQUIRED_MESSAGE)
+
+        return cleaned_data
