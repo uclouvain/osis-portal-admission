@@ -41,20 +41,20 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         widget=forms.RadioSelect,
     )
     motivation = forms.CharField(
-        label=_("Motivation"),
+        label=_("Cotutelle motivation"),
         required=False,
     )
     institution = forms.CharField(
-        label=_("Institution"),
+        label=_("Cotutelle institution"),
         required=False,
     )
     demande_ouverture = FileUploadField(
-        label=_("Opening request"),
+        label=_("Cotutelle opening request"),
         required=False,
         max_files=1,
     )
     convention = FileUploadField(
-        label=_("Convention"),
+        label=_("Cotutelle convention"),
         required=False,
         max_files=1,
     )
