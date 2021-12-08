@@ -38,7 +38,7 @@
     {# Hide it by default to prevent FOUC #}
     <div id="got-diploma" style="display: none">
         <div class="row">
-            <div class="col-md-6">{% bootstrap_field main_form.academic_graduation_year %}</div>
+            <div class="col-md-6" id="academic-year">{% bootstrap_field main_form.academic_graduation_year %}</div>
             <div class="col-md-6">{% bootstrap_field main_form.diploma_type %}</div>
         </div>
 
@@ -220,7 +220,7 @@
         }
 
         $('#got-diploma').dependsOn({
-            'input[name=got_diploma]': { values: ['True'] },
+            'input[name=got_diploma]': { values: ['YES', 'THIS_YEAR'] },
         }, {
             onDisable: function () {
                 setNullValue('#got-diploma');
@@ -228,6 +228,10 @@
                 setNullValue('#belgian-diploma');
                 setNullValue('#schedule');
             },
+        });
+
+        $('#academic-year').dependsOn({
+          'input[name=got_diploma]': { not: ['THIS_YEAR'] },
         });
 
         $('#foreign-diploma').dependsOn({

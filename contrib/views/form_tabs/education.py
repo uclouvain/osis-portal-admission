@@ -27,7 +27,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
-from admission.contrib.enums.secondary_studies import DiplomaTypes, EducationalType
+from admission.contrib.enums.secondary_studies import DiplomaTypes, EducationalType, GotDiploma
 from admission.contrib.forms.education import (
     DoctorateAdmissionEducationForm,
     DoctorateAdmissionEducationForeignDiplomaForm,
@@ -37,6 +37,7 @@ from admission.contrib.forms.education import (
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
+from base.tests.factories.academic_year import get_current_year
 
 educational_types_that_require_schedule = [
     EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
@@ -148,8 +149,11 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
 
         data = forms["main_form"].cleaned_data
 
-        if not data.pop("got_diploma"):
+        got_diploma = data.pop("got_diploma")
+        if got_diploma in [GotDiploma.NO.name, ""]:
             return {}
+        elif got_diploma == GotDiploma.THIS_YEAR.name:
+            data["academic_graduation_year"] = get_current_year()
 
         diploma_type = data.pop("diploma_type", None)
         if diploma_type == DiplomaTypes.BELGIAN.name:

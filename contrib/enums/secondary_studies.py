@@ -28,6 +28,12 @@ from django.utils.translation import gettext_lazy as _
 from base.models.utils.utils import ChoiceEnum
 
 
+class GotDiploma(ChoiceEnum):
+    YES = _("Yes I have a high school diploma")
+    THIS_YEAR = _("I will have a high school diploma this year")
+    NO = _("No I don't have a high school diploma")
+
+
 class DiplomaTypes(ChoiceEnum):
     BELGIAN = _("belgian")
     FOREIGN = _("foreign")

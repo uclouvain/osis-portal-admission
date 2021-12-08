@@ -33,6 +33,7 @@ from admission.contrib.enums.secondary_studies import (
     DiplomaTypes,
     EducationalType,
     ForeignDiplomaTypes,
+    GotDiploma,
 )
 from admission.contrib.forms import (
     EMPTY_CHOICE,
@@ -45,14 +46,10 @@ FIELD_REQUIRED_MESSAGE = _("This field is required.")
 
 
 class DoctorateAdmissionEducationForm(forms.Form):
-    got_diploma = forms.BooleanField(
-        label=_("Did you obtain a high school diploma or will you receive this kind of diploma still this year?"),
-        widget=forms.RadioSelect(
-            choices=[
-                (True, _('Yes')),
-                (False, _('No')),
-            ],
-        ),
+    got_diploma = forms.ChoiceField(
+        label=_("Do you have a high school diploma?"),
+        choices=GotDiploma.choices(),
+        widget=forms.RadioSelect,
         required=False,
     )
     academic_graduation_year = forms.IntegerField(
@@ -61,7 +58,7 @@ class DoctorateAdmissionEducationForm(forms.Form):
         required=False,
     )
     diploma_type = forms.ChoiceField(
-        label=_("Type of high school diploma"),
+        label=_("This is a diploma from"),
         choices=DiplomaTypes.choices(),
         widget=forms.RadioSelect,
         required=False,
@@ -91,20 +88,21 @@ class DoctorateAdmissionEducationForm(forms.Form):
         # Tick the got_diploma checkbox only if there is a saved diploma
         # and select the correct related type
         if diploma:
-            self.fields["got_diploma"].initial = True
+            self.fields["got_diploma"].initial = GotDiploma.YES.name
             self.fields["diploma_type"].initial = (
                 DiplomaTypes.BELGIAN.name if belgian_diploma else DiplomaTypes.FOREIGN.name
             )
             self.fields["academic_graduation_year"].initial = diploma.get("academic_graduation_year")
             self.fields["result"].initial = diploma.get("result")
         else:
-            self.fields["got_diploma"].initial = False
+            self.fields["got_diploma"].initial = GotDiploma.NO.name
 
     def clean(self):
         cleaned_data = super().clean()
 
-        if cleaned_data.get("got_diploma"):
-            if not cleaned_data.get("academic_graduation_year"):
+        got_diploma = cleaned_data.get("got_diploma")
+        if got_diploma in [GotDiploma.THIS_YEAR.name, GotDiploma.YES.name]:
+            if got_diploma == GotDiploma.YES.name and not cleaned_data.get("academic_graduation_year"):
                 self.add_error('academic_graduation_year', FIELD_REQUIRED_MESSAGE)
             if not cleaned_data.get("diploma_type"):
                 self.add_error('diploma_type', FIELD_REQUIRED_MESSAGE)
