@@ -48,7 +48,7 @@
 
     {% for admission in admissions %}
         {% panel %}
-            <span class="h3">{{ admission.intitule_doctorat_fr }} (21-300001)</span>
+            <span class="h3">{{ admission.intitule_doctorat_fr }} ({{ admission.reference }})</span>
             <em>Créée le {{ admission.creee_le }}</em>
             <em>Statut : {{ admission.statut|enum_display:'ChoixStatusProposition' }}</em>
 
