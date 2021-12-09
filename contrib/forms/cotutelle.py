@@ -70,11 +70,8 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         cleaned_data = super().clean()
 
         if cleaned_data.get("cotutelle") == "YES":
-            if not cleaned_data.get("motivation"):
-                self.add_error('motivation', FIELD_REQUIRED_MESSAGE)
-            if not cleaned_data.get("institution"):
-                self.add_error('institution', FIELD_REQUIRED_MESSAGE)
-            if not cleaned_data.get("demande_ouverture"):
-                self.add_error('demande_ouverture', FIELD_REQUIRED_MESSAGE)
+            for field in ['motivation', 'institution', 'demande_ouverture']:
+                if not cleaned_data.get(field):
+                    self.add_error(field, _("This field is required."))
 
         return cleaned_data
