@@ -275,7 +275,7 @@
       otherEducation.on('focus', function () {
         education.val(null).trigger('change');
       });
-      education.on('focus', function () {
+      education.on('select2:select', function () {
         otherEducation.val(null);
       });
 
