@@ -31,7 +31,8 @@ from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
     DiplomaTypes,
-    EducationalType,
+    EDUCATIONAL_TYPES,
+    Equivalence,
     ForeignDiplomaTypes,
     GotDiploma,
 )
@@ -63,12 +64,6 @@ class DoctorateAdmissionEducationForm(forms.Form):
         widget=forms.RadioSelect,
         required=False,
     )
-    result = forms.ChoiceField(
-        label="",
-        choices=DiplomaResults.choices(),
-        widget=forms.RadioSelect,
-        required=False,
-    )
 
     class Media:
         js = ("dependsOn.min.js",)
@@ -93,7 +88,6 @@ class DoctorateAdmissionEducationForm(forms.Form):
                 DiplomaTypes.BELGIAN.name if belgian_diploma else DiplomaTypes.FOREIGN.name
             )
             self.fields["academic_graduation_year"].initial = diploma.get("academic_graduation_year")
-            self.fields["result"].initial = diploma.get("result")
         else:
             self.fields["got_diploma"].initial = GotDiploma.NO.name
 
@@ -106,8 +100,6 @@ class DoctorateAdmissionEducationForm(forms.Form):
                 self.add_error('academic_graduation_year', FIELD_REQUIRED_MESSAGE)
             if not cleaned_data.get("diploma_type"):
                 self.add_error('diploma_type', FIELD_REQUIRED_MESSAGE)
-            if not cleaned_data.get("result"):
-                self.add_error('result', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data
 
@@ -116,16 +108,16 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
     community = forms.ChoiceField(
         label=_("In what Community did (do) you follow last year of high school?"),
         choices=BelgianCommunitiesOfEducation.choices(),
-        widget=forms.RadioSelect,
+        widget=autocomplete.ListSelect2,
     )
     educational_type = forms.ChoiceField(
         label=_("What type of education did (do) you follow?"),
-        choices=EducationalType.choices(),
-        widget=forms.RadioSelect,
+        choices=EDUCATIONAL_TYPES,
+        widget=autocomplete.ListSelect2,
         required=False,
     )
     educational_other = forms.CharField(
-        label=_(">> Other education, to specify"),
+        label=_("If you cannot find your educational type, please clarify below"),
         required=False,
     )
     course_repeat = forms.NullBooleanField(
@@ -150,7 +142,16 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
     )
     # TODO institute & other_institute
     institute = forms.CharField(label=_("Institute"), required=False)
-    other_institute = forms.CharField(label=_("Other institute"), required=False)
+    other_institute = forms.CharField(
+        label=_("If you cannot find your institute, please clarify below"),
+        required=False,
+    )
+    result = forms.ChoiceField(
+        label=_("At which result level do you consider yourself?"),
+        choices=DiplomaResults.choices(),
+        widget=forms.RadioSelect,
+        required=False,
+    )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -175,6 +176,9 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
             institute_error_msg = _("Please set one of institute or other institute fields")
             self.add_error("institute", institute_error_msg)
             self.add_error("other_institute", institute_error_msg)
+
+        if not cleaned_data.get("result"):
+            self.add_error('result', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data
 
@@ -256,18 +260,31 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         choices=ForeignDiplomaTypes.choices(),
         widget=forms.RadioSelect,
     )
+    equivalence = forms.ChoiceField(
+        label=_(
+            "Is this diploma subject to an equivalence decision by the services of the French community of Belgium?"
+        ),
+        choices=Equivalence.choices(),
+        widget=forms.RadioSelect,
+    )
     linguistic_regime = forms.CharField(
         label=_("Linguistic regime"),
         widget=autocomplete.ListSelect2(url="admission:autocomplete:language"),
         required=False,
     )
     other_linguistic_regime = forms.CharField(
-        label=_("If other linguistic regime, please clarify"),
+        label=_("If you cannot find your linguistic regime, please clarify below"),
         required=False,
     )
     country = forms.CharField(
         label=_("Organizing country"),
         widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+    )
+    result = forms.ChoiceField(
+        label=_("What result did you get?"),
+        choices=DiplomaResults.choices(),
+        widget=forms.RadioSelect,
+        required=False,
     )
 
     def __init__(self, person=None, *args, **kwargs):
@@ -285,4 +302,6 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         cleaned_data = super().clean()
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
             self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))
+        if not cleaned_data.get("result"):
+            self.add_error('result', FIELD_REQUIRED_MESSAGE)
         return cleaned_data
