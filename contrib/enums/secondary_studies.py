@@ -58,6 +58,7 @@ EDUCATIONAL_TYPES = (
         ("TRANSITION_METHOD", _("Transition method")),
         ("ARTISTIC_TRANSITION", _("Artistic transition")),
     )),
+    ("", ""),
     (_("Educational qualification"), (
         ("QUALIFICATION_METHOD", _("Qualification method")),
         ("ARTISTIC_QUALIFICATION", _("Artistic qualification")),
