@@ -31,6 +31,13 @@ READ_ACTIONS_BY_TAB = {
     'person': 'retrieve_person',
     'project': 'retrieve_proposition',
     'supervision': 'retrieve_supervision',
+    'confirm': '',
+    'confirm-paper': '',
+    'training': '',
+    'jury': '',
+    'private-defense': '',
+    'public-defense': '',
+    'messages': '',
 }
 
 # Association between a write-only tab name (path name) and an action link key
@@ -41,5 +48,12 @@ UPDATE_ACTIONS_BY_TAB = {
     'education': 'update_secondary_studies',
     'person': 'update_person',
     'project': 'update_proposition',
-    'supervision': 'add_member',
+    'supervision': 'update_supervision',
+    'confirm': '',
+    'confirm-paper': '',
+    'training': '',
+    'jury': '',
+    'private-defense': '',
+    'public-defense': '',
+    'messages': '',
 }

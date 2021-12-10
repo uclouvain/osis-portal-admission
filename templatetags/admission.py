@@ -92,6 +92,20 @@ def can_make_action(admission, action_name):
     return 'url' in admission.links.get(action_name, {})
 
 
+def _can_access_tab(admission, tab_name, actions_by_tab):
+    """Return true if the specified tab can be opened for this admission, otherwise return False"""
+    try:
+        return can_make_action(admission, actions_by_tab[tab_name])
+    except AttributeError:
+        raise ImproperlyConfigured("The admission should contain the 'links' property to check tab access")
+    except KeyError:
+        raise ImproperlyConfigured(
+            "Please check that the '{}' property is well specified in the 'READ_ACTIONS_BY_TAB' and"
+            " 'UPDATE_ACTIONS_BY_TAB' constants"
+            .format(tab_name)
+        )
+
+
 def get_valid_tab_tree(admission, original_tab_tree, is_form_view):
     """
     Return a tab tree based on the specified one but whose the tabs depending on the permissions links.
@@ -105,7 +119,7 @@ def get_valid_tab_tree(admission, original_tab_tree, is_form_view):
         # Loop over the tabs of the original tab tree
         for (parent_tab, sub_tabs) in original_tab_tree.items():
             # Get the accessible sub tabs depending on the user permissions
-            valid_sub_tabs = [tab for tab in sub_tabs if can_make_action(admission, actions_by_tab[tab])]
+            valid_sub_tabs = [tab for tab in sub_tabs if _can_access_tab(admission, tab, actions_by_tab)]
             # Only add the parent tab if at least one sub tab is allowed
             if len(valid_sub_tabs) > 0:
                 valid_tab_tree[parent_tab] = valid_sub_tabs
@@ -127,9 +141,7 @@ def doctorate_tabs(context, admission=None):
         is_form_view=is_form_view,
     )
 
-    valid_tabs = {}  # FIXME
     return {
-        'valid_tabs': valid_tabs,
         'tab_tree': context['valid_tab_tree'],
         'active_parent': get_active_parent(context['request'].resolver_match.url_name),
         'admission': admission,
@@ -168,7 +180,7 @@ def doctorate_subtabs(context, admission=None):
         'subtabs': valid_tab_tree.get(get_active_parent(context['request'].resolver_match.url_name), []),
         'subtab_labels': subtab_labels,
         'admission': admission,
-        'detail_view': not isinstance(context['view'], FormView),
+        'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'request': context['request'],
     }
@@ -212,20 +224,6 @@ def enum_display(value, enum_name):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
-
-
-def _can_access_tab(admission, tab_name, actions_by_tab):
-    """Return true if the specified tab can be opened for this admission, otherwise return False"""
-    try:
-        return can_make_action(admission, actions_by_tab[tab_name])
-    except AttributeError:
-        raise ImproperlyConfigured("The admission should contain the 'links' property to check tab access")
-    except KeyError:
-        raise ImproperlyConfigured(
-            "Please check that the '{}' property is well specified in the 'READ_ACTIONS_BY_TAB' and"
-            " 'UPDATE_ACTIONS_BY_TAB' constants"
-            .format(tab_name)
-        )
 
 
 @register.filter
