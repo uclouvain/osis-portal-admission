@@ -111,7 +111,7 @@ class EducationTestCase(TestCase):
             "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
+            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
             "belgian_diploma-community": "FLEMISH_SPEAKING",
             "belgian_diploma-other_institute": "Special school",
             "belgian_diploma-course_repeat": False,
@@ -143,7 +143,7 @@ class EducationTestCase(TestCase):
             "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
+            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
             "belgian_diploma-community": "FRENCH_SPEAKING",
             "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
             "belgian_diploma-other_institute": "Special school",
@@ -205,7 +205,7 @@ class EducationTestCase(TestCase):
             "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
+            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
             "belgian_diploma-community": "FRENCH_SPEAKING",
             "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
             "belgian_diploma-other_institute": "Special school",
@@ -223,10 +223,11 @@ class EducationTestCase(TestCase):
             "got_diploma": "YES",
             "diploma_type": "FOREIGN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
             "foreign_diploma-linguistic_regime": "EN",
             "foreign_diploma-country": "FR",
+            "foreign_diploma-equivalence": "PENDING",
+            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
             # Even if we send data for belgian diploma, it should be stripped from data sent to WS
             "belgian_diploma-other_institute": "Special school",
             # Even if we send data for schedule, it should be stripped from data sent to WS
@@ -243,6 +244,7 @@ class EducationTestCase(TestCase):
                 'foreign_diploma_type': 'NATIONAL_BACHELOR',
                 'linguistic_regime': 'EN',
                 'other_linguistic_regime': '',
+                'equivalence': 'PENDING',
             },
         })
 
@@ -250,10 +252,11 @@ class EducationTestCase(TestCase):
         response = self.client.post(self.form_url, {
             "got_diploma": "THIS_YEAR",
             "diploma_type": "FOREIGN",
-            "result": "NOT_KNOWN_YET_RESULT",
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
             "foreign_diploma-linguistic_regime": "EN",
             "foreign_diploma-country": "FR",
+            "foreign_diploma-equivalence": "NO",
+            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
             # Even if we send data for belgian diploma, it should be stripped from data sent to WS
             "belgian_diploma-other_institute": "Special school",
             # Even if we send data for schedule, it should be stripped from data sent to WS
@@ -270,6 +273,7 @@ class EducationTestCase(TestCase):
                 'foreign_diploma_type': 'NATIONAL_BACHELOR',
                 'linguistic_regime': 'EN',
                 'other_linguistic_regime': '',
+                'equivalence': 'NO',
             },
         })
 
@@ -280,7 +284,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('academic_graduation_year', response.context['main_form'].errors)
         self.assertIn('diploma_type', response.context['main_form'].errors)
-        self.assertIn('result', response.context['main_form'].errors)
 
     def test_form_error_if_hour_or_label_not_set(self):
         response = self.client.post(self.form_url, {
@@ -311,7 +314,7 @@ class EducationTestCase(TestCase):
             "got_diploma": "YES",
             "diploma_type": "FOREIGN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
+            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
             "foreign_diploma-country": "FR",
         })
