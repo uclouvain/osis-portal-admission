@@ -25,6 +25,7 @@
 # ##############################################################################
 from django.shortcuts import resolve_url
 
+from base.models.person import Person
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
@@ -61,3 +62,7 @@ class WebServiceFormMixin:
             tab_name = self.request.resolver_match.url_name
             return resolve_url('admission:doctorate-detail:' + tab_name, pk=pk)
         return resolve_url('admission:doctorate-list')
+
+    @property
+    def person(self) -> Person:
+        return self.request.user.person

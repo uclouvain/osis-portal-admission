@@ -37,12 +37,12 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceForm
     form_class = Form
 
     def call_webservice(self, data):
-        AdmissionPropositionService.request_signatures(person=self.request.user.person, uuid=str(self.kwargs.get('pk')))
+        AdmissionPropositionService.request_signatures(person=self.person, uuid=str(self.kwargs.get('pk')))
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person, uuid=str(self.kwargs['pk'])
+            person=self.person, uuid=str(self.kwargs['pk'])
         )
         return context_data
 
