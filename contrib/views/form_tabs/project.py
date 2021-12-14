@@ -59,13 +59,13 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['person'] = self.request.user.person
+        kwargs['person'] = self.person
         return kwargs
 
     def get_initial(self):
         if self.is_update_form:
             self.proposition = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person,
+                person=self.person,
                 uuid=str(self.kwargs['pk']),
             )
             initial = {
@@ -111,13 +111,13 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 **data,
                 sigle_formation=doctorate_value.split('-')[0],
                 annee_formation=int(doctorate_value.split('-')[-1]),
-                matricule_candidat=self.request.user.person.global_id,
+                matricule_candidat=self.person.global_id,
             )
             data.pop('sector')
-            self.response = AdmissionPropositionService.create_proposition(person=self.request.user.person, **data)
+            AdmissionPropositionService.create_proposition(person=self.person, **data)
         else:
             data['uuid'] = str(self.kwargs['pk'])
-            AdmissionPropositionService.update_proposition(person=self.request.user.person, **data)
+            AdmissionPropositionService.update_proposition(person=self.person, **data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

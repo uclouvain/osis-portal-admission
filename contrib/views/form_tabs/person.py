@@ -39,11 +39,11 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['person'] = self.request.user.person
+        kwargs['person'] = self.person
         return kwargs
 
     def get_initial(self):
-        person = AdmissionPersonService.retrieve_person(self.request.user.person)
+        person = AdmissionPersonService.retrieve_person(self.person)
         initial = person.to_dict()
         document_fields = [
             'id_card',
@@ -60,12 +60,12 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
         return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_person(person=self.request.user.person, **data)
+        AdmissionPersonService.update_person(person=self.person, **data)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         if 'pk' in self.kwargs:
             context_data['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person, uuid=str(self.kwargs['pk']),
+                person=self.person, uuid=str(self.kwargs['pk'])
             )
         return context_data

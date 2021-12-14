@@ -45,7 +45,7 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person,
+            person=self.person,
             uuid=str(self.kwargs['pk']),
         )
         return context
@@ -57,11 +57,7 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
         }
 
     def call_webservice(self, data):
-        AdmissionSupervisionService.add_member(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-            **data,
-        )
+        AdmissionSupervisionService.add_member(person=self.person, uuid=str(self.kwargs['pk']), **data)
 
 
 class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin, FormView):
@@ -76,13 +72,10 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
         context = super().get_context_data(**kwargs)
         try:
             context['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person,
+                person=self.person,
                 uuid=str(self.kwargs['pk']),
             )
-            supervision = AdmissionSupervisionService.get_supervision(
-                person=self.request.user.person,
-                uuid=str(self.kwargs['pk']),
-            )
+            supervision = AdmissionSupervisionService.get_supervision(person=self.person, uuid=str(self.kwargs['pk']))
             context['member'] = self.get_member(supervision)
         except (ApiException, AttributeError, KeyError):
             raise Http404(_('Member not found'))
@@ -103,11 +96,7 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
         }
 
     def call_webservice(self, data):
-        AdmissionSupervisionService.remove_member(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-            **data,
-        )
+        AdmissionSupervisionService.remove_member(person=self.person, uuid=str(self.kwargs['pk']), **data)
 
     def get_success_url(self):
         return resolve_url('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
