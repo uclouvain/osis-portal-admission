@@ -44,38 +44,38 @@
   {# Hide it by default to prevent FOUC #}
   <div id="got-diploma" style="display: none">
     <div class="row">
-      <div class="col-md-6" id="academic-year">{% bootstrap_field main_form.academic_graduation_year placeholder="" %}</div>
-      <div class="col-md-6">{% bootstrap_field main_form.diploma_type placeholder="" %}</div>
+      <div class="col-md-6" id="academic-year">{% bootstrap_field main_form.academic_graduation_year %}</div>
+      <div class="col-md-6">{% bootstrap_field main_form.diploma_type %}</div>
     </div>
 
     {% panel _("Foreign diploma") id="foreign-diploma" %}
-      {% bootstrap_field foreign_diploma_form.foreign_diploma_type placeholder="" %}
-      {% bootstrap_field foreign_diploma_form.equivalence placeholder="" %}
+      {% bootstrap_field foreign_diploma_form.foreign_diploma_type %}
+      {% bootstrap_field foreign_diploma_form.equivalence %}
       <p>{% lorem 1 %}</p>
       <div class="row">
         <div class="col-md-4">
-          {% bootstrap_field foreign_diploma_form.country placeholder="" %}
+          {% bootstrap_field foreign_diploma_form.country %}
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
-          {% bootstrap_field foreign_diploma_form.linguistic_regime placeholder="" %}
+          {% bootstrap_field foreign_diploma_form.linguistic_regime %}
         </div>
       </div>
       {% bootstrap_field foreign_diploma_form.other_linguistic_regime placeholder="" %}
-      {% bootstrap_field foreign_diploma_form.result placeholder="" %}
+      {% bootstrap_field foreign_diploma_form.result %}
     {% endpanel %}
 
     {% panel _("Belgian diploma") id="belgian-diploma" %}
-      {% bootstrap_field belgian_diploma_form.community placeholder="" %}
+      {% bootstrap_field belgian_diploma_form.community %}
 
       <div id="education-type">
-        {% bootstrap_field belgian_diploma_form.educational_type placeholder="" %}
+        {% bootstrap_field belgian_diploma_form.educational_type %}
         {% bootstrap_field belgian_diploma_form.educational_other placeholder="" %}
       </div>
 
-      {% bootstrap_field belgian_diploma_form.course_repeat placeholder="" %}
-      {% bootstrap_field belgian_diploma_form.course_orientation placeholder="" %}
+      {% bootstrap_field belgian_diploma_form.course_repeat %}
+      {% bootstrap_field belgian_diploma_form.course_orientation %}
 
       <p>
         <strong>{% trans "What is the name of the educational institute that has provided to you a certificate of upper-secundary education (C.E.S.S.)?" %}</strong>
@@ -84,7 +84,7 @@
       {% bootstrap_field belgian_diploma_form.institute placeholder="" %}
       {% bootstrap_field belgian_diploma_form.other_institute placeholder="" %}
 
-      {% bootstrap_field belgian_diploma_form.result placeholder="" %}
+      {% bootstrap_field belgian_diploma_form.result %}
 
       <div id="schedule">
         <strong>{% trans "Timetable" %}</strong>
