@@ -97,23 +97,23 @@
         <div class="row">
           <div class="col-md-4">
             {% panel _("Ancient languages") %}
-              {% bootstrap_field schedule_form.latin addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.greek addon_after=_("h/w") placeholder="" %}
+              {% bootstrap_field schedule_form.latin addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.greek addon_after=_("h/w") %}
             {% endpanel %}
 
             {% panel _("Sciences") %}
-              {% bootstrap_field schedule_form.chemistry addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.physic addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.biology addon_after=_("h/w") placeholder="" %}
+              {% bootstrap_field schedule_form.chemistry addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.physic addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.biology addon_after=_("h/w") %}
             {% endpanel %}
           </div>
 
           <div class="col-md-4">
             {% panel _("Modern languages") %}
-              {% bootstrap_field schedule_form.german addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.dutch addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.english addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.french addon_after=_("h/w") placeholder="" %}
+              {% bootstrap_field schedule_form.german addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.dutch addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.english addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.french addon_after=_("h/w") %}
 
               <div
                   class="form-group {% if schedule_form.modern_languages_other_label.errors or schedule_form.modern_languages_other_hours.errors %}has-error{% elif schedule_form.is_bound %}has-success{% endif %}">
@@ -154,10 +154,10 @@
 
           <div class="col-md-4">
             {% panel _("Others")|add:_(" (h/w)") %}
-              {% bootstrap_field schedule_form.mathematics addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.it addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.social_sciences addon_after=_("h/w") placeholder="" %}
-              {% bootstrap_field schedule_form.economic_sciences addon_after=_("h/w") placeholder="" %}
+              {% bootstrap_field schedule_form.mathematics addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.it addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.social_sciences addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.economic_sciences addon_after=_("h/w") %}
 
               <div
                   class="form-group {% if schedule_form.other_label.errors or schedule_form.other_hours.errors %}has-error{% elif schedule_form.is_bound %}has-success{% endif %}">

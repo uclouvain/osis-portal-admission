@@ -188,6 +188,11 @@ class HourField(forms.IntegerField):
         kwargs.setdefault('required', False)
         super().__init__(max_value=max_value, min_value=min_value, **kwargs)
 
+    def widget_attrs(self, widget):
+        attrs = super().widget_attrs(widget)
+        attrs['placeholder'] = ''
+        return attrs
+
 
 class DoctorateAdmissionEducationScheduleForm(forms.Form):
     # ancient language
