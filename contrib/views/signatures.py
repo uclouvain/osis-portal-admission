@@ -44,6 +44,9 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceForm
         context_data['admission'] = AdmissionPropositionService.get_proposition(
             person=self.person, uuid=str(self.kwargs['pk'])
         )
+        context_data['errors'] = AdmissionPropositionService.verify_proposition(
+            person=self.person, uuid=str(self.kwargs['pk'])
+        )
         return context_data
 
     def get_success_url(self):
