@@ -25,11 +25,12 @@
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import Form
+from django.utils.translation import gettext as _
 from django.shortcuts import resolve_url
 from django.views.generic import FormView
 
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionPropositionService
+from admission.services.proposition import AdmissionPropositionService, proposition_business_exception_error_mapping
 
 
 class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceFormMixin, FormView):
@@ -44,9 +45,10 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceForm
         context_data['admission'] = AdmissionPropositionService.get_proposition(
             person=self.person, uuid=str(self.kwargs['pk'])
         )
-        context_data['errors'] = AdmissionPropositionService.verify_proposition(
-            person=self.person, uuid=str(self.kwargs['pk'])
-        )
+        errors = AdmissionPropositionService.verify_proposition(person=self.person, uuid=str(self.kwargs['pk']))
+        for error in errors:
+            error.detail += " " + _(proposition_business_exception_error_mapping.get(error.status_code, ""))
+        context_data['errors'] = errors
         return context_data
 
     def get_success_url(self):

@@ -33,6 +33,7 @@ from osis_admission_sdk.api import propositions_api
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
 from osis_admission_sdk.model.proposition_dto import PropositionDTO
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
+from django.utils.translation import gettext as _
 
 
 class AdmissionPropositionAPIClient:
@@ -118,6 +119,15 @@ class PropositionBusinessException(Enum):
     PromoteurManquantException = "PROPOSITION-19"
     MembreCAManquantException = "PROPOSITION-20"
     CotutelleDoitAvoirAuMoinsUnPromoteurExterneException = "PROPOSITION-21"
+
+
+proposition_business_exception_error_mapping = {
+    "PROPOSITION-17": "(On 'Doctoral project' tab)",
+    "PROPOSITION-18": "(On 'Cotutelle' tab)",
+    "PROPOSITION-19": "(On 'Cotutelle' tab)",
+    "PROPOSITION-20": "(On 'Cotutelle' tab)",
+    "PROPOSITION-21": "(On 'Cotutelle' tab)",
+}
 
 
 class AdmissionCotutelleService:

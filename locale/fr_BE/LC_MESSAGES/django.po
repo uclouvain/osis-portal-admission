@@ -77,6 +77,12 @@ msgstr " (h/s)"
 msgid " (template downloadable on the CDD site)"
 msgstr " (fichier-type à télécharger sur le site de la CDD)"
 
+msgid "(On 'Cotutelle' tab)"
+msgstr "(Sur l'onglet 'Cotutelle')"
+
+msgid "(On 'Doctoral project' tab)"
+msgstr "(Sur l'onglet 'Projet doctoral')"
+
 msgid "(e.g. +32 490 00 00 00)"
 msgstr "(ex: +32 490 00 00 00)"
 
