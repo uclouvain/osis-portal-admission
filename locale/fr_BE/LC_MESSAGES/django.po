@@ -77,12 +77,6 @@ msgstr " (h/s)"
 msgid " (template downloadable on the CDD site)"
 msgstr " (fichier-type à télécharger sur le site de la CDD)"
 
-msgid "(On 'Cotutelle' tab)"
-msgstr "(Sur l'onglet 'Cotutelle')"
-
-msgid "(On 'Doctoral project' tab)"
-msgstr "(Sur l'onglet 'Projet doctoral')"
-
 msgid "(e.g. +32 490 00 00 00)"
 msgstr "(ex: +32 490 00 00 00)"
 
@@ -433,6 +427,9 @@ msgstr "Équivalent temps plein (en %)"
 msgid "Gantt graph"
 msgstr "Graphe de Gantt à quatre ans"
 
+msgid "Gantt graph *"
+msgstr "Graphe de Gantt à quatre ans *"
+
 msgid "Gender"
 msgstr "Genre"
 
@@ -510,6 +507,9 @@ msgstr "Établissement"
 
 msgid "Institution"
 msgstr "Institution"
+
+msgid "Institution *"
+msgstr "Institution *"
 
 msgid "International Baccalaureate"
 msgstr "Baccalauréat international (IBO)"
@@ -589,8 +589,8 @@ msgstr "Langues modernes"
 msgid "More than 75%"
 msgstr "Plus de 75%"
 
-msgid "Motivation"
-msgstr "Motivation"
+msgid "Motivation *"
+msgstr "Motivation *"
 
 msgid "NO"
 msgstr "Non"
@@ -646,8 +646,8 @@ msgstr ""
 "vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
 "obligatoire (11 chiffres sans espace, ni tiret, ni point (Ex:79682312345))."
 
-msgid "Opening request"
-msgstr "Demande d'ouverture"
+msgid "Opening request *"
+msgstr "Demande d'ouverture *"
 
 msgid "Organizing country"
 msgstr "Pays organisateur"
@@ -747,11 +747,22 @@ msgstr ""
 "Projet (question de recherche, état de l'art, objectifs, méthodes, "
 "chronologie, références bibliographiques)"
 
+msgid "Project documents *"
+msgstr ""
+"Projet (question de recherche, état de l'art, objectifs, méthodes, "
+"chronologie, références bibliographiques) *"
+
 msgid "Project resume"
 msgstr "Résumé du projet"
 
+msgid "Project resume *"
+msgstr "Résumé du projet *"
+
 msgid "Project title"
 msgstr "Titre du projet"
+
+msgid "Project title *"
+msgstr "Titre du projet *"
 
 msgid "Promoter"
 msgstr "Promoteur"
@@ -854,6 +865,9 @@ msgstr "Lieu de la thèse"
 
 msgid "Thesis redacting language"
 msgstr "Langue de rédaction de la thèse"
+
+msgid "Thesis redacting language *"
+msgstr "Langue de rédaction de la thèse *"
 
 msgid "This field is required"
 msgstr "Ce champ est requis"
