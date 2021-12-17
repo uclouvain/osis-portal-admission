@@ -32,7 +32,7 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.services.organization import EntitiesService
 from admission.services.reference import CountriesService, LanguageService
-from admission.utils.utils import format_entity_title
+from admission.utils import format_entity_title
 
 EMPTY_CHOICE = (('', ' - '),)
 
