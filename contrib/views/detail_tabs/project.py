@@ -30,7 +30,9 @@ from django.views.generic import TemplateView
 from django.utils.translation import gettext_lazy as _
 
 from admission.services.autocomplete import AdmissionAutocompleteService
+from admission.services.organization import EntitiesService
 from admission.services.proposition import AdmissionPropositionService
+from admission.utils.utils import format_entity_title
 
 
 class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
@@ -51,4 +53,13 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
             getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
             if s.sigle == context_data['admission'].code_secteur_formation
         ][0]
+
+        # Replace the institute uuid with the formatted name
+        if context_data['admission'].institut_these:
+            institute = EntitiesService.get_entity(
+                person=self.request.user.person,
+                uuid=context_data['admission'].institut_these
+            )
+            context_data['admission'].institut_these = format_entity_title(institute)
+
         return context_data

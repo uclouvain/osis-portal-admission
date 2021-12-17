@@ -545,6 +545,9 @@ msgid ""
 "mandatory (11 digits length without space, hyphen or dot (Ex:79682312345))."
 msgstr ""
 
+msgid "Only to provide if the address is not available in the previous field."
+msgstr ""
+
 msgid "Opening request"
 msgstr ""
 
@@ -567,6 +570,9 @@ msgid "Other linguistic regime"
 msgstr ""
 
 msgid "Other names"
+msgstr ""
+
+msgid "Other thesis location"
 msgstr ""
 
 msgid "Others"

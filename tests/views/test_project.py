@@ -28,6 +28,8 @@ from unittest.mock import Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
+from osis_organisation_sdk.model.entite import Entite
+from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 from rest_framework import status
 
 from admission.contrib.enums.admission_type import AdmissionType
@@ -43,8 +45,25 @@ class ProjectViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
+        cls.mock_entities = [
+            Entite(
+                uuid='uuid1',
+                organization_name='Université Catholique de Louvain',
+                organization_acronym='UCL',
+                title='Institute of technology',
+                acronym='IT',
+            ),
+            Entite(
+                uuid='uuid2',
+                organization_name='Université Catholique de Louvain',
+                organization_acronym='UCL',
+                title='Institute of foreign languages',
+                acronym='IFL',
+            ),
+        ]
 
     def setUp(self):
+        # Mock proposition sdk api
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
@@ -55,6 +74,8 @@ class ProjectViewTestCase(TestCase):
             projet_formation_complementaire=[],
         )
         self.addCleanup(propositions_api_patcher.stop)
+
+        # Mock admission sdk api
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")
         self.mock_autocomplete_api = autocomplete_api_patcher.start()
         self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = [
@@ -62,6 +83,19 @@ class ProjectViewTestCase(TestCase):
             Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
         ]
         self.addCleanup(autocomplete_api_patcher.stop)
+
+        # Mock organization sdk api
+        organization_api_patcher = patch("osis_organisation_sdk.api.entites_api.EntitesApi")
+        self.mock_organization_api = organization_api_patcher.start()
+        self.mock_organization_api.return_value.get_entities.return_value = PaginatedEntites(
+            results=self.mock_entities,
+        )
+        self.mock_organization_api.return_value.get_entity.return_value = PaginatedEntites(
+            results=[self.mock_entities[0]],
+        )
+        self.addCleanup(organization_api_patcher.stop)
+
+        # Mock reference sdk api
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
         self.mock_countries_api = countries_api_patcher.start()
         self.addCleanup(countries_api_patcher.stop)
@@ -130,6 +164,18 @@ class ProjectViewTestCase(TestCase):
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check that the thesis institute field is well initialized with existing value
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+            'code_secteur_formation': "SST",
+            'type_contrat_travail': "Something",
+            'institut_these': self.mock_entities[0].uuid,
+            'lieu_these': 'A random postal address',
+        }
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
+        self.assertContains(response, "A random postal address")
 
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
@@ -200,10 +246,12 @@ class ProjectViewTestCase(TestCase):
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
             type_contrat_travail="Something",
             code_secteur_formation="SST",
+            institut_these=self.mock_entities[0].uuid,
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Something")
+        self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
 
     def test_cancel(self):
         url = resolve_url('admission:doctorate-cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

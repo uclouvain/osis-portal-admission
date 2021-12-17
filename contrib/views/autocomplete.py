@@ -28,9 +28,12 @@ from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import get_language
+from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 
 from admission.services.autocomplete import AdmissionAutocompleteService
+from admission.services.organization import EntitiesService
 from admission.services.reference import CitiesService, CountriesService, LanguageService
+from admission.utils import format_entity_title, format_entity_address
 
 __all__ = [
     "DoctorateAutocomplete",
@@ -39,6 +42,8 @@ __all__ = [
     "LanguageAutocomplete",
     "TutorAutocomplete",
     "PersonAutocomplete",
+    "EntityAutocomplete",
+    "EntityPlaceAutocomplete",
 ]
 
 
@@ -135,3 +140,52 @@ class PersonAutocomplete(TutorAutocomplete):
             person=self.request.user.person,
             search=self.request.GET.get('q', ''),
         )
+
+
+class EntityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        # Return a list of UCL institutes whose title / acronym is specified by the user
+        return EntitiesService.get_entities(
+            limit=10,
+            person=self.request.user.person,
+            organisation_code='UCL',
+            entity_type=[
+                EntiteTypeEnum('INSTITUTE'),
+            ],
+            # TODO Only search the institutes whose title/acronym is specified (self.q)
+        )
+
+    def autocomplete_results(self, results):
+        return results
+
+    def results(self, results):
+        return [dict(
+            id=entity.uuid,
+            text=format_entity_title(entity=entity),
+        ) for entity in results]
+
+
+class EntityPlaceAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        # Return a list of addresses related to the thesis institute, if defined
+        if not self.forwarded['institut_these']:
+            return []
+        else:
+            return EntitiesService.get_entity_addresses(
+                person=self.request.user.person,
+                organisation_code='UCL',
+                uuid=self.forwarded['institut_these'],
+            )
+
+    def autocomplete_results(self, results):
+        return results
+
+    def results(self, results):
+        formatted_results = []
+        for address in results:
+            formatted_address = format_entity_address(address)
+            formatted_results.append(dict(
+                id=formatted_address,
+                text=formatted_address,
+            ))
+        return formatted_results
