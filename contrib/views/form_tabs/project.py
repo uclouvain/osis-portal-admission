@@ -81,6 +81,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 'graphe_gantt',
                 'proposition_programme_doctoral',
                 'projet_formation_complementaire',
+                'lettres_recommandation',
             ]
             for field in document_fields:
                 initial[field] = [get_remote_token(document, write_token=True)

@@ -53,6 +53,7 @@ class ProjectViewTestCase(TestCase):
             graphe_gantt=[],
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
+            lettres_recommandation=[],
         )
         self.addCleanup(propositions_api_patcher.stop)
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")
