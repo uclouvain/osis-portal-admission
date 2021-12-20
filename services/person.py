@@ -73,3 +73,14 @@ class AdmissionPersonService:
             high_school_diploma=data,
             **build_mandatory_auth_headers(person),
         )
+
+    @classmethod
+    def retrieve_languages_knowledge(cls, person):
+        return AdmissionPersonAPIClient().list_language_knowledges(**build_mandatory_auth_headers(person))
+
+    @classmethod
+    def update_languages_knowledge(cls, person, data):
+        return AdmissionPersonAPIClient().create_language_knowledge(
+            language_knowledge=data,
+            **build_mandatory_auth_headers(person),
+        )

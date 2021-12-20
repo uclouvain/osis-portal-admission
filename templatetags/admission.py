@@ -75,7 +75,7 @@ ParentTab = namedtuple('ParentTab', ['label', 'icon'])
 PERSONAL = ParentTab(_('Personal data'), 'user')
 TAB_TREE = {
     PERSONAL: ['person', 'coordonnees'],
-    ParentTab(_('Previous experience'), 'list-alt'): ['education', 'curriculum'],
+    ParentTab(_('Previous experience'), 'list-alt'): ['education', 'curriculum', 'languages'],
     ParentTab(_('Doctorate'), 'graduation-cap'): ['project', 'cotutelle', 'supervision'],
 }
 
@@ -105,6 +105,7 @@ def doctorate_subtabs(context, admission=None):
         'coordonnees': _("Contact details"),
         'education': _("Secondary studies"),
         'curriculum': _("Curriculum"),
+        'languages': _("Languages knowledge"),
         'project': _("Doctoral project"),
         'cotutelle': _("Cotutelle"),
         'supervision': _("Supervision"),
