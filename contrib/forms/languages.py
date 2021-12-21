@@ -27,6 +27,7 @@ import json
 
 from dal import autocomplete
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.languages_knowledge import LanguageKnowledgeGrade
@@ -102,8 +103,16 @@ class DoctorateAdmissionLanguageForm(forms.Form):
 class DoctorateAdmissionLanguagesBaseFormset(forms.BaseFormSet):
 
     def clean(self):
-        # TODO check for unicity with languages
-        super().clean()
+        """Check that no language have been set more than once."""
+        if any(self.errors):
+            return
+        languages = [form.cleaned_data.get("language") for form in self.forms]
+        duplicate_languages = set([language for language in languages if languages.count(language) > 1])
+        if duplicate_languages:
+            for form in self.forms:
+                if form.cleaned_data.get("language") in duplicate_languages:
+                    form.add_error("language", _("This language is set more than once."))
+            raise ValidationError(_("You cannot fill in a language more than once, please correct the form."))
 
     def __init__(self, *args, initial=None, **kwargs):
         if initial is None:
