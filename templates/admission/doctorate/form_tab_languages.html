@@ -44,9 +44,11 @@
 
   {% panel _("Languages knowledge") %}
       {% for language_form in form %}
-        {% panel _("Add a language") %}
-          {% bootstrap_form language_form %}
-        {% endpanel %}
+        <div class="form-container">
+          {% panel _("Add a language") %}
+            {% bootstrap_form language_form %}
+          {% endpanel %}
+        </div>
       {% endfor %}
   {% endpanel %}
 
@@ -54,4 +56,21 @@
 
 {% block script %}
   {{ form.media }}
+  <script type="text/javascript">
+    $(function() {
+      $('.form-container').formset({
+        formTemplate: '{{empty_form|escapejs}}',  // The jQuery selection cloned to generate new form instances
+        addText: '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'Add another' %}',       // Text for the add link
+        deleteText: '<span class="glyphicon glyphicon-minus" aria-hidden="true"></span> {% trans 'Remove' %}',         // Text for the delete link
+        deleteContainerClass: 'panel-body',       // Container CSS class for the delete link
+        addCssClass: 'btn btn-success btn-block', // CSS class applied to the add link
+        deleteCssClass: 'btn btn-danger btn-sm delete-language-btn',  // CSS class applied to the delete link
+        added: function(form){                    // Function called each time a new form is added
+          $("input[data-provide=slider]", form).slider();
+        },
+      });
+      // delete the two first delete buttons that will always be for mandatory languages
+      $('.btn.btn-danger.btn-sm.delete-language-btn').slice(0, 2).remove();
+    })
+  </script>
 {% endblock %}

@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template import Context, Template
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
@@ -31,6 +32,7 @@ from admission.contrib.forms.languages import DoctorateAdmissionLanguagesKnowled
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
+from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
 class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
@@ -44,6 +46,18 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
             context_data["admission"] = AdmissionPropositionService.get_proposition(
                 person=self.person, uuid=str(self.kwargs["pk"]),
             )
+        template_empty_form = """
+            {% load bootstrap3 i18n static admission %}
+            <div class="form-container">
+              {% panel _("Add a language") %}
+                {% bootstrap_form language_form %}
+              {% endpanel %}
+            </div>
+        """
+        template = Template(template_empty_form)
+        context = Context({'language_form': context_data["form"].empty_form})
+
+        context_data["empty_form"] = template.render(context)
         return context_data
 
     def get_initial(self):
@@ -61,3 +75,17 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
 
     def call_webservice(self, data):
         AdmissionPersonService.update_languages_knowledge(self.person, data)
+
+    def form_valid(self, formset):
+        data = [form.cleaned_data for form in formset.forms if form not in formset.deleted_forms]
+
+        try:
+            self.call_webservice(data)
+        except MultipleApiBusinessException as multiple_business_api_exception:
+            for exception in multiple_business_api_exception.exceptions:
+                if exception.status_code in self._error_mapping:
+                    formset.add_error(self._error_mapping[exception.status_code], exception.detail)
+                else:
+                    formset.add_error(None, exception.detail)
+            return self.form_invalid(formset)
+        return super().form_valid(formset)
