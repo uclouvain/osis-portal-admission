@@ -99,6 +99,9 @@ class DoctorateAdmissionLanguageForm(forms.Form):
             self.fields["language"].disabled = True
             self.fields["language"].help_text = _("Mandatory language")
 
+    class Media:
+        js = ("jquery.formset.js",)
+
 
 class DoctorateAdmissionLanguagesBaseFormset(forms.BaseFormSet):
 
