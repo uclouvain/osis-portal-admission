@@ -44,14 +44,53 @@
 
   {% panel _("Languages knowledge") %}
       {% for language_form in form %}
-        {% panel _("Add a language") %}
-          {% bootstrap_form language_form %}
-        {% endpanel %}
+        <div class="language-form-container">
+          {% panel _("Add a language") %}
+            {% bootstrap_form language_form %}
+            <button class="align-self-center btn btn-danger delete-language-form">{% trans "Delete" %}</button>
+          {% endpanel %}
+        </div>
       {% endfor %}
+      <button id="add-language-form-btn" class="btn btn-primary btn-block">{% trans "Add another language" %}</button>
   {% endpanel %}
 
 {% endblock %}
 
 {% block script %}
   {{ form.media }}
+  <script type="text/javascript">
+    $(function() {
+      let addLanguageFormBtn = $("#add-language-form-btn");
+      let languageFormContainer = $(".language-form-container");
+      let totalForms = $("#id_form-TOTAL_FORMS");
+      let formCount = languageFormContainer.length - 1;
+      let mainForm = $(".osis-form");
+
+      function updateForms() {
+        languageFormContainer.each(function(index) {
+          $(this).html($(this).html().replaceAll(/form-(\d+)-/g, `form-${index}-`))
+        });
+      }
+
+      mainForm.click(function(event) {
+        if(event.target.classList.contains('delete-language-form')) {
+          event.preventDefault();
+          event.target.parentElement.parentElement.remove();
+          formCount--;
+          totalForms.attr('value', `${formCount + 1}`);
+          updateForms();
+        }
+      });
+
+      addLanguageFormBtn.click(function(event) {
+        event.preventDefault();
+        formCount++;
+        // clone and insert new language form
+        let newLanguageForm = languageFormContainer.last().clone({deepWithDataAndEvents: true});
+        newLanguageForm.html(newLanguageForm.html().replaceAll(/form-(\d+)-/g, `form-${formCount}-`));
+        newLanguageForm.insertBefore(addLanguageFormBtn);
+        totalForms.attr('value', `${formCount + 1}`);
+      });
+    });
+  </script>
 {% endblock %}
