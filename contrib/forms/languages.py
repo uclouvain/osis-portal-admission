@@ -103,10 +103,12 @@ class DoctorateAdmissionLanguageForm(forms.Form):
 class DoctorateAdmissionLanguagesBaseFormset(forms.BaseFormSet):
 
     def clean(self):
-        """Check that no language have been set more than once."""
+        """Check that no language have been set more than once and that mandatory languages are set."""
         if any(self.errors):
             return
         languages = [form.cleaned_data.get("language") for form in self.forms]
+        if not all(language in languages for language in MANDATORY_LANGUAGES):
+            raise ValidationError(_("Mandatory languages are missing."))
         duplicate_languages = set([language for language in languages if languages.count(language) > 1])
         if duplicate_languages:
             for form in self.forms:
