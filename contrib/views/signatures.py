@@ -25,12 +25,11 @@
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import Form
-from django.utils.translation import gettext as _
 from django.shortcuts import resolve_url
 from django.views.generic import FormView
 
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionPropositionService, proposition_business_exception_error_mapping
+from admission.services.proposition import AdmissionPropositionService
 
 
 class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceFormMixin, FormView):
@@ -42,14 +41,13 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceForm
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.person, uuid=str(self.kwargs['pk'])
-        )
-        errors = AdmissionPropositionService.verify_proposition(person=self.person, uuid=str(self.kwargs['pk']))
-        for error in errors:
-            error.detail += " " + _(proposition_business_exception_error_mapping.get(error.status_code, ""))
-        context_data['errors'] = errors
+        service_kwargs = {
+            "person": self.person,
+            "uuid": str(self.kwargs['pk']),
+        }
+        context_data["admission"] = AdmissionPropositionService.get_proposition(**service_kwargs)
+        context_data["errors"] = AdmissionPropositionService.verify_proposition(**service_kwargs)
         return context_data
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate-list')
+        return resolve_url("admission:doctorate-list")
