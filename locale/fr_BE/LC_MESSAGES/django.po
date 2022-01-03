@@ -611,7 +611,7 @@ msgid "No defense reason"
 msgstr "Raison de non-soutenance"
 
 msgid "No languages knowledge provided."
-msgstr "Pas de connaissance des langues renseignées."
+msgstr "Aucune connaissance des langues renseignée."
 
 msgid "No one invited"
 msgstr "Aucun invité"
