@@ -698,7 +698,7 @@ msgid "Please mention the academic graduation year"
 msgstr "Veuillez indiquer l'année académique d'obtention"
 
 msgid "Please rate your listening comprehension"
-msgstr "Veuillez noter votre compréhension à l'audition"
+msgstr "Veuillez évaluer votre compréhension à l'audition"
 
 msgid "Please rate your speaking ability"
 msgstr "Veuillez évaluer votre capacité orale"
