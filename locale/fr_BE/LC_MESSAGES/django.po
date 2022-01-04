@@ -926,7 +926,15 @@ msgid "Yes I have a high school diploma"
 msgstr "Oui j'ai déjà un diplôme de fin d'études secondaires"
 
 msgid "You cannot fill in a language more than once, please correct the form."
-msgstr "Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le formulaire."
+msgstr ""
+"Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le "
+"formulaire."
+
+msgid ""
+"You must correct your proposition before being able to request signatures."
+msgstr ""
+"Vous devez corriger votre demande d'admission avant de pouvoir réaliser la "
+"demande de signatures."
 
 msgid "belgian"
 msgstr "belge"

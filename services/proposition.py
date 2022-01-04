@@ -87,6 +87,14 @@ class AdmissionPropositionService:
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    @api_exception_handler(api_exception_cls=ApiException)
+    def verify_proposition(cls, person: Person, uuid):
+        return AdmissionPropositionAPIClient().retrieve_verify_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"

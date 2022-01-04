@@ -66,26 +66,29 @@
   <form class="osis-form" method="post" action="">
     {% csrf_token %}
 
-    {% if form.non_field_errors %}
+    {% if errors %}
       <div class="alert alert-danger" role="alert">
         <ul>
-          {% for error in form.non_field_errors %}
-            <li> {{ error }} </li>
+          {% for error in errors %}
+            <li> {{ error.detail }} </li>
           {% endfor %}
         </ul>
       </div>
+      <p>
+        {% trans "You must correct your proposition before being able to request signatures." %}
+      </p>
+    {% else %}
+      <p>
+        {% trans "Are you sure you want to request signatures for this admission?" %}
+      </p>
+
+      <button type="submit" class="btn btn-success">
+        {% trans "Confirm" %}
+      </button>
     {% endif %}
 
-    <p>
-      {% trans "Are you sure you want to request signatures for this admission?" %}
-    </p>
-
-    <button type="submit" class="btn btn-success">
-      {% trans "Confirm" %}
-    </button>
     <a href="{% url 'admission:doctorate-detail' view.kwargs.pk %}">
       {% trans "Back to my request" %}
     </a>
-
   </form>
 {% endblock %}

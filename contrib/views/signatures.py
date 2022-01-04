@@ -41,10 +41,13 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, WebServiceForm
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.person, uuid=str(self.kwargs['pk'])
-        )
+        service_kwargs = {
+            "person": self.person,
+            "uuid": str(self.kwargs['pk']),
+        }
+        context_data["admission"] = AdmissionPropositionService.get_proposition(**service_kwargs)
+        context_data["errors"] = AdmissionPropositionService.verify_proposition(**service_kwargs)
         return context_data
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate-list')
+        return resolve_url("admission:doctorate-list")
