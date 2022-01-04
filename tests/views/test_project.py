@@ -53,6 +53,7 @@ class ProjectViewTestCase(TestCase):
             graphe_gantt=[],
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
+            lettres_recommandation=[],
             links={},
         )
         self.addCleanup(propositions_api_patcher.stop)

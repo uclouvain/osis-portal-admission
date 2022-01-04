@@ -19,16 +19,6 @@ msgstr ""
 
 msgid ""
 "\n"
-"                    Please complete here below the schedule of your last "
-"year\n"
-"                    of high school, indicating for each domain the number "
-"of\n"
-"                    hours of education followed per week (h/w).\n"
-"                "
-msgstr ""
-
-msgid ""
-"\n"
 "                Please refer to your identity document in order to complete "
 "the\n"
 "                form. If you have a Belgian national register number, "
@@ -59,6 +49,14 @@ msgid ""
 "        "
 msgstr ""
 
+msgid ""
+"\n"
+"          Please complete here below the schedule of your last year\n"
+"          of high school, indicating for each domain the number of\n"
+"          hours of education followed per week (h/w).\n"
+"        "
+msgstr ""
+
 msgid " (h/w)"
 msgstr ""
 
@@ -86,16 +84,13 @@ msgstr ""
 msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
 msgstr ""
 
-msgid ">> Educational  qualification :"
-msgstr ""
-
-msgid ">> Educational transition :"
-msgstr ""
-
-msgid ">> Other education, to specify"
-msgstr ""
-
 msgid "A field of the schedule must at least be set."
+msgstr ""
+
+msgid "A1"
+msgstr ""
+
+msgid "A2"
 msgstr ""
 
 msgid "APPROVED"
@@ -110,7 +105,13 @@ msgstr ""
 msgid "Academic graduation year"
 msgstr ""
 
+msgid "Add a language"
+msgstr ""
+
 msgid "Add a promoter or a CA member"
+msgstr ""
+
+msgid "Add another"
 msgstr ""
 
 msgid "Admission"
@@ -131,6 +132,9 @@ msgstr ""
 msgid "Are you sure you want to cancel this request?"
 msgstr ""
 
+msgid "Are you sure you want to request signatures for this admission?"
+msgstr ""
+
 msgid "Artistic qualification"
 msgstr ""
 
@@ -138,6 +142,15 @@ msgid "Artistic transition"
 msgstr ""
 
 msgid "At which result level do you consider yourself?"
+msgstr ""
+
+msgid "B1"
+msgstr ""
+
+msgid "B2"
+msgstr ""
+
+msgid "Back to my request"
 msgstr ""
 
 msgid "Back to my requests"
@@ -171,6 +184,12 @@ msgid "Brief justification"
 msgstr ""
 
 msgid "Bureau"
+msgstr ""
+
+msgid "C1"
+msgstr ""
+
+msgid "C2"
 msgstr ""
 
 msgid "CA Member"
@@ -230,17 +249,25 @@ msgstr ""
 msgid "Cotutelle"
 msgstr ""
 
+msgid "Cotutelle convention"
+msgstr ""
+
+msgid "Cotutelle institution"
+msgstr ""
+
 msgid "Cotutelle is not defined yet"
+msgstr ""
+
+msgid "Cotutelle motivation"
+msgstr ""
+
+msgid "Cotutelle opening request"
 msgstr ""
 
 msgid "Country"
 msgstr ""
 
 msgid "Country of citizenship"
-msgstr ""
-
-msgctxt "trajectory"
-msgid "Course"
 msgstr ""
 
 msgid "Course choice"
@@ -265,12 +292,10 @@ msgstr ""
 msgid "Did you change of orientation during your studies?"
 msgstr ""
 
-msgid ""
-"Did you obtain a high school diploma or will you receive this kind of "
-"diploma still this year?"
+msgid "Did you repeat certain study years during your studies?"
 msgstr ""
 
-msgid "Did you repeat certain study years during your studies?"
+msgid "Do you have a high school diploma?"
 msgstr ""
 
 msgid "Doctoral project"
@@ -301,6 +326,12 @@ msgid "Economic sciences"
 msgstr ""
 
 msgid "Edit"
+msgstr ""
+
+msgid "Educational qualification"
+msgstr ""
+
+msgid "Educational transition"
 msgstr ""
 
 msgid "Educational type is required with this community of education"
@@ -395,10 +426,7 @@ msgstr ""
 msgid "Have you previously been registered at UCLouvain?"
 msgstr ""
 
-msgid "ID card"
-msgstr ""
-
-msgid "ID photo"
+msgid "I will have a high school diploma this year"
 msgstr ""
 
 msgid "INVITED"
@@ -425,10 +453,16 @@ msgstr ""
 msgid "If other language, please specify"
 msgstr ""
 
-msgid "If other linguistic regime, please clarify"
+msgid "If other optional domains, please specify"
 msgstr ""
 
-msgid "If other optional domains, please specify"
+msgid "If you cannot find your educational type, please clarify below"
+msgstr ""
+
+msgid "If you cannot find your institute, please clarify below"
+msgstr ""
+
+msgid "If you cannot find your linguistic regime, please clarify below"
 msgstr ""
 
 msgid ""
@@ -448,6 +482,11 @@ msgstr ""
 msgid "International Baccalaureate"
 msgstr ""
 
+msgid ""
+"Is this diploma subject to an equivalence decision by the services of the "
+"French community of Belgium?"
+msgstr ""
+
 msgid "Is your contact address different from your residential address?"
 msgstr ""
 
@@ -455,6 +494,12 @@ msgid "Is your thesis joint with another secondary institute?"
 msgstr ""
 
 msgid "Jury"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Languages knowledge"
 msgstr ""
 
 msgid "Last name"
@@ -472,6 +517,9 @@ msgstr ""
 msgid "Linguistic regime"
 msgstr ""
 
+msgid "Listening comprehension"
+msgstr ""
+
 msgid "MANAGEMENT"
 msgstr "Management"
 
@@ -480,6 +528,12 @@ msgstr ""
 
 msgctxt "gender male"
 msgid "Male"
+msgstr ""
+
+msgid "Mandatory language"
+msgstr ""
+
+msgid "Mandatory languages are missing."
 msgstr ""
 
 msgid "Mathematics"
@@ -515,10 +569,16 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No I don't have a high school diploma"
+msgstr ""
+
 msgid "No cotutelle"
 msgstr ""
 
 msgid "No defense reason"
+msgstr ""
+
+msgid "No languages knowledge provided."
 msgstr ""
 
 msgid "No one invited"
@@ -560,9 +620,6 @@ msgstr ""
 msgid "Other education, to specify"
 msgstr ""
 
-msgid "Other institute"
-msgstr ""
-
 msgid "Other linguistic regime"
 msgstr ""
 
@@ -584,6 +641,9 @@ msgstr ""
 msgid "Passport number"
 msgstr ""
 
+msgid "Pending"
+msgstr ""
+
 msgid "Personal data"
 msgstr ""
 
@@ -600,6 +660,15 @@ msgid "Place"
 msgstr ""
 
 msgid "Please mention the academic graduation year"
+msgstr ""
+
+msgid "Please rate your listening comprehension"
+msgstr ""
+
+msgid "Please rate your speaking ability"
+msgstr ""
+
+msgid "Please rate your writing ability"
 msgstr ""
 
 msgid "Please set either street or postal_box"
@@ -667,6 +736,9 @@ msgstr ""
 msgid "Reference:"
 msgstr ""
 
+msgid "Remove"
+msgstr ""
+
 msgid "Residential address"
 msgstr ""
 
@@ -680,9 +752,6 @@ msgid "SUBMITTED"
 msgstr "Submitted"
 
 msgid "Save"
-msgstr ""
-
-msgid "Schedule"
 msgstr ""
 
 msgid "Scholarship"
@@ -710,6 +779,9 @@ msgid "Sex"
 msgstr ""
 
 msgid "Social sciences"
+msgstr ""
+
+msgid "Speaking ability"
 msgstr ""
 
 msgid "Specify scholarship grant"
@@ -748,13 +820,16 @@ msgstr ""
 msgid "This field is required."
 msgstr ""
 
+msgid "This is a diploma from"
+msgstr ""
+
+msgid "This language is set more than once."
+msgstr ""
+
+msgid "Timetable"
+msgstr ""
+
 msgid "Transition method"
-msgstr ""
-
-msgid "Type of education"
-msgstr ""
-
-msgid "Type of high school diploma"
 msgstr ""
 
 msgid "UCLOUVAIN_ASSISTANT"
@@ -786,6 +861,9 @@ msgid ""
 "certificate of upper-secundary education (C.E.S.S.)?"
 msgstr ""
 
+msgid "What result did you get?"
+msgstr ""
+
 msgid "What type of education did (do) you follow?"
 msgstr ""
 
@@ -798,10 +876,23 @@ msgstr ""
 msgid "Work contract type"
 msgstr ""
 
+msgid "Writing ability"
+msgstr ""
+
 msgid "YES"
 msgstr "Yes"
 
 msgid "Yes"
+msgstr ""
+
+msgid "Yes I have a high school diploma"
+msgstr ""
+
+msgid "You cannot fill in a language more than once, please correct the form."
+msgstr ""
+
+msgid ""
+"You must correct your proposition before being able to request signatures."
 msgstr ""
 
 msgid "belgian"

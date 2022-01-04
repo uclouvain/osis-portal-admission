@@ -31,7 +31,7 @@
         </li>
         {% if admission %}
             <li class="active">
-                {{ admission.intitule_doctorat_fr }} (21-300001)
+                {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
             </li>
         {% else %}
             <li class="active">{% trans "Create new doctorate admission" %}</li>
@@ -48,7 +48,7 @@
     <div class="page-header h3">
         <span class="d-inline-block">
         {% if admission %}
-            {{ admission.intitule_doctorat_fr }} (21-300001)
+            {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
         {% else %}
             {% trans "Create new doctorate admission" %}
         {% endif %}
@@ -68,7 +68,6 @@
             {% if not admission %}
                 {% trans "No reference yet - Go to Project tab" %}
             {% else %}
-                21-300001
                 {{ admission.reference }}
             {% endif %}
         </div>

@@ -37,7 +37,7 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
 
     def get_initial(self):
         cotutelle = AdmissionCotutelleService.get_cotutelle(
-            person=self.request.user.person,
+            person=self.person,
             uuid=str(self.kwargs['pk']),
         )
         initial = cotutelle.to_dict()
@@ -54,7 +54,7 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
         return initial
 
     def call_webservice(self, data):
-        AdmissionCotutelleService.update_cotutelle(person=self.request.user.person, **data)
+        AdmissionCotutelleService.update_cotutelle(person=self.person, **data)
 
     def prepare_data(self, data: dict):
         if data['cotutelle'] == 'NO':
@@ -72,7 +72,7 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person,
+            person=self.person,
             uuid=str(self.kwargs['pk']),
         )
         return context

@@ -26,6 +26,7 @@
 
 from .autocomplete import *
 from .cancel import DoctorateAdmissionCancelView
+from .signatures import DoctorateAdmissionRequestSignaturesView
 from .list import *
 from .form_tabs.supervision import DoctorateAdmissionRemoveActorView
 
@@ -34,4 +35,5 @@ __all__ = [
     "DoctorateAdmissionListView",
     "DoctorateAdmissionRemoveActorView",
     "DoctorateAdmissionCancelView",
+    "DoctorateAdmissionRequestSignaturesView",
 ]
