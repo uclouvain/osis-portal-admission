@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from copy import copy
+
 from django.shortcuts import resolve_url
 
 from base.models.person import Person
@@ -40,7 +42,7 @@ class WebServiceFormMixin:
         return data
 
     def form_valid(self, form):
-        data = self.prepare_data(dict(**form.cleaned_data))
+        data = self.prepare_data(copy(form.cleaned_data))
 
         try:
             self.call_webservice(data)
