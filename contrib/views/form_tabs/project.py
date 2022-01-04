@@ -25,6 +25,7 @@
 # ##############################################################################
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import resolve_url
 from django.utils.translation import get_language
 from django.views.generic import FormView
 
@@ -122,7 +123,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 matricule_candidat=self.person.global_id,
             )
             data.pop('sector')
-            AdmissionPropositionService.create_proposition(person=self.person, **data)
+            response = AdmissionPropositionService.create_proposition(person=self.person, **data)
+            self.uuid = response['uuid']
         else:
             data['uuid'] = str(self.kwargs['pk'])
             AdmissionPropositionService.update_proposition(person=self.person, **data)
@@ -138,3 +140,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 if s.sigle == self.proposition.code_secteur_formation
             ][0]
         return context
+
+    def get_success_url(self):
+        if self.kwargs.get('pk'):
+            return super().get_success_url()
+        return resolve_url('admission:doctorate-update:project', pk=self.uuid)

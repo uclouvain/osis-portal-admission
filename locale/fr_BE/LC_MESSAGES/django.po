@@ -716,6 +716,9 @@ msgstr "Physique"
 msgid "Place"
 msgstr "Lieu-dit"
 
+msgid "Please correct the errors below"
+msgstr "Veuillez corriger les erreurs ci-dessous"
+
 msgid "Please correct the errors first"
 msgstr "Veuillez d'abord corriger les erreurs"
 
@@ -996,6 +999,9 @@ msgid ""
 msgstr ""
 "Vous devez corriger votre demande d'admission avant de pouvoir réaliser la "
 "demande de signatures."
+
+msgid "Your data has been saved"
+msgstr "Vos données ont été enregistrées"
 
 msgid "belgian"
 msgstr "belge"
