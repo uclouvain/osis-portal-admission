@@ -72,8 +72,22 @@ class ProjectViewTestCase(TestCase):
         url = resolve_url('admission:doctorate-create:project')
         self.client.force_login(self.person.user)
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
-            Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE", links=[]),
-            Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT", links=[]),
+            Mock(
+                sigle='FOOBAR',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
+                annee=2021,
+                sigle_entite_gestion="CDE",
+                links=[],
+            ),
+            Mock(
+                sigle='BARBAZ',
+                intitule_fr='Barbaz',
+                intitule_en='Barbaz',
+                annee=2021,
+                sigle_entite_gestion="AZERT",
+                links=[],
+            ),
         ]
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

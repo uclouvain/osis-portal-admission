@@ -210,7 +210,6 @@ class TemplateTagsTestCase(TestCase):
         # Check children tabs
         self.assertIn('coordonnees', valid_tab_tree[parent_tabs[0]])
 
-
     def test_can_make_action_valid_existing_action(self):
         # The tab action is specified in the admission as allowed -> return True
         admission = self.Admission()
