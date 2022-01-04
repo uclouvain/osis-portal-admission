@@ -42,7 +42,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',
-        PropositionBusinessException.BureauCDEInconsistantException: 'bureau_cde',
+        PropositionBusinessException.ProximityCommissionCDEInconsistantException: 'commission_proximite_cde',
+        PropositionBusinessException.ProximityCommissionCDSSInconsistantException: 'commission_proximite_cdss',
         PropositionBusinessException.ContratTravailInconsistantException: 'type_contrat_travail',
         PropositionBusinessException.DoctoratNonTrouveException: 'doctorate',
         PropositionBusinessException.InstitutionInconsistanteException: 'institution',

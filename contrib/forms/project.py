@@ -29,7 +29,7 @@ from django.conf import settings
 from django.utils.translation import get_language, gettext as _
 
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.bureau_CDE import ChoixBureauCDE
+from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
 from admission.contrib.enums.financement import (
     BourseRecherche,
@@ -56,9 +56,14 @@ class DoctorateAdmissionProjectForm(forms.Form):
         }),
         required=False,
     )
-    bureau_cde = forms.ChoiceField(
-        label=_("Bureau"),
-        choices=EMPTY_CHOICE + ChoixBureauCDE.choices(),
+    commission_proximite_cde = forms.ChoiceField(
+        label=_("Proximity commission"),
+        choices=EMPTY_CHOICE + ChoixProximityCommissionCDE.choices(),
+        required=False,
+    )
+    commission_proximite_cdss = forms.ChoiceField(
+        label=_("Proximity commission"),
+        choices=EMPTY_CHOICE + ChoixProximityCommissionCDSS.choices(),
         required=False,
     )
 
@@ -177,7 +182,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     class Media:
         js = ('dependsOn.min.js',)
 
-    def __init__(self, hide_bureau_field=True, *args, **kwargs):
+    def __init__(self, hide_proximity_commission_fields=True, *args, **kwargs):
         kwargs.pop('person', None)
         super().__init__(*args, **kwargs)
         # Set type_contrat_travail to OTHER if value is not from enum
@@ -196,9 +201,10 @@ class DoctorateAdmissionProjectForm(forms.Form):
             self.initial['bourse_recherche_other'] = self.initial['bourse_recherche']
             self.initial['bourse_recherche'] = BourseRecherche.OTHER.name
 
-        # Remove Bureau if doctoral commission is not CDE
-        if hide_bureau_field:
-            self.fields['bureau_cde'].widget = forms.HiddenInput()
+        # Remove proximity commission fields if doctoral commission is not CDE or CDSS
+        if hide_proximity_commission_fields:
+            self.fields['commission_proximite_cde'].widget = forms.HiddenInput()
+            self.fields['commission_proximite_cdss'].widget = forms.HiddenInput()
 
     def clean(self):
         data = super().clean()
@@ -236,7 +242,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
 
     def __init__(self, person=None, *args, **kwargs):
         self.person = person
-        super().__init__(hide_bureau_field=False, *args, **kwargs)
+        super().__init__(hide_proximity_commission_fields=False, *args, **kwargs)
         self.fields['sector'].widget.choices = (
                 [('', '-')]
                 + [
@@ -264,7 +270,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                     ),
                 )
             ]
-            # This is used in the template to make Bureau field appear
+            # This is used in the template to make proximity commission field appear
             self.doctorate_data = dict(
                 id="{result.sigle}-{result.annee}".format(result=doctorate),
                 sigle_entite_gestion=doctorate.sigle_entite_gestion,
@@ -273,8 +279,11 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        if self.doctorate_data['sigle_entite_gestion'] == 'CDE' and not cleaned_data.get('bureau_cde'):
-            self.add_error('bureau_cde', _("This field is required."))
+        if self.doctorate_data['sigle_entite_gestion'] == 'CDE' and not cleaned_data.get('commission_proximite_cde'):
+            self.add_error('commission_proximite_cde', _("This field is required."))
+
+        if self.doctorate_data['sigle_entite_gestion'] == 'CDSS' and not cleaned_data.get('commission_proximite_cdss'):
+            self.add_error('commission_proximite_cdss', _("This field is required."))
 
         return cleaned_data
 
