@@ -31,8 +31,10 @@
             {% field_data _("Sector") sector_label "col-md-4" %}
             {% field_data _("Doctorate") admission.intitule_doctorat_fr "col-md-4" %}
         </div>
-        {% if admission.bureau_cde %}
-            {% field_data _("Bureau") admission.bureau_cde|enum_display:'ChoixBureauCDE' %}
+        {% if admission.commission_proximite_cde %}
+            {% field_data _("CDE proximity commission") admission.commission_proximite_cde|enum_display:'ChoixProximityCommissionCDE' %}
+        {% elif admission.commission_proximite_cdss %}
+            {% field_data _("CDSS proximity commission") admission.commission_proximite_cdss|enum_display:'ChoixProximityCommissionCDSS' %}
         {% endif %}
         {% if admission.justification %}
             {% field_data _("Brief justification") admission.justification|linebreaks %}
