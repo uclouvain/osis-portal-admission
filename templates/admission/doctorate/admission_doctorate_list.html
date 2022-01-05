@@ -34,13 +34,15 @@
             <div class="col-md-12">
                 <h2>
                     {% trans "Doctorate admissions" %}
-                    <a
-                        href="{% url 'admission:doctorate-create' %}"
-                        class="btn btn-primary pull-right"
-                    >
-                        <span class="glyphicon glyphicon-plus"></span>
-                        {% trans "Create new doctorate admission" %}
-                    </a>
+                    {% if 'url' in global_links.create_proposition %}
+                        <a
+                            href="{% url 'admission:doctorate-create' %}"
+                            class="btn btn-primary pull-right"
+                        >
+                            <span class="glyphicon glyphicon-plus"></span>
+                            {% trans "Create new doctorate admission" %}
+                        </a>
+                    {% endif %}
                 </h2>
             </div>
         </div>
@@ -53,9 +55,11 @@
             <em>Statut : {{ admission.statut|enum_display:'ChoixStatusProposition' }}</em>
 
             {% if admission.statut != 'CANCELLED' %}
-                <a class="btn btn-danger" href="{% url "admission:doctorate-cancel" admission.uuid %}">
-                    {% trans "Delete" %}
-                </a>
+                {% if admission|can_make_action:'destroy_proposition' %}
+                    <a class="btn btn-danger" href="{% url "admission:doctorate-cancel" admission.uuid %}">
+                        {% trans "Delete" %}
+                    </a>
+                {% endif %}
 
                 <div class="dropdown pull-right">
                     <button

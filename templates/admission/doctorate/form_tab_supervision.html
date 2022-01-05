@@ -27,17 +27,21 @@
 {% block form %}
     {% bootstrap_form_errors form %}
     {% panel _("Add a promoter or a CA member") %}
-        <div class="row">
-            <div class="col-md-6">
-                {% bootstrap_field form.type %}
-                <div id="person">
-                    {% bootstrap_field form.person %}
-                </div>
-                <div id="tutor">
-                    {% bootstrap_field form.tutor %}
+        {% if admission|can_make_action:'add_member' %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% bootstrap_field form.type %}
+                    <div id="person">
+                        {% bootstrap_field form.person %}
+                    </div>
+                    <div id="tutor">
+                        {% bootstrap_field form.tutor %}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% else %}
+            <p>{% trans "You aren't allowed to add a new member to the supervision group." %}</p>
+        {% endif %}
     {% endpanel %}
 {% endblock %}
 

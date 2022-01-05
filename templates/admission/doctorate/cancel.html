@@ -63,7 +63,11 @@
             {% trans "Are you sure you want to cancel this request?" %}
         </p>
 
-        <button type="submit" class="btn btn-danger">
+        <button
+                type="submit"
+                class="btn btn-danger"
+                {% if not admission|can_make_action:'destroy_proposition' %}disabled{% endif %}
+        >
             {% trans "Confirm" %}
         </button>
         <a href="{% url 'admission:doctorate-list' %}">
