@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n admission %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -24,11 +24,11 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% if detail_view %}
+{% if detail_view and admission|can_read_tab:tab_name %}
     {% url 'admission:doctorate-detail:'|add:tab_name admission_uuid as tab_url %}
 {% elif not admission %}
     {% url 'admission:doctorate-create:'|add:tab_name as tab_url %}
-{% else %}
+{% elif admission|can_update_tab:tab_name %}
     {% url 'admission:doctorate-update:'|add:tab_name admission_uuid as tab_url %}
 {% endif %}
 <li

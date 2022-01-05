@@ -925,6 +925,11 @@ msgstr "Oui"
 msgid "Yes I have a high school diploma"
 msgstr "Oui j'ai déjà un diplôme de fin d'études secondaires"
 
+msgid "You aren't allowed to add a new member to the supervision group."
+msgstr ""
+"Vous n'êtes pas autorisé à ajouter un nouveau membre au groupe de "
+"supervision."
+
 msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
 "Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le "

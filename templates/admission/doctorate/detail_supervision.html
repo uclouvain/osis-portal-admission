@@ -34,12 +34,14 @@
                     <strong>{{ signature.promoteur.prenom }} {{ signature.promoteur.nom }}</strong>
                     {{ signature.status|enum_display:'ChoixEtatSignature' }}
                 </div>
-                <div class="col-md-4">
-                    <a href="{{ remove_url }}" class="btn btn-danger">
-                        <i class="glyphicon glyphicon-trash"></i>
-                        Retirer
-                    </a>
-                </div>
+                {% if admission|can_make_action:'remove_member' %}
+                    <div class="col-md-4">
+                        <a href="{{ remove_url }}" class="btn btn-danger">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            Retirer
+                        </a>
+                    </div>
+                {% endif %}
             </div>
             {% if not forloop.last %}
                 <hr/>
@@ -53,16 +55,17 @@
         {% for signature in supervision.signatures_membres_ca %}
             {% url 'admission:doctorate-update:remove-actor' view.kwargs.pk 'CA_MEMBER' signature.membre_ca.matricule as remove_url %}
             <div class="row">
-
                 <div class="col-md-8">
                     <strong>{{ signature.membre_ca.prenom }} {{ signature.membre_ca.nom }}</strong>
                     {{ signature.status|enum_display:'ChoixEtatSignature' }}
                 </div>
                 <div class="col-md-4">
-                    <a href="{{ remove_url }}" class="btn btn-danger">
-                        <i class="glyphicon glyphicon-trash"></i>
-                        Retirer
-                    </a>
+                    {% if admission|can_make_action:'remove_member' %}
+                        <a href="{{ remove_url }}" class="btn btn-danger">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            Retirer
+                        </a>
+                    {% endif %}
                 </div>
             </div>
             {% if not forloop.last %}
