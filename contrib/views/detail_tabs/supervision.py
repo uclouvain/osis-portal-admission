@@ -24,13 +24,17 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, FormView
 
+from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
+from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
 
 
-class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, TemplateView):
+class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, TemplateView, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/detail_supervision.html'
+    form_class = DoctorateAdmissionApprovalForm
+    is_detail_view = True
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -43,3 +47,16 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, TemplateView):
             uuid=self.kwargs['pk'],
         )
         return context_data
+
+    def call_webservice(self, data):
+        decision = data.pop('decision')
+        if decision == 'APPROVED':
+            return AdmissionSupervisionService.approve_proposition(
+                person=self.person,
+                uuid=self.kwargs['pk'],
+                approuver_proposition_command={
+                    "commentaire_interne": data['internal_comment'],
+                    "commentaire_externe": data['comment'],
+                    "matricule": self.person.global_id
+                },
+            )

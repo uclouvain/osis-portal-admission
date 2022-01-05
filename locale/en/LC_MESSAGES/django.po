@@ -129,6 +129,9 @@ msgstr ""
 msgid "Another institute"
 msgstr ""
 
+msgid "Approved"
+msgstr ""
+
 msgid "Are you sure you want to cancel this request?"
 msgstr ""
 
@@ -277,6 +280,9 @@ msgid "Create new doctorate admission"
 msgstr ""
 
 msgid "Curriculum"
+msgstr ""
+
+msgid "Decision"
 msgstr ""
 
 msgid "Defense date"
@@ -477,6 +483,9 @@ msgid "Institute"
 msgstr ""
 
 msgid "Institution"
+msgstr ""
+
+msgid "Internal comment"
 msgstr ""
 
 msgid "International Baccalaureate"
@@ -727,6 +736,9 @@ msgstr ""
 msgid "Qualification method"
 msgstr ""
 
+msgid "Reason"
+msgstr ""
+
 msgid "REFUSED"
 msgstr "Refused"
 
@@ -734,6 +746,9 @@ msgid "Recommendation letters"
 msgstr ""
 
 msgid "Reference:"
+msgstr ""
+
+msgid "Rejected"
 msgstr ""
 
 msgid "Remove"
@@ -799,6 +814,9 @@ msgstr ""
 msgid "Street number"
 msgstr ""
 
+msgid "Submit my decision"
+msgstr ""
+
 msgid "Supervision"
 msgstr ""
 
@@ -812,6 +830,12 @@ msgid "Thesis location"
 msgstr ""
 
 msgid "Thesis redacting language"
+msgstr ""
+
+msgid "This comment will be visible to all users who have access to this page."
+msgstr ""
+
+msgid "This comment will only be visible by the administrators."
 msgstr ""
 
 msgid "This field is required"

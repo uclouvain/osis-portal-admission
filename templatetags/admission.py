@@ -92,7 +92,7 @@ def doctorate_tabs(context, admission=None):
         'tab_tree': TAB_TREE,
         'active_parent': get_active_parent(context['request'].resolver_match.url_name),
         'admission': admission,
-        'detail_view': not isinstance(context['view'], FormView),
+        'detail_view': getattr(context['view'], 'is_detail_view', False) or not isinstance(context['view'], FormView),
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'request': context['request'],
     }
@@ -120,7 +120,7 @@ def doctorate_subtabs(context, admission=None):
         'subtabs': TAB_TREE.get(get_active_parent(context['request'].resolver_match.url_name), []),
         'subtab_labels': subtab_labels,
         'admission': admission,
-        'detail_view': not isinstance(context['view'], FormView),
+        'detail_view': getattr(context['view'], 'is_detail_view', False) or not isinstance(context['view'], FormView),
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'request': context['request'],
     }

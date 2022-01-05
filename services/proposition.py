@@ -161,3 +161,12 @@ class AdmissionSupervisionService:
             supervision_actor=kwargs,
             **build_mandatory_auth_headers(person),
         )
+
+    @classmethod
+    @api_exception_handler(api_exception_cls=ApiException)
+    def approve_proposition(cls, person, uuid, **kwargs):
+        return AdmissionPropositionAPIClient().create_approval(
+            uuid=uuid,
+            **kwargs,
+            **build_mandatory_auth_headers(person)
+        )

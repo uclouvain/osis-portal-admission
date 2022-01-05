@@ -143,6 +143,9 @@ msgstr "Langues anciennes"
 msgid "Another institute"
 msgstr "Autre établissement"
 
+msgid "Approved"
+msgstr "Approuvée"
+
 msgid "Are you sure you want to cancel this request?"
 msgstr "Êtes vous sûr de vouloir supprimer cette demande ?"
 
@@ -292,6 +295,9 @@ msgstr "Créer une nouvelle admission en doctorat"
 
 msgid "Curriculum"
 msgstr "Curriculum"
+
+msgid "Decision"
+msgstr "Décision"
 
 msgid "Defense date"
 msgstr "Date de soutenance"
@@ -504,6 +510,9 @@ msgstr "Établissement"
 
 msgid "Institution"
 msgstr "Institution"
+
+msgid "Internal comment"
+msgstr "Commentaire interne"
 
 msgid "International Baccalaureate"
 msgstr "Baccalauréat international (IBO)"
@@ -762,6 +771,9 @@ msgstr "Soutenance publique"
 msgid "Qualification method"
 msgstr "Technique de qualification"
 
+msgid "Reason"
+msgstr "Raison"
+
 msgid "REFUSED"
 msgstr "Refusé"
 
@@ -770,6 +782,9 @@ msgstr "Lettres de recommandation"
 
 msgid "Reference:"
 msgstr "Référence :"
+
+msgid "Rejected"
+msgstr "Rejetée"
 
 msgid "Remove"
 msgstr "Retirer"
@@ -834,6 +849,9 @@ msgstr "Rue"
 msgid "Street number"
 msgstr "Numéro de rue"
 
+msgid "Submit my decision"
+msgstr "Soumettre ma décision"
+
 msgid "Supervision"
 msgstr "Supervision"
 
@@ -848,6 +866,12 @@ msgstr "Lieu de la thèse"
 
 msgid "Thesis redacting language"
 msgstr "Langue de rédaction de la thèse"
+
+msgid "This comment will be visible to all users who have access to this page."
+msgstr "Ce commentaire sera visible par tous les utilisateurs ayant accès à cette page."
+
+msgid "This comment will only be visible by the administrators."
+msgstr "Ce commentaire ne sera visible par les gestionnaires."
 
 msgid "This field is required"
 msgstr "Ce champ est requis"
