@@ -101,7 +101,7 @@ class PropositionBusinessException(Enum):
     DoctoratNonTrouveException = "PROPOSITION-2"
     PropositionNonTrouveeException = "PROPOSITION-3"
     GroupeDeSupervisionNonTrouveException = "PROPOSITION-4"
-    ProximityCommissionCDEInconsistantException = "PROPOSITION-5"
+    ProximityCommissionInconsistantException = "PROPOSITION-5"
     ContratTravailInconsistantException = "PROPOSITION-6"
     InstitutionInconsistanteException = "PROPOSITION-7"
     MembreGroupeDeSupervisionNonTrouveException = "PROPOSITION-8"
@@ -120,7 +120,6 @@ class PropositionBusinessException(Enum):
     CotutelleDoitAvoirAuMoinsUnPromoteurExterneException = "PROPOSITION-21"
     GroupeSupervisionCompletPourPromoteursException = "PROPOSITION-22"
     GroupeSupervisionCompletPourMembresCAException = "PROPOSITION-23"
-    ProximityCommissionCDSSInconsistantException = "PROPOSITION-24"
 
 
 class AdmissionCotutelleService:
