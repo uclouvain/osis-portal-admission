@@ -50,30 +50,13 @@ class EntitiesService:
 
     @classmethod
     def get_entity(cls, person, uuid, *args, **kwargs):
-        # breakpoint()
-        results = EntitiesAPIClient().get_entities(
-            # TODO Use the UUID instead of the organisation_code and the entity_type (used as example)
+        return EntitiesAPIClient().get_entity(
+            uuid=uuid,
             organisation_code='UCL',
-            entity_type=[
-                EntiteTypeEnum('INSTITUTE'),
-            ],
-            # uuid=uuid,
-            limit=1,
             *args,
             **kwargs,
             **build_mandatory_auth_headers(person),
-        ).results
-        return results[0]
-
-    @classmethod
-    def get_entity_addresses1(cls, person, organisation_code, uuid, *args, **kwargs):
-        return EntitiesAPIClient().get_entity_addresses(
-            organisation_code=organisation_code,
-            uuid=uuid,
-            *args,
-            **kwargs,
-            **build_mandatory_auth_headers(person)
-        ).results
+        )
 
     @classmethod
     def get_entity_addresses(cls, person, organisation_code, uuid, *args, **kwargs):

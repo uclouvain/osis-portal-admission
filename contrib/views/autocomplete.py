@@ -152,7 +152,7 @@ class EntityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             entity_type=[
                 EntiteTypeEnum('INSTITUTE'),
             ],
-            # TODO Only search the institutes whose title/acronym is specified (self.q)
+            search=self.q,
         )
 
     def autocomplete_results(self, results):

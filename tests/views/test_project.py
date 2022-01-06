@@ -92,9 +92,7 @@ class ProjectViewTestCase(TestCase):
         self.mock_organization_api.return_value.get_entities.return_value = PaginatedEntites(
             results=self.mock_entities,
         )
-        self.mock_organization_api.return_value.get_entity.return_value = PaginatedEntites(
-            results=[self.mock_entities[0]],
-        )
+        self.mock_organization_api.return_value.get_entity.return_value = self.mock_entities[0]
         self.addCleanup(organization_api_patcher.stop)
 
         # Mock reference sdk api
