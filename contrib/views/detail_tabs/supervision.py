@@ -24,14 +24,14 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView, FormView
+from django.views.generic import FormView
 
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
 
 
-class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, TemplateView, WebServiceFormMixin, FormView):
+class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/detail_supervision.html'
     form_class = DoctorateAdmissionApprovalForm
     is_detail_view = True

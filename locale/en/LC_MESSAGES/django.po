@@ -835,7 +835,7 @@ msgstr ""
 msgid "This comment will be visible to all users who have access to this page."
 msgstr ""
 
-msgid "This comment will only be visible by the administrators."
+msgid "This comment will only to visible by the administrators."
 msgstr ""
 
 msgid "This field is required"

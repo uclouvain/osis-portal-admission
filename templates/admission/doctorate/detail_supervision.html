@@ -26,23 +26,25 @@
 
 {% block tab_content %}
 
-    {% panel _("Proposition approval") %}
-        {% bootstrap_form_errors form %}
-        <form class="osis-form approval-form" method="post" action="">
-            {% csrf_token %}
-            {% bootstrap_field form.decision %}
-            {% bootstrap_field form.reason %}
-            <div class="row">
-                <div class="col-md-6">
-                    {% bootstrap_field form.internal_comment %}
+    {% if admission|can_make_action:'add_approval' %}
+        {% panel _("Proposition approval") %}
+            {% bootstrap_form_errors form %}
+            <form class="osis-form approval-form" method="post" action="">
+                {% csrf_token %}
+                {% bootstrap_field form.decision %}
+                {% bootstrap_field form.reason %}
+                <div class="row">
+                    <div class="col-md-6">
+                        {% bootstrap_field form.internal_comment %}
+                    </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.comment %}
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    {% bootstrap_field form.comment %}
-                </div>
-            </div>
-            {% bootstrap_button button_type="submit" content=_("Submit my decision") button_class="btn btn-primary" %}
-        </form>
-    {% endpanel %}
+                {% bootstrap_button button_type="submit" content=_("Submit my decision") button_class="btn btn-primary" %}
+            </form>
+        {% endpanel %}
+    {% endif %}
 
     {% panel _("Promoters") %}
         {% for signature in supervision.signatures_promoteurs %}
@@ -81,11 +83,6 @@
                         <strong>{{ signature.membre_ca.prenom }} {{ signature.membre_ca.nom }}</strong>
                         {{ signature.status|enum_display:'ChoixEtatSignature' }}
                     </div>
-                    <div class="col-md-4">
-                <div class="col-md-8">
-                    <strong>{{ signature.membre_ca.prenom }} {{ signature.membre_ca.nom }}</strong>
-                    {{ signature.status|enum_display:'ChoixEtatSignature' }}
-                </div>
                 {% if admission|can_make_action:'remove_member' %}
                     <div class="col-md-4">
                         <a href="{{ remove_url }}" class="btn btn-danger">
@@ -130,6 +127,8 @@
     }
     blockquote.comment {
         font-size: 1em;
+        margin: 10px 0 0;
+        font-style: italic;
     }
   </style>
 {% endblock %}

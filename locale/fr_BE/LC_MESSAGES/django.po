@@ -870,7 +870,7 @@ msgstr "Langue de rédaction de la thèse"
 msgid "This comment will be visible to all users who have access to this page."
 msgstr "Ce commentaire sera visible par tous les utilisateurs ayant accès à cette page."
 
-msgid "This comment will only be visible by the administrators."
+msgid "This comment will only be visible to the administrators."
 msgstr "Ce commentaire ne sera visible par les gestionnaires."
 
 msgid "This field is required"

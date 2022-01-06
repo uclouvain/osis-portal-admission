@@ -92,7 +92,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
                 'rows': 5,
             },
         ),
-        help_text="This comment will be visible to all users who have access to this page."
+        help_text=_("This comment will be visible to all users who have access to this page."),
     )
 
     def clean(self):
