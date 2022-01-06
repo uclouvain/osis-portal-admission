@@ -79,6 +79,22 @@ class AdmissionPropositionService:
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    @api_exception_handler(api_exception_cls=ApiException)
+    def request_signatures(cls, person: Person, uuid):
+        return AdmissionPropositionAPIClient().create_signatures(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    @api_exception_handler(api_exception_cls=ApiException)
+    def verify_proposition(cls, person: Person, uuid):
+        return AdmissionPropositionAPIClient().retrieve_verify_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
@@ -97,6 +113,11 @@ class PropositionBusinessException(Enum):
     DejaPromoteurException = "PROPOSITION-14"
     DejaMembreCAException = "PROPOSITION-15"
     JustificationRequiseException = "PROPOSITION-16"
+    DetailProjetNonCompleteException = "PROPOSITION-17"
+    CotutelleNonCompleteException = "PROPOSITION-18"
+    PromoteurManquantException = "PROPOSITION-19"
+    MembreCAManquantException = "PROPOSITION-20"
+    CotutelleDoitAvoirAuMoinsUnPromoteurExterneException = "PROPOSITION-21"
 
 
 class AdmissionCotutelleService:

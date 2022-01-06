@@ -29,42 +29,23 @@ from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
-from admission.services.proposition import AdmissionPropositionService
-from admission.services.reference import CountriesService, LanguageService
+from admission.services.reference import LanguageService
 
 
-class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_education.html'
+class DoctorateAdmissionLanguagesDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'admission/doctorate/detail_languages.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        # Admission
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person, uuid=str(self.kwargs['pk']),
+        context_data["languages_knowledge"] = AdmissionPersonService.retrieve_languages_knowledge(
+            self.request.user.person
         )
-        # Person
-        high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
-            person=self.request.user.person
-        ).to_dict()
         translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
-
-        belgian_diploma = high_school_diploma.get('belgian_diploma')
-        foreign_diploma = high_school_diploma.get('foreign_diploma')
-        if belgian_diploma:
-            context_data["belgian_diploma"] = high_school_diploma["belgian_diploma"]
-        elif foreign_diploma:
-            context_data["foreign_diploma"] = high_school_diploma["foreign_diploma"]
-            if context_data["foreign_diploma"].get("country"):
-                country = CountriesService.get_country(
-                    iso_code=context_data["foreign_diploma"]["country"],
+        if len(context_data["languages_knowledge"]):
+            for language_knowledge in context_data["languages_knowledge"]:
+                language = LanguageService.get_language(
+                    code=language_knowledge["language"],
                     person=self.request.user.person,
                 )
-                context_data["foreign_diploma"]['country'] = getattr(country, translated_field)
-            if context_data["foreign_diploma"].get("linguistic_regime"):
-                linguistic_regime = LanguageService.get_language(
-                    code=context_data["foreign_diploma"]["linguistic_regime"],
-                    person=self.request.user.person,
-                )
-                context_data["foreign_diploma"]['linguistic_regime'] = getattr(linguistic_regime, translated_field)
-
+                language_knowledge["language"] = getattr(language, translated_field)
         return context_data

@@ -119,15 +119,15 @@
     {% endpanel %}
 
     {% panel _("Doctoral project") %}
-        {% bootstrap_field form.titre_projet %}
-        {% bootstrap_field form.resume_projet %}
+        {% bootstrap_field form.titre_projet form_group_class="form-group required_field" %}
+        {% bootstrap_field form.resume_projet form_group_class="form-group required_field" %}
         <div class="row">
             <div class="col-md-4">
-                {% bootstrap_field form.langue_redaction_these %}
+                {% bootstrap_field form.langue_redaction_these form_group_class="form-group required_field" %}
             </div>
         </div>
-        {% bootstrap_field form.documents_projet %}
-        {% bootstrap_field form.graphe_gantt %}
+        {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
+        {% bootstrap_field form.graphe_gantt form_group_class="form-group required_field" %}
         {% bootstrap_field form.proposition_programme_doctoral %}
         {% bootstrap_field form.projet_formation_complementaire %}
         {% bootstrap_field form.lettres_recommandation %}

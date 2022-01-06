@@ -38,5 +38,7 @@ class DoctorateAdmissionListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["admissions"] = AdmissionPropositionService().get_propositions(self.request.user.person)
+        result = AdmissionPropositionService().get_propositions(self.request.user.person)
+        context["admissions"] = result['propositions']
+        context["global_links"] = result['links']
         return context

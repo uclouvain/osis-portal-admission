@@ -34,13 +34,15 @@
             <div class="col-md-12">
                 <h2>
                     {% trans "Doctorate admissions" %}
-                    <a
-                        href="{% url 'admission:doctorate-create' %}"
-                        class="btn btn-primary pull-right"
-                    >
-                        <span class="glyphicon glyphicon-plus"></span>
-                        {% trans "Create new doctorate admission" %}
-                    </a>
+                    {% if 'url' in global_links.create_proposition %}
+                        <a
+                            href="{% url 'admission:doctorate-create' %}"
+                            class="btn btn-primary pull-right"
+                        >
+                            <span class="glyphicon glyphicon-plus"></span>
+                            {% trans "Create new doctorate admission" %}
+                        </a>
+                    {% endif %}
                 </h2>
             </div>
         </div>
@@ -48,14 +50,16 @@
 
     {% for admission in admissions %}
         {% panel %}
-            <span class="h3">{{ admission.intitule_doctorat_fr }} (21-300001)</span>
+            <span class="h3">{{ admission.intitule_doctorat_fr }} ({{ admission.reference }})</span>
             <em>Créée le {{ admission.creee_le }}</em>
             <em>Statut : {{ admission.statut|enum_display:'ChoixStatusProposition' }}</em>
 
             {% if admission.statut != 'CANCELLED' %}
-                <a class="btn btn-danger" href="{% url "admission:doctorate-cancel" admission.uuid %}">
-                    {% trans "Delete" %}
-                </a>
+                {% if admission|can_make_action:'destroy_proposition' %}
+                    <a class="btn btn-danger" href="{% url "admission:doctorate-cancel" admission.uuid %}">
+                        {% trans "Delete" %}
+                    </a>
+                {% endif %}
 
                 <div class="dropdown pull-right">
                     <button
@@ -73,6 +77,7 @@
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="person" tab_label=_("Identification") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="coordonnees" tab_label=_("Contact details") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="education" tab_label=_("Secondary studies") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="languages" tab_label=_("Languages knowledge") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="curriculum" tab_label=_("Curriculum") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="project" tab_label=_("Doctoral project") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="cotutelle" tab_label=_("Cotutelle") %}
@@ -105,6 +110,7 @@
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="person" tab_label=_("Identification") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="coordonnees" tab_label=_("Contact details") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="education" tab_label=_("Secondary studies") %}
+                        {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="languages" tab_label=_("Languages knowledge") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="curriculum" tab_label=_("Curriculum") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="project" tab_label=_("Doctoral project") %}
                         {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="cotutelle" tab_label=_("Cotutelle") %}

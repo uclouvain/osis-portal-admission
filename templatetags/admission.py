@@ -28,10 +28,12 @@ from collections import namedtuple
 from inspect import getfullargspec
 
 from django import template
+from django.core.exceptions import ImproperlyConfigured
 from django.views.generic import FormView
 from django.utils.translation import gettext as _
 
 from base.models.utils.utils import ChoiceEnum
+from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 
 register = template.Library()
 
@@ -75,7 +77,7 @@ ParentTab = namedtuple('ParentTab', ['label', 'icon'])
 PERSONAL = ParentTab(_('Personal data'), 'user')
 TAB_TREE = {
     PERSONAL: ['person', 'coordonnees'],
-    ParentTab(_('Previous experience'), 'list-alt'): ['education', 'curriculum'],
+    ParentTab(_('Previous experience'), 'list-alt'): ['education', 'curriculum', 'languages'],
     ParentTab(_('Doctorate'), 'graduation-cap'): ['project', 'cotutelle', 'supervision'],
 }
 
@@ -84,15 +86,66 @@ def get_active_parent(tab_name):
     return next((parent for parent, children in TAB_TREE.items() if tab_name in children), None)
 
 
+@register.filter
+def can_make_action(admission, action_name):
+    """Return true if the specified action can be applied for this admission, otherwise return False"""
+    return 'url' in admission.links.get(action_name, {})
+
+
+def _can_access_tab(admission, tab_name, actions_by_tab):
+    """Return true if the specified tab can be opened for this admission, otherwise return False"""
+    try:
+        return can_make_action(admission, actions_by_tab[tab_name])
+    except AttributeError:
+        raise ImproperlyConfigured("The admission should contain the 'links' property to check tab access")
+    except KeyError:
+        raise ImproperlyConfigured(
+            "Please check that the '{}' property is well specified in the 'READ_ACTIONS_BY_TAB' and"
+            " 'UPDATE_ACTIONS_BY_TAB' constants"
+            .format(tab_name)
+        )
+
+
+def get_valid_tab_tree(admission, original_tab_tree, is_form_view):
+    """
+    Return a tab tree based on the specified one but whose the tabs depending on the permissions links.
+    """
+    if admission:
+        valid_tab_tree = {}
+
+        # The actions depend on whether the tab is read or written only
+        actions_by_tab = UPDATE_ACTIONS_BY_TAB if is_form_view else READ_ACTIONS_BY_TAB
+
+        # Loop over the tabs of the original tab tree
+        for (parent_tab, sub_tabs) in original_tab_tree.items():
+            # Get the accessible sub tabs depending on the user permissions
+            valid_sub_tabs = [tab for tab in sub_tabs if _can_access_tab(admission, tab, actions_by_tab)]
+            # Only add the parent tab if at least one sub tab is allowed
+            if len(valid_sub_tabs) > 0:
+                valid_tab_tree[parent_tab] = valid_sub_tabs
+
+        return valid_tab_tree
+
+    else:
+        return original_tab_tree
+
+
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
 def doctorate_tabs(context, admission=None):
-    valid_tabs = {}  # FIXME
+    is_form_view = isinstance(context['view'], FormView)
+
+    # Create a new tab tree based on the default one but depending on the permissions links
+    context['valid_tab_tree'] = get_valid_tab_tree(
+        admission=admission,
+        original_tab_tree=TAB_TREE,
+        is_form_view=is_form_view,
+    )
+
     return {
-        'valid_tabs': valid_tabs,
-        'tab_tree': TAB_TREE,
+        'tab_tree': context['valid_tab_tree'],
         'active_parent': get_active_parent(context['request'].resolver_match.url_name),
         'admission': admission,
-        'detail_view': not isinstance(context['view'], FormView),
+        'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'request': context['request'],
     }
@@ -100,11 +153,14 @@ def doctorate_tabs(context, admission=None):
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None):
+    is_form_view = isinstance(context['view'], FormView)
+
     subtab_labels = {
         'person': _("Identification"),
         'coordonnees': _("Contact details"),
         'education': _("Secondary studies"),
         'curriculum': _("Curriculum"),
+        'languages': _("Languages knowledge"),
         'project': _("Doctoral project"),
         'cotutelle': _("Cotutelle"),
         'supervision': _("Supervision"),
@@ -115,11 +171,17 @@ def doctorate_subtabs(context, admission=None):
         'private_defense': _("Private defense"),
         'public_defense': _("Public defense"),
     }
+    valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(
+        admission=admission,
+        original_tab_tree=TAB_TREE,
+        is_form_view=is_form_view,
+    ))
+
     return {
-        'subtabs': TAB_TREE.get(get_active_parent(context['request'].resolver_match.url_name), []),
+        'subtabs': valid_tab_tree.get(get_active_parent(context['request'].resolver_match.url_name), []),
         'subtab_labels': subtab_labels,
         'admission': admission,
-        'detail_view': not isinstance(context['view'], FormView),
+        'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'request': context['request'],
     }
@@ -163,3 +225,15 @@ def enum_display(value, enum_name):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+def can_read_tab(admission, tab_name):
+    """Return true if the specified tab can be opened in reading mode for this admission, otherwise return False"""
+    return _can_access_tab(admission, tab_name, READ_ACTIONS_BY_TAB)
+
+
+@register.filter
+def can_update_tab(admission, tab_name):
+    """Return true if the specified tab can be opened in writing mode for this admission, otherwise return False"""
+    return _can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB)

@@ -28,6 +28,12 @@ from django.utils.translation import gettext_lazy as _
 from base.models.utils.utils import ChoiceEnum
 
 
+class GotDiploma(ChoiceEnum):
+    YES = _("Yes I have a high school diploma")
+    THIS_YEAR = _("I will have a high school diploma this year")
+    NO = _("No I don't have a high school diploma")
+
+
 class DiplomaTypes(ChoiceEnum):
     BELGIAN = _("belgian")
     FOREIGN = _("foreign")
@@ -46,6 +52,23 @@ class BelgianCommunitiesOfEducation(ChoiceEnum):
     GERMAN_SPEAKING = _("German-speaking Community")
 
 
+EDUCATIONAL_TYPES = (
+    (_("Educational transition"), (
+        ("TEACHING_OF_GENERAL_EDUCATION", _("Teaching of general education")),
+        ("TRANSITION_METHOD", _("Transition method")),
+        ("ARTISTIC_TRANSITION", _("Artistic transition")),
+    )),
+    ("", ""),
+    (_("Educational qualification"), (
+        ("QUALIFICATION_METHOD", _("Qualification method")),
+        ("ARTISTIC_QUALIFICATION", _("Artistic qualification")),
+        ("PROFESSIONAL_EDUCATION", _("Professional education")),
+        ("PROFESSIONAL_EDUCATION_AND_MATURITY_EXAM", _("Professional education + Maturity exam")),
+    )),
+)
+
+
+# FIXME to be removed when fully replaced by EDUCATIONAL_TYPES above
 class EducationalType(ChoiceEnum):
     TEACHING_OF_GENERAL_EDUCATION = _("Teaching of general education")
     TRANSITION_METHOD = _("Transition method")
@@ -60,3 +83,9 @@ class ForeignDiplomaTypes(ChoiceEnum):
     NATIONAL_BACHELOR = _("National Bachelor (or government diploma, ...)")
     EUROPEAN_BACHELOR = _("European Bachelor (Schola Europaea)")
     INTERNATIONAL_BACCALAUREATE = _("International Baccalaureate")
+
+
+class Equivalence(ChoiceEnum):
+    YES = _("Yes")
+    NO = _("No")
+    PENDING = _("Pending")

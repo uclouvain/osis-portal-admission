@@ -31,7 +31,7 @@
         </li>
         {% if admission %}
             <li class="active">
-                {{ admission.intitule_doctorat_fr }} (21-300001)
+                {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
             </li>
         {% else %}
             <li class="active">{% trans "Create new doctorate admission" %}</li>
@@ -48,7 +48,7 @@
     <div class="page-header h3">
         <span class="d-inline-block">
         {% if admission %}
-            {{ admission.intitule_doctorat_fr }} (21-300001)
+            {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
         {% else %}
             {% trans "Create new doctorate admission" %}
         {% endif %}
@@ -68,7 +68,6 @@
             {% if not admission %}
                 {% trans "No reference yet - Go to Project tab" %}
             {% else %}
-                21-300001
                 {{ admission.reference }}
             {% endif %}
         </div>
@@ -92,9 +91,8 @@
             and resume at any moment.
         {% endblocktrans %}
     </em></p>
-
     {% url 'admission:doctorate-update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
-    {% if change_url %}
+    {% if change_url and admission|can_update_tab:request.resolver_match.url_name %}
         <div class="text-right">
             <a href="{{ change_url }}" class="btn btn-primary">
                 <span

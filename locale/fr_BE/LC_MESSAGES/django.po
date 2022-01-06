@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-09 12:00+0100\n"
+"POT-Creation-Date: 2021-12-22 17:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,20 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid ""
-"\n"
-"                    Please complete here below the schedule of your last "
-"year\n"
-"                    of high school, indicating for each domain the number "
-"of\n"
-"                    hours of education followed per week (h/w).\n"
-"                "
-msgstr ""
-"\n"
-"Veuillez compléter ci-dessous la grille horaire de votre dernière année "
-"d'études secondaires, en indiquant en regard de chaque matière, le nombre "
-"d'heures suivies par semaine (h/s)."
 
 msgid ""
 "\n"
@@ -73,6 +59,18 @@ msgstr ""
 "été complétés avec succès. Les icônes indiquent la progression de votre "
 "demande qui peut être interrompue et reprise à tout moment."
 
+msgid ""
+"\n"
+"          Please complete here below the schedule of your last year\n"
+"          of high school, indicating for each domain the number of\n"
+"          hours of education followed per week (h/w).\n"
+"        "
+msgstr ""
+"\n"
+"Veuillez compléter ci-dessous la grille horaire de votre dernière année "
+"d'études secondaires, en indiquant en regard de chaque matière, le nombre "
+"d'heures suivies par semaine (h/s)."
+
 msgid " (h/w)"
 msgstr " (h/s)"
 
@@ -100,17 +98,14 @@ msgstr "(ex: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
 msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
 msgstr "(ex: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
 
-msgid ">> Educational  qualification :"
-msgstr ">> Enseignement de qualification :"
-
-msgid ">> Educational transition :"
-msgstr ">> Enseignement de transition :"
-
-msgid ">> Other education, to specify"
-msgstr ">> Autre enseignement, à préciser"
-
 msgid "A field of the schedule must at least be set."
 msgstr "Au moins un champ de la grille horaire doit être complété."
+
+msgid "A1"
+msgstr "A1"
+
+msgid "A2"
+msgstr "A2"
 
 msgid "APPROVED"
 msgstr "Approuvé"
@@ -124,8 +119,14 @@ msgstr "ARES - Coopération au développement"
 msgid "Academic graduation year"
 msgstr "Année d'obtention du diplôme universitaire"
 
+msgid "Add a language"
+msgstr "Ajouter une langue"
+
 msgid "Add a promoter or a CA member"
 msgstr "Ajouter un promoteur ou un membre du CA"
+
+msgid "Add another"
+msgstr "Ajouter une autre"
 
 msgid "Admission"
 msgstr "Admission"
@@ -145,6 +146,9 @@ msgstr "Autre établissement"
 msgid "Are you sure you want to cancel this request?"
 msgstr "Êtes vous sûr de vouloir supprimer cette demande ?"
 
+msgid "Are you sure you want to request signatures for this admission?"
+msgstr "Êtes vous sûr de vouloir requérir les signatures pour cette demande ?"
+
 msgid "Artistic qualification"
 msgstr "Artistique de qualification"
 
@@ -153,6 +157,15 @@ msgstr "Artistique de transition"
 
 msgid "At which result level do you consider yourself?"
 msgstr "Quel résultat avez-vous obtenu ?"
+
+msgid "B1"
+msgstr "B1"
+
+msgid "B2"
+msgstr "B2"
+
+msgid "Back to my request"
+msgstr "Retourner sur ma demande"
 
 msgid "Back to my requests"
 msgstr "Retour à mes demandes"
@@ -186,6 +199,12 @@ msgstr "Justification succincte"
 
 msgid "Bureau"
 msgstr "Bureau"
+
+msgid "C1"
+msgstr "C1"
+
+msgid "C2"
+msgstr "C2"
 
 msgid "CA Member"
 msgstr "Membre du CA"
@@ -244,18 +263,26 @@ msgstr "Convention"
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
+msgid "Cotutelle convention"
+msgstr "Convention de cotutelle"
+
+msgid "Cotutelle institution"
+msgstr "Institution de la cotutelle"
+
 msgid "Cotutelle is not defined yet"
 msgstr "Le choix de la cotutelle n'est pas encore défini"
+
+msgid "Cotutelle motivation"
+msgstr "Motivation de la cotutelle"
+
+msgid "Cotutelle opening request"
+msgstr "Demande d'ouverture de cotutelle"
 
 msgid "Country"
 msgstr "Pays"
 
 msgid "Country of citizenship"
 msgstr "Pays de nationalité"
-
-msgctxt "trajectory"
-msgid "Course"
-msgstr "Parcours"
 
 msgid "Course choice"
 msgstr "Choix de la formation"
@@ -279,15 +306,11 @@ msgstr "Détaillez ici les raisons justifiant une admission provisoire."
 msgid "Did you change of orientation during your studies?"
 msgstr "En cours d'études, avez-vous changé d'orientation ?"
 
-msgid ""
-"Did you obtain a high school diploma or will you receive this kind of "
-"diploma still this year?"
-msgstr ""
-"Avez-vous obtenu un diplôme de fin d'études secondaires ou allez-vous "
-"l'obtenir cette année ?"
-
 msgid "Did you repeat certain study years during your studies?"
 msgstr "En cours d'études, avez-vous redoublé ?"
+
+msgid "Do you have a high school diploma?"
+msgstr "Avez-vous un diplôme de fin d'études secondaires ?"
 
 msgid "Doctoral project"
 msgstr "Projet doctoral"
@@ -318,6 +341,12 @@ msgstr "Sciences économiques"
 
 msgid "Edit"
 msgstr "Modifier"
+
+msgid "Educational qualification"
+msgstr "Enseignement de qualification"
+
+msgid "Educational transition"
+msgstr "Enseignement de transition"
 
 msgid "Educational type is required with this community of education"
 msgstr ""
@@ -413,11 +442,8 @@ msgstr "Grec"
 msgid "Have you previously been registered at UCLouvain?"
 msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
 
-msgid "ID card"
-msgstr "Carte d'identité"
-
-msgid "ID photo"
-msgstr "Photo d'identité"
+msgid "I will have a high school diploma this year"
+msgstr "Je vais l'avoir dans l'année"
 
 msgid "INVITED"
 msgstr "Invité"
@@ -443,11 +469,23 @@ msgstr "Photo d'identité"
 msgid "If other language, please specify"
 msgstr "Si autre langue, précisez"
 
-msgid "If other linguistic regime, please clarify"
-msgstr "Si autre régime linguistique, précisez"
-
 msgid "If other optional domains, please specify"
 msgstr "Si autres matières optionnelles, précisez"
+
+msgid "If you cannot find your educational type, please clarify below"
+msgstr ""
+"Si vous ne trouvez pas le bon type d'enseignement, veuillez préciser ci-"
+"dessous"
+
+msgid "If you cannot find your institute, please clarify below"
+msgstr ""
+"Si vous ne trouvez pas votre établissement dans ceux proposés, veuillez "
+"préciser ci-dessous"
+
+msgid "If you cannot find your linguistic regime, please clarify below"
+msgstr ""
+"Si vous ne trouvez pas votre régime linguistique, veuillez préciser ci-"
+"dessous"
 
 msgid ""
 "In order to help you at this matter, we propose you to perform a search "
@@ -470,6 +508,13 @@ msgstr "Institution"
 msgid "International Baccalaureate"
 msgstr "Baccalauréat international (IBO)"
 
+msgid ""
+"Is this diploma subject to an equivalence decision by the services of the "
+"French community of Belgium?"
+msgstr ""
+"Ce diplôme a-t-il l'objet d'une décision d'équivalence par les services de "
+"la Communauté française de Belgique ?"
+
 msgid "Is your contact address different from your residential address?"
 msgstr ""
 "Souhaitez vous recevoir votre courrier à une autre adresse que votre "
@@ -482,6 +527,12 @@ msgstr ""
 
 msgid "Jury"
 msgstr "Jury"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Languages knowledge"
+msgstr "Connaissance des langues"
 
 msgid "Last name"
 msgstr "Nom"
@@ -498,6 +549,9 @@ msgstr "Moins de 65%"
 msgid "Linguistic regime"
 msgstr "Régime linguistique"
 
+msgid "Listening comprehension"
+msgstr "Compréhension à l'audition"
+
 msgid "MANAGEMENT"
 msgstr "Gestion"
 
@@ -507,6 +561,12 @@ msgstr "Masculin"
 msgctxt "gender male"
 msgid "Male"
 msgstr "Masculin"
+
+msgid "Mandatory language"
+msgstr "Langue obligatoire"
+
+msgid "Mandatory languages are missing."
+msgstr "Des langues obligatoires sont manquantes."
 
 msgid "Mathematics"
 msgstr "Mathématiques"
@@ -541,11 +601,17 @@ msgstr "Numéro de registre national"
 msgid "No"
 msgstr "Non"
 
+msgid "No I don't have a high school diploma"
+msgstr "Non je n'ai pas de diplôme de fin d'études secondaires"
+
 msgid "No cotutelle"
 msgstr "Pas de cotutelle"
 
 msgid "No defense reason"
 msgstr "Raison de non-soutenance"
+
+msgid "No languages knowledge provided."
+msgstr "Aucune connaissance des langues renseignée."
 
 msgid "No one invited"
 msgstr "Aucun invité"
@@ -592,9 +658,6 @@ msgstr "Autres documents"
 msgid "Other education, to specify"
 msgstr "Autre éducation, précisez"
 
-msgid "Other institute"
-msgstr "Autre établissement"
-
 msgid "Other linguistic regime"
 msgstr "Autre régime linguistique"
 
@@ -619,6 +682,9 @@ msgstr "Date d'expiration du passeport"
 msgid "Passport number"
 msgstr "Numéro de passeport"
 
+msgid "Pending"
+msgstr "En cours de demande"
+
 msgid "Personal data"
 msgstr "Données personnelles"
 
@@ -636,6 +702,15 @@ msgstr "Lieu-dit"
 
 msgid "Please mention the academic graduation year"
 msgstr "Veuillez indiquer l'année académique d'obtention"
+
+msgid "Please rate your listening comprehension"
+msgstr "Veuillez évaluer votre compréhension à l'audition"
+
+msgid "Please rate your speaking ability"
+msgstr "Veuillez évaluer votre capacité orale"
+
+msgid "Please rate your writing ability"
+msgstr "Veuillez évaluer votre capacité d'écriture"
 
 msgid "Please set either street or postal_box"
 msgstr "Veuillez définir la rue ou la boîte postale"
@@ -702,6 +777,9 @@ msgstr "Lettres de recommandation"
 msgid "Reference:"
 msgstr "Référence :"
 
+msgid "Remove"
+msgstr "Retirer"
+
 msgid "Residential address"
 msgstr "Domicile légal"
 
@@ -716,9 +794,6 @@ msgstr "Soumis"
 
 msgid "Save"
 msgstr "Enregistrer"
-
-msgid "Schedule"
-msgstr "Grille horaire"
 
 msgid "Scholarship"
 msgstr "Bourse"
@@ -746,6 +821,9 @@ msgstr "Sexe"
 
 msgid "Social sciences"
 msgstr "Sciences sociales"
+
+msgid "Speaking ability"
+msgstr "Parler"
 
 msgid "Specify scholarship grant"
 msgstr "Spécifier la bourse de recherche"
@@ -783,14 +861,17 @@ msgstr "Ce champ est requis"
 msgid "This field is required."
 msgstr "Ce champ est requis."
 
+msgid "This is a diploma from"
+msgstr "Il s'agit d'un diplôme"
+
+msgid "This language is set more than once."
+msgstr "Cette langue est définie plusieurs fois."
+
+msgid "Timetable"
+msgstr "Grille horaire"
+
 msgid "Transition method"
 msgstr "Technique de transition"
-
-msgid "Type of education"
-msgstr "Type d'enseignement"
-
-msgid "Type of high school diploma"
-msgstr "Type de diplôme d'étude secondaire"
 
 msgid "UCLOUVAIN_ASSISTANT"
 msgstr "Assistant UCLouvain"
@@ -823,6 +904,9 @@ msgstr ""
 "Quel établissement scolaire a délivré ou délivrera votre certificat "
 "d'enseignement secondaire supérieur (C.E.S.S.) ?"
 
+msgid "What result did you get?"
+msgstr "Quel résultat avez-vous obtenu ?"
+
 msgid "What type of education did (do) you follow?"
 msgstr "Quel type d'enseignement avez-vous suivi (ou suivez-vous) ?"
 
@@ -835,11 +919,33 @@ msgstr "Contrat de travail"
 msgid "Work contract type"
 msgstr "Type de contrat de travail"
 
+msgid "Writing ability"
+msgstr "Écrire"
+
 msgid "YES"
 msgstr "Oui"
 
 msgid "Yes"
 msgstr "Oui"
+
+msgid "Yes I have a high school diploma"
+msgstr "Oui j'ai déjà un diplôme de fin d'études secondaires"
+
+msgid "You aren't allowed to add a new member to the supervision group."
+msgstr ""
+"Vous n'êtes pas autorisé à ajouter un nouveau membre au groupe de "
+"supervision."
+
+msgid "You cannot fill in a language more than once, please correct the form."
+msgstr ""
+"Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le "
+"formulaire."
+
+msgid ""
+"You must correct your proposition before being able to request signatures."
+msgstr ""
+"Vous devez corriger votre demande d'admission avant de pouvoir réaliser la "
+"demande de signatures."
 
 msgid "belgian"
 msgstr "belge"

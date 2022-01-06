@@ -31,6 +31,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.tests.utils import MockCountry, MockLanguage
+from base.tests.factories.academic_year import get_current_year
 from base.tests.factories.person import PersonFactory
 
 
@@ -107,10 +108,10 @@ class EducationTestCase(TestCase):
 
     def test_form_belgian(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": True,
+            "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
+            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
             "belgian_diploma-community": "FLEMISH_SPEAKING",
             "belgian_diploma-other_institute": "Special school",
             "belgian_diploma-course_repeat": False,
@@ -139,10 +140,10 @@ class EducationTestCase(TestCase):
 
     def test_form_belgian_schedule(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": True,
+            "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
+            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
             "belgian_diploma-community": "FRENCH_SPEAKING",
             "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
             "belgian_diploma-other_institute": "Special school",
@@ -201,10 +202,10 @@ class EducationTestCase(TestCase):
 
     def test_form_belgian_bad_schedule(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": True,
+            "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
+            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
             "belgian_diploma-community": "FRENCH_SPEAKING",
             "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
             "belgian_diploma-other_institute": "Special school",
@@ -219,13 +220,14 @@ class EducationTestCase(TestCase):
 
     def test_form_foreign(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": True,
+            "got_diploma": "YES",
             "diploma_type": "FOREIGN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
             "foreign_diploma-linguistic_regime": "EN",
             "foreign_diploma-country": "FR",
+            "foreign_diploma-equivalence": "PENDING",
+            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
             # Even if we send data for belgian diploma, it should be stripped from data sent to WS
             "belgian_diploma-other_institute": "Special school",
             # Even if we send data for schedule, it should be stripped from data sent to WS
@@ -242,21 +244,50 @@ class EducationTestCase(TestCase):
                 'foreign_diploma_type': 'NATIONAL_BACHELOR',
                 'linguistic_regime': 'EN',
                 'other_linguistic_regime': '',
+                'equivalence': 'PENDING',
+            },
+        })
+
+    def test_form_will_get_diploma_this_year(self):
+        response = self.client.post(self.form_url, {
+            "got_diploma": "THIS_YEAR",
+            "diploma_type": "FOREIGN",
+            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-linguistic_regime": "EN",
+            "foreign_diploma-country": "FR",
+            "foreign_diploma-equivalence": "NO",
+            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
+            # Even if we send data for belgian diploma, it should be stripped from data sent to WS
+            "belgian_diploma-other_institute": "Special school",
+            # Even if we send data for schedule, it should be stripped from data sent to WS
+            "schedule-greek": 5,
+        })
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
+        self.assertEqual(sent, {
+            'foreign_diploma': {
+                'academic_graduation_year': get_current_year(),
+                'result': 'NOT_KNOWN_YET_RESULT',
+                'country': 'FR',
+                'foreign_diploma_type': 'NATIONAL_BACHELOR',
+                'linguistic_regime': 'EN',
+                'other_linguistic_regime': '',
+                'equivalence': 'NO',
             },
         })
 
     def test_form_error_if_got_diploma_but_nothing_else(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": True,
+            "got_diploma": "YES",
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('academic_graduation_year', response.context['main_form'].errors)
         self.assertIn('diploma_type', response.context['main_form'].errors)
-        self.assertIn('result', response.context['main_form'].errors)
 
     def test_form_error_if_hour_or_label_not_set(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": True,
+            "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
             "belgian_diploma-community": "FRENCH_SPEAKING",
@@ -270,7 +301,7 @@ class EducationTestCase(TestCase):
 
     def test_form_error_if_french_community_and_no_educational(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": True,
+            "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
             "belgian_diploma-community": "FRENCH_SPEAKING",
@@ -280,10 +311,10 @@ class EducationTestCase(TestCase):
 
     def test_form_error_linguistic_regime(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": True,
+            "got_diploma": "YES",
             "diploma_type": "FOREIGN",
             "academic_graduation_year": 2020,
-            "result": "NOT_KNOWN_YET_RESULT",
+            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
             "foreign_diploma-country": "FR",
         })

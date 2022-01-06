@@ -72,6 +72,8 @@ class ProjectViewTestCase(TestCase):
             graphe_gantt=[],
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
+            lettres_recommandation=[],
+            links={},
         )
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -104,8 +106,22 @@ class ProjectViewTestCase(TestCase):
         url = resolve_url('admission:doctorate-create:project')
         self.client.force_login(self.person.user)
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
-            Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE"),
-            Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
+            Mock(
+                sigle='FOOBAR',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
+                annee=2021,
+                sigle_entite_gestion="CDE",
+                links=[],
+            ),
+            Mock(
+                sigle='BARBAZ',
+                intitule_fr='Barbaz',
+                intitule_en='Barbaz',
+                annee=2021,
+                sigle_entite_gestion="AZERT",
+                links=[],
+            ),
         ]
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -247,6 +263,7 @@ class ProjectViewTestCase(TestCase):
             type_contrat_travail="Something",
             code_secteur_formation="SST",
             institut_these=self.mock_entities[0].uuid,
+            links={},
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -258,6 +275,7 @@ class ProjectViewTestCase(TestCase):
         self.client.force_login(self.person.user)
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             statut=ChoixStatusProposition.IN_PROGRESS.name,
+            links={},
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
