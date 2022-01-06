@@ -581,6 +581,9 @@ msgstr ""
 msgid "No I don't have a high school diploma"
 msgstr ""
 
+msgid "No comment"
+msgstr ""
+
 msgid "No cotutelle"
 msgstr ""
 
@@ -728,6 +731,9 @@ msgid "Promoters"
 msgstr ""
 
 msgid "Proof of identity"
+msgstr ""
+
+msgid "Proposition approval"
 msgstr ""
 
 msgid "Public defense"

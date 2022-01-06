@@ -362,6 +362,9 @@ msgstr ""
 msgid "Email"
 msgstr "E-mail"
 
+msgid "External comment"
+msgstr "Commentaire externe"
+
 msgid "English"
 msgstr "Anglais"
 
@@ -613,6 +616,9 @@ msgstr "Non"
 msgid "No I don't have a high school diploma"
 msgstr "Non je n'ai pas de diplôme de fin d'études secondaires"
 
+msgid "No comment"
+msgstr "Pas de commentaire"
+
 msgid "No cotutelle"
 msgstr "Pas de cotutelle"
 
@@ -764,6 +770,9 @@ msgstr "Promoteurs"
 
 msgid "Proof of identity"
 msgstr "Pièce d'identité"
+
+msgid "Proposition approval"
+msgstr "Approbation de la proposition"
 
 msgid "Public defense"
 msgstr "Soutenance publique"
