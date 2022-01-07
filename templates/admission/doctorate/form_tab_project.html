@@ -61,9 +61,14 @@
                 {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
             {% endif %}
         {% endif %}
-        <div class="row" id="bureau">
+        <div class="row" id="commission_proximite_cde">
             <div class="col-md-4">
-                {% bootstrap_field form.bureau_cde %}
+                {% bootstrap_field form.commission_proximite_cde %}
+            </div>
+        </div>
+        <div class="row" id="commission_proximite_cdss">
+            <div class="col-md-4">
+                {% bootstrap_field form.commission_proximite_cdss %}
             </div>
         </div>
     {% endpanel %}
@@ -169,8 +174,8 @@
                 var initialData = false;
             {% endif %}
 
-            // Bureau depends on doctorate
-            $('#bureau').dependsOn({
+            // proximity commission depends on doctorate
+            $('#commission_proximite_cde').dependsOn({
                 '#id_doctorate': {
                     changed: function () {
                         var $doctorate = $('#id_doctorate');
@@ -186,7 +191,25 @@
                     },
                 },
             }, { valueOnDisable: '' });
+
+            $('#commission_proximite_cdss').dependsOn({
+                '#id_doctorate': {
+                    changed: function () {
+                        var $doctorate = $('#id_doctorate');
+                        if ($doctorate.hasClass('select2-hidden-accessible')) {
+                            var data = $doctorate.select2('data')
+                            if (initialData && data[0].id === initialData.id) {
+                                data = [initialData];
+                            }
+                            if (data.length && data[0].sigle_entite_gestion === 'CDSS') {
+                                return true;
+                            }
+                        }
+                    },
+                },
+            }, { valueOnDisable: '' });
         {% endif %}
+
         $('#work').dependsOn({
             '#id_type_financement': { values: ['WORK_CONTRACT'] },
         }, { valueOnDisable: '' });

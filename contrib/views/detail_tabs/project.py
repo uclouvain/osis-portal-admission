@@ -29,6 +29,7 @@ from django.utils.translation import get_language
 from django.views.generic import TemplateView
 from django.utils.translation import gettext_lazy as _
 
+from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.proposition import AdmissionPropositionService
 
@@ -51,4 +52,9 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
             getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
             if s.sigle == context_data['admission'].code_secteur_formation
         ][0]
+        commission_proximite = context_data['admission'].commission_proximite
+        if commission_proximite in ChoixProximityCommissionCDE.get_names():
+            context_data['commission_proximite_cde'] = commission_proximite
+        if commission_proximite in ChoixProximityCommissionCDSS.get_names():
+            context_data['commission_proximite_cdss'] = commission_proximite
         return context_data

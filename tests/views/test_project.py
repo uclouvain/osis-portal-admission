@@ -99,7 +99,7 @@ class ProjectViewTestCase(TestCase):
             'doctorate': 'FOOBAR-2021',
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, 'form', 'bureau_cde', _("This field is required."))
+        self.assertFormError(response, 'form', 'commission_proximite_cde', _("This field is required."))
 
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,

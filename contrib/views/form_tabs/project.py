@@ -42,7 +42,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',
-        PropositionBusinessException.BureauCDEInconsistantException: 'bureau_cde',
+        PropositionBusinessException.ProximityCommissionInconsistantException: 'doctorate',
         PropositionBusinessException.ContratTravailInconsistantException: 'type_contrat_travail',
         PropositionBusinessException.DoctoratNonTrouveException: 'doctorate',
         PropositionBusinessException.InstitutionInconsistanteException: 'institution',
@@ -97,11 +97,19 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             else data['type_contrat_travail']
         )
         data['bourse_recherche'] = (
-            data['bourse_recherche_other'] if data['bourse_recherche'] == BourseRecherche.OTHER.name
+            data['bourse_recherche_other']
+            if data['bourse_recherche'] == BourseRecherche.OTHER.name
             else data['bourse_recherche']
+        )
+        data['commission_proximite'] = (
+            data.get('commission_proximite_cde')
+            if data.get('commission_proximite_cde') != ''
+            else data.get('commission_proximite_cdss')
         )
         data.pop('type_contrat_travail_other')
         data.pop('bourse_recherche_other')
+        data.pop('commission_proximite_cde')
+        data.pop('commission_proximite_cdss')
 
         return data
 
