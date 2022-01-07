@@ -32,7 +32,7 @@
             <form class="osis-form approval-form" method="post" action="">
                 {% csrf_token %}
                 {% bootstrap_field form.decision %}
-                {% bootstrap_field form.reason %}
+                {% bootstrap_field form.rejection_reason %}
                 <div class="row">
                     <div class="col-md-6">
                         {% bootstrap_field form.internal_comment %}
@@ -109,7 +109,7 @@
     <script type="application/javascript">
     $(function () {
         // Hide the reason input if the the promoter approves the proposition
-        $('#id_reason').dependsOn({
+        $('#id_rejection_reason').dependsOn({
             'input[name="decision"]': {
                 values: ['REJECTED'],
             }

@@ -28,6 +28,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.actor import ActorType
+from admission.contrib.enums.supervision import DecisionApprovalEnum
 
 
 class DoctorateAdmissionSupervisionForm(forms.Form):
@@ -62,15 +63,12 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
 class DoctorateAdmissionApprovalForm(forms.Form):
     decision = forms.ChoiceField(
         label=_("Decision"),
-        choices=[
-            ('APPROVED', _('Approved')),
-            ('REJECTED', _('Rejected')),
-        ],
+        choices=DecisionApprovalEnum.choices(),
         widget=forms.RadioSelect,
         required=True,
     )
-    reason = forms.CharField(
-        label=_('Reason'),
+    rejection_reason = forms.CharField(
+        label=_('Rejection reason'),
         required=False,
         max_length=50,
     )
@@ -98,8 +96,8 @@ class DoctorateAdmissionApprovalForm(forms.Form):
     def clean(self):
         data = super().clean()
         # The reason is useful only if the admission is not approved
-        if data['decision'] == 'APPROVED' and data['reason']:
-            data['reason'] = ''
+        if data['decision'] == DecisionApprovalEnum.APPROVED.name and data['rejection_reason']:
+            data['rejection_reason'] = ''
 
     class Media:
         js = ('dependsOn.min.js',)

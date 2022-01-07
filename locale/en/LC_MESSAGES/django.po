@@ -742,7 +742,7 @@ msgstr ""
 msgid "Qualification method"
 msgstr ""
 
-msgid "Reason"
+msgid "Rejection reason"
 msgstr ""
 
 msgid "REFUSED"

@@ -26,6 +26,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView
 
+from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
@@ -50,7 +51,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
 
     def call_webservice(self, data):
         decision = data.pop('decision')
-        if decision == 'APPROVED':
+        if decision == DecisionApprovalEnum.APPROVED.name:
             return AdmissionSupervisionService.approve_proposition(
                 person=self.person,
                 uuid=self.kwargs['pk'],

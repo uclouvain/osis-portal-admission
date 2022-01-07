@@ -780,8 +780,8 @@ msgstr "Soutenance publique"
 msgid "Qualification method"
 msgstr "Technique de qualification"
 
-msgid "Reason"
-msgstr "Raison"
+msgid "Rejection reason"
+msgstr "Motif de refus"
 
 msgid "REFUSED"
 msgstr "Refusé"
