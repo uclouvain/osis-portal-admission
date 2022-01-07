@@ -42,8 +42,8 @@ __all__ = [
     "LanguageAutocomplete",
     "TutorAutocomplete",
     "PersonAutocomplete",
-    "EntityAutocomplete",
-    "EntityPlaceAutocomplete",
+    "InstituteAutocomplete",
+    "InstituteLocationAutocomplete",
 ]
 
 
@@ -142,7 +142,7 @@ class PersonAutocomplete(TutorAutocomplete):
         )
 
 
-class EntityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class InstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
         # Return a list of UCL institutes whose title / acronym is specified by the user
         return EntitiesService.get_entities(
@@ -165,7 +165,7 @@ class EntityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         ) for entity in results]
 
 
-class EntityPlaceAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
         # Return a list of addresses related to the thesis institute, if defined
         if not self.forwarded['institut_these']:
