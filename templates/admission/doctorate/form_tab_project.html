@@ -184,7 +184,7 @@
                             if (initialData && data[0].id === initialData.id) {
                                 data = [initialData];
                             }
-                            if (data.length && data[0].sigle_entite_gestion === 'CDE') {
+                            if (data.length && ['CDE', 'CLSM'].includes(data[0].sigle_entite_gestion)) {
                                 return true;
                             }
                         }
