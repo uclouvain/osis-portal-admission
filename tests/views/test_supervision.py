@@ -27,9 +27,10 @@ from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
+from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
-from admission.contrib.enums.actor import ActorType
+from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from base.tests.factories.person import PersonFactory
 from osis_admission_sdk import ApiException
 
@@ -46,20 +47,43 @@ class SupervisionTestCase(TestCase):
         api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_api = api_patcher.start()
         self.addCleanup(api_patcher.stop)
+        self.mock_api.return_value.retrieve_proposition.return_value = Mock(
+            code_secteur_formation="SSH",
+            documents_projet=[],
+            graphe_gantt=[],
+            proposition_programme_doctoral=[],
+            projet_formation_complementaire=[],
+            lettres_recommandation=[],
+            links={
+                'add_approval': {
+                    'url': 'some_url',
+                    'method': 'POST',
+                },
+            },
+        )
 
         self.mock_api.return_value.retrieve_supervision.return_value = Mock(
-            signatures_promoteurs=[Mock(promoteur=Mock(
-                matricule="0123456978",
-                prenom="Marie-Odile",
-                nom="Troufignon",
-            ))],
+            signatures_promoteurs=[Mock(
+                promoteur=Mock(
+                    matricule="0123456978",
+                    prenom="Marie-Odile",
+                    nom="Troufignon",
+                ),
+                status=ChoixEtatSignature.APPROVED.name,
+                commentaire_externe="A public comment to display",
+            )],
             signatures_membres_ca=[],
         )
 
     def test_should_detail_supervision_member(self):
         url = resolve_url("admission:doctorate-detail:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
+        # Display the signature
         self.assertContains(response, "Troufignon")
+        self.assertContains(response, _(ChoixEtatSignature.APPROVED.name))
+        self.assertContains(response, "A public comment to display")
+        # Display the proposition approval panel
+        self.assertContains(response, _("Proposition approval"))
         self.mock_api.return_value.retrieve_supervision.assert_called()
 
     def test_should_add_supervision_member(self):

@@ -61,3 +61,14 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
                     "matricule": self.person.global_id
                 },
             )
+        else:
+            return AdmissionSupervisionService.reject_proposition(
+                person=self.person,
+                uuid=self.kwargs['pk'],
+                refuser_proposition_command={
+                    "commentaire_interne": data['internal_comment'],
+                    "commentaire_externe": data['comment'],
+                    "matricule": self.person.global_id,
+                    "motif_refus": data['rejection_reason'],
+                },
+            )
