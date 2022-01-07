@@ -31,7 +31,7 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
 from admission.services.autocomplete import AdmissionAutocompleteService
-from admission.services.organization import EntitiesService
+from admission.services.organisation import EntitiesService
 from admission.services.proposition import AdmissionPropositionService
 from admission.utils.utils import format_entity_title
 
@@ -65,6 +65,7 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
         if context_data['admission'].institut_these:
             institute = EntitiesService.get_entity(
                 person=self.request.user.person,
+                organisation_code='UCL',
                 uuid=context_data['admission'].institut_these
             )
             context_data['admission'].institut_these = format_entity_title(institute)

@@ -30,7 +30,7 @@ from django.conf import settings
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
-from admission.services.organization import EntitiesService
+from admission.services.organisation import EntitiesService
 from admission.services.reference import CountriesService, LanguageService
 from admission.utils import format_entity_title
 
@@ -61,7 +61,7 @@ def get_thesis_institute_initial_choices(uuid, person):
     """Return the unique initial choice for an institute when data is either set from initial or webservice."""
     if not uuid:
         return EMPTY_CHOICE
-    institute = EntitiesService.get_entity(person=person, uuid=uuid)
+    institute = EntitiesService.get_entity(person=person, organisation_code='UCL', uuid=uuid)
     return EMPTY_CHOICE + (
         (institute.uuid, format_entity_title(entity=institute)),
     )

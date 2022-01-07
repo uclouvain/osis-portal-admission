@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 # ##############################################################################
 from osis_organisation_sdk import ApiClient
 from osis_organisation_sdk.api import entites_api
-from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 
 from frontoffice.settings.osis_sdk import organisation as organisation_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
@@ -49,10 +48,10 @@ class EntitiesService:
         ).results
 
     @classmethod
-    def get_entity(cls, person, uuid, *args, **kwargs):
+    def get_entity(cls, person, organisation_code, uuid, *args, **kwargs):
         return EntitiesAPIClient().get_entity(
             uuid=uuid,
-            organisation_code='UCL',
+            organisation_code=organisation_code,
             *args,
             **kwargs,
             **build_mandatory_auth_headers(person),

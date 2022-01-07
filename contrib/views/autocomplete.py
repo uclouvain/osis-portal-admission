@@ -31,7 +31,7 @@ from django.utils.translation import get_language
 from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 
 from admission.services.autocomplete import AdmissionAutocompleteService
-from admission.services.organization import EntitiesService
+from admission.services.organisation import EntitiesService
 from admission.services.reference import CitiesService, CountriesService, LanguageService
 from admission.utils import format_entity_title, format_entity_address
 
