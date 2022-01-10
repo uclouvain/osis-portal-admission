@@ -147,6 +147,13 @@ class AdmissionSupervisionService:
         return AdmissionPropositionAPIClient().retrieve_supervision(uuid=uuid, **build_mandatory_auth_headers(person))
 
     @classmethod
+    def get_signature_conditions(cls, person, uuid) -> SupervisionDTO:
+        return AdmissionPropositionAPIClient().retrieve_verify_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     @api_exception_handler(api_exception_cls=ApiException)
     def add_member(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().add_member(

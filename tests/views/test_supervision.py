@@ -58,7 +58,7 @@ class SupervisionTestCase(TestCase):
 
     def test_should_detail_supervision_member(self):
         url = resolve_url("admission:doctorate-detail:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        response = self.client.get(url)
+        response = self.client.get(url, follow=True)
         self.assertContains(response, "Troufignon")
         self.mock_api.return_value.retrieve_supervision.assert_called()
 
