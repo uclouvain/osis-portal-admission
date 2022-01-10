@@ -36,7 +36,6 @@ from admission.services.proposition import AdmissionPropositionService
 
 
 class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, SuccessMessageMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/request_signatures.html"
     form_class = Form
     success_message = _("Signatures requests sent")
 
@@ -50,7 +49,6 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, SuccessMessage
             "uuid": str(self.kwargs['pk']),
         }
         context_data["admission"] = AdmissionPropositionService.get_proposition(**service_kwargs)
-        context_data["errors"] = AdmissionPropositionService.verify_proposition(**service_kwargs)
 
     def form_invalid(self, form):
         return JsonResponse({

@@ -23,12 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import uuid
 from unittest.mock import patch
 
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
+from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from base.tests.factories.person import PersonFactory
@@ -113,3 +112,11 @@ class CotutelleTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         last_call_kwargs = self.mock_api.return_value.update_cotutelle.call_args[1]
         self.assertEqual(last_call_kwargs['definir_cotutelle_command']['motivation'], "")
+
+    def test_cotutelle_update_missing_data(self):
+        response = self.client.post(self.url, {
+            "cotutelle": "YES",
+            "motivation": "Barbaz",
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'institution', _("This field is required."))

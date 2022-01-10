@@ -27,6 +27,7 @@ from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
+from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.contrib.enums.actor import ActorType
@@ -126,3 +127,14 @@ class SupervisionTestCase(TestCase):
         response = self.client.get(url, {})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.mock_api.return_value.remove_member.assert_not_called()
+
+    def test_should_not_display_confirmation_if_errors(self):
+        url = resolve_url("admission:doctorate-update:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_api.return_value.retrieve_verify_proposition.return_value = [
+            {'detail': "Nope"}
+        ]
+        response = self.client.get(url, {})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mock_api.return_value.retrieve_verify_proposition.assert_called()
+        self.assertNotContains(response, _("Are you sure you want to request signatures for this admission?"))
+        self.assertContains(response, "Nope")
