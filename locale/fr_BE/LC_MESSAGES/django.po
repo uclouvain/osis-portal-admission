@@ -43,6 +43,15 @@ msgstr ""
 
 msgid ""
 "\n"
+"            Lorem impsum for supervision\n"
+"        "
+msgstr ""
+"\n"
+"            Lorem impsum for supervision\n"
+"        "
+
+msgid ""
+"\n"
 "            The online enrolment request procedure is split up into several\n"
 "            sheet. The enrolment request can only be validated as soon as "
 "all\n"
@@ -119,6 +128,9 @@ msgstr "ARES - Coopération au développement"
 msgid "Academic graduation year"
 msgstr "Année d'obtention du diplôme universitaire"
 
+msgid "Add"
+msgstr "Ajouter"
+
 msgid "Add a language"
 msgstr "Ajouter une langue"
 
@@ -163,9 +175,6 @@ msgstr "B1"
 
 msgid "B2"
 msgstr "B2"
-
-msgid "Back to my request"
-msgstr "Retourner sur ma demande"
 
 msgid "Back to my requests"
 msgstr "Retour à mes demandes"
@@ -706,6 +715,9 @@ msgstr "Physique"
 msgid "Place"
 msgstr "Lieu-dit"
 
+msgid "Please correct the errors first"
+msgstr "Veuillez d'abord corriger les erreurs"
+
 msgid "Please mention the academic graduation year"
 msgstr "Veuillez indiquer l'année académique d'obtention"
 
@@ -972,11 +984,6 @@ msgstr "Oui"
 
 msgid "Yes I have a high school diploma"
 msgstr "Oui j'ai déjà un diplôme de fin d'études secondaires"
-
-msgid "You aren't allowed to add a new member to the supervision group."
-msgstr ""
-"Vous n'êtes pas autorisé à ajouter un nouveau membre au groupe de "
-"supervision."
 
 msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""

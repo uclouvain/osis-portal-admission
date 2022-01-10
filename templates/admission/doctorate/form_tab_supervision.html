@@ -52,6 +52,8 @@
         </div>
     </div>
 
+    {% include "template_messages.html" %}
+
     <p><em>
         {% blocktrans %}
             Lorem impsum for supervision
@@ -105,21 +107,23 @@
                 </form>
             {% endif %}
 
-            <!-- Button trigger modal -->
-            <div class="text-center">
+            {% if admission|can_make_action:'request_signatures' %}
+                <!-- Button trigger modal -->
+                <div class="text-center">
 
-                <button
-                    type="button"
-                    class="btn btn-success btn-lg"
-                    data-toggle="modal"
-                    data-target="#request-signatures-modal"
-                >
-                    {% trans "Request signatures" %}
-                </button>
-            </div>
+                    <button
+                        type="button"
+                        class="btn btn-success btn-lg"
+                        data-toggle="modal"
+                        data-target="#request-signatures-modal"
+                    >
+                        {% trans "Request signatures" %}
+                    </button>
+                </div>
 
 
-            {% include "admission/doctorate/includes/request_signature_modal.html" %}
+                {% include "admission/doctorate/includes/request_signature_modal.html" %}
+            {% endif %}
 
         </div>
     </div>

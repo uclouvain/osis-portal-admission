@@ -35,6 +35,7 @@ from rest_framework import status
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.enums.projet import ChoixStatusProposition
+from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
@@ -87,23 +88,6 @@ class ProjectViewTestCase(TestCase):
         ]
         self.addCleanup(autocomplete_api_patcher.stop)
 
-        # Mock organization sdk api
-        organization_api_patcher = patch("osis_organisation_sdk.api.entites_api.EntitesApi")
-        self.mock_organization_api = organization_api_patcher.start()
-        self.mock_organization_api.return_value.get_entities.return_value = PaginatedEntites(
-            results=self.mock_entities,
-        )
-        self.mock_organization_api.return_value.get_entity.return_value = self.mock_entities[0]
-        self.addCleanup(organization_api_patcher.stop)
-
-        # Mock reference sdk api
-        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
-        self.mock_countries_api = countries_api_patcher.start()
-        self.addCleanup(countries_api_patcher.stop)
-
-    def test_create(self):
-        url = resolve_url('admission:doctorate-create:project')
-        self.client.force_login(self.person.user)
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
             Mock(
                 sigle='FOOBAR',
@@ -130,6 +114,24 @@ class ProjectViewTestCase(TestCase):
                 links=[],
             ),
         ]
+        self.addCleanup(autocomplete_api_patcher.stop)
+
+        # Mock organization sdk api
+        organization_api_patcher = patch("osis_organisation_sdk.api.entites_api.EntitesApi")
+        self.mock_organization_api = organization_api_patcher.start()
+        self.mock_organization_api.return_value.get_entities.return_value = PaginatedEntites(
+            results=self.mock_entities,
+        )
+        self.mock_organization_api.return_value.get_entity.return_value = self.mock_entities[0]
+        self.addCleanup(organization_api_patcher.stop)
+
+        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
+        self.mock_countries_api = countries_api_patcher.start()
+        self.addCleanup(countries_api_patcher.stop)
+
+    def test_create(self):
+        url = resolve_url('admission:doctorate-create:project')
+        self.client.force_login(self.person.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'SSH')
@@ -181,16 +183,24 @@ class ProjectViewTestCase(TestCase):
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBAR'
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.annee_doctorat = '2021'
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.code_secteur_formation = 'SSH'
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
-            'code_secteur_formation': "SST",
+            'code_secteur_formation': "SSH",
             'type_contrat_travail': "Something",
+            "commission_proximite": ChoixProximityCommissionCDE.ECONOMY.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBARBAZ'
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
-            'code_secteur_formation': "SST",
-            'bourse_recherche': "Something other"
+            'code_secteur_formation': "SSH",
+            'sigle_doctorat': 'FOOBARBAZ',
+            'annee_doctorat': '2021',
+            'bourse_recherche': "Something other",
+            "commission_proximite": ChoixProximityCommissionCDSS.ECLI.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

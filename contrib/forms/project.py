@@ -200,7 +200,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         js = ('dependsOn.min.js',)
 
     def __init__(self, hide_proximity_commission_fields=True, *args, **kwargs):
-        self.person = kwargs.pop('person', None)
+        self.person = getattr(self, 'person', kwargs.pop('person', None))
         super().__init__(*args, **kwargs)
         # Set type_contrat_travail to OTHER if value is not from enum
         if (
@@ -222,10 +222,10 @@ class DoctorateAdmissionProjectForm(forms.Form):
         if self.initial.get('commission_proximite'):
             sigle_entite_gestion = self.get_selected_doctorate(
                 self.initial.get('sector'), self.initial.get('doctorate'),
-            )['sigle_entite_gestion']
+            ).sigle_entite_gestion
             if sigle_entite_gestion in ['CDE', 'CLSM']:
                 self.initial['commission_proximite_cde'] = self.initial['commission_proximite']
-            elif sigle_entite_gestion == 'CDSS':
+            elif sigle_entite_gestion == 'CDSS':  # pragma: no branch
                 self.initial['commission_proximite_cdss'] = self.initial['commission_proximite']
 
         # Hide proximity commission fields

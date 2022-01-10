@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import Form
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
 from django.views.generic import FormView
@@ -42,19 +43,9 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, SuccessMessage
     def call_webservice(self, data):
         AdmissionPropositionService.request_signatures(person=self.person, uuid=str(self.kwargs.get('pk')))
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        service_kwargs = {
-            "person": self.person,
-            "uuid": str(self.kwargs['pk']),
-        }
-        context_data["admission"] = AdmissionPropositionService.get_proposition(**service_kwargs)
-
     def form_invalid(self, form):
-        return JsonResponse({
-            "success": False,
-            "errors": dict(form.errors),
-        })
+        messages.error(self.request, _("Please correct the errors first"))
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return resolve_url("admission:doctorate-list")
+        return resolve_url("admission:doctorate-update:supervision", pk=self.kwargs.get('pk'))
