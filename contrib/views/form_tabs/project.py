@@ -139,8 +139,3 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 if s.sigle == self.proposition.code_secteur_formation
             ][0]
         return context
-
-    def get_success_url(self):
-        if hasattr(self, 'response'):
-            return resolve_url('admission:doctorate-detail:project', pk=self.response.uuid)
-        return super().get_success_url()

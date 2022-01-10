@@ -83,6 +83,7 @@ class ProjectViewTestCase(TestCase):
         self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = [
             Mock(sigle='SSH', intitule_fr='Foobar', intitule_en='Foobar'),
             Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
+            Mock(sigle='SSS', intitule_fr='Foobarbaz', intitule_en='Foobarbaz'),
         ]
         self.addCleanup(autocomplete_api_patcher.stop)
 
@@ -113,6 +114,14 @@ class ProjectViewTestCase(TestCase):
                 links=[],
             ),
             Mock(
+                sigle='FOOBARBAZ',
+                intitule_fr='Foobarbaz',
+                intitule_en='Foobarbaz',
+                annee=2021,
+                sigle_entite_gestion="CDSS",
+                links=[],
+            ),
+            Mock(
                 sigle='BARBAZ',
                 intitule_fr='Barbaz',
                 intitule_en='Barbaz',
@@ -132,6 +141,13 @@ class ProjectViewTestCase(TestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'commission_proximite_cde', _("This field is required."))
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sector': 'SSH',
+            'doctorate': 'FOOBARBAZ-2021',
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'commission_proximite_cdss', _("This field is required."))
 
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
@@ -259,7 +275,8 @@ class ProjectViewTestCase(TestCase):
             langue_redaction_these="",
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
             type_contrat_travail="Something",
-            code_secteur_formation="SST",
+            code_secteur_formation="SSH",
+            commission_proximite="ECONOMY",
             institut_these=self.mock_entities[0].uuid,
             links={},
         )
@@ -267,6 +284,17 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Something")
         self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
+        self.assertContains(response, _("ECONOMY"))
+
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            langue_redaction_these="",
+            code_secteur_formation="SSS",
+            commission_proximite="ECLI",
+            links={},
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Proximity commission for experimental and clinical research (ECLI)"))
 
     def test_cancel(self):
         url = resolve_url('admission:doctorate-cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
