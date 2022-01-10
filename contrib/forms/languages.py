@@ -50,7 +50,10 @@ class SliderWidget(forms.widgets.TextInput):
         super().__init__(attrs)
 
     def value_from_datadict(self, data, files, name):
-        return self.choices[int(data.get(name)) - 1][0]
+        value = data.get(name)
+        if value is None:
+            return value
+        return self.choices[int(value) - 1][0]
 
     def format_value(self, value):
         if value:
@@ -120,8 +123,6 @@ class DoctorateAdmissionLanguagesBaseFormset(forms.BaseFormSet):
             raise ValidationError(_("You cannot fill in a language more than once, please correct the form."))
 
     def __init__(self, *args, initial=None, **kwargs):
-        if initial is None:
-            initial = list()
         for mandatory_language in MANDATORY_LANGUAGES:
             if mandatory_language not in [initial_form_data.get("language") for initial_form_data in initial]:
                 initial.insert(0, {"language": mandatory_language})  # always add mandatory languages
