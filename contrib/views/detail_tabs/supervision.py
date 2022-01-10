@@ -50,8 +50,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
         return context_data
 
     def call_webservice(self, data):
-        decision = data.pop('decision')
-        if decision == DecisionApprovalEnum.APPROVED.name:
+        if data['decision'] == DecisionApprovalEnum.APPROVED.name:
             return AdmissionSupervisionService.approve_proposition(
                 person=self.person,
                 uuid=self.kwargs['pk'],
