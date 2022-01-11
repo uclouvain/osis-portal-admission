@@ -658,6 +658,9 @@ msgstr ""
 "vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
 "obligatoire (11 chiffres sans espace, ni tiret, ni point (Ex:79682312345))."
 
+msgid "Only to provide if the address is not available in the previous field."
+msgstr "À ne spécifier que si l'adresse n'est pas disponible dans le champ précédent."
+
 msgid "Opening request"
 msgstr "Demande d'ouverture"
 
@@ -678,6 +681,9 @@ msgstr "Autre régime linguistique"
 
 msgid "Other names"
 msgstr "Autres prénoms"
+
+msgid "Other thesis location"
+msgstr "Autre lieu de la thèse"
 
 msgid "Others"
 msgstr "Autres"

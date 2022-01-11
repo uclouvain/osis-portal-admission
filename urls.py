@@ -89,6 +89,8 @@ urlpatterns = [
             path("country/", views.CountryAutocomplete.as_view(), name="country"),
             path("city/", views.CityAutocomplete.as_view(), name="city"),
             path("language/", views.LanguageAutocomplete.as_view(), name="language"),
+            path("entity/", views.InstituteAutocomplete.as_view(), name="entity"),
+            path("entity-place/", views.InstituteLocationAutocomplete.as_view(), name="entity-place"),
         ],
         "autocomplete",
     ))),

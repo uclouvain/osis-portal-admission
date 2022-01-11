@@ -37,7 +37,8 @@ from admission.contrib.enums.financement import (
     ChoixTypeFinancement,
 )
 from admission.contrib.enums.projet import ChoixLangueRedactionThese
-from admission.contrib.forms import CustomDateInput, EMPTY_CHOICE
+from admission.contrib.forms import CustomDateInput, EMPTY_CHOICE, get_thesis_institute_initial_choices, \
+    get_thesis_location_initial_choices
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
 
@@ -117,13 +118,29 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     institut_these = forms.CharField(
         label=_("Thesis institute"),
-        # TODO autocomplete when available
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:entity",
+            attrs={
+                'data-minimum-input-length': 3,
+            },
+        ),
         required=False,
     )
     lieu_these = forms.CharField(
         label=_("Thesis location"),
-        # TODO autocomplete when available
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:entity-place",
+            forward=['institut_these'],
+            attrs={
+                'data-minimum-results-for-search': 'Infinity',  # Hide the search box
+            },
+        ),
         required=False,
+    )
+    autre_lieu_these = forms.CharField(
+        label=_("Other thesis location"),
+        required=False,
+        help_text=_("Only to provide if the address is not available in the previous field."),
     )
     resume_projet = forms.CharField(
         label=_("Project resume"),
@@ -183,7 +200,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         js = ('dependsOn.min.js',)
 
     def __init__(self, hide_proximity_commission_fields=True, *args, **kwargs):
-        kwargs.pop('person', None)
+        person = kwargs.pop('person', None)
         super().__init__(*args, **kwargs)
         # Set type_contrat_travail to OTHER if value is not from enum
         if (
@@ -205,6 +222,19 @@ class DoctorateAdmissionProjectForm(forms.Form):
         if hide_proximity_commission_fields:
             self.fields['commission_proximite_cde'].widget = forms.HiddenInput()
             self.fields['commission_proximite_cdss'].widget = forms.HiddenInput()
+
+        # Add the specified institute in the choices of the related field
+        if self.initial.get('institut_these'):
+            self.fields['institut_these'].widget.choices = get_thesis_institute_initial_choices(
+                self.data.get(self.add_prefix("institut_these"), self.initial.get("institut_these")),
+                person
+            )
+
+        # Add the specified thesis position in the choices of the related field
+        if self.initial.get('lieu_these'):
+            self.fields['lieu_these'].widget.choices = get_thesis_location_initial_choices(
+                self.data.get(self.add_prefix("lieu_these"), self.initial.get("lieu_these")),
+            )
 
     def clean(self):
         data = super().clean()

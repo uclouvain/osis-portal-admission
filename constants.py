@@ -59,3 +59,5 @@ UPDATE_ACTIONS_BY_TAB = {
     'public-defense': '',
     'messages': '',
 }
+
+UCL_CODE = 'UCL'

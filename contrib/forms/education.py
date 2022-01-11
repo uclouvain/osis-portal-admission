@@ -140,7 +140,6 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         ),
         required=False,
     )
-    # TODO institute & other_institute
     institute = forms.CharField(label=_("Institute"), required=False)
     other_institute = forms.CharField(
         label=_("If you cannot find your institute, please clarify below"),
