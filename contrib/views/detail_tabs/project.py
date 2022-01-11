@@ -63,9 +63,8 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
 
         # Replace the institute uuid with the formatted name
         if context_data['admission'].institut_these:
-            institute = EntitiesService.get_entity(
+            institute = EntitiesService.get_ucl_entity(
                 person=self.request.user.person,
-                organisation_code='UCL',
                 uuid=context_data['admission'].institut_these
             )
             context_data['admission'].institut_these = format_entity_title(institute)

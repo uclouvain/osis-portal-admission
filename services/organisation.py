@@ -26,6 +26,7 @@
 from osis_organisation_sdk import ApiClient
 from osis_organisation_sdk.api import entites_api
 
+from admission.constants import UCL_CODE
 from frontoffice.settings.osis_sdk import organisation as organisation_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
@@ -38,33 +39,33 @@ class EntitiesAPIClient:
 
 class EntitiesService:
     @classmethod
-    def get_entities(cls, person, organisation_code, entity_type, *args, **kwargs):
+    def get_ucl_entities(cls, person, entity_type, *args, **kwargs):
         return EntitiesAPIClient().get_entities(
             entity_type=entity_type,
-            organisation_code=organisation_code,
+            organisation_code=UCL_CODE,
             *args,
             **kwargs,
             **build_mandatory_auth_headers(person),
         ).results
 
     @classmethod
-    def get_entity(cls, person, organisation_code, uuid, *args, **kwargs):
+    def get_ucl_entity(cls, person, uuid, *args, **kwargs):
         return EntitiesAPIClient().get_entity(
             uuid=uuid,
-            organisation_code=organisation_code,
+            organisation_code=UCL_CODE,
             *args,
             **kwargs,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def get_entity_addresses(cls, person, organisation_code, uuid, *args, **kwargs):
+    def get_ucl_entity_addresses(cls, person, uuid, *args, **kwargs):
         has_next = True
         offset = 0
         results = []
         while has_next:
             paginated_results = EntitiesAPIClient().get_entity_addresses(
-                organisation_code=organisation_code,
+                organisation_code=UCL_CODE,
                 uuid=uuid,
                 offset=offset,
                 *args,

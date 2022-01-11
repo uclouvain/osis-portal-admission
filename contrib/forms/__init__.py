@@ -61,7 +61,7 @@ def get_thesis_institute_initial_choices(uuid, person):
     """Return the unique initial choice for an institute when data is either set from initial or webservice."""
     if not uuid:
         return EMPTY_CHOICE
-    institute = EntitiesService.get_entity(person=person, organisation_code='UCL', uuid=uuid)
+    institute = EntitiesService.get_ucl_entity(person=person, uuid=uuid)
     return EMPTY_CHOICE + (
         (institute.uuid, format_entity_title(entity=institute)),
     )

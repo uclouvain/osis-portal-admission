@@ -46,6 +46,8 @@ __all__ = [
     "InstituteLocationAutocomplete",
 ]
 
+from base.models.enums.entity_type import INSTITUTE
+
 
 class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
@@ -145,12 +147,11 @@ class PersonAutocomplete(TutorAutocomplete):
 class InstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
         # Return a list of UCL institutes whose title / acronym is specified by the user
-        return EntitiesService.get_entities(
+        return EntitiesService.get_ucl_entities(
             limit=10,
             person=self.request.user.person,
-            organisation_code='UCL',
             entity_type=[
-                EntiteTypeEnum('INSTITUTE'),
+                EntiteTypeEnum(INSTITUTE),
             ],
             search=self.q,
         )
@@ -171,9 +172,8 @@ class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2List
         if not self.forwarded['institut_these']:
             return []
         else:
-            return EntitiesService.get_entity_addresses(
+            return EntitiesService.get_ucl_entity_addresses(
                 person=self.request.user.person,
-                organisation_code='UCL',
                 uuid=self.forwarded['institut_these'],
             )
 
