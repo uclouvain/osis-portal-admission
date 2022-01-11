@@ -177,9 +177,6 @@ class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2List
                 uuid=self.forwarded['institut_these'],
             )
 
-    def autocomplete_results(self, results):
-        return results
-
     def results(self, results):
         formatted_results = []
         for address in results:

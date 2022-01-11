@@ -119,7 +119,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     institut_these = forms.CharField(
         label=_("Thesis institute"),
         widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:entity",
+            url="admission:autocomplete:institute",
             attrs={
                 'data-minimum-input-length': 3,
             },
@@ -129,7 +129,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     lieu_these = forms.CharField(
         label=_("Thesis location"),
         widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:entity-place",
+            url="admission:autocomplete:institute-location",
             forward=['institut_these'],
             attrs={
                 'data-minimum-results-for-search': 'Infinity',  # Hide the search box
@@ -224,17 +224,15 @@ class DoctorateAdmissionProjectForm(forms.Form):
             self.fields['commission_proximite_cdss'].widget = forms.HiddenInput()
 
         # Add the specified institute in the choices of the related field
-        if self.initial.get('institut_these'):
-            self.fields['institut_these'].widget.choices = get_thesis_institute_initial_choices(
-                self.data.get(self.add_prefix("institut_these"), self.initial.get("institut_these")),
-                person
-            )
+        self.fields['institut_these'].widget.choices = get_thesis_institute_initial_choices(
+            self.data.get(self.add_prefix("institut_these"), self.initial.get("institut_these")),
+            person
+        )
 
         # Add the specified thesis position in the choices of the related field
-        if self.initial.get('lieu_these'):
-            self.fields['lieu_these'].widget.choices = get_thesis_location_initial_choices(
-                self.data.get(self.add_prefix("lieu_these"), self.initial.get("lieu_these")),
-            )
+        self.fields['lieu_these'].widget.choices = get_thesis_location_initial_choices(
+            self.data.get(self.add_prefix("lieu_these"), self.initial.get("lieu_these")),
+        )
 
     def clean(self):
         data = super().clean()
