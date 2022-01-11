@@ -51,8 +51,9 @@
             {% elif admission.type_financement == "SEARCH_SCHOLARSHIP" %}
                 {% field_data _("Scholarship") admission.bourse_recherche|enum_display:'BourseRecherche' %}
             {% endif %}
-            {% field_data _("Thesis institute") admission.institut_these %}
+            {% field_data _("Thesis institute") admission.institut_these|default_if_none:'' %}
             {% field_data _("Thesis location") admission.lieu_these %}
+            {% field_data _("Other thesis location") admission.autre_lieu_these %}
             {% field_data _("Estimated time to complete the doctorate (in months)") admission.duree_prevue|default_if_none:'' %}
             {% field_data _("Allocated time for the thesis (in EFT)") admission.temps_consacre|default_if_none:'' %}
         {% endif %}
