@@ -86,8 +86,6 @@ class ProjectViewTestCase(TestCase):
             Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
             Mock(sigle='SSS', intitule_fr='Foobarbaz', intitule_en='Foobarbaz'),
         ]
-        self.addCleanup(autocomplete_api_patcher.stop)
-
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
             Mock(
                 sigle='FOOBAR',
@@ -129,9 +127,10 @@ class ProjectViewTestCase(TestCase):
         self.mock_countries_api = countries_api_patcher.start()
         self.addCleanup(countries_api_patcher.stop)
 
+        self.client.force_login(self.person.user)
+
     def test_create(self):
         url = resolve_url('admission:doctorate-create:project')
-        self.client.force_login(self.person.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'SSH')
@@ -181,7 +180,6 @@ class ProjectViewTestCase(TestCase):
 
     def test_update(self):
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.client.force_login(self.person.user)
 
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBAR'
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.annee_doctorat = '2021'
@@ -223,7 +221,6 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_update_consistency_errors(self):
-        self.client.force_login(self.person.user)
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
             'code_secteur_formation': "SST",
@@ -280,7 +277,6 @@ class ProjectViewTestCase(TestCase):
 
     def test_detail(self):
         url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.client.force_login(self.person.user)
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             langue_redaction_these="",
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
@@ -308,7 +304,6 @@ class ProjectViewTestCase(TestCase):
 
     def test_cancel(self):
         url = resolve_url('admission:doctorate-cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.client.force_login(self.person.user)
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             statut=ChoixStatusProposition.IN_PROGRESS.name,
             links={},
