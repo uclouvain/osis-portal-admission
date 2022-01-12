@@ -25,7 +25,6 @@
 # ##############################################################################
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import resolve_url
 from django.utils.translation import get_language
 from django.views.generic import FormView
 
@@ -42,7 +41,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',
-        PropositionBusinessException.ProximityCommissionInconsistantException: 'doctorate',
+        PropositionBusinessException.ProximityCommissionInconsistantException: None,
         PropositionBusinessException.ContratTravailInconsistantException: 'type_contrat_travail',
         PropositionBusinessException.DoctoratNonTrouveException: 'doctorate',
         PropositionBusinessException.InstitutionInconsistanteException: 'institution',
@@ -139,8 +138,3 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 if s.sigle == self.proposition.code_secteur_formation
             ][0]
         return context
-
-    def get_success_url(self):
-        if hasattr(self, 'response'):
-            return resolve_url('admission:doctorate-detail:project', pk=self.response.uuid)
-        return super().get_success_url()

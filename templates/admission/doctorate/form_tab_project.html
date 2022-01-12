@@ -76,7 +76,7 @@
     {% panel _("Financing") %}
         <div class="row">
             <div class="col-md-4">
-                {% bootstrap_field form.type_financement %}
+                {% bootstrap_field form.type_financement form_group_class="form-group required_field"  %}
             </div>
         </div>
         <div class="row" id="work">
@@ -133,9 +133,9 @@
         </div>
         {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
         {% bootstrap_field form.graphe_gantt form_group_class="form-group required_field" %}
-        {% bootstrap_field form.proposition_programme_doctoral %}
-        {% bootstrap_field form.projet_formation_complementaire %}
-        {% bootstrap_field form.lettres_recommandation %}
+        {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group required_field"  %}
+        {% bootstrap_field form.projet_formation_complementaire form_group_class="form-group required_field"  %}
+        {% bootstrap_field form.lettres_recommandation form_group_class="form-group required_field"  %}
     {% endpanel %}
 
     {% panel _("Previous research experience") %}

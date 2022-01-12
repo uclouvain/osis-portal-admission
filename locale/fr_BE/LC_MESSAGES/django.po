@@ -43,6 +43,15 @@ msgstr ""
 
 msgid ""
 "\n"
+"            Lorem impsum for supervision\n"
+"        "
+msgstr ""
+"\n"
+"            Lorem impsum for supervision\n"
+"        "
+
+msgid ""
+"\n"
 "            The online enrolment request procedure is split up into several\n"
 "            sheet. The enrolment request can only be validated as soon as "
 "all\n"
@@ -119,6 +128,9 @@ msgstr "ARES - Coopération au développement"
 msgid "Academic graduation year"
 msgstr "Année d'obtention du diplôme universitaire"
 
+msgid "Add"
+msgstr "Ajouter"
+
 msgid "Add a language"
 msgstr "Ajouter une langue"
 
@@ -163,9 +175,6 @@ msgstr "B1"
 
 msgid "B2"
 msgstr "B2"
-
-msgid "Back to my request"
-msgstr "Retourner sur ma demande"
 
 msgid "Back to my requests"
 msgstr "Retour à mes demandes"
@@ -232,6 +241,9 @@ msgstr "Chimie"
 
 msgid "City"
 msgstr "Localité"
+
+msgid "Close"
+msgstr "Fermer"
 
 msgid "Community of education"
 msgstr "Communauté d'enseignement"
@@ -634,6 +646,10 @@ msgstr "Non soumis"
 msgid "OTHER"
 msgstr "Autre"
 
+msgid "Only to provide if the address is not available in the previous field."
+msgstr ""
+"À ne spécifier que si l'adresse n'est pas disponible dans le champ précédent."
+
 msgid ""
 "Only to provide if you are in possession of a Belgian document of identity. "
 "If you are of Belgian nationality and you live in Belgium this field is "
@@ -642,9 +658,6 @@ msgstr ""
 "À ne fournir que si vous êtes en possession d'une pièce d'identité belge. Si "
 "vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
 "obligatoire (11 chiffres sans espace, ni tiret, ni point (Ex:79682312345))."
-
-msgid "Only to provide if the address is not available in the previous field."
-msgstr "À ne spécifier que si l'adresse n'est pas disponible dans le champ précédent."
 
 msgid "Opening request"
 msgstr "Demande d'ouverture"
@@ -702,6 +715,9 @@ msgstr "Physique"
 
 msgid "Place"
 msgstr "Lieu-dit"
+
+msgid "Please correct the errors first"
+msgstr "Veuillez d'abord corriger les erreurs"
 
 msgid "Please mention the academic graduation year"
 msgstr "Veuillez indiquer l'année académique d'obtention"
@@ -813,6 +829,9 @@ msgstr "Référence :"
 msgid "Remove"
 msgstr "Retirer"
 
+msgid "Request signatures"
+msgstr "Demander les signatures"
+
 msgid "Residential address"
 msgstr "Domicile légal"
 
@@ -851,6 +870,9 @@ msgstr "Secteur"
 
 msgid "Sex"
 msgstr "Sexe"
+
+msgid "Signatures requests sent"
+msgstr "Demandes de signature envoyées"
 
 msgid "Social sciences"
 msgstr "Sciences sociales"
@@ -963,11 +985,6 @@ msgstr "Oui"
 
 msgid "Yes I have a high school diploma"
 msgstr "Oui j'ai déjà un diplôme de fin d'études secondaires"
-
-msgid "You aren't allowed to add a new member to the supervision group."
-msgstr ""
-"Vous n'êtes pas autorisé à ajouter un nouveau membre au groupe de "
-"supervision."
 
 msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
