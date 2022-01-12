@@ -611,13 +611,13 @@ msgstr ""
 msgid "OTHER"
 msgstr "Other"
 
+msgid "Only to provide if the address is not available in the previous field."
+msgstr ""
+
 msgid ""
 "Only to provide if you are in possession of a Belgian document of identity. "
 "If you are of Belgian nationality and you live in Belgium this field is "
 "mandatory (11 digits length without space, hyphen or dot (Ex:79682312345))."
-msgstr ""
-
-msgid "Only to provide if the address is not available in the previous field."
 msgstr ""
 
 msgid "Opening request"

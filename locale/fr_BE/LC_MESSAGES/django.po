@@ -646,6 +646,10 @@ msgstr "Non soumis"
 msgid "OTHER"
 msgstr "Autre"
 
+msgid "Only to provide if the address is not available in the previous field."
+msgstr ""
+"À ne spécifier que si l'adresse n'est pas disponible dans le champ précédent."
+
 msgid ""
 "Only to provide if you are in possession of a Belgian document of identity. "
 "If you are of Belgian nationality and you live in Belgium this field is "
@@ -654,9 +658,6 @@ msgstr ""
 "À ne fournir que si vous êtes en possession d'une pièce d'identité belge. Si "
 "vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
 "obligatoire (11 chiffres sans espace, ni tiret, ni point (Ex:79682312345))."
-
-msgid "Only to provide if the address is not available in the previous field."
-msgstr "À ne spécifier que si l'adresse n'est pas disponible dans le champ précédent."
 
 msgid "Opening request"
 msgstr "Demande d'ouverture"
