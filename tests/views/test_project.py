@@ -150,12 +150,17 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'commission_proximite_cdss', _("This field is required."))
 
+        self.mock_proposition_api.return_value.create_proposition.return_value = {
+            'uuid': "3c5cdc60-2537-4a12-a396-64d2e9e34876",
+        }
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'BARBAZ-2021',
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
         self.mock_proposition_api.return_value.create_proposition.side_effect = MultipleApiBusinessException(
             exceptions={

@@ -677,6 +677,9 @@ msgstr ""
 msgid "Place"
 msgstr ""
 
+msgid "Please correct the errors below"
+msgstr ""
+
 msgid "Please correct the errors first"
 msgstr ""
 
@@ -948,6 +951,9 @@ msgstr ""
 
 msgid ""
 "You must correct your proposition before being able to request signatures."
+msgstr ""
+
+msgid "Your data has been saved"
 msgstr ""
 
 msgid "belgian"

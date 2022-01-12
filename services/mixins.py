@@ -25,7 +25,9 @@
 # ##############################################################################
 from copy import copy
 
+from django.contrib import messages
 from django.shortcuts import resolve_url
+from django.utils.translation import gettext_lazy as _
 
 from base.models.person import Person
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
@@ -40,6 +42,11 @@ class WebServiceFormMixin:
 
     def prepare_data(self, data):
         return data
+
+    def form_invalid(self, form):
+        # On error, display global message
+        messages.error(self.request, _("Please correct the errors below"))
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         data = self.prepare_data(copy(form.cleaned_data))
@@ -61,9 +68,12 @@ class WebServiceFormMixin:
     def get_success_url(self):
         pk = self.kwargs.get('pk')
         if pk:
+            # On update, redirect on admission detail
             tab_name = self.request.resolver_match.url_name
             return resolve_url('admission:doctorate-detail:' + tab_name, pk=pk)
-        return resolve_url('admission:doctorate-list')
+        # On creation, display a message and redirect on same form
+        messages.info(self.request, _("Your data has been saved"))
+        return self.request.get_full_path()
 
     @property
     def person(self) -> Person:

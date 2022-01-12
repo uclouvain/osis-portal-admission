@@ -95,6 +95,8 @@
         {% endblocktrans %}
     </em></p>
 
+    {% include "template_messages.html" %}
+
     {% url "admission:doctorate-detail:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
     <form class="osis-form" method="post" action="">
