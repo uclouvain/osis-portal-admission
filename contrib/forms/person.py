@@ -55,12 +55,10 @@ class DoctorateAdmissionPersonForm(forms.Form):
     )
     first_name_in_use = forms.CharField(required=False, label=_("First name in use"))
     sex = forms.ChoiceField(
-        required=False,
         label=_("Sex"),
         choices=EMPTY_CHOICE + SexEnum.choices(),
     )
     gender = forms.ChoiceField(
-        required=False,
         label=_("Gender"),
         choices=EMPTY_CHOICE + GenderEnum.choices(),
     )
@@ -110,9 +108,8 @@ class DoctorateAdmissionPersonForm(forms.Form):
         required=False,
         label=_("National registry number"),
         help_text=_("Only to provide if you are in possession of a Belgian document of identity. If "
-                    "you are of Belgian nationality and you live in Belgium this field is mandatory "
-                    "(11 digits length without space, hyphen or dot (Ex:79682312345))."),
-        validators=[validators.RegexValidator(r'\d{11}')],
+                    "you are of Belgian nationality and you live in Belgium this field is mandatory."),
+        validators=[validators.RegexValidator(r'^\d{11}$')],
     )
     id_card_number = forms.CharField(required=False, label=_("Identity card number"))
     passport_number = forms.CharField(required=False, label=_("Passport number"))

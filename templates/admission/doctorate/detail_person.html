@@ -27,8 +27,8 @@
 {% block tab_content %}
     {% panel _("Personal information") %}
         <div class="row">
-            {% field_data _("First name") person.first_name "col-md-4" %}
             {% field_data _("Last name") person.last_name "col-md-4" %}
+            {% field_data _("First name") person.first_name "col-md-4" %}
             {% if person.first_name_in_use %}
                 {% field_data _("First name in use") person.first_name_in_use "col-md-4" %}
             {% endif %}
@@ -40,7 +40,7 @@
         </div>
         <div class="row">
             {% if person.birth_date %}
-                {% field_data _("Birth date") person.birth_date "col-md-4" %}
+                {% field_data _("Birth date") person.birth_date|date:'d/m/Y' "col-md-4" %}
             {% elif person.birth_year %}
                 {% field_data _("Birth year") person.birth_year "col-md-4" %}
             {% endif %}

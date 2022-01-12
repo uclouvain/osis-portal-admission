@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
@@ -90,6 +91,8 @@ class PersonViewTestCase(TestCase):
         response = self.client.post(url, {
             'first_name': "Joe",
             'last_name': "Doe",
+            'sex': 'M',
+            'gender': 'X',
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification.assert_called()
@@ -143,6 +146,8 @@ class PersonViewTestCase(TestCase):
         response = self.client.post(url, {
             'first_name': "Joe",
             'last_name': "Doe",
+            'sex': 'M',
+            'gender': 'X',
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
@@ -154,6 +159,7 @@ class PersonViewTestCase(TestCase):
             first_name="Joe",
             birth_country="",
             country_of_citizenship="",
+            birth_date=datetime.date(1990, 1, 1),
         )
 
         response = self.client.get(url)
@@ -166,6 +172,7 @@ class PersonViewTestCase(TestCase):
             first_name="John",
             birth_country="BE",
             country_of_citizenship="FR",
+            birth_date=datetime.date(1990, 1, 1),
         )
 
         response = self.client.get(url)
