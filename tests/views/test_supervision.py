@@ -58,7 +58,6 @@ class SupervisionTestCase(TestCase):
         api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_api = api_patcher.start()
         self.addCleanup(api_patcher.stop)
-        self.mock_api.return_value
         self.mock_api.return_value.retrieve_proposition.return_value = Mock(
             code_secteur_formation="SSH",
             documents_projet=[],
