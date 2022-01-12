@@ -38,6 +38,12 @@ msgstr ""
 
 msgid ""
 "\n"
+"            Lorem impsum for supervision\n"
+"        "
+msgstr ""
+
+msgid ""
+"\n"
 "            The online enrolment request procedure is split up into several\n"
 "            sheet. The enrolment request can only be validated as soon as "
 "all\n"
@@ -105,6 +111,9 @@ msgstr ""
 msgid "Academic graduation year"
 msgstr ""
 
+msgid "Add"
+msgstr ""
+
 msgid "Add a language"
 msgstr ""
 
@@ -153,9 +162,6 @@ msgstr ""
 msgid "B2"
 msgstr ""
 
-msgid "Back to my request"
-msgstr ""
-
 msgid "Back to my requests"
 msgstr ""
 
@@ -186,9 +192,6 @@ msgstr ""
 msgid "Brief justification"
 msgstr ""
 
-msgid "Bureau"
-msgstr ""
-
 msgid "C1"
 msgstr ""
 
@@ -204,6 +207,12 @@ msgstr ""
 msgid "CANCELLED"
 msgstr "Cancelled"
 
+msgid "CDE proximity commission"
+msgstr ""
+
+msgid "CDSS proximity commission"
+msgstr ""
+
 msgid "CSC - China Scholarship Council"
 msgstr ""
 
@@ -217,6 +226,9 @@ msgid "Chemistry"
 msgstr ""
 
 msgid "City"
+msgstr ""
+
+msgid "Close"
 msgstr ""
 
 msgid "Community of education"
@@ -611,13 +623,13 @@ msgstr ""
 msgid "OTHER"
 msgstr "Other"
 
+msgid "Only to provide if the address is not available in the previous field."
+msgstr ""
+
 msgid ""
 "Only to provide if you are in possession of a Belgian document of identity. "
 "If you are of Belgian nationality and you live in Belgium this field is "
 "mandatory (11 digits length without space, hyphen or dot (Ex:79682312345))."
-msgstr ""
-
-msgid "Only to provide if the address is not available in the previous field."
 msgstr ""
 
 msgid "Opening request"
@@ -675,6 +687,12 @@ msgid "Physic"
 msgstr ""
 
 msgid "Place"
+msgstr ""
+
+msgid "Please correct the errors below"
+msgstr ""
+
+msgid "Please correct the errors first"
 msgstr ""
 
 msgid "Please mention the academic graduation year"
@@ -742,6 +760,34 @@ msgstr ""
 msgid "Proposition approval"
 msgstr ""
 
+msgid "Proximity Commission for Dental Sciences (DENT)"
+msgstr ""
+
+msgid "Proximity Commission for Genetics and Immunology (GIM)"
+msgstr ""
+
+msgid "Proximity Commission for Motricity Sciences (MOTR)"
+msgstr ""
+
+msgid "Proximity Commission for Neuroscience (NRSC)"
+msgstr ""
+
+msgid "Proximity Commission for Pharmaceutical Sciences (DFAR)"
+msgstr ""
+
+msgid "Proximity commission"
+msgstr ""
+
+msgid ""
+"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+msgstr ""
+
+msgid "Proximity commission for experimental and clinical research (ECLI)"
+msgstr ""
+
+msgid "Proximity commission for public health, health and society (SPSS)"
+msgstr ""
+
 msgid "Public defense"
 msgstr ""
 
@@ -764,6 +810,9 @@ msgid "Rejected"
 msgstr ""
 
 msgid "Remove"
+msgstr ""
+
+msgid "Request signatures"
 msgstr ""
 
 msgid "Residential address"
@@ -803,6 +852,9 @@ msgid "Sector"
 msgstr ""
 
 msgid "Sex"
+msgstr ""
+
+msgid "Signatures requests sent"
 msgstr ""
 
 msgid "Social sciences"
@@ -924,14 +976,14 @@ msgstr ""
 msgid "Yes I have a high school diploma"
 msgstr ""
 
-msgid "You aren't allowed to add a new member to the supervision group."
-msgstr ""
-
 msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
 
 msgid ""
 "You must correct your proposition before being able to request signatures."
+msgstr ""
+
+msgid "Your data has been saved"
 msgstr ""
 
 msgid "belgian"

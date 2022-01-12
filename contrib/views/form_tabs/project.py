@@ -42,7 +42,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',
-        PropositionBusinessException.ProximityCommissionInconsistantException: 'doctorate',
+        PropositionBusinessException.ProximityCommissionInconsistantException: None,
         PropositionBusinessException.ContratTravailInconsistantException: 'type_contrat_travail',
         PropositionBusinessException.DoctoratNonTrouveException: 'doctorate',
         PropositionBusinessException.InstitutionInconsistanteException: 'institution',
@@ -123,7 +123,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 matricule_candidat=self.person.global_id,
             )
             data.pop('sector')
-            AdmissionPropositionService.create_proposition(person=self.person, **data)
+            response = AdmissionPropositionService.create_proposition(person=self.person, **data)
+            self.uuid = response['uuid']
         else:
             data['uuid'] = str(self.kwargs['pk'])
             AdmissionPropositionService.update_proposition(person=self.person, **data)
@@ -141,6 +142,6 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
         return context
 
     def get_success_url(self):
-        if hasattr(self, 'response'):
-            return resolve_url('admission:doctorate-detail:project', pk=self.response.uuid)
-        return super().get_success_url()
+        if self.kwargs.get('pk'):
+            return super().get_success_url()
+        return resolve_url('admission:doctorate-update:project', pk=self.uuid)

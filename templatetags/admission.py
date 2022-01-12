@@ -132,7 +132,7 @@ def get_valid_tab_tree(admission, original_tab_tree, is_form_view):
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
 def doctorate_tabs(context, admission=None):
-    is_form_view = isinstance(context['view'], FormView) and not getattr(context['view'], 'is_detail_view', False)
+    is_form_view = isinstance(context['view'], FormView)
 
     # Create a new tab tree based on the default one but depending on the permissions links
     context['valid_tab_tree'] = get_valid_tab_tree(
@@ -153,7 +153,7 @@ def doctorate_tabs(context, admission=None):
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None):
-    is_form_view = isinstance(context['view'], FormView) and not getattr(context['view'], 'is_detail_view', False)
+    is_form_view = isinstance(context['view'], FormView)
 
     subtab_labels = {
         'person': _("Identification"),

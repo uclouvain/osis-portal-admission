@@ -35,6 +35,7 @@ from rest_framework import status
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.enums.projet import ChoixStatusProposition
+from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
@@ -83,6 +84,33 @@ class ProjectViewTestCase(TestCase):
         self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = [
             Mock(sigle='SSH', intitule_fr='Foobar', intitule_en='Foobar'),
             Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
+            Mock(sigle='SSS', intitule_fr='Foobarbaz', intitule_en='Foobarbaz'),
+        ]
+        self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
+            Mock(
+                sigle='FOOBAR',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
+                annee=2021,
+                sigle_entite_gestion="CDE",
+                links=[],
+            ),
+            Mock(
+                sigle='FOOBARBAZ',
+                intitule_fr='Foobarbaz',
+                intitule_en='Foobarbaz',
+                annee=2021,
+                sigle_entite_gestion="CDSS",
+                links=[],
+            ),
+            Mock(
+                sigle='BARBAZ',
+                intitule_fr='Barbaz',
+                intitule_en='Barbaz',
+                annee=2021,
+                sigle_entite_gestion="AZERT",
+                links=[],
+            ),
         ]
         self.addCleanup(autocomplete_api_patcher.stop)
 
@@ -95,32 +123,14 @@ class ProjectViewTestCase(TestCase):
         self.mock_organization_api.return_value.get_entity.return_value = self.mock_entities[0]
         self.addCleanup(organization_api_patcher.stop)
 
-        # Mock reference sdk api
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
         self.mock_countries_api = countries_api_patcher.start()
         self.addCleanup(countries_api_patcher.stop)
 
+        self.client.force_login(self.person.user)
+
     def test_create(self):
         url = resolve_url('admission:doctorate-create:project')
-        self.client.force_login(self.person.user)
-        self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
-            Mock(
-                sigle='FOOBAR',
-                intitule_fr='Foobar',
-                intitule_en='Foobar',
-                annee=2021,
-                sigle_entite_gestion="CDE",
-                links=[],
-            ),
-            Mock(
-                sigle='BARBAZ',
-                intitule_fr='Barbaz',
-                intitule_en='Barbaz',
-                annee=2021,
-                sigle_entite_gestion="AZERT",
-                links=[],
-            ),
-        ]
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'SSH')
@@ -132,13 +142,25 @@ class ProjectViewTestCase(TestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'commission_proximite_cde', _("This field is required."))
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sector': 'SSH',
+            'doctorate': 'FOOBARBAZ-2021',
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'commission_proximite_cdss', _("This field is required."))
 
+        self.mock_proposition_api.return_value.create_proposition.return_value = {
+            'uuid': "3c5cdc60-2537-4a12-a396-64d2e9e34876",
+        }
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'BARBAZ-2021',
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
         self.mock_proposition_api.return_value.create_proposition.side_effect = MultipleApiBusinessException(
             exceptions={
@@ -163,18 +185,25 @@ class ProjectViewTestCase(TestCase):
 
     def test_update(self):
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.client.force_login(self.person.user)
 
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBAR'
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.annee_doctorat = '2021'
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.code_secteur_formation = 'SSH'
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
-            'code_secteur_formation': "SST",
+            'code_secteur_formation': "SSH",
             'type_contrat_travail': "Something",
+            "commission_proximite": ChoixProximityCommissionCDE.ECONOMY.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBARBAZ'
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
-            'code_secteur_formation': "SST",
-            'bourse_recherche': "Something other"
+            'code_secteur_formation': "SSH",
+            'sigle_doctorat': 'FOOBARBAZ',
+            'annee_doctorat': '2021',
+            'bourse_recherche': "Something other",
+            "commission_proximite": ChoixProximityCommissionCDSS.ECLI.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -197,7 +226,6 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_update_consistency_errors(self):
-        self.client.force_login(self.person.user)
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
             'code_secteur_formation': "SST",
@@ -254,12 +282,12 @@ class ProjectViewTestCase(TestCase):
 
     def test_detail(self):
         url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.client.force_login(self.person.user)
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             langue_redaction_these="",
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
             type_contrat_travail="Something",
-            code_secteur_formation="SST",
+            code_secteur_formation="SSH",
+            commission_proximite="ECONOMY",
             institut_these=self.mock_entities[0].uuid,
             links={},
         )
@@ -267,10 +295,20 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Something")
         self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
+        self.assertContains(response, _("ECONOMY"))
+
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            langue_redaction_these="",
+            code_secteur_formation="SSS",
+            commission_proximite="ECLI",
+            links={},
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Proximity commission for experimental and clinical research (ECLI)"))
 
     def test_cancel(self):
         url = resolve_url('admission:doctorate-cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.client.force_login(self.person.user)
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             statut=ChoixStatusProposition.IN_PROGRESS.name,
             links={},

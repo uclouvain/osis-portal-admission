@@ -56,7 +56,7 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         return self.form_invalid(forms['main_form'])
 
     def get_initial(self):
-        return AdmissionPersonService.retrieve_person_coordonnees(self.person).to_dict()
+        return AdmissionPersonService.retrieve_person_coordonnees(self.person, uuid=self.kwargs.get('uuid')).to_dict()
 
     @staticmethod
     def prepare_be_city(form_cleaned_data):
@@ -82,7 +82,7 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_person_coordonnees(person=self.person, **data)
+        AdmissionPersonService.update_person_coordonnees(person=self.person, uuid=self.kwargs.get('uuid'), **data)
 
     def get_forms(self):
         if not self.forms:
