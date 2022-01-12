@@ -29,11 +29,11 @@
         {% if cotutelle.cotutelle is None %}
             {% trans "Cotutelle is not defined yet" %}
         {% elif cotutelle.cotutelle %}
-            {% field_data _("Motivation") cotutelle.motivation %}
+            {% field_data _("Motivation") cotutelle.motivation|linebreaks %}
             {% field_data _("Institution") cotutelle.institution %}
             {% field_data _("Opening request") cotutelle.demande_ouverture %}
             {% field_data _("Convention") cotutelle.convention %}
-            {% field_data _("Other documents") cotutelle.autres_documents %}
+            {% field_data _("Other documents concerning cotutelle") cotutelle.autres_documents %}
         {% else %}
             {% trans "No cotutelle" %}
         {% endif %}

@@ -668,8 +668,8 @@ msgstr "Pays organisateur"
 msgid "Other"
 msgstr "Autre"
 
-msgid "Other documents"
-msgstr "Autres documents"
+msgid "Other documents concerning cotutelle"
+msgstr "Autres documents relatifs à la cotutelle"
 
 msgid "Other education, to specify"
 msgstr "Autre éducation, précisez"
