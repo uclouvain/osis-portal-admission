@@ -23,51 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import FormView
-
-from admission.contrib.enums.supervision import DecisionApprovalEnum
-from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
-from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
+from django.views.generic import RedirectView
 
 
-class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/detail_supervision.html'
-    form_class = DoctorateAdmissionApprovalForm
-    is_detail_view = True
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person,
-            uuid=self.kwargs['pk'],
-        )
-        context_data['supervision'] = AdmissionSupervisionService.get_supervision(
-            person=self.request.user.person,
-            uuid=self.kwargs['pk'],
-        )
-        return context_data
-
-    def call_webservice(self, data):
-        if data['decision'] == DecisionApprovalEnum.APPROVED.name:
-            return AdmissionSupervisionService.approve_proposition(
-                person=self.person,
-                uuid=self.kwargs['pk'],
-                approuver_proposition_command={
-                    "commentaire_interne": data['internal_comment'],
-                    "commentaire_externe": data['comment'],
-                    "matricule": self.person.global_id
-                },
-            )
-        else:
-            return AdmissionSupervisionService.reject_proposition(
-                person=self.person,
-                uuid=self.kwargs['pk'],
-                refuser_proposition_command={
-                    "commentaire_interne": data['internal_comment'],
-                    "commentaire_externe": data['comment'],
-                    "matricule": self.person.global_id,
-                    "motif_refus": data['rejection_reason'],
-                },
-            )
+class DoctorateAdmissionSupervisionDetailView(RedirectView):
+    # Same as supervision form
+    pattern_name = 'admission:doctorate-update:supervision'

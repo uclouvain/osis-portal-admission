@@ -32,7 +32,8 @@ from django.views.generic import FormView
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.actor import ActorType
-from admission.contrib.forms.supervision import DoctorateAdmissionSupervisionForm
+from admission.contrib.enums.supervision import DecisionApprovalEnum
+from admission.contrib.forms.supervision import DoctorateAdmissionSupervisionForm, DoctorateAdmissionApprovalForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
 from osis_admission_sdk import ApiException
@@ -48,16 +49,62 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
             person=self.person,
             uuid=str(self.kwargs['pk']),
         )
+        context['supervision'] = AdmissionSupervisionService.get_supervision(
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
+        )
+        context['signature_conditions'] = AdmissionSupervisionService.get_signature_conditions(
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
+        )
+        context.update(self.get_forms())
         return context
 
+    def post(self, request, *args, **kwargs):
+        # Only one form can be submitted at a time
+        if 'approval_submit' in request.POST:
+            self.form_class = DoctorateAdmissionApprovalForm
+        return super().post(request, *args, **kwargs)
+
     def prepare_data(self, data):
-        return {
-            'type': data['type'],
-            'member': data['person'] or data['tutor'],
-        }
+        if self.form_class is DoctorateAdmissionSupervisionForm:
+            return {
+                'type': data['type'],
+                'member': data['person'] or data['tutor'],
+            }
+        return super().prepare_data(data)
 
     def call_webservice(self, data):
-        AdmissionSupervisionService.add_member(person=self.person, uuid=str(self.kwargs['pk']), **data)
+        if self.form_class is DoctorateAdmissionSupervisionForm:
+            AdmissionSupervisionService.add_member(person=self.person, uuid=str(self.kwargs['pk']), **data)
+        else:
+            if data.get('decision') == DecisionApprovalEnum.APPROVED.name:
+                return AdmissionSupervisionService.approve_proposition(
+                    person=self.person,
+                    uuid=str(self.kwargs['pk']),
+                    approuver_proposition_command={
+                        "commentaire_interne": data['internal_comment'],
+                        "commentaire_externe": data['comment'],
+                        "matricule": self.person.global_id
+                    },
+                )
+            else:
+                return AdmissionSupervisionService.reject_proposition(
+                    person=self.person,
+                    uuid=str(self.kwargs['pk']),
+                    refuser_proposition_command={
+                        "commentaire_interne": data['internal_comment'],
+                        "commentaire_externe": data['comment'],
+                        "matricule": self.person.global_id,
+                        "motif_refus": data['rejection_reason'],
+                    },
+                )
+
+    def get_forms(self):
+        return {
+            'main_form': self.get_form(),
+            'approval_form': DoctorateAdmissionApprovalForm(),
+        }
 
 
 class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin, FormView):

@@ -33,6 +33,7 @@ from rest_framework import status
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from base.tests.factories.person import PersonFactory
+from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 from osis_admission_sdk import ApiException
 
 
@@ -70,6 +71,10 @@ class SupervisionTestCase(TestCase):
                     'url': 'some_url',
                     'method': 'POST',
                 },
+                'request_signatures': {
+                    'url': 'foobar',
+                    'method': 'POST',
+                },
             },
         )
 
@@ -99,7 +104,7 @@ class SupervisionTestCase(TestCase):
 
     def test_should_detail_supervision_member(self):
         url = resolve_url("admission:doctorate-detail:supervision", pk=self.pk)
-        response = self.client.get(url)
+        response = self.client.get(url, follow=True)
         # Display the signatures
         self.assertContains(response, "Troufignon")
         self.assertContains(response, _(ChoixEtatSignature.APPROVED.name))
@@ -175,21 +180,21 @@ class SupervisionTestCase(TestCase):
         self.mock_api.return_value.remove_member.assert_not_called()
 
     def test_should_approve_proposition(self):
-        url = resolve_url("admission:doctorate-detail:supervision", pk=self.pk)
-
+        url = resolve_url("admission:doctorate-update:supervision", pk=self.pk)
         # All data is provided and the proposition is approved
         response = self.client.post(url, {
             'decision': DecisionApprovalEnum.APPROVED.name,
-            'internal_comment': "The external comment",
+            'internal_comment': "The internal comment",
             'comment': "The public comment",
             'rejection_reason': "The reason",  # The reason is provided but will not be used
+            'approval_submit': [''],
         })
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_api.return_value.approve_proposition.assert_called_with(
             uuid=self.pk,
             approuver_proposition_command={
-                'commentaire_interne': "The external comment",
+                'commentaire_interne': "The internal comment",
                 'commentaire_externe': "The public comment",
                 'matricule': self.person.global_id,
             },
@@ -201,9 +206,10 @@ class SupervisionTestCase(TestCase):
         # All data is provided and the proposition is rejected
         response = self.client.post(url, {
             'decision': DecisionApprovalEnum.REJECTED.name,
-            'internal_comment': "The external comment",
+            'internal_comment': "The internal comment",
             'comment': "The public comment",
             'rejection_reason': "The reason",
+            'approval_submit': [''],
         })
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -211,7 +217,7 @@ class SupervisionTestCase(TestCase):
         self.mock_api.return_value.reject_proposition.assert_called_with(
             uuid=self.pk,
             refuser_proposition_command={
-                'commentaire_interne': "The external comment",
+                'commentaire_interne': "The internal comment",
                 'commentaire_externe': "The public comment",
                 'motif_refus': "The reason",
                 'matricule': self.person.global_id,
@@ -223,12 +229,53 @@ class SupervisionTestCase(TestCase):
 
         # The decision is missing
         response = self.client.post(url, {
-            'internal_comment': "The external comment",
+            'internal_comment': "The internal comment",
             'comment': "The public comment",
             'rejection_reason': "The reason",
+            'approval_submit': [''],
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('decision', response.context['form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
         self.mock_api.return_value.approve_proposition.assert_not_called()
+
+    def test_should_not_display_confirmation_if_errors(self):
+        url = resolve_url("admission:doctorate-update:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_api.return_value.retrieve_verify_proposition.return_value = [
+            {'detail': "Nope"}
+        ]
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mock_api.return_value.retrieve_verify_proposition.assert_called()
+        self.assertNotContains(response, _("Are you sure you want to request signatures for this admission?"))
+        self.assertContains(response, "Nope")
+
+    def test_should_redirect_to_supervision_without_buttons(self):
+        url = resolve_url("admission:doctorate-update:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_api.return_value.retrieve_verify_proposition.return_value = []
+        response = self.client.get(url, {})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mock_api.return_value.retrieve_verify_proposition.assert_called()
+        self.assertContains(response, _("Are you sure you want to request signatures for this admission?"))
+
+        # Success
+        post_url = resolve_url("admission:doctorate-request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.post(post_url, {})
+        self.assertRedirects(response, url)
+        self.mock_api.return_value.create_signatures.assert_called()
+
+        # Failure
+        post_url = resolve_url("admission:doctorate-request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_api.return_value.create_signatures.side_effect = MultipleApiBusinessException(
+            exceptions={
+                ApiBusinessException(
+                    status_code=42,
+                    detail="Something went wrong globally"
+                ),
+            }
+        )
+        response = self.client.post(post_url, {}, follow=True)
+        self.assertRedirects(response, url)
+        self.assertContains(response, _("Please correct the errors first"))
+        self.mock_api.return_value.create_signatures.assert_called()

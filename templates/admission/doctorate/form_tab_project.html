@@ -76,7 +76,7 @@
     {% panel _("Financing") %}
         <div class="row">
             <div class="col-md-4">
-                {% bootstrap_field form.type_financement %}
+                {% bootstrap_field form.type_financement form_group_class="form-group required_field"  %}
             </div>
         </div>
         <div class="row" id="work">
@@ -98,18 +98,27 @@
                 {% bootstrap_field form.bourse_recherche_other %}
             </div>
         </div>
-        <div class="row" id="financing-details">
-            <div class="col-md-6">
-                {% bootstrap_field form.institut_these %}
+        <div id="financing-details">
+            <div class="row">
+                <div class="col-md-6">
+                    {% bootstrap_field form.institut_these %}
+                </div>
             </div>
-            <div class="col-md-6">
-                {% bootstrap_field form.lieu_these %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% bootstrap_field form.lieu_these %}
+                </div>
+                <div class="col-md-6">
+                    {% bootstrap_field form.autre_lieu_these %}
+                </div>
             </div>
-            <div class="col-md-6">
-                {% bootstrap_field form.duree_prevue %}
-            </div>
-            <div class="col-md-6">
-                {% bootstrap_field form.temps_consacre %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% bootstrap_field form.duree_prevue %}
+                </div>
+                <div class="col-md-6">
+                    {% bootstrap_field form.temps_consacre %}
+                </div>
             </div>
         </div>
     {% endpanel %}
@@ -124,9 +133,9 @@
         </div>
         {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
         {% bootstrap_field form.graphe_gantt form_group_class="form-group required_field" %}
-        {% bootstrap_field form.proposition_programme_doctoral %}
-        {% bootstrap_field form.projet_formation_complementaire %}
-        {% bootstrap_field form.lettres_recommandation %}
+        {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group required_field"  %}
+        {% bootstrap_field form.projet_formation_complementaire form_group_class="form-group required_field"  %}
+        {% bootstrap_field form.lettres_recommandation form_group_class="form-group required_field"  %}
     {% endpanel %}
 
     {% panel _("Previous research experience") %}
@@ -151,6 +160,8 @@
     {{ form.media }}
     <script type="application/javascript">
     $(function () {
+        const context = $('.osis-form');
+
         // Justification depends on pre-admission
         $('#justification').dependsOn({
             'input[name=type_admission]': { values: ['PRE_ADMISSION'] },
@@ -184,7 +195,7 @@
                             if (initialData && data[0].id === initialData.id) {
                                 data = [initialData];
                             }
-                            if (data.length && data[0].sigle_entite_gestion === 'CDE') {
+                            if (data.length && ['CDE', 'CLSM'].includes(data[0].sigle_entite_gestion)) {
                                 return true;
                             }
                         }
@@ -228,6 +239,21 @@
         $('#previous_experience').dependsOn({
             '#id_doctorat_deja_realise': { values: ['YES', 'PARTIAL'] },
         }, { valueOnDisable: '' });
+
+        // Clear the fields related to the thesis place
+        const thesisPlace = context.find('select[name=lieu_these]');
+        const otherThesisPlace = context.find('input[name=autre_lieu_these]');
+
+        otherThesisPlace.on('focus', function () {
+            thesisPlace.val(null).change();
+        });
+        thesisPlace.on('change', function () {
+            otherThesisPlace.val(null);
+        })
+        context.find('select[name=institut_these]').on('change', function () {
+            thesisPlace.val(null).change();
+            otherThesisPlace.val(null);
+        });
     });
     </script>
 {% endblock %}
