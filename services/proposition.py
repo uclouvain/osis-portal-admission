@@ -171,3 +171,12 @@ class AdmissionSupervisionService:
             **kwargs,
             **build_mandatory_auth_headers(person)
         )
+
+    @classmethod
+    @api_exception_handler(api_exception_cls=ApiException)
+    def reject_proposition(cls, person, uuid, **kwargs):
+        return AdmissionPropositionAPIClient().reject_proposition(
+            uuid=uuid,
+            **kwargs,
+            **build_mandatory_auth_headers(person)
+        )

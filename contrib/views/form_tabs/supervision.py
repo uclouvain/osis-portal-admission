@@ -42,7 +42,6 @@ from osis_admission_sdk import ApiException
 class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_supervision.html'
     form_class = DoctorateAdmissionSupervisionForm
-    forms = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -89,14 +88,23 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
                         "matricule": self.person.global_id
                     },
                 )
+            else:
+                return AdmissionSupervisionService.reject_proposition(
+                    person=self.person,
+                    uuid=str(self.kwargs['pk']),
+                    refuser_proposition_command={
+                        "commentaire_interne": data['internal_comment'],
+                        "commentaire_externe": data['comment'],
+                        "matricule": self.person.global_id,
+                        "motif_refus": data['rejection_reason'],
+                    },
+                )
 
     def get_forms(self):
-        if not self.forms:
-            self.forms = {
-                'main_form': self.get_form(),
-                'approval_form': DoctorateAdmissionApprovalForm(),
-            }
-        return self.forms
+        return {
+            'main_form': self.get_form(),
+            'approval_form': DoctorateAdmissionApprovalForm(),
+        }
 
 
 class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin, FormView):
