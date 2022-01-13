@@ -629,7 +629,7 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-msgid "Other documents"
+msgid "Other documents concerning cotutelle"
 msgstr ""
 
 msgid "Other education, to specify"
