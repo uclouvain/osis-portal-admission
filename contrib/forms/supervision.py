@@ -96,7 +96,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
     def clean(self):
         data = super().clean()
         # The reason is useful only if the admission is not approved
-        if data.get('decision', None) == DecisionApprovalEnum.APPROVED.name and data.get('rejection_reason', None):
+        if data.get('decision') == DecisionApprovalEnum.APPROVED.name and data.get('rejection_reason'):
             data['rejection_reason'] = ''
 
     class Media:
