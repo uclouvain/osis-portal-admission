@@ -32,10 +32,10 @@
 
     {% panel _("Residential address") %}
         <div class="row">
-            <div class="col-md-2">{% bootstrap_field residential.street_number %}</div>
             <div class="col-md-4">{% bootstrap_field residential.street %}</div>
-            <div class="col-md-4">{% bootstrap_field residential.place %}</div>
+            <div class="col-md-2">{% bootstrap_field residential.street_number %}</div>
             <div class="col-md-2">{% bootstrap_field residential.postal_box %}</div>
+            <div class="col-md-4">{% bootstrap_field residential.place %}</div>
         </div>
         <div class="row">
             <div class="col-md-4">{% bootstrap_field residential.country %}</div>
@@ -53,10 +53,10 @@
 
     {% panel _("Contact address") id="contact_address" %}
         <div class="row">
-            <div class="col-md-2">{% bootstrap_field contact.street_number %}</div>
             <div class="col-md-4">{% bootstrap_field contact.street %}</div>
-            <div class="col-md-4">{% bootstrap_field contact.place %}</div>
+            <div class="col-md-2">{% bootstrap_field contact.street_number %}</div>
             <div class="col-md-2">{% bootstrap_field contact.postal_box %}</div>
+            <div class="col-md-4">{% bootstrap_field contact.place %}</div>
         </div>
         <div class="row">
             <div class="col-md-4">{% bootstrap_field contact.country %}</div>

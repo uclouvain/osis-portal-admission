@@ -554,6 +554,7 @@ msgstr ""
 msgid "Member not found"
 msgstr ""
 
+msgctxt "admission"
 msgid "Mobile phone"
 msgstr ""
 
@@ -681,6 +682,10 @@ msgid "Physic"
 msgstr ""
 
 msgid "Place"
+msgstr ""
+
+msgid ""
+"Please contact the Enrolment Office if you wish to change your contact email."
 msgstr ""
 
 msgid "Please correct the errors below"

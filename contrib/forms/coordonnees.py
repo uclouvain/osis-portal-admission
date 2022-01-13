@@ -25,7 +25,7 @@
 # ##############################################################################
 from dal import autocomplete, forward
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
 from admission.contrib.forms import get_country_initial_choices
 
@@ -36,10 +36,14 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
         label=_("Is your contact address different from your residential address?"),
     )
 
-    email = forms.EmailField(disabled=True, label=_("Email"))
+    email = forms.EmailField(
+        disabled=True,
+        label=_("Email"),
+        help_text=_("Please contact the Enrolment Office if you wish to change your contact email.")
+    )
     phone_mobile = forms.CharField(
         required=False,
-        label=_("Mobile phone"),
+        label=__('admission', "Mobile phone"),
         help_text=_("(e.g. +32 490 00 00 00)"),
     )
 
@@ -92,9 +96,9 @@ class DoctorateAdmissionAddressForm(forms.Form):
             self.data.get(self.add_prefix("country"), self.initial.get("country")),
             person,
         )
-        if self.initial and self.initial["country"] == self.BE_ISO_CODE:
-            self.initial["be_postal_code"] = self.initial["postal_code"]
-            self.initial["be_city"] = self.initial["city"]
+        if self.data.get(self.add_prefix('country'), self.initial.get('country')) == self.BE_ISO_CODE:
+            self.initial["be_postal_code"] = self.initial.get("postal_code")
+            self.initial["be_city"] = self.initial.get("city")
             initial_choice_needed = self.data.get(self.add_prefix('be_city'), self.initial.get("be_city"))
             if initial_choice_needed:
                 self.fields['be_city'].widget.choices = [(initial_choice_needed, initial_choice_needed)]

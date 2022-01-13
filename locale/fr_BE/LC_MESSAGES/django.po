@@ -592,6 +592,7 @@ msgstr "Mathématiques"
 msgid "Member not found"
 msgstr "Membre non trouvé"
 
+msgctxt "admission"
 msgid "Mobile phone"
 msgstr "Téléphone mobile"
 
@@ -724,6 +725,12 @@ msgstr "Physique"
 
 msgid "Place"
 msgstr "Lieu-dit"
+
+msgid ""
+"Please contact the Enrolment Office if you wish to change your contact email."
+msgstr ""
+"Veuillez contacter le Service des Inscriptions si vous souhaitez modifier "
+"votre email de contact"
 
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
