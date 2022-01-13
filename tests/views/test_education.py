@@ -227,6 +227,18 @@ class EducationTestCase(TestCase):
             "foreign_diploma-linguistic_regime": "EN",
             "foreign_diploma-country": "FR",
             "foreign_diploma-equivalence": "PENDING",
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'foreign_diploma_form', 'result', _("This field is required."))
+
+        response = self.client.post(self.form_url, {
+            "got_diploma": "YES",
+            "diploma_type": "FOREIGN",
+            "academic_graduation_year": 2020,
+            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-linguistic_regime": "EN",
+            "foreign_diploma-country": "FR",
+            "foreign_diploma-equivalence": "PENDING",
             "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
             # Even if we send data for belgian diploma, it should be stripped from data sent to WS
             "belgian_diploma-other_institute": "Special school",

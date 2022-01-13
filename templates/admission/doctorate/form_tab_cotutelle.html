@@ -28,7 +28,7 @@
     {% bootstrap_form_errors form %}
 
     {% panel _("Cotutelle") %}
-        {% bootstrap_field form.cotutelle %}
+        {% bootstrap_field form.cotutelle form_group_class="form-group required_field" %}
         <div id="cotutelle">
             {% bootstrap_field form.motivation form_group_class="form-group required_field" %}
             <div class="row">

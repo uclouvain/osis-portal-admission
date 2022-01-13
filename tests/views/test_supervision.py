@@ -27,10 +27,12 @@ from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
+from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.contrib.enums.actor import ActorType
 from base.tests.factories.person import PersonFactory
+from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 from osis_admission_sdk import ApiException
 
 
@@ -47,6 +49,14 @@ class SupervisionTestCase(TestCase):
         self.mock_api = api_patcher.start()
         self.addCleanup(api_patcher.stop)
 
+        self.mock_api.return_value.retrieve_proposition.return_value = Mock(
+            links={
+                'request_signatures': {
+                    'url': 'foobar',
+                    'method': 'POST',
+                }
+            },
+        )
         self.mock_api.return_value.retrieve_supervision.return_value = Mock(
             signatures_promoteurs=[Mock(promoteur=Mock(
                 matricule="0123456978",
@@ -58,7 +68,7 @@ class SupervisionTestCase(TestCase):
 
     def test_should_detail_supervision_member(self):
         url = resolve_url("admission:doctorate-detail:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        response = self.client.get(url)
+        response = self.client.get(url, follow=True)
         self.assertContains(response, "Troufignon")
         self.mock_api.return_value.retrieve_supervision.assert_called()
 
@@ -126,3 +136,43 @@ class SupervisionTestCase(TestCase):
         response = self.client.get(url, {})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.mock_api.return_value.remove_member.assert_not_called()
+
+    def test_should_not_display_confirmation_if_errors(self):
+        url = resolve_url("admission:doctorate-update:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_api.return_value.retrieve_verify_proposition.return_value = [
+            {'detail': "Nope"}
+        ]
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mock_api.return_value.retrieve_verify_proposition.assert_called()
+        self.assertNotContains(response, _("Are you sure you want to request signatures for this admission?"))
+        self.assertContains(response, "Nope")
+
+    def test_should_redirect_to_supervision_without_buttons(self):
+        url = resolve_url("admission:doctorate-update:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_api.return_value.retrieve_verify_proposition.return_value = []
+        response = self.client.get(url, {})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mock_api.return_value.retrieve_verify_proposition.assert_called()
+        self.assertContains(response, _("Are you sure you want to request signatures for this admission?"))
+
+        # Success
+        post_url = resolve_url("admission:doctorate-request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.post(post_url, {})
+        self.assertRedirects(response, url)
+        self.mock_api.return_value.create_signatures.assert_called()
+
+        # Failure
+        post_url = resolve_url("admission:doctorate-request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_api.return_value.create_signatures.side_effect = MultipleApiBusinessException(
+            exceptions={
+                ApiBusinessException(
+                    status_code=42,
+                    detail="Something went wrong globally"
+                ),
+            }
+        )
+        response = self.client.post(post_url, {}, follow=True)
+        self.assertRedirects(response, url)
+        self.assertContains(response, _("Please correct the errors first"))
+        self.mock_api.return_value.create_signatures.assert_called()

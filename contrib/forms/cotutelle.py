@@ -43,6 +43,9 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
     motivation = forms.CharField(
         label=_("Cotutelle motivation"),
         required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 2,
+        }),
     )
     institution = forms.CharField(
         label=_("Cotutelle institution"),
@@ -59,7 +62,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         max_files=1,
     )
     autres_documents = FileUploadField(
-        label=_("Other documents"),
+        label=_("Other documents concerning cotutelle"),
         required=False,
     )
 

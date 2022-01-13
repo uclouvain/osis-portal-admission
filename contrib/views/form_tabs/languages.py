@@ -61,12 +61,11 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
         return context_data
 
     def get_initial(self):
-        knowledge = [
+        return [
             language_knowledge.to_dict()
             for language_knowledge
             in AdmissionPersonService.retrieve_languages_knowledge(self.person)
         ]
-        return knowledge
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -81,7 +80,7 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
 
         try:
             self.call_webservice(data)
-        except MultipleApiBusinessException as multiple_business_api_exception:
+        except MultipleApiBusinessException as multiple_business_api_exception:  # pragma: no cover
             for exception in multiple_business_api_exception.exceptions:
                 if exception.status_code in self._error_mapping:
                     formset.add_error(self._error_mapping[exception.status_code], exception.detail)

@@ -48,6 +48,14 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
             person=self.person,
             uuid=str(self.kwargs['pk']),
         )
+        context['supervision'] = AdmissionSupervisionService.get_supervision(
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
+        )
+        context['signature_conditions'] = AdmissionSupervisionService.get_signature_conditions(
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
+        )
         return context
 
     def prepare_data(self, data):

@@ -44,8 +44,8 @@ class DoctorateAdmissionLanguagesDetailView(LoginRequiredMixin, TemplateView):
         if len(context_data["languages_knowledge"]):
             for language_knowledge in context_data["languages_knowledge"]:
                 language = LanguageService.get_language(
-                    code=language_knowledge["language"],
+                    code=language_knowledge.language,
                     person=self.request.user.person,
                 )
-                language_knowledge["language"] = getattr(language, translated_field)
+                language_knowledge.language = getattr(language, translated_field)
         return context_data
