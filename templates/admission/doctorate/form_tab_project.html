@@ -60,6 +60,9 @@
             {% else %}
                 {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
             {% endif %}
+            {% if admission.commission_proximite %}
+                {% field_data _("Proximity commission") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS' %}
+            {% endif %}
         {% endif %}
         <div class="row" id="commission_proximite_cde">
             <div class="col-md-4">
@@ -146,12 +149,15 @@
                     {% bootstrap_field form.institution %}
                 </div>
             </div>
-            <div class="row">
+            {% bootstrap_field form.non_soutenue %}
+            <div class="row" id="soutenue">
                 <div class="col-md-4">
                     {% bootstrap_field form.date_soutenance %}
                 </div>
             </div>
-            {% bootstrap_field form.raison_non_soutenue %}
+            <div id="non-soutenue">
+                {% bootstrap_field form.raison_non_soutenue %}
+            </div>
         </div>
     {% endpanel %}
 {% endblock %}
@@ -238,6 +244,12 @@
         }, { valueOnDisable: '' });
         $('#previous_experience').dependsOn({
             '#id_doctorat_deja_realise': { values: ['YES', 'PARTIAL'] },
+        }, { valueOnDisable: '' });
+        $('#non-soutenue').dependsOn({
+            '#id_non_soutenue': { checked: true },
+        }, { valueOnDisable: '' });
+        $('#soutenue').dependsOn({
+            '#id_non_soutenue': { checked: false },
         }, { valueOnDisable: '' });
 
         // Clear the fields related to the thesis place

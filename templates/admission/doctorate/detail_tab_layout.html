@@ -68,7 +68,7 @@
             {% if not admission %}
                 {% trans "No reference yet - Go to Project tab" %}
             {% else %}
-                {{ admission.reference }}
+                {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
             {% endif %}
         </div>
         <div>

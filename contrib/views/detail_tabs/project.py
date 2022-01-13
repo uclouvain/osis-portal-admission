@@ -55,12 +55,6 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
             if s.sigle == context_data['admission'].code_secteur_formation
         ][0]
 
-        commission_proximite = context_data['admission'].commission_proximite
-        if commission_proximite in ChoixProximityCommissionCDE.get_names():
-            context_data['commission_proximite_cde'] = commission_proximite
-        if commission_proximite in ChoixProximityCommissionCDSS.get_names():
-            context_data['commission_proximite_cdss'] = commission_proximite
-
         # Replace the institute uuid with the formatted name
         if context_data['admission'].institut_these:
             institute = EntitiesService.get_ucl_entity(

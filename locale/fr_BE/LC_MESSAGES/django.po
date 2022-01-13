@@ -83,9 +83,6 @@ msgstr ""
 msgid " (h/w)"
 msgstr " (h/s)"
 
-msgid " (template downloadable on the CDD site)"
-msgstr " (fichier-type à télécharger sur le site de la CDD)"
-
 msgid "(e.g. +32 490 00 00 00)"
 msgstr "(ex: +32 490 00 00 00)"
 
@@ -221,12 +218,6 @@ msgstr "Membres du CA"
 msgid "CANCELLED"
 msgstr "Annulée"
 
-msgid "CDE proximity commission"
-msgstr "Commission de proximité CDE"
-
-msgid "CDSS proximity commission"
-msgstr "Commission de proximité CDSS"
-
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
 
@@ -327,11 +318,11 @@ msgstr "En cours d'études, avez-vous redoublé ?"
 msgid "Do you have a high school diploma?"
 msgstr "Avez-vous un diplôme de fin d'études secondaires ?"
 
+msgid "Doctoral program proposition"
+msgstr "Proposition de programme doctoral"
+
 msgid "Doctoral project"
 msgstr "Projet doctoral"
-
-msgid "Doctoral project proposition"
-msgstr "Proposition de projet doctoral"
 
 msgid "Doctoral training"
 msgstr "Formation doctorale"
@@ -622,6 +613,9 @@ msgstr "Non je n'ai pas de diplôme de fin d'études secondaires"
 msgid "No cotutelle"
 msgstr "Pas de cotutelle"
 
+msgid "No defense"
+msgstr "Non soutenue"
+
 msgid "No defense reason"
 msgstr "Raison de non-soutenance"
 
@@ -687,7 +681,7 @@ msgid "Others"
 msgstr "Autres"
 
 msgid "PARTIAL"
-msgstr "Partiel"
+msgstr "En partie"
 
 msgid "Passport"
 msgstr "Passeport"
