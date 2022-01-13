@@ -28,6 +28,10 @@ from unittest.mock import Mock, patch
 
 from django.test import TestCase
 from django.urls import reverse
+from osis_organisation_sdk.model.address import Address
+from osis_organisation_sdk.model.entite import Entite
+from osis_organisation_sdk.model.paginated_addresses import PaginatedAddresses
+from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
@@ -182,4 +186,83 @@ class AutocompleteTestCase(TestCase):
                 'id': '789654213',
                 'text': 'Marie-Odile Troufignon',
             }],
+        })
+
+    @patch('osis_organisation_sdk.api.entites_api.EntitesApi')
+    def test_autocomplete_institute_list(self, api):
+        mock_entities = [
+            Entite(
+                uuid='uuid1',
+                organization_name='Université Catholique de Louvain',
+                organization_acronym='UCL',
+                title='Institute of technology',
+                acronym='IT',
+            ),
+            Entite(
+                uuid='uuid2',
+                organization_name='Université Catholique de Louvain',
+                organization_acronym='UCL',
+                title='Institute of foreign languages',
+                acronym='IFL',
+            ),
+        ]
+        api.return_value.get_entities.return_value = PaginatedEntites(
+            results=mock_entities,
+        )
+        url = reverse('admission:autocomplete:institute')
+        response = self.client.get(url, {'q': 'Institute'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': 'uuid1',
+                'text': 'Institute of technology (IT)',
+            }, {
+                'id': 'uuid2',
+                'text': 'Institute of foreign languages (IFL)',
+            }],
+        })
+
+    @patch('osis_organisation_sdk.api.entites_api.EntitesApi')
+    def test_autocomplete_institute_location(self, api):
+        mock_locations = [
+            Address(
+                state='Belgique',
+                street='Place de l\'université',
+                street_number='1',
+                postal_code='1348',
+                city='Ottignies-Louvain-la-Neuve',
+                country_iso_code='BE',
+                is_main=True,
+            ),
+            Address(
+                state='Belgique',
+                street='Avenue E. Mounier',
+                street_number='81',
+                postal_code='1200',
+                city='Woluwe-Saint-Lambert',
+                country_iso_code='BE',
+                is_main=True,
+            ),
+        ]
+        api.return_value.get_entity_addresses.return_value = PaginatedAddresses(
+            results=mock_locations,
+            next=None,
+        )
+        url = reverse('admission:autocomplete:institute-location')
+
+        response = self.client.get(url, {'forward': json.dumps({'institut_these': ''})}, {'uuid': 'uuid1'})
+        self.assertEqual(response.json(), {
+            'results': [],
+        })
+
+        response = self.client.get(url, {'forward': json.dumps({'institut_these': 'IFL'})}, {'uuid': 'uuid1'})
+        self.assertEqual(response.json(), {
+            'results': [
+                {
+                    'id': 'Place de l\'université 1, 1348 Ottignies-Louvain-la-Neuve, Belgique',
+                    'text': 'Place de l\'université 1, 1348 Ottignies-Louvain-la-Neuve, Belgique',
+                }, {
+                    'id': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                    'text': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                },
+            ],
         })
