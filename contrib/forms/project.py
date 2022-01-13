@@ -48,6 +48,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Admission type"),
         choices=AdmissionType.choices(),
         widget=forms.RadioSelect,
+        initial=AdmissionType.ADMISSION.name,
     )
     justification = forms.CharField(
         label=_("Brief justification"),
@@ -156,12 +157,13 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     proposition_programme_doctoral = FileUploadField(
-        label=_("Doctoral project proposition") + _(" (template downloadable on the CDD site)"),
+        label=_("Doctoral program proposition"),
         required=False,
     )
     projet_formation_complementaire = FileUploadField(
         label=_("Complementary training project"),
         required=False,
+        max_files=2,
     )
     lettres_recommandation = FileUploadField(
         label=_("Recommendation letters"),
@@ -181,6 +183,10 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     institution = forms.CharField(
         label=_("Institution"),
+        required=False,
+    )
+    non_soutenue = forms.BooleanField(
+        label=_("No defense"),
         required=False,
     )
     date_soutenance = forms.DateField(
@@ -243,6 +249,8 @@ class DoctorateAdmissionProjectForm(forms.Form):
         self.fields['lieu_these'].widget.choices = get_thesis_location_initial_choices(
             self.data.get(self.add_prefix("lieu_these"), self.initial.get("lieu_these")),
         )
+        if self.data.get(self.add_prefix("raison_non_soutenue"), self.initial.get("raison_non_soutenue")):
+            self.fields['non_soutenue'].initial = True
 
     def clean(self):
         data = super().clean()
@@ -302,6 +310,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
 
         # If we have a POST value, set the doctorate
         data = kwargs.get('data', None)
+        self.doctorate_data = {}
         if data and data.get('doctorate'):
             # Populate doctorate choices
             doctorate = self.get_selected_doctorate(data.get('sector'), data.get('doctorate'))
@@ -324,11 +333,12 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        if (self.doctorate_data['sigle_entite_gestion'] in ['CDE', 'CLSM']
+        if (self.doctorate_data.get('sigle_entite_gestion') in ['CDE', 'CLSM']
                 and not cleaned_data.get('commission_proximite_cde')):
             self.add_error('commission_proximite_cde', _("This field is required."))
 
-        if self.doctorate_data['sigle_entite_gestion'] == 'CDSS' and not cleaned_data.get('commission_proximite_cdss'):
+        if (self.doctorate_data.get('sigle_entite_gestion') == 'CDSS'
+                and not cleaned_data.get('commission_proximite_cdss')):
             self.add_error('commission_proximite_cdss', _("This field is required."))
 
         return cleaned_data

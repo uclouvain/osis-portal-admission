@@ -31,11 +31,8 @@
             {% field_data _("Sector") sector_label "col-md-4" %}
             {% field_data _("Doctorate") admission.intitule_doctorat_fr "col-md-4" %}
         </div>
-        {% if commission_proximite_cde %}
-            {% field_data _("CDE proximity commission") commission_proximite_cde|enum_display:'ChoixProximityCommissionCDE' %}
-        {% endif %}
-        {% if commission_proximite_cdss %}
-            {% field_data _("CDSS proximity commission") commission_proximite_cdss|enum_display:'ChoixProximityCommissionCDSS' %}
+        {% if admission.commission_proximite %}
+            {% field_data _("Proximity commission") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS' %}
         {% endif %}
         {% if admission.justification %}
             {% field_data _("Brief justification") admission.justification|linebreaks %}
@@ -65,7 +62,7 @@
         {% field_data _("Thesis redacting language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
         {% field_data _("Project documents") admission.documents_projet %}
         {% field_data _("Gantt graph") admission.graphe_gantt %}
-        {% field_data _("Doctoral project proposition") admission.proposition_programme_doctoral %}
+        {% field_data _("Doctoral program proposition") admission.proposition_programme_doctoral %}
         {% field_data _("Complementary training project") admission.projet_formation_complementaire %}
         {% field_data _("Recommendation letters") admission.lettres_recommandation %}
     {% endpanel %}
@@ -74,8 +71,11 @@
         {% field_data _("PhD already done") admission.doctorat_deja_realise|enum_display:'ChoixDoctoratDejaRealise' %}
         {% if admission.doctorat_deja_realise != "NO" %}
             {% field_data _("Institution") admission.institution %}
-            {% field_data _("Defense date") admission.date_soutenance %}
-            {% field_data _("No defense reason") admission.raison_non_soutenue|linebreaks %}
+            {% if admission.date_soutenance %}
+                {% field_data _("Defense date") admission.date_soutenance %}
+            {% else %}
+                {% field_data _("No defense reason") admission.raison_non_soutenue|linebreaks %}
+            {% endif %}
         {% endif %}
     {% endpanel %}
 {% endblock %}

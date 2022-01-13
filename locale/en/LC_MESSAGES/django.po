@@ -66,9 +66,6 @@ msgstr ""
 msgid " (h/w)"
 msgstr ""
 
-msgid " (template downloadable on the CDD site)"
-msgstr ""
-
 msgid "(e.g. +32 490 00 00 00)"
 msgstr ""
 
@@ -204,12 +201,6 @@ msgstr ""
 msgid "CANCELLED"
 msgstr "Cancelled"
 
-msgid "CDE proximity commission"
-msgstr ""
-
-msgid "CDSS proximity commission"
-msgstr ""
-
 msgid "CSC - China Scholarship Council"
 msgstr ""
 
@@ -310,10 +301,10 @@ msgstr ""
 msgid "Do you have a high school diploma?"
 msgstr ""
 
-msgid "Doctoral project"
+msgid "Doctoral program proposition"
 msgstr ""
 
-msgid "Doctoral project proposition"
+msgid "Doctoral project"
 msgstr ""
 
 msgid "Doctoral training"
@@ -587,6 +578,9 @@ msgstr ""
 msgid "No cotutelle"
 msgstr ""
 
+msgid "No defense"
+msgstr ""
+
 msgid "No defense reason"
 msgstr ""
 
@@ -648,7 +642,7 @@ msgid "Others"
 msgstr ""
 
 msgid "PARTIAL"
-msgstr "Partial"
+msgstr "Partially"
 
 msgid "Passport"
 msgstr ""
