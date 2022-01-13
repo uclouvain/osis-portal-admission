@@ -28,6 +28,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.actor import ActorType
+from admission.contrib.enums.supervision import DecisionApprovalEnum
 
 
 class DoctorateAdmissionSupervisionForm(forms.Form):
@@ -54,6 +55,49 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
         elif data['type'] == ActorType.PROMOTER.name and not data['tutor']:
             self.add_error('tutor', _("This field is required"))
         return data
+
+    class Media:
+        js = ('dependsOn.min.js',)
+
+
+class DoctorateAdmissionApprovalForm(forms.Form):
+    decision = forms.ChoiceField(
+        label=_("Decision"),
+        choices=DecisionApprovalEnum.choices(),
+        widget=forms.RadioSelect,
+        required=True,
+    )
+    rejection_reason = forms.CharField(
+        label=_('Rejection reason'),
+        required=False,
+        max_length=50,
+    )
+    internal_comment = forms.CharField(
+        label=_('Internal comment'),
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'rows': 5,
+            },
+        ),
+        help_text=_("This comment will only be visible to the administrators."),
+    )
+    comment = forms.CharField(
+        label=_('External comment'),
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'rows': 5,
+            },
+        ),
+        help_text=_("This comment will be visible to all users who have access to this page."),
+    )
+
+    def clean(self):
+        data = super().clean()
+        # The reason is useful only if the admission is not approved
+        if data['decision'] == DecisionApprovalEnum.APPROVED.name and data['rejection_reason']:
+            data['rejection_reason'] = ''
 
     class Media:
         js = ('dependsOn.min.js',)

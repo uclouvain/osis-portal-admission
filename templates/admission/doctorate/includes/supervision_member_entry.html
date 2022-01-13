@@ -26,20 +26,23 @@
 {% endcomment %}
 
 {% url 'admission:doctorate-update:remove-actor' view.kwargs.pk type member.matricule as remove_url %}
-<div class="row">
-    <div class="col-md-8">
-        <strong>{{ member.prenom }} {{ member.nom }}</strong>
-        {{ signature.status|enum_display:'ChoixEtatSignature' }}
-    </div>
-    {% if admission|can_make_action:'remove_member' %}
-        <div class="col-md-4">
-            <a href="{{ remove_url }}" class="btn btn-danger">
-                <i class="glyphicon glyphicon-trash"></i>
-                {% trans "Remove" %}
-            </a>
+<details class="signature-item">
+    <summary class="row">
+        <div class="col-md-8">
+            <strong>{{ member.prenom }} {{ member.nom }}</strong>
+            {{ signature.status|enum_display:'ChoixEtatSignature' }}
         </div>
-    {% endif %}
-</div>
+        {% if admission|can_make_action:'remove_member' %}
+            <div class="col-md-4">
+                <a href="{{ remove_url }}" class="btn btn-danger">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    {% trans "Remove" %}
+                </a>
+            </div>
+        {% endif %}
+    </summary>
+    <blockquote>{{ signature.commentaire_externe|default:_('No comment') }}</blockquote>
+</details>
 {% if not forloop.last %}
     <hr />
 {% endif %}
