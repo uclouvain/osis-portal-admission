@@ -25,7 +25,7 @@
 # ##############################################################################
 from dal import autocomplete, forward
 from django import forms
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
 from admission.contrib.forms import get_country_initial_choices
 
@@ -36,10 +36,14 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
         label=_("Is your contact address different from your residential address?"),
     )
 
-    email = forms.EmailField(disabled=True, label=_("Email"))
+    email = forms.EmailField(
+        disabled=True,
+        label=_("Email"),
+        help_text=_("Please contact the Enrolment Office if you wish to change your contact email.")
+    )
     phone_mobile = forms.CharField(
         required=False,
-        label=_("Mobile phone"),
+        label=__('admission', "Mobile phone"),
         help_text=_("(e.g. +32 490 00 00 00)"),
     )
 
@@ -49,13 +53,14 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Tick the show contact checkbox only if there is data in contact
-        if self.initial['contact'] and any(self.initial['contact'][k] for k in self.initial['contact'].attribute_map):
+        if self.initial['contact'] and any(v for k, v in self.initial['contact'].items()):
             self.fields["show_contact"].initial = True
 
 
 class DoctorateAdmissionAddressForm(forms.Form):
     street = forms.CharField(required=False, label=_("Street"))
     street_number = forms.CharField(required=False, label=_("Street number"))
+    place = forms.CharField(required=False, label=_("Place"))
     postal_box = forms.CharField(required=False, label=_("Box"))
     postal_code = forms.CharField(
         required=False,
@@ -88,13 +93,13 @@ class DoctorateAdmissionAddressForm(forms.Form):
         self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_country_initial_choices(
-            self.initial.get("country"),
+            self.data.get(self.add_prefix("country"), self.initial.get("country")),
             person,
         )
-        if self.initial and self.initial["country"] == self.BE_ISO_CODE:
-            self.initial["be_postal_code"] = self.initial["postal_code"]
-            self.initial["be_city"] = self.initial["city"]
-            initial_choice_needed = self.data.get('be_city', self.initial.get("be_city"))
+        if self.data.get(self.add_prefix('country'), self.initial.get('country')) == self.BE_ISO_CODE:
+            self.initial["be_postal_code"] = self.initial.get("postal_code")
+            self.initial["be_city"] = self.initial.get("city")
+            initial_choice_needed = self.data.get(self.add_prefix('be_city'), self.initial.get("be_city"))
             if initial_choice_needed:
                 self.fields['be_city'].widget.choices = [(initial_choice_needed, initial_choice_needed)]
 
@@ -113,10 +118,12 @@ class DoctorateAdmissionAddressForm(forms.Form):
         else:
             mandatory_address_fields.extend(["postal_code", "city"])
 
-        if any(cleaned_data.get(f) for f in mandatory_address_fields):
+        all_fields = mandatory_address_fields + ["street", "postal_box", "place"]
+
+        if any(cleaned_data.get(f) for f in all_fields):
             for field in mandatory_address_fields:
                 if not cleaned_data.get(field):
-                    self.add_error(field, _("Please fill all the address fields"))
+                    self.add_error(field, _("This field is required."))
 
             street = cleaned_data.get("street")
             postal_box = cleaned_data.get("postal_box")

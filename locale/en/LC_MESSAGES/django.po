@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-18 17:48+0200\n"
+"POT-Creation-Date: 2021-11-08 17:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,31 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid ""
+"\n"
+"                Please refer to your identity document in order to complete "
+"the\n"
+"                form. If you have a Belgian national register number, "
+"please\n"
+"                indicate it as a priority.\n"
+"            "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"            Are you sure you want to remove %(prenom)s\n"
+"            %(nom)s as %(role)s\n"
+"            ?\n"
+"        "
+msgstr ""
+
+msgid ""
+"\n"
+"            Lorem impsum for supervision\n"
+"        "
+msgstr ""
 
 msgid ""
 "\n"
@@ -28,6 +53,17 @@ msgid ""
 "interrupt\n"
 "            and resume at any moment.\n"
 "        "
+msgstr ""
+
+msgid ""
+"\n"
+"          Please complete here below the schedule of your last year\n"
+"          of high school, indicating for each domain the number of\n"
+"          hours of education followed per week (h/w).\n"
+"        "
+msgstr ""
+
+msgid " (h/w)"
 msgstr ""
 
 msgid "(e.g. +32 490 00 00 00)"
@@ -51,10 +87,37 @@ msgstr ""
 msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
 msgstr ""
 
+msgid "A field of the schedule must at least be set."
+msgstr ""
+
+msgid "A1"
+msgstr ""
+
+msgid "A2"
+msgstr ""
+
+msgid "APPROVED"
+msgstr "Approved"
+
 msgid "ARC - Action de Recherche Concertée"
 msgstr ""
 
 msgid "ARES - Coopération au développement"
+msgstr ""
+
+msgid "Academic graduation year"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Add a language"
+msgstr ""
+
+msgid "Add a promoter or a CA member"
+msgstr ""
+
+msgid "Add another"
 msgstr ""
 
 msgid "Admission"
@@ -63,13 +126,49 @@ msgstr ""
 msgid "Admission type"
 msgstr ""
 
-msgid "Allocated time"
+msgid "Allocated time for the thesis (in EFT)"
 msgstr ""
 
-msgid "Already registered to UCLouvain?"
+msgid "Ancient languages"
+msgstr ""
+
+msgid "Another institute"
+msgstr ""
+
+msgid "Approved"
+msgstr ""
+
+msgid "Are you sure you want to cancel this request?"
+msgstr ""
+
+msgid "Are you sure you want to request signatures for this admission?"
+msgstr ""
+
+msgid "Artistic qualification"
+msgstr ""
+
+msgid "Artistic transition"
+msgstr ""
+
+msgid "At which result level do you consider yourself?"
+msgstr ""
+
+msgid "B1"
+msgstr ""
+
+msgid "B2"
 msgstr ""
 
 msgid "Back to my requests"
+msgstr ""
+
+msgid "Belgian diploma"
+msgstr ""
+
+msgid "Between 65 and 75%"
+msgstr ""
+
+msgid "Biology"
 msgstr ""
 
 msgid "Birth country"
@@ -90,8 +189,20 @@ msgstr ""
 msgid "Brief justification"
 msgstr ""
 
-msgid "Bureau"
+msgid "C1"
 msgstr ""
+
+msgid "C2"
+msgstr ""
+
+msgid "CA Member"
+msgstr ""
+
+msgid "CA members"
+msgstr ""
+
+msgid "CANCELLED"
+msgstr "Cancelled"
 
 msgid "CSC - China Scholarship Council"
 msgstr ""
@@ -102,10 +213,22 @@ msgstr ""
 msgid "Change my submission"
 msgstr ""
 
+msgid "Chemistry"
+msgstr ""
+
 msgid "City"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
+msgid "Community of education"
+msgstr ""
+
 msgid "Complementary training project"
+msgstr ""
+
+msgid "Confirm"
 msgstr ""
 
 msgid "Confirmation"
@@ -126,7 +249,25 @@ msgstr ""
 msgid "Contact language"
 msgstr ""
 
+msgid "Convention"
+msgstr ""
+
 msgid "Cotutelle"
+msgstr ""
+
+msgid "Cotutelle convention"
+msgstr ""
+
+msgid "Cotutelle institution"
+msgstr ""
+
+msgid "Cotutelle is not defined yet"
+msgstr ""
+
+msgid "Cotutelle motivation"
+msgstr ""
+
+msgid "Cotutelle opening request"
 msgstr ""
 
 msgid "Country"
@@ -135,23 +276,41 @@ msgstr ""
 msgid "Country of citizenship"
 msgstr ""
 
+msgid "Course choice"
+msgstr ""
+
 msgid "Create new doctorate admission"
 msgstr ""
 
 msgid "Curriculum"
 msgstr ""
 
+msgid "Decision"
+msgstr ""
+
 msgid "Defense date"
+msgstr ""
+
+msgid "Delete"
 msgstr ""
 
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
 msgstr ""
 
-msgid "Doctoral project"
+msgid "Did you change of orientation during your studies?"
 msgstr ""
 
-msgid "Doctoral project proposition"
+msgid "Did you repeat certain study years during your studies?"
+msgstr ""
+
+msgid "Do you have a high school diploma?"
+msgstr ""
+
+msgid "Doctoral program proposition"
+msgstr ""
+
+msgid "Doctoral project"
 msgstr ""
 
 msgid "Doctoral training"
@@ -163,13 +322,28 @@ msgstr ""
 msgid "Doctorate admissions"
 msgstr ""
 
-msgid "ECONOMY"
+msgid "Dutch"
 msgstr ""
+
+msgid "ECONOMY"
+msgstr "Economy"
 
 msgid "ERC - European Research Council"
 msgstr ""
 
+msgid "Economic sciences"
+msgstr ""
+
 msgid "Edit"
+msgstr ""
+
+msgid "Educational qualification"
+msgstr ""
+
+msgid "Educational transition"
+msgstr ""
+
+msgid "Educational type is required with this community of education"
 msgstr ""
 
 msgid "Email"
@@ -178,13 +352,19 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-msgid "Estimated time"
+msgid "Estimated time to complete the doctorate (in months)"
+msgstr ""
+
+msgid "European Bachelor (Schola Europaea)"
 msgstr ""
 
 msgid "Exchange with UCLouvain"
 msgstr ""
 
 msgid "FNRS"
+msgstr ""
+
+msgid "FRC - Fonds de recherche clinique"
 msgstr ""
 
 msgid "FRESH"
@@ -215,46 +395,123 @@ msgstr ""
 msgid "First name in use"
 msgstr ""
 
+msgid "Flemish-speaking Community"
+msgstr ""
+
 msgid "Fondation Mont Godinne"
 msgstr ""
 
 msgid "Fondation St Luc"
 msgstr ""
 
-msgid "Fonds de recherche clinique"
+msgid "Foreign diploma"
 msgstr ""
 
 msgid "French"
 msgstr ""
 
-msgid "Full-time equivalent"
+msgid "French-speaking Community of Belgium"
 msgstr ""
 
+#, no-python-format
+msgid "Full-time equivalent (as %)"
+msgstr "Full-time equivalent (as %)"
+
 msgid "Gantt graph"
-msgstr ""
+msgstr "4-year gantt graph"
 
 msgid "Gender"
 msgstr ""
 
-msgid "ID card"
+msgid "German"
 msgstr ""
 
-msgid "ID photo"
+msgid "German-speaking Community"
+msgstr ""
+
+msgid "Greek"
+msgstr ""
+
+msgid "Have you previously been registered at UCLouvain?"
+msgstr ""
+
+msgid "I will have a high school diploma this year"
+msgstr ""
+
+msgid "INVITED"
+msgstr ""
+
+msgid "IN_PROGRESS"
+msgstr "In progress"
+
+msgid "IT"
 msgstr ""
 
 msgid "Identification"
 msgstr ""
 
+msgid "Identity card (both sides)"
+msgstr ""
+
 msgid "Identity card number"
+msgstr ""
+
+msgid "Identity picture"
+msgstr ""
+
+msgid "If other language, please specify"
+msgstr ""
+
+msgid "If other optional domains, please specify"
+msgstr ""
+
+msgid "If you cannot find your educational type, please clarify below"
+msgstr ""
+
+msgid "If you cannot find your institute, please clarify below"
+msgstr ""
+
+msgid "If you cannot find your linguistic regime, please clarify below"
+msgstr ""
+
+msgid ""
+"In order to help you at this matter, we propose you to perform a search "
+"based on the location or postal code."
+msgstr ""
+
+msgid "In what Community did (do) you follow last year of high school?"
+msgstr ""
+
+msgid "Institute"
 msgstr ""
 
 msgid "Institution"
 msgstr ""
 
+msgid "Internal comment"
+msgstr ""
+
+msgid "International Baccalaureate"
+msgstr ""
+
+msgid ""
+"Is this diploma subject to an equivalence decision by the services of the "
+"French community of Belgium?"
+msgstr ""
+
 msgid "Is your contact address different from your residential address?"
 msgstr ""
 
+msgid "Is your thesis joint with another secondary institute?"
+msgstr ""
+
 msgid "Jury"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Languages knowledge"
 msgstr ""
 
 msgid "Last name"
@@ -263,8 +520,20 @@ msgstr ""
 msgid "Last registration year"
 msgstr ""
 
-msgid "MANAGEMENT"
+msgid "Latin"
 msgstr ""
+
+msgid "Less than 65%"
+msgstr ""
+
+msgid "Linguistic regime"
+msgstr ""
+
+msgid "Listening comprehension"
+msgstr ""
+
+msgid "MANAGEMENT"
+msgstr "Management"
 
 msgid "Male"
 msgstr ""
@@ -273,10 +542,38 @@ msgctxt "gender male"
 msgid "Male"
 msgstr ""
 
+msgid "Mandatory language"
+msgstr ""
+
+msgid "Mandatory languages are missing."
+msgstr ""
+
+msgid "Mathematics"
+msgstr ""
+
+msgid "Member not found"
+msgstr ""
+
+msgctxt "admission"
 msgid "Mobile phone"
 msgstr ""
 
+msgid "Modern languages"
+msgstr ""
+
+msgid "More than 75%"
+msgstr ""
+
+msgid "Motivation"
+msgstr ""
+
 msgid "NO"
+msgstr "No"
+
+msgid "NOT_INVITED"
+msgstr "Not invited"
+
+msgid "National Bachelor (or government diploma, ...)"
 msgstr ""
 
 msgid "National registry number"
@@ -285,32 +582,80 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No I don't have a high school diploma"
+msgstr ""
+
+msgid "No comment"
+msgstr ""
+
+msgid "No cotutelle"
+msgstr ""
+
+msgid "No defense"
+msgstr ""
+
 msgid "No defense reason"
 msgstr ""
 
+msgid "No languages knowledge provided."
+msgstr ""
+
+msgid "No one invited"
+msgstr ""
+
 msgid "No reference yet - Go to Project tab"
+msgstr ""
+
+msgid "No secondary studies provided."
+msgstr ""
+
+msgid "Not known yet"
 msgstr ""
 
 msgid "Not submitted"
 msgstr ""
 
 msgid "OTHER"
+msgstr "Other"
+
+msgid "Only to provide if the address is not available in the previous field."
 msgstr ""
 
 msgid ""
 "Only to provide if you are in possession of a Belgian document of identity. "
 "If you are of Belgian nationality and you live in Belgium this field is "
-"mandatory (11 digits length without space, hyphen or dot (Ex:79682312345))."
+"mandatory."
+msgstr ""
+
+msgid "Opening request"
+msgstr ""
+
+msgid "Organizing country"
 msgstr ""
 
 msgid "Other"
 msgstr ""
 
+msgid "Other documents concerning cotutelle"
+msgstr ""
+
+msgid "Other education, to specify"
+msgstr ""
+
+msgid "Other linguistic regime"
+msgstr ""
+
 msgid "Other names"
 msgstr ""
 
-msgid "PARTIAL"
+msgid "Other thesis location"
 msgstr ""
+
+msgid "Others"
+msgstr ""
+
+msgid "PARTIAL"
+msgstr "Partially"
 
 msgid "Passport"
 msgstr ""
@@ -321,16 +666,53 @@ msgstr ""
 msgid "Passport number"
 msgstr ""
 
+msgid "Pending"
+msgstr ""
+
+msgid "Personal data"
+msgstr ""
+
 msgid "Personal information"
 msgstr ""
 
 msgid "PhD already done"
 msgstr ""
 
-msgid "Please fill all the address fields"
+msgid "Physic"
+msgstr ""
+
+msgid "Place"
+msgstr ""
+
+msgid ""
+"Please contact the Enrolment Office if you wish to change your contact email."
+msgstr ""
+
+msgid "Please correct the errors below"
+msgstr ""
+
+msgid "Please correct the errors first"
+msgstr ""
+
+msgid "Please mention the academic graduation year"
+msgstr ""
+
+msgid "Please rate your listening comprehension"
+msgstr ""
+
+msgid "Please rate your speaking ability"
+msgstr ""
+
+msgid "Please rate your writing ability"
 msgstr ""
 
 msgid "Please set either street or postal_box"
+msgstr ""
+
+msgid "Please set either the linguistic regime or other field."
+msgstr ""
+
+msgid "Please set one of institute or other institute fields"
 msgstr ""
 
 msgid "Postal code"
@@ -339,17 +721,25 @@ msgstr ""
 msgid "Pre-Admission"
 msgstr ""
 
+msgid "Previous experience"
+msgstr ""
+
 msgid "Previous research experience"
 msgstr ""
 
 msgid "Private defense"
 msgstr ""
 
-msgid "Project"
+msgid "Professional education"
+msgstr ""
+
+msgid "Professional education + Maturity exam"
 msgstr ""
 
 msgid "Project documents"
 msgstr ""
+"Project (research questions, state of the art, objectives, methods, "
+"chronology, bibliography)"
 
 msgid "Project resume"
 msgstr ""
@@ -357,28 +747,101 @@ msgstr ""
 msgid "Project title"
 msgstr ""
 
+msgid "Promoter"
+msgstr ""
+
+msgid "Promoters"
+msgstr ""
+
+msgid "Proof of identity"
+msgstr ""
+
+msgid "Proposition approval"
+msgstr ""
+
+msgid "Proximity Commission for Dental Sciences (DENT)"
+msgstr ""
+
+msgid "Proximity Commission for Genetics and Immunology (GIM)"
+msgstr ""
+
+msgid "Proximity Commission for Motricity Sciences (MOTR)"
+msgstr ""
+
+msgid "Proximity Commission for Neuroscience (NRSC)"
+msgstr ""
+
+msgid "Proximity Commission for Pharmaceutical Sciences (DFAR)"
+msgstr ""
+
+msgid "Proximity commission"
+msgstr ""
+
+msgid ""
+"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+msgstr ""
+
+msgid "Proximity commission for experimental and clinical research (ECLI)"
+msgstr ""
+
+msgid "Proximity commission for public health, health and society (SPSS)"
+msgstr ""
+
 msgid "Public defense"
 msgstr ""
 
+msgid "Qualification method"
+msgstr ""
+
+msgid "Rejection reason"
+msgstr ""
+
+msgid "REFUSED"
+msgstr "Refused"
+
+msgid "Recommendation letters"
+msgstr ""
+
 msgid "Reference:"
+msgstr ""
+
+msgid "Rejected"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Request signatures"
 msgstr ""
 
 msgid "Residential address"
 msgstr ""
 
 msgid "SEARCH_SCHOLARSHIP"
-msgstr ""
+msgstr "Research scholarship"
 
 msgid "SELF_FUNDING"
-msgstr ""
+msgstr "Self-funding"
 
-msgid "Save my submission"
+msgid "SUBMITTED"
+msgstr "Submitted"
+
+msgid "Save"
 msgstr ""
 
 msgid "Scholarship"
 msgstr ""
 
 msgid "Scholarship grant"
+msgstr ""
+
+msgid "Sciences"
+msgstr ""
+
+msgid "Search a person by name"
+msgstr ""
+
+msgid "Search a tutor by name"
 msgstr ""
 
 msgid "Secondary studies"
@@ -388,6 +851,15 @@ msgid "Sector"
 msgstr ""
 
 msgid "Sex"
+msgstr ""
+
+msgid "Signatures requests sent"
+msgstr ""
+
+msgid "Social sciences"
+msgstr ""
+
+msgid "Speaking ability"
 msgstr ""
 
 msgid "Specify scholarship grant"
@@ -405,14 +877,50 @@ msgstr ""
 msgid "Street number"
 msgstr ""
 
+msgid "Submit my decision"
+msgstr ""
+
 msgid "Supervision"
+msgstr ""
+
+msgid "Teaching of general education"
+msgstr ""
+
+msgid "Thesis institute"
+msgstr ""
+
+msgid "Thesis location"
 msgstr ""
 
 msgid "Thesis redacting language"
 msgstr ""
 
-msgid "UCLOUVAIN_ASSISTANT"
+msgid "This comment will be visible to all users who have access to this page."
 msgstr ""
+
+msgid "This comment will only to visible by the administrators."
+msgstr ""
+
+msgid "This field is required"
+msgstr ""
+
+msgid "This field is required."
+msgstr ""
+
+msgid "This is a diploma from"
+msgstr ""
+
+msgid "This language is set more than once."
+msgstr ""
+
+msgid "Timetable"
+msgstr ""
+
+msgid "Transition method"
+msgstr ""
+
+msgid "UCLOUVAIN_ASSISTANT"
+msgstr "Uclouvain assistant"
 
 msgid "Undecided"
 msgstr ""
@@ -423,10 +931,30 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-msgid "WORK_CONTRACT"
+msgid "WBI - Wallonie Bruxelles International"
 msgstr ""
 
-msgid "Wallonie Bruxelles International"
+msgid "WORK_CONTRACT"
+msgstr "Work contract"
+
+msgid "What diploma did you get (or will you get) ?"
+msgstr ""
+
+msgid "What diploma did you get (or will you get)?"
+msgstr ""
+
+msgid ""
+"What is the name of the educational institute that has provided to you a "
+"certificate of upper-secundary education (C.E.S.S.)?"
+msgstr ""
+
+msgid "What result did you get?"
+msgstr ""
+
+msgid "What type of education did (do) you follow?"
+msgstr ""
+
+msgid "What was your last year of UCLouvain enrollment?"
 msgstr ""
 
 msgid "Work contract"
@@ -435,8 +963,45 @@ msgstr ""
 msgid "Work contract type"
 msgstr ""
 
-msgid "YES"
+msgid "Writing ability"
 msgstr ""
 
+msgid "YES"
+msgstr "Yes"
+
 msgid "Yes"
+msgstr ""
+
+msgid "Yes I have a high school diploma"
+msgstr ""
+
+msgid "You cannot fill in a language more than once, please correct the form."
+msgstr ""
+
+msgid ""
+"You must correct your proposition before being able to request signatures."
+msgstr ""
+
+msgid "Your data has been saved"
+msgstr ""
+
+msgid "belgian"
+msgstr ""
+
+msgid "dd/mm/yyyy"
+msgstr ""
+
+msgid "foreign"
+msgstr ""
+
+msgid "h/w"
+msgstr ""
+
+msgid "hours are required"
+msgstr ""
+
+msgid "label is required"
+msgstr ""
+
+msgid "yyyy"
 msgstr ""

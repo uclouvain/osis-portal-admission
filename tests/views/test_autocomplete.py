@@ -28,15 +28,21 @@ from unittest.mock import Mock, patch
 
 from django.test import TestCase
 from django.urls import reverse
+from osis_organisation_sdk.model.address import Address
+from osis_organisation_sdk.model.entite import Entite
+from osis_organisation_sdk.model.paginated_addresses import PaginatedAddresses
+from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 
-from admission.tests.utils import MockCity, MockCountry
+from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
 
 
 class AutocompleteTestCase(TestCase):
+    def setUp(self):
+        self.client.force_login(PersonFactory().user)
+
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
-        self.client.force_login(PersonFactory().user)
         api.return_value.list_doctorat_dtos.return_value = [
             Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE"),
             Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
@@ -54,7 +60,6 @@ class AutocompleteTestCase(TestCase):
 
     @patch('osis_reference_sdk.api.countries_api.CountriesApi')
     def test_autocomplete_country(self, api):
-        self.client.force_login(PersonFactory().user)
         api.return_value.countries_list.return_value = Mock(results=[
             MockCountry(iso_code='FR', name='France', name_en='France'),
             MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
@@ -84,9 +89,39 @@ class AutocompleteTestCase(TestCase):
         })
         self.assertEqual(api.return_value.countries_list.call_args[1]['search'], 'F')
 
+    @patch('osis_reference_sdk.api.languages_api.LanguagesApi')
+    def test_autocomplete_languages(self, api):
+        api.return_value.languages_list.return_value = Mock(results=[
+            MockLanguage(code='FR', name='Français', name_en='French'),
+            MockLanguage(code='EN', name='Anglais', name_en='English'),
+        ])
+        url = reverse('admission:autocomplete:language')
+        response = self.client.get(url, {'q': ''})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': 'FR',
+                'text': 'Français'
+            }, {
+                'id': 'EN',
+                'text': 'Anglais'
+            }]
+        })
+        api.return_value.languages_list.assert_called()
+
+        api.return_value.languages_list.return_value = Mock(results=[
+            MockLanguage(code='FR', name='Français', name_en='French'),
+        ])
+        response = self.client.get(url, {'q': 'F'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': 'FR',
+                'text': 'Français'
+            }]
+        })
+        self.assertEqual(api.return_value.languages_list.call_args[1]['search'], 'F')
+
     @patch('osis_reference_sdk.api.cities_api.CitiesApi')
     def test_autocomplete_city(self, api):
-        self.client.force_login(PersonFactory().user)
         api.return_value.cities_list.return_value = Mock(results=[
             MockCity(name='Pintintin-les-Creumeuil'),
             MockCity(name='Montreuil-les-Sardouille'),
@@ -116,3 +151,118 @@ class AutocompleteTestCase(TestCase):
         })
         self.assertEqual(api.return_value.cities_list.call_args[1]['zip_code'], '1111')
         self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')
+
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_tutors(self, api):
+        api.return_value.list_tutors.return_value = {'results': [
+            Mock(first_name='Michel', last_name='Screugnette', global_id="0123456987"),
+            Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213"),
+        ]}
+        url = reverse('admission:autocomplete:tutor')
+        response = self.client.get(url, {'q': 'm'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': '0123456987',
+                'text': 'Michel Screugnette',
+            }, {
+                'id': '789654213',
+                'text': 'Marie-Odile Troufignon',
+            }],
+        })
+
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_persons(self, api):
+        api.return_value.list_persons.return_value = {'results': [
+            Mock(first_name='Ripolin', last_name='Trolapois', global_id="0123456987"),
+            Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213"),
+        ]}
+        url = reverse('admission:autocomplete:person')
+        response = self.client.get(url, {'q': 'm'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': '0123456987',
+                'text': 'Ripolin Trolapois',
+            }, {
+                'id': '789654213',
+                'text': 'Marie-Odile Troufignon',
+            }],
+        })
+
+    @patch('osis_organisation_sdk.api.entites_api.EntitesApi')
+    def test_autocomplete_institute_list(self, api):
+        mock_entities = [
+            Entite(
+                uuid='uuid1',
+                organization_name='Université Catholique de Louvain',
+                organization_acronym='UCL',
+                title='Institute of technology',
+                acronym='IT',
+            ),
+            Entite(
+                uuid='uuid2',
+                organization_name='Université Catholique de Louvain',
+                organization_acronym='UCL',
+                title='Institute of foreign languages',
+                acronym='IFL',
+            ),
+        ]
+        api.return_value.get_entities.return_value = PaginatedEntites(
+            results=mock_entities,
+        )
+        url = reverse('admission:autocomplete:institute')
+        response = self.client.get(url, {'q': 'Institute'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': 'uuid1',
+                'text': 'Institute of technology (IT)',
+            }, {
+                'id': 'uuid2',
+                'text': 'Institute of foreign languages (IFL)',
+            }],
+        })
+
+    @patch('osis_organisation_sdk.api.entites_api.EntitesApi')
+    def test_autocomplete_institute_location(self, api):
+        mock_locations = [
+            Address(
+                state='Belgique',
+                street='Place de l\'université',
+                street_number='1',
+                postal_code='1348',
+                city='Ottignies-Louvain-la-Neuve',
+                country_iso_code='BE',
+                is_main=True,
+            ),
+            Address(
+                state='Belgique',
+                street='Avenue E. Mounier',
+                street_number='81',
+                postal_code='1200',
+                city='Woluwe-Saint-Lambert',
+                country_iso_code='BE',
+                is_main=True,
+            ),
+        ]
+        api.return_value.get_entity_addresses.return_value = PaginatedAddresses(
+            results=mock_locations,
+            next=None,
+        )
+        url = reverse('admission:autocomplete:institute-location')
+
+        response = self.client.get(url, {'forward': json.dumps({'institut_these': ''})}, {'uuid': 'uuid1'})
+        self.assertEqual(response.json(), {
+            'results': [],
+        })
+
+        response = self.client.get(url, {'forward': json.dumps({'institut_these': 'IFL'})}, {'uuid': 'uuid1'})
+        self.assertEqual(response.json(), {
+            'results': [
+                {
+                    'id': 'Place de l\'université 1, 1348 Ottignies-Louvain-la-Neuve, Belgique',
+                    'text': 'Place de l\'université 1, 1348 Ottignies-Louvain-la-Neuve, Belgique',
+                }, {
+                    'id': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                    'text': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                },
+            ],
+        })

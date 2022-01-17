@@ -1,27 +1,38 @@
-{% load i18n %}
+{% load i18n admission %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
 <div class="form-group">
-  <ul class="nav nav-tabs nav-justified">
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="person" is_valid=valid_tabs.person tab_label=_("Identification") %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="coordonnees" is_valid=valid_tabs.contact_coordonnees tab_label=_("Contact details") %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="education" is_valid=valid_tabs.secondary_studies tab_label=_("Secondary studies") %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="curriculum" is_valid=valid_tabs.curriculum tab_label=_("Curriculum") %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="project" is_valid=valid_tabs.project tab_label=_("Doctoral project") %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="cotutelle" is_valid=valid_tabs.cotutelle tab_label=_("Cotutelle") %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="supervision" is_valid=valid_tabs.supervision tab_label=_("Supervision") %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="confirm" is_valid=valid_tabs.confirm tab_label=_("Confirmation") %}
-  </ul>
-
-  {% if admission.is_valid %}
     <ul class="nav nav-tabs">
-      {% include 'admission/doctorate_tab_entry.html' with tab_name="confirm-paper" is_valid=valid_tabs.confirm_paper tab_label=_("Confirmation paper") %}
-      {% include 'admission/doctorate_tab_entry.html' with tab_name="training" is_valid=valid_tabs.training tab_label=_("Doctoral training") %}
-      {% include 'admission/doctorate_tab_entry.html' with tab_name="jury" is_valid=valid_tabs.jury tab_label=_("Jury") %}
-      {% include 'admission/doctorate_tab_entry.html' with tab_name="private-defense" is_valid=valid_tabs.private_defense tab_label=_("Private defense") %}
-      {% include 'admission/doctorate_tab_entry.html' with tab_name="public-defense" is_valid=valid_tabs.public_defense tab_label=_("Public defense") %}
+        {% for parent, children in tab_tree.items %}
+            {% if parent == active_parent %}
+                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon %}
+            {% else %}
+                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon %}
+            {% endif %}
+        {% endfor %}
+        {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") %}
     </ul>
-  {% endif %}
-
-  <ul class="nav nav-tabs">
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") %}
-  </ul>
 </div>

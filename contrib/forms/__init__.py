@@ -23,18 +23,57 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from functools import partial
 
+from django import forms
 from django.conf import settings
+from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 
-from admission.services.reference import CountriesService
+from admission.services.organisation import EntitiesService
+from admission.services.reference import CountriesService, LanguageService
+from admission.utils import format_entity_title
 
 EMPTY_CHOICE = (('', ' - '),)
 
 
 def get_country_initial_choices(iso_code, person):
+    """Return the unique initial choice for a country when data is either set from initial or from webservice."""
     if not iso_code:
         return EMPTY_CHOICE
     country = CountriesService.get_country(iso_code=iso_code, person=person)
     return EMPTY_CHOICE + (
-        (country.iso_code, country.name_en if settings.LANGUAGE_CODE == 'en' else country.name),
+        (country.iso_code, country.name if get_language() == settings.LANGUAGE_CODE else country.name_en),
     )
+
+
+def get_language_initial_choices(code, person):
+    """Return the unique initial choice for a language when data is either set from initial or from webservice."""
+    if not code:
+        return EMPTY_CHOICE
+    language = LanguageService.get_language(code=code, person=person)
+    return EMPTY_CHOICE + (
+        (language.code, language.name if get_language() == settings.LANGUAGE_CODE else language.name_en),
+    )
+
+
+def get_thesis_institute_initial_choices(uuid, person):
+    """Return the unique initial choice for an institute when data is either set from initial or webservice."""
+    if not uuid:
+        return EMPTY_CHOICE
+    institute = EntitiesService.get_ucl_entity(person=person, uuid=uuid)
+    return EMPTY_CHOICE + (
+        (institute.uuid, format_entity_title(entity=institute)),
+    )
+
+
+def get_thesis_location_initial_choices(value):
+    """Return the unique initial choice for a thesis location when data is either set from initial or webservice."""
+    return EMPTY_CHOICE if not value else EMPTY_CHOICE + ((value, value),)
+
+
+CustomDateInput = partial(
+    forms.DateInput,
+    attrs={'placeholder': _("dd/mm/yyyy")},
+    format='%d/%m/%Y',
+)

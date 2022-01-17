@@ -27,11 +27,10 @@ from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
+from rest_framework import status
 
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
-from osis_admission_sdk.model.coordonnees import Coordonnees
-from osis_admission_sdk.model.coordonnees_contact import CoordonneesContact
 
 
 class CoordonneesTestCase(TestCase):
@@ -50,29 +49,30 @@ class CoordonneesTestCase(TestCase):
         self.mock_person_api = person_api_patcher.start()
         self.addCleanup(person_api_patcher.stop)
 
-        self.mock_person_api.return_value.retrieve_coordonnees.return_value = Coordonnees._from_openapi_data(
+        self.mock_get = self.mock_person_api.return_value.retrieve_coordonnees.return_value.to_dict
+        self.mock_get.return_value = dict(
             email="john@example.org",
             phone_mobile="",
-            residential=CoordonneesContact(
-                location="",
-                postal_code="",
-                city="",
-                country="",
-                street="",
-                street_number="",
-                postal_box="",
-                place="",
-            ),
-            contact=CoordonneesContact(
-                location="",
-                postal_code="",
-                city="",
-                country="",
-                street="",
-                street_number="",
-                postal_box="",
-                place="",
-            ),
+            residential={
+                'location': "",
+                'postal_code': "",
+                'city': "",
+                'country': "",
+                'street': "",
+                'street_number': "",
+                'postal_box': "",
+                'place': ""
+            },
+            contact={
+                'location': "",
+                'postal_code': "",
+                'city': "",
+                'country': "",
+                'street': "",
+                'street_number': "",
+                'postal_box': "",
+                'place': ""
+            },
         )
 
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
@@ -95,16 +95,12 @@ class CoordonneesTestCase(TestCase):
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
         self.addCleanup(academic_year_api_patcher.stop)
-        autocomplete_api_patcher = patch("frontoffice.settings.osis_sdk.utils.get_user_token")
-        mock_user_token = autocomplete_api_patcher.start()
-        mock_user_token.return_value = 'foobar'
-        self.addCleanup(mock_user_token.stop)
 
     def test_form_display(self):
         url = resolve_url('admission:doctorate-create:coordonnees')
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.retrieve_coordonnees.assert_called()
         self.mock_proposition_api.assert_not_called()
 
@@ -112,7 +108,7 @@ class CoordonneesTestCase(TestCase):
         url = resolve_url('admission:doctorate-create:coordonnees')
 
         response = self.client.post(url, {})
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_coordonnees.assert_called()
 
     def test_form_should_be_all_filled(self):
@@ -121,7 +117,7 @@ class CoordonneesTestCase(TestCase):
         response = self.client.post(url, {
             "residential-country": "FR",
         })
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('city', response.context['residential'].errors)
 
     def test_form_belgian(self):
@@ -134,7 +130,7 @@ class CoordonneesTestCase(TestCase):
             "residential-street": "Rue du Compas",
             "residential-street_number": "1",
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['postal_code'], "1111")
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['city'], "Louvain-La-Neuve")
@@ -142,41 +138,39 @@ class CoordonneesTestCase(TestCase):
     def test_update(self):
         url = resolve_url('admission:doctorate-update:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
-        self.mock_person_api.return_value.retrieve_coordonnees.return_value['residential']['country'] = "BE"
-        self.mock_person_api.return_value.retrieve_coordonnees.return_value['contact']['country'] = "BE"
-        self.mock_person_api.return_value.retrieve_coordonnees.return_value['contact']['city'] = "Liège"
+        self.mock_get.return_value['residential']['country'] = "BE"
+        self.mock_get.return_value['contact']['country'] = "BE"
+        self.mock_get.return_value['contact']['city'] = "Liège"
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Belgique")
         self.mock_person_api.return_value.retrieve_coordonnees.assert_called()
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
 
         response = self.client.post(url, {})
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):
         url = resolve_url('admission:doctorate-detail:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
-        self.mock_person_api.return_value.retrieve_coordonnees.return_value = Mock(
-            residential=Mock(country=""),
-            contact=Mock(country="", attribute_map={}),
-        )
+        self.mock_get.return_value = {'residential': None, 'contact': None}
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.mock_get.return_value = {'residential': {'country': ""}, 'contact': {'country': ""}}
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotContains(response, "Belgique")
         self.mock_person_api.return_value.retrieve_coordonnees.assert_called()
         self.assertIn('admission', response.context)
 
-        self.mock_person_api.return_value.retrieve_coordonnees.return_value = Mock(
-            residential=Mock(country="FR"),
-            contact=Mock(country="BE", attribute_map={"country": "BE"}),
-        )
+        self.mock_get.return_value = {'residential': {'country': "FR"}, 'contact': {'country': "BE"}}
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Belgique")
         self.assertContains(response, "France")
         self.mock_person_api.return_value.retrieve_coordonnees.assert_called()

@@ -23,11 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import resolve_url
+from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
 from admission.contrib.forms.project import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
+from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
 from osis_document.api.utils import get_remote_token
@@ -38,7 +43,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',
-        PropositionBusinessException.BureauCDEInconsistantException: 'bureau_cde',
+        PropositionBusinessException.ProximityCommissionInconsistantException: None,
         PropositionBusinessException.ContratTravailInconsistantException: 'type_contrat_travail',
         PropositionBusinessException.DoctoratNonTrouveException: 'doctorate',
         PropositionBusinessException.InstitutionInconsistanteException: 'institution',
@@ -55,13 +60,13 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['person'] = self.request.user.person
+        kwargs['person'] = self.person
         return kwargs
 
     def get_initial(self):
         if self.is_update_form:
             self.proposition = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person,
+                person=self.person,
                 uuid=str(self.kwargs['pk']),
             )
             initial = {
@@ -77,6 +82,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 'graphe_gantt',
                 'proposition_programme_doctoral',
                 'projet_formation_complementaire',
+                'lettres_recommandation',
             ]
             for field in document_fields:
                 initial[field] = [get_remote_token(document, write_token=True)
@@ -92,11 +98,19 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             else data['type_contrat_travail']
         )
         data['bourse_recherche'] = (
-            data['bourse_recherche_other'] if data['bourse_recherche'] == BourseRecherche.OTHER.name
+            data['bourse_recherche_other']
+            if data['bourse_recherche'] == BourseRecherche.OTHER.name
             else data['bourse_recherche']
+        )
+        data['commission_proximite'] = (
+            data.get('commission_proximite_cde')
+            if data.get('commission_proximite_cde') != ''
+            else data.get('commission_proximite_cdss')
         )
         data.pop('type_contrat_travail_other')
         data.pop('bourse_recherche_other')
+        data.pop('commission_proximite_cde')
+        data.pop('commission_proximite_cdss')
 
         return data
 
@@ -107,16 +121,30 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 **data,
                 sigle_formation=doctorate_value.split('-')[0],
                 annee_formation=int(doctorate_value.split('-')[-1]),
-                matricule_candidat=self.request.user.person.global_id,
+                matricule_candidat=self.person.global_id,
             )
             data.pop('sector')
-            AdmissionPropositionService.create_proposition(person=self.request.user.person, **data)
+            response = AdmissionPropositionService.create_proposition(person=self.person, **data)
+            self.uuid = response['uuid']
         else:
             data['uuid'] = str(self.kwargs['pk'])
-            AdmissionPropositionService.update_proposition(person=self.request.user.person, **data)
+            AdmissionPropositionService.update_proposition(person=self.person, **data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.is_update_form:
             context['admission'] = self.proposition
+            # Lookup sector label from API
+            attr_name = 'intitule_fr' if get_language() == settings.LANGUAGE_CODE else 'intitule_en'
+            context['sector_label'] = [
+                getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
+                if s.sigle == self.proposition.code_secteur_formation
+            ][0]
         return context
+
+    def get_success_url(self):
+        if self.kwargs.get('pk'):
+            return super().get_success_url()
+        # On creation, display a message and redirect on same form (but with uuid now that we have it)
+        messages.info(self.request, _("Your data has been saved"))
+        return resolve_url('admission:doctorate-update:project', pk=self.uuid)

@@ -23,12 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from collections import namedtuple
 
-from django.utils.translation import gettext_lazy as _
-
-from base.models.utils.utils import ChoiceEnum
-
-
-class ChoixBureauCDE(ChoiceEnum):
-    ECONOMY = _('ECONOMY')
-    MANAGEMENT = _('MANAGEMENT')
+# Can't use Mock because 'name' property is reserved
+MockCountry = namedtuple('MockCountry', ['iso_code', 'name', 'name_en'])
+MockCity = namedtuple('MockCity', ['name'])
+MockLanguage = namedtuple('MockLanguage', ['code', 'name', 'name_en'])

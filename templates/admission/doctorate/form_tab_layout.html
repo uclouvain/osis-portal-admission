@@ -1,5 +1,38 @@
 {% extends "layout.html" %}{% load bootstrap3 i18n static admission %}
 
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block style %}
+  <style>
+    .form-group.required_field .control-label:after {
+      content: " *";
+      color: red;
+    }
+  </style>
+{% endblock %}
+
 {% block breadcrumb %}
     <ol class="breadcrumb">
         <li>
@@ -39,15 +72,15 @@
             {% if not admission %}
                 {% trans "No reference yet - Go to Project tab" %}
             {% else %}
-                {{ admission.intitule_doctorat_fr }}
+                {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
             {% endif %}
         </div>
         <div>
             {% trans "Status:" %}
-            {% if not admission or admission.status == ADMISSION_NOT_SUBMITTED %}
+            {% if not admission %}
                 {% trans "Not submitted" %}
             {% else %}
-                {{ admission.status }}
+                {{ admission.statut|enum_display:'ChoixStatusProposition' }}
             {% endif %}
         </div>
     </div>
@@ -62,33 +95,53 @@
         {% endblocktrans %}
     </em></p>
 
-    {% doctorate_tabs admission %}
+    {% include "template_messages.html" %}
+
     {% url "admission:doctorate-detail:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
     <form class="osis-form" method="post" action="">
         {% csrf_token %}
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">
-                <span
-                    class="glyphicon glyphicon-floppy-save" aria-hidden="true"
-                ></span>
-                {% trans 'Save my submission' %}
-            </button>
-            {% if cancel_url %}<a href="{{ cancel_url }}" class="text-danger">{% trans "Cancel" %}</a>{% endif %}
-        </div>
-
-        {% block form %}{% endblock %}
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">
-                <span
-                    class="glyphicon glyphicon-floppy-save" aria-hidden="true"
-                ></span>
-                {% trans 'Save my submission' %}
-            </button>
-            {% if cancel_url %}<a href="{{ cancel_url }}" class="text-danger">{% trans "Cancel" %}</a>{% endif %}
-        </div>
-
+        {% block form_content %}
+            {% doctorate_tabs admission %}
+            <div class="row">
+                <div class="col-md-2">
+                    {% doctorate_subtabs admission %}
+                    {% block submit_button_affix %}
+                        <hr />
+                        <div
+                            data-spy="affix"
+                            data-offset-top="500"
+                            style="top:90px"
+                        >
+                            <div>
+                                <button
+                                    type="submit" class="btn btn-primary"
+                                    {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
+                                    disabled
+                                    {% endif %}
+                                >
+                                <span
+                                    class="glyphicon glyphicon-floppy-save"
+                                    aria-hidden="true"
+                                ></span>
+                                    {% trans 'Save' %}
+                                </button>
+                            </div>
+                            {% if cancel_url and admission|can_read_tab:request.resolver_match.url_name %}
+                                <a
+                                    href="{{ cancel_url }}"
+                                    class="text-danger btn"
+                                >
+                                    {% trans "Cancel" %}
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endblock submit_button_affix %}
+                </div>
+                <div class="col-md-10">
+                    {% block form %}{% endblock %}
+                </div>
+            </div>
+        {% endblock form_content %}
     </form>
 {% endblock %}

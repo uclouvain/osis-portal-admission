@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
+from django.utils.translation import gettext_lazy as _
+from rest_framework import status
 
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
@@ -65,30 +68,33 @@ class PersonViewTestCase(TestCase):
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
         self.addCleanup(academic_year_api_patcher.stop)
-        autocomplete_api_patcher = patch("frontoffice.settings.osis_sdk.utils.get_user_token")
-        mock_user_token = autocomplete_api_patcher.start()
-        mock_user_token.return_value = 'foobar'
-        self.addCleanup(mock_user_token.stop)
 
     def test_form(self):
         url = resolve_url('admission:doctorate-create:person')
         self.client.force_login(self.person.user)
 
         self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name="John",
+            last_name="Doe",
             id_card=[],
             passport=[],
             id_photo=[],
+            birth_year="1990",
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.context['form'].initial['unknown_birth_date'], True)
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.mock_proposition_api.assert_not_called()
 
         response = self.client.post(url, {
             'first_name': "Joe",
+            'last_name': "Doe",
+            'sex': 'M',
+            'gender': 'X',
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification.assert_called()
 
     def test_update(self):
@@ -97,6 +103,7 @@ class PersonViewTestCase(TestCase):
 
         values = dict(
             first_name="John",
+            last_name="Doe",
             id_card=[],
             passport=[],
             id_photo=[],
@@ -108,7 +115,7 @@ class PersonViewTestCase(TestCase):
         self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = values
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "John")
         self.assertContains(response, "FR")
         self.assertContains(response, "BE")
@@ -118,8 +125,31 @@ class PersonViewTestCase(TestCase):
 
         response = self.client.post(url, {
             'first_name': "Joe",
+            'last_name': "Doe",
+            'unknown_birth_date': True,
+            'already_registered': 'YES',
+            'passport_number': 'ABC123',
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
+        self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
+        self.assertFormError(response, 'form', 'passport_expiration_date', _("This field is required."))
+
+        response = self.client.post(url, {
+            'first_name': "Joe",
+            'last_name': "Doe",
+            'passport_expiration_date': '22/11/2021',
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'passport_number', _("This field is required."))
+
+        response = self.client.post(url, {
+            'first_name': "Joe",
+            'last_name': "Doe",
+            'sex': 'M',
+            'gender': 'X',
+        })
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):
         url = resolve_url('admission:doctorate-detail:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -129,10 +159,11 @@ class PersonViewTestCase(TestCase):
             first_name="Joe",
             birth_country="",
             country_of_citizenship="",
+            birth_date=datetime.date(1990, 1, 1),
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Joe")
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.assertIn('admission', response.context)
@@ -141,10 +172,11 @@ class PersonViewTestCase(TestCase):
             first_name="John",
             birth_country="BE",
             country_of_citizenship="FR",
+            birth_date=datetime.date(1990, 1, 1),
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "John")
         self.assertContains(response, "Belgique")
         self.assertContains(response, "France")

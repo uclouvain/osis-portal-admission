@@ -38,28 +38,82 @@ class AdmissionPersonAPIClient:
 
 class AdmissionPersonService:
     @classmethod
-    def retrieve_person(cls, person):
+    def retrieve_person(cls, person, uuid=None):
+        if uuid:
+            AdmissionPersonAPIClient().retrieve_person_identification_admission(
+                uuid=str(uuid),
+                **build_mandatory_auth_headers(person),
+            )
         return AdmissionPersonAPIClient().retrieve_person_identification(
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def update_person(cls, person, **data):
+    def update_person(cls, person, uuid=None, **data):
+        if uuid:
+            return AdmissionPersonAPIClient().update_person_identification_admission(
+                uuid=str(uuid),
+                person_identification=data,
+                **build_mandatory_auth_headers(person),
+            )
         return AdmissionPersonAPIClient().update_person_identification(
             person_identification=data,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def retrieve_person_coordonnees(cls, person):
+    def retrieve_person_coordonnees(cls, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().retrieve_coordonnees_admission(
+                uuid=str(uuid),
+                **build_mandatory_auth_headers(person),
+            )
         return AdmissionPersonAPIClient().retrieve_coordonnees(
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def update_person_coordonnees(cls, person, **data):
+    def update_person_coordonnees(cls, person, uuid=None, **data):
+        if uuid:
+            return AdmissionPersonAPIClient().update_coordonnees_admission(
+                uuid=str(uuid),
+                coordonnees=data,
+                **build_mandatory_auth_headers(person),
+            )
         return AdmissionPersonAPIClient().update_coordonnees(
             coordonnees=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_high_school_diploma(cls, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().retrieve_high_school_diploma_admission(
+                uuid=str(uuid),
+                **build_mandatory_auth_headers(person))
+        return AdmissionPersonAPIClient().retrieve_high_school_diploma(**build_mandatory_auth_headers(person))
+
+    @classmethod
+    def update_high_school_diploma(cls, person, data, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().update_high_school_diploma_admission(
+                uuid=str(uuid),
+                high_school_diploma=data,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().update_high_school_diploma(
+            high_school_diploma=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_languages_knowledge(cls, person):
+        return AdmissionPersonAPIClient().list_language_knowledges(**build_mandatory_auth_headers(person))
+
+    @classmethod
+    def update_languages_knowledge(cls, person, data):
+        return AdmissionPersonAPIClient().create_language_knowledge(
+            language_knowledge=data,
             **build_mandatory_auth_headers(person),
         )
 

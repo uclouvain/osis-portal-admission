@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
@@ -41,21 +41,25 @@ class DoctorateAdmissionCoordonneesDetailView(LoginRequiredMixin, TemplateView):
         context_data['admission'] = AdmissionPropositionService.get_proposition(
             person=self.request.user.person, uuid=str(self.kwargs['pk']),
         )
-        coordonnees = AdmissionPersonService.retrieve_person_coordonnees(self.request.user.person)
+        coordonnees = AdmissionPersonService.retrieve_person_coordonnees(
+            person=self.request.user.person,
+            uuid=self.kwargs.get('uuid'),
+        ).to_dict()
         context_data['coordonnees'] = coordonnees
-        translated_field = 'name_en' if settings.LANGUAGE_CODE == "en" else 'name'
-        if coordonnees.residential.country:
+        translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
+        if coordonnees['residential'] and coordonnees['residential']['country']:
             residential_country = CountriesService.get_country(
-                iso_code=coordonnees.residential.country,
+                iso_code=coordonnees['residential']['country'],
                 person=self.request.user.person,
             )
             context_data['residential_country'] = getattr(residential_country, translated_field)
-        if coordonnees.contact.country:
+        if coordonnees['contact'] and coordonnees['contact']['country']:
             contact_country = CountriesService.get_country(
-                iso_code=coordonnees.contact.country,
+                iso_code=coordonnees['contact']['country'],
                 person=self.request.user.person,
             )
             context_data['contact_country'] = getattr(contact_country, translated_field)
         # check if there is at least one data into contact
-        context_data["show_contact"] = any(getattr(coordonnees.contact, k) for k in coordonnees.contact.attribute_map)
+        if coordonnees['contact']:
+            context_data["show_contact"] = any(v for k, v in coordonnees['contact'].items())
         return context_data

@@ -23,15 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from django.utils.translation import pgettext_lazy, gettext_lazy as _
 
-GENDER_CHOICES = (
-    ('F', pgettext_lazy("female gender", "Female")),
-    ('H', pgettext_lazy("gender male", "Male")),
-    ('X', _('Other'))
-)
-SEX_CHOICES = (
-    ('F', _('Female')),
-    ('M', _('Male'))
-)
+from base.models.utils.utils import ChoiceEnum
+
+
+class GenderEnum(ChoiceEnum):
+    F = pgettext_lazy("female gender", "Female")
+    H = pgettext_lazy("gender male", "Male")
+    X = _('Other')
+
+
+class SexEnum(ChoiceEnum):
+    F = _('Female')
+    M = _('Male')

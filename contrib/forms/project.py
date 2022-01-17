@@ -26,10 +26,10 @@
 from dal import autocomplete
 from django import forms
 from django.conf import settings
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import get_language, gettext as _
 
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.bureau_CDE import ChoixBureauCDE
+from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
 from admission.contrib.enums.financement import (
     BourseRecherche,
@@ -37,7 +37,8 @@ from admission.contrib.enums.financement import (
     ChoixTypeFinancement,
 )
 from admission.contrib.enums.projet import ChoixLangueRedactionThese
-from admission.contrib.forms import EMPTY_CHOICE
+from admission.contrib.forms import CustomDateInput, EMPTY_CHOICE, get_thesis_institute_initial_choices, \
+    get_thesis_location_initial_choices
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
 
@@ -47,6 +48,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Admission type"),
         choices=AdmissionType.choices(),
         widget=forms.RadioSelect,
+        initial=AdmissionType.ADMISSION.name,
     )
     justification = forms.CharField(
         label=_("Brief justification"),
@@ -56,9 +58,14 @@ class DoctorateAdmissionProjectForm(forms.Form):
         }),
         required=False,
     )
-    bureau_cde = forms.ChoiceField(
-        label=_("Bureau"),
-        choices=EMPTY_CHOICE + ChoixBureauCDE.choices(),
+    commission_proximite_cde = forms.ChoiceField(
+        label=_("Proximity commission"),
+        choices=EMPTY_CHOICE + ChoixProximityCommissionCDE.choices(),
+        required=False,
+    )
+    commission_proximite_cdss = forms.ChoiceField(
+        label=_("Proximity commission"),
+        choices=EMPTY_CHOICE + ChoixProximityCommissionCDSS.choices(),
         required=False,
     )
 
@@ -77,7 +84,8 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     eft = forms.IntegerField(
-        label=_("Full-time equivalent"),
+        # xgettext:no-python-format
+        label=_("Full-time equivalent (as %)"),
         min_value=0,
         max_value=100,
         required=False,
@@ -93,19 +101,47 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     duree_prevue = forms.IntegerField(
-        label=_("Estimated time"),
+        label=_("Estimated time to complete the doctorate (in months)"),
         min_value=0,
+        max_value=100,
         required=False,
     )
     temps_consacre = forms.IntegerField(
-        label=_("Allocated time"),
+        label=_("Allocated time for the thesis (in EFT)"),
         min_value=0,
+        max_value=1000,
         required=False,
     )
 
     titre_projet = forms.CharField(
         label=_("Project title"),
         required=False,
+    )
+    institut_these = forms.CharField(
+        label=_("Thesis institute"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:institute",
+            attrs={
+                'data-minimum-input-length': 3,
+            },
+        ),
+        required=False,
+    )
+    lieu_these = forms.CharField(
+        label=_("Thesis location"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:institute-location",
+            forward=['institut_these'],
+            attrs={
+                'data-minimum-results-for-search': 'Infinity',  # Hide the search box
+            },
+        ),
+        required=False,
+    )
+    autre_lieu_these = forms.CharField(
+        label=_("Other thesis location"),
+        required=False,
+        help_text=_("Only to provide if the address is not available in the previous field."),
     )
     resume_projet = forms.CharField(
         label=_("Project resume"),
@@ -121,11 +157,16 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     proposition_programme_doctoral = FileUploadField(
-        label=_("Doctoral project proposition"),
+        label=_("Doctoral program proposition"),
         required=False,
     )
     projet_formation_complementaire = FileUploadField(
         label=_("Complementary training project"),
+        required=False,
+        max_files=2,
+    )
+    lettres_recommandation = FileUploadField(
+        label=_("Recommendation letters"),
         required=False,
     )
     langue_redaction_these = forms.ChoiceField(
@@ -144,8 +185,13 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Institution"),
         required=False,
     )
+    non_soutenue = forms.BooleanField(
+        label=_("No defense"),
+        required=False,
+    )
     date_soutenance = forms.DateField(
         label=_("Defense date"),
+        widget=CustomDateInput(),
         required=False,
     )
     raison_non_soutenue = forms.CharField(
@@ -159,8 +205,8 @@ class DoctorateAdmissionProjectForm(forms.Form):
     class Media:
         js = ('dependsOn.min.js',)
 
-    def __init__(self, hide_bureau_field=True, *args, **kwargs):
-        kwargs.pop('person', None)
+    def __init__(self, hide_proximity_commission_fields=True, *args, **kwargs):
+        self.person = getattr(self, 'person', kwargs.pop('person', None))
         super().__init__(*args, **kwargs)
         # Set type_contrat_travail to OTHER if value is not from enum
         if (
@@ -178,9 +224,63 @@ class DoctorateAdmissionProjectForm(forms.Form):
             self.initial['bourse_recherche_other'] = self.initial['bourse_recherche']
             self.initial['bourse_recherche'] = BourseRecherche.OTHER.name
 
-        # Remove Bureau if doctoral commission is not CDE
-        if hide_bureau_field:
-            self.fields['bureau_cde'].widget = forms.HiddenInput()
+        # Set proximity commission fields value from API data
+        if self.initial.get('commission_proximite'):
+            sigle_entite_gestion = self.get_selected_doctorate(
+                self.initial.get('sector'), self.initial.get('doctorate'),
+            ).sigle_entite_gestion
+            if sigle_entite_gestion in ['CDE', 'CLSM']:
+                self.initial['commission_proximite_cde'] = self.initial['commission_proximite']
+            elif sigle_entite_gestion == 'CDSS':  # pragma: no branch
+                self.initial['commission_proximite_cdss'] = self.initial['commission_proximite']
+
+        # Hide proximity commission fields
+        if hide_proximity_commission_fields:
+            self.fields['commission_proximite_cde'].widget = forms.HiddenInput()
+            self.fields['commission_proximite_cdss'].widget = forms.HiddenInput()
+
+        # Add the specified institute in the choices of the related field
+        self.fields['institut_these'].widget.choices = get_thesis_institute_initial_choices(
+            self.data.get(self.add_prefix("institut_these"), self.initial.get("institut_these")),
+            self.person
+        )
+
+        # Add the specified thesis position in the choices of the related field
+        self.fields['lieu_these'].widget.choices = get_thesis_location_initial_choices(
+            self.data.get(self.add_prefix("lieu_these"), self.initial.get("lieu_these")),
+        )
+        if self.data.get(self.add_prefix("raison_non_soutenue"), self.initial.get("raison_non_soutenue")):
+            self.fields['non_soutenue'].initial = True
+
+    def clean(self):
+        data = super().clean()
+
+        # Some consistency checks
+        if data.get('type_financement') == ChoixTypeFinancement.WORK_CONTRACT.name:
+            if not data.get('type_contrat_travail') and not data.get('type_contrat_travail_other'):
+                self.add_error('type_contrat_travail', _("This field is required."))
+            elif (data.get('type_contrat_travail') == ChoixTypeContratTravail.OTHER.name
+                  and not data.get('type_contrat_travail_other')):
+                self.add_error('type_contrat_travail_other', _("This field is required."))
+
+            if not data.get('eft'):
+                self.add_error('eft', _("This field is required."))
+
+        elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
+            if not data.get('bourse_recherche') and not data.get('bourse_recherche_other'):
+                self.add_error('bourse_recherche', _("This field is required."))
+            elif (data.get('bourse_recherche') == BourseRecherche.OTHER.name
+                  and not data.get('bourse_recherche_other')):
+                self.add_error('bourse_recherche_other', _("This field is required."))
+
+        return data
+
+    def get_selected_doctorate(self, sector, doctorat):
+        doctorats = AdmissionAutocompleteService.get_doctorates(self.person, sector)
+        return next(  # pragma: no branch
+            d for d in doctorats
+            if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
+        )
 
 
 class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
@@ -195,7 +295,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
 
     def __init__(self, person=None, *args, **kwargs):
         self.person = person
-        super().__init__(hide_bureau_field=False, *args, **kwargs)
+        super().__init__(hide_proximity_commission_fields=False, *args, **kwargs)
         self.fields['sector'].widget.choices = (
                 [('', '-')]
                 + [
@@ -210,6 +310,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
 
         # If we have a POST value, set the doctorate
         data = kwargs.get('data', None)
+        self.doctorate_data = {}
         if data and data.get('doctorate'):
             # Populate doctorate choices
             doctorate = self.get_selected_doctorate(data.get('sector'), data.get('doctorate'))
@@ -223,15 +324,21 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                     ),
                 )
             ]
-            # This is used in the template to make Bureau field appear
+            # This is used in the template to make proximity commission field appear
             self.doctorate_data = dict(
                 id="{result.sigle}-{result.annee}".format(result=doctorate),
                 sigle_entite_gestion=doctorate.sigle_entite_gestion,
             )
 
-    def get_selected_doctorate(self, sector, doctorat):
-        doctorats = AdmissionAutocompleteService.get_doctorates(self.person, sector)
-        return next(  # pragma: no branch
-            d for d in doctorats
-            if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
-        )
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if (self.doctorate_data.get('sigle_entite_gestion') in ['CDE', 'CLSM']
+                and not cleaned_data.get('commission_proximite_cde')):
+            self.add_error('commission_proximite_cde', _("This field is required."))
+
+        if (self.doctorate_data.get('sigle_entite_gestion') == 'CDSS'
+                and not cleaned_data.get('commission_proximite_cdss')):
+            self.add_error('commission_proximite_cdss', _("This field is required."))
+
+        return cleaned_data

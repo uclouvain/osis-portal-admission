@@ -45,7 +45,7 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         context_data["BE_ISO_CODE"] = self.BE_ISO_CODE
         if 'pk' in self.kwargs:
             context_data['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person, uuid=str(self.kwargs['pk']),
+                person=self.person, uuid=str(self.kwargs['pk'])
             )
         return context_data
 
@@ -56,7 +56,7 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         return self.form_invalid(forms['main_form'])
 
     def get_initial(self):
-        return AdmissionPersonService.retrieve_person_coordonnees(self.request.user.person)
+        return AdmissionPersonService.retrieve_person_coordonnees(self.person, uuid=self.kwargs.get('uuid')).to_dict()
 
     @staticmethod
     def prepare_be_city(form_cleaned_data):
@@ -82,25 +82,25 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_person_coordonnees(person=self.request.user.person, **data)
+        AdmissionPersonService.update_person_coordonnees(person=self.person, uuid=self.kwargs.get('uuid'), **data)
 
     def get_forms(self):
         if not self.forms:
-            self.BE_ISO_CODE = CountriesService.get_country(person=self.request.user.person, name="Belgique").iso_code
+            self.BE_ISO_CODE = CountriesService.get_country(person=self.person, name="Belgique").iso_code
             kwargs = self.get_form_kwargs()
             kwargs.pop('prefix')
             initial = kwargs.pop('initial')
             self.forms = {
                 'main_form': self.get_form(),
                 'contact': DoctorateAdmissionAddressForm(
-                    person=self.request.user.person,
+                    person=self.person,
                     prefix='contact',
                     initial=initial['contact'],
                     be_iso_code=self.BE_ISO_CODE,
                     **kwargs,
                 ),
                 'residential': DoctorateAdmissionAddressForm(
-                    person=self.request.user.person,
+                    person=self.person,
                     prefix='residential',
                     initial=initial['residential'],
                     be_iso_code=self.BE_ISO_CODE,
