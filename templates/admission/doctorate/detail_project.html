@@ -48,9 +48,6 @@
             {% elif admission.type_financement == "SEARCH_SCHOLARSHIP" %}
                 {% field_data _("Scholarship") admission.bourse_recherche|enum_display:'BourseRecherche' %}
             {% endif %}
-            {% field_data _("Thesis institute") admission.institut_these|default_if_none:'' %}
-            {% field_data _("Thesis location") admission.lieu_these %}
-            {% field_data _("Other thesis location") admission.autre_lieu_these %}
             {% field_data _("Estimated time to complete the doctorate (in months)") admission.duree_prevue|default_if_none:'' %}
             {% field_data _("Allocated time for the thesis (in EFT)") admission.temps_consacre|default_if_none:'' %}
         {% endif %}
@@ -60,6 +57,9 @@
         {% field_data _("Project title") admission.titre_projet %}
         {% field_data _("Project resume") admission.resume_projet|linebreaks %}
         {% field_data _("Thesis redacting language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
+        {% field_data _("Thesis institute") admission.institut_these|default_if_none:'' %}
+        {% field_data _("Thesis location") admission.lieu_these %}
+        {% field_data _("Other thesis location") admission.autre_lieu_these %}
         {% field_data _("Project documents") admission.documents_projet %}
         {% field_data _("Gantt graph") admission.graphe_gantt %}
         {% field_data _("Doctoral program proposition") admission.proposition_programme_doctoral %}
