@@ -4,8 +4,7 @@
     <h4>
         {% blocktrans with prenom=member.prenom nom=member.nom role=view.kwargs.type|enum_display:'ActorType' %}
             Are you sure you want to remove {{ prenom }}
-            {{ nom }} as {{ role }}
-            ?
+            {{ nom }} as {{ role }}?
         {% endblocktrans %}
     </h4>
 
