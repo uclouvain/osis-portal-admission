@@ -266,9 +266,6 @@ msgstr "Coordonnées"
 msgid "Contact language"
 msgstr "Langue de contact"
 
-msgid "Convention"
-msgstr "Convention"
-
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
@@ -368,9 +365,6 @@ msgstr ""
 msgid "Email"
 msgstr "E-mail"
 
-msgid "External comment"
-msgstr "Commentaire externe"
-
 msgid "English"
 msgstr "Anglais"
 
@@ -382,6 +376,9 @@ msgstr "Baccalauréat européen (Schola Europaea)"
 
 msgid "Exchange with UCLouvain"
 msgstr "Échanges avec l'UCLouvain"
+
+msgid "External comment"
+msgstr "Commentaire externe"
 
 msgid "FNRS"
 msgstr "FNRS"
@@ -602,9 +599,6 @@ msgstr "Langues modernes"
 msgid "More than 75%"
 msgstr "Plus de 75%"
 
-msgid "Motivation"
-msgstr "Motivation"
-
 msgid "NO"
 msgstr "Non"
 
@@ -668,9 +662,6 @@ msgstr ""
 "À ne fournir que si vous êtes en possession d'une pièce d'identité belge. Si "
 "vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
 "obligatoire."
-
-msgid "Opening request"
-msgstr "Demande d'ouverture"
 
 msgid "Organizing country"
 msgstr "Pays organisateur"
@@ -839,9 +830,6 @@ msgstr "Soutenance publique"
 msgid "Qualification method"
 msgstr "Technique de qualification"
 
-msgid "Rejection reason"
-msgstr "Motif de refus"
-
 msgid "REFUSED"
 msgstr "Refusé"
 
@@ -853,6 +841,9 @@ msgstr "Référence :"
 
 msgid "Rejected"
 msgstr "Rejetée"
+
+msgid "Rejection reason"
+msgstr "Motif de refus"
 
 msgid "Remove"
 msgstr "Retirer"
@@ -942,7 +933,9 @@ msgid "Thesis redacting language"
 msgstr "Langue de rédaction de la thèse"
 
 msgid "This comment will be visible to all users who have access to this page."
-msgstr "Ce commentaire sera visible par tous les utilisateurs ayant accès à cette page."
+msgstr ""
+"Ce commentaire sera visible par tous les utilisateurs ayant accès à cette "
+"page."
 
 msgid "This comment will only be visible to the administrators."
 msgstr "Ce commentaire ne sera visible que par les gestionnaires."
