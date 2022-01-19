@@ -30,8 +30,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"            Are you sure you want to remove %(prenom)s\n"
-"            %(nom)s as %(role)s?\n"
+"            Are you sure you want to remove %(first_name)s\n"
+"            %(last_name)s as %(role)s?\n"
 "        "
 msgstr ""
 
