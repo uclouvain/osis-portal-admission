@@ -40,6 +40,8 @@ from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
 from base.tests.factories.academic_year import get_current_year
 
+LINGUISTIC_REGIMES_WITHOUT_TRANSLATION = ['FR', 'DE', 'EN', 'IT', 'PT', 'ES']
+
 educational_types_that_require_schedule = [
     EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
     EducationalType.TRANSITION_METHOD.name,
@@ -64,6 +66,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
             'INTERNATIONAL_BACCALAUREATE': 'admission/images/IBO.png',
             'EUROPEAN_BACHELOR': 'admission/images/schola_europa.png',
         }
+        context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
         return context_data
 
     def get_initial(self):
@@ -96,7 +99,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         if (main_form.is_valid()
                 and main_form.cleaned_data.get("got_diploma") == GotDiploma.YES.name
                 and foreign_diploma.is_valid()
-                and foreign_diploma.cleaned_data.get("linguistic_regime") not in ['FR', 'DE', 'EN', 'IT', 'PT', 'ES']
+                and foreign_diploma.cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
                 and not foreign_diploma.cleaned_data.get("high_school_diploma_translation")):
             foreign_diploma.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
 

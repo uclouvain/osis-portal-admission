@@ -321,9 +321,10 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
+        from admission.contrib.views.form_tabs.education import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
             self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))
-        elif cleaned_data.get("linguistic_regime") not in ['FR', 'DE', 'EN', 'IT', 'PT', 'ES']:
+        elif cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION:
             if not cleaned_data.get('high_school_transcript_translation'):
                 self.add_error("high_school_transcript_translation", FIELD_REQUIRED_MESSAGE)
         if not cleaned_data.get("result"):

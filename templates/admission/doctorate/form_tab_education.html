@@ -311,7 +311,7 @@
       });
 
       $('#translated-files').dependsOn({
-          'select[name=foreign_diploma-linguistic_regime]': { not: ['FR', 'DE', 'EN', 'IT', 'PT', 'ES'] },
+          'select[name=foreign_diploma-linguistic_regime]': { not: {{ linguistic_regimes_without_translation|safe }} },
       }, {
           valueOnDisable: '',
       });
