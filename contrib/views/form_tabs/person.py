@@ -42,14 +42,15 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
         return kwargs
 
     def get_initial(self):
-        return AdmissionPersonService.retrieve_person(self.person, uuid=self.kwargs.get('uuid')).to_dict()
+        return AdmissionPersonService.retrieve_person(self.person, uuid=self.kwargs.get('pk')).to_dict()
 
     def prepare_data(self, data):
-        data['last_registration_year'] = int(data['last_registration_year']) if data['last_registration_year'] else None
+        data['last_registration_year'] = (int(data['last_registration_year'])
+                                          if data['last_registration_year'] else None)
         return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_person(person=self.person, uuid=self.kwargs.get('uuid'), **data)
+        AdmissionPersonService.update_person(person=self.person, uuid=self.kwargs.get('pk'), **data)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

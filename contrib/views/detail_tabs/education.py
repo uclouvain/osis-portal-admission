@@ -45,7 +45,7 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
         # Person
         high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
             person=self.request.user.person,
-            uuid=self.kwargs.get('uuid'),
+            uuid=self.kwargs.get('pk'),
         ).to_dict()
         translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
 

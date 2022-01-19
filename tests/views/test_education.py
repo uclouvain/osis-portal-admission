@@ -54,10 +54,13 @@ class EducationTestCase(TestCase):
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = person_api_patcher.start()
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+        person_api_ret = self.mock_person_api.return_value
+        default_return = {
             'belgian_diploma': None,
             'foreign_diploma': None,
         }
+        person_api_ret.retrieve_high_school_diploma.return_value.to_dict.return_value \
+            = person_api_ret.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = default_return
         self.addCleanup(person_api_patcher.stop)
 
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
@@ -384,7 +387,7 @@ class EducationTestCase(TestCase):
 
     def test_update_admission_in_context(self):
         url = resolve_url('admission:doctorate-update:education', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
             "belgian_diploma": {},
             "foreign_diploma": {
                 "academic_graduation_year": 2020,
@@ -398,19 +401,23 @@ class EducationTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "France")
-        self.mock_person_api.return_value.retrieve_high_school_diploma.assert_called()
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
 
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+
     def test_detail_without_data(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {}
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {}
 
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, _("No secondary studies provided."))
 
     def test_detail_without_country_and_language(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
             "foreign_diploma": {
                 "linguistic_regime": None,
                 "country": None,
@@ -421,7 +428,7 @@ class EducationTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_detail_belgian_diploma(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
             "belgian_diploma": {
                 "academic_graduation_year": 2020,
                 "other_institute": "Special school",
@@ -437,11 +444,11 @@ class EducationTestCase(TestCase):
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Special school")
-        self.mock_person_api.return_value.retrieve_high_school_diploma.assert_called()
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
         self.assertIn('admission', response.context)
 
     def test_detail_foreign_diploma(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
             "belgian_diploma": {},
             "foreign_diploma": {
                 "academic_graduation_year": 2019,
@@ -455,5 +462,5 @@ class EducationTestCase(TestCase):
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "France")
-        self.mock_person_api.return_value.retrieve_high_school_diploma.assert_called()
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
         self.assertIn('admission', response.context)
