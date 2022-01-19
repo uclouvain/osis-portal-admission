@@ -17,19 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid ""
-"\n"
-"                Please refer to your identity document in order to complete "
-"the\n"
-"                form. If you have a Belgian national register number, "
-"please\n"
-"                indicate it as a priority.\n"
-"            "
-msgstr ""
-"\n"
-"Veuillez fournir au moins un numéro d'identité. Si vous avez un numéro de "
-"registre national belge, merci de l'indiquer en priorité."
-
 #, python-format
 msgid ""
 "\n"
@@ -70,6 +57,17 @@ msgstr ""
 "Veuillez compléter ci-dessous la grille horaire de votre dernière année "
 "d'études secondaires, en indiquant en regard de chaque matière, le nombre "
 "d'heures suivies par semaine (h/s)."
+
+msgid ""
+"\n"
+"        Please refer to your identity document in order to complete the\n"
+"        form. If you have a Belgian national register number, please\n"
+"        indicate it as a priority.\n"
+"      "
+msgstr ""
+"\n"
+"Veuillez fournir au moins un numéro d'identité. Si vous avez un numéro de "
+"registre national belge, merci de l'indiquer en priorité."
 
 msgid " (h/w)"
 msgstr " (h/s)"
@@ -241,6 +239,9 @@ msgstr "Chimie"
 msgid "City"
 msgstr "Localité"
 
+msgid "Civil status"
+msgstr "État civil"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -316,6 +317,9 @@ msgstr "Supprimer"
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
 msgstr "Détaillez ici les raisons justifiant une admission provisoire."
+
+msgid "Divorced"
+msgstr "Divorcé(e)"
 
 msgid "Do you have a high school diploma?"
 msgstr "Avez-vous un diplôme de fin d'études secondaires ?"
@@ -562,6 +566,9 @@ msgstr "Dernière année d'inscription"
 msgid "Latin"
 msgstr "Latin"
 
+msgid "Legal cohabitant"
+msgstr "Cohabitant(e) légal(e)"
+
 msgid "Less than 65%"
 msgstr "Moins de 65%"
 
@@ -586,6 +593,9 @@ msgstr "Langue obligatoire"
 
 msgid "Mandatory languages are missing."
 msgstr "Des langues obligatoires sont manquantes."
+
+msgid "Married"
+msgstr "Marié(e)"
 
 msgid "Mathematics"
 msgstr "Mathématiques"
@@ -894,11 +904,17 @@ msgstr "Études secondaires"
 msgid "Sector"
 msgstr "Secteur"
 
+msgid "Separate"
+msgstr "Séparé(e)"
+
 msgid "Sex"
 msgstr "Sexe"
 
 msgid "Signatures requests sent"
 msgstr "Demandes de signature envoyées"
+
+msgid "Single"
+msgstr "Célibataire"
 
 msgid "Social sciences"
 msgstr "Sciences sociales"
@@ -929,6 +945,9 @@ msgstr "Supervision"
 
 msgid "Teaching of general education"
 msgstr "Général de transition"
+
+msgid "The Belgian national register number must consist of 11 digits."
+msgstr "Le numéro de registre national belge doit être composé de 11 chiffres."
 
 msgid "Thesis institute"
 msgstr "Institut de la thèse"
@@ -991,6 +1010,9 @@ msgstr "Quel résultat avez-vous obtenu ?"
 
 msgid "What was your last year of UCLouvain enrollment?"
 msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
+
+msgid "Widowed"
+msgstr "Veuf(ve)"
 
 msgid "Work contract"
 msgstr "Contrat de travail"

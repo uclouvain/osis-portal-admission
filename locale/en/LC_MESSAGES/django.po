@@ -17,16 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid ""
-"\n"
-"                Please refer to your identity document in order to complete "
-"the\n"
-"                form. If you have a Belgian national register number, "
-"please\n"
-"                indicate it as a priority.\n"
-"            "
-msgstr ""
-
 #, python-format
 msgid ""
 "\n"
@@ -54,6 +44,14 @@ msgid ""
 "          of high school, indicating for each domain the number of\n"
 "          hours of education followed per week (h/w).\n"
 "        "
+msgstr ""
+
+msgid ""
+"\n"
+"        Please refer to your identity document in order to complete the\n"
+"        form. If you have a Belgian national register number, please\n"
+"        indicate it as a priority.\n"
+"      "
 msgstr ""
 
 msgid " (h/w)"
@@ -223,6 +221,9 @@ msgstr ""
 msgid "City"
 msgstr ""
 
+msgid "Civil status"
+msgstr ""
+
 msgid "Close"
 msgstr ""
 
@@ -297,6 +298,9 @@ msgstr ""
 
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
+msgstr ""
+
+msgid "Divorced"
 msgstr ""
 
 msgid "Do you have a high school diploma?"
@@ -527,6 +531,9 @@ msgstr ""
 msgid "Latin"
 msgstr ""
 
+msgid "Legal cohabitant"
+msgstr ""
+
 msgid "Less than 65%"
 msgstr ""
 
@@ -550,6 +557,9 @@ msgid "Mandatory language"
 msgstr ""
 
 msgid "Mandatory languages are missing."
+msgstr ""
+
+msgid "Married"
 msgstr ""
 
 msgid "Mathematics"
@@ -851,10 +861,16 @@ msgstr ""
 msgid "Sector"
 msgstr ""
 
+msgid "Separate"
+msgstr ""
+
 msgid "Sex"
 msgstr ""
 
 msgid "Signatures requests sent"
+msgstr ""
+
+msgid "Single"
 msgstr ""
 
 msgid "Social sciences"
@@ -885,6 +901,9 @@ msgid "Supervision"
 msgstr ""
 
 msgid "Teaching of general education"
+msgstr ""
+
+msgid "The Belgian national register number must consist of 11 digits."
 msgstr ""
 
 msgid "Thesis institute"
@@ -945,6 +964,9 @@ msgid "What result did you get?"
 msgstr ""
 
 msgid "What was your last year of UCLouvain enrollment?"
+msgstr ""
+
+msgid "Widowed"
 msgstr ""
 
 msgid "Work contract"
