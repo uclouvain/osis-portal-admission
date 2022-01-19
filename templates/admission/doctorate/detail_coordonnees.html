@@ -30,9 +30,9 @@
             {% if coordonnees.residential.street %}
                 <div class="col-md-4">{% field_data _("Street") coordonnees.residential.street %}</div>
             {% endif %}
-            <div class="col-md-4">{% field_data _("Street number") coordonnees.residential.street_number %}</div>
+            <div class="col-md-2">{% field_data _("Street number") coordonnees.residential.street_number %}</div>
             {% if coordonnees.residential.postal_box %}
-                <div class="col-md-4">{% field_data _("Box") coordonnees.residential.postal_box %}</div>
+                <div class="col-md-2">{% field_data _("Box") coordonnees.residential.postal_box %}</div>
             {% endif %}
             {% if coordonnees.residential.place %}
                 <div class="col-md-4">{% field_data _("Place") coordonnees.residential.place %}</div>
@@ -50,9 +50,11 @@
                 {% if coordonnees.contact.street %}
                     <div class="col-md-4">{% field_data _("Street") coordonnees.contact.street %}</div>
                 {% endif %}
-                <div class="col-md-4">{% field_data _("Street number") coordonnees.contact.street_number %}</div>
+                <div class="col-md-2">
+                  {% field_data _("Street number") coordonnees.contact.street_number %}
+                </div>
                 {% if coordonnees.contact.postal_box %}
-                    <div class="col-md-4">{% field_data _("Box") coordonnees.contact.postal_box %}</div>
+                    <div class="col-md-2">{% field_data _("Box") coordonnees.contact.postal_box %}</div>
                 {% endif %}
                 {% if coordonnees.contact.place %}
                     <div class="col-md-4">{% field_data _("Place") coordonnees.contact.place %}</div>
