@@ -101,27 +101,12 @@
                 {% bootstrap_field form.bourse_recherche_other %}
             </div>
         </div>
-        <div id="financing-details">
-            <div class="row">
-                <div class="col-md-6">
-                    {% bootstrap_field form.institut_these %}
-                </div>
+        <div id="financing-details" class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.duree_prevue %}
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    {% bootstrap_field form.lieu_these %}
-                </div>
-                <div class="col-md-6">
-                    {% bootstrap_field form.autre_lieu_these %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    {% bootstrap_field form.duree_prevue %}
-                </div>
-                <div class="col-md-6">
-                    {% bootstrap_field form.temps_consacre %}
-                </div>
+            <div class="col-md-6">
+                {% bootstrap_field form.temps_consacre %}
             </div>
         </div>
     {% endpanel %}
@@ -132,6 +117,19 @@
         <div class="row">
             <div class="col-md-4">
                 {% bootstrap_field form.langue_redaction_these form_group_class="form-group required_field" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.institut_these %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.lieu_these %}
+            </div>
+            <div class="col-md-6">
+                {% bootstrap_field form.autre_lieu_these %}
             </div>
         </div>
         {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
