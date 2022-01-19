@@ -163,7 +163,6 @@ class DoctorateAdmissionProjectForm(forms.Form):
     projet_formation_complementaire = FileUploadField(
         label=_("Complementary training project"),
         required=False,
-        max_files=2,
     )
     lettres_recommandation = FileUploadField(
         label=_("Recommendation letters"),
@@ -272,6 +271,9 @@ class DoctorateAdmissionProjectForm(forms.Form):
             elif (data.get('bourse_recherche') == BourseRecherche.OTHER.name
                   and not data.get('bourse_recherche_other')):
                 self.add_error('bourse_recherche_other', _("This field is required."))
+
+        if data.get('non_soutenue') and not data.get('raison_non_soutenue'):
+            self.add_error('raison_non_soutenue', _("This field is required."))
 
         return data
 
