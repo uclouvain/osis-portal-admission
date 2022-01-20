@@ -75,6 +75,13 @@ class EducationTestCase(TestCase):
         self.mock_countries_api.return_value.countries_list.side_effect = get_countries
         self.addCleanup(countries_api_patcher.stop)
 
+        patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
         languages_api_patcher = patch("osis_reference_sdk.api.languages_api.LanguagesApi")
         self.mock_languages_api = languages_api_patcher.start()
 
@@ -82,6 +89,7 @@ class EducationTestCase(TestCase):
             languages = [
                 MockLanguage(code='FR', name='Français', name_en='French'),
                 MockLanguage(code='EN', name='Anglais', name_en='English'),
+                MockLanguage(code='AR', name='Arabe', name_en='Arabic'),
             ]
             if kwargs.get('code'):
                 return Mock(results=[c for c in languages if c.code == kwargs.get('code')])
@@ -110,12 +118,12 @@ class EducationTestCase(TestCase):
         response = self.client.post(self.form_url, {
             "got_diploma": "YES",
             "diploma_type": "BELGIAN",
+            "high_school_transcript_0": "test",
+            "high_school_diploma_0": "test",
             "academic_graduation_year": 2020,
             "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
             "belgian_diploma-community": "FLEMISH_SPEAKING",
             "belgian_diploma-other_institute": "Special school",
-            "belgian_diploma-course_repeat": False,
-            "belgian_diploma-course_orientation": False,
             # Even if we send data for schedule, it should be stripped from data sent to WS
             "schedule-greek": 5,
             # Even if we send data for foreign diploma, it should be stripped from data sent to WS
@@ -128,8 +136,8 @@ class EducationTestCase(TestCase):
             'belgian_diploma': {
                 'academic_graduation_year': 2020,
                 'community': 'FLEMISH_SPEAKING',
-                'course_orientation': False,
-                'course_repeat': False,
+                "high_school_transcript": ["test"],
+                "high_school_diploma": ["test"],
                 'educational_other': '',
                 'educational_type': '',
                 'institute': '',
@@ -143,12 +151,12 @@ class EducationTestCase(TestCase):
             "got_diploma": "YES",
             "diploma_type": "BELGIAN",
             "academic_graduation_year": 2020,
+            "high_school_transcript_0": "test",
+            "high_school_diploma_0": "test",
             "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
             "belgian_diploma-community": "FRENCH_SPEAKING",
             "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
             "belgian_diploma-other_institute": "Special school",
-            "belgian_diploma-course_repeat": False,
-            "belgian_diploma-course_orientation": False,
             "schedule-latin": 5,
             "schedule-chemistry": 5,
             "schedule-physic": 5,
@@ -170,9 +178,9 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent, {
             'belgian_diploma': {
                 'academic_graduation_year': 2020,
+                "high_school_transcript": ["test"],
+                "high_school_diploma": ["test"],
                 'community': 'FRENCH_SPEAKING',
-                'course_orientation': False,
-                'course_repeat': False,
                 'educational_other': '',
                 'educational_type': 'TEACHING_OF_GENERAL_EDUCATION',
                 'institute': '',
@@ -209,8 +217,6 @@ class EducationTestCase(TestCase):
             "belgian_diploma-community": "FRENCH_SPEAKING",
             "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
             "belgian_diploma-other_institute": "Special school",
-            "belgian_diploma-course_repeat": False,
-            "belgian_diploma-course_orientation": False,
             # Even if we send data for foreign diploma, it should be stripped from data sent to WS
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
         })
@@ -224,21 +230,44 @@ class EducationTestCase(TestCase):
             "diploma_type": "FOREIGN",
             "academic_graduation_year": 2020,
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
-            "foreign_diploma-linguistic_regime": "EN",
+            "foreign_diploma-linguistic_regime": "AR",
             "foreign_diploma-country": "FR",
             "foreign_diploma-equivalence": "PENDING",
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'foreign_diploma_form', 'result', _("This field is required."))
+        self.assertFormError(response, 'foreign_diploma_form', 'high_school_transcript_translation',
+                             _("This field is required."))
+
+        response = self.client.post(self.form_url, {
+            "got_diploma": "YES",
+            "diploma_type": "FOREIGN",
+            "high_school_transcript_0": "test",
+            "high_school_diploma_0": "test",
+            "academic_graduation_year": 2020,
+            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-linguistic_regime": "AR",
+            "foreign_diploma-country": "FR",
+            "foreign_diploma-equivalence": "PENDING",
+            'foreign_diploma-high_school_transcript_translation_0': 'test',
+            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'foreign_diploma_form', 'high_school_diploma_translation',
+                             _("This field is required."))
 
         response = self.client.post(self.form_url, {
             "got_diploma": "YES",
             "diploma_type": "FOREIGN",
             "academic_graduation_year": 2020,
+            "high_school_transcript_0": "test",
+            "high_school_diploma_0": "test",
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
-            "foreign_diploma-linguistic_regime": "EN",
+            "foreign_diploma-linguistic_regime": "AR",
             "foreign_diploma-country": "FR",
             "foreign_diploma-equivalence": "PENDING",
+            'foreign_diploma-high_school_transcript_translation_0': 'test',
+            'foreign_diploma-high_school_diploma_translation_0': 'test',
             "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
             # Even if we send data for belgian diploma, it should be stripped from data sent to WS
             "belgian_diploma-other_institute": "Special school",
@@ -251,19 +280,35 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent, {
             'foreign_diploma': {
                 'academic_graduation_year': 2020,
+                "high_school_transcript": ["test"],
+                "high_school_diploma": ["test"],
                 'result': 'NOT_KNOWN_YET_RESULT',
                 'country': 'FR',
                 'foreign_diploma_type': 'NATIONAL_BACHELOR',
-                'linguistic_regime': 'EN',
+                'linguistic_regime': 'AR',
                 'other_linguistic_regime': '',
+                'high_school_transcript_translation': ['test'],
+                'high_school_diploma_translation': ['test'],
                 'equivalence': 'PENDING',
             },
         })
 
     def test_form_will_get_diploma_this_year(self):
+        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+            "belgian_diploma": {},
+            "foreign_diploma": {
+                "academic_graduation_year": get_current_year(),
+                "result": "NOT_KNOWN_YET_RESULT",
+                "foreign_diploma_type": "NATIONAL_BACHELOR",
+                "linguistic_regime": "EN",
+                "country": "FR",
+            }
+        }
         response = self.client.post(self.form_url, {
             "got_diploma": "THIS_YEAR",
             "diploma_type": "FOREIGN",
+            "high_school_transcript_0": "test",
+            "high_school_diploma_0": "test",
             "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
             "foreign_diploma-linguistic_regime": "EN",
             "foreign_diploma-country": "FR",
@@ -280,11 +325,15 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent, {
             'foreign_diploma': {
                 'academic_graduation_year': get_current_year(),
+                "high_school_transcript": ["test"],
+                "high_school_diploma": ["test"],
                 'result': 'NOT_KNOWN_YET_RESULT',
                 'country': 'FR',
                 'foreign_diploma_type': 'NATIONAL_BACHELOR',
                 'linguistic_regime': 'EN',
                 'other_linguistic_regime': '',
+                'high_school_transcript_translation': [],
+                'high_school_diploma_translation': [],
                 'equivalence': 'NO',
             },
         })

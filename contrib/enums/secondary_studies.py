@@ -36,7 +36,7 @@ class GotDiploma(ChoiceEnum):
 
 class DiplomaTypes(ChoiceEnum):
     BELGIAN = _("belgian")
-    FOREIGN = _("foreign")
+    FOREIGN = _("foreign or international")
 
 
 class DiplomaResults(ChoiceEnum):
@@ -88,4 +88,4 @@ class ForeignDiplomaTypes(ChoiceEnum):
 class Equivalence(ChoiceEnum):
     YES = _("Yes")
     NO = _("No")
-    PENDING = _("Pending")
+    PENDING = _("Ongoing request")

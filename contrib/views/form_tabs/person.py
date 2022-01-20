@@ -30,7 +30,6 @@ from admission.contrib.forms.person import DoctorateAdmissionPersonForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
-from osis_document.api.utils import get_remote_token
 
 
 class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
@@ -43,17 +42,7 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
         return kwargs
 
     def get_initial(self):
-        person = AdmissionPersonService.retrieve_person(self.person, uuid=self.kwargs.get('uuid'))
-        initial = person.to_dict()
-        document_fields = [
-            'id_card',
-            'passport',
-            'id_photo',
-        ]
-        for field in document_fields:
-            initial[field] = [get_remote_token(document, write_token=True)
-                              for document in initial.get(field)]
-        return initial
+        return AdmissionPersonService.retrieve_person(self.person, uuid=self.kwargs.get('uuid')).to_dict()
 
     def prepare_data(self, data):
         data['last_registration_year'] = int(data['last_registration_year']) if data['last_registration_year'] else None

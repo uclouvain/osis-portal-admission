@@ -35,7 +35,6 @@ from admission.contrib.forms.project import DoctorateAdmissionProjectCreateForm,
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
-from osis_document.api.utils import get_remote_token
 
 
 class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
@@ -69,7 +68,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 person=self.person,
                 uuid=str(self.kwargs['pk']),
             )
-            initial = {
+            return {
                 **self.proposition.to_dict(),
                 'sector': self.proposition.code_secteur_formation,
                 'doctorate': "{sigle}-{annee}".format(
@@ -77,17 +76,6 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                     annee=self.proposition.annee_doctorat,
                 ),
             }
-            document_fields = [
-                'documents_projet',
-                'graphe_gantt',
-                'proposition_programme_doctoral',
-                'projet_formation_complementaire',
-                'lettres_recommandation',
-            ]
-            for field in document_fields:
-                initial[field] = [get_remote_token(document, write_token=True)
-                                  for document in getattr(self.proposition, field)]
-            return initial
         return super().get_initial()
 
     def prepare_data(self, data):

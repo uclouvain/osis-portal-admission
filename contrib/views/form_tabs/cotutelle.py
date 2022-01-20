@@ -43,14 +43,6 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
         initial = cotutelle.to_dict()
         if initial['cotutelle'] is not None:
             initial['cotutelle'] = 'YES' if initial['cotutelle'] else 'NO'
-        document_fields = [
-            'demande_ouverture',
-            'convention',
-            'autres_documents',
-        ]
-        for field in document_fields:
-            initial[field] = [get_remote_token(document, write_token=True)
-                              for document in initial.get(field)]
         return initial
 
     def call_webservice(self, data):
