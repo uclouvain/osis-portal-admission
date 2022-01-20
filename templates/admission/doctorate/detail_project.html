@@ -73,7 +73,7 @@
             {% field_data _("Institution") admission.institution %}
             {% if admission.date_soutenance %}
                 {% field_data _("Defense date") admission.date_soutenance %}
-            {% else %}
+            {% elif admission.raison_non_soutenue %}
                 {% field_data _("No defense reason") admission.raison_non_soutenue|linebreaks %}
             {% endif %}
         {% endif %}
