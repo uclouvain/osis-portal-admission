@@ -30,7 +30,7 @@ from inspect import getfullargspec
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 from django.views.generic import FormView
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 
 from base.models.utils.utils import ChoiceEnum
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
