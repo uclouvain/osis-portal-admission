@@ -30,7 +30,7 @@ from django.conf import settings
 from django.core import validators
 from django.utils.translation import gettext_lazy as _
 
-from admission.contrib.enums.person import GenderEnum, SexEnum
+from admission.contrib.enums.person import CivilState, GenderEnum, SexEnum
 from admission.contrib.forms import CustomDateInput, EMPTY_CHOICE, get_country_initial_choices
 from admission.services.reference import AcademicYearService
 from osis_document.contrib.forms import FileUploadField
@@ -75,6 +75,12 @@ class DoctorateAdmissionPersonForm(forms.Form):
         min_value=1000,
         max_value=2999,
     )
+    civil_state = forms.ChoiceField(
+        label=_("Civil status"),
+        required=False,
+        choices=EMPTY_CHOICE + CivilState.choices(),
+    )
+
     birth_country = forms.CharField(
         required=False,
         label=_("Birth country"),
@@ -109,7 +115,14 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("National registry number"),
         help_text=_("Only to provide if you are in possession of a Belgian document of identity. If "
                     "you are of Belgian nationality and you live in Belgium this field is mandatory."),
-        validators=[validators.RegexValidator(r'^\d{11}$')],
+        validators=[
+            validators.RegexValidator(r'^(\d{2}[.-]?\d{2}[.-]?\d{2}[.-]?\d{3}[.-]?\d{2})$',
+                                      message=_("The Belgian national register number must consist of 11 digits.")),
+        ],
+        widget=forms.TextInput(attrs={
+            "data-mask": "00.00.00-000.00",
+            "placeholder": "Par ex.: 85.07.30-001.33",
+        }),
     )
     id_card_number = forms.CharField(required=False, label=_("Identity card number"))
     passport_number = forms.CharField(required=False, label=_("Passport number"))
@@ -136,7 +149,10 @@ class DoctorateAdmissionPersonForm(forms.Form):
     )
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = (
+            'dependsOn.min.js',
+            'jquery.mask.min.js',
+        )
 
     def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -151,11 +167,11 @@ class DoctorateAdmissionPersonForm(forms.Form):
             self.initial['unknown_birth_date'] = True
 
         self.fields['birth_country'].widget.choices = get_country_initial_choices(
-            self.initial.get('birth_country'),
+            self.data.get(self.add_prefix("birth_country"), self.initial.get("birth_country")),
             person
         )
         self.fields['country_of_citizenship'].widget.choices = get_country_initial_choices(
-            self.initial.get('country_of_citizenship'),
+            self.data.get(self.add_prefix("country_of_citizenship"), self.initial.get("country_of_citizenship")),
             person
         )
 
@@ -169,4 +185,6 @@ class DoctorateAdmissionPersonForm(forms.Form):
             self.add_error('passport_expiration_date', _("This field is required."))
         elif data.get('passport_expiration_date') and not data.get('passport_number'):
             self.add_error('passport_number', _("This field is required."))
+        if data.get('country_of_citizenship') == 'BE' and not data.get('national_number'):
+            self.add_error('national_number', _("This field is required."))
         return data

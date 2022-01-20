@@ -37,3 +37,12 @@ class GenderEnum(ChoiceEnum):
 class SexEnum(ChoiceEnum):
     F = _('Female')
     M = _('Male')
+
+
+class CivilState(ChoiceEnum):
+    LEGAL_COHABITANT = _("Legal cohabitant")
+    SINGLE = _("Single")
+    DIVORCED = _("Divorced")
+    MARRIED = _("Married")
+    SEPARATE = _("Separate")
+    WIDOWED = _("Widowed")

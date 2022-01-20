@@ -72,7 +72,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
     def get_initial(self):
         return AdmissionPersonService.retrieve_high_school_diploma(
             person=self.person,
-            uuid=self.kwargs.get('uuid'),
+            uuid=self.kwargs.get('pk'),
         ).to_dict()
 
     @staticmethod
@@ -153,7 +153,11 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         return self.forms
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_high_school_diploma(self.person, data, uuid=self.kwargs.get('uuid'))
+        AdmissionPersonService.update_high_school_diploma(
+            self.person,
+            data,
+            uuid=self.kwargs.get('pk'),
+        )
 
     @staticmethod
     def prepare_diploma(data, forms, diploma):

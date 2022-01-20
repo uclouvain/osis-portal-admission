@@ -43,7 +43,7 @@ class DoctorateAdmissionCoordonneesDetailView(LoginRequiredMixin, TemplateView):
         )
         coordonnees = AdmissionPersonService.retrieve_person_coordonnees(
             person=self.request.user.person,
-            uuid=self.kwargs.get('uuid'),
+            uuid=self.kwargs['pk'],
         ).to_dict()
         context_data['coordonnees'] = coordonnees
         translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
