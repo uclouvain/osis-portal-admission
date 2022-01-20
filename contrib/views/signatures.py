@@ -29,7 +29,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import Form
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.services.mixins import WebServiceFormMixin

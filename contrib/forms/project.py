@@ -26,7 +26,7 @@
 from dal import autocomplete
 from django import forms
 from django.conf import settings
-from django.utils.translation import get_language, gettext as _
+from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
