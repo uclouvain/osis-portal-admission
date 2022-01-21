@@ -117,15 +117,65 @@ class AdmissionPersonService:
             **build_mandatory_auth_headers(person),
         )
 
+    # Curriculum
     @classmethod
-    def retrieve_curriculum(cls, person):
-        return AdmissionPersonAPIClient().retrieve_curriculum(
+    def list_curriculum_experiences(cls, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().list_curriculum_experiences_admission(
+                uuid=uuid,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().list_curriculum_experiences(
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def update_curriculum(cls, person, **data):
-        return AdmissionPersonAPIClient().update_curriculum(
-            curriculum=data,
+    def retrieve_curriculum_experience(cls, experience_id, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().retrieve_curriculum_experience_admission(
+                uuid=uuid,
+                xp=experience_id,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().retrieve_curriculum_experience(
+            xp=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_curriculum_experience(cls, experience_id, person, data, uuid=None):
+        common_params = {
+            'xp': experience_id,
+            'experience_updating': data,
+            **build_mandatory_auth_headers(person),
+        }
+        if uuid:
+            return AdmissionPersonAPIClient().update_curriculum_experience_admission(uuid=uuid, **common_params)
+        return AdmissionPersonAPIClient().update_curriculum_experience(**common_params)
+
+    @classmethod
+    def create_curriculum_experience(cls, person, data, uuid=None):
+        common_params = {
+            'experience_creation': data,
+            **build_mandatory_auth_headers(person),
+        }
+
+        if uuid:
+            return AdmissionPersonAPIClient().create_curriculum_experience_admission(
+                uuid=uuid,
+                **common_params,
+            )
+        return AdmissionPersonAPIClient().create_curriculum_experience(**common_params)
+
+    @classmethod
+    def delete_curriculum_experience(cls, experience_id, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().destroy_curriculum_experience_admission(
+                uuid=uuid,
+                xp=experience_id,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().destroy_curriculum_experience(
+            xp=experience_id,
             **build_mandatory_auth_headers(person),
         )

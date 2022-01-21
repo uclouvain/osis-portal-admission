@@ -188,11 +188,13 @@ def doctorate_subtabs(context, admission=None):
 
 
 @register.inclusion_tag('admission/field_data.html')
-def field_data(name, data=None, css_class=None, hide_empty=False):
+def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
+    elif translate_data is True:
+        data = _(data)
     return {
         'name': name,
         'data': data,
@@ -202,16 +204,18 @@ def field_data(name, data=None, css_class=None, hide_empty=False):
 
 
 @register_inclusion_with_body('panel.html', takes_context=True, context_name='panel_body')
-def panel(context, title='', css_class="panel panel-default", **kwargs):
+def panel(context, title='', css_class="panel panel-default", title_level=4, **kwargs):
     """
     Template tag for panel
     :param title: the panel title
     :param css_class: the panel css class
+    :param title_level: the title level
     :type context: django.template.context.RequestContext
     """
     context['title'] = title
     context['attributes'] = kwargs
     context['attributes']['class'] = css_class
+    context['title_level'] = title_level
     return context
 
 
@@ -239,3 +243,9 @@ def can_read_tab(admission, tab_name):
 def can_update_tab(admission, tab_name):
     """Return true if the specified tab can be opened in writing mode for this admission, otherwise return False"""
     return _can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB)
+
+
+@register.filter
+def add_str(arg1, arg2):
+    """Return the concatenation of two arguments."""
+    return str(arg1) + str(arg2)

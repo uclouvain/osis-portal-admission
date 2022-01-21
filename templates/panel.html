@@ -25,9 +25,9 @@
 <div {% for name, value in attributes.items %} {{ name }}="{{ value|stringformat:'s' }}"{% endfor %}>
     {% if title %}
     <div class="panel-heading">
-        <h4 class="panel-title">
+        <h{{ title_level }} class="panel-title">
             {{ title }}
-        </h4>
+        </h{{ title_level }}>
     </div>
     {% endif %}
     <div class="panel-body">

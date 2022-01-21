@@ -1,26 +1,176 @@
 {% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission index %}
 
 {% block tab_content %}
+    {% if curriculum_experiences %}
+        {% for experience in curriculum_experiences %}
+            {% ifchanged experience.curriculum_year.academic_year %}
+                <h4>{{ experience.curriculum_year.academic_year }}-{{ experience.curriculum_year.academic_year|add:"1" }}</h4>
+            {% endifchanged %}
 
-  {% if curriculum_years %}
-    {% for curriculum_year in curriculum_years %}
-      {% panel curriculum_year.academic_graduation_year %}
-        {% for experience in curriculum_year.experiences %}
-         {% panel experience.course_type|enum_display:"CourseTypes" css_class=experience.valuated_from|yesno:"panel panel-info,panel panel-default" %}
-            {{ experience.course_type|enum_display:"CourseTypes" }}
-            {% if experience.valuated_from %}
-              <p>
-                <a href="{% url "admission:doctorate-detail" experience.valuated_from %}">
-                  {% trans "Experience valuated from this admission" %}
-                </a>
-              </p>
-            {% endif %}
-          {% endpanel %}
+            <section class="experience panel panel-default">
+                <div class="panel-heading">
+                    <h5>{{ experience.type.value|enum_display:"ExperienceTypes" }} - {{ experience.country.name }}</h5>
+                    <div class="experience-actions">
+                        {% if experience.valuated_from %}
+                            <i class="glyphicon glyphicon-check" title="{% trans "This experience has been valuated." %}"></i>
+                        {% else %}
+                            <i class="glyphicon glyphicon-unchecked" title="{% trans "This experience has not been valuated yet." %}"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {% if experience.type.value == 'BELGIAN_UNIVERSITY_HIGHER_EDUCATION' %}
+                        {% panel _('Institute') title_level=6 %}
+                            {% field_data _("Institute name") experience.institute.name|default:experience.institute_name %}
+                            {% field_data _("Education community") experience.belgian_education_community.value|enum_display:"BelgianCommunitiesOfEducation" %}
+                            <div class="row">
+                                {% field_data _("Institute city") experience.institute_city css_class="col-md-6" hide_empty=True %}
+                                {% field_data _("Institute postal code") experience.institute_postal_code css_class="col-md-6" hide_empty=True %}
+                            </div>
+                        {% endpanel %}
+                        {% panel _('Studies') title_level=6 %}
+                            <div class="row">
+                                {% if experience.belgian_education_community.value == 'FRENCH_SPEAKING' %}
+                                    {% field_data _("Programme") experience.program_name css_class="col-md-6"%}
+                                {% else %}
+                                    {% field_data _("Course or diploma name") experience.program_name css_class="col-md-6"%}
+                                {% endif %}
+                                {% field_data _("Study cycle type") experience.study_cycle_type.value|enum_display:"ForeignStudyCycleType" css_class="col-md-6" %}
+                            </div>
+                            {% field_data _("Linguistic regime") experience.linguistic_regime.name %}
+                        {% endpanel %}
+                        {% panel _('Results') title_level=6 %}
+                            <div class="row">
+                                {% field_data _("Result") experience.result.value|enum_display:"Result" css_class="col-md-6" %}
+                                {% field_data _("Is it your graduation year?") experience.graduation_year|yesno:_("Yes,No") css_class="col-md-6" hide_empty=True %}
+                            </div>
+                            {% if experience.graduation_year %}
+                                <div class="row">
+                                    {% field_data _("Obtained grade") experience.obtained_grade.value|enum_display:"Grade" css_class="col-md-6" %}
+                                    {% field_data _("Diploma ranked") experience.diploma_ranked css_class="col-md-6" %}
+                                </div>
+                                <div class="row">
+                                    {% field_data _("Issue diploma date") experience.issue_diploma_date css_class="col-md-6" %}
+                                    {% field_data _("Graduate degree") experience.graduate_degree css_class="col-md-6" %}
+                                </div>
+                            {% endif %}
+                            <hr>
+                            <div class="row">
+                                {% field_data _("Credit type") experience.credit_type.value|enum_display:"CreditType" css_class="col-md-6" %}
+                                {% field_data _("Acquired credits") experience.acquired_credits_number|add_str:_(" on ")|add_str:experience.entered_credits_number css_class="col-md-6" %}
+                            </div>
+                            {% field_data _("Transcript") experience.transcript %}
+                            {% field_data _("Access certificate after 60 master") experience.access_certificate_after_60_master hide_empty=True %}
+                            <hr>
+                            {% field_data _("Dissertation title") experience.dissertation_title %}
+                            <div class="row">
+                                {% field_data _("Dissertation summary") experience.dissertation_summary css_class="col-md-6" %}
+                                {% field_data _("Dissertation score") experience.dissertation_score css_class="col-md-6" %}
+                            </div>
+                        {% endpanel %}
+                        {#                     {% field_data _("Curriculum") experience.curriculum %}#}
+                    {% elif experience.type.value == 'FOREIGN_UNIVERSITY_HIGHER_EDUCATION' %}
+                        {% panel _('Institute') title_level=6 %}
+                            {% field_data _("Institute name") experience.institute.name|default:experience.institute_name %}
+                            <div class="row">
+                                {% field_data _("Institute city") experience.institute_city css_class="col-md-6" hide_empty=True %}
+                                {% field_data _("Institute postal code") experience.institute_postal_code css_class="col-md-6" hide_empty=True %}
+                            </div>
+                        {% endpanel %}
+                        {% panel _('Studies') title_level=6 %}
+                            <div class="row">
+                                {% field_data _("Programme") experience.program.title|default:experience.program_name css_class="col-md-6"%}
+                                {% field_data _("Study system") experience.study_system.value|enum_display:"StudySystems" css_class="col-md-6" %}
+                            </div>
+                        {% endpanel %}
+                        {% panel _('Results') title_level=6 %}
+                            <div class="row">
+                                {% field_data _("Result") experience.result.value|enum_display:"Result" css_class="col-md-6" %}
+                                {% field_data _("Is it your graduation year?") experience.graduation_year|yesno:_("Yes,No") css_class="col-md-6" hide_empty=True %}
+                            </div>
+                            {% if experience.graduation_year %}
+                                <div class="row">
+                                    {% field_data _("Obtained grade") experience.obtained_grade.value|enum_display:"Grade" css_class="col-md-6" %}
+                                    {% field_data _("Diploma ranked") experience.diploma_ranked css_class="col-md-6" %}
+                                </div>
+                                {% field_data _("Issue diploma date") experience.issue_diploma_date %}
+                                <div class="row">
+                                    {% field_data _("Graduate degree") experience.graduate_degree css_class="col-md-6" %}
+                                    {% field_data _("Graduate degree translation") experience.graduate_degree_translation css_class="col-md-6" %}
+                                </div>
+                            {% endif %}
+                            <hr>
+                            <div class="row">
+                                {% field_data _("Credit type") experience.credit_type.value|enum_display:"CreditType" css_class="col-md-6" %}
+                                {% field_data _("Acquired credits") experience.acquired_credits_number|add_str:_(" on ")|add_str:experience.entered_credits_number css_class="col-md-6" %}
+                            </div>
+                            <div class="row">
+                                {% field_data _("Transcript") experience.transcript css_class="col-md-6" %}
+                                {% field_data _("Transcript translation") experience.transcript_translation css_class="col-md-6" %}
+                            </div>
+                            {% field_data _("Access certificate after 60 master") experience.access_certificate_after_60_master hide_empty=True %}
+                            <hr>
+                            {% field_data _("Dissertation title") experience.dissertation_title %}
+                            <div class="row">
+                                {% field_data _("Dissertation summary") experience.dissertation_summary css_class="col-md-6" %}
+                                {% field_data _("Dissertation score") experience.dissertation_score css_class="col-md-6" %}
+                            </div>
+                        {% endpanel %}
+                    {% else %}
+                        {% panel _('Institute') title_level=6 %}
+                            {% field_data _("Institute name") experience.institute_name %}
+                            {% field_data _("Institute city") experience.institute_city hide_empty=True %}
+                        {% endpanel %}
+                        {% panel _('Activity') title_level=6 %}
+                            <div class="row">
+                                {% field_data _("Type") experience.activity_type.value|enum_display:"ActivityTypes"|default:experience.other_activity_type css_class="col-md-6" hide_empty=True %}
+                                {% field_data _("Position") experience.activity_position css_class="col-md-6" hide_empty=True %}
+                            </div>
+                            {% field_data _("Certificate") experience.activity_certificate %}
+                        {% endpanel %}
+                    {% endif %}
+                </div>
+            </section>
         {% endfor %}
-      {% endpanel %}
-    {% endfor %}
-  {% else %}
-    {% trans "Please fullfil your curriculum" %}
-  {% endif %}
 
+    {% else %}
+        {% panel %}
+            {% trans "Please fullfill your curriculum" %}
+        {% endpanel %}
+    {% endif %}
+
+{% endblock %}
+
+{% block style %}
+    <style>
+        hr {
+            margin-top: 0;
+        }
+        h4 {
+            padding: 1em;
+            background: white;
+            border: 1px solid #cccc;
+            font-size: 16px;
+        }
+        .experience .panel-heading h6 {
+            font-size: 15px;
+        }
+        .experience .panel-heading h5 {
+            font-size: 15px;
+        }
+        .experience > .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+        .experience .panel-heading {
+        {#background: #f9f9f9;#}
+        }
+        .experience-list {
+        {#border-left: 10px solid #f5f5f5;#}
+        {#padding-left: 1em;#}
+        {#padding-top: 0.5em;#}
+        }
+    </style>
 {% endblock %}

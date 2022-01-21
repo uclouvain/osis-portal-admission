@@ -27,7 +27,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 # Do not remove the following import as it is used by enum_display templatetag
-from admission.contrib.enums.curriculum import CourseTypes
+from admission.contrib.enums.curriculum import *
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
 
@@ -37,9 +37,14 @@ class DoctorateAdmissionCurriculumDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
+        proposition_uuid = str(self.kwargs.get("pk", ""))
+
         context_data["admission"] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person, uuid=str(self.kwargs["pk"]),
+            person=self.request.user.person,
+            uuid=proposition_uuid,
         )
-        curriculum = AdmissionPersonService.retrieve_curriculum(self.request.user.person)
-        context_data["curriculum_years"] = curriculum.get("curriculum_years")
+        context_data["curriculum_experiences"] = AdmissionPersonService.list_curriculum_experiences(
+            person=self.request.user.person,
+            uuid=proposition_uuid,
+        )
         return context_data

@@ -27,7 +27,7 @@ from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext as _
 
-from admission.contrib.enums.curriculum import CourseTypes
+# from admission.contrib.enums.curriculum import CourseTypes
 from admission.contrib.forms import EMPTY_CHOICE
 from admission.services.reference import AcademicYearService
 
@@ -40,7 +40,7 @@ class DoctorateAdmissionCurriculumForm(forms.Form):
     )
     course_type = forms.ChoiceField(
         label=_("Type of high school diploma"),
-        choices=CourseTypes.choices(),
+        # choices=CourseTypes.choices(),
         widget=forms.RadioSelect,
         required=False,
     )

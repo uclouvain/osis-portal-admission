@@ -29,9 +29,56 @@ from django.utils.translation import gettext_lazy as _
 from base.models.utils.utils import ChoiceEnum
 
 
-class CourseTypes(ChoiceEnum):
-    BELGIAN_UNIVERSITY = _("Belgian university")
-    FOREIGN_UNIVERSITY = _("Foreign university")
-    BELGIAN_NON_UNIVERSITY_HIGHER_EDUCATION = _("Belgian non-university higher education")
-    FOREIGN_NON_UNIVERSITY_HIGHER_EDUCATION = _("Foreign non-university higher education")
+class ExperienceTypes(ChoiceEnum):
+    BELGIAN_UNIVERSITY_HIGHER_EDUCATION = _("Belgian university higher education")
+    FOREIGN_UNIVERSITY_HIGHER_EDUCATION = _("Foreign university higher education")
     OTHER = _("Other")
+
+
+class BelgianCommunitiesOfEducation(ChoiceEnum):
+    FRENCH_SPEAKING = _("French-speaking Community of Belgium")
+    FLEMISH_SPEAKING = _("Flemish-speaking Community")
+    GERMAN_SPEAKING = _("German-speaking Community")
+
+
+class StudySystems(ChoiceEnum):
+    CONTINUING_EDUCATION = _("Continuing education")
+    FULL_TIME_EDUCATION = _("Full-time education")
+
+
+class Result(ChoiceEnum):
+    FAILURE = _('Failure')
+    NO_RESULT = _('No result')
+    SUCCESS = _("Success")
+    SUCCESS_WITH_RESIDUAL_CREDITS = _('Success with residual credits')
+
+
+class Grade(ChoiceEnum):
+    GREATER_DISTINCTION = _('Greater distinction')
+    GREAT_DISTINCTION = _('Great distinction')
+    DISTINCTION = _('Distinction')
+    SATISFACTION = _('Satisfaction')
+    SUCCESS_WITHOUT_DISTINCTION = _('Success without distinction')
+    NO_GRADE = _('No grade')
+
+
+class CreditType(ChoiceEnum):
+    EUROPEAN_UNION_CREDITS = _('European Union credits')
+    NON_EUROPEAN_UNION_CREDITS = _('Non European Union credits')
+    SEMESTERS = _('Semesters')
+
+
+class ForeignStudyCycleType(ChoiceEnum):
+    BACHELOR = _('Bachelor')
+    DOCTORATE = _('Doctorate')
+    MASTER = _('Master')
+    OTHER_HIGHER_EDUCATION = _('Other higher education')
+
+
+class ActivityTypes(ChoiceEnum):
+    ILLNESS = _('Illness')
+    INTERNSHIP = _('Internship')
+    OTHER = _('Other')
+    UNEMPLOYMENT = _('Unemployment')
+    VOLUNTEERING = _('Volunteering')
+    WORK = _('Work')
