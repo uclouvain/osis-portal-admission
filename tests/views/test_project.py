@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -146,9 +146,11 @@ class ProjectViewTestCase(TestCase):
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'FOOBARBAZ-2021',
+            'non_soutenue': True,
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'commission_proximite_cdss', _("This field is required."))
+        self.assertFormError(response, 'form', 'raison_non_soutenue', _("This field is required."))
 
         self.mock_proposition_api.return_value.create_proposition.return_value = {
             'uuid': "3c5cdc60-2537-4a12-a396-64d2e9e34876",
@@ -193,6 +195,7 @@ class ProjectViewTestCase(TestCase):
             'code_secteur_formation': "SSH",
             'type_contrat_travail': "Something",
             "commission_proximite": ChoixProximityCommissionCDE.ECONOMY.name,
+            "raison_non_soutenue": "A very good reason",
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -301,6 +304,7 @@ class ProjectViewTestCase(TestCase):
             langue_redaction_these="",
             code_secteur_formation="SSS",
             commission_proximite="ECLI",
+            institut_these="",
             links={},
         )
         response = self.client.get(url)

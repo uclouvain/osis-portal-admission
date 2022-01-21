@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,15 +29,18 @@ from django.views.generic import FormView
 
 from admission.contrib.enums.secondary_studies import DiplomaTypes, EducationalType, GotDiploma
 from admission.contrib.forms.education import (
-    DoctorateAdmissionEducationForm,
-    DoctorateAdmissionEducationForeignDiplomaForm,
     DoctorateAdmissionEducationBelgianDiplomaForm,
+    DoctorateAdmissionEducationForeignDiplomaForm,
+    DoctorateAdmissionEducationForm,
     DoctorateAdmissionEducationScheduleForm,
+    FIELD_REQUIRED_MESSAGE,
 )
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
 from base.tests.factories.academic_year import get_current_year
+
+LINGUISTIC_REGIMES_WITHOUT_TRANSLATION = ['FR', 'DE', 'EN', 'IT', 'PT', 'ES']
 
 educational_types_that_require_schedule = [
     EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
@@ -59,12 +62,17 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
             context_data['admission'] = AdmissionPropositionService.get_proposition(
                 person=self.person, uuid=str(self.kwargs['pk']),
             )
+        context_data['foreign_diploma_type_images'] = {
+            'INTERNATIONAL_BACCALAUREATE': 'admission/images/IBO.png',
+            'EUROPEAN_BACHELOR': 'admission/images/schola_europa.png',
+        }
+        context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
         return context_data
 
     def get_initial(self):
         return AdmissionPersonService.retrieve_high_school_diploma(
             person=self.person,
-            uuid=self.kwargs.get('uuid'),
+            uuid=self.kwargs.get('pk'),
         ).to_dict()
 
     @staticmethod
@@ -77,7 +85,8 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
     def post(self, request, *args, **kwargs):
         forms = self.get_forms()
         self.check_bound_and_set_required_attr(forms["belgian_diploma_form"])
-        self.check_bound_and_set_required_attr(forms["foreign_diploma_form"])
+        foreign_diploma = forms["foreign_diploma_form"]
+        self.check_bound_and_set_required_attr(foreign_diploma)
 
         if forms["belgian_diploma_form"].is_valid():
             educational_type_data = forms["belgian_diploma_form"].cleaned_data.get("educational_type")
@@ -86,9 +95,17 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
             else:
                 forms["schedule_form"].is_bound = False
 
+        main_form = forms["main_form"]
+        if (main_form.is_valid()
+                and main_form.cleaned_data.get("got_diploma") == GotDiploma.YES.name
+                and foreign_diploma.is_valid()
+                and foreign_diploma.cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+                and not foreign_diploma.cleaned_data.get("high_school_diploma_translation")):
+            foreign_diploma.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
+
         if all(not form.is_bound or form.is_valid() for form in forms.values()):
-            return self.form_valid(forms["main_form"])
-        return self.form_invalid(forms["main_form"])
+            return self.form_valid(main_form)
+        return self.form_invalid(main_form)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -136,12 +153,18 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         return self.forms
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_high_school_diploma(self.person, data, uuid=self.kwargs.get('uuid'))
+        AdmissionPersonService.update_high_school_diploma(
+            self.person,
+            data,
+            uuid=self.kwargs.get('pk'),
+        )
 
     @staticmethod
     def prepare_diploma(data, forms, diploma):
         data[diploma] = forms["{}_form".format(diploma)].cleaned_data
         data[diploma]["academic_graduation_year"] = data.pop("academic_graduation_year")
+        data[diploma]["high_school_transcript"] = data.pop("high_school_transcript")
+        data[diploma]["high_school_diploma"] = data.pop("high_school_diploma")
 
     def prepare_data(self, main_form_data):
         # Process the form data to match API
@@ -154,18 +177,18 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         got_diploma = data.pop("got_diploma")
         if got_diploma in [GotDiploma.NO.name, ""]:
             return {}
-        elif got_diploma == GotDiploma.THIS_YEAR.name:
+
+        if got_diploma == GotDiploma.THIS_YEAR.name:
             data["academic_graduation_year"] = get_current_year()
 
-        diploma_type = data.pop("diploma_type", None)
-        if diploma_type == DiplomaTypes.BELGIAN.name:
+        if data.pop("diploma_type") == DiplomaTypes.BELGIAN.name:
             self.prepare_diploma(data, forms, "belgian_diploma")
             schedule = forms.get("schedule_form")
             educational_type = forms.get("belgian_diploma_form").cleaned_data.get("educational_type")
             if schedule and educational_type in educational_types_that_require_schedule:
                 data["belgian_diploma"]["schedule"] = schedule.cleaned_data
 
-        if diploma_type == DiplomaTypes.FOREIGN.name:
+        else:
             self.prepare_diploma(data, forms, "foreign_diploma")
 
         return data

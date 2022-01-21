@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
+from admission.services.proposition import AdmissionPropositionService
 from admission.services.reference import LanguageService
 
 
@@ -37,6 +38,9 @@ class DoctorateAdmissionLanguagesDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
+        context_data['admission'] = AdmissionPropositionService.get_proposition(
+            person=self.request.user.person, uuid=str(self.kwargs['pk']),
+        )
         context_data["languages_knowledge"] = AdmissionPersonService.retrieve_languages_knowledge(
             self.request.user.person
         )

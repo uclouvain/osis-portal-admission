@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -66,13 +66,13 @@ class WebServiceFormMixin:
         raise NotImplementedError
 
     def get_success_url(self):
+        messages.info(self.request, _("Your data has been saved"))
         pk = self.kwargs.get('pk')
         if pk:
             # On update, redirect on admission detail
             tab_name = self.request.resolver_match.url_name
             return resolve_url('admission:doctorate-detail:' + tab_name, pk=pk)
         # On creation, display a message and redirect on same form
-        messages.info(self.request, _("Your data has been saved"))
         return self.request.get_full_path()
 
     @property

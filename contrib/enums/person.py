@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -37,3 +37,12 @@ class GenderEnum(ChoiceEnum):
 class SexEnum(ChoiceEnum):
     F = _('Female')
     M = _('Male')
+
+
+class CivilState(ChoiceEnum):
+    LEGAL_COHABITANT = _("Legal cohabitant")
+    SINGLE = _("Single")
+    DIVORCED = _("Divorced")
+    MARRIED = _("Married")
+    SEPARATE = _("Separate")
+    WIDOWED = _("Widowed")

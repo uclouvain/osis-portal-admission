@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class DoctorateAdmissionPersonDetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        person = AdmissionPersonService.retrieve_person(self.request.user.person, uuid=self.kwargs.get('uuid'))
+        person = AdmissionPersonService.retrieve_person(self.request.user.person, uuid=self.kwargs.get('pk'))
         context_data['person'] = person
         context_data['admission'] = AdmissionPropositionService.get_proposition(
             person=self.request.user.person, uuid=str(self.kwargs['pk']),

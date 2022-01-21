@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 from dal import autocomplete
 from django import forms
 from django.conf import settings
-from django.utils.translation import get_language, gettext as _
+from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
@@ -163,7 +163,6 @@ class DoctorateAdmissionProjectForm(forms.Form):
     projet_formation_complementaire = FileUploadField(
         label=_("Complementary training project"),
         required=False,
-        max_files=2,
     )
     lettres_recommandation = FileUploadField(
         label=_("Recommendation letters"),
@@ -272,6 +271,9 @@ class DoctorateAdmissionProjectForm(forms.Form):
             elif (data.get('bourse_recherche') == BourseRecherche.OTHER.name
                   and not data.get('bourse_recherche_other')):
                 self.add_error('bourse_recherche_other', _("This field is required."))
+
+        if data.get('non_soutenue') and not data.get('raison_non_soutenue'):
+            self.add_error('raison_non_soutenue', _("This field is required."))
 
         return data
 

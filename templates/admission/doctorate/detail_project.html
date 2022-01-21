@@ -7,7 +7,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@
             {% field_data _("Institution") admission.institution %}
             {% if admission.date_soutenance %}
                 {% field_data _("Defense date") admission.date_soutenance %}
-            {% else %}
+            {% elif admission.raison_non_soutenue %}
                 {% field_data _("No defense reason") admission.raison_non_soutenue|linebreaks %}
             {% endif %}
         {% endif %}

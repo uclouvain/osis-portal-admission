@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ from admission.contrib.forms.person import DoctorateAdmissionPersonForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
-from osis_document.api.utils import get_remote_token
 
 
 class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
@@ -43,24 +42,15 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
         return kwargs
 
     def get_initial(self):
-        person = AdmissionPersonService.retrieve_person(self.person, uuid=self.kwargs.get('uuid'))
-        initial = person.to_dict()
-        document_fields = [
-            'id_card',
-            'passport',
-            'id_photo',
-        ]
-        for field in document_fields:
-            initial[field] = [get_remote_token(document, write_token=True)
-                              for document in initial.get(field)]
-        return initial
+        return AdmissionPersonService.retrieve_person(self.person, uuid=self.kwargs.get('pk')).to_dict()
 
     def prepare_data(self, data):
-        data['last_registration_year'] = int(data['last_registration_year']) if data['last_registration_year'] else None
+        data['last_registration_year'] = (int(data['last_registration_year'])
+                                          if data['last_registration_year'] else None)
         return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_person(person=self.person, uuid=self.kwargs.get('uuid'), **data)
+        AdmissionPersonService.update_person(person=self.person, uuid=self.kwargs.get('pk'), **data)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

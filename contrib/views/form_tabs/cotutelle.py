@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -43,14 +43,6 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
         initial = cotutelle.to_dict()
         if initial['cotutelle'] is not None:
             initial['cotutelle'] = 'YES' if initial['cotutelle'] else 'NO'
-        document_fields = [
-            'demande_ouverture',
-            'convention',
-            'autres_documents',
-        ]
-        for field in document_fields:
-            initial[field] = [get_remote_token(document, write_token=True)
-                              for document in initial.get(field)]
         return initial
 
     def call_webservice(self, data):

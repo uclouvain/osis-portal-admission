@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -127,6 +127,7 @@ class PersonViewTestCase(TestCase):
             'first_name': "Joe",
             'last_name': "Doe",
             'unknown_birth_date': True,
+            'country_of_citizenship': "BE",
             'already_registered': 'YES',
             'passport_number': 'ABC123',
         })
@@ -134,6 +135,7 @@ class PersonViewTestCase(TestCase):
         self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
         self.assertFormError(response, 'form', 'passport_expiration_date', _("This field is required."))
+        self.assertFormError(response, 'form', 'national_number', _("This field is required."))
 
         response = self.client.post(url, {
             'first_name': "Joe",

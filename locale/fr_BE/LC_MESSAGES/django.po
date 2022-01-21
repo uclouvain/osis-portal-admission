@@ -17,38 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid ""
-"\n"
-"                Please refer to your identity document in order to complete "
-"the\n"
-"                form. If you have a Belgian national register number, "
-"please\n"
-"                indicate it as a priority.\n"
-"            "
-msgstr ""
-"\n"
-"Veuillez fournir au moins un numéro d'identité. Si vous avez un numéro de "
-"registre national belge, merci de l'indiquer en priorité."
-
 #, python-format
 msgid ""
 "\n"
-"            Are you sure you want to remove %(prenom)s\n"
-"            %(nom)s as %(role)s\n"
-"            ?\n"
+"            Are you sure you want to remove %(first_name)s\n"
+"            %(last_name)s as %(role)s?\n"
 "        "
 msgstr ""
 "\n"
-"Êtes-vous sûr de vouloir supprimer %(prenom)s %(nom)s en tant que %(role)s ?"
-
-msgid ""
-"\n"
-"            Lorem impsum for supervision\n"
-"        "
-msgstr ""
-"\n"
-"            Lorem impsum for supervision\n"
-"        "
+"Êtes-vous sûr de vouloir supprimer %(first_name)s %(last_name)s en tant que "
+"%(role)s ?"
 
 msgid ""
 "\n"
@@ -80,6 +58,17 @@ msgstr ""
 "d'études secondaires, en indiquant en regard de chaque matière, le nombre "
 "d'heures suivies par semaine (h/s)."
 
+msgid ""
+"\n"
+"        Please refer to your identity document in order to complete the\n"
+"        form. If you have a Belgian national register number, please\n"
+"        indicate it as a priority.\n"
+"      "
+msgstr ""
+"\n"
+"Veuillez fournir au moins un numéro d'identité. Si vous avez un numéro de "
+"registre national belge, merci de l'indiquer en priorité."
+
 msgid " (h/w)"
 msgstr " (h/s)"
 
@@ -104,8 +93,22 @@ msgstr "(ex: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
 msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
 msgstr "(ex: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
 
+msgid "A certified translation of your high school diploma"
+msgstr ""
+"Une traduction de votre diplôme d'études secondaires par un traducteur juré"
+
+msgid ""
+"A certified translation of your official transcript of marks for your final "
+"year of secondary education"
+msgstr ""
+"Une traduction de votre relevé de notes pour votre dernière année d'études "
+"secondaires par un traducteur juré"
+
 msgid "A field of the schedule must at least be set."
 msgstr "Au moins un champ de la grille horaire doit être complété."
+
+msgid "A transcript or your last year at high school"
+msgstr "Un relevé de notes pour votre dernière année d'études secondaires"
 
 msgid "A1"
 msgstr "A1"
@@ -156,10 +159,10 @@ msgid "Approved"
 msgstr "Approuvée"
 
 msgid "Are you sure you want to cancel this request?"
-msgstr "Êtes vous sûr de vouloir supprimer cette demande ?"
+msgstr "Êtes-vous sûr de vouloir supprimer cette demande ?"
 
 msgid "Are you sure you want to request signatures for this admission?"
-msgstr "Êtes vous sûr de vouloir requérir les signatures pour cette demande ?"
+msgstr "Êtes-vous sûr de vouloir requérir les signatures pour cette demande ?"
 
 msgid "Artistic qualification"
 msgstr "Artistique de qualification"
@@ -168,7 +171,7 @@ msgid "Artistic transition"
 msgstr "Artistique de transition"
 
 msgid "At which result level do you consider yourself?"
-msgstr "Quel résultat avez-vous obtenu ?"
+msgstr "Quel résultat avez-vous obtenu ?"
 
 msgid "B1"
 msgstr "B1"
@@ -235,6 +238,9 @@ msgstr "Chimie"
 
 msgid "City"
 msgstr "Localité"
+
+msgid "Civil status"
+msgstr "État civil"
 
 msgid "Close"
 msgstr "Fermer"
@@ -312,14 +318,11 @@ msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
 msgstr "Détaillez ici les raisons justifiant une admission provisoire."
 
-msgid "Did you change of orientation during your studies?"
-msgstr "En cours d'études, avez-vous changé d'orientation ?"
-
-msgid "Did you repeat certain study years during your studies?"
-msgstr "En cours d'études, avez-vous redoublé ?"
+msgid "Divorced"
+msgstr "Divorcé(e)"
 
 msgid "Do you have a high school diploma?"
-msgstr "Avez-vous un diplôme de fin d'études secondaires ?"
+msgstr "Avez-vous un diplôme de fin d'études secondaires ?"
 
 msgid "Doctoral program proposition"
 msgstr "Proposition de programme doctoral"
@@ -351,6 +354,12 @@ msgstr "Sciences économiques"
 msgid "Edit"
 msgstr "Modifier"
 
+msgid "Education type"
+msgstr "Type d'enseignement"
+
+msgid "Educational community"
+msgstr "Communauté d'enseignement"
+
 msgid "Educational qualification"
 msgstr "Enseignement de qualification"
 
@@ -359,7 +368,7 @@ msgstr "Enseignement de transition"
 
 msgid "Educational type is required with this community of education"
 msgstr ""
-"Le type d'éducation doit obligatoirement être renseigné avec cette "
+"Le type d'enseignement doit obligatoirement être renseigné avec cette "
 "communauté d'enseignement"
 
 msgid "Email"
@@ -451,8 +460,18 @@ msgstr "Communauté germanophone"
 msgid "Greek"
 msgstr "Grec"
 
+msgid ""
+"Has this diploma been subject to a decision of equivalence provided by the "
+"French-speaking community of Belgium?"
+msgstr ""
+"Ce diplôme a-t-il fait l'objet d'une décision d'équivalence par les services "
+"de la Communauté française de Belgique ?"
+
 msgid "Have you previously been registered at UCLouvain?"
-msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
+msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
+
+msgid "High school diploma"
+msgstr "Diplôme d'études secondaires"
 
 msgid "I will have a high school diploma this year"
 msgstr "Je vais l'avoir dans l'année"
@@ -481,35 +500,31 @@ msgstr "Photo d'identité"
 msgid "If other language, please specify"
 msgstr "Si autre langue, précisez"
 
+msgid "If other linguistic regime, please specify"
+msgstr "Si autre régime linguistique, précisez"
+
 msgid "If other optional domains, please specify"
 msgstr "Si autres matières optionnelles, précisez"
 
-msgid "If you cannot find your educational type, please clarify below"
-msgstr ""
-"Si vous ne trouvez pas le bon type d'enseignement, veuillez préciser ci-"
-"dessous"
-
-msgid "If you cannot find your institute, please clarify below"
-msgstr ""
-"Si vous ne trouvez pas votre établissement dans ceux proposés, veuillez "
-"préciser ci-dessous"
-
-msgid "If you cannot find your linguistic regime, please clarify below"
-msgstr ""
-"Si vous ne trouvez pas votre régime linguistique, veuillez préciser ci-"
-"dessous"
-
 msgid ""
-"In order to help you at this matter, we propose you to perform a search "
-"based on the location or postal code."
+"If you have it, you must provide a photocopy of both sides of the final "
+"equivalence decision issued by the Ministry of the French Community of "
+"Belgium. If you do not have it, a request for equivalence MUST be submitted "
+"in strict accordance with the instructions given by the CFWB, only in the "
+"case of a request for enrolment in BACHELOR degree. As a reminder, for any "
+"secondary school diploma from a country outside the European Union, the "
+"admission application must contain the equivalence of your diploma issued by "
+"the Wallonia-Brussels Federation (French Community of Belgium)."
 msgstr ""
-"Pour vous y aider, nous vous proposons de le rechercher soit par localité "
-"soit par code postal."
-
-msgid "In what Community did (do) you follow last year of high school?"
-msgstr ""
-"Dans quelle Communauté avez-vous suivi (ou suivez-vous) la dernière année de "
-"vos études secondaires ?"
+"Si vous la possédez, vous devrez fournir une photocopie recto-verso de la "
+"décision d'équivalence définitive délivrée par le Ministère de la Communauté "
+"française de Belgique. Si vous ne la possédez pas, une demande d'équivalence "
+"DOIT être introduite en respectant strictement les consignes indiquées par "
+"la CFWB, uniquement dans le cas d'une demande d'inscription en BACHELIER. "
+"Pour rappel, pour tout diplôme d'études secondaires issu d'un pays hors de "
+"l'Union européenne, la demande d'admission doit contenir l'équivalence de "
+"votre diplôme délivrée par la Fédération Wallonie-Bruxelles (Communauté "
+"française de Belgique)."
 
 msgid "Institute"
 msgstr "Établissement"
@@ -523,22 +538,15 @@ msgstr "Commentaire interne"
 msgid "International Baccalaureate"
 msgstr "Baccalauréat international (IBO)"
 
-msgid ""
-"Is this diploma subject to an equivalence decision by the services of the "
-"French community of Belgium?"
-msgstr ""
-"Ce diplôme a-t-il l'objet d'une décision d'équivalence par les services de "
-"la Communauté française de Belgique ?"
-
 msgid "Is your contact address different from your residential address?"
 msgstr ""
 "Souhaitez vous recevoir votre courrier à une autre adresse que votre "
-"domicile légal ?"
+"domicile légal ?"
 
 msgid "Is your thesis joint with another secondary institute?"
 msgstr ""
 "Votre thèse est-elle réalisée en cotutelle avec une autre institution "
-"d'enseignement supérieur?"
+"d'enseignement supérieur ?"
 
 msgid "Jury"
 msgstr "Jury"
@@ -557,6 +565,9 @@ msgstr "Dernière année d'inscription"
 
 msgid "Latin"
 msgstr "Latin"
+
+msgid "Legal cohabitant"
+msgstr "Cohabitant(e) légal(e)"
 
 msgid "Less than 65%"
 msgstr "Moins de 65%"
@@ -582,6 +593,9 @@ msgstr "Langue obligatoire"
 
 msgid "Mandatory languages are missing."
 msgstr "Des langues obligatoires sont manquantes."
+
+msgid "Married"
+msgstr "Marié(e)"
 
 msgid "Mathematics"
 msgstr "Mathématiques"
@@ -650,6 +664,9 @@ msgstr "Non soumis"
 msgid "OTHER"
 msgstr "Autre"
 
+msgid "Ongoing request"
+msgstr "En cours de demande"
+
 msgid "Only to provide if the address is not available in the previous field."
 msgstr ""
 "À ne spécifier que si l'adresse n'est pas disponible dans le champ précédent."
@@ -672,8 +689,11 @@ msgstr "Autre"
 msgid "Other documents concerning cotutelle"
 msgstr "Autres documents relatifs à la cotutelle"
 
-msgid "Other education, to specify"
-msgstr "Autre éducation, précisez"
+msgid "Other education, please specify"
+msgstr "Autre enseignement, précisez"
+
+msgid "Other institute, please specify"
+msgstr "Si autre institut, précisez"
 
 msgid "Other linguistic regime"
 msgstr "Autre régime linguistique"
@@ -698,9 +718,6 @@ msgstr "Date d'expiration du passeport"
 
 msgid "Passport number"
 msgstr "Numéro de passeport"
-
-msgid "Pending"
-msgstr "En cours de demande"
 
 msgid "Personal data"
 msgstr "Données personnelles"
@@ -887,11 +904,17 @@ msgstr "Études secondaires"
 msgid "Sector"
 msgstr "Secteur"
 
+msgid "Separate"
+msgstr "Séparé(e)"
+
 msgid "Sex"
 msgstr "Sexe"
 
 msgid "Signatures requests sent"
 msgstr "Demandes de signature envoyées"
+
+msgid "Single"
+msgstr "Célibataire"
 
 msgid "Social sciences"
 msgstr "Sciences sociales"
@@ -921,7 +944,10 @@ msgid "Supervision"
 msgstr "Supervision"
 
 msgid "Teaching of general education"
-msgstr "Enseignement de formation générale"
+msgstr "Général de transition"
+
+msgid "The Belgian national register number must consist of 11 digits."
+msgstr "Le numéro de registre national belge doit être composé de 11 chiffres."
 
 msgid "Thesis institute"
 msgstr "Institut de la thèse"
@@ -976,27 +1002,17 @@ msgstr "WBI - Wallonie Bruxelles International"
 msgid "WORK_CONTRACT"
 msgstr "Contrat de travail"
 
-msgid "What diploma did you get (or will you get) ?"
-msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"
-
 msgid "What diploma did you get (or will you get)?"
-msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"
-
-msgid ""
-"What is the name of the educational institute that has provided to you a "
-"certificate of upper-secundary education (C.E.S.S.)?"
-msgstr ""
-"Quel établissement scolaire a délivré ou délivrera votre certificat "
-"d'enseignement secondaire supérieur (C.E.S.S.) ?"
+msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"
 
 msgid "What result did you get?"
-msgstr "Quel résultat avez-vous obtenu ?"
-
-msgid "What type of education did (do) you follow?"
-msgstr "Quel type d'enseignement avez-vous suivi (ou suivez-vous) ?"
+msgstr "Quel résultat avez-vous obtenu ?"
 
 msgid "What was your last year of UCLouvain enrollment?"
-msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
+msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
+
+msgid "Widowed"
+msgstr "Veuf(ve)"
 
 msgid "Work contract"
 msgstr "Contrat de travail"
@@ -1015,6 +1031,9 @@ msgstr "Oui"
 
 msgid "Yes I have a high school diploma"
 msgstr "Oui j'ai déjà un diplôme de fin d'études secondaires"
+
+msgid "You can perform a search based on the location or postal code."
+msgstr "Vous pouvez rechercher soit par localité soit par code postal."
 
 msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
@@ -1036,8 +1055,8 @@ msgstr "belge"
 msgid "dd/mm/yyyy"
 msgstr "jj/mm/aaaa"
 
-msgid "foreign"
-msgstr "étranger"
+msgid "foreign or international"
+msgstr "étranger ou international"
 
 msgid "h/w"
 msgstr "h/s"
