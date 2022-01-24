@@ -284,6 +284,10 @@ msgstr ""
 msgid "Create new doctorate admission"
 msgstr ""
 
+msgctxt "an admission"
+msgid "Created at:"
+msgstr ""
+
 msgid "Curriculum"
 msgstr ""
 
@@ -836,6 +840,9 @@ msgstr "Research scholarship"
 
 msgid "SELF_FUNDING"
 msgstr "Self-funding"
+
+msgid "SIGNING_IN_PROGRESS"
+msgstr "Signing in progress"
 
 msgid "SUBMITTED"
 msgstr "Submitted"

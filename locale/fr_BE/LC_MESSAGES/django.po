@@ -302,6 +302,10 @@ msgstr "Choix de la formation"
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
 
+msgctxt "an admission"
+msgid "Created at:"
+msgstr "Créée le :"
+
 msgid "Curriculum"
 msgstr "Curriculum"
 
@@ -879,6 +883,9 @@ msgstr "Bourse de recherche"
 
 msgid "SELF_FUNDING"
 msgstr "Fonds propres"
+
+msgid "SIGNING_IN_PROGRESS"
+msgstr "Signature en cours"
 
 msgid "SUBMITTED"
 msgstr "Soumis"
