@@ -318,6 +318,7 @@ msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
 msgstr "Détaillez ici les raisons justifiant une admission provisoire."
 
+msgctxt "admission"
 msgid "Divorced"
 msgstr "Divorcé(e)"
 
@@ -566,6 +567,7 @@ msgstr "Dernière année d'inscription"
 msgid "Latin"
 msgstr "Latin"
 
+msgctxt "admission"
 msgid "Legal cohabitant"
 msgstr "Cohabitant(e) légal(e)"
 
@@ -594,6 +596,7 @@ msgstr "Langue obligatoire"
 msgid "Mandatory languages are missing."
 msgstr "Des langues obligatoires sont manquantes."
 
+msgctxt "admission"
 msgid "Married"
 msgstr "Marié(e)"
 
@@ -904,6 +907,7 @@ msgstr "Études secondaires"
 msgid "Sector"
 msgstr "Secteur"
 
+msgctxt "admission"
 msgid "Separate"
 msgstr "Séparé(e)"
 
@@ -913,6 +917,7 @@ msgstr "Sexe"
 msgid "Signatures requests sent"
 msgstr "Demandes de signature envoyées"
 
+msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
 
@@ -1011,6 +1016,7 @@ msgstr "Quel résultat avez-vous obtenu ?"
 msgid "What was your last year of UCLouvain enrollment?"
 msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
 
+msgctxt "admission"
 msgid "Widowed"
 msgstr "Veuf(ve)"
 
