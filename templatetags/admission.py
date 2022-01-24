@@ -29,11 +29,10 @@ from inspect import getfullargspec
 
 from django import template
 from django.core.exceptions import ImproperlyConfigured
-from django.views.generic import FormView
 from django.utils.translation import gettext_lazy as _
 
-from base.models.utils.utils import ChoiceEnum
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from base.models.utils.utils import ChoiceEnum
 
 register = template.Library()
 
@@ -144,7 +143,8 @@ def get_valid_tab_tree(admission, original_tab_tree, is_form_view):
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
 def doctorate_tabs(context, admission=None):
-    is_form_view = isinstance(context['view'], FormView)
+    match = context['request'].resolver_match
+    is_form_view = match.namespaces[1] == 'doctorate-update'
 
     # Create a new tab tree based on the default one but depending on the permissions links
     context['valid_tab_tree'] = get_valid_tab_tree(
@@ -155,7 +155,7 @@ def doctorate_tabs(context, admission=None):
 
     return {
         'tab_tree': context['valid_tab_tree'],
-        'active_parent': get_active_parent(context['request'].resolver_match.url_name),
+        'active_parent': get_active_parent(match.url_name),
         'admission': admission,
         'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
@@ -165,7 +165,8 @@ def doctorate_tabs(context, admission=None):
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None):
-    is_form_view = isinstance(context['view'], FormView)
+    match = context['request'].resolver_match
+    is_form_view = match.namespaces[1] == 'doctorate-update'
 
     subtab_labels = {
         'person': _("Identification"),

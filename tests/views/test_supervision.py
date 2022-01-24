@@ -183,9 +183,9 @@ class SupervisionTestCase(TestCase):
         # All data is provided and the proposition is approved
         response = self.client.post(url, {
             'decision': DecisionApprovalEnum.APPROVED.name,
-            'internal_comment': "The internal comment",
-            'comment': "The public comment",
-            'rejection_reason': "The reason",  # The reason is provided but will not be used
+            'commentaire_interne': "The internal comment",
+            'commentaire_externe': "The public comment",
+            'motif_refus': "The reason",  # The reason is provided but will not be used
             'approval_submit': [''],
         })
 
@@ -205,9 +205,9 @@ class SupervisionTestCase(TestCase):
         # All data is provided and the proposition is rejected
         response = self.client.post(url, {
             'decision': DecisionApprovalEnum.REJECTED.name,
-            'internal_comment': "The internal comment",
-            'comment': "The public comment",
-            'rejection_reason': "The reason",
+            'commentaire_interne': "The internal comment",
+            'commentaire_externe': "The public comment",
+            'motif_refus': "The reason",
             'approval_submit': [''],
         })
 
@@ -228,9 +228,9 @@ class SupervisionTestCase(TestCase):
 
         # The decision is missing
         response = self.client.post(url, {
-            'internal_comment': "The internal comment",
-            'comment': "The public comment",
-            'rejection_reason': "The reason",
+            'commentaire_interne': "The internal comment",
+            'commentaire_externe': "The public comment",
+            'motif_refus': "The reason",
             'approval_submit': [''],
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -67,12 +67,12 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         widget=forms.RadioSelect,
         required=True,
     )
-    rejection_reason = forms.CharField(
+    motif_refus = forms.CharField(
         label=_('Rejection reason'),
         required=False,
         max_length=50,
     )
-    internal_comment = forms.CharField(
+    commentaire_interne = forms.CharField(
         label=_('Internal comment'),
         required=False,
         widget=forms.Textarea(
@@ -82,7 +82,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         ),
         help_text=_("This comment will only be visible to the administrators."),
     )
-    comment = forms.CharField(
+    commentaire_externe = forms.CharField(
         label=_('External comment'),
         required=False,
         widget=forms.Textarea(
@@ -95,9 +95,8 @@ class DoctorateAdmissionApprovalForm(forms.Form):
 
     def clean(self):
         data = super().clean()
-        # The reason is useful only if the admission is not approved
-        if data.get('decision') == DecisionApprovalEnum.APPROVED.name and data.get('rejection_reason'):
-            data['rejection_reason'] = ''
+        if data.get('decision') == DecisionApprovalEnum.REJECTED.name and not data.get('motif_refus'):
+            self.add_error('motif_refus', _("This field is required."))
 
     class Media:
         js = ('dependsOn.min.js',)
