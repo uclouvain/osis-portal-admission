@@ -31,10 +31,10 @@
   {% panel _("Personal information") %}
     <div class="row">
       <div class="col-md-4">
-        {% bootstrap_field form.last_name %}
+        {% bootstrap_field form.last_name form_group_class="form-group required_field" %}
       </div>
       <div class="col-md-4">
-        {% bootstrap_field form.first_name %}
+        {% bootstrap_field form.first_name form_group_class="form-group required_field" %}
       </div>
       <div class="col-md-4">
         {% bootstrap_field form.first_name_in_use %}
