@@ -267,13 +267,15 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     equivalence = forms.ChoiceField(
         label=_("Has this diploma been subject to a decision of equivalence provided by the "
                 "French-speaking community of Belgium?"),
-        help_text=_("If you have it, you must provide a photocopy of both sides of the final equivalence decision "
-                    "issued by the Ministry of the French Community of Belgium. If you do not have it, a request for "
-                    "equivalence MUST be submitted in strict accordance with the instructions given by the CFWB, only "
-                    "in the case of a request for enrolment in BACHELOR degree. As a reminder, for any secondary "
-                    "school diploma from a country outside the European Union, the admission application "
-                    "must contain the equivalence of your diploma issued by the Wallonia-Brussels Federation "
-                    "(French Community of Belgium)."),
+        required=False,
+        help_text=_('If you have it, you must provide a photocopy of both sides of the final equivalence decision '
+                    'issued by the Ministry of the French Community of Belgium. If you do not have it, a request for '
+                    'equivalence MUST be submitted in strict accordance with the instructions given by the '
+                    '<a href="http://www.equivalences.cfwb.be/" target="blank">CFWB</a>, only '
+                    'in the case of a request for enrolment in BACHELOR degree. As a reminder, for any secondary '
+                    'school diploma <strong>from a country outside the European Union, the admission application '
+                    'must contain the equivalence of your diploma</strong> issued by the Wallonia-Brussels Federation '
+                    '(French Community of Belgium).'),
         choices=Equivalence.choices(),
         widget=forms.RadioSelect,
     )
@@ -294,7 +296,6 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         label=_("What result did you get?"),
         choices=DiplomaResults.choices(),
         widget=forms.RadioSelect,
-        required=False,
     )
     high_school_transcript_translation = FileUploadField(
         label=_("A certified translation of your official transcript of marks for your final year of "
@@ -327,6 +328,7 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         elif cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION:
             if not cleaned_data.get('high_school_transcript_translation'):
                 self.add_error("high_school_transcript_translation", FIELD_REQUIRED_MESSAGE)
-        if not cleaned_data.get("result"):
-            self.add_error('result', FIELD_REQUIRED_MESSAGE)
+        if (cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name
+                and not cleaned_data.get('equivalence')):
+            self.add_error('equivalence', FIELD_REQUIRED_MESSAGE)
         return cleaned_data
