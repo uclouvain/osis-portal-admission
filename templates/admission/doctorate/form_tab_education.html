@@ -295,7 +295,7 @@
           },
       });
       $('#schedule').dependsOn({
-          'select[name=belgian_diploma-educational_type]': { values: ['TEACHING_OF_GENERAL_EDUCATION', 'TRANSITION_METHOD', 'ARTISTIC_TRANSITION'] },
+          'select[name=belgian_diploma-educational_type]': { values: {{ educational_types_requiring_schedule|safe }} },
       }, {
           onDisable: function () {
               setNullValue('#schedule')

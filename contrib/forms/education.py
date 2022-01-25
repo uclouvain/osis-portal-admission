@@ -325,9 +325,13 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         from admission.contrib.views.form_tabs.education import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
             self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))
-        elif cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION:
-            if not cleaned_data.get('high_school_transcript_translation'):
-                self.add_error("high_school_transcript_translation", FIELD_REQUIRED_MESSAGE)
+
+        # Translation of transcript required depending on linguistic regime
+        if (cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+                and not cleaned_data.get('high_school_transcript_translation')):
+            self.add_error("high_school_transcript_translation", FIELD_REQUIRED_MESSAGE)
+
+        # Equivalence required depending on national bachelor
         if (cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name
                 and not cleaned_data.get('equivalence')):
             self.add_error('equivalence', FIELD_REQUIRED_MESSAGE)
