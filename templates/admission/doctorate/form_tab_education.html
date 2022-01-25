@@ -272,6 +272,10 @@
 
       $('.high-school-diploma').dependsOn({
           'input[name=got_diploma]': { values: ['YES'] },
+      }, {
+          onDisable: function () {
+              setNullValue('.high-school-diploma')
+          },
       });
 
       $('#foreign-diploma').dependsOn({

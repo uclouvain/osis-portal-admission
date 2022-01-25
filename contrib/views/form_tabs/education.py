@@ -172,7 +172,13 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         data[diploma] = forms["{}_form".format(diploma)].cleaned_data
         data[diploma]["academic_graduation_year"] = data.pop("academic_graduation_year")
         data[diploma]["high_school_transcript"] = data.pop("high_school_transcript")
-        data[diploma]["high_school_diploma"] = data.pop("high_school_diploma")
+        if data[diploma]["academic_graduation_year"] == get_current_year():
+            # Drop diploma info for current year
+            data.pop("high_school_diploma")
+            data[diploma].pop("high_school_diploma_translation", None)
+        else:
+            # Include diploma info
+            data[diploma]["high_school_diploma"] = data.pop("high_school_diploma")
 
     def prepare_data(self, main_form_data):
         # Process the form data to match API
