@@ -1,3 +1,4 @@
+{% load admission %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -33,4 +34,9 @@
     <div class="panel-body">
         {{ panel_body }}
     </div>
+    {% if panel_footer|strip %}
+    <div class="panel-footer clearfix">
+      {{ panel_footer }}
+    </div>
+    {% endif %}
 </div>

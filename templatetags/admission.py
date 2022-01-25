@@ -29,43 +29,47 @@ from inspect import getfullargspec
 
 from django import template
 from django.core.exceptions import ImproperlyConfigured
-from django.views.generic import FormView
 from django.utils.translation import gettext_lazy as _
 
-from base.models.utils.utils import ChoiceEnum
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from base.models.utils.utils import ChoiceEnum
 
 register = template.Library()
 
 
-class InclusionWithBodyNode(template.library.InclusionNode):
-    def __init__(self, nodelist, func, takes_context, args, kwargs, filename, context_name):
+class PanelNode(template.library.InclusionNode):
+    def __init__(self, nodelist: dict, func, takes_context, args, kwargs, filename):
         super().__init__(func, takes_context, args, kwargs, filename)
-        self.nodelist = nodelist
-        self.context_name = context_name
+        self.nodelist_dict = nodelist
 
     def render(self, context):
-        context[self.context_name] = self.nodelist.render(context)
+        for context_name, nodelist in self.nodelist_dict.items():
+            context[context_name] = nodelist.render(context)
         return super().render(context)
 
 
-def register_inclusion_with_body(filename, takes_context=None, name=None, context_name='body'):
+def register_panel(filename, takes_context=None, name=None):
     def dec(func):
         params, varargs, varkw, defaults, kwonly, kwonly_defaults, _ = getfullargspec(func)
         function_name = name or getattr(func, '_decorated_function', func).__name__
 
         @functools.wraps(func)
         def compile_func(parser, token):
+            # {% panel %} and its arguments
             bits = token.split_contents()[1:]
             args, kwargs = template.library.parse_bits(
                 parser, bits, params, varargs, varkw, defaults,
                 kwonly, kwonly_defaults, takes_context, function_name,
             )
-            nodelist = parser.parse((f'end{function_name}',))
-            parser.delete_first_token()
-            return InclusionWithBodyNode(
-                nodelist, func, takes_context, args, kwargs, filename, context_name
-            )
+            nodelist_dict = {'panel_body': parser.parse(('footer', 'endpanel',))}
+            token = parser.next_token()
+
+            # {% footer %} (optional)
+            if token.contents == 'footer':
+                nodelist_dict['panel_footer'] = parser.parse(('endpanel',))
+                parser.next_token()
+
+            return PanelNode(nodelist_dict, func, takes_context, args, kwargs, filename)
 
         register.tag(function_name, compile_func)
         return func
@@ -132,7 +136,8 @@ def get_valid_tab_tree(admission, original_tab_tree, is_form_view):
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
 def doctorate_tabs(context, admission=None):
-    is_form_view = isinstance(context['view'], FormView)
+    match = context['request'].resolver_match
+    is_form_view = match.namespaces[1] == 'doctorate-update'
 
     # Create a new tab tree based on the default one but depending on the permissions links
     context['valid_tab_tree'] = get_valid_tab_tree(
@@ -143,7 +148,7 @@ def doctorate_tabs(context, admission=None):
 
     return {
         'tab_tree': context['valid_tab_tree'],
-        'active_parent': get_active_parent(context['request'].resolver_match.url_name),
+        'active_parent': get_active_parent(match.url_name),
         'admission': admission,
         'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
@@ -153,7 +158,8 @@ def doctorate_tabs(context, admission=None):
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None):
-    is_form_view = isinstance(context['view'], FormView)
+    match = context['request'].resolver_match
+    is_form_view = match.namespaces[1] == 'doctorate-update'
 
     subtab_labels = {
         'person': _("Identification"),
@@ -201,7 +207,7 @@ def field_data(name, data=None, css_class=None, hide_empty=False):
     }
 
 
-@register_inclusion_with_body('panel.html', takes_context=True, context_name='panel_body')
+@register_panel('panel.html', takes_context=True)
 def panel(context, title='', **kwargs):
     """
     Template tag for panel
@@ -225,6 +231,13 @@ def enum_display(value, enum_name):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+def strip(value):
+    if isinstance(value, str):
+        return value.strip()
+    return value
 
 
 @register.filter

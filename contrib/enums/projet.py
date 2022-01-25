@@ -35,7 +35,8 @@ class ChoixLangueRedactionThese(ChoiceEnum):
     UNDECIDED = _('Undecided')
 
 
-class ChoixStatusProposition(ChoiceEnum):
+class ChoixStatutProposition(ChoiceEnum):
     CANCELLED = _('CANCELLED')
     IN_PROGRESS = _('IN_PROGRESS')
     SUBMITTED = _('SUBMITTED')
+    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
