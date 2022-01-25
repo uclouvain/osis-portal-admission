@@ -77,6 +77,7 @@
           </a>
         {% endif %}
 
+        {% if admission|can_update_something %}
         <div class="dropdown pull-right">
           <button
             type="button"
@@ -109,6 +110,7 @@
             {% endif %}
           </ul>
         </div>
+        {% endif %}
 
         <div class="dropdown pull-right">
           <button
