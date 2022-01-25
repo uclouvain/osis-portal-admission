@@ -1,0 +1,1084 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-04 11:38+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, python-format
+msgid ""
+"\n"
+"            Are you sure you want to remove %(first_name)s\n"
+"            %(last_name)s as %(role)s?\n"
+"        "
+msgstr ""
+"\n"
+"Êtes-vous sûr de vouloir supprimer %(first_name)s %(last_name)s en tant que "
+"%(role)s ?"
+
+msgid ""
+"\n"
+"            The online enrolment request procedure is split up into several\n"
+"            sheet. The enrolment request can only be validated as soon as "
+"all\n"
+"            sheets have been duly completed. The icons will remind you of "
+"the\n"
+"            state of progress of your enrolment request which you can "
+"interrupt\n"
+"            and resume at any moment.\n"
+"        "
+msgstr ""
+"\n"
+"La procédure d'inscription en ligne est divisée en plusieurs onglets. La "
+"demande d'inscription ne peut être validée que lorsque tous les onglets ont "
+"été complétés avec succès. Les icônes indiquent la progression de votre "
+"demande qui peut être interrompue et reprise à tout moment."
+
+msgid ""
+"\n"
+"          Please complete here below the schedule of your last year\n"
+"          of high school, indicating for each domain the number of\n"
+"          hours of education followed per week (h/w).\n"
+"        "
+msgstr ""
+"\n"
+"Veuillez compléter ci-dessous la grille horaire de votre dernière année "
+"d'études secondaires, en indiquant en regard de chaque matière, le nombre "
+"d'heures suivies par semaine (h/s)."
+
+msgid ""
+"\n"
+"        Please refer to your identity document in order to complete the\n"
+"        form. If you have a Belgian national register number, please\n"
+"        indicate it as a priority.\n"
+"      "
+msgstr ""
+"\n"
+"Veuillez fournir au moins un numéro d'identité. Si vous avez un numéro de "
+"registre national belge, merci de l'indiquer en priorité."
+
+msgid " (h/w)"
+msgstr " (h/s)"
+
+msgid "(e.g. +32 490 00 00 00)"
+msgstr "(ex: +32 490 00 00 00)"
+
+msgid "(e.g.: 1234)"
+msgstr "(ex: 1234)"
+
+msgid "(e.g.: Frédéric) <del>frederic FREDERIC</del>)"
+msgstr "(ex: Frédéric) <del>frederic FREDERIC</del>)"
+
+msgid "(e.g.: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"
+msgstr "(ex: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"
+
+msgid "(e.g.: Louvain-la-Neuve) louvain-la-neuve)"
+msgstr "(ex: Louvain-la-Neuve) louvain-la-neuve)"
+
+msgid "(e.g.: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
+msgstr "(ex: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
+
+msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
+msgstr "(ex: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
+
+msgid "A certified translation of your high school diploma"
+msgstr ""
+"Une traduction de votre diplôme d'études secondaires par un traducteur juré"
+
+msgid ""
+"A certified translation of your official transcript of marks for your final "
+"year of secondary education"
+msgstr ""
+"Une traduction de votre relevé de notes pour votre dernière année d'études "
+"secondaires par un traducteur juré"
+
+msgid "A field of the schedule must at least be set."
+msgstr "Au moins un champ de la grille horaire doit être complété."
+
+msgid "A transcript or your last year at high school"
+msgstr "Un relevé de notes pour votre dernière année d'études secondaires"
+
+msgid "A1"
+msgstr "A1"
+
+msgid "A2"
+msgstr "A2"
+
+msgid "APPROVED"
+msgstr "Approuvé"
+
+msgid "ARC - Action de Recherche Concertée"
+msgstr "ARC - Action de Recherche Concertée"
+
+msgid "ARES - Coopération au développement"
+msgstr "ARES - Coopération au développement"
+
+msgid "Academic graduation year"
+msgstr "Année d'obtention du diplôme universitaire"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Add a language"
+msgstr "Ajouter une langue"
+
+msgid "Add a promoter or a CA member"
+msgstr "Ajouter un promoteur ou un membre du CA"
+
+msgid "Add another"
+msgstr "Ajouter une autre"
+
+msgid "Admission"
+msgstr "Admission"
+
+msgid "Admission type"
+msgstr "Type d'admission"
+
+msgid "Allocated time for the thesis (in EFT)"
+msgstr "Temps consacré à la thèse (en EFT)"
+
+msgid "Ancient languages"
+msgstr "Langues anciennes"
+
+msgid "Another institute"
+msgstr "Autre établissement"
+
+msgid "Approved"
+msgstr "Approuvée"
+
+msgid "Are you sure you want to cancel this request?"
+msgstr "Êtes-vous sûr de vouloir supprimer cette demande ?"
+
+msgid "Are you sure you want to request signatures for this admission?"
+msgstr "Êtes-vous sûr de vouloir requérir les signatures pour cette demande ?"
+
+msgid "Artistic qualification"
+msgstr "Artistique de qualification"
+
+msgid "Artistic transition"
+msgstr "Artistique de transition"
+
+msgid "At which result level do you consider yourself?"
+msgstr "Quel résultat avez-vous obtenu ?"
+
+msgid "B1"
+msgstr "B1"
+
+msgid "B2"
+msgstr "B2"
+
+msgid "Back to my requests"
+msgstr "Retour à mes demandes"
+
+msgid "Belgian diploma"
+msgstr "Diplôme belge"
+
+msgid "Between 65 and 75%"
+msgstr "Entre 65 et 75%"
+
+msgid "Biology"
+msgstr "Biologie"
+
+msgid "Birth country"
+msgstr "Pays de naissance"
+
+msgid "Birth date"
+msgstr "Date de naissance"
+
+msgid "Birth place"
+msgstr "Lieu de naissance"
+
+msgid "Birth year"
+msgstr "Année de naissance"
+
+msgid "Box"
+msgstr "Boîte"
+
+msgid "Brief justification"
+msgstr "Justification succincte"
+
+msgid "C1"
+msgstr "C1"
+
+msgid "C2"
+msgstr "C2"
+
+msgid "CA Member"
+msgstr "Membre du CA"
+
+msgid "CA members"
+msgstr "Membres du CA"
+
+msgid "CANCELLED"
+msgstr "Annulée"
+
+msgid "CSC - China Scholarship Council"
+msgstr "CSC - China Scholarship Council"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Change my submission"
+msgstr "Modifier ma soumission"
+
+msgid "Chemistry"
+msgstr "Chimie"
+
+msgid "City"
+msgstr "Localité"
+
+msgid "Civil status"
+msgstr "État civil"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Community of education"
+msgstr "Communauté d'enseignement"
+
+msgid "Complementary training project"
+msgstr "Projet de formation complémentaire"
+
+msgid "Confirm"
+msgstr "Confirmer"
+
+msgid "Confirmation"
+msgstr "Confirmation"
+
+msgid "Confirmation paper"
+msgstr "Lettre de confirmation"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Contact address"
+msgstr "Adresse de correspondance"
+
+msgid "Contact details"
+msgstr "Coordonnées"
+
+msgid "Contact language"
+msgstr "Langue de contact"
+
+msgid "Cotutelle"
+msgstr "Cotutelle"
+
+msgid "Cotutelle convention"
+msgstr "Convention de cotutelle"
+
+msgid "Cotutelle institution"
+msgstr "Institution de la cotutelle"
+
+msgid "Cotutelle is not defined yet"
+msgstr "Le choix de la cotutelle n'est pas encore défini"
+
+msgid "Cotutelle motivation"
+msgstr "Motivation de la cotutelle"
+
+msgid "Cotutelle opening request"
+msgstr "Demande d'ouverture de cotutelle"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "Country of citizenship"
+msgstr "Nationalité (pays)"
+
+msgid "Course choice"
+msgstr "Choix de la formation"
+
+msgid "Create new doctorate admission"
+msgstr "Créer une nouvelle admission en doctorat"
+
+msgctxt "an admission"
+msgid "Created at:"
+msgstr "Créée le :"
+
+msgid "Curriculum"
+msgstr "Curriculum"
+
+msgid "Decision"
+msgstr "Décision"
+
+msgid "Defense date"
+msgstr "Date de soutenance"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid ""
+"Detail here the reasons which justify the recourse to a provisory admission."
+msgstr "Détaillez ici les raisons justifiant une admission provisoire."
+
+msgctxt "admission"
+msgid "Divorced"
+msgstr "Divorcé(e)"
+
+msgid "Do you have a high school diploma?"
+msgstr "Avez-vous un diplôme de fin d'études secondaires ?"
+
+msgid "Doctoral program proposition"
+msgstr "Proposition de programme doctoral"
+
+msgid "Doctoral project"
+msgstr "Projet doctoral"
+
+msgid "Doctoral training"
+msgstr "Formation doctorale"
+
+msgid "Doctorate"
+msgstr "Doctorat"
+
+msgid "Doctorate admissions"
+msgstr "Admissions en doctorat"
+
+msgid "Dutch"
+msgstr "Néerlandais"
+
+msgid "ECONOMY"
+msgstr "Economie"
+
+msgid "ERC - European Research Council"
+msgstr "ERC - European Research Council"
+
+msgid "Economic sciences"
+msgstr "Sciences économiques"
+
+msgid "Edit"
+msgstr "Modifier"
+
+msgid "Education type"
+msgstr "Type d'enseignement"
+
+msgid "Educational community"
+msgstr "Communauté d'enseignement"
+
+msgid "Educational qualification"
+msgstr "Enseignement de qualification"
+
+msgid "Educational transition"
+msgstr "Enseignement de transition"
+
+msgid "Educational type is required with this community of education"
+msgstr ""
+"Le type d'enseignement doit obligatoirement être renseigné avec cette "
+"communauté d'enseignement"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "English"
+msgstr "Anglais"
+
+msgid "Estimated time to complete the doctorate (in months)"
+msgstr "Durée prévue pour la réalisation du doctorat (en mois)"
+
+msgid "European Bachelor (Schola Europaea)"
+msgstr "Baccalauréat européen (Schola Europaea)"
+
+msgid "Exchange with UCLouvain"
+msgstr "Échanges avec l'UCLouvain"
+
+msgid "External comment"
+msgstr "Commentaire externe"
+
+msgid "FNRS"
+msgstr "FNRS"
+
+msgid "FRC - Fonds de recherche clinique"
+msgstr "FRC - Fonds de recherche clinique"
+
+msgid "FRESH"
+msgstr "FRESH"
+
+msgid "FRIA"
+msgstr "FRIA"
+
+msgid "FSR - Fonds Spéciaux de Recherche"
+msgstr "FSR - Fonds Spéciaux de Recherche"
+
+msgid "Female"
+msgstr "Féminin"
+
+msgctxt "female gender"
+msgid "Female"
+msgstr "Féminin"
+
+msgid "Financing"
+msgstr "Financement"
+
+msgid "Financing type"
+msgstr "Type de financement"
+
+msgid "First name"
+msgstr "Prénom"
+
+msgid "First name in use"
+msgstr "Prénom d'usage"
+
+msgid "Flemish-speaking Community"
+msgstr "Communauté flamande"
+
+msgid "Fondation Mont Godinne"
+msgstr "Fondation Mont Godinne"
+
+msgid "Fondation St Luc"
+msgstr "Fondation St Luc"
+
+msgid "Foreign diploma"
+msgstr "Diplôme étranger"
+
+msgid "French"
+msgstr "Français"
+
+msgid "French-speaking Community of Belgium"
+msgstr "Communauté française de Belgique"
+
+#, no-python-format
+msgid "Full-time equivalent (as %)"
+msgstr "Équivalent temps plein (en %)"
+
+msgid "Gantt graph"
+msgstr "Graphe de Gantt à quatre ans"
+
+msgid "Gender"
+msgstr "Genre"
+
+msgid "German"
+msgstr "Allemand"
+
+msgid "German-speaking Community"
+msgstr "Communauté germanophone"
+
+msgid "Greek"
+msgstr "Grec"
+
+msgid ""
+"Has this diploma been subject to a decision of equivalence provided by the "
+"French-speaking community of Belgium?"
+msgstr ""
+"Ce diplôme a-t-il fait l'objet d'une décision d'équivalence par les services "
+"de la Communauté française de Belgique ?"
+
+msgid "Have you previously been registered at UCLouvain?"
+msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
+
+msgid "High school diploma"
+msgstr "Diplôme d'études secondaires"
+
+msgid "I will have a high school diploma this year"
+msgstr "Je vais l'avoir dans l'année"
+
+msgid "INVITED"
+msgstr "Invité"
+
+msgid "IN_PROGRESS"
+msgstr "En cours"
+
+msgid "IT"
+msgstr "Informatique"
+
+msgid "Identification"
+msgstr "Identification"
+
+msgid "Identity card (both sides)"
+msgstr "Carte d'identité (recto/verso)"
+
+msgid "Identity card number"
+msgstr "Numéro de carte d'identité"
+
+msgid "Identity picture"
+msgstr "Photo d'identité"
+
+msgid "If other language, please specify"
+msgstr "Si autre langue, précisez"
+
+msgid "If other linguistic regime, please specify"
+msgstr "Si autre régime linguistique, précisez"
+
+msgid "If other optional domains, please specify"
+msgstr "Si autres matières optionnelles, précisez"
+
+msgid ""
+"If you have it, you must provide a photocopy of both sides of the final "
+"equivalence decision issued by the Ministry of the French Community of "
+"Belgium. If you do not have it, a request for equivalence MUST be submitted "
+"in strict accordance with the instructions given by the CFWB, only in the "
+"case of a request for enrolment in BACHELOR degree. As a reminder, for any "
+"secondary school diploma from a country outside the European Union, the "
+"admission application must contain the equivalence of your diploma issued by "
+"the Wallonia-Brussels Federation (French Community of Belgium)."
+msgstr ""
+"Si vous la possédez, vous devrez fournir une photocopie recto-verso de la "
+"décision d'équivalence définitive délivrée par le Ministère de la Communauté "
+"française de Belgique. Si vous ne la possédez pas, une demande d'équivalence "
+"DOIT être introduite en respectant strictement les consignes indiquées par "
+"la CFWB, uniquement dans le cas d'une demande d'inscription en BACHELIER. "
+"Pour rappel, pour tout diplôme d'études secondaires issu d'un pays hors de "
+"l'Union européenne, la demande d'admission doit contenir l'équivalence de "
+"votre diplôme délivrée par la Fédération Wallonie-Bruxelles (Communauté "
+"française de Belgique)."
+
+msgid "Institute"
+msgstr "Établissement"
+
+msgid "Institution"
+msgstr "Institution"
+
+msgid "Internal comment"
+msgstr "Commentaire interne"
+
+msgid "International Baccalaureate"
+msgstr "Baccalauréat international (IBO)"
+
+msgid "Is your contact address different from your residential address?"
+msgstr ""
+"Souhaitez vous recevoir votre courrier à une autre adresse que votre "
+"domicile légal ?"
+
+msgid "Is your thesis joint with another secondary institute?"
+msgstr ""
+"Votre thèse est-elle réalisée en cotutelle avec une autre institution "
+"d'enseignement supérieur ?"
+
+msgid "Jury"
+msgstr "Jury"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Languages knowledge"
+msgstr "Connaissance des langues"
+
+msgid "Last name"
+msgstr "Nom"
+
+msgid "Last registration year"
+msgstr "Dernière année d'inscription"
+
+msgid "Latin"
+msgstr "Latin"
+
+msgctxt "admission"
+msgid "Legal cohabitant"
+msgstr "Cohabitant(e) légal(e)"
+
+msgid "Less than 65%"
+msgstr "Moins de 65%"
+
+msgid "Linguistic regime"
+msgstr "Régime linguistique"
+
+msgid "Listening comprehension"
+msgstr "Compréhension à l'audition"
+
+msgid "MANAGEMENT"
+msgstr "Gestion"
+
+msgid "Male"
+msgstr "Masculin"
+
+msgctxt "gender male"
+msgid "Male"
+msgstr "Masculin"
+
+msgid "Mandatory language"
+msgstr "Langue obligatoire"
+
+msgid "Mandatory languages are missing."
+msgstr "Des langues obligatoires sont manquantes."
+
+msgctxt "admission"
+msgid "Married"
+msgstr "Marié(e)"
+
+msgid "Mathematics"
+msgstr "Mathématiques"
+
+msgid "Member not found"
+msgstr "Membre non trouvé"
+
+msgctxt "admission"
+msgid "Mobile phone"
+msgstr "Téléphone mobile"
+
+msgid "Modern languages"
+msgstr "Langues modernes"
+
+msgid "More than 75%"
+msgstr "Plus de 75%"
+
+msgid "NO"
+msgstr "Non"
+
+msgid "NOT_INVITED"
+msgstr "Non invité"
+
+msgid "National Bachelor (or government diploma, ...)"
+msgstr "Baccalauréat national (ou diplôme d'état, ...)"
+
+msgid "National registry number"
+msgstr "Numéro de registre national"
+
+msgid "No"
+msgstr "Non"
+
+msgid "No I don't have a high school diploma"
+msgstr "Non je n'ai pas de diplôme de fin d'études secondaires"
+
+msgid "No comment"
+msgstr "Pas de commentaire"
+
+msgid "No cotutelle"
+msgstr "Pas de cotutelle"
+
+msgid "No defense"
+msgstr "Non soutenue"
+
+msgid "No defense reason"
+msgstr "Raison de non-soutenance"
+
+msgid "No languages knowledge provided."
+msgstr "Aucune connaissance des langues renseignée."
+
+msgid "No one invited"
+msgstr "Aucun invité"
+
+msgid "No reference yet - Go to Project tab"
+msgstr "Pas de reference pour le moment - Voir l'onglet projet"
+
+msgid "No secondary studies provided."
+msgstr "Pas d'études secondaires renseignées."
+
+msgid "Not known yet"
+msgstr "Pas encore connu"
+
+msgid "Not submitted"
+msgstr "Non soumis"
+
+msgid "OTHER"
+msgstr "Autre"
+
+msgid "Ongoing request"
+msgstr "En cours de demande"
+
+msgid "Only to provide if the address is not available in the previous field."
+msgstr ""
+"À ne spécifier que si l'adresse n'est pas disponible dans le champ précédent."
+
+msgid ""
+"Only to provide if you are in possession of a Belgian document of identity. "
+"If you are of Belgian nationality and you live in Belgium this field is "
+"mandatory."
+msgstr ""
+"À ne fournir que si vous êtes en possession d'une pièce d'identité belge. Si "
+"vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
+"obligatoire."
+
+msgid "Organizing country"
+msgstr "Pays organisateur"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Other documents concerning cotutelle"
+msgstr "Autres documents relatifs à la cotutelle"
+
+msgid "Other education, please specify"
+msgstr "Autre enseignement, précisez"
+
+msgid "Other institute, please specify"
+msgstr "Si autre institut, précisez"
+
+msgid "Other linguistic regime"
+msgstr "Autre régime linguistique"
+
+msgid "Other names"
+msgstr "Autres prénoms"
+
+msgid "Other thesis location"
+msgstr "Autre lieu de la thèse"
+
+msgid "Others"
+msgstr "Autres"
+
+msgid "PARTIAL"
+msgstr "En partie"
+
+msgid "Passport"
+msgstr "Passeport"
+
+msgid "Passport expiration date"
+msgstr "Date d'expiration du passeport"
+
+msgid "Passport number"
+msgstr "Numéro de passeport"
+
+msgid "Personal data"
+msgstr "Données personnelles"
+
+msgid "Personal information"
+msgstr "Coordonnées"
+
+msgid "PhD already done"
+msgstr "Doctorat déjà réalisé"
+
+msgid "Physic"
+msgstr "Physique"
+
+msgid "Place"
+msgstr "Lieu-dit"
+
+msgid ""
+"Please contact the Enrolment Office if you wish to change your contact email."
+msgstr ""
+"Veuillez contacter le Service des Inscriptions si vous souhaitez modifier "
+"votre email de contact"
+
+msgid "Please correct the errors below"
+msgstr "Veuillez corriger les erreurs ci-dessous"
+
+msgid "Please correct the errors first"
+msgstr "Veuillez d'abord corriger les erreurs"
+
+msgid "Please mention the academic graduation year"
+msgstr "Veuillez indiquer l'année académique d'obtention"
+
+msgid "Please rate your listening comprehension"
+msgstr "Veuillez évaluer votre compréhension à l'audition"
+
+msgid "Please rate your speaking ability"
+msgstr "Veuillez évaluer votre capacité orale"
+
+msgid "Please rate your writing ability"
+msgstr "Veuillez évaluer votre capacité d'écriture"
+
+msgid "Please set either street or postal_box"
+msgstr "Veuillez définir la rue ou la boîte postale"
+
+msgid "Please set either the linguistic regime or other field."
+msgstr "Veuillez définir le régime linguistique ou précisez un autre régime."
+
+msgid "Please set one of institute or other institute fields"
+msgstr "Veuillez définir l'établissement ou précisez un autre établissement."
+
+msgid "Postal code"
+msgstr "Code postal"
+
+msgid "Pre-Admission"
+msgstr "Pré-Admission"
+
+msgid "Previous experience"
+msgstr "Parcours antérieur"
+
+msgid "Previous research experience"
+msgstr "Expérience précédente de recherche"
+
+msgid "Private defense"
+msgstr "Soutenance privée"
+
+msgid "Professional education"
+msgstr "Enseignement professionnel"
+
+msgid "Professional education + Maturity exam"
+msgstr "Enseignement professionnel + Examen de maturité"
+
+msgid "Project documents"
+msgstr ""
+"Projet (question de recherche, état de l'art, objectifs, méthodes, "
+"chronologie, références bibliographiques)"
+
+msgid "Project resume"
+msgstr "Résumé du projet"
+
+msgid "Project title"
+msgstr "Titre du projet"
+
+msgid "Promoter"
+msgstr "Promoteur"
+
+msgid "Promoters"
+msgstr "Promoteurs"
+
+msgid "Proof of identity"
+msgstr "Pièce d'identité"
+
+msgid "Proposition approval"
+msgstr "Approbation de la proposition"
+
+msgid "Proximity Commission for Dental Sciences (DENT)"
+msgstr "Commission de proximité de sciences dentaires (DENT)"
+
+msgid "Proximity Commission for Genetics and Immunology (GIM)"
+msgstr "Commission de proximité de génétique et immunologie (GIM)"
+
+msgid "Proximity Commission for Motricity Sciences (MOTR)"
+msgstr "Commission de proximité de sciences de la motricité (MOTR)"
+
+msgid "Proximity Commission for Neuroscience (NRSC)"
+msgstr "Commission de proximité de neurosciences (NRSC)"
+
+msgid "Proximity Commission for Pharmaceutical Sciences (DFAR)"
+msgstr "Commission de proximité de sciences pharmaceutiques (DFAR)"
+
+msgid "Proximity commission"
+msgstr "Commission de proximité"
+
+msgid ""
+"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+msgstr ""
+"Commission de proximité de biologie cellulaire et moléculaire, biochimie "
+"(BCM)"
+
+msgid "Proximity commission for experimental and clinical research (ECLI)"
+msgstr "Commission de proximité de recherche expérimentale et clinique (ECLI)"
+
+msgid "Proximity commission for public health, health and society (SPSS)"
+msgstr "Commission de proximité de santé publique, santé et société (SPSS)"
+
+msgid "Public defense"
+msgstr "Soutenance publique"
+
+msgid "Qualification method"
+msgstr "Technique de qualification"
+
+msgid "REFUSED"
+msgstr "Refusé"
+
+msgid "Recommendation letters"
+msgstr "Lettres de recommandation"
+
+msgid "Reference:"
+msgstr "Référence :"
+
+msgid "Rejected"
+msgstr "Rejetée"
+
+msgid "Rejection reason"
+msgstr "Motif de refus"
+
+msgid "Remove"
+msgstr "Retirer"
+
+msgid "Request signatures"
+msgstr "Demander les signatures"
+
+msgid "Residential address"
+msgstr "Domicile légal"
+
+msgid "SEARCH_SCHOLARSHIP"
+msgstr "Bourse de recherche"
+
+msgid "SELF_FUNDING"
+msgstr "Fonds propres"
+
+msgid "SIGNING_IN_PROGRESS"
+msgstr "Signature en cours"
+
+msgid "SUBMITTED"
+msgstr "Soumis"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Scholarship"
+msgstr "Bourse"
+
+msgid "Scholarship grant"
+msgstr "Bourse de recherche"
+
+msgid "Sciences"
+msgstr "Sciences"
+
+msgid "Search a person by name"
+msgstr "Rechercher une personne par son nom"
+
+msgid "Search a tutor by name"
+msgstr "Rechercher un tuteur par son nom"
+
+msgid "Secondary studies"
+msgstr "Études secondaires"
+
+msgid "Sector"
+msgstr "Secteur"
+
+msgctxt "admission"
+msgid "Separate"
+msgstr "Séparé(e)"
+
+msgid "Sex"
+msgstr "Sexe"
+
+msgid "Signatures requests sent"
+msgstr "Demandes de signature envoyées"
+
+msgctxt "admission"
+msgid "Single"
+msgstr "Célibataire"
+
+msgid "Social sciences"
+msgstr "Sciences sociales"
+
+msgid "Speaking ability"
+msgstr "Parler"
+
+msgid "Specify scholarship grant"
+msgstr "Spécifier la bourse de recherche"
+
+msgid "Specify work contract"
+msgstr "Spécifier le contrat de travail"
+
+msgid "Status:"
+msgstr "Statut :"
+
+msgid "Street"
+msgstr "Rue"
+
+msgid "Street number"
+msgstr "Numéro de rue"
+
+msgid "Submit my decision"
+msgstr "Soumettre ma décision"
+
+msgid "Supervision"
+msgstr "Supervision"
+
+msgid "Teaching of general education"
+msgstr "Général de transition"
+
+msgid "The Belgian national register number must consist of 11 digits."
+msgstr "Le numéro de registre national belge doit être composé de 11 chiffres."
+
+msgid "Thesis institute"
+msgstr "Institut de la thèse"
+
+msgid "Thesis location"
+msgstr "Lieu de la thèse"
+
+msgid "Thesis redacting language"
+msgstr "Langue de rédaction de la thèse"
+
+msgid "This comment will be visible to all users who have access to this page."
+msgstr ""
+"Ce commentaire sera visible par tous les utilisateurs ayant accès à cette "
+"page."
+
+msgid "This comment will only be visible to the administrators."
+msgstr "Ce commentaire ne sera visible que par les gestionnaires."
+
+msgid "This field is required"
+msgstr "Ce champ est requis"
+
+msgid "This field is required."
+msgstr "Ce champ est requis."
+
+msgid "This is a diploma from"
+msgstr "Il s'agit d'un diplôme"
+
+msgid "This language is set more than once."
+msgstr "Cette langue est définie plusieurs fois."
+
+msgid "Timetable"
+msgstr "Grille horaire"
+
+msgid "Transition method"
+msgstr "Technique de transition"
+
+msgid "UCLOUVAIN_ASSISTANT"
+msgstr "Assistant UCLouvain"
+
+msgid "Undecided"
+msgstr "Non décidé"
+
+msgid "Unknown birth date"
+msgstr "Date de naissance exacte inconnue"
+
+msgid "View"
+msgstr "Voir"
+
+msgid "WBI - Wallonie Bruxelles International"
+msgstr "WBI - Wallonie Bruxelles International"
+
+msgid "WORK_CONTRACT"
+msgstr "Contrat de travail"
+
+msgid "What diploma did you get (or will you get)?"
+msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"
+
+msgid "What result did you get?"
+msgstr "Quel résultat avez-vous obtenu ?"
+
+msgid "What was your last year of UCLouvain enrollment?"
+msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
+
+msgctxt "admission"
+msgid "Widowed"
+msgstr "Veuf(ve)"
+
+msgid "Work contract"
+msgstr "Contrat de travail"
+
+msgid "Work contract type"
+msgstr "Type de contrat de travail"
+
+msgid "Writing ability"
+msgstr "Écrire"
+
+msgid "YES"
+msgstr "Oui"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "Yes I have a high school diploma"
+msgstr "Oui j'ai déjà un diplôme de fin d'études secondaires"
+
+msgid "You can perform a search based on the location or postal code."
+msgstr "Vous pouvez rechercher soit par localité soit par code postal."
+
+msgid "You cannot fill in a language more than once, please correct the form."
+msgstr ""
+"Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le "
+"formulaire."
+
+msgid ""
+"You must correct your proposition before being able to request signatures."
+msgstr ""
+"Vous devez corriger votre demande d'admission avant de pouvoir réaliser la "
+"demande de signatures."
+
+msgid "Your data has been saved"
+msgstr "Vos données ont été enregistrées"
+
+msgid "belgian"
+msgstr "belge"
+
+msgid "dd/mm/yyyy"
+msgstr "jj/mm/aaaa"
+
+msgid "foreign or international"
+msgstr "étranger ou international"
+
+msgid "h/w"
+msgstr "h/s"
+
+msgid "hours are required"
+msgstr "les heures sont requises"
+
+msgid "label is required"
+msgstr "un label est requis"
+
+msgid "yyyy"
+msgstr "aaaa"

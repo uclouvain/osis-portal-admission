@@ -1,0 +1,20 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
+
+{% block form_content %}
+    <h4>
+        {% blocktrans with first_name=member.prenom last_name=member.nom role=view.kwargs.type|enum_display:'ActorType' %}
+            Are you sure you want to remove {{ first_name }}
+            {{ last_name }} as {{ role }}?
+        {% endblocktrans %}
+    </h4>
+
+    {% bootstrap_form_errors form %}
+
+    <button type="submit" class="btn btn-danger">
+        {% trans "Confirm" %}
+    </button>
+    {% url 'admission:doctorate-update:supervision' view.kwargs.pk as cancel_url %}
+    <a href="{{ cancel_url }}">
+        {% trans "Cancel" %}
+    </a>
+{% endblock %}

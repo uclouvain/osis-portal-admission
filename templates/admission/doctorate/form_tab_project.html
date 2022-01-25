@@ -1,0 +1,264 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block form %}
+    {% bootstrap_form_errors form %}
+
+    {% panel _("Course choice") %}
+        <div class="row">
+            <div class="col-md-12">
+                {% bootstrap_field form.type_admission %}
+                <p>{% lorem 1 %}</p>
+            </div>
+            <div class="col-md-12" id="justification">
+                {% bootstrap_field form.justification %}
+            </div>
+        </div>
+        {% if not admission %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% bootstrap_field form.sector %}
+                </div>
+            </div>
+            <div class="row" id="doctorate">
+                <div class="col-md-9">
+                    {% bootstrap_field form.doctorate %}
+                </div>
+            </div>
+        {% else %}
+            {% field_data _("Sector") sector_label %}
+            {% if LANGUAGE_CODE == 'en' %}
+                {% field_data _("Doctorate") admission.intitule_doctorat_en %}
+            {% else %}
+                {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
+            {% endif %}
+            {% if admission.commission_proximite %}
+                {% field_data _("Proximity commission") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS' %}
+            {% endif %}
+        {% endif %}
+        <div class="row" id="commission_proximite_cde">
+            <div class="col-md-4">
+                {% bootstrap_field form.commission_proximite_cde %}
+            </div>
+        </div>
+        <div class="row" id="commission_proximite_cdss">
+            <div class="col-md-4">
+                {% bootstrap_field form.commission_proximite_cdss %}
+            </div>
+        </div>
+    {% endpanel %}
+
+    {% panel _("Financing") %}
+        <div class="row">
+            <div class="col-md-4">
+                {% bootstrap_field form.type_financement form_group_class="form-group required_field"  %}
+            </div>
+        </div>
+        <div class="row" id="work">
+            <div class="col-md-4">
+                {% bootstrap_field form.type_contrat_travail %}
+            </div>
+            <div class="col-md-4" id="type_contrat_travail_other">
+                {% bootstrap_field form.type_contrat_travail_other %}
+            </div>
+            <div class="col-md-4">
+                {% bootstrap_field form.eft %}
+            </div>
+        </div>
+        <div class="row" id="scholarship">
+            <div class="col-md-4">
+                {% bootstrap_field form.bourse_recherche %}
+            </div>
+            <div class="col-md-4" id="bourse_recherche_other">
+                {% bootstrap_field form.bourse_recherche_other %}
+            </div>
+        </div>
+        <div id="financing-details" class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.duree_prevue %}
+            </div>
+            <div class="col-md-6">
+                {% bootstrap_field form.temps_consacre %}
+            </div>
+        </div>
+    {% endpanel %}
+
+    {% panel _("Doctoral project") %}
+        {% bootstrap_field form.titre_projet form_group_class="form-group required_field" %}
+        {% bootstrap_field form.resume_projet form_group_class="form-group required_field" %}
+        <div class="row">
+            <div class="col-md-4">
+                {% bootstrap_field form.langue_redaction_these form_group_class="form-group required_field" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.institut_these %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.lieu_these %}
+            </div>
+            <div class="col-md-6">
+                {% bootstrap_field form.autre_lieu_these %}
+            </div>
+        </div>
+        {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
+        {% bootstrap_field form.graphe_gantt form_group_class="form-group required_field" %}
+        {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group required_field"  %}
+        {% bootstrap_field form.projet_formation_complementaire form_group_class="form-group required_field"  %}
+        {% bootstrap_field form.lettres_recommandation form_group_class="form-group required_field"  %}
+    {% endpanel %}
+
+    {% panel _("Previous research experience") %}
+        {% bootstrap_field form.doctorat_deja_realise %}
+        <div id="previous_experience">
+            <div class="row">
+                <div class="col-md-6">
+                    {% bootstrap_field form.institution %}
+                </div>
+            </div>
+            {% bootstrap_field form.non_soutenue %}
+            <div class="row" id="soutenue">
+                <div class="col-md-4">
+                    {% bootstrap_field form.date_soutenance %}
+                </div>
+            </div>
+            <div id="non-soutenue">
+                {% bootstrap_field form.raison_non_soutenue form_group_class="form-group required_field" %}
+            </div>
+        </div>
+    {% endpanel %}
+{% endblock %}
+
+{% block script %}
+    {{ form.media }}
+    <script type="application/javascript">
+    $(function () {
+        const context = $('.osis-form');
+
+        // Justification depends on pre-admission
+        $('#justification').dependsOn({
+            'input[name=type_admission]': { values: ['PRE_ADMISSION'] },
+        }, { valueOnDisable: '' });
+
+        {% if not admission %}
+            // Reset doctorate when changing sector
+            $('#id_sector').change(function () {
+                $('#id_doctorate').val(null).trigger('change');
+            });
+            // Doctorate depends on sector
+            $('#doctorate').dependsOn({
+                '#id_sector': { not: [''] },
+            });
+
+            // When a value is already set in select2, it won't be replaced by
+            // ajax call, so we compare the data to evaluate if CDE is present
+            {% if form.doctorate_data %}
+                var initialData = {{ form.doctorate_data|safe }};
+            {% else %}
+                var initialData = false;
+            {% endif %}
+
+            // proximity commission depends on doctorate
+            $('#commission_proximite_cde').dependsOn({
+                '#id_doctorate': {
+                    changed: function () {
+                        var $doctorate = $('#id_doctorate');
+                        if ($doctorate.hasClass('select2-hidden-accessible')) {
+                            var data = $doctorate.select2('data')
+                            if (initialData && data[0].id === initialData.id) {
+                                data = [initialData];
+                            }
+                            if (data.length && ['CDE', 'CLSM'].includes(data[0].sigle_entite_gestion)) {
+                                return true;
+                            }
+                        }
+                    },
+                },
+            }, { valueOnDisable: '' });
+
+            $('#commission_proximite_cdss').dependsOn({
+                '#id_doctorate': {
+                    changed: function () {
+                        var $doctorate = $('#id_doctorate');
+                        if ($doctorate.hasClass('select2-hidden-accessible')) {
+                            var data = $doctorate.select2('data')
+                            if (initialData && data[0].id === initialData.id) {
+                                data = [initialData];
+                            }
+                            if (data.length && data[0].sigle_entite_gestion === 'CDSS') {
+                                return true;
+                            }
+                        }
+                    },
+                },
+            }, { valueOnDisable: '' });
+        {% endif %}
+
+        $('#work').dependsOn({
+            '#id_type_financement': { values: ['WORK_CONTRACT'] },
+        }, { valueOnDisable: '' });
+        $('#scholarship').dependsOn({
+            '#id_type_financement': { values: ['SEARCH_SCHOLARSHIP'] },
+        }, { valueOnDisable: '' });
+        $('#financing-details').dependsOn({
+            '#id_type_financement': { not: [''] },
+        }, { valueOnDisable: '' });
+        $('#type_contrat_travail_other').dependsOn({
+            '#id_type_contrat_travail': { values: ['OTHER'] },
+        }, { valueOnDisable: '' });
+        $('#bourse_recherche_other').dependsOn({
+            '#id_bourse_recherche': { values: ['OTHER'] },
+        }, { valueOnDisable: '' });
+        $('#previous_experience').dependsOn({
+            '#id_doctorat_deja_realise': { values: ['YES', 'PARTIAL'] },
+        }, { valueOnDisable: '' });
+        $('#non-soutenue').dependsOn({
+            '#id_non_soutenue': { checked: true },
+        }, { valueOnDisable: '' });
+        $('#soutenue').dependsOn({
+            '#id_non_soutenue': { checked: false },
+        }, { valueOnDisable: '' });
+
+        // Clear the fields related to the thesis place
+        const thesisPlace = context.find('select[name=lieu_these]');
+        const otherThesisPlace = context.find('input[name=autre_lieu_these]');
+
+        otherThesisPlace.on('focus', function () {
+            thesisPlace.val(null).change();
+        });
+        thesisPlace.on('change', function () {
+            otherThesisPlace.val(null);
+        })
+        context.find('select[name=institut_these]').on('change', function () {
+            thesisPlace.val(null).change();
+            otherThesisPlace.val(null);
+        });
+    });
+    </script>
+{% endblock %}
