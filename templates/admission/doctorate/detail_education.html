@@ -31,13 +31,6 @@
 
       {% field_data _("Academic graduation year") belgian_diploma.academic_graduation_year|display_as_academic_year %}
 
-      <div class="row">
-        {% field_data _("A transcript or your last year at high school") belgian_diploma.high_school_transcript css_class="col-md-6" %}
-        {% if belgian_diploma.high_school_diploma %}
-          {% field_data _("High school diploma") belgian_diploma.high_school_diploma css_class="col-md-6" %}
-        {% endif %}
-      </div>
-
       {% panel _("Belgian diploma") %}
 
         {% field_data _("Community of education") belgian_diploma.community|enum_display:'BelgianCommunitiesOfEducation' %}
@@ -155,16 +148,18 @@
         {% endif %}
       {% endpanel %}
 
-    {% else %}
+      {% panel _("Attachments") %}
+        <div class="row">
+          {% field_data _("A transcript or your last year at high school") belgian_diploma.high_school_transcript %}
+          {% if belgian_diploma.high_school_diploma %}
+            {% field_data _("High school diploma") belgian_diploma.high_school_diploma %}
+          {% endif %}
+        </div>
+      {% endpanel %}
+
+    {% else %}{# if foreign_diploma %} #}
 
       {% field_data _("Academic graduation year") foreign_diploma.academic_graduation_year|display_as_academic_year %}
-
-      <div class="row">
-        {% field_data _("A transcript or your last year at high school") foreign_diploma.high_school_transcript css_class="col-md-6" %}
-        {% if foreign_diploma.high_school_diploma %}
-          {% field_data _("High school diploma") foreign_diploma.high_school_diploma css_class="col-md-6" %}
-        {% endif %}
-      </div>
 
       {% panel _("Foreign diploma") %}
 
@@ -180,15 +175,19 @@
 
         {% field_data _("At which result level do you consider yourself?") foreign_diploma.result|enum_display:'DiplomaResults' %}
 
-        <div class="row">
-          {% if foreign_diploma.high_school_transcript_translation %}
-            {% field_data _("A certified translation of your official transcript of marks for your final year of secondary education") foreign_diploma.high_school_transcript_translation css_class="col-md-6" %}
-          {% endif %}
-          {% if foreign_diploma.high_school_diploma_translation %}
-            {% field_data _("A certified translation of your high school diploma") foreign_diploma.high_school_diploma_translation css_class="col-md-6" %}
-          {% endif %}
-        </div>
+      {% endpanel %}
 
+      {% panel _("Attachments") %}
+        {% field_data _("A transcript or your last year at high school") foreign_diploma.high_school_transcript %}
+        {% if foreign_diploma.high_school_diploma %}
+          {% field_data _("High school diploma") foreign_diploma.high_school_diploma %}
+        {% endif %}
+        {% if foreign_diploma.high_school_transcript_translation %}
+          {% field_data _("A certified translation of your official transcript of marks for your final year of secondary education") foreign_diploma.high_school_transcript_translation %}
+        {% endif %}
+        {% if foreign_diploma.high_school_diploma_translation %}
+          {% field_data _("A certified translation of your high school diploma") foreign_diploma.high_school_diploma_translation %}
+        {% endif %}
       {% endpanel %}
 
     {% endif %}

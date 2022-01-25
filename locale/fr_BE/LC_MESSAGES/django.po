@@ -173,6 +173,9 @@ msgstr "Artistique de transition"
 msgid "At which result level do you consider yourself?"
 msgstr "Quel résultat avez-vous obtenu ?"
 
+msgid "Attachments"
+msgstr "Pièces jointes"
+
 msgid "B1"
 msgstr "B1"
 

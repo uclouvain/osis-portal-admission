@@ -46,13 +46,6 @@
     </div>
     {% bootstrap_field main_form.diploma_type form_group_class="form-group required_field" %}
 
-    <div class="row">
-      {% bootstrap_field main_form.high_school_transcript form_group_class="form-group required_field col-md-6" %}
-      <div class="high-school-diploma">
-        {% bootstrap_field main_form.high_school_diploma form_group_class="form-group required_field col-md-6" %}
-      </div>
-    </div>
-
     {% panel _("Foreign diploma") id="foreign-diploma" %}
 
       {# This deconstructed for image rendering #}
@@ -101,10 +94,6 @@
       </div>
       {% bootstrap_field foreign_diploma_form.result form_group_class="form-group required_field" %}
 
-      <div id="translated-files" class="row">
-        {% bootstrap_field foreign_diploma_form.high_school_transcript_translation form_group_class="form-group required_field col-md-6" %}
-        {% bootstrap_field foreign_diploma_form.high_school_diploma_translation form_group_class="form-group required_field col-md-6 high-school-diploma" %}
-      </div>
     {% endpanel %}
 
     {% panel _("Belgian diploma") id="belgian-diploma" %}
@@ -239,6 +228,19 @@
         </div>
       </div>
     {% endpanel %}
+
+    {% panel _("Attachments") %}
+      <div class="row">
+        {% bootstrap_field main_form.high_school_transcript form_group_class="form-group required_field col-md-6" %}
+        <div class="high-school-diploma">
+          {% bootstrap_field main_form.high_school_diploma form_group_class="form-group required_field col-md-6" %}
+        </div>
+      </div>
+      <div id="translated-files" class="row">
+        {% bootstrap_field foreign_diploma_form.high_school_transcript_translation form_group_class="form-group required_field col-md-6" %}
+        {% bootstrap_field foreign_diploma_form.high_school_diploma_translation form_group_class="form-group required_field col-md-6 high-school-diploma" %}
+      </div>
+    {% endpanel %}
   </div>
 
 {% endblock %}
@@ -311,6 +313,7 @@
       });
 
       $('#translated-files').dependsOn({
+          'input[name=diploma_type]': { values: ['FOREIGN'] },
           'select[name=foreign_diploma-linguistic_regime]': { not: {{ linguistic_regimes_without_translation|safe }} },
       }, {
           valueOnDisable: '',
