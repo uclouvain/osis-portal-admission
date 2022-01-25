@@ -32,7 +32,13 @@ from django.urls import resolve
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
-from admission.templatetags.admission import TAB_TREE, get_valid_tab_tree, can_make_action, can_read_tab, can_update_tab
+from admission.templatetags.admission import (
+    TAB_TREE,
+    can_make_action,
+    can_read_tab,
+    can_update_tab,
+    get_valid_tab_tree,
+)
 from base.models.utils.utils import ChoiceEnum
 
 

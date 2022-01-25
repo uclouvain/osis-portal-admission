@@ -67,16 +67,9 @@ def register_panel(filename, takes_context=None, name=None):
             # {% footer %} (optional)
             if token.contents == 'footer':
                 nodelist_dict['panel_footer'] = parser.parse(('endpanel',))
-                token = parser.next_token()
+                parser.next_token()
 
-            # {% endpanel %} presence check
-            if token.contents != 'endpanel':
-                raise template.TemplateSyntaxError(
-                    'Malformed template tag at line {0}: "{1}"'.format(token.lineno, token.contents))
-
-            return PanelNode(
-                nodelist_dict, func, takes_context, args, kwargs, filename
-            )
+            return PanelNode(nodelist_dict, func, takes_context, args, kwargs, filename)
 
         register.tag(function_name, compile_func)
         return func
@@ -238,6 +231,13 @@ def enum_display(value, enum_name):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+def strip(value):
+    if isinstance(value, str):
+        return value.strip()
+    return value
 
 
 @register.filter

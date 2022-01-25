@@ -27,6 +27,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views.generic import FormView
 
+from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
 from admission.services.mixins import WebServiceFormMixin
@@ -39,7 +40,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        if context['admission'].statut != 'SIGNING_IN_PROGRESS':
+        if context['admission'].statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name:
             return redirect('admission:doctorate-update:supervision', **self.kwargs)
         return self.render_to_response(context)
 
