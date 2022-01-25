@@ -101,7 +101,8 @@ class PersonViewTestCase(TestCase):
         url = resolve_url('admission:doctorate-update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
-        values = dict(
+        mocking_dict = self.mock_person_api.return_value.retrieve_person_identification_admission.return_value
+        mocking_dict.to_dict.return_value = dict(
             first_name="John",
             last_name="Doe",
             id_card=[],
@@ -111,15 +112,13 @@ class PersonViewTestCase(TestCase):
             country_of_citizenship="FR",
             last_registration_year=2021,
         )
-        self.mock_person_api.return_value.retrieve_person_identification.return_value = Mock(**values)
-        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = values
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "John")
         self.assertContains(response, "FR")
         self.assertContains(response, "BE")
-        self.mock_person_api.return_value.retrieve_person_identification.assert_called()
+        self.mock_person_api.return_value.retrieve_person_identification_admission.assert_called()
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
 
@@ -157,7 +156,8 @@ class PersonViewTestCase(TestCase):
         url = resolve_url('admission:doctorate-detail:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
-        self.mock_person_api.return_value.retrieve_person_identification.return_value = Mock(
+        mocking_dict_return = self.mock_person_api.return_value.retrieve_person_identification_admission.return_value
+        mocking_dict_return.to_dict.return_value = dict(
             first_name="Joe",
             birth_country="",
             country_of_citizenship="",
@@ -167,10 +167,10 @@ class PersonViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Joe")
-        self.mock_person_api.return_value.retrieve_person_identification.assert_called()
+        self.mock_person_api.return_value.retrieve_person_identification_admission.assert_called()
         self.assertIn('admission', response.context)
 
-        self.mock_person_api.return_value.retrieve_person_identification.return_value = Mock(
+        mocking_dict_return.to_dict.return_value = dict(
             first_name="John",
             birth_country="BE",
             country_of_citizenship="FR",
@@ -182,5 +182,5 @@ class PersonViewTestCase(TestCase):
         self.assertContains(response, "John")
         self.assertContains(response, "Belgique")
         self.assertContains(response, "France")
-        self.mock_person_api.return_value.retrieve_person_identification.assert_called()
+        self.mock_person_api.return_value.retrieve_person_identification_admission.assert_called()
         self.assertIn('admission', response.context)
