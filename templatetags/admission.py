@@ -250,3 +250,10 @@ def can_read_tab(admission, tab_name):
 def can_update_tab(admission, tab_name):
     """Return true if the specified tab can be opened in writing mode for this admission, otherwise return False"""
     return _can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB)
+
+
+@register.filter
+def can_update_something(admission):
+    """Return true if any update tab can be opened for this admission, otherwise return False"""
+    return any(_can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB)
+               for tab_name in UPDATE_ACTIONS_BY_TAB)

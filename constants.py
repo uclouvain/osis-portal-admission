@@ -50,7 +50,7 @@ UPDATE_ACTIONS_BY_TAB = {
     'person': 'update_person',
     'languages': 'update_languages',
     'project': 'update_proposition',
-    'supervision': 'retrieve_supervision',
+    'supervision': 'request_signatures',
     'confirm': '',
     'confirm-paper': '',
     'training': '',
