@@ -30,7 +30,6 @@ from django.test import TestCase
 from django.urls import reverse
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
-from osis_organisation_sdk.model.paginated_addresses import PaginatedAddresses
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
@@ -243,10 +242,12 @@ class AutocompleteTestCase(TestCase):
                 is_main=True,
             ),
         ]
-        api.return_value.get_entity_addresses.return_value = PaginatedAddresses(
-            results=mock_locations,
-            next=None,
-        )
+        # TODO This will become (again) paginated later
+        # api.return_value.get_entity_addresses.return_value = PaginatedAddresses(
+        #     results=mock_locations,
+        #     next=None,
+        # )
+        api.return_value.get_entity_addresses.return_value = mock_locations[0]
         url = reverse('admission:autocomplete:institute-location')
 
         response = self.client.get(url, {'forward': json.dumps({'institut_these': ''})}, {'uuid': 'uuid1'})
@@ -260,9 +261,9 @@ class AutocompleteTestCase(TestCase):
                 {
                     'id': 'Place de l\'université 1, 1348 Ottignies-Louvain-la-Neuve, Belgique',
                     'text': 'Place de l\'université 1, 1348 Ottignies-Louvain-la-Neuve, Belgique',
-                }, {
-                    'id': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
-                    'text': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                    # }, {
+                    #     'id': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                    #     'text': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
                 },
             ],
         })
