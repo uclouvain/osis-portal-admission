@@ -24,28 +24,80 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import resolve_url
 from django.views.generic import FormView
 
-from admission.contrib.forms.curriculum import DoctorateAdmissionCurriculumFormSet
+from admission.constants import BE_ISO_CODE
+from admission.contrib.forms.curriculum import DoctorateAdmissionCurriculumExperienceForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
+from admission.services.proposition import AdmissionPropositionService
 
 
 class DoctorateAdmissionCurriculumFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/form_tab_curriculum.html"
-    form_class = DoctorateAdmissionCurriculumFormSet
+    template_name = "admission/doctorate/detail_curriculum.html"
+    form_class = DoctorateAdmissionCurriculumExperienceForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["form_kwargs"] = {"person": self.request.user.person}
+        kwargs["person"] = self.request.user.person
         return kwargs
 
-    def get_initial(self):
-        curriculum = AdmissionPersonService.retrieve_curriculum(self.request.user.person)
-        return curriculum.to_dict()["curriculum_years"]
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        proposition_uuid = str(self.kwargs.get("pk", ""))
+
+        context_data["admission"] = AdmissionPropositionService.get_proposition(
+            person=self.request.user.person,
+            uuid=proposition_uuid,
+        )
+        context_data["curriculum_experiences"] = AdmissionPersonService.list_curriculum_experiences(
+            person=self.request.user.person,
+            uuid=proposition_uuid,
+        )
+        context_data["BE_ISO_CODE"] = BE_ISO_CODE
+        return context_data
+
+    # def get
+    #
+    # def get_initial(self):
+    #     curriculum = AdmissionPersonService.retrieve_curriculum(self.request.user.person)
+    #     return curriculum.to_dict()["curriculum_years"]
+    #
 
     def prepare_data(self, data):
-        return data  # TODO merge all the year with their experiences
+        # Remove redundant fields
+        data.pop('institute_city_be')
+        data.pop('activity_institute_city')
+        data.pop('activity_institute_name')
+
+        # Format fields values
+        data['academic_year'] = int(data['academic_year'])
+
+        return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_curriculum(person=self.request.user.person, **data)
+        # breakpoint()
+        AdmissionPersonService.create_curriculum_experience(
+            person=self.request.user.person,
+            uuid=str(self.kwargs.get('pk')),
+            data=data,
+        )
+
+    def get_success_url(self):
+        pk = self.kwargs.get('pk')
+        if pk:
+            return resolve_url('admission:doctorate-detail:curriculum', pk=pk)
+        else:
+            return resolve_url('admission:curriculum')
+
+
+# class DoctorateAdmissionDeleteCurriculumExperienceFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+#     template_name = "admission/doctorate/cancel.html"
+#     form_class = Form
+#
+#     def call_webservice(self, data):
+#         AdmissionPropositionService.cancel_proposition(person=self.person, uuid=str(self.kwargs.get('pk')))
+#
+#     def get_success_url(self):
+#         return resolve_url('admission:doctorate-list')

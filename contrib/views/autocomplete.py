@@ -94,10 +94,15 @@ class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
     def autocomplete_results(self, results):
         """Return list of strings that match the autocomplete query."""
+        query_params = {
+            'person': self.request.user.person,
+            'search': self.q,
+        }
+        if self.forwarded['postal_code']:
+            query_params['zip_code'] = self.forwarded['postal_code']
+
         return CitiesService.get_cities(
-            person=self.request.user.person,
-            zip_code=self.forwarded['postal_code'],
-            search=self.q,
+            **query_params,
         )
 
     def results(self, results):
