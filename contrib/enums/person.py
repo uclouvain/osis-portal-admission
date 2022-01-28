@@ -40,9 +40,9 @@ class SexEnum(ChoiceEnum):
 
 
 class CivilState(ChoiceEnum):
-    LEGAL_COHABITANT = _("Legal cohabitant")
-    SINGLE = _("Single")
-    DIVORCED = _("Divorced")
-    MARRIED = _("Married")
-    SEPARATE = _("Separate")
-    WIDOWED = _("Widowed")
+    LEGAL_COHABITANT = pgettext_lazy("admission", "Legal cohabitant")
+    SINGLE = pgettext_lazy("admission", "Single")
+    DIVORCED = pgettext_lazy("admission", "Divorced")
+    MARRIED = pgettext_lazy("admission", "Married")
+    SEPARATE = pgettext_lazy("admission", "Separate")
+    WIDOWED = pgettext_lazy("admission", "Widowed")

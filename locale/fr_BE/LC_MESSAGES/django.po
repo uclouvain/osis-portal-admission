@@ -203,6 +203,9 @@ msgstr "Artistique de transition"
 msgid "At which result level do you consider yourself?"
 msgstr "Quel résultat avez-vous obtenu ?"
 
+msgid "Attachments"
+msgstr "Pièces jointes"
+
 msgid "B1"
 msgstr "B1"
 
@@ -341,6 +344,10 @@ msgstr "Choix de la formation"
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
 
+msgctxt "an admission"
+msgid "Created at:"
+msgstr "Créée le :"
+
 msgid "Credit type"
 msgstr "Type de crédits"
 
@@ -372,6 +379,7 @@ msgstr "Titre du mémoire"
 msgid "Distinction"
 msgstr "Distinction"
 
+msgctxt "admission"
 msgid "Divorced"
 msgstr "Divorcé(e)"
 
@@ -609,21 +617,23 @@ msgid ""
 "If you have it, you must provide a photocopy of both sides of the final "
 "equivalence decision issued by the Ministry of the French Community of "
 "Belgium. If you do not have it, a request for equivalence MUST be submitted "
-"in strict accordance with the instructions given by the CFWB, only in the "
-"case of a request for enrolment in BACHELOR degree. As a reminder, for any "
-"secondary school diploma from a country outside the European Union, the "
-"admission application must contain the equivalence of your diploma issued by "
-"the Wallonia-Brussels Federation (French Community of Belgium)."
+"in strict accordance with the instructions given by the <a href=\"http://www."
+"equivalences.cfwb.be/\" target=\"blank\">CFWB</a>, only in the case of a "
+"request for enrolment in BACHELOR degree. As a reminder, for any secondary "
+"school diploma <strong>from a country outside the European Union, the "
+"admission application must contain the equivalence of your diploma</strong> "
+"issued by the Wallonia-Brussels Federation (French Community of Belgium)."
 msgstr ""
 "Si vous la possédez, vous devrez fournir une photocopie recto-verso de la "
 "décision d'équivalence définitive délivrée par le Ministère de la Communauté "
 "française de Belgique. Si vous ne la possédez pas, une demande d'équivalence "
 "DOIT être introduite en respectant strictement les consignes indiquées par "
-"la CFWB, uniquement dans le cas d'une demande d'inscription en BACHELIER. "
-"Pour rappel, pour tout diplôme d'études secondaires issu d'un pays hors de "
-"l'Union européenne, la demande d'admission doit contenir l'équivalence de "
-"votre diplôme délivrée par la Fédération Wallonie-Bruxelles (Communauté "
-"française de Belgique)."
+"la <a href=\"http://www.equivalences.cfwb.be/\" target=\"blank\">CFWB</a>, "
+"uniquement dans le cas d'une demande d'inscription en BACHELIER. Pour "
+"rappel, pour tout diplôme d'études secondaires <strong>issu d'un pays hors "
+"de l'Union européenne, la demande d'admission doit contenir l'équivalence de "
+"votre diplôme</strong> délivrée par la Fédération Wallonie-Bruxelles "
+"(Communauté française de Belgique)."
 
 msgid "Illness"
 msgstr "Maladie"
@@ -686,6 +696,7 @@ msgstr "Dernière année d'inscription"
 msgid "Latin"
 msgstr "Latin"
 
+msgctxt "admission"
 msgid "Legal cohabitant"
 msgstr "Cohabitant(e) légal(e)"
 
@@ -720,6 +731,7 @@ msgstr "Langue obligatoire"
 msgid "Mandatory languages are missing."
 msgstr "Des langues obligatoires sont manquantes."
 
+msgctxt "admission"
 msgid "Married"
 msgstr "Marié(e)"
 
@@ -849,7 +861,7 @@ msgid "Other higher education"
 msgstr "Autres études supérieures"
 
 msgid "Other institute, please specify"
-msgstr "Si autre institut, précisez"
+msgstr "Si autre établissement, précisez"
 
 msgid "Other linguistic regime"
 msgstr "Autre régime linguistique"
@@ -1048,6 +1060,9 @@ msgstr "Bourse de recherche"
 msgid "SELF_FUNDING"
 msgstr "Fonds propres"
 
+msgid "SIGNING_IN_PROGRESS"
+msgstr "Signature en cours"
+
 msgid "SUBMITTED"
 msgstr "Soumis"
 
@@ -1081,6 +1096,7 @@ msgstr "Secteur"
 msgid "Semesters"
 msgstr "Semestres"
 
+msgctxt "admission"
 msgid "Separate"
 msgstr "Séparé(e)"
 
@@ -1090,6 +1106,7 @@ msgstr "Sexe"
 msgid "Signatures requests sent"
 msgstr "Demandes de signature envoyées"
 
+msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
 
@@ -1233,6 +1250,7 @@ msgstr "Quel résultat avez-vous obtenu ?"
 msgid "What was your last year of UCLouvain enrollment?"
 msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
 
+msgctxt "admission"
 msgid "Widowed"
 msgstr "Veuf(ve)"
 

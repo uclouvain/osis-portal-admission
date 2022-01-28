@@ -40,7 +40,7 @@ class AdmissionPersonService:
     @classmethod
     def retrieve_person(cls, person, uuid=None):
         if uuid:
-            AdmissionPersonAPIClient().retrieve_person_identification_admission(
+            return AdmissionPersonAPIClient().retrieve_person_identification_admission(
                 uuid=str(uuid),
                 **build_mandatory_auth_headers(person),
             )

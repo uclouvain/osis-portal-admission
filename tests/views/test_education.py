@@ -30,6 +30,12 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums.secondary_studies import (
+    BelgianCommunitiesOfEducation,
+    DiplomaResults,
+    DiplomaTypes,
+    EducationalType, Equivalence, ForeignDiplomaTypes, GotDiploma,
+)
 from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.academic_year import get_current_year
 from base.tests.factories.person import PersonFactory
@@ -119,18 +125,18 @@ class EducationTestCase(TestCase):
 
     def test_form_belgian(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "BELGIAN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.BELGIAN.name,
             "high_school_transcript_0": "test",
             "high_school_diploma_0": "test",
             "academic_graduation_year": 2020,
-            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
-            "belgian_diploma-community": "FLEMISH_SPEAKING",
+            "belgian_diploma-result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
+            "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
             "belgian_diploma-other_institute": "Special school",
             # Even if we send data for schedule, it should be stripped from data sent to WS
             "schedule-greek": 5,
             # Even if we send data for foreign diploma, it should be stripped from data sent to WS
-            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_high_school_diploma.assert_called()
@@ -138,27 +144,27 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent, {
             'belgian_diploma': {
                 'academic_graduation_year': 2020,
-                'community': 'FLEMISH_SPEAKING',
+                'community': BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
                 "high_school_transcript": ["test"],
                 "high_school_diploma": ["test"],
                 'educational_other': '',
                 'educational_type': '',
                 'institute': '',
                 'other_institute': 'Special school',
-                'result': 'NOT_KNOWN_YET_RESULT'
+                'result': DiplomaResults.NOT_KNOWN_YET_RESULT.name
             },
         })
 
     def test_form_belgian_schedule(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "BELGIAN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.BELGIAN.name,
             "academic_graduation_year": 2020,
             "high_school_transcript_0": "test",
             "high_school_diploma_0": "test",
-            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
-            "belgian_diploma-community": "FRENCH_SPEAKING",
-            "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
+            "belgian_diploma-result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
+            "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
+            "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
             "belgian_diploma-other_institute": "Special school",
             "schedule-latin": 5,
             "schedule-chemistry": 5,
@@ -173,7 +179,7 @@ class EducationTestCase(TestCase):
             "schedule-social_sciences": 5,
             "schedule-economic_sciences": 5,
             # Even if we send data for foreign diploma, it should be stripped from data sent to WS
-            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_high_school_diploma.assert_called()
@@ -183,12 +189,12 @@ class EducationTestCase(TestCase):
                 'academic_graduation_year': 2020,
                 "high_school_transcript": ["test"],
                 "high_school_diploma": ["test"],
-                'community': 'FRENCH_SPEAKING',
+                'community': BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
                 'educational_other': '',
-                'educational_type': 'TEACHING_OF_GENERAL_EDUCATION',
+                'educational_type': EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
                 'institute': '',
                 'other_institute': 'Special school',
-                'result': 'NOT_KNOWN_YET_RESULT',
+                'result': DiplomaResults.NOT_KNOWN_YET_RESULT.name,
                 'schedule': {
                     'biology': 5,
                     'chemistry': 5,
@@ -213,15 +219,15 @@ class EducationTestCase(TestCase):
 
     def test_form_belgian_bad_schedule(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "BELGIAN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.BELGIAN.name,
             "academic_graduation_year": 2020,
-            "belgian_diploma-result": "NOT_KNOWN_YET_RESULT",
-            "belgian_diploma-community": "FRENCH_SPEAKING",
-            "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
+            "belgian_diploma-result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
+            "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
+            "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
             "belgian_diploma-other_institute": "Special school",
             # Even if we send data for foreign diploma, it should be stripped from data sent to WS
-            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'schedule_form', None, _("A field of the schedule must at least be set."))
@@ -229,13 +235,13 @@ class EducationTestCase(TestCase):
 
     def test_form_foreign(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "FOREIGN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.FOREIGN.name,
             "academic_graduation_year": 2020,
-            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             "foreign_diploma-linguistic_regime": "AR",
             "foreign_diploma-country": "FR",
-            "foreign_diploma-equivalence": "PENDING",
+            "foreign_diploma-equivalence": Equivalence.PENDING.name,
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'foreign_diploma_form', 'result', _("This field is required."))
@@ -243,35 +249,35 @@ class EducationTestCase(TestCase):
                              _("This field is required."))
 
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "FOREIGN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.FOREIGN.name,
             "high_school_transcript_0": "test",
             "high_school_diploma_0": "test",
             "academic_graduation_year": 2020,
-            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             "foreign_diploma-linguistic_regime": "AR",
             "foreign_diploma-country": "FR",
-            "foreign_diploma-equivalence": "PENDING",
+            "foreign_diploma-equivalence": Equivalence.PENDING.name,
             'foreign_diploma-high_school_transcript_translation_0': 'test',
-            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
+            "foreign_diploma-result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'foreign_diploma_form', 'high_school_diploma_translation',
                              _("This field is required."))
 
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "FOREIGN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.FOREIGN.name,
             "academic_graduation_year": 2020,
             "high_school_transcript_0": "test",
             "high_school_diploma_0": "test",
-            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             "foreign_diploma-linguistic_regime": "AR",
             "foreign_diploma-country": "FR",
-            "foreign_diploma-equivalence": "PENDING",
+            "foreign_diploma-equivalence": Equivalence.PENDING.name,
             'foreign_diploma-high_school_transcript_translation_0': 'test',
             'foreign_diploma-high_school_diploma_translation_0': 'test',
-            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
+            "foreign_diploma-result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
             # Even if we send data for belgian diploma, it should be stripped from data sent to WS
             "belgian_diploma-other_institute": "Special school",
             # Even if we send data for schedule, it should be stripped from data sent to WS
@@ -285,14 +291,14 @@ class EducationTestCase(TestCase):
                 'academic_graduation_year': 2020,
                 "high_school_transcript": ["test"],
                 "high_school_diploma": ["test"],
-                'result': 'NOT_KNOWN_YET_RESULT',
+                'result': DiplomaResults.NOT_KNOWN_YET_RESULT.name,
                 'country': 'FR',
-                'foreign_diploma_type': 'NATIONAL_BACHELOR',
+                'foreign_diploma_type': ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 'linguistic_regime': 'AR',
                 'other_linguistic_regime': '',
                 'high_school_transcript_translation': ['test'],
                 'high_school_diploma_translation': ['test'],
-                'equivalence': 'PENDING',
+                'equivalence': Equivalence.PENDING.name,
             },
         })
 
@@ -301,22 +307,22 @@ class EducationTestCase(TestCase):
             "belgian_diploma": {},
             "foreign_diploma": {
                 "academic_graduation_year": get_current_year(),
-                "result": "NOT_KNOWN_YET_RESULT",
-                "foreign_diploma_type": "NATIONAL_BACHELOR",
+                "result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
+                "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 "linguistic_regime": "EN",
                 "country": "FR",
             }
         }
         response = self.client.post(self.form_url, {
-            "got_diploma": "THIS_YEAR",
-            "diploma_type": "FOREIGN",
+            "got_diploma": GotDiploma.THIS_YEAR.name,
+            "diploma_type": DiplomaTypes.FOREIGN.name,
             "high_school_transcript_0": "test",
             "high_school_diploma_0": "test",
-            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             "foreign_diploma-linguistic_regime": "EN",
             "foreign_diploma-country": "FR",
             "foreign_diploma-equivalence": "NO",
-            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
+            "foreign_diploma-result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
             # Even if we send data for belgian diploma, it should be stripped from data sent to WS
             "belgian_diploma-other_institute": "Special school",
             # Even if we send data for schedule, it should be stripped from data sent to WS
@@ -329,21 +335,19 @@ class EducationTestCase(TestCase):
             'foreign_diploma': {
                 'academic_graduation_year': get_current_year(),
                 "high_school_transcript": ["test"],
-                "high_school_diploma": ["test"],
-                'result': 'NOT_KNOWN_YET_RESULT',
+                'result': DiplomaResults.NOT_KNOWN_YET_RESULT.name,
                 'country': 'FR',
-                'foreign_diploma_type': 'NATIONAL_BACHELOR',
+                'foreign_diploma_type': ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 'linguistic_regime': 'EN',
                 'other_linguistic_regime': '',
                 'high_school_transcript_translation': [],
-                'high_school_diploma_translation': [],
                 'equivalence': 'NO',
             },
         })
 
     def test_form_error_if_got_diploma_but_nothing_else(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
+            "got_diploma": GotDiploma.YES.name,
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('academic_graduation_year', response.context['main_form'].errors)
@@ -351,11 +355,11 @@ class EducationTestCase(TestCase):
 
     def test_form_error_if_hour_or_label_not_set(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "BELGIAN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.BELGIAN.name,
             "academic_graduation_year": 2020,
-            "belgian_diploma-community": "FRENCH_SPEAKING",
-            "belgian_diploma-educational_type": "TEACHING_OF_GENERAL_EDUCATION",
+            "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
+            "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
             "schedule-modern_languages_other_label": 'Chinese',
             "schedule-other_hours": 5,
         })
@@ -365,21 +369,21 @@ class EducationTestCase(TestCase):
 
     def test_form_error_if_french_community_and_no_educational(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "BELGIAN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.BELGIAN.name,
             "academic_graduation_year": 2020,
-            "belgian_diploma-community": "FRENCH_SPEAKING",
+            "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('educational_type', response.context['belgian_diploma_form'].errors)
 
     def test_form_error_linguistic_regime(self):
         response = self.client.post(self.form_url, {
-            "got_diploma": "YES",
-            "diploma_type": "FOREIGN",
+            "got_diploma": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.FOREIGN.name,
             "academic_graduation_year": 2020,
-            "foreign_diploma-result": "NOT_KNOWN_YET_RESULT",
-            "foreign_diploma-foreign_diploma_type": "NATIONAL_BACHELOR",
+            "foreign_diploma-result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
+            "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             "foreign_diploma-country": "FR",
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -391,8 +395,8 @@ class EducationTestCase(TestCase):
             "belgian_diploma": {},
             "foreign_diploma": {
                 "academic_graduation_year": 2020,
-                "result": "NOT_KNOWN_YET_RESULT",
-                "foreign_diploma_type": "NATIONAL_BACHELOR",
+                "result": DiplomaResults.NOT_KNOWN_YET_RESULT.name,
+                "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 "linguistic_regime": "EN",
                 "country": "FR",
             }
@@ -452,8 +456,8 @@ class EducationTestCase(TestCase):
             "belgian_diploma": {},
             "foreign_diploma": {
                 "academic_graduation_year": 2019,
-                "result": "LT_65_RESULT",
-                "foreign_diploma_type": "NATIONAL_BACHELOR",
+                "result": DiplomaResults.LT_65_RESULT.name,
+                "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 "linguistic_regime": "EN",
                 "country": "FR",
             }

@@ -185,6 +185,9 @@ msgstr ""
 msgid "At which result level do you consider yourself?"
 msgstr ""
 
+msgid "Attachments"
+msgstr ""
+
 msgid "B1"
 msgstr ""
 
@@ -323,6 +326,10 @@ msgstr ""
 msgid "Create new doctorate admission"
 msgstr ""
 
+msgctxt "an admission"
+msgid "Created at:"
+msgstr ""
+
 msgid "Credit type"
 msgstr ""
 
@@ -354,6 +361,7 @@ msgstr ""
 msgid "Distinction"
 msgstr ""
 
+msgctxt "admission"
 msgid "Divorced"
 msgstr ""
 
@@ -587,11 +595,12 @@ msgid ""
 "If you have it, you must provide a photocopy of both sides of the final "
 "equivalence decision issued by the Ministry of the French Community of "
 "Belgium. If you do not have it, a request for equivalence MUST be submitted "
-"in strict accordance with the instructions given by the CFWB, only in the "
-"case of a request for enrolment in BACHELOR degree. As a reminder, for any "
-"secondary school diploma from a country outside the European Union, the "
-"admission application must contain the equivalence of your diploma issued by "
-"the Wallonia-Brussels Federation (French Community of Belgium)."
+"in strict accordance with the instructions given by the <a href=\"http://www."
+"equivalences.cfwb.be/\" target=\"blank\">CFWB</a>, only in the case of a "
+"request for enrolment in BACHELOR degree. As a reminder, for any secondary "
+"school diploma <strong>from a country outside the European Union, the "
+"admission application must contain the equivalence of your diploma</strong> "
+"issued by the Wallonia-Brussels Federation (French Community of Belgium)."
 msgstr ""
 
 msgid "Illness"
@@ -651,6 +660,7 @@ msgstr ""
 msgid "Latin"
 msgstr ""
 
+msgctxt "admission"
 msgid "Legal cohabitant"
 msgstr ""
 
@@ -685,6 +695,7 @@ msgstr ""
 msgid "Mandatory languages are missing."
 msgstr ""
 
+msgctxt "admission"
 msgid "Married"
 msgstr ""
 
@@ -1005,6 +1016,9 @@ msgstr "Research scholarship"
 msgid "SELF_FUNDING"
 msgstr "Self-funding"
 
+msgid "SIGNING_IN_PROGRESS"
+msgstr "Signing in progress"
+
 msgid "SUBMITTED"
 msgstr "Submitted"
 
@@ -1038,6 +1052,7 @@ msgstr ""
 msgid "Semesters"
 msgstr ""
 
+msgctxt "admission"
 msgid "Separate"
 msgstr ""
 
@@ -1047,6 +1062,7 @@ msgstr ""
 msgid "Signatures requests sent"
 msgstr ""
 
+msgctxt "admission"
 msgid "Single"
 msgstr ""
 
@@ -1188,6 +1204,7 @@ msgstr ""
 msgid "What was your last year of UCLouvain enrollment?"
 msgstr ""
 
+msgctxt "admission"
 msgid "Widowed"
 msgstr ""
 

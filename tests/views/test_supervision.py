@@ -31,6 +31,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
+from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
@@ -65,6 +66,7 @@ class SupervisionTestCase(TestCase):
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
             lettres_recommandation=[],
+            statut=ChoixStatutProposition.SIGNING_IN_PROGRESS.name,
             links={
                 'add_approval': {
                     'url': 'some_url',
@@ -101,16 +103,21 @@ class SupervisionTestCase(TestCase):
             signatures_membres_ca=[],
         )
 
+    def test_should_detail_redirect_to_form_when_not_signing(self):
+        self.mock_api.return_value.retrieve_proposition.return_value.statut = ChoixStatutProposition.IN_PROGRESS.name,
+        url = resolve_url("admission:doctorate-detail:supervision", pk=self.pk)
+        response = self.client.get(url)
+        # Display the signatures
+        self.assertRedirects(response, resolve_url("admission:doctorate-update:supervision", pk=self.pk))
+
     def test_should_detail_supervision_member(self):
         url = resolve_url("admission:doctorate-detail:supervision", pk=self.pk)
-        response = self.client.get(url, follow=True)
+        response = self.client.get(url)
         # Display the signatures
         self.assertContains(response, "Troufignon")
         self.assertContains(response, _(ChoixEtatSignature.APPROVED.name))
         self.assertContains(response, "A public comment to display")
         self.assertContains(response, _(ChoixEtatSignature.REFUSED.name))
-        # Display the proposition approval panel
-        self.assertContains(response, _("Proposition approval"))
         self.mock_api.return_value.retrieve_supervision.assert_called()
 
     def test_should_add_supervision_member(self):
@@ -179,14 +186,13 @@ class SupervisionTestCase(TestCase):
         self.mock_api.return_value.remove_member.assert_not_called()
 
     def test_should_approve_proposition(self):
-        url = resolve_url("admission:doctorate-update:supervision", pk=self.pk)
+        url = resolve_url("admission:doctorate-detail:supervision", pk=self.pk)
         # All data is provided and the proposition is approved
         response = self.client.post(url, {
             'decision': DecisionApprovalEnum.APPROVED.name,
-            'internal_comment': "The internal comment",
-            'comment': "The public comment",
-            'rejection_reason': "The reason",  # The reason is provided but will not be used
-            'approval_submit': [''],
+            'commentaire_interne': "The internal comment",
+            'commentaire_externe': "The public comment",
+            'motif_refus': "The reason",  # The reason is provided but will not be used
         })
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -205,10 +211,9 @@ class SupervisionTestCase(TestCase):
         # All data is provided and the proposition is rejected
         response = self.client.post(url, {
             'decision': DecisionApprovalEnum.REJECTED.name,
-            'internal_comment': "The internal comment",
-            'comment': "The public comment",
-            'rejection_reason': "The reason",
-            'approval_submit': [''],
+            'commentaire_interne': "The internal comment",
+            'commentaire_externe': "The public comment",
+            'motif_refus': "The reason",
         })
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -228,13 +233,24 @@ class SupervisionTestCase(TestCase):
 
         # The decision is missing
         response = self.client.post(url, {
-            'internal_comment': "The internal comment",
-            'comment': "The public comment",
-            'rejection_reason': "The reason",
-            'approval_submit': [''],
+            'commentaire_interne': "The internal comment",
+            'commentaire_externe': "The public comment",
+            'motif_refus': "The reason",
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('decision', response.context['form'].errors)
+
+        self.mock_api.return_value.reject_proposition.assert_not_called()
+        self.mock_api.return_value.approve_proposition.assert_not_called()
+
+        # The motive is missing
+        response = self.client.post(url, {
+            'decision': DecisionApprovalEnum.REJECTED.name,
+            'commentaire_interne': "The internal comment",
+            'commentaire_externe': "The public comment",
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('motif_refus', response.context['form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
         self.mock_api.return_value.approve_proposition.assert_not_called()

@@ -80,7 +80,7 @@
             {% if not admission %}
                 {% trans "Not submitted" %}
             {% else %}
-                {{ admission.statut|enum_display:'ChoixStatusProposition' }}
+                {{ admission.statut|enum_display:'ChoixStatutProposition' }}
             {% endif %}
         </div>
     </div>

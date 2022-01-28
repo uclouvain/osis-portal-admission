@@ -168,7 +168,7 @@ class AdmissionSupervisionService:
     def approve_proposition(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().approve_proposition(
             uuid=uuid,
-            **kwargs,
+            approuver_proposition_command=kwargs,
             **build_mandatory_auth_headers(person)
         )
 
@@ -177,6 +177,6 @@ class AdmissionSupervisionService:
     def reject_proposition(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().reject_proposition(
             uuid=uuid,
-            **kwargs,
+            refuser_proposition_command=kwargs,
             **build_mandatory_auth_headers(person)
         )

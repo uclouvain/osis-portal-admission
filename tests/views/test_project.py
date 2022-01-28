@@ -34,7 +34,7 @@ from rest_framework import status
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
-from admission.contrib.enums.projet import ChoixStatusProposition
+from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
@@ -314,12 +314,12 @@ class ProjectViewTestCase(TestCase):
     def test_cancel(self):
         url = resolve_url('admission:doctorate-cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
-            statut=ChoixStatusProposition.IN_PROGRESS.name,
+            statut=ChoixStatutProposition.IN_PROGRESS.name,
             links={},
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, ChoixStatusProposition.IN_PROGRESS.value)
+        self.assertContains(response, ChoixStatutProposition.IN_PROGRESS.value)
         self.mock_proposition_api.return_value.destroy_proposition.assert_not_called()
         response = self.client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)

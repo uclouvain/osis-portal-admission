@@ -29,43 +29,47 @@ from inspect import getfullargspec
 
 from django import template
 from django.core.exceptions import ImproperlyConfigured
-from django.views.generic import FormView
 from django.utils.translation import gettext_lazy as _
 
-from base.models.utils.utils import ChoiceEnum
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from base.models.utils.utils import ChoiceEnum
 
 register = template.Library()
 
 
-class InclusionWithBodyNode(template.library.InclusionNode):
-    def __init__(self, nodelist, func, takes_context, args, kwargs, filename, context_name):
+class PanelNode(template.library.InclusionNode):
+    def __init__(self, nodelist: dict, func, takes_context, args, kwargs, filename):
         super().__init__(func, takes_context, args, kwargs, filename)
-        self.nodelist = nodelist
-        self.context_name = context_name
+        self.nodelist_dict = nodelist
 
     def render(self, context):
-        context[self.context_name] = self.nodelist.render(context)
+        for context_name, nodelist in self.nodelist_dict.items():
+            context[context_name] = nodelist.render(context)
         return super().render(context)
 
 
-def register_inclusion_with_body(filename, takes_context=None, name=None, context_name='body'):
+def register_panel(filename, takes_context=None, name=None):
     def dec(func):
         params, varargs, varkw, defaults, kwonly, kwonly_defaults, _ = getfullargspec(func)
         function_name = name or getattr(func, '_decorated_function', func).__name__
 
         @functools.wraps(func)
         def compile_func(parser, token):
+            # {% panel %} and its arguments
             bits = token.split_contents()[1:]
             args, kwargs = template.library.parse_bits(
                 parser, bits, params, varargs, varkw, defaults,
                 kwonly, kwonly_defaults, takes_context, function_name,
             )
-            nodelist = parser.parse((f'end{function_name}',))
-            parser.delete_first_token()
-            return InclusionWithBodyNode(
-                nodelist, func, takes_context, args, kwargs, filename, context_name
-            )
+            nodelist_dict = {'panel_body': parser.parse(('footer', 'endpanel',))}
+            token = parser.next_token()
+
+            # {% footer %} (optional)
+            if token.contents == 'footer':
+                nodelist_dict['panel_footer'] = parser.parse(('endpanel',))
+                parser.next_token()
+
+            return PanelNode(nodelist_dict, func, takes_context, args, kwargs, filename)
 
         register.tag(function_name, compile_func)
         return func
@@ -132,7 +136,8 @@ def get_valid_tab_tree(admission, original_tab_tree, is_form_view):
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
 def doctorate_tabs(context, admission=None):
-    is_form_view = isinstance(context['view'], FormView)
+    match = context['request'].resolver_match
+    is_form_view = match.namespaces[1] == 'doctorate-update'
 
     # Create a new tab tree based on the default one but depending on the permissions links
     context['valid_tab_tree'] = get_valid_tab_tree(
@@ -143,7 +148,7 @@ def doctorate_tabs(context, admission=None):
 
     return {
         'tab_tree': context['valid_tab_tree'],
-        'active_parent': get_active_parent(context['request'].resolver_match.url_name),
+        'active_parent': get_active_parent(match.url_name),
         'admission': admission,
         'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
@@ -153,7 +158,8 @@ def doctorate_tabs(context, admission=None):
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None):
-    is_form_view = isinstance(context['view'], FormView)
+    match = context['request'].resolver_match
+    is_form_view = match.namespaces[1] == 'doctorate-update'
 
     subtab_labels = {
         'person': _("Identification"),
@@ -203,22 +209,17 @@ def field_data(name, data=None, css_class=None, hide_empty=False, translate_data
     }
 
 
-@register_inclusion_with_body('panel.html', takes_context=True, context_name='panel_body')
-def panel(context, title='', css_class="panel panel-default", title_level=4, additional_css_class="", **kwargs):
+@register_panel('panel.html', takes_context=True)
+def panel(context, title='', title_level=4, **kwargs):
     """
     Template tag for panel
     :param title: the panel title
-    :param css_class: the panel css class
     :param title_level: the title level
-    :param additional_css_class: some additional css classes
     :type context: django.template.context.RequestContext
     """
     context['title'] = title
-    context['attributes'] = kwargs
-    context['attributes']['class'] = css_class + " " + additional_css_class
     context['title_level'] = title_level
-    if id:
-        context['id'] = id
+    context['attributes'] = kwargs
     return context
 
 
@@ -237,6 +238,13 @@ def get_item(dictionary, key):
 
 
 @register.filter
+def strip(value):
+    if isinstance(value, str):
+        return value.strip()
+    return value
+
+
+@register.filter
 def can_read_tab(admission, tab_name):
     """Return true if the specified tab can be opened in reading mode for this admission, otherwise return False"""
     return _can_access_tab(admission, tab_name, READ_ACTIONS_BY_TAB)
@@ -252,3 +260,10 @@ def can_update_tab(admission, tab_name):
 def add_str(arg1, arg2):
     """Return the concatenation of two arguments."""
     return str(arg1) + str(arg2)
+
+
+@register.filter
+def can_update_something(admission):
+    """Return true if any update tab can be opened for this admission, otherwise return False"""
+    return any(_can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB)
+               for tab_name in UPDATE_ACTIONS_BY_TAB)

@@ -60,20 +60,29 @@ class EntitiesService:
 
     @classmethod
     def get_ucl_entity_addresses(cls, person, uuid, *args, **kwargs):
-        has_next = True
+        # TODO will become (again) a list of results
         offset = 0
-        results = []
-        while has_next:
-            paginated_results = EntitiesAPIClient().get_entity_addresses(
-                organisation_code=UCL_CODE,
-                uuid=uuid,
-                offset=offset,
-                *args,
-                **kwargs,
-                **build_mandatory_auth_headers(person)
-            )
-            has_next = paginated_results.next is not None
-            results += paginated_results.results
-            offset = len(results)
-
-        return results
+        return [EntitiesAPIClient().get_entity_addresses(
+            organisation_code=UCL_CODE,
+            uuid=uuid,
+            offset=offset,
+            *args,
+            **kwargs,
+            **build_mandatory_auth_headers(person)
+        )]
+        # has_next = True
+        # results = []
+        # while has_next:
+        #     paginated_results = EntitiesAPIClient().get_entity_addresses(
+        #         organisation_code=UCL_CODE,
+        #         uuid=uuid,
+        #         offset=offset,
+        #         *args,
+        #         **kwargs,
+        #         **build_mandatory_auth_headers(person)
+        #     )
+        #     has_next = paginated_results.next is not None
+        #     results += paginated_results.results
+        #     offset = len(results)
+        #
+        # return results
