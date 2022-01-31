@@ -164,14 +164,18 @@
       {% panel _("Foreign diploma") %}
 
         {% field_data _("What diploma did you get (or will you get)?") foreign_diploma.foreign_diploma_type|enum_display:'ForeignDiplomaTypes' %}
-        {% field_data _("Has this diploma been subject to a decision of equivalence provided by the French-speaking community of Belgium?") foreign_diploma.equivalence|enum_display:'Equivalence' %}
+
+        {% if foreign_diploma.equivalence %}
+          {% field_data _("Has this diploma been subject to a decision of equivalence provided by the French-speaking community of Belgium?") foreign_diploma.equivalence|enum_display:'Equivalence' %}
+        {% endif %}
+
+        {% field_data _("Organizing country") foreign_diploma.country %}
+
         {% if foreign_diploma.linguistic_regime %}
           {% field_data _("Linguistic regime") foreign_diploma.linguistic_regime %}
         {% else %}
           {% field_data _("Other linguistic regime") foreign_diploma.other_linguistic_regime %}
         {% endif %}
-
-        {% field_data _("Organizing country") foreign_diploma.country %}
 
         {% field_data _("At which result level do you consider yourself?") foreign_diploma.result|enum_display:'DiplomaResults' %}
 

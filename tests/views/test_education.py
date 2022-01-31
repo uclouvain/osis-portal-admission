@@ -335,12 +335,14 @@ class EducationTestCase(TestCase):
             'foreign_diploma': {
                 'academic_graduation_year': get_current_year(),
                 "high_school_transcript": ["test"],
+                "high_school_diploma": [],
                 'result': DiplomaResults.NOT_KNOWN_YET_RESULT.name,
                 'country': 'FR',
                 'foreign_diploma_type': ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 'linguistic_regime': 'EN',
                 'other_linguistic_regime': '',
                 'high_school_transcript_translation': [],
+                'high_school_diploma_translation': [],
                 'equivalence': 'NO',
             },
         })
