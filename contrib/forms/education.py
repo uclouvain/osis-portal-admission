@@ -210,8 +210,12 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
         label=_("Other"),
         help_text=_("If other language, please specify"),
         required=False,
+        max_length=25,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
-    modern_languages_other_hours = HourField()
+    modern_languages_other_hours = HourField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+    )
     # other disciplines
     mathematics = HourField(label=_("Mathematics"))
     it = HourField(label=_("IT"))
@@ -221,8 +225,12 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
         label=_("Other"),
         help_text=_("If other optional domains, please specify"),
         required=False,
+        max_length=25,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
-    other_hours = HourField()
+    other_hours = HourField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+    )
 
     def get_initial_for_field(self, field, field_name):
         # Set all hours fields to None if initial is 0, so that nothing is displayed in field

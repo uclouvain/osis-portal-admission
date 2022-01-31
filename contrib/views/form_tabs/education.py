@@ -175,7 +175,9 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         if data[diploma]["academic_graduation_year"] == get_current_year():
             # Drop diploma info for current year
             data.pop("high_school_diploma")
+            data[diploma]["high_school_diploma"] = []
             data[diploma].pop("high_school_diploma_translation", None)
+            data[diploma]["high_school_diploma_translation"] = []
         else:
             # Include diploma info
             data[diploma]["high_school_diploma"] = data.pop("high_school_diploma")
