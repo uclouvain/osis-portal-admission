@@ -33,6 +33,33 @@
   </style>
 {% endblock %}
 
+{% block script %}
+  <script type="text/javascript">
+  // Notify user when something in a form has changed
+  var initialData = {};
+  var checkForm = true;
+  $('form').each(function () {
+      var action = $(this).attr('action');
+      initialData[action] = $(this).serialize();
+  }).submit(function () {
+      checkForm = false;
+  });
+  $(window).on('beforeunload', function (e) {
+      if (checkForm) {
+          $('form').each(function () {
+              var action = $(this).attr('action');
+              if (initialData[action] !== $(this).serialize()) {
+                  // Cancel the event
+                  e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+                  // Chrome requires returnValue to be set
+                  return e.returnValue = "{% trans "You may lose your changes, are you sure you want to quit?" %}"
+              }
+          });
+      }
+  });
+  </script>
+{% endblock %}
+
 {% block breadcrumb %}
     <ol class="breadcrumb">
         <li>

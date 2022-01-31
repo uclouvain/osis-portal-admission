@@ -149,12 +149,10 @@
       {% endpanel %}
 
       {% panel _("Attachments") %}
-        <div class="row">
-          {% field_data _("A transcript or your last year at high school") belgian_diploma.high_school_transcript %}
-          {% if belgian_diploma.high_school_diploma %}
-            {% field_data _("High school diploma") belgian_diploma.high_school_diploma %}
-          {% endif %}
-        </div>
+        {% field_data _("A transcript or your last year at high school") belgian_diploma.high_school_transcript %}
+        {% if belgian_diploma.high_school_diploma %}
+          {% field_data _("High school diploma") belgian_diploma.high_school_diploma %}
+        {% endif %}
       {% endpanel %}
 
     {% else %}{# if foreign_diploma %} #}
