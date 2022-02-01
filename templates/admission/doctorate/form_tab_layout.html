@@ -38,17 +38,24 @@
   // Notify user when something in a form has changed
   var initialData = {};
   var checkForm = true;
-  $('form').each(function () {
-      var action = $(this).attr('action');
-      initialData[action] = $(this).serialize();
-  }).submit(function () {
-      checkForm = false;
+  document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('form').forEach(function (form) {
+          var action = form.getAttribute('action');
+          var formData = new FormData(form);
+          var searchParams = new URLSearchParams(formData);
+          initialData[action] = searchParams.toString();
+          form.addEventListener('submit', function () {
+              checkForm = false;
+          });
+      });
   });
-  $(window).on('beforeunload', function (e) {
+  window.addEventListener('beforeunload', function (e) {
       if (checkForm) {
-          $('form').each(function () {
-              var action = $(this).attr('action');
-              if (initialData[action] !== $(this).serialize()) {
+          document.querySelectorAll('form').forEach(function (form) {
+              var action = form.getAttribute('action');
+              var formData = new FormData(form);
+              var searchParams = new URLSearchParams(formData);
+              if (initialData[action] !== searchParams.toString()) {
                   // Cancel the event
                   e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
                   // Chrome requires returnValue to be set
