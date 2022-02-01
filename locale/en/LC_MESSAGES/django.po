@@ -1010,6 +1010,9 @@ msgstr ""
 msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
 
+msgid "You may lose your changes, are you sure you want to quit?"
+msgstr ""
+
 msgid ""
 "You must correct your proposition before being able to request signatures."
 msgstr ""

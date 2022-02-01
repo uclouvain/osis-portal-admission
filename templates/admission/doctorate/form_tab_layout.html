@@ -33,6 +33,40 @@
   </style>
 {% endblock %}
 
+{% block script %}
+  <script type="text/javascript">
+  // Notify user when something in a form has changed
+  var initialData = {};
+  var checkForm = true;
+  document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('form').forEach(function (form) {
+          var action = form.getAttribute('action');
+          var formData = new FormData(form);
+          var searchParams = new URLSearchParams(formData);
+          initialData[action] = searchParams.toString();
+          form.addEventListener('submit', function () {
+              checkForm = false;
+          });
+      });
+  });
+  window.addEventListener('beforeunload', function (e) {
+      if (checkForm) {
+          document.querySelectorAll('form').forEach(function (form) {
+              var action = form.getAttribute('action');
+              var formData = new FormData(form);
+              var searchParams = new URLSearchParams(formData);
+              if (initialData[action] !== searchParams.toString()) {
+                  // Cancel the event
+                  e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+                  // Chrome requires returnValue to be set
+                  return e.returnValue = "{% trans "You may lose your changes, are you sure you want to quit?" %}"
+              }
+          });
+      }
+  });
+  </script>
+{% endblock %}
+
 {% block breadcrumb %}
     <ol class="breadcrumb">
         <li>

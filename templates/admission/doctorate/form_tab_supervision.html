@@ -150,6 +150,7 @@
 {% endblock content %}
 
 {% block script %}
+    {{ block.super }}
     {{ form.media }}
     <script type="application/javascript">
     $(function () {

@@ -1058,6 +1058,10 @@ msgstr ""
 "Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le "
 "formulaire."
 
+msgid "You may lose your changes, are you sure you want to quit?"
+msgstr ""
+"Vous allez perdre vos modifications, êtes-vous sûr de vouloir quitter ?"
+
 msgid ""
 "You must correct your proposition before being able to request signatures."
 msgstr ""

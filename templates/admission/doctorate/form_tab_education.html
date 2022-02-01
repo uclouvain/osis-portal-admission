@@ -178,23 +178,9 @@
               >
                 {% bootstrap_label schedule_form.other_label.label label_for=schedule_form.other_label.id_for_label label_class="control-label" %}
                 <div class="input-group">
-                  <input
-                    type="text"
-                    name="schedule-other_label"
-                    class="form-control"
-                    title=""
-                    id="id_schedule-other_label"
-                    value="{{ schedule_form.other_label.value }}"
-                  />
+                  {{ schedule_form.other_label }}
                   <span class="input-group-addon">:</span>
-                  <input
-                    type="number"
-                    name="schedule-other_hours"
-                    class="form-control"
-                    title=""
-                    id="id_schedule-other_hours"
-                    value="{{ schedule_form.other_hours.value }}"
-                  />
+                  {{ schedule_form.other_hours }}
                   <div class="input-group-addon">{% trans "h/w" %}</div>
                 </div>
                 {% if schedule_form.other_label.errors %}
@@ -231,6 +217,7 @@
 {% endblock %}
 
 {% block script %}
+  {{ block.super }}
   {{ form.media }}
   {{ foreign_diploma_form.media }}
   <script type="application/javascript">
