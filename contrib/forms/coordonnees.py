@@ -109,6 +109,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
         mandatory_address_fields = [
             "street_number",
             "country",
+            "street",
         ]
 
         # Either one of following data couple is mandatory :
@@ -124,13 +125,5 @@ class DoctorateAdmissionAddressForm(forms.Form):
             for field in mandatory_address_fields:
                 if not cleaned_data.get(field):
                     self.add_error(field, _("This field is required."))
-
-            street = cleaned_data.get("street")
-            postal_box = cleaned_data.get("postal_box")
-
-            if not any([postal_box, street]):
-                error_message = _("Please set either street or postal_box")
-                self.add_error('postal_box', error_message)
-                self.add_error('street', error_message)
 
         return cleaned_data
