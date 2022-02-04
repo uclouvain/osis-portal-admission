@@ -151,6 +151,16 @@ class AutocompleteTestCase(TestCase):
         self.assertEqual(api.return_value.cities_list.call_args[1]['zip_code'], '1111')
         self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')
 
+        # Without the postal code
+        response = self.client.get(url, {'forward': json.dumps({'postal_code': ''}), 'q': 'Mont'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': 'Montreuil-les-Sardouille',
+                'text': 'Montreuil-les-Sardouille'
+            }]
+        })
+        self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')
+
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_tutors(self, api):
         api.return_value.list_tutors.return_value = {'results': [

@@ -199,7 +199,7 @@ class AdmissionPersonService:
                 curriculum_file=data,
                 **build_mandatory_auth_headers(person),
             )
-        return AdmissionPersonAPIClient().update_person_identification(
+        return AdmissionPersonAPIClient().update_curriculum_file(
             curriculum_file=data,
             **build_mandatory_auth_headers(person),
         )

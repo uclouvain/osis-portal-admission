@@ -28,6 +28,7 @@ from unittest.mock import patch, Mock, ANY
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk import ApiException
 from osis_admission_sdk.model.experience_output_country import ExperienceOutputCountry
 from osis_admission_sdk.model.experience_output_curriculum_year import ExperienceOutputCurriculumYear
 from rest_framework import status
@@ -104,28 +105,43 @@ class CurriculumTestCase(ExtendedTestCase):
         api_person_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = api_person_patcher.start()
 
-        self.mock_person_api.return_value.list_curriculum_experiences_admission.return_value = [
-            Mock(
+        mock_experience = Mock(
+            id=1,
+            curriculum_year=Mock(
+                academic_year=2020,
                 id=1,
-                curriculum_year=Mock(
-                    academic_year=2020,
-                    id=1,
-                ),
-                country=Mock(
-                    iso_code=BE_ISO_CODE,
-                    name='Belgium',
-                ),
-                type=ExperienceType.OTHER_ACTIVITY.name,
-                institute_name='UCL',
-                nstitute_city='Louvain-La-Neuve',
-                activity_type=ActivityType.WORK.name,
-                activity_position='Developer',
             ),
-        ]
+            country=Mock(
+                iso_code=BE_ISO_CODE,
+                name='Belgium',
+            ),
+            type=ExperienceType.OTHER_ACTIVITY.name,
+            institute_name='UCL',
+            institute_city='Louvain-La-Neuve',
+            activity_type=ActivityType.WORK.name,
+            activity_position='Developer',
+            to_dict=Mock(return_value={
+                'id': 1,
+                'curriculum_year': {
+                    'academic_year': 2020,
+                    'id': 1,
+                },
+                'country': {
+                    'iso_code': BE_ISO_CODE,
+                    'name': 'Belgium',
+                },
+                'type': ExperienceType.OTHER_ACTIVITY.name,
+                'institute_name': 'UCL',
+                'institute_city': 'Louvain-La-Neuve',
+                'activity_type': ActivityType.WORK.name,
+                'activity_position': 'Developer',
 
-        # self.mock_person_api.return_value.retrieve_curriculum_file_admission.return_value = Mock(
-        #     curriculum='uuid1',
-        # )
+            })
+        )
+
+        self.mock_person_api.return_value.list_curriculum_experiences_admission.return_value = [
+            mock_experience,
+        ]
 
         self.addCleanup(api_person_patcher.stop)
 
@@ -153,7 +169,25 @@ class CurriculumTestCase(ExtendedTestCase):
         self.mock_person_api.return_value.retrieve_curriculum_file_admission.assert_called()
         self.assertContains(response, "2020-2021")
 
-    def test_curriculum_post_upload_file_valid(self):
+    def test_curriculum_get_form_with_specified_known_experience(self):
+        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+                          experience_id=1)
+        response = self.client.get(url)
+
+        self.mock_person_api.return_value.list_curriculum_experiences_admission.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_file_admission.assert_called()
+        self.assertContains(response, "2020-2021")
+
+    def test_curriculum_get_form_with_specified_unknown_experience(self):
+        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+                          experience_id=2)
+        response = self.client.get(url)
+
+        self.mock_person_api.return_value.list_curriculum_experiences_admission.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_file_admission.assert_called()
+        self.assertContains(response, "2020-2021")
+
+    def test_curriculum_post_upload_file_valid_update(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.post(url, data={
             'curriculum_upload': '',
@@ -165,10 +199,25 @@ class CurriculumTestCase(ExtendedTestCase):
             curriculum_file={'curriculum': ['uuid1']},
             **self.api_default_params,
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, url)
 
-    def test_curriculum_post_upload_file_invalid(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+    def test_curriculum_post_upload_file_valid_create(self):
+        url = resolve_url("admission:doctorate-create:curriculum")
+        form_prefix = CurriculumForm.CURRICULUM_UPLOAD.value
+
+        response = self.client.post(url, data={
+            form_prefix: '',
+            form_prefix + '-curriculum_0': 'uuid1',
+        })
+
+        self.mock_person_api.return_value.update_curriculum_file.assert_called_with(
+            curriculum_file={'curriculum': ['uuid1']},
+            **self.api_default_params,
+        )
+        self.assertRedirects(response, url)
+
+    def test_curriculum_post_upload_file_invalid_form(self):
+        url = resolve_url("admission:doctorate-create:curriculum")
         form_prefix = CurriculumForm.CURRICULUM_UPLOAD.value
 
         response = self.client.post(url, data={
@@ -176,11 +225,28 @@ class CurriculumTestCase(ExtendedTestCase):
             form_prefix + '-curriculum_0': '',
         })
 
-        self.mock_person_api.return_value.update_curriculum_file_admission.assert_not_called()
+        self.mock_person_api.return_value.update_curriculum_file.assert_not_called()
         self.assertEqual(response.status_code, HTTP_200_OK)
         self.assertFormError(response, 'curriculum_upload', 'curriculum', _("This field is required."))
 
-    def test_curriculum_post_create_experience_valid(self):
+    def test_curriculum_post_upload_file_invalid_request(self):
+        url = resolve_url("admission:doctorate-create:curriculum")
+        form_prefix = CurriculumForm.CURRICULUM_UPLOAD.value
+        self.mock_person_api.return_value.update_curriculum_file.side_effect = ApiException(
+            status=404,
+        )
+
+        response = self.client.post(url, data={
+            form_prefix: '',
+            form_prefix + '-curriculum_0': 'uuid1',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        message = list(response.context.get('messages'))[0]
+        self.assertEqual(message.tags, "error")
+        self.assertEqual(_("An error has happened when uploading the file."), message.message)
+
+    def test_curriculum_post_create_experience_valid_update(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         form_prefix = CurriculumForm.EXPERIENCE_CREATION.value
 
@@ -237,7 +303,64 @@ class CurriculumTestCase(ExtendedTestCase):
         )
         self.assertRedirects(response, url)
 
-    def test_curriculum_post_create_experience_invalid(self):
+    def test_curriculum_post_create_experience_valid_create(self):
+        url = resolve_url("admission:doctorate-create:curriculum")
+
+        form_prefix = CurriculumForm.EXPERIENCE_CREATION.value
+
+        response = self.client.post(url, data={
+            form_prefix: '',
+            form_prefix + '-academic_year': '2020',
+            form_prefix + '-country': BE_ISO_CODE,
+            form_prefix + '-type': ExperienceType.OTHER_ACTIVITY.name,
+            form_prefix + '-activity_institute_name': 'UCL',
+            form_prefix + '-activity_institute_city': 'Louvain-La-Neuve',
+            form_prefix + '-activity_type': ActivityType.ILLNESS.name,
+            form_prefix + '-activity_certificate_0': 'uuid1',
+            form_prefix + '-dissertation_score': 14.5,
+        })
+
+        self.mock_person_api.return_value.create_curriculum_experience.assert_called_with(
+            experience_input={
+                'academic_year': 2020,
+                'type': 'OTHER_ACTIVITY',
+                'country': 'BE',
+                'institute': None,
+                'institute_name': 'UCL',
+                'institute_postal_code': '',
+                'education_name': '',
+                'result': '',
+                'graduation_year': False,
+                'obtained_grade': '',
+                'rank_in_diploma': '',
+                'issue_diploma_date': None,
+                'credit_type': '',
+                'entered_credits_number': None,
+                'acquired_credits_number': None,
+                'transcript': [],
+                'graduate_degree': [],
+                'access_certificate_after_60_master': [],
+                'dissertation_title': '',
+                'dissertation_score': '14.5',
+                'dissertation_summary': [],
+                'belgian_education_community': '',
+                'program': None,
+                'study_system': '',
+                'institute_city': 'Louvain-La-Neuve',
+                'study_cycle_type': '',
+                'linguistic_regime': None,
+                'transcript_translation': [],
+                'graduate_degree_translation': [],
+                'activity_type': 'ILLNESS',
+                'other_activity_type': '',
+                'activity_position': '',
+                'activity_certificate': ['uuid1'],
+            },
+            **self.api_default_params,
+        )
+        self.assertRedirects(response, url)
+
+    def test_curriculum_post_create_experience_invalid_form(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         form_prefix = CurriculumForm.EXPERIENCE_CREATION.value
 
@@ -254,7 +377,30 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
         self.assertSubFormError(response, 'creation_form', 'activity_type', _('This field is required.'))
 
-    def test_curriculum_post_update_experience_valid(self):
+    def test_curriculum_post_create_experience_invalid_request(self):
+        url = resolve_url("admission:doctorate-create:curriculum")
+        form_prefix = CurriculumForm.EXPERIENCE_CREATION.value
+        self.mock_person_api.return_value.create_curriculum_experience.side_effect = ApiException(
+            status=404,
+        )
+
+        response = self.client.post(url, data={
+            form_prefix: '',
+            form_prefix + '-academic_year': '2020',
+            form_prefix + '-country': BE_ISO_CODE,
+            form_prefix + '-type': ExperienceType.OTHER_ACTIVITY.name,
+            form_prefix + '-activity_institute_name': 'UCL',
+            form_prefix + '-activity_institute_city': 'Louvain-La-Neuve',
+            form_prefix + '-activity_type': ActivityType.ILLNESS.name,
+            form_prefix + '-activity_certificate_0': 'uuid1',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        message = list(response.context.get('messages'))[0]
+        self.assertEqual(message.tags, "error")
+        self.assertEqual(_("An error has happened when adding the experience."), message.message)
+
+    def test_curriculum_post_update_experience_valid_update(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
                           experience_id=1)
         redirect_url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -313,7 +459,64 @@ class CurriculumTestCase(ExtendedTestCase):
         )
         self.assertRedirects(response, redirect_url)
 
-    def test_curriculum_post_update_experience_invalid(self):
+    def test_curriculum_post_update_experience_valid_create(self):
+        url = resolve_url("admission:doctorate-create:curriculum", experience_id=1)
+        redirect_url = resolve_url("admission:doctorate-create:curriculum")
+        form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
+
+        response = self.client.post(url, data={
+            form_prefix: '',
+            form_prefix + '-academic_year': '2020',
+            form_prefix + '-country': BE_ISO_CODE,
+            form_prefix + '-type': ExperienceType.OTHER_ACTIVITY.name,
+            form_prefix + '-activity_institute_name': 'UCL',
+            form_prefix + '-activity_institute_city': 'Louvain-La-Neuve',
+            form_prefix + '-activity_type': ActivityType.ILLNESS.name,
+            form_prefix + '-activity_certificate_0': 'uuid1',
+        })
+
+        self.mock_person_api.return_value.update_curriculum_experience.assert_called_with(
+            xp='1',
+            experience_input={
+                'academic_year': 2020,
+                'type': 'OTHER_ACTIVITY',
+                'country': 'BE',
+                'institute': None,
+                'institute_name': 'UCL',
+                'institute_postal_code': '',
+                'education_name': '',
+                'result': '',
+                'graduation_year': False,
+                'obtained_grade': '',
+                'rank_in_diploma': '',
+                'issue_diploma_date': None,
+                'credit_type': '',
+                'entered_credits_number': None,
+                'acquired_credits_number': None,
+                'transcript': [],
+                'graduate_degree': [],
+                'access_certificate_after_60_master': [],
+                'dissertation_title': '',
+                'dissertation_score': None,
+                'dissertation_summary': [],
+                'belgian_education_community': '',
+                'program': None,
+                'study_system': '',
+                'institute_city': 'Louvain-La-Neuve',
+                'study_cycle_type': '',
+                'linguistic_regime': None,
+                'transcript_translation': [],
+                'graduate_degree_translation': [],
+                'activity_type': 'ILLNESS',
+                'other_activity_type': '',
+                'activity_position': '',
+                'activity_certificate': ['uuid1'],
+            },
+            **self.api_default_params,
+        )
+        self.assertRedirects(response, redirect_url)
+
+    def test_curriculum_post_update_experience_invalid_form(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
                           experience_id=1)
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
@@ -331,7 +534,30 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
         self.assertSubFormError(response, 'update_form', 'activity_type', _('This field is required.'))
 
-    def test_curriculum_post_delete_experience_valid(self):
+    def test_curriculum_post_update_experience_invalid_request(self):
+        url = resolve_url("admission:doctorate-create:curriculum", experience_id=1)
+        form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
+        self.mock_person_api.return_value.update_curriculum_experience.side_effect = ApiException(
+            status=404,
+        )
+
+        response = self.client.post(url, data={
+            form_prefix: '',
+            form_prefix + '-academic_year': '2020',
+            form_prefix + '-country': BE_ISO_CODE,
+            form_prefix + '-type': ExperienceType.OTHER_ACTIVITY.name,
+            form_prefix + '-activity_institute_name': 'UCL',
+            form_prefix + '-activity_institute_city': 'Louvain-La-Neuve',
+            form_prefix + '-activity_type': ActivityType.ILLNESS.name,
+            form_prefix + '-activity_certificate_0': 'uuid1',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        message = list(response.context.get('messages'))[0]
+        self.assertEqual(message.tags, "error")
+        self.assertEqual(_("An error has happened when updating the experience."), message.message)
+
+    def test_curriculum_post_delete_experience_valid_update(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         response = self.client.post(url, data={
@@ -345,3 +571,36 @@ class CurriculumTestCase(ExtendedTestCase):
             **self.api_default_params,
         )
         self.assertRedirects(response, url)
+
+    def test_curriculum_post_delete_experience_valid_create(self):
+        url = resolve_url("admission:doctorate-create:curriculum")
+
+        response = self.client.post(url, data={
+            CurriculumForm.EXPERIENCE_DELETION.value: '',
+            'confirmed-id': '1',
+        })
+
+        self.mock_person_api.return_value.destroy_curriculum_experience.assert_called_with(
+            xp='1',
+            **self.api_default_params,
+        )
+        self.assertRedirects(response, url)
+
+    def test_curriculum_post_delete_experience_invalid_request(self):
+        url = resolve_url("admission:doctorate-create:curriculum")
+        self.mock_person_api.return_value.destroy_curriculum_experience.side_effect = ApiException(
+            status=404,
+        )
+        response = self.client.post(url, data={
+            CurriculumForm.EXPERIENCE_DELETION.value: '',
+            'confirmed-id': '1',
+        })
+
+        self.mock_person_api.return_value.destroy_curriculum_experience.assert_called_with(
+            xp='1',
+            **self.api_default_params,
+        )
+        self.assertEqual(response.status_code, 200)
+        message = list(response.context.get('messages'))[0]
+        self.assertEqual(message.tags, "error")
+        self.assertEqual(_("An error has happened when deleting the experience."), message.message)
