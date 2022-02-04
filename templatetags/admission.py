@@ -184,7 +184,7 @@ def doctorate_subtabs(context, admission=None):
     ))
 
     return {
-        'subtabs': valid_tab_tree.get(get_active_parent(context['request'].resolver_match.url_name), []),
+        'subtabs': valid_tab_tree.get(get_active_parent(match.url_name), []),
         'subtab_labels': subtab_labels,
         'admission': admission,
         'detail_view': not is_form_view,
@@ -210,15 +210,17 @@ def field_data(name, data=None, css_class=None, hide_empty=False, translate_data
 
 
 @register_panel('panel.html', takes_context=True)
-def panel(context, title='', title_level=4, **kwargs):
+def panel(context, title='', title_level=4, additional_class='', **kwargs):
     """
     Template tag for panel
     :param title: the panel title
     :param title_level: the title level
+    :param additional_class: css class to add
     :type context: django.template.context.RequestContext
     """
     context['title'] = title
     context['title_level'] = title_level
+    context['additional_class'] = additional_class
     context['attributes'] = kwargs
     return context
 

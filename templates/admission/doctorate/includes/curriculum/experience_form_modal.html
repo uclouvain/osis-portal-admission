@@ -24,20 +24,22 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block modal_id %}form-modal{% endblock %}
+{% block modal_id %}{{ form.prefix }}{% endblock %}
 
-{% block modal_title %}{% trans 'Create' %}{% endblock %}
+{% block modal_title %}{{ modal_title }}{% endblock %}
 
 {% block modal_class %}modal-lg{% endblock %}
 
 {% block modal_body %}
-    {% include "template_messages.html" %}
     {% bootstrap_form_errors form %}
+    {% if form.errors %}
+        <div class="alert alert-danger">{% trans "Please correct the errors below" %}</div>
+    {% endif %}
 
-    <form class="osis-form" method="post" action="" id="experience-form">
+    <form class="osis-form" method="post" action="" id="{{ form.prefix }}_form">
         {% csrf_token %}
 
-        {% panel _('General information') id="experience-form-general" %}
+        {% panel _('General information') additional_class="experience-form-general" %}
             <div class="row">
                 <div class="col-md-6">{% bootstrap_field form.academic_year form_group_class="form-group required_field" %}</div>
             </div>
@@ -49,7 +51,7 @@
             </div>
         {% endpanel %}
 
-        <div id="experience-form-education">
+        <div class="experience-form-education">
             {% panel _('Studies') %}
                 <div class="row foreign-education-fields">
                     <div class="col-md-6">{% bootstrap_field form.study_cycle_type form_group_class="form-group required_field" %}</div>
@@ -69,10 +71,10 @@
                 {% bootstrap_field form.education_name form_group_class="form-group required_field" %}
             {% endpanel %}
 
-            {% panel _('Institute') id="experience-form-education-institute" %}
+            {% panel _('Institute') additional_class="experience-form-education-institute" %}
                 {% bootstrap_field form.institute form_group_class="form-group required_field" %}
                 {% bootstrap_field form.institute_not_found %}
-                <div id="institute_not_found_container">
+                <div class="institute_not_found_container">
                     {% bootstrap_field form.institute_name form_group_class="form-group required_field" %}
                     <div class="row">
                         <div class="col-md-6">{% bootstrap_field form.institute_postal_code form_group_class="form-group required_field" %}</div>
@@ -87,7 +89,7 @@
                     <div class="col-md-6">{% bootstrap_field form.result form_group_class="form-group required_field" %}</div>
                     <div class="col-md-6">{% bootstrap_field form.graduation_year %}</div>
                 </div>
-                <div id="graduation-year-results-fields">
+                <div class="graduation-year-results-fields">
                     <div class="row">
                         <div class="col-md-6">{% bootstrap_field form.obtained_grade form_group_class="form-group required_field" %}</div>
                         <div class="col-md-6">{% bootstrap_field form.rank_in_diploma %}</div>
@@ -118,7 +120,7 @@
             {% endpanel %}
         </div>
 
-        {% panel _('Activity') id="experience-form-activity" %}
+        {% panel _('Activity') additional_class="experience-form-activity" %}
             {% bootstrap_field form.activity_type form_group_class="form-group required_field" %}
             {% bootstrap_field form.other_activity_type form_group_class="form-group required_field" %}
             {% bootstrap_field form.activity_position form_group_class="form-group other-active-activity" %}
@@ -127,12 +129,12 @@
                 <div class="col-md-6">{% bootstrap_field form.activity_institute_city form_group_class="form-group required_field" %}</div>
             </div>
             {% bootstrap_field form.activity_certificate form_group_class="form-group required_field" %}
-            <div id="activity-certificate-help-text" class="help-block"></div>
+            <div class="activity-certificate-help-text" class="help-block"></div>
         {% endpanel %}
     </form>
 {% endblock %}
 
 {% block modal_footer %}
     <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
-    <button type="submit" class="btn btn-danger" form="experience-form">{% trans "Save" %}</button>
+    <button type="submit" class="btn btn-primary" name="{{ form.prefix }}" form="{{ form.prefix }}_form">{% trans "Save" %}</button>
 {% endblock %}

@@ -173,8 +173,17 @@ msgstr "Type d'admission"
 msgid "Allocated time for the thesis (in EFT)"
 msgstr "Temps consacré à la thèse (en EFT)"
 
+msgid "An error has happened when adding the experience."
+msgstr "Une erreur est survenue lors de l'ajout d'une expérience."
+
 msgid "An error has happened when deleting the experience."
-msgstr "Une erreur est survenue lors de la suppression de l'expérience."
+msgstr "Une erreur est survenue lors de la suppression d'une expérience."
+
+msgid "An error has happened when updating the experience."
+msgstr "Une erreur est survenue lors de la mise à jour d'une expérience."
+
+msgid "An error has happened when uploading the file."
+msgstr "Une erreur est survenue lors de la soumission du fichier."
 
 msgid "Ancient languages"
 msgstr "Langues anciennes"
@@ -373,7 +382,7 @@ msgstr "Note du mémoire"
 msgid "Dissertation summary"
 msgstr "Résumé du mémoire"
 
-msgid "Dissertation title"
+msgid "Title of the dissertation"
 msgstr "Titre du mémoire"
 
 msgid "Distinction"
@@ -717,9 +726,6 @@ msgstr "Masculin"
 
 msgid "Master"
 msgstr "Master"
-
-msgid "Must be detailed, dated and signed."
-msgstr "Doit être détaillé, daté et signé."
 
 msgctxt "gender male"
 msgid "Male"
@@ -1161,6 +1167,9 @@ msgstr "Général de transition"
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr "Le numéro de registre national belge doit être composé de 11 chiffres."
 
+msgid "The curriculum has correctly been updated."
+msgstr "Le curriculum a bien été mis à jour."
+
 msgid "The CV doesn't yet contain any experience."
 msgstr "Le CV ne contient pas encore d'expérience."
 
@@ -1180,6 +1189,9 @@ msgstr ""
 
 msgid "This comment will only be visible to the administrators."
 msgstr "Ce commentaire ne sera visible que par les gestionnaires."
+
+msgid "This document must be detailed, dated and signed."
+msgstr "Ce document doit être détaillé, daté et signé."
 
 msgid "This experience has been valuated."
 msgstr "Cette expérience a été valorisée."
@@ -1224,10 +1236,22 @@ msgid "Unemployment"
 msgstr "Chômage"
 
 msgid "Unemployment certificate, with dates, justifying this academic year."
-msgstr "Attestation de chômage, avec mention des dates, justifiant cette année académique"
+msgstr "Attestation de chômage, avec mention des dates, justifiant cette année académique."
 
 msgid "Unknown birth date"
 msgstr "Date de naissance exacte inconnue"
+
+msgid "Update"
+msgstr "Mettre à jour"
+
+msgid "Update the experience"
+msgstr "Mettre à jour l'expérience"
+
+msgid "Upload"
+msgstr "Envoyer"
+
+msgid "Upload your CV"
+msgstr "Envoyer votre CV"
 
 msgid "View"
 msgstr "Voir"

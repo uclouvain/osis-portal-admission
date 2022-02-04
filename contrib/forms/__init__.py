@@ -33,9 +33,11 @@ from django.utils.translation import gettext_lazy as _
 from admission.services.organisation import EntitiesService
 from admission.services.reference import CountriesService, LanguageService, AcademicYearService
 from admission.utils import format_entity_title
+from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
 EMPTY_CHOICE_LIST = [EMPTY_CHOICE[0]]
+
 
 def get_country_initial_choices(iso_code, person):
     """Return the unique initial choice for a country when data is either set from initial or from webservice."""
@@ -77,6 +79,7 @@ def get_academic_year_initial_choices(person):
     return EMPTY_CHOICE + tuple(
         (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
         for academic_year in AcademicYearService.get_academic_years(person)
+        if academic_year.year <= get_current_year()
     )
 
 CustomDateInput = partial(

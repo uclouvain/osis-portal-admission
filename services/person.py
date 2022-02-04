@@ -146,7 +146,7 @@ class AdmissionPersonService:
     def update_curriculum_experience(cls, experience_id, person, data, uuid=None):
         common_params = {
             'xp': experience_id,
-            'experience_updating': data,
+            'experience_input': data,
             **build_mandatory_auth_headers(person),
         }
         if uuid:
@@ -156,7 +156,7 @@ class AdmissionPersonService:
     @classmethod
     def create_curriculum_experience(cls, person, data, uuid=None):
         common_params = {
-            'experience_creation': data,
+            'experience_input': data,
             **build_mandatory_auth_headers(person),
         }
 
@@ -177,5 +177,29 @@ class AdmissionPersonService:
             )
         return AdmissionPersonAPIClient().destroy_curriculum_experience(
             xp=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_curriculum_file(cls, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().retrieve_curriculum_file_admission(
+                uuid=str(uuid),
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().retrieve_curriculum_file(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_curriculum_file(cls, person, data, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().update_curriculum_file_admission(
+                uuid=str(uuid),
+                curriculum_file=data,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().update_person_identification(
+            curriculum_file=data,
             **build_mandatory_auth_headers(person),
         )

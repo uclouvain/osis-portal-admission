@@ -1,27 +1,27 @@
 # ##############################################################################
-# 
+#
 #     OSIS stands for Open Student Information System. It's an application
 #     designed to manage the core business of higher education institutions,
 #     such as universities, faculties, institutes and professional schools.
 #     The core business involves the administration of students, teachers,
 #     courses, programs and so on.
-# 
-#     Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
-# 
+#
+#     Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
 #     the Free Software Foundation, either version 3 of the License, or
 #     (at your option) any later version.
-# 
+#
 #     This program is distributed in the hope that it will be useful,
 #     but WITHOUT ANY WARRANTY; without even the implied warranty of
 #     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #     GNU General Public License for more details.
-# 
+#
 #     A copy of this license - GNU General Public License - is available
 #     at the root of the source code of this program.  If not,
 #     see http://www.gnu.org/licenses/.
-# 
+#
 # ##############################################################################
 from dal import autocomplete, forward
 from django import forms
@@ -30,10 +30,17 @@ from django.utils.translation import gettext_lazy as _
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.secondary_studies import BelgianCommunitiesOfEducation
-from admission.contrib.forms import EMPTY_CHOICE, get_country_initial_choices, get_academic_year_initial_choices, \
-    EMPTY_CHOICE_LIST, CustomDateInput
-from admission.services.reference import AcademicYearService
+from admission.contrib.forms import EMPTY_CHOICE, get_country_initial_choices, get_academic_year_initial_choices,\
+    CustomDateInput, get_language_initial_choices
 from osis_document.contrib.forms import FileUploadField
+
+
+class DoctorateAdmissionCurriculumFileForm(forms.Form):
+    curriculum = FileUploadField(
+        help_text=_('This document must be detailed, dated and signed.'),
+        label=_('Curriculum'),
+        required=True,
+    )
 
 
 class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
@@ -50,31 +57,20 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
         label=_("Country"),
         widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
     )
-    institute_name = forms.CharField(
-        label=_("Institute name"),
-        required=False,
-    )
-    institute_city_be = forms.CharField(
-        label=_("Institute city"),
-        required=False,
-        widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:city",
-            forward=(forward.Field('institute_postal_code', 'postal_code'),),
-        ),
-    )
-    institute_city = forms.CharField(
-        label=_("Institute city"),
-        required=False,
-    )
     # Common university higher education
     institute = forms.CharField(
         label=_("Institute"),
         required=False,
         empty_value=None,
-        # TODO add autocomplete
+        # TODO Enable the field and add autocomplete
+        disabled=True,
     )
     institute_not_found = forms.BooleanField(
         label=_("I don't find my institute in the list."),
+        required=False,
+    )
+    institute_name = forms.CharField(
+        label=_("Institute name"),
         required=False,
     )
     institute_postal_code = forms.CharField(
@@ -136,7 +132,7 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
         required=False,
     )
     dissertation_title = forms.CharField(
-        label=_('Dissertation title'),
+        label=_('Title of the dissertation'),
         required=False,
     )
     dissertation_score = forms.DecimalField(
@@ -156,11 +152,20 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
         required=False,
         widget=forms.RadioSelect,
     )
+    institute_city_be = forms.CharField(
+        label=_("Institute city"),
+        required=False,
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:city",
+            forward=(forward.Field('institute_postal_code', 'postal_code'),),
+        ),
+    )
     program = forms.CharField(
         label=_("Program"),
         required=False,
         empty_value=None,
-        # TODO Add autocomplete
+        # TODO Enable the field and add autocomplete
+        disabled=True,
     )
     program_not_found = forms.BooleanField(
         label=_("I don't find my program in the list."),
@@ -175,12 +180,11 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
         label=_("Study system"),
         required=False,
     )
-    curriculum = FileUploadField(
-        help_text=_('Must be detailed, dated and signed.'),
-        label=_('Curriculum'),
+    # Foreign higher education
+    institute_city = forms.CharField(
+        label=_("Institute city"),
         required=False,
     )
-    # Foreign higher education
     study_cycle_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + ForeignStudyCycleType.choices(),
         label=_("Study cycle type"),
@@ -204,7 +208,7 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
     activity_type = forms.ChoiceField(
         choices=ActivityType.choices(),
         label=_('Activity type'),
-        required=True,
+        required=False,
         widget=forms.RadioSelect,
     )
     other_activity_type = forms.CharField(
@@ -234,19 +238,68 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
             'jquery.mask.min.js',
         )
 
-    def __init__(self, *args, person=None, **kwargs):
+    def __init__(self, person, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Init the form fields
-
         self.fields["academic_year"].choices = get_academic_year_initial_choices(person)
 
-        # country = self.data.get(self.add_prefix("country"), self.initial.get("country"))
-        # if country:
-        #     self.fields['country'].choices = (country.iso_code, country.name,)
+        if len(self.initial) > 0:
+            # with the api data
+            # > initialize the choices of autocomplete fields
+            # > initialize the fields which are not automatically mapping
+
+            curriculum_year = self.initial.get('curriculum_year')
+            if curriculum_year:
+                self.initial["academic_year"] = curriculum_year.get('academic_year')
+
+            initial_country = self.initial.get('country')
+            if initial_country:
+                self.fields['country'].widget.choices = ((initial_country['iso_code'], initial_country['name']),)
+                self.initial['country'] = initial_country['iso_code']
+
+            initial_linguistic_regime = self.initial.get('linguistic_regime')
+            if initial_linguistic_regime:
+                self.fields['linguistic_regime'].widget.choices = (
+                    (initial_linguistic_regime.get('code'), initial_linguistic_regime['name']),
+                )
+                self.initial['linguistic_regime'] = initial_linguistic_regime['code']
+
+            initial_education_name = self.initial.get('education_name')
+            if initial_education_name:
+                self.initial['other_program'] = initial_education_name
+                self.initial['program_not_found'] = True
+
+            if self.initial.get('institute_name'):
+                self.initial['institute_not_found'] = True
+
+            initial_institute_city = self.initial.get('institute_city')
+            if initial_institute_city:
+                if self.initial.get('country') == BE_ISO_CODE:
+                    self.fields['institute_city_be'].widget.choices = (
+                        (initial_institute_city, initial_institute_city),
+                    )
+
+                self.initial['institute_city_be'] = initial_institute_city
+                self.initial['activity_institute_city'] = initial_institute_city
+
+            self.initial['activity_institute_name'] = self.initial.get('institute_name')
+
+        else:
+            # with the POST request data
+            # > initialize the choices of autocomplete fields
+
+            self.fields['country'].widget.choices = get_country_initial_choices(
+                self.data.get(self.add_prefix("country")),
+                person,
+            )
+
+            self.fields['linguistic_regime'].widget.choices = get_language_initial_choices(
+                self.data.get(self.add_prefix("linguistic_regime")),
+                person,
+            )
 
     def clean(self):
-        # breakpoint()
         cleaned_data = super().clean()
 
         # List the fields that are mandatory depending on the values of other fields
@@ -268,7 +321,7 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
             if cleaned_data.get('dissertation_score') is None:
                 self.add_error('dissertation_score', _('This field is required.'))
 
-            # Institute
+            # Either a known or an unknown institute
             if cleaned_data.get('institute_not_found'):
                 mandatory_fields += [
                     'institute_city_be' if is_belgian_education else 'institute_city',
@@ -284,22 +337,26 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
                     mandatory_fields.append('obtained_grade')
 
             if is_belgian_education:
-                # Belgium studies
+                # Belgian studies
                 mandatory_fields += [
                     'belgian_education_community',
                     'study_system',
                 ]
 
-                if cleaned_data.get('belgian_education_community') == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name:
-                    if cleaned_data.get('program_not_found'):
-                        mandatory_fields.append('other_program')
-                        cleaned_data['program_name'] = cleaned_data['other_program']
-                    else:
-                        mandatory_fields.append('program')
-                else:
-                    mandatory_fields.append('education_name')
-
                 cleaned_data['institute_city'] = cleaned_data['institute_city_be']
+
+                belgian_education_community = cleaned_data.get('belgian_education_community')
+                if belgian_education_community:
+                    if belgian_education_community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name:
+                        # French-speaking community -> program (either known or unknown)
+                        if cleaned_data.get('program_not_found'):
+                            mandatory_fields.append('other_program')
+                            cleaned_data['education_name'] = cleaned_data['other_program']
+                        else:
+                            mandatory_fields.append('program')
+                    else:
+                        # Other speaking communities -> education
+                        mandatory_fields.append('education_name')
 
             else:
                 # Foreign studies
@@ -308,15 +365,21 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
                     'linguistic_regime',
                     'education_name'
                 ]
-        else:
+
+        elif cleaned_data.get('type') == ExperienceType.OTHER_ACTIVITY.name:
             # Other occupations
             mandatory_fields += [
                 'activity_type',
                 'activity_certificate',
             ]
+
             activity_type = cleaned_data.get('activity_type')
+
+            # Custom activity type
             if activity_type == ActivityType.OTHER.name:
                 mandatory_fields.append('other_activity_type')
+
+            # Specify the location if necessary
             if activity_type in {
                 ActivityType.WORK.name,
                 ActivityType.INTERNSHIP.name,
@@ -324,9 +387,11 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
                 ActivityType.OTHER.name,
             }:
                 mandatory_fields.append('activity_institute_city')
+
             cleaned_data['institute_city'] = cleaned_data['activity_institute_city']
             cleaned_data['institute_name'] = cleaned_data['activity_institute_name']
 
+        # Check fields and eventually add errors
         for field in mandatory_fields:
             if not cleaned_data.get(field):
                 self.add_error(field, _('This field is required.'))

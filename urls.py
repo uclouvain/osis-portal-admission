@@ -72,6 +72,15 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
             )
         )
 
+    if not detail_only:
+        includes.append(
+            path(
+                'curriculum/<int:experience_id>/',
+                views.DoctorateAdmissionCurriculumFormView.as_view(),
+                name='curriculum',
+            )
+        )
+
     return [
         # Add a pattern that redirects to the default tab
         path(pattern_prefix, RedirectView.as_view(pattern_name='admission:{}:project'.format(name)), name=name),

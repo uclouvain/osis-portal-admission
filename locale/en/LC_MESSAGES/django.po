@@ -155,7 +155,16 @@ msgstr ""
 msgid "Allocated time for the thesis (in EFT)"
 msgstr ""
 
+msgid "An error has happened when adding the experience."
+msgstr ""
+
 msgid "An error has happened when deleting the experience."
+msgstr ""
+
+msgid "An error has happened when updating the experience."
+msgstr ""
+
+msgid "An error has happened when uploading the file."
 msgstr ""
 
 msgid "Ancient languages"
@@ -355,7 +364,7 @@ msgstr ""
 msgid "Dissertation summary"
 msgstr ""
 
-msgid "Dissertation title"
+msgid "Title of the dissertation"
 msgstr ""
 
 msgid "Distinction"
@@ -680,9 +689,6 @@ msgid "Male"
 msgstr ""
 
 msgid "Master"
-msgstr ""
-
-msgid "Must be detailed, dated and signed."
 msgstr ""
 
 msgctxt "gender male"
@@ -1117,6 +1123,9 @@ msgstr ""
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr ""
 
+msgid "The curriculum has correctly been updated."
+msgstr ""
+
 msgid "The CV doesn't yet contain any experience."
 msgstr ""
 
@@ -1133,6 +1142,9 @@ msgid "This comment will be visible to all users who have access to this page."
 msgstr ""
 
 msgid "This comment will only be visible to the administrators."
+msgstr ""
+
+msgid "This document must be detailed, dated and signed."
 msgstr ""
 
 msgid "This experience has been valuated."
@@ -1181,6 +1193,18 @@ msgid "Unemployment certificate, with dates, justifying this academic year."
 msgstr ""
 
 msgid "Unknown birth date"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Update the experience"
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Upload your CV"
 msgstr ""
 
 msgid "View"
