@@ -513,4 +513,3 @@ class CurriculumFormTestCase(TestCase):
             self.assertIn(f, form.errors)
 
         self.assertEqual(len(form.errors), len(required_fields))
-

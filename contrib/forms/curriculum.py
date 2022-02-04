@@ -30,7 +30,7 @@ from django.utils.translation import gettext_lazy as _
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.secondary_studies import BelgianCommunitiesOfEducation
-from admission.contrib.forms import EMPTY_CHOICE, get_country_initial_choices, get_academic_year_initial_choices,\
+from admission.contrib.forms import EMPTY_CHOICE, get_country_initial_choices, get_academic_year_initial_choices, \
     CustomDateInput, get_language_initial_choices
 from osis_document.contrib.forms import FileUploadField
 
