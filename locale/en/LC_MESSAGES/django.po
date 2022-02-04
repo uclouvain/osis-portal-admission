@@ -110,6 +110,9 @@ msgstr ""
 msgid "Academic graduation year"
 msgstr ""
 
+msgid "Access my doctoral students' requests"
+msgstr ""
+
 msgid "Add"
 msgstr ""
 
@@ -230,6 +233,9 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Comment to the candidate:"
+msgstr ""
+
 msgid "Community of education"
 msgstr ""
 
@@ -282,6 +288,9 @@ msgid "Country of citizenship"
 msgstr ""
 
 msgid "Course choice"
+msgstr ""
+
+msgid "Create and manage my enrolment request for UCLouvain"
 msgstr ""
 
 msgid "Create new doctorate admission"
@@ -513,6 +522,9 @@ msgstr ""
 msgid "Internal comment"
 msgstr ""
 
+msgid "Internal comment:"
+msgstr ""
+
 msgid "International Baccalaureate"
 msgstr ""
 
@@ -563,6 +575,9 @@ msgctxt "gender male"
 msgid "Male"
 msgstr ""
 
+msgid "Manage doctorates"
+msgstr ""
+
 msgid "Mandatory language"
 msgstr ""
 
@@ -589,6 +604,9 @@ msgstr ""
 msgid "More than 75%"
 msgstr ""
 
+msgid "My enrolment request"
+msgstr ""
+
 msgid "NO"
 msgstr "No"
 
@@ -605,9 +623,6 @@ msgid "No"
 msgstr ""
 
 msgid "No I don't have a high school diploma"
-msgstr ""
-
-msgid "No comment"
 msgstr ""
 
 msgid "No cotutelle"

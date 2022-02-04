@@ -40,7 +40,11 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        if context['admission'].statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name:
+        # If not signing in progress and ability to update supervision, redirect on update page
+        if (
+            context['admission'].statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
+            and 'url' in context['admission'].links['request_signatures']
+        ):
             return redirect('admission:doctorate-update:supervision', **self.kwargs)
         return self.render_to_response(context)
 

@@ -28,6 +28,7 @@ from django.views.generic import TemplateView
 
 __all__ = [
     "DoctorateAdmissionListView",
+    "DoctorateAdmissionMemberListView",
 ]
 
 from admission.services.proposition import AdmissionPropositionService
@@ -41,4 +42,13 @@ class DoctorateAdmissionListView(LoginRequiredMixin, TemplateView):
         result = AdmissionPropositionService().get_propositions(self.request.user.person)
         context["admissions"] = result['propositions']
         context["global_links"] = result['links']
+        return context
+
+
+class DoctorateAdmissionMemberListView(LoginRequiredMixin, TemplateView):
+    template_name = "admission/doctorate/supervised_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["admissions"] = AdmissionPropositionService().get_supervised_propositions(self.request.user.person)
         return context

@@ -32,6 +32,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from admission.services.proposition import AdmissionPropositionService
 from base.models.utils.utils import ChoiceEnum
 
 register = template.Library()
@@ -58,10 +59,9 @@ def register_panel(filename, takes_context=None, name=None):
             # {% panel %} and its arguments
             bits = token.split_contents()[1:]
             args, kwargs = template.library.parse_bits(
-                parser, bits, params, varargs, varkw, defaults,
-                kwonly, kwonly_defaults, takes_context, function_name,
+                parser, bits, params, varargs, varkw, defaults, kwonly, kwonly_defaults, takes_context, function_name
             )
-            nodelist_dict = {'panel_body': parser.parse(('footer', 'endpanel',))}
+            nodelist_dict = {'panel_body': parser.parse(('footer', 'endpanel'))}
             token = parser.next_token()
 
             # {% footer %} (optional)
@@ -105,33 +105,28 @@ def _can_access_tab(admission, tab_name, actions_by_tab):
     except KeyError:
         raise ImproperlyConfigured(
             "Please check that the '{}' property is well specified in the 'READ_ACTIONS_BY_TAB' and"
-            " 'UPDATE_ACTIONS_BY_TAB' constants"
-            .format(tab_name)
+            " 'UPDATE_ACTIONS_BY_TAB' constants".format(tab_name)
         )
 
 
-def get_valid_tab_tree(admission, original_tab_tree, is_form_view):
+def get_valid_tab_tree(admission):
     """
     Return a tab tree based on the specified one but whose the tabs depending on the permissions links.
     """
     if admission:
         valid_tab_tree = {}
 
-        # The actions depend on whether the tab is read or written only
-        actions_by_tab = UPDATE_ACTIONS_BY_TAB if is_form_view else READ_ACTIONS_BY_TAB
-
         # Loop over the tabs of the original tab tree
-        for (parent_tab, sub_tabs) in original_tab_tree.items():
+        for (parent_tab, sub_tabs) in TAB_TREE.items():
             # Get the accessible sub tabs depending on the user permissions
-            valid_sub_tabs = [tab for tab in sub_tabs if _can_access_tab(admission, tab, actions_by_tab)]
+            valid_sub_tabs = [tab for tab in sub_tabs if _can_access_tab(admission, tab, READ_ACTIONS_BY_TAB)]
             # Only add the parent tab if at least one sub tab is allowed
             if len(valid_sub_tabs) > 0:
                 valid_tab_tree[parent_tab] = valid_sub_tabs
 
         return valid_tab_tree
 
-    else:
-        return original_tab_tree
+    return TAB_TREE
 
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
@@ -140,11 +135,7 @@ def doctorate_tabs(context, admission=None):
     is_form_view = match.namespaces[1] == 'doctorate-update'
 
     # Create a new tab tree based on the default one but depending on the permissions links
-    context['valid_tab_tree'] = get_valid_tab_tree(
-        admission=admission,
-        original_tab_tree=TAB_TREE,
-        is_form_view=is_form_view,
-    )
+    context['valid_tab_tree'] = get_valid_tab_tree(admission=admission)
 
     return {
         'tab_tree': context['valid_tab_tree'],
@@ -177,11 +168,7 @@ def doctorate_subtabs(context, admission=None):
         'private_defense': _("Private defense"),
         'public_defense': _("Public defense"),
     }
-    valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(
-        admission=admission,
-        original_tab_tree=TAB_TREE,
-        is_form_view=is_form_view,
-    ))
+    valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(admission=admission))
 
     return {
         'subtabs': valid_tab_tree.get(get_active_parent(context['request'].resolver_match.url_name), []),
@@ -217,6 +204,11 @@ def panel(context, title='', **kwargs):
     context['title'] = title
     context['attributes'] = kwargs
     return context
+
+
+@register.simple_tag(takes_context=True)
+def get_dashboard_links(context):
+    return AdmissionPropositionService.get_dashboard_links(context['request'].user.person)
 
 
 @register.filter
@@ -255,5 +247,4 @@ def can_update_tab(admission, tab_name):
 @register.filter
 def can_update_something(admission):
     """Return true if any update tab can be opened for this admission, otherwise return False"""
-    return any(_can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB)
-               for tab_name in UPDATE_ACTIONS_BY_TAB)
+    return any(_can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB) for tab_name in UPDATE_ACTIONS_BY_TAB)

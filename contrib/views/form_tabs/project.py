@@ -26,6 +26,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import FormView
@@ -68,6 +69,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 person=self.person,
                 uuid=str(self.kwargs['pk']),
             )
+            if 'url' not in self.proposition.links['update_proposition']:
+                raise PermissionDenied(self.proposition.links['update_proposition']['error'])
             return {
                 **self.proposition.to_dict(),
                 'sector': self.proposition.code_secteur_formation,

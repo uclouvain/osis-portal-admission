@@ -50,9 +50,9 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
 
     def clean(self):
         data = super().clean()
-        if data['type'] == ActorType.CA_MEMBER.name and not data['person']:
+        if data.get('type') == ActorType.CA_MEMBER.name and not data.get('person'):
             self.add_error('person', _("This field is required"))
-        elif data['type'] == ActorType.PROMOTER.name and not data['tutor']:
+        elif data.get('type') == ActorType.PROMOTER.name and not data.get('tutor'):
             self.add_error('tutor', _("This field is required"))
         return data
 

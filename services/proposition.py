@@ -25,9 +25,10 @@
 # ##############################################################################
 from enum import Enum
 
+from admission.services.mixins import ServiceMeta
 from base.models.person import Person
 from frontoffice.settings.osis_sdk import admission as admission_sdk
-from frontoffice.settings.osis_sdk.utils import api_exception_handler, build_mandatory_auth_headers
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
@@ -41,9 +42,19 @@ class AdmissionPropositionAPIClient:
         return propositions_api.PropositionsApi(ApiClient(configuration=api_config))
 
 
-class AdmissionPropositionService:
+class AdmissionPropositionService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
+    def get_dashboard_links(cls, person: Person):
+        return (
+            AdmissionPropositionAPIClient()
+            .retrieve_dashboard(**build_mandatory_auth_headers(person))
+            .to_dict()
+            .get('links', {})
+        )
+
+    @classmethod
     def create_proposition(cls, person: Person, **kwargs):
         return AdmissionPropositionAPIClient().create_proposition(
             initier_proposition_command=kwargs,
@@ -51,7 +62,6 @@ class AdmissionPropositionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def update_proposition(cls, person: Person, **kwargs):
         return AdmissionPropositionAPIClient().update_proposition(
             uuid=kwargs['uuid'],
@@ -73,6 +83,12 @@ class AdmissionPropositionService:
         )
 
     @classmethod
+    def get_supervised_propositions(cls, person: Person):
+        return AdmissionPropositionAPIClient().list_supervised_propositions(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def cancel_proposition(cls, person: Person, uuid):
         return AdmissionPropositionAPIClient().destroy_proposition(
             uuid=uuid,
@@ -80,7 +96,6 @@ class AdmissionPropositionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def request_signatures(cls, person: Person, uuid):
         return AdmissionPropositionAPIClient().create_signatures(
             uuid=uuid,
@@ -114,9 +129,10 @@ class PropositionBusinessException(Enum):
     GroupeSupervisionCompletPourMembresCAException = "PROPOSITION-23"
 
 
-class AdmissionCotutelleService:
+class AdmissionCotutelleService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def update_cotutelle(cls, person, **kwargs):
         uuid = str(kwargs.pop('uuid'))
         return AdmissionPropositionAPIClient().update_cotutelle(
@@ -133,7 +149,9 @@ class AdmissionCotutelleService:
         )
 
 
-class AdmissionSupervisionService:
+class AdmissionSupervisionService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def get_supervision(cls, person, uuid) -> SupervisionDTO:
         return AdmissionPropositionAPIClient().retrieve_supervision(uuid=uuid, **build_mandatory_auth_headers(person))
@@ -146,7 +164,6 @@ class AdmissionSupervisionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def add_member(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().add_member(
             uuid=uuid,
@@ -155,7 +172,6 @@ class AdmissionSupervisionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def remove_member(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().remove_member(
             uuid=uuid,
@@ -164,19 +180,17 @@ class AdmissionSupervisionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def approve_proposition(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().approve_proposition(
             uuid=uuid,
             approuver_proposition_command=kwargs,
-            **build_mandatory_auth_headers(person)
+            **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def reject_proposition(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().reject_proposition(
             uuid=uuid,
             refuser_proposition_command=kwargs,
-            **build_mandatory_auth_headers(person)
+            **build_mandatory_auth_headers(person),
         )
