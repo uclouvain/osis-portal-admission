@@ -67,6 +67,6 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
             person=self.person,
             uuid=str(self.kwargs['pk']),
         )
-        if 'url' not in context['admission'].links['update_proposition']:
-            raise PermissionDenied(context['admission'].links['update_proposition']['error'])
+        if 'url' not in context['admission'].links['update_cotutelle']:
+            raise PermissionDenied(context['admission'].links['update_cotutelle']['error'])
         return context
