@@ -59,8 +59,9 @@ class TemplateTagsTestCase(TestCase):
                     'retrieve_person': {
                         'error': 'Method not allowed',
                         'method': 'GET',
-                    }
+                    },
                 }
+
         cls.Admission = Admission
 
     def test_normal_panel(self):
@@ -170,11 +171,7 @@ class TemplateTagsTestCase(TestCase):
 
     def test_valid_tab_tree_no_admission(self):
         # No admission is specified -> return the original tab tree
-        valid_tab_tree = get_valid_tab_tree(
-            admission=None,
-            original_tab_tree=TAB_TREE,
-            is_form_view=True,
-        )
+        valid_tab_tree = get_valid_tab_tree(admission=None)
         self.assertEqual(valid_tab_tree, TAB_TREE)
 
     def test_valid_tab_tree_read_mode(self):
@@ -182,11 +179,7 @@ class TemplateTagsTestCase(TestCase):
 
         admission = self.Admission()
 
-        valid_tab_tree = get_valid_tab_tree(
-            admission=admission,
-            original_tab_tree=TAB_TREE,
-            is_form_view=True,
-        )
+        valid_tab_tree = get_valid_tab_tree(admission=admission)
 
         parent_tabs = list(valid_tab_tree.keys())
 
@@ -201,11 +194,7 @@ class TemplateTagsTestCase(TestCase):
         # Only one form tab is allowed -> return it and its parent
 
         admission = self.Admission()
-        valid_tab_tree = get_valid_tab_tree(
-            admission=admission,
-            original_tab_tree=TAB_TREE,
-            is_form_view=True,
-        )
+        valid_tab_tree = get_valid_tab_tree(admission=admission)
 
         parent_tabs = list(valid_tab_tree.keys())
 

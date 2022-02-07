@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.core.exceptions import PermissionDenied
 from django.views.generic import FormView
 
 from admission.contrib.forms.cotutelle import DoctorateAdmissionCotutelleForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionCotutelleService, AdmissionPropositionService
-from osis_document.api.utils import get_remote_token
 
 
 class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
@@ -67,4 +67,6 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
             person=self.person,
             uuid=str(self.kwargs['pk']),
         )
+        if 'url' not in context['admission'].links['update_cotutelle']:
+            raise PermissionDenied(context['admission'].links['update_cotutelle']['error'])
         return context

@@ -1,48 +1,87 @@
 {% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
-    * OSIS stands for Open Student Information System. It's an application
-    * designed to manage the core business of higher education institutions,
-    * such as universities, faculties, institutes and professional schools.
-    * The core business involves the administration of students, teachers,
-    * courses, programs and so on.
-    *
-    * Copyright (C) 2015-2022 Université catholique de Louvain
-    (http://www.uclouvain.be)
-    *
-    * This program is free software: you can redistribute it and/or modify
-    * it under the terms of the GNU General Public License as published by
-    * the Free Software Foundation, either version 3 of the License, or
-    * (at your option) any later version.
-    *
-    * This program is distributed in the hope that it will be useful,
-    * but WITHOUT ANY WARRANTY; without even the implied warranty of
-    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    * GNU General Public License for more details.
-    *
-    * A copy of this license - GNU General Public License - is available
-    * at the root of the source code of this program.  If not,
-    * see http://www.gnu.org/licenses/.
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2022 Université catholique de Louvain
+  (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% url 'admission:doctorate-update:remove-actor' view.kwargs.pk type member.matricule as remove_url %}
-<details class="signature-item">
-    <summary class="row">
-        <div class="col-md-8">
-            <strong>{{ member.prenom }} {{ member.nom }}</strong>
-            {{ signature.status|enum_display:'ChoixEtatSignature' }}
-        </div>
-        {% if admission|can_make_action:'remove_member' %}
-            <div class="col-md-4">
-                <a href="{{ remove_url }}" class="btn btn-danger">
-                    <i class="glyphicon glyphicon-trash"></i>
-                    {% trans "Remove" %}
-                </a>
-            </div>
-        {% endif %}
-    </summary>
-    <blockquote>{{ signature.commentaire_externe|default:_('No comment') }}</blockquote>
-</details>
+{% url 'admission:doctorate-update:remove-actor' view.kwargs.pk type member.matricule as remove_url %}{% get_dashboard_links as links %}
+
+{# Determine if there is a comment to show #}
+{% if 'url' in links.list_supervised %}
+  {% firstof signature.commentaire_externe signature.commentaire_interne as has_comment %}
+{% else %}
+  {% firstof signature.commentaire_externe as has_comment %}
+{% endif %}
+
+{% if has_comment %}
+  <details class="signature-item">
+  <summary class="row">
+{% else %}
+  <div class="row">
+{% endif %}
+
+<div class="col-md-9">
+  <div>
+    <strong>
+      {% if member.titre %}{{ member.titre }} {% endif %}
+      {{ member.prenom }} {{ member.nom }}
+    </strong>
+    (<a href="mailto:{{ member.email }}">{{ member.email }}</a>)
+    {% if member.ville or member.pays %}
+      - {% if member.ville %}{{ member.ville }} {% endif %}
+      {% if member.pays %}({{ member.pays }}){% endif %}
+    {% endif %}
+  </div>
+  <em>{{ signature.status|enum_display:'ChoixEtatSignature' }}</em>
+</div>
+
+{% if admission|can_make_action:'remove_member' %}
+  <div class="col-md-3">
+    <a href="{{ remove_url }}" class="btn btn-danger pull-right">
+      <i class="glyphicon glyphicon-trash"></i>
+      {% trans "Remove" %}
+    </a>
+  </div>
+{% endif %}
+
+{% if has_comment %}
+  </summary>
+  {% if signature.commentaire_externe %}
+    <blockquote><strong>{% trans "Comment to the candidate:" %}</strong>
+      {{ signature.commentaire_externe|linebreaks }}</blockquote>
+  {% endif %}
+
+  {% if 'url' in links.list_supervised and signature.commentaire_interne %}
+    <blockquote><strong>{% trans "Internal comment:" %}</strong>
+      {{ signature.commentaire_interne|linebreaks }}</blockquote>
+  {% endif %}
+
+  </details>
+{% else %}
+  </div>
+{% endif %}
+
 {% if not forloop.last %}
-    <hr />
+  <hr />
 {% endif %}

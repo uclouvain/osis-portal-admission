@@ -23,10 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
-from osis_admission_sdk import ApiClient
-
+from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import admission as admission_sdk
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
+from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import autocomplete_api
 
 
@@ -36,7 +36,9 @@ class AdmissionAutocompleteAPIClient:
         return autocomplete_api.AutocompleteApi(ApiClient(configuration=api_config))
 
 
-class AdmissionAutocompleteService:
+class AdmissionAutocompleteService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def get_sectors(cls, person=None):
         return AdmissionAutocompleteAPIClient().list_sector_dtos(**build_mandatory_auth_headers(person))

@@ -23,10 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
-from osis_admission_sdk import ApiClient
-
+from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import admission as admission_sdk
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
+from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import person_api
 
 
@@ -36,7 +36,9 @@ class AdmissionPersonAPIClient:
         return person_api.PersonApi(ApiClient(configuration=api_config))
 
 
-class AdmissionPersonService:
+class AdmissionPersonService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def retrieve_person(cls, person, uuid=None):
         if uuid:
@@ -90,7 +92,8 @@ class AdmissionPersonService:
         if uuid:
             return AdmissionPersonAPIClient().retrieve_high_school_diploma_admission(
                 uuid=str(uuid),
-                **build_mandatory_auth_headers(person))
+                **build_mandatory_auth_headers(person),
+            )
         return AdmissionPersonAPIClient().retrieve_high_school_diploma(**build_mandatory_auth_headers(person))
 
     @classmethod

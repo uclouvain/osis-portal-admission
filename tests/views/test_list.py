@@ -25,6 +25,7 @@
 # ##############################################################################
 from unittest.mock import Mock, patch
 
+from django.shortcuts import resolve_url
 from django.test import TestCase
 from django.urls import reverse
 
@@ -37,11 +38,30 @@ class ListTestCase(TestCase):
         self.client.force_login(PersonFactory().user)
         api.return_value.list_propositions.return_value = {
             'propositions': [
-                Mock(uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876', links={}),
+                Mock(
+                    uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+                    links={'retrieve_proposition': {'url': 'access granted'}},
+                ),
                 Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}),
             ],
             'links': {},
         }
         url = reverse('admission:doctorate-list')
         response = self.client.get(url)
-        self.assertContains(response, "")
+        detail_url = resolve_url('admission:doctorate-detail:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        self.assertContains(response, detail_url)
+
+    @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
+    def test_list_supervised(self, api, *args):
+        self.client.force_login(PersonFactory().user)
+        api.return_value.list_supervised_propositions.return_value = [
+            Mock(
+                uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+                links={'retrieve_proposition': {'url': 'access granted'}},
+            ),
+            Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}),
+        ]
+        url = reverse('admission:supervised-list')
+        response = self.client.get(url)
+        detail_url = resolve_url('admission:doctorate-detail:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        self.assertContains(response, detail_url)

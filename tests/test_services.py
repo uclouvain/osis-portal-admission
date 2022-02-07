@@ -23,32 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
 
-__all__ = [
-    "DoctorateAdmissionListView",
-    "DoctorateAdmissionMemberListView",
-]
+from django.test import SimpleTestCase
 
-from admission.services.proposition import AdmissionPropositionService
+from admission.services.mixins import ServiceMeta
 
 
-class DoctorateAdmissionListView(LoginRequiredMixin, TemplateView):
-    template_name = "admission/doctorate/admission_doctorate_list.html"
+class ServicesTestCase(SimpleTestCase):
+    def test_services_meta(self):
+        with self.assertRaises(AttributeError):
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        result = AdmissionPropositionService().get_propositions(self.request.user.person)
-        context["admissions"] = result['propositions']
-        context["global_links"] = result['links']
-        return context
-
-
-class DoctorateAdmissionMemberListView(LoginRequiredMixin, TemplateView):
-    template_name = "admission/doctorate/supervised_list.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["admissions"] = AdmissionPropositionService().get_supervised_propositions(self.request.user.person)
-        return context
+            class TestService(metaclass=ServiceMeta):
+                pass
