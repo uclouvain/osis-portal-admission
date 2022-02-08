@@ -128,10 +128,10 @@
             </div>
         </div>
         {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
-        {% bootstrap_field form.graphe_gantt form_group_class="form-group required_field" %}
-        {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group required_field"  %}
-        {% bootstrap_field form.projet_formation_complementaire form_group_class="form-group required_field"  %}
-        {% bootstrap_field form.lettres_recommandation form_group_class="form-group required_field"  %}
+        {% bootstrap_field form.graphe_gantt %}
+        {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group proposition_programme_doctoral" %}
+        {% bootstrap_field form.projet_formation_complementaire %}
+        {% bootstrap_field form.lettres_recommandation %}
     {% endpanel %}
 
     {% panel _("Previous research experience") %}
@@ -156,6 +156,7 @@
 {% endblock %}
 
 {% block script %}
+    {{ block.super }}
     {{ form.media }}
     <script type="application/javascript">
     $(function () {
@@ -244,6 +245,15 @@
         $('#soutenue').dependsOn({
             '#id_non_soutenue': { checked: false },
         }, { valueOnDisable: '' });
+
+        // Mark proposition_programme_doctoral as required depending on type
+        $('.proposition_programme_doctoral').dependsOn({
+            'input[name=type_admission]': { values: ['ADMISSION'] }
+        }, {
+            disable: false,
+            hide: false,
+            toggleClass: 'required_field'
+        });
 
         // Clear the fields related to the thesis place
         const thesisPlace = context.find('select[name=lieu_these]');

@@ -74,7 +74,7 @@ class ProjectViewTestCase(TestCase):
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
             lettres_recommandation=[],
-            links={},
+            links={'update_proposition': {'url': 'ok'}},
         )
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -227,6 +227,14 @@ class ProjectViewTestCase(TestCase):
             'type_admission': AdmissionType.ADMISSION.name,
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+    def test_update_no_permission(self):
+        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.links = {
+            'update_proposition': {'error': 'no access'},
+        }
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_update_consistency_errors(self):
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

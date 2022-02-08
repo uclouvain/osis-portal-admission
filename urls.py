@@ -90,6 +90,7 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
 
 urlpatterns = [
     path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
+    path("supervised/", views.DoctorateAdmissionMemberListView.as_view(), name="supervised-list"),
     path("autocomplete/", include((
         [
             path("tutor/", views.TutorAutocomplete.as_view(), name="tutor"),

@@ -27,7 +27,7 @@
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import resolve_url
+from django.shortcuts import redirect, resolve_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
@@ -57,6 +57,12 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
             uuid=str(self.kwargs['pk']),
         )
         return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        if 'url' not in context['admission'].links['request_signatures']:
+            return redirect('admission:doctorate-detail:supervision', **self.kwargs)
+        return self.render_to_response(context)
 
     def prepare_data(self, data):
         return {

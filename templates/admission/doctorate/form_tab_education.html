@@ -50,10 +50,10 @@
 
       {# This deconstructed for image rendering #}
       {% with field=foreign_diploma_form.foreign_diploma_type %}
-        <div class="form-group required_field">
+        <div class="form-group required_field {% if field.errors %}has-error{% elif foreign_diploma_form.is_bound %}has-success{% endif %}">
           {% bootstrap_label field.label label_for=field.html_name label_class='control-label' %}
           {% for radio_value, choice_label in field.field.widget.choices %}
-            <div>
+            <div class="radio">
               <label
                 for="id_{{ field.html_name }}_{{ forloop.counter0 }}"
               >
@@ -62,6 +62,7 @@
                   name="{{ field.html_name }}"
                   type="{{ field.field.widget.input_type }}"
                   value="{{ radio_value }}"
+                  style="position: relative"
                   {% ifequal field.value radio_value %}
                   checked="checked"
                   {% endifequal %}/>
@@ -146,25 +147,9 @@
               >
                 {% bootstrap_label schedule_form.modern_languages_other_label.label label_for=schedule_form.modern_languages_other_label.id_for_label label_class="control-label" %}
                 <div class="input-group">
-                  <input
-                    type="text"
-                    name="schedule-modern_languages_other_label"
-                    class="form-control"
-                    title=""
-                    id="id_schedule-modern_languages_other_label"
-                    value="
-                      {{ schedule_form.modern_languages_other_label.value|default_if_none:"" }}"
-                  />
+                  {{ schedule_form.modern_languages_other_label }}
                   <span class="input-group-addon">:</span>
-                  <input
-                    type="number"
-                    name="schedule-modern_languages_other_hours"
-                    class="form-control"
-                    title=""
-                    id="id_schedule-modern_languages_other_hours"
-                    value="
-                      {{ schedule_form.modern_languages_other_hours.value|default_if_none:"" }}"
-                  />
+                  {{ schedule_form.modern_languages_other_hours }}
                   <div class="input-group-addon">{% trans "h/w" %}</div>
                 </div>
                 {% if schedule_form.modern_languages_other_label.errors %}
@@ -193,23 +178,9 @@
               >
                 {% bootstrap_label schedule_form.other_label.label label_for=schedule_form.other_label.id_for_label label_class="control-label" %}
                 <div class="input-group">
-                  <input
-                    type="text"
-                    name="schedule-other_label"
-                    class="form-control"
-                    title=""
-                    id="id_schedule-other_label"
-                    value="{{ schedule_form.other_label.value }}"
-                  />
+                  {{ schedule_form.other_label }}
                   <span class="input-group-addon">:</span>
-                  <input
-                    type="number"
-                    name="schedule-other_hours"
-                    class="form-control"
-                    title=""
-                    id="id_schedule-other_hours"
-                    value="{{ schedule_form.other_hours.value }}"
-                  />
+                  {{ schedule_form.other_hours }}
                   <div class="input-group-addon">{% trans "h/w" %}</div>
                 </div>
                 {% if schedule_form.other_label.errors %}
@@ -246,6 +217,7 @@
 {% endblock %}
 
 {% block script %}
+  {{ block.super }}
   {{ form.media }}
   {{ foreign_diploma_form.media }}
   <script type="application/javascript">
@@ -280,24 +252,16 @@
 
       $('#foreign-diploma').dependsOn({
           'input[name=diploma_type]': { values: ['FOREIGN'] },
-      }, {
-          onDisable: function () {
-              setNullValue('#diploma_type')
-          },
       });
-
       $('#belgian-diploma').dependsOn({
           'input[name=diploma_type]': { values: ['BELGIAN'] },
-      }, {
-          onDisable: function () {
-              setNullValue('#diploma_type')
-          },
       });
+
       $('#education-type').dependsOn({
           'select[name=belgian_diploma-community]': { values: ['FRENCH_SPEAKING'] },
       }, {
           onDisable: function () {
-              setNullValue('#belgian_diploma-community')
+              setNullValue('#education-type')
           },
       });
       $('#schedule').dependsOn({

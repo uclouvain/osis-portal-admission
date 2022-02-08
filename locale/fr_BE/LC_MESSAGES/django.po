@@ -134,6 +134,9 @@ msgstr "Année d'obtention du diplôme universitaire"
 msgid "Access certificate after a 60 master"
 msgstr "Attestation d'accès après un master 60"
 
+msgid "Access my doctoral students' requests"
+msgstr "Accéder aux dossiers de mes doctorants"
+
 msgid "Acquired credit number"
 msgstr "Crédits acquis"
 
@@ -293,6 +296,9 @@ msgstr "État civil"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Comment to the candidate:"
+msgstr "Commentaire à destination du candidat :"
+
 msgid "Community of education"
 msgstr "Communauté d'enseignement"
 
@@ -349,6 +355,9 @@ msgstr "Nationalité (pays)"
 
 msgid "Course choice"
 msgstr "Choix de la formation"
+
+msgid "Create and manage my enrolment request for UCLouvain"
+msgstr "Créer et gérer ma demande d'inscription UCLouvain"
 
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
@@ -665,6 +674,9 @@ msgstr "Institution"
 msgid "Internal comment"
 msgstr "Commentaire interne"
 
+msgid "Internal comment:"
+msgstr "Commentaire interne :"
+
 msgid "International Baccalaureate"
 msgstr "Baccalauréat international (IBO)"
 
@@ -731,6 +743,9 @@ msgctxt "gender male"
 msgid "Male"
 msgstr "Masculin"
 
+msgid "Manage doctorates"
+msgstr "Gestion des doctorats"
+
 msgid "Mandatory language"
 msgstr "Langue obligatoire"
 
@@ -760,6 +775,9 @@ msgstr "Langues modernes"
 msgid "More than 75%"
 msgstr "Plus de 75%"
 
+msgid "My enrolment request"
+msgstr "Ma demande d'inscription"
+
 msgid "NO"
 msgstr "Non"
 
@@ -780,9 +798,6 @@ msgstr "Non"
 
 msgid "No I don't have a high school diploma"
 msgstr "Non je n'ai pas de diplôme de fin d'études secondaires"
-
-msgid "No comment"
-msgstr "Pas de commentaire"
 
 msgid "No cotutelle"
 msgstr "Pas de cotutelle"
@@ -1309,6 +1324,10 @@ msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
 "Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le "
 "formulaire."
+
+msgid "You may lose your changes, are you sure you want to quit?"
+msgstr ""
+"Vous allez perdre vos modifications, êtes-vous sûr de vouloir quitter ?"
 
 msgid ""
 "You must correct your proposition before being able to request signatures."

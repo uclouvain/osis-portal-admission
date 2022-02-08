@@ -104,7 +104,7 @@ class SupervisionTestCase(TestCase):
         )
 
     def test_should_detail_redirect_to_form_when_not_signing(self):
-        self.mock_api.return_value.retrieve_proposition.return_value.statut = ChoixStatutProposition.IN_PROGRESS.name,
+        self.mock_api.return_value.retrieve_proposition.return_value.statut = ChoixStatutProposition.IN_PROGRESS.name
         url = resolve_url("admission:doctorate-detail:supervision", pk=self.pk)
         response = self.client.get(url)
         # Display the signatures
@@ -254,6 +254,13 @@ class SupervisionTestCase(TestCase):
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
         self.mock_api.return_value.approve_proposition.assert_not_called()
+
+    def test_update_should_redirect_to_detail_if_no_permission(self):
+        self.mock_api.return_value.retrieve_proposition.return_value.links = {
+            'request_signatures': {'error': 'no access'},
+        }
+        response = self.client.get(self.url)
+        self.assertRedirects(response, resolve_url("admission:doctorate-detail:supervision", pk=self.pk))
 
     def test_should_not_display_confirmation_if_errors(self):
         url = resolve_url("admission:doctorate-update:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

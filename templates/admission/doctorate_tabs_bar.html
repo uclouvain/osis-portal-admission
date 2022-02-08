@@ -28,9 +28,9 @@
     <ul class="nav nav-tabs">
         {% for parent, children in tab_tree.items %}
             {% if parent == active_parent %}
-                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon %}
+                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon for_navigation=1 %}
             {% else %}
-                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon %}
+                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon for_navigation=1 %}
             {% endif %}
         {% endfor %}
         {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") %}

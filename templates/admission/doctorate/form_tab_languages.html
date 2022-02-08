@@ -55,6 +55,7 @@
 {% endblock %}
 
 {% block script %}
+  {{ block.super }}
   {{ form.media }}
   <script type="text/javascript">
     $(function() {
