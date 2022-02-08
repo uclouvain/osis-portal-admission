@@ -34,9 +34,6 @@ from django.shortcuts import resolve_url
 
 from osis_admission_sdk import ApiException
 
-# Do not remove the following import as it is used by enum_display templatetag
-from admission.contrib.enums.curriculum import *
-
 from admission.contrib.forms.curriculum import DoctorateAdmissionCurriculumExperienceForm, \
     DoctorateAdmissionCurriculumFileForm
 from admission.contrib.views import DoctorateAdmissionCurriculumDetailView

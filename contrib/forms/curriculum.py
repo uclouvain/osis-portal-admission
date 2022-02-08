@@ -30,8 +30,13 @@ from django.utils.translation import gettext_lazy as _
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.secondary_studies import BelgianCommunitiesOfEducation
-from admission.contrib.forms import EMPTY_CHOICE, get_country_initial_choices, get_academic_year_initial_choices, \
-    CustomDateInput, get_language_initial_choices
+from admission.contrib.forms import (
+    EMPTY_CHOICE,
+    get_country_initial_choices,
+    get_past_academic_years_choices,
+    CustomDateInput,
+    get_language_initial_choices,
+)
 from osis_document.contrib.forms import FileUploadField
 
 
@@ -102,7 +107,7 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
     issue_diploma_date = forms.DateField(
         label=_('Issue diploma date'),
         required=False,
-        widget=CustomDateInput()
+        widget=CustomDateInput(),
     )
     credit_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + CreditType.choices(),
@@ -233,18 +238,15 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
     )
 
     class Media:
-        js = (
-            'dependsOn.min.js',
-            'jquery.mask.min.js',
-        )
+        js = ('dependsOn.min.js',)
 
     def __init__(self, person, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Init the form fields
-        self.fields["academic_year"].choices = get_academic_year_initial_choices(person)
+        self.fields["academic_year"].choices = get_past_academic_years_choices(person)
 
-        if len(self.initial) > 0:
+        if self.initial:
             # with the api data
             # > initialize the choices of autocomplete fields
             # > initialize the fields which are not automatically mapping
@@ -332,9 +334,11 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
                 mandatory_fields.append('institute')
 
             # Result
-            if cleaned_data.get('result') in {Result.SUCCESS.name, Result.SUCCESS_WITH_RESIDUAL_CREDITS}:
-                if cleaned_data.get('graduation_year'):
-                    mandatory_fields.append('obtained_grade')
+            if cleaned_data.get('result') in {
+                Result.SUCCESS.name,
+                Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+            } and cleaned_data.get('graduation_year'):
+                mandatory_fields.append('obtained_grade')
 
             if is_belgian_education:
                 # Belgian studies
@@ -363,7 +367,7 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
                 mandatory_fields += [
                     'study_cycle_type',
                     'linguistic_regime',
-                    'education_name'
+                    'education_name',
                 ]
 
         elif cleaned_data.get('type') == ExperienceType.OTHER_ACTIVITY.name:

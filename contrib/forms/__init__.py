@@ -36,7 +36,6 @@ from admission.utils import format_entity_title
 from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
-EMPTY_CHOICE_LIST = [EMPTY_CHOICE[0]]
 
 
 def get_country_initial_choices(iso_code, person):
@@ -74,8 +73,8 @@ def get_thesis_location_initial_choices(value):
     return EMPTY_CHOICE if not value else EMPTY_CHOICE + ((value, value),)
 
 
-def get_academic_year_initial_choices(person):
-    """Return a list of choices of academic years."""
+def get_past_academic_years_choices(person):
+    """Return a list of choices of past academic years."""
     return EMPTY_CHOICE + tuple(
         (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
         for academic_year in AcademicYearService.get_academic_years(person)
