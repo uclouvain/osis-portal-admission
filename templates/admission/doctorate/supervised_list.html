@@ -39,24 +39,26 @@
   </div>
 
   {% for admission in admissions %}
-    {% panel %}
-      <h3 style="margin-top: 0">
-        {{ admission.prenom_candidat }} {{ admission.nom_candidat }} ({{ admission.reference }})
-        <div><small>{{ admission.intitule_doctorat_fr }} - {{ admission.intitule_secteur_formation }}</small></div>
-      </h3>
-      <div>
-        <em>{% trans "Created at:" context "an admission" %} {{ admission.creee_le }}</em>
-      </div>
-      <div>
-        <em>
-          {% trans "Status:" %}
-          {{ admission.statut|enum_display:'ChoixStatutProposition' }}
-        </em>
-      </div>
+    {% if admission.statut != 'CANCELLED' %}
+      {% panel %}
+        <h3 style="margin-top: 0">
+          {{ admission.prenom_candidat }} {{ admission.nom_candidat }}
+          ({{ admission.reference }})
+          <div><small>{{ admission.intitule_doctorat_fr }}
+            - {{ admission.intitule_secteur_formation }}</small></div>
+        </h3>
+        <div>
+          <em>{% trans "Created at:" context "an admission" %} {{ admission.creee_le }}</em>
+        </div>
+        <div>
+          <em>
+            {% trans "Status:" %}
+            {{ admission.statut|enum_display:'ChoixStatutProposition' }}
+          </em>
+        </div>
 
-      {% footer %}
+        {% footer %}
 
-      {% if admission.statut != 'CANCELLED' %}
         <div class="dropdown pull-right">
           <button
             type="button"
@@ -89,7 +91,7 @@
             {% endif %}
           </ul>
         </div>
-      {% endif %}
-    {% endpanel %}
+      {% endpanel %}
+    {% endif %}
   {% endfor %}
 {% endblock %}
