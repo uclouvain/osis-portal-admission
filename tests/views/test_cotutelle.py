@@ -63,7 +63,7 @@ class CotutelleTestCase(TestCase):
             'update_cotutelle': {'error': 'no access'},
         }
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_cotutelle_get(self):
         url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
