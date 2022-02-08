@@ -75,7 +75,7 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
     if not detail_only:
         includes.append(
             path(
-                'curriculum/<int:experience_id>/',
+                'curriculum/<uuid:experience_id>/',
                 views.DoctorateAdmissionCurriculumFormView.as_view(),
                 name='curriculum',
             )

@@ -45,20 +45,20 @@
                     <a
                         class="btn btn-primary glyphicon glyphicon-pencil"
                         aria-label="{% trans "Update" %}"
-                        {% if experience.id == view.kwargs.experience_id %}
+                        {% if experience.uuid == view.kwargs.experience_id|stringformat:"s" %}
                         data-toggle="modal"
                         data-target="#{{ forms.update_form.prefix }}"
                         {% elif view.kwargs.pk %}
-                        href="{% url 'admission:doctorate-update:curriculum' pk=view.kwargs.pk experience_id=experience.id %}"
+                        href="{% url 'admission:doctorate-update:curriculum' pk=view.kwargs.pk experience_id=experience.uuid %}"
                         {% else %}
-                        href="{% url 'admission:doctorate-create:curriculum' experience_id=experience.id %}"
+                        href="{% url 'admission:doctorate-create:curriculum' experience_id=experience.uuid %}"
                         {% endif %}
                     ></a>
                     <button
                         class="btn btn-danger"
                         data-toggle="modal"
                         data-target="#confirmation-modal"
-                        data-confirmed-id="{{ experience.id }}"
+                        data-confirmed-id="{{ experience.uuid }}"
                         aria-label="{% trans "Delete" %}"
                     >
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -70,10 +70,10 @@
         <div class="panel-body">
 
             {% if experience.type.value == 'OTHER_ACTIVITY' %}
-                {% if experience.activity_type.value != 'UNEMPLOYMENT' and experience.experience.activity_type.value != 'ILLNESS' %}
+                {% if experience.activity_type.value != 'UNEMPLOYMENT' and experience.activity_type.value != 'ILLNESS' %}
                     {% panel _('Institute') title_level=6 %}
-                        {% field_data _("Institute name") experience.institute_name %}
-                        {% field_data _("Institute city") experience.institute_city hide_empty=True %}
+                        {% field_data _("Institute name") experience.institute_name hide_empty=True %}
+                        {% field_data _("Institute city") experience.institute_city %}
                     {% endpanel %}
                 {% endif %}
                 {% panel _('Activity') title_level=6 %}

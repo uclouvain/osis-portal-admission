@@ -23,15 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import uuid
 from unittest.mock import patch, Mock, ANY
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_admission_sdk import ApiException
-from osis_admission_sdk.model.experience_output_country import ExperienceOutputCountry
-from osis_admission_sdk.model.experience_output_curriculum_year import ExperienceOutputCurriculumYear
-from rest_framework import status
 from rest_framework.status import HTTP_200_OK
 
 from admission.constants import BE_ISO_CODE
@@ -105,8 +103,11 @@ class CurriculumTestCase(ExtendedTestCase):
         api_person_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = api_person_patcher.start()
 
+        self.uuid = uuid.uuid4()
+        self.other_uuid = uuid.uuid4()
+
         mock_experience = Mock(
-            id=1,
+            uuid=self.uuid,
             curriculum_year=Mock(
                 academic_year=2020,
                 id=1,
@@ -121,7 +122,7 @@ class CurriculumTestCase(ExtendedTestCase):
             activity_type=ActivityType.WORK.name,
             activity_position='Developer',
             to_dict=Mock(return_value={
-                'id': 1,
+                'uuid': str(self.uuid),
                 'curriculum_year': {
                     'academic_year': 2020,
                     'id': 1,
@@ -171,7 +172,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
     def test_curriculum_get_form_with_specified_known_experience(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-                          experience_id=1)
+                          experience_id=self.uuid)
         response = self.client.get(url)
 
         self.mock_person_api.return_value.list_curriculum_experiences_admission.assert_called()
@@ -180,7 +181,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
     def test_curriculum_get_form_with_specified_unknown_experience(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-                          experience_id=2)
+                          experience_id=self.other_uuid)
         response = self.client.get(url)
 
         self.mock_person_api.return_value.list_curriculum_experiences_admission.assert_called()
@@ -402,7 +403,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
     def test_curriculum_post_update_experience_valid_update(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-                          experience_id=1)
+                          experience_id=self.uuid)
         redirect_url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
 
@@ -419,7 +420,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
         self.mock_person_api.return_value.update_curriculum_experience_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
-            xp='1',
+            xp=str(self.uuid),
             experience_input={
                 'academic_year': 2020,
                 'type': 'OTHER_ACTIVITY',
@@ -460,7 +461,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertRedirects(response, redirect_url)
 
     def test_curriculum_post_update_experience_valid_create(self):
-        url = resolve_url("admission:doctorate-create:curriculum", experience_id=1)
+        url = resolve_url("admission:doctorate-create:curriculum", experience_id=self.uuid)
         redirect_url = resolve_url("admission:doctorate-create:curriculum")
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
 
@@ -476,7 +477,7 @@ class CurriculumTestCase(ExtendedTestCase):
         })
 
         self.mock_person_api.return_value.update_curriculum_experience.assert_called_with(
-            xp='1',
+            xp=str(self.uuid),
             experience_input={
                 'academic_year': 2020,
                 'type': 'OTHER_ACTIVITY',
@@ -518,7 +519,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
     def test_curriculum_post_update_experience_invalid_form(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-                          experience_id=1)
+                          experience_id=self.uuid)
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
 
         response = self.client.post(url, data={
@@ -535,7 +536,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertSubFormError(response, 'update_form', 'activity_type', _('This field is required.'))
 
     def test_curriculum_post_update_experience_invalid_request(self):
-        url = resolve_url("admission:doctorate-create:curriculum", experience_id=1)
+        url = resolve_url("admission:doctorate-create:curriculum", experience_id=self.uuid)
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
         self.mock_person_api.return_value.update_curriculum_experience.side_effect = ApiException(
             status=404,
@@ -562,12 +563,12 @@ class CurriculumTestCase(ExtendedTestCase):
 
         response = self.client.post(url, data={
             CurriculumForm.EXPERIENCE_DELETION.value: '',
-            'confirmed-id': '1',
+            'confirmed-id': str(self.uuid),
         })
 
         self.mock_person_api.return_value.destroy_curriculum_experience_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
-            xp='1',
+            xp=str(self.uuid),
             **self.api_default_params,
         )
         self.assertRedirects(response, url)
@@ -577,11 +578,11 @@ class CurriculumTestCase(ExtendedTestCase):
 
         response = self.client.post(url, data={
             CurriculumForm.EXPERIENCE_DELETION.value: '',
-            'confirmed-id': '1',
+            'confirmed-id': str(self.uuid),
         })
 
         self.mock_person_api.return_value.destroy_curriculum_experience.assert_called_with(
-            xp='1',
+            xp=str(self.uuid),
             **self.api_default_params,
         )
         self.assertRedirects(response, url)
@@ -593,11 +594,11 @@ class CurriculumTestCase(ExtendedTestCase):
         )
         response = self.client.post(url, data={
             CurriculumForm.EXPERIENCE_DELETION.value: '',
-            'confirmed-id': '1',
+            'confirmed-id': str(self.uuid),
         })
 
         self.mock_person_api.return_value.destroy_curriculum_experience.assert_called_with(
-            xp='1',
+            xp=str(self.uuid),
             **self.api_default_params,
         )
         self.assertEqual(response.status_code, 200)

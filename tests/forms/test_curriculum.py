@@ -26,9 +26,7 @@
 import datetime
 from unittest.mock import patch, Mock
 
-from django.shortcuts import resolve_url
 from django.test import TestCase
-from osis_admission_sdk.model.experience_output import ExperienceOutput
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.curriculum import ExperienceType, Result, Grade, CreditType, StudySystem, \

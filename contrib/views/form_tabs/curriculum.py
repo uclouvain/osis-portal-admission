@@ -56,7 +56,7 @@ class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailVie
     def get_context_data(self, submitted_form=None, **kwargs):
         # The admission (if available), the experience list and the curriculum file are loaded from the parent
         context_data = super().get_context_data(**kwargs)
-        experience_id = self.kwargs.get('experience_id')
+        experience_id = str(self.kwargs.get('experience_id', ''))
 
         # Add the necessary forms (initialize them and add the submitted one)
         submitted_form_prefix = submitted_form.prefix if submitted_form else ''
@@ -81,7 +81,7 @@ class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailVie
                 context_data['forms']['update_form'] = submitted_form
             else:
                 experience = next(
-                    (exp for exp in context_data.get('curriculum_experiences') if exp.id == experience_id), None,
+                    (exp for exp in context_data.get('curriculum_experiences') if exp.uuid == experience_id), None,
                 )
                 if experience:
                     context_data['forms']['update_form'] = DoctorateAdmissionCurriculumExperienceForm(
