@@ -35,6 +35,7 @@ from rest_framework.status import HTTP_200_OK
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.curriculum import ExperienceType, ActivityType
 from admission.contrib.views.form_tabs.curriculum import CurriculumForm
+from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
 
 
@@ -103,48 +104,105 @@ class CurriculumTestCase(ExtendedTestCase):
         api_person_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = api_person_patcher.start()
 
-        self.uuid = uuid.uuid4()
+        self.first_uuid = uuid.uuid4()
+        self.second_uuid = uuid.uuid4()
         self.other_uuid = uuid.uuid4()
 
-        mock_experience = Mock(
-            uuid=self.uuid,
+        mock_first_experience = Mock(
+            uuid=self.first_uuid,
             curriculum_year=Mock(
                 academic_year=2020,
                 id=1,
             ),
-            country=Mock(
-                iso_code=BE_ISO_CODE,
-                name='Belgium',
-            ),
+            country=BE_ISO_CODE,
             type=ExperienceType.OTHER_ACTIVITY.name,
             institute_name='UCL',
             institute_city='Louvain-La-Neuve',
             activity_type=ActivityType.WORK.name,
             activity_position='Developer',
+            linguistic_regime='',
             to_dict=Mock(return_value={
-                'uuid': str(self.uuid),
+                'uuid': str(self.first_uuid),
                 'curriculum_year': {
                     'academic_year': 2020,
                     'id': 1,
                 },
-                'country': {
-                    'iso_code': BE_ISO_CODE,
-                    'name': 'Belgium',
-                },
+                'country': BE_ISO_CODE,
                 'type': ExperienceType.OTHER_ACTIVITY.name,
                 'institute_name': 'UCL',
                 'institute_city': 'Louvain-La-Neuve',
                 'activity_type': ActivityType.WORK.name,
                 'activity_position': 'Developer',
-
+                'linguistic_regime': 'FR',
+            })
+        )
+        mock_second_experience = Mock(
+            uuid=self.second_uuid,
+            curriculum_year=Mock(
+                academic_year=2019,
+                id=2,
+            ),
+            country=BE_ISO_CODE,
+            type=ExperienceType.OTHER_ACTIVITY.name,
+            institute_name='UCL',
+            institute_city='Louvain-La-Neuve',
+            activity_type=ActivityType.WORK.name,
+            activity_position='Developer',
+            linguistic_regime='',
+            to_dict=Mock(return_value={
+                'uuid': str(self.second_uuid),
+                'curriculum_year': {
+                    'academic_year': 2019,
+                    'id': 2,
+                },
+                'country': BE_ISO_CODE,
+                'type': ExperienceType.OTHER_ACTIVITY.name,
+                'institute_name': 'UCL',
+                'institute_city': 'Louvain-La-Neuve',
+                'activity_type': ActivityType.WORK.name,
+                'activity_position': 'Developer',
+                'linguistic_regime': 'FR',
             })
         )
 
         self.mock_person_api.return_value.list_curriculum_experiences_admission.return_value = [
-            mock_experience,
+            mock_first_experience,
+            mock_second_experience,
         ]
 
         self.addCleanup(api_person_patcher.stop)
+
+        # Mock countries api
+        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
+        self.mock_countries_api = countries_api_patcher.start()
+
+        def get_countries(**kwargs):
+            countries = [
+                MockCountry(iso_code='FR', name='France', name_en='France'),
+                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
+            ]
+            if kwargs.get('iso_code'):
+                return Mock(results=[c for c in countries if c.iso_code == kwargs.get('iso_code')])
+            return Mock(results=countries)
+
+        self.mock_countries_api.return_value.countries_list.side_effect = get_countries
+        self.addCleanup(countries_api_patcher.stop)
+
+        # Mock languages api
+        languages_api_patcher = patch("osis_reference_sdk.api.languages_api.LanguagesApi")
+        self.mock_languages_api = languages_api_patcher.start()
+
+        def get_languages(**kwargs):
+            languages = [
+                MockLanguage(code='FR', name='Français', name_en='French'),
+                MockLanguage(code='EN', name='Anglais', name_en='English'),
+            ]
+            if kwargs.get('code'):
+                return Mock(results=[c for c in languages if c.code == kwargs.get('code')])
+            return Mock(results=languages)
+
+        self.mock_languages_api.return_value.languages_list.side_effect = get_languages
+        self.addCleanup(languages_api_patcher.stop)
 
         # Mock document api
         patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
@@ -172,7 +230,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
     def test_curriculum_get_form_with_specified_known_experience(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-                          experience_id=self.uuid)
+                          experience_id=self.first_uuid)
         response = self.client.get(url)
 
         self.mock_person_api.return_value.list_curriculum_experiences_admission.assert_called()
@@ -403,7 +461,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
     def test_curriculum_post_update_experience_valid_update(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-                          experience_id=self.uuid)
+                          experience_id=self.first_uuid)
         redirect_url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
 
@@ -420,7 +478,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
         self.mock_person_api.return_value.update_curriculum_experience_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
-            xp=str(self.uuid),
+            xp=str(self.first_uuid),
             experience_input={
                 'academic_year': 2020,
                 'type': 'OTHER_ACTIVITY',
@@ -461,7 +519,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertRedirects(response, redirect_url)
 
     def test_curriculum_post_update_experience_valid_create(self):
-        url = resolve_url("admission:doctorate-create:curriculum", experience_id=self.uuid)
+        url = resolve_url("admission:doctorate-create:curriculum", experience_id=self.first_uuid)
         redirect_url = resolve_url("admission:doctorate-create:curriculum")
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
 
@@ -477,7 +535,7 @@ class CurriculumTestCase(ExtendedTestCase):
         })
 
         self.mock_person_api.return_value.update_curriculum_experience.assert_called_with(
-            xp=str(self.uuid),
+            xp=str(self.first_uuid),
             experience_input={
                 'academic_year': 2020,
                 'type': 'OTHER_ACTIVITY',
@@ -519,7 +577,7 @@ class CurriculumTestCase(ExtendedTestCase):
 
     def test_curriculum_post_update_experience_invalid_form(self):
         url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-                          experience_id=self.uuid)
+                          experience_id=self.first_uuid)
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
 
         response = self.client.post(url, data={
@@ -536,7 +594,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertSubFormError(response, 'update_form', 'activity_type', _('This field is required.'))
 
     def test_curriculum_post_update_experience_invalid_request(self):
-        url = resolve_url("admission:doctorate-create:curriculum", experience_id=self.uuid)
+        url = resolve_url("admission:doctorate-create:curriculum", experience_id=self.first_uuid)
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
         self.mock_person_api.return_value.update_curriculum_experience.side_effect = ApiException(
             status=404,
@@ -563,12 +621,12 @@ class CurriculumTestCase(ExtendedTestCase):
 
         response = self.client.post(url, data={
             CurriculumForm.EXPERIENCE_DELETION.value: '',
-            'confirmed-id': str(self.uuid),
+            'confirmed-id': str(self.first_uuid),
         })
 
         self.mock_person_api.return_value.destroy_curriculum_experience_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
-            xp=str(self.uuid),
+            xp=str(self.first_uuid),
             **self.api_default_params,
         )
         self.assertRedirects(response, url)
@@ -578,11 +636,11 @@ class CurriculumTestCase(ExtendedTestCase):
 
         response = self.client.post(url, data={
             CurriculumForm.EXPERIENCE_DELETION.value: '',
-            'confirmed-id': str(self.uuid),
+            'confirmed-id': str(self.first_uuid),
         })
 
         self.mock_person_api.return_value.destroy_curriculum_experience.assert_called_with(
-            xp=str(self.uuid),
+            xp=str(self.first_uuid),
             **self.api_default_params,
         )
         self.assertRedirects(response, url)
@@ -594,11 +652,11 @@ class CurriculumTestCase(ExtendedTestCase):
         )
         response = self.client.post(url, data={
             CurriculumForm.EXPERIENCE_DELETION.value: '',
-            'confirmed-id': str(self.uuid),
+            'confirmed-id': str(self.first_uuid),
         })
 
         self.mock_person_api.return_value.destroy_curriculum_experience.assert_called_with(
-            xp=str(self.uuid),
+            xp=str(self.first_uuid),
             **self.api_default_params,
         )
         self.assertEqual(response.status_code, 200)

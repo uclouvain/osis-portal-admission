@@ -118,17 +118,13 @@ class CurriculumFormTestCase(TestCase):
                 'academic_year': 2020,
                 'id': 1,
             },
-            'country': {
-                'iso_code': BE_ISO_CODE,
-                'name': 'Belgium',
-            },
+            'country': BE_ISO_CODE,
+            'country_name': 'Belgium',
             'program': None,
             'institute': None,
             'is_valuated': False,
-            'linguistic_regime': {
-                'code': 'FR',
-                'name': 'Français',
-            },
+            'linguistic_regime': 'FR',
+            'linguistic_regime_name': 'French',
             'type': ExperienceType.HIGHER_EDUCATION.name,
             'institute_name': 'UCL',
             'institute_city': 'Louvain-La-Neuve',
@@ -173,7 +169,7 @@ class CurriculumFormTestCase(TestCase):
             form.fields['country'].widget.choices,
         )
         self.assertIn(
-            ('FR', 'Français'),
+            ('FR', 'French'),
             form.fields['linguistic_regime'].widget.choices,
         )
         self.assertIn(
@@ -189,6 +185,7 @@ class CurriculumFormTestCase(TestCase):
         experience = {
             'academic_year': 2020,
             'country': BE_ISO_CODE,
+            'country_name': 'Belgium',
             'type': ExperienceType.HIGHER_EDUCATION.name,
             'institute_name': 'UCL',
             'institute_postal_code': '1348',
@@ -352,6 +349,7 @@ class CurriculumFormTestCase(TestCase):
         experience = {
             'academic_year': 2020,
             'country': 'FR',
+            'country_name': 'France',
             'type': ExperienceType.HIGHER_EDUCATION.name,
             'institute_name': 'Institute name',
             'institute_postal_code': '44000',
@@ -369,6 +367,7 @@ class CurriculumFormTestCase(TestCase):
             'dissertation_summary_0': 'uuid1',
             'institute_not_found': True,
             'linguistic_regime': 'FR',
+            'linguistic_regime_name': 'French',
             'study_cycle_type': ForeignStudyCycleType.MASTER.name,
             'education_name': 'IT',
         }
@@ -449,6 +448,7 @@ class CurriculumFormTestCase(TestCase):
         experience = {
             'academic_year': 2020,
             'country': BE_ISO_CODE,
+            'country_name': 'Belgium',
             'type': ExperienceType.OTHER_ACTIVITY.name,
             'activity_institute_name': 'UCL',
             'activity_institute_city': 'Louvain-La-Neuve',

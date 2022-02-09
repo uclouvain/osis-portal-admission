@@ -51,43 +51,43 @@ class DoctorateAdmissionCurriculumFileForm(forms.Form):
 class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
     # Common
     academic_year = forms.ChoiceField(
-        label=_("Academic year"),
+        label=_('Academic year'),
     )
     type = forms.ChoiceField(
-        label=_("Type"),
+        label=_('Type'),
         choices=ExperienceType.choices(),
         widget=forms.RadioSelect,
     )
     country = forms.CharField(
-        label=_("Country"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+        label=_('Country'),
+        widget=autocomplete.ListSelect2(url='admission:autocomplete:country'),
     )
     # Common university higher education
     institute = forms.CharField(
-        label=_("Institute"),
+        label=_('Institute'),
         required=False,
         empty_value=None,
         # TODO Enable the field and add autocomplete
         disabled=True,
     )
     institute_not_found = forms.BooleanField(
-        label=_("I don't find my institute in the list."),
+        label=_('I don\'t find my institute in the list.'),
         required=False,
     )
     institute_name = forms.CharField(
-        label=_("Institute name"),
+        label=_('Institute name'),
         required=False,
     )
     institute_postal_code = forms.CharField(
-        label=_("Institute postal code"),
+        label=_('Institute postal code'),
         required=False,
     )
     education_name = forms.CharField(
-        label=_("Name of the diploma or of the education"),
+        label=_('Name of the diploma or of the education'),
         required=False,
     )
     result = forms.ChoiceField(
-        label=_("Result"),
+        label=_('Result'),
         required=False,
         choices=EMPTY_CHOICE + Result.choices(),
     )
@@ -153,51 +153,51 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
     # Belgian higher education
     belgian_education_community = forms.ChoiceField(
         choices=BelgianCommunitiesOfEducation.choices(),
-        label=_("Education community"),
+        label=_('Education community'),
         required=False,
         widget=forms.RadioSelect,
     )
     institute_city_be = forms.CharField(
-        label=_("Institute city"),
+        label=_('Institute city'),
         required=False,
         widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:city",
+            url='admission:autocomplete:city',
             forward=(forward.Field('institute_postal_code', 'postal_code'),),
         ),
     )
     program = forms.CharField(
-        label=_("Program"),
+        label=_('Program'),
         required=False,
         empty_value=None,
         # TODO Enable the field and add autocomplete
         disabled=True,
     )
     program_not_found = forms.BooleanField(
-        label=_("I don't find my program in the list."),
+        label=_('I don\'t find my program in the list.'),
         required=False,
     )
     other_program = forms.CharField(
-        label=_("Other program"),
+        label=_('Other program'),
         required=False,
     )
     study_system = forms.ChoiceField(
         choices=EMPTY_CHOICE + StudySystem.choices(),
-        label=_("Study system"),
+        label=_('Study system'),
         required=False,
     )
     # Foreign higher education
     institute_city = forms.CharField(
-        label=_("Institute city"),
+        label=_('Institute city'),
         required=False,
     )
     study_cycle_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + ForeignStudyCycleType.choices(),
-        label=_("Study cycle type"),
+        label=_('Study cycle type'),
         required=False,
     )
     linguistic_regime = forms.CharField(
-        label=_("Linguistic regime"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:language"),
+        label=_('Linguistic regime'),
+        widget=autocomplete.ListSelect2(url='admission:autocomplete:language'),
         required=False,
         empty_value=None,
     )
@@ -229,11 +229,11 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
         required=False,
     )
     activity_institute_name = forms.CharField(
-        label=_("Institute name"),
+        label=_('Institute name'),
         required=False,
     )
     activity_institute_city = forms.CharField(
-        label=_("Institute city"),
+        label=_('Institute city'),
         required=False,
     )
 
@@ -244,7 +244,7 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         # Init the form fields
-        self.fields["academic_year"].choices = get_past_academic_years_choices(person)
+        self.fields['academic_year'].choices = get_past_academic_years_choices(person)
 
         if self.initial:
             # with the api data
@@ -253,19 +253,17 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
 
             curriculum_year = self.initial.get('curriculum_year')
             if curriculum_year:
-                self.initial["academic_year"] = curriculum_year.get('academic_year')
+                self.initial['academic_year'] = curriculum_year.get('academic_year')
 
-            initial_country = self.initial.get('country')
-            if initial_country:
-                self.fields['country'].widget.choices = ((initial_country['iso_code'], initial_country['name']),)
-                self.initial['country'] = initial_country['iso_code']
+            initial_country_code = self.initial.get('country')
+            if initial_country_code:
+                self.fields['country'].widget.choices = ((initial_country_code, self.initial.get('country_name')),)
 
-            initial_linguistic_regime = self.initial.get('linguistic_regime')
-            if initial_linguistic_regime:
+            initial_linguistic_regime_code = self.initial.get('linguistic_regime')
+            if initial_linguistic_regime_code:
                 self.fields['linguistic_regime'].widget.choices = (
-                    (initial_linguistic_regime.get('code'), initial_linguistic_regime['name']),
+                    (initial_linguistic_regime_code, self.initial.get('linguistic_regime_name')),
                 )
-                self.initial['linguistic_regime'] = initial_linguistic_regime['code']
 
             initial_education_name = self.initial.get('education_name')
             if initial_education_name:
@@ -292,12 +290,12 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
             # > initialize the choices of autocomplete fields
 
             self.fields['country'].widget.choices = get_country_initial_choices(
-                self.data.get(self.add_prefix("country")),
+                self.data.get(self.add_prefix('country')),
                 person,
             )
 
             self.fields['linguistic_regime'].widget.choices = get_language_initial_choices(
-                self.data.get(self.add_prefix("linguistic_regime")),
+                self.data.get(self.add_prefix('linguistic_regime')),
                 person,
             )
 

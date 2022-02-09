@@ -33,7 +33,7 @@
     <details class="experience panel panel-default" open>
 
         <summary class="panel-heading">
-            <h5>{{ experience.type.value|enum_display:"ExperienceType" }} - {{ experience.country.name }}</h5>
+            <h5>{{ experience.type.value|enum_display:"ExperienceType" }} - {{ experience.country_name }}</h5>
             <div class="experience-actions">
                 {% if experience.is_valuated %}
                     <span
@@ -84,7 +84,7 @@
                     {% field_data _("Activity certificate") experience.activity_certificate %}
                 {% endpanel %}
 
-            {% elif experience.type.value == 'HIGHER_EDUCATION' and experience.country.iso_code == 'BE' %}
+            {% elif experience.type.value == 'HIGHER_EDUCATION' and experience.country == 'BE' %}
                 {% panel _('Institute') title_level=6 %}
                     {% field_data _("Institute name") experience.institute.name|default:experience.institute_name %}
                     {% field_data _("Education community") experience.belgian_education_community.value|enum_display:"BelgianCommunitiesOfEducation" %}
@@ -144,7 +144,7 @@
                 {% panel _('Studies') title_level=6 %}
                     {% field_data _("Program") experience.education_name %}
                     <div class="row">
-                        {% field_data _("Linguistic regime") experience.linguistic_regime.name css_class="col-md-6" %}
+                        {% field_data _("Linguistic regime") experience.linguistic_regime_name css_class="col-md-6" %}
                         {% field_data _("Study cycle type") experience.study_cycle_type.value|enum_display:"ForeignStudyCycleType" css_class="col-md-6" %}
                     </div>
                 {% endpanel %}
