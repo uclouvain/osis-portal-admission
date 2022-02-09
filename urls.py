@@ -55,21 +55,30 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
 
     # Add pattern for each tab
     includes = [
-        path(tab_name, import_string(module_path.format(
-            tab=tab_name,
-            view='DoctorateAdmission{}{}'.format(tab_name.title().replace('-', ''), view_suffix),
-        )).as_view(), name=tab_name)
+        path(
+            tab_name,
+            import_string(
+                module_path.format(
+                    tab=tab_name,
+                    view='DoctorateAdmission{}{}'.format(tab_name.title().replace('-', ''), view_suffix),
+                )
+            ).as_view(),
+            name=tab_name,
+        )
         for tab_name in tab_names
     ]
 
     # Some extra actions
     if not create_only:
-        includes.append(
-            path(
-                'remove-member/<type>/<matricule>',
-                views.DoctorateAdmissionRemoveActorView.as_view(),
-                name='remove-actor'
-            )
+        includes.extend(
+            [
+                path(
+                    'remove-member/<type>/<matricule>',
+                    views.DoctorateAdmissionRemoveActorView.as_view(),
+                    name='remove-actor',
+                ),
+                path('approve-by-pdf', views.DoctorateAdmissionApprovalByPdfView.as_view(), name='approve-by-pdf'),
+            ]
         )
 
     if not detail_only:

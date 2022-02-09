@@ -23,13 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, resolve_url
 from django.views.generic import FormView
+from django.views.generic.edit import BaseFormView
+from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
-from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
+from admission.contrib.forms.supervision import DoctorateAdmissionApprovalByPdfForm, DoctorateAdmissionApprovalForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
 
@@ -59,6 +62,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
             uuid=str(self.kwargs['pk']),
         )
         context['approval_form'] = DoctorateAdmissionApprovalForm(self.request.POST or None)
+        context['approve_by_pdf_form'] = DoctorateAdmissionApprovalByPdfForm()
         return context
 
     def prepare_data(self, data):
@@ -84,3 +88,20 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
 
     def get_success_url(self):
         return self.request.get_full_path()
+
+
+class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+    form_class = DoctorateAdmissionApprovalByPdfForm
+
+    def call_webservice(self, data):
+        return AdmissionSupervisionService.approve_by_pdf(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+            **data,
+        )
+
+    def get_success_url(self):
+        return resolve_url('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
+
+    def form_invalid(self, form):
+        return redirect('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
