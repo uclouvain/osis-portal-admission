@@ -25,11 +25,11 @@
 # ##############################################################################
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.translation import get_language
+from django.shortcuts import redirect
+from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import TemplateView
-from django.utils.translation import gettext_lazy as _
 
-from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
+from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
 from admission.services.proposition import AdmissionPropositionService
@@ -39,11 +39,29 @@ from admission.utils.utils import format_entity_title
 class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'admission/doctorate/detail_project.html'
 
+    def get_admission(self):
+        if not hasattr(self, 'admission'):
+            self.admission = AdmissionPropositionService.get_proposition(
+                person=self.request.user.person,
+                uuid=str(self.kwargs['pk']),
+            )
+        return self.admission
+
+    def get(self, request, *args, **kwargs):
+        # Always redirect to update form as long as signatures are not sent
+        admission = self.get_admission()
+        if (
+            admission.statut == ChoixStatutProposition.IN_PROGRESS.name
+            and 'url' in admission.links['update_proposition']
+        ):
+            return redirect('admission:doctorate-update:project', **self.kwargs)
+
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person, uuid=str(self.kwargs['pk']),
-        )
+        context_data['admission'] = self.get_admission()
+
         # There is a bug with translated strings with percent signs
         # https://docs.djangoproject.com/en/3.2/topics/i18n/translation/#troubleshooting-gettext-incorrectly-detects-python-format-in-strings-with-percent-signs
         # xgettext:no-python-format
@@ -51,7 +69,8 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
         # Lookup sector label from API
         attr_name = 'intitule_fr' if get_language() == settings.LANGUAGE_CODE else 'intitule_en'
         context_data['sector_label'] = [
-            getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
+            getattr(s, attr_name)
+            for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
             if s.sigle == context_data['admission'].code_secteur_formation
         ][0]
 
@@ -59,7 +78,7 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
         if context_data['admission'].institut_these:
             institute = EntitiesService.get_ucl_entity(
                 person=self.request.user.person,
-                uuid=context_data['admission'].institut_these
+                uuid=context_data['admission'].institut_these,
             )
             context_data['admission'].institut_these = format_entity_title(institute)
 

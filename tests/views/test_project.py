@@ -291,6 +291,15 @@ class ProjectViewTestCase(TestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
+    def test_project_detail_should_redirect_if_not_signing(self):
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.statut = (
+            ChoixStatutProposition.IN_PROGRESS.name
+        )
+        url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.get(url)
+        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+
     def test_detail(self):
         url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(

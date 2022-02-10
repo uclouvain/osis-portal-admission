@@ -30,6 +30,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums.projet import ChoixStatutProposition
 from base.tests.factories.person import PersonFactory
 
 
@@ -69,6 +70,12 @@ class CotutelleTestCase(TestCase):
         url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
         self.assertContains(response, "Foobar")
+
+    def test_cotutelle_detail_should_redirect_if_not_signing(self):
+        self.mock_api.return_value.retrieve_proposition.return_value.statut = ChoixStatutProposition.IN_PROGRESS.name
+        url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.get(url)
+        self.assertRedirects(response, self.url)
 
     def test_cotutelle_get_form(self):
         response = self.client.get(self.url)
