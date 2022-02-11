@@ -234,7 +234,7 @@ class ProjectViewTestCase(TestCase):
             'update_proposition': {'error': 'no access'},
         }
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_consistency_errors(self):
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
