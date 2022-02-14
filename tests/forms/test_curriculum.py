@@ -26,7 +26,9 @@
 import datetime
 from unittest.mock import patch, Mock
 
+from django.conf import settings
 from django.test import TestCase
+from django.utils.translation import get_language
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.curriculum import ExperienceType, Result, Grade, CreditType, StudySystem, \
@@ -41,6 +43,8 @@ class CurriculumFormTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
+
+        cls.is_supported_language = get_language() == settings.LANGUAGE_CODE
 
     def setUp(self):
         # Mock countries api
@@ -119,12 +123,10 @@ class CurriculumFormTestCase(TestCase):
                 'id': 1,
             },
             'country': BE_ISO_CODE,
-            'country_name': 'Belgium',
             'program': None,
             'institute': None,
             'is_valuated': False,
             'linguistic_regime': 'FR',
-            'linguistic_regime_name': 'French',
             'type': ExperienceType.HIGHER_EDUCATION.name,
             'institute_name': 'UCL',
             'institute_city': 'Louvain-La-Neuve',
@@ -165,11 +167,11 @@ class CurriculumFormTestCase(TestCase):
 
         # Check that the choices are well initialized
         self.assertIn(
-            (BE_ISO_CODE, 'Belgium'),
+            (BE_ISO_CODE, 'Belgique' if self.is_supported_language else 'Belgium'),
             form.fields['country'].widget.choices,
         )
         self.assertIn(
-            ('FR', 'French'),
+            ('FR', 'Français' if self.is_supported_language else 'French'),
             form.fields['linguistic_regime'].widget.choices,
         )
         self.assertIn(
@@ -185,7 +187,6 @@ class CurriculumFormTestCase(TestCase):
         experience = {
             'academic_year': 2020,
             'country': BE_ISO_CODE,
-            'country_name': 'Belgium',
             'type': ExperienceType.HIGHER_EDUCATION.name,
             'institute_name': 'UCL',
             'institute_postal_code': '1348',
@@ -349,7 +350,6 @@ class CurriculumFormTestCase(TestCase):
         experience = {
             'academic_year': 2020,
             'country': 'FR',
-            'country_name': 'France',
             'type': ExperienceType.HIGHER_EDUCATION.name,
             'institute_name': 'Institute name',
             'institute_postal_code': '44000',
@@ -367,7 +367,6 @@ class CurriculumFormTestCase(TestCase):
             'dissertation_summary_0': 'uuid1',
             'institute_not_found': True,
             'linguistic_regime': 'FR',
-            'linguistic_regime_name': 'French',
             'study_cycle_type': ForeignStudyCycleType.MASTER.name,
             'education_name': 'IT',
         }
@@ -385,7 +384,7 @@ class CurriculumFormTestCase(TestCase):
             form.fields['country'].widget.choices,
         )
         self.assertIn(
-            ('FR', 'Français'),
+            ('FR', 'Français' if self.is_supported_language else 'French'),
             form.fields['linguistic_regime'].widget.choices,
         )
         self.assertIn(
@@ -448,7 +447,6 @@ class CurriculumFormTestCase(TestCase):
         experience = {
             'academic_year': 2020,
             'country': BE_ISO_CODE,
-            'country_name': 'Belgium',
             'type': ExperienceType.OTHER_ACTIVITY.name,
             'activity_institute_name': 'UCL',
             'activity_institute_city': 'Louvain-La-Neuve',

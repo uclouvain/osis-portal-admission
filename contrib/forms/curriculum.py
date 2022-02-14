@@ -243,27 +243,25 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
     def __init__(self, person, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Init the form fields
+        # Initialize the choices of some fields
         self.fields['academic_year'].choices = get_past_academic_years_choices(person)
 
+        self.fields['country'].widget.choices = get_country_initial_choices(
+            self.data.get(self.add_prefix('country'), self.initial.get('country')),
+            person,
+        )
+
+        self.fields['linguistic_regime'].widget.choices = get_language_initial_choices(
+            self.data.get(self.add_prefix('linguistic_regime'), self.initial.get('linguistic_regime')),
+            person,
+        )
+
+        # Initialize the fields which are not automatically mapping
         if self.initial:
-            # with the api data
-            # > initialize the choices of autocomplete fields
-            # > initialize the fields which are not automatically mapping
 
             curriculum_year = self.initial.get('curriculum_year')
             if curriculum_year:
                 self.initial['academic_year'] = curriculum_year.get('academic_year')
-
-            initial_country_code = self.initial.get('country')
-            if initial_country_code:
-                self.fields['country'].widget.choices = ((initial_country_code, self.initial.get('country_name')),)
-
-            initial_linguistic_regime_code = self.initial.get('linguistic_regime')
-            if initial_linguistic_regime_code:
-                self.fields['linguistic_regime'].widget.choices = (
-                    (initial_linguistic_regime_code, self.initial.get('linguistic_regime_name')),
-                )
 
             initial_education_name = self.initial.get('education_name')
             if initial_education_name:
@@ -284,20 +282,6 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
                 self.initial['activity_institute_city'] = initial_institute_city
 
             self.initial['activity_institute_name'] = self.initial.get('institute_name')
-
-        else:
-            # with the POST request data
-            # > initialize the choices of autocomplete fields
-
-            self.fields['country'].widget.choices = get_country_initial_choices(
-                self.data.get(self.add_prefix('country')),
-                person,
-            )
-
-            self.fields['linguistic_regime'].widget.choices = get_language_initial_choices(
-                self.data.get(self.add_prefix('linguistic_regime')),
-                person,
-            )
 
     def clean(self):
         cleaned_data = super().clean()

@@ -46,7 +46,6 @@ class DoctorateAdmissionCurriculumDetailView(LoginRequiredMixin, TemplateView):
         context_data = super().get_context_data(**kwargs)
 
         proposition_uuid = str(self.kwargs.get('pk', ''))
-        is_supported_language = get_language() == settings.LANGUAGE_CODE
 
         if proposition_uuid:
             context_data['admission'] = AdmissionPropositionService.get_proposition(
@@ -66,36 +65,32 @@ class DoctorateAdmissionCurriculumDetailView(LoginRequiredMixin, TemplateView):
 
         context_data['BE_ISO_CODE'] = BE_ISO_CODE
 
-        # Retrieve more information about the foreign key fields
-        # Store previous data to prevent unnecessary requests
-        retrieved_countries = dict()
-        retrieved_linguistic_regimes = dict()
+        self.initialize_countries_and_linguistic_regimes(context_data['curriculum_experiences'])
 
-        for experience in context_data['curriculum_experiences']:
+        return context_data
+
+    def initialize_countries_and_linguistic_regimes(self, curriculum_experiences):
+        """
+        Add into each experience, the names of the country and the linguistic regime.
+        """
+        is_supported_language = get_language() == settings.LANGUAGE_CODE
+
+        for experience in curriculum_experiences:
 
             # Initialize the country
             if experience.country:
-                if experience.country in retrieved_countries:
-                    experience.country = retrieved_countries.get(experience.country)
-                else:
-                    country = CountriesService.get_country(
-                        iso_code=experience.country,
-                        person=self.request.user.person,
-                    )
-                    experience.country_name = country.name if is_supported_language else country.name_en
-                    retrieved_countries[experience.country] = experience.country_name
+                country = CountriesService.get_country(
+                    iso_code=experience.country,
+                    person=self.request.user.person,
+                )
+                experience.country_name = country.name if is_supported_language else country.name_en
 
             # Initialize the linguistic regime
             if experience.linguistic_regime:
-                if experience.linguistic_regime in retrieved_linguistic_regimes:
-                    experience.linguistic_regime_name = retrieved_linguistic_regimes.get(experience.linguistic_regime)
-                else:
-                    linguistic_regime = LanguageService.get_language(
-                        code=experience.linguistic_regime,
-                        person=self.request.user.person,
-                    )
-                    experience.linguistic_regime_name = (
-                        linguistic_regime.name if is_supported_language else linguistic_regime.name_en
-                    )
-
-        return context_data
+                linguistic_regime = LanguageService.get_language(
+                    code=experience.linguistic_regime,
+                    person=self.request.user.person,
+                )
+                experience.linguistic_regime_name = (
+                    linguistic_regime.name if is_supported_language else linguistic_regime.name_en
+                )
