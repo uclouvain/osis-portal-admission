@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-04 11:38+0100\n"
+"POT-Creation-Date: 2022-02-14 15:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,17 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#, python-format
+msgid ""
+"\n"
+"                Approve on behalf of %(first_name)s %(last_name)s\n"
+"                by uploading a file\n"
+"              "
+msgstr ""
+"\n"
+"Approuver de la part de %(first_name)s %(last_name)s en téléversant un "
+"fichier"
 
 #, python-format
 msgid ""
@@ -72,6 +83,9 @@ msgstr ""
 msgid " (h/w)"
 msgstr " (h/s)"
 
+msgid " on "
+msgstr " sur "
+
 msgid "(e.g. +32 490 00 00 00)"
 msgstr "(ex: +32 490 00 00 00)"
 
@@ -125,11 +139,11 @@ msgstr "ARC - Action de Recherche Concertée"
 msgid "ARES - Coopération au développement"
 msgstr "ARES - Coopération au développement"
 
-msgid "Academic year"
-msgstr "Année académique"
-
 msgid "Academic graduation year"
 msgstr "Année d'obtention du diplôme universitaire"
+
+msgid "Academic year"
+msgstr "Année académique"
 
 msgid "Access certificate after a 60 master"
 msgstr "Attestation d'accès après un master 60"
@@ -193,6 +207,9 @@ msgstr "Langues anciennes"
 
 msgid "Another institute"
 msgstr "Autre établissement"
+
+msgid "Approve by PDF"
+msgstr "Approuver via PDF"
 
 msgid "Approved"
 msgstr "Approuvée"
@@ -278,8 +295,12 @@ msgstr "CSC - China Scholarship Council"
 msgid "Cancel"
 msgstr "Annuler"
 
-msgid "Certificate, with dates, justifying your volunteer activities during this academic year."
-msgstr "Attestation, avec mention des dates, justifiant vos activités de bénévolat pour cette année académique."
+msgid ""
+"Certificate, with dates, justifying your volunteer activities during this "
+"academic year."
+msgstr ""
+"Attestation, avec mention des dates, justifiant vos activités de bénévolat "
+"pour cette année académique."
 
 msgid "Change my submission"
 msgstr "Modifier ma soumission"
@@ -391,9 +412,6 @@ msgstr "Note du mémoire"
 msgid "Dissertation summary"
 msgstr "Résumé du mémoire"
 
-msgid "Title of the dissertation"
-msgstr "Titre du mémoire"
-
 msgid "Distinction"
 msgstr "Distinction"
 
@@ -420,7 +438,9 @@ msgid "Doctorate admissions"
 msgstr "Admissions en doctorat"
 
 msgid "Document justifying your activity for this academic year."
-msgstr "Document justifiant votre activité : poinçonneur, pour cette année académique."
+msgstr ""
+"Document justifiant votre activité : poinçonneur, pour cette année "
+"académique."
 
 msgid "Dutch"
 msgstr "Néerlandais"
@@ -460,8 +480,12 @@ msgstr ""
 msgid "Email"
 msgstr "E-mail"
 
-msgid "Employment certificate from the employer, with dates, justifying this academic year."
-msgstr "Attestation de travail, émanant de l'employeur, avec mention des dates, justifiant cette année académique."
+msgid ""
+"Employment certificate from the employer, with dates, justifying this "
+"academic year."
+msgstr ""
+"Attestation de travail, émanant de l'employeur, avec mention des dates, "
+"justifiant cette année académique."
 
 msgid "English"
 msgstr "Anglais"
@@ -736,9 +760,6 @@ msgstr "Gestion"
 msgid "Male"
 msgstr "Masculin"
 
-msgid "Master"
-msgstr "Master"
-
 msgctxt "gender male"
 msgid "Male"
 msgstr "Masculin"
@@ -756,11 +777,16 @@ msgctxt "admission"
 msgid "Married"
 msgstr "Marié(e)"
 
+msgid "Master"
+msgstr "Master"
+
 msgid "Mathematics"
 msgstr "Mathématiques"
 
 msgid "Medical certificate, with dates, justifying this academic year."
-msgstr "Attestation, avec mention des dates, justifiant vos activités de bénévolat pour cette année académique."
+msgstr ""
+"Attestation, avec mention des dates, justifiant vos activités de bénévolat "
+"pour cette année académique."
 
 msgid "Member not found"
 msgstr "Membre non trouvé"
@@ -841,9 +867,6 @@ msgstr "Autre"
 msgid "Obtained grade"
 msgstr "Grade obtenu"
 
-msgid " on "
-msgstr " sur "
-
 msgid "Ongoing request"
 msgstr "En cours de demande"
 
@@ -863,11 +886,11 @@ msgstr ""
 msgid "Organizing country"
 msgstr "Pays organisateur"
 
-msgid "Other activity"
-msgstr "Autre activité"
-
 msgid "Other"
 msgstr "Autre"
+
+msgid "Other activity"
+msgstr "Autre activité"
 
 msgid "Other activity type"
 msgstr "Autre type d'activité"
@@ -901,6 +924,9 @@ msgstr "Autres"
 
 msgid "PARTIAL"
 msgstr "En partie"
+
+msgid "PDF file"
+msgstr "Fichier PDF"
 
 msgid "Passport"
 msgstr "Passeport"
@@ -949,9 +975,6 @@ msgstr "Veuillez évaluer votre capacité orale"
 
 msgid "Please rate your writing ability"
 msgstr "Veuillez évaluer votre capacité d'écriture"
-
-msgid "Please set either street or postal_box"
-msgstr "Veuillez définir la rue ou la boîte postale"
 
 msgid "Please set either the linguistic regime or other field."
 msgstr "Veuillez définir le régime linguistique ou précisez un autre régime."
@@ -1161,6 +1184,9 @@ msgstr "Type du cycle d'études"
 msgid "Study system"
 msgstr "Système d'études"
 
+msgid "Submit"
+msgstr "Soumettre"
+
 msgid "Submit my decision"
 msgstr "Soumettre ma décision"
 
@@ -1182,11 +1208,11 @@ msgstr "Général de transition"
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr "Le numéro de registre national belge doit être composé de 11 chiffres."
 
-msgid "The curriculum has correctly been updated."
-msgstr "Le curriculum a bien été mis à jour."
-
 msgid "The CV doesn't yet contain any experience."
 msgstr "Le CV ne contient pas encore d'expérience."
+
+msgid "The curriculum has correctly been updated."
+msgstr "Le curriculum a bien été mis à jour."
 
 msgid "Thesis institute"
 msgstr "Institut de la thèse"
@@ -1226,17 +1252,22 @@ msgstr "Cette langue est définie plusieurs fois."
 msgid "Timetable"
 msgstr "Grille horaire"
 
-msgid "Training certificate, with dates, justifying this academic year."
-msgstr "Attestation de stage, avec mention des dates, justifiant cette année académique."
+msgid "Title of the dissertation"
+msgstr "Titre du mémoire"
 
-msgid "Transition method"
-msgstr "Technique de transition"
+msgid "Training certificate, with dates, justifying this academic year."
+msgstr ""
+"Attestation de stage, avec mention des dates, justifiant cette année "
+"académique."
 
 msgid "Transcript"
 msgstr "Relevé de notes"
 
 msgid "Transcript translation"
 msgstr "Traduction du relevé de notes"
+
+msgid "Transition method"
+msgstr "Technique de transition"
 
 msgid "Type"
 msgstr "Type"
@@ -1251,7 +1282,9 @@ msgid "Unemployment"
 msgstr "Chômage"
 
 msgid "Unemployment certificate, with dates, justifying this academic year."
-msgstr "Attestation de chômage, avec mention des dates, justifiant cette année académique."
+msgstr ""
+"Attestation de chômage, avec mention des dates, justifiant cette année "
+"académique."
 
 msgid "Unknown birth date"
 msgstr "Date de naissance exacte inconnue"
@@ -1311,11 +1344,11 @@ msgstr "Oui"
 msgid "Yes"
 msgstr "Oui"
 
-msgid "Yes,No"
-msgstr "Oui,Non"
-
 msgid "Yes I have a high school diploma"
 msgstr "Oui j'ai déjà un diplôme de fin d'études secondaires"
+
+msgid "Yes,No"
+msgstr "Oui,Non"
 
 msgid "You can perform a search based on the location or postal code."
 msgstr "Vous pouvez rechercher soit par localité soit par code postal."

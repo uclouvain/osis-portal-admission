@@ -301,3 +301,25 @@ class SupervisionTestCase(TestCase):
         self.assertRedirects(response, url)
         self.assertContains(response, _("Please correct the errors first"))
         self.mock_api.return_value.create_signatures.assert_called()
+
+    @patch(
+        'osis_document.api.utils.get_remote_metadata',
+        return_value={'name': 'myfile', 'mimetype': 'application/pdf'},
+    )
+    def test_should_approval_by_pdf_redirect_without_errors(self, *args):
+        url = resolve_url("admission:doctorate-update:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.post(
+            url,
+            {
+                'matricule': "test",
+                'pdf_0': 'some_file',
+            },
+        )
+        expected_url = resolve_url("admission:doctorate-detail:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, expected_url)
+
+    def test_should_approval_by_pdf_redirect_with_errors(self):
+        url = resolve_url("admission:doctorate-update:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.post(url, {})
+        expected_url = resolve_url("admission:doctorate-detail:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, expected_url)

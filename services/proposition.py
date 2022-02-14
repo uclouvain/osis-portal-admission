@@ -194,3 +194,11 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
             refuser_proposition_command=kwargs,
             **build_mandatory_auth_headers(person),
         )
+
+    @classmethod
+    def approve_by_pdf(cls, person, uuid, **kwargs):
+        return AdmissionPropositionAPIClient().approve_by_pdf(
+            uuid=uuid,
+            approuver_proposition_par_pdf_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )

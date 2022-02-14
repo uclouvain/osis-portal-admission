@@ -20,6 +20,14 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
+"                Approve on behalf of %(first_name)s %(last_name)s\n"
+"                by uploading a file\n"
+"              "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
 "            Are you sure you want to remove %(first_name)s\n"
 "            %(last_name)s as %(role)s?\n"
 "        "
@@ -55,6 +63,9 @@ msgid ""
 msgstr ""
 
 msgid " (h/w)"
+msgstr ""
+
+msgid " on "
 msgstr ""
 
 msgid "(e.g. +32 490 00 00 00)"
@@ -107,10 +118,10 @@ msgstr ""
 msgid "ARES - Coopération au développement"
 msgstr ""
 
-msgid "Academic year"
+msgid "Academic graduation year"
 msgstr ""
 
-msgid "Academic graduation year"
+msgid "Academic year"
 msgstr ""
 
 msgid "Access certificate after a 60 master"
@@ -174,6 +185,9 @@ msgid "Ancient languages"
 msgstr ""
 
 msgid "Another institute"
+msgstr ""
+
+msgid "Approve by PDF"
 msgstr ""
 
 msgid "Approved"
@@ -260,7 +274,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Certificate, with dates, justifying your volunteer activities during this academic year."
+msgid ""
+"Certificate, with dates, justifying your volunteer activities during this "
+"academic year."
 msgstr ""
 
 msgid "Change my submission"
@@ -373,9 +389,6 @@ msgstr ""
 msgid "Dissertation summary"
 msgstr ""
 
-msgid "Title of the dissertation"
-msgstr ""
-
 msgid "Distinction"
 msgstr ""
 
@@ -440,7 +453,9 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-msgid "Employment certificate from the employer, with dates, justifying this academic year."
+msgid ""
+"Employment certificate from the employer, with dates, justifying this "
+"academic year."
 msgstr ""
 
 msgid "English"
@@ -700,9 +715,6 @@ msgstr "Management"
 msgid "Male"
 msgstr ""
 
-msgid "Master"
-msgstr ""
-
 msgctxt "gender male"
 msgid "Male"
 msgstr ""
@@ -718,6 +730,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Married"
+msgstr ""
+
+msgid "Master"
 msgstr ""
 
 msgid "Mathematics"
@@ -805,9 +820,6 @@ msgstr "Other"
 msgid "Obtained grade"
 msgstr ""
 
-msgid " on "
-msgstr ""
-
 msgid "Ongoing request"
 msgstr ""
 
@@ -862,6 +874,9 @@ msgstr ""
 msgid "PARTIAL"
 msgstr "Partially"
 
+msgid "PDF file"
+msgstr ""
+
 msgid "Passport"
 msgstr ""
 
@@ -906,9 +921,6 @@ msgid "Please rate your speaking ability"
 msgstr ""
 
 msgid "Please rate your writing ability"
-msgstr ""
-
-msgid "Please set either street or postal_box"
 msgstr ""
 
 msgid "Please set either the linguistic regime or other field."
@@ -1117,6 +1129,9 @@ msgstr ""
 msgid "Study system"
 msgstr ""
 
+msgid "Submit"
+msgstr ""
+
 msgid "Submit my decision"
 msgstr ""
 
@@ -1138,10 +1153,10 @@ msgstr ""
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr ""
 
-msgid "The curriculum has correctly been updated."
+msgid "The CV doesn't yet contain any experience."
 msgstr ""
 
-msgid "The CV doesn't yet contain any experience."
+msgid "The curriculum has correctly been updated."
 msgstr ""
 
 msgid "Thesis institute"
@@ -1180,16 +1195,19 @@ msgstr ""
 msgid "Timetable"
 msgstr ""
 
-msgid "Training certificate, with dates, justifying this academic year."
+msgid "Title of the dissertation"
 msgstr ""
 
-msgid "Transition method"
+msgid "Training certificate, with dates, justifying this academic year."
 msgstr ""
 
 msgid "Transcript"
 msgstr ""
 
 msgid "Transcript translation"
+msgstr ""
+
+msgid "Transition method"
 msgstr ""
 
 msgid "Type"
@@ -1265,10 +1283,10 @@ msgstr "Yes"
 msgid "Yes"
 msgstr ""
 
-msgid "Yes,No"
+msgid "Yes I have a high school diploma"
 msgstr ""
 
-msgid "Yes I have a high school diploma"
+msgid "Yes,No"
 msgstr ""
 
 msgid "You can perform a search based on the location or postal code."

@@ -26,6 +26,7 @@
 from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from osis_document.contrib.forms import FileUploadField
 
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.enums.supervision import DecisionApprovalEnum
@@ -100,3 +101,17 @@ class DoctorateAdmissionApprovalForm(forms.Form):
 
     class Media:
         js = ('dependsOn.min.js',)
+
+
+class DoctorateAdmissionApprovalByPdfForm(forms.Form):
+    matricule = forms.CharField(
+        widget=forms.HiddenInput,
+        required=True,
+    )
+    pdf = FileUploadField(
+        label=_("PDF file"),
+        required=True,
+        min_files=1,
+        max_files=1,
+        mimetypes=['application/pdf'],
+    )
