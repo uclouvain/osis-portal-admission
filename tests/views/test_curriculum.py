@@ -172,6 +172,20 @@ class CurriculumTestCase(ExtendedTestCase):
 
         self.addCleanup(api_person_patcher.stop)
 
+        # Mock academic years api
+        academic_years_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
+        self.mock_academic_years_api = academic_years_api_patcher.start()
+
+        def get_academic_years(**kwargs):
+            years = [
+                Mock(year=2020),
+                Mock(year=2019),
+            ]
+            return Mock(results=years)
+
+        self.mock_academic_years_api.return_value.get_academic_years.side_effect = get_academic_years
+        self.addCleanup(academic_years_api_patcher.stop)
+
         # Mock countries api
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
         self.mock_countries_api = countries_api_patcher.start()
