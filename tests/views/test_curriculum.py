@@ -292,7 +292,7 @@ class CurriculumTestCase(ExtendedTestCase):
         url = resolve_url("admission:doctorate-create:curriculum")
         form_prefix = CurriculumForm.CURRICULUM_UPLOAD.value
         self.mock_person_api.return_value.update_curriculum_file.side_effect = ApiException(
-            status=404,
+            status=500,
         )
 
         response = self.client.post(url, data={
@@ -440,7 +440,7 @@ class CurriculumTestCase(ExtendedTestCase):
         url = resolve_url("admission:doctorate-create:curriculum")
         form_prefix = CurriculumForm.EXPERIENCE_CREATION.value
         self.mock_person_api.return_value.create_curriculum_experience.side_effect = ApiException(
-            status=404,
+            status=500,
         )
 
         response = self.client.post(url, data={
@@ -597,7 +597,7 @@ class CurriculumTestCase(ExtendedTestCase):
         url = resolve_url("admission:doctorate-create:curriculum", experience_id=self.first_uuid)
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
         self.mock_person_api.return_value.update_curriculum_experience.side_effect = ApiException(
-            status=404,
+            status=500,
         )
 
         response = self.client.post(url, data={
@@ -648,7 +648,7 @@ class CurriculumTestCase(ExtendedTestCase):
     def test_curriculum_post_delete_experience_invalid_request(self):
         url = resolve_url("admission:doctorate-create:curriculum")
         self.mock_person_api.return_value.destroy_curriculum_experience.side_effect = ApiException(
-            status=404,
+            status=500,
         )
         response = self.client.post(url, data={
             CurriculumForm.EXPERIENCE_DELETION.value: '',
