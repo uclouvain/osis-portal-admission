@@ -25,6 +25,7 @@
 {% endcomment %}
 
 {% block style %}
+  <link href="{% static "admission/admission.css" %}" rel="stylesheet"/>
   <style>
     .form-group.required_field .control-label:after {
       content: " *";
@@ -162,14 +163,6 @@
                                         {% trans 'Save' %}
                                     </button>
                                 </div>
-                                {% if cancel_url and admission|can_read_tab:request.resolver_match.url_name %}
-                                    <a
-                                        href="{{ cancel_url }}"
-                                        class="text-danger btn"
-                                    >
-                                        {% trans "Cancel" %}
-                                    </a>
-                                {% endif %}
                             </div>
                         {% endblock submit_button_affix %}
                     </div>
