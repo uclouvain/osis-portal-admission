@@ -1,0 +1,34 @@
+{% extends "admission/doctorate/detail_tab_layout.html" %}
+{% load bootstrap3 i18n static admission %}
+
+{% block tab_content %}
+    <!-- List of experiences -->
+    {% include 'admission/doctorate/includes/curriculum/experience_list.html' with experiences=curriculum_experiences proposition_id=view.kwargs.pk experience_id=view.kwargs.experience_id with_editing_options=False %}
+{% endblock %}
+
+{% block style %}
+    <style>
+        hr {
+            margin-top: 0;
+        }
+        .experience-year {
+            padding: 1em;
+            border: 1px solid #cccc;
+            font-size: 16px;
+        }
+        .experience .panel-heading h6 {
+            font-size: 15px;
+        }
+        .experience .panel-heading h5 {
+            display: list-item;
+            font-size: 15px;
+            margin-left: 1em;
+        }
+        .experience > .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+    </style>
+{% endblock %}

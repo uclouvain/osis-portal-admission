@@ -107,16 +107,40 @@ msgstr ""
 msgid "ARES - Coopération au développement"
 msgstr ""
 
+msgid "Academic year"
+msgstr ""
+
 msgid "Academic graduation year"
 msgstr ""
 
+msgid "Access certificate after a 60 master"
+msgstr ""
+
 msgid "Access my doctoral students' requests"
+msgstr ""
+
+msgid "Acquired credit number"
+msgstr ""
+
+msgid "Activity"
+msgstr ""
+
+msgid "Activity certificate"
+msgstr ""
+
+msgid "Activity position"
+msgstr ""
+
+msgid "Activity type"
 msgstr ""
 
 msgid "Add"
 msgstr ""
 
 msgid "Add a language"
+msgstr ""
+
+msgid "Add a new experience"
 msgstr ""
 
 msgid "Add a promoter or a CA member"
@@ -134,6 +158,18 @@ msgstr ""
 msgid "Allocated time for the thesis (in EFT)"
 msgstr ""
 
+msgid "An error has happened when adding the experience."
+msgstr ""
+
+msgid "An error has happened when deleting the experience."
+msgstr ""
+
+msgid "An error has happened when updating the experience."
+msgstr ""
+
+msgid "An error has happened when uploading the file."
+msgstr ""
+
 msgid "Ancient languages"
 msgstr ""
 
@@ -144,6 +180,9 @@ msgid "Approved"
 msgstr ""
 
 msgid "Are you sure you want to cancel this request?"
+msgstr ""
+
+msgid "Are you sure you want to delete this experience?"
 msgstr ""
 
 msgid "Are you sure you want to request signatures for this admission?"
@@ -166,6 +205,9 @@ msgstr ""
 
 msgid "B2"
 msgstr ""
+
+msgid "Bachelor"
+msgstr "Bachelier"
 
 msgid "Back to my requests"
 msgstr ""
@@ -218,6 +260,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Certificate, with dates, justifying your volunteer activities during this academic year."
+msgstr ""
+
 msgid "Change my submission"
 msgstr ""
 
@@ -263,6 +308,9 @@ msgstr ""
 msgid "Contact language"
 msgstr ""
 
+msgid "Continuing education"
+msgstr ""
+
 msgid "Cotutelle"
 msgstr ""
 
@@ -300,6 +348,9 @@ msgctxt "an admission"
 msgid "Created at:"
 msgstr ""
 
+msgid "Credit type"
+msgstr ""
+
 msgid "Curriculum"
 msgstr ""
 
@@ -314,6 +365,18 @@ msgstr ""
 
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
+msgstr ""
+
+msgid "Dissertation score"
+msgstr ""
+
+msgid "Dissertation summary"
+msgstr ""
+
+msgid "Title of the dissertation"
+msgstr ""
+
+msgid "Distinction"
 msgstr ""
 
 msgctxt "admission"
@@ -338,6 +401,9 @@ msgstr ""
 msgid "Doctorate admissions"
 msgstr ""
 
+msgid "Document justifying your activity for this academic year."
+msgstr ""
+
 msgid "Dutch"
 msgstr ""
 
@@ -351,6 +417,9 @@ msgid "Economic sciences"
 msgstr ""
 
 msgid "Edit"
+msgstr ""
+
+msgid "Education community"
 msgstr ""
 
 msgid "Education type"
@@ -371,13 +440,22 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
+msgid "Employment certificate from the employer, with dates, justifying this academic year."
+msgstr ""
+
 msgid "English"
+msgstr ""
+
+msgid "Entered credit number"
 msgstr ""
 
 msgid "Estimated time to complete the doctorate (in months)"
 msgstr ""
 
 msgid "European Bachelor (Schola Europaea)"
+msgstr ""
+
+msgid "European Union credits"
 msgstr ""
 
 msgid "Exchange with UCLouvain"
@@ -400,6 +478,9 @@ msgstr ""
 
 msgid "FSR - Fonds Spéciaux de Recherche"
 msgstr ""
+
+msgid "Failure"
+msgstr "Échec"
 
 msgid "Female"
 msgstr ""
@@ -438,6 +519,9 @@ msgstr ""
 msgid "French-speaking Community of Belgium"
 msgstr ""
 
+msgid "Full-time education"
+msgstr ""
+
 #, no-python-format
 msgid "Full-time equivalent (as %)"
 msgstr "Full-time equivalent (as %)"
@@ -448,10 +532,25 @@ msgstr "4-year gantt graph"
 msgid "Gender"
 msgstr ""
 
+msgid "General information"
+msgstr ""
+
 msgid "German"
 msgstr ""
 
 msgid "German-speaking Community"
+msgstr ""
+
+msgid "Graduate degree"
+msgstr ""
+
+msgid "Graduate degree translation"
+msgstr ""
+
+msgid "Great distinction"
+msgstr ""
+
+msgid "Greater distinction"
 msgstr ""
 
 msgid "Greek"
@@ -466,6 +565,15 @@ msgid "Have you previously been registered at UCLouvain?"
 msgstr ""
 
 msgid "High school diploma"
+msgstr ""
+
+msgid "Higher education"
+msgstr ""
+
+msgid "I don't find my institute in the list."
+msgstr ""
+
+msgid "I don't find my program in the list."
 msgstr ""
 
 msgid "I will have a high school diploma this year"
@@ -513,7 +621,19 @@ msgid ""
 "issued by the Wallonia-Brussels Federation (French Community of Belgium)."
 msgstr ""
 
+msgid "Illness"
+msgstr ""
+
 msgid "Institute"
+msgstr ""
+
+msgid "Institute city"
+msgstr ""
+
+msgid "Institute name"
+msgstr ""
+
+msgid "Institute postal code"
 msgstr ""
 
 msgid "Institution"
@@ -528,10 +648,19 @@ msgstr ""
 msgid "International Baccalaureate"
 msgstr ""
 
+msgid "Internship"
+msgstr ""
+
+msgid "Is it your graduation year?"
+msgstr ""
+
 msgid "Is your contact address different from your residential address?"
 msgstr ""
 
 msgid "Is your thesis joint with another secondary institute?"
+msgstr ""
+
+msgid "Issue diploma date"
 msgstr ""
 
 msgid "Jury"
@@ -571,6 +700,9 @@ msgstr "Management"
 msgid "Male"
 msgstr ""
 
+msgid "Master"
+msgstr ""
+
 msgctxt "gender male"
 msgid "Male"
 msgstr ""
@@ -589,6 +721,9 @@ msgid "Married"
 msgstr ""
 
 msgid "Mathematics"
+msgstr ""
+
+msgid "Medical certificate, with dates, justifying this academic year."
 msgstr ""
 
 msgid "Member not found"
@@ -613,6 +748,9 @@ msgstr "No"
 msgid "NOT_INVITED"
 msgstr "Not invited"
 
+msgid "Name of the diploma or of the education"
+msgstr ""
+
 msgid "National Bachelor (or government diploma, ...)"
 msgstr ""
 
@@ -634,6 +772,9 @@ msgstr ""
 msgid "No defense reason"
 msgstr ""
 
+msgid "No grade"
+msgstr ""
+
 msgid "No languages knowledge provided."
 msgstr ""
 
@@ -643,7 +784,13 @@ msgstr ""
 msgid "No reference yet - Go to Project tab"
 msgstr ""
 
+msgid "No result"
+msgstr ""
+
 msgid "No secondary studies provided."
+msgstr ""
+
+msgid "Non European Union credits"
 msgstr ""
 
 msgid "Not known yet"
@@ -654,6 +801,12 @@ msgstr ""
 
 msgid "OTHER"
 msgstr "Other"
+
+msgid "Obtained grade"
+msgstr ""
+
+msgid " on "
+msgstr ""
 
 msgid "Ongoing request"
 msgstr ""
@@ -673,10 +826,19 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
+msgid "Other activity"
+msgstr ""
+
+msgid "Other activity type"
+msgstr ""
+
 msgid "Other documents concerning cotutelle"
 msgstr ""
 
 msgid "Other education, please specify"
+msgstr ""
+
+msgid "Other higher education"
 msgstr ""
 
 msgid "Other institute, please specify"
@@ -686,6 +848,9 @@ msgid "Other linguistic regime"
 msgstr ""
 
 msgid "Other names"
+msgstr ""
+
+msgid "Other program"
 msgstr ""
 
 msgid "Other thesis location"
@@ -773,6 +938,9 @@ msgstr ""
 msgid "Professional education + Maturity exam"
 msgstr ""
 
+msgid "Program"
+msgstr ""
+
 msgid "Project documents"
 msgstr ""
 "Project (research questions, state of the art, objectives, methods, "
@@ -833,6 +1001,9 @@ msgstr ""
 msgid "REFUSED"
 msgstr "Refused"
 
+msgid "Rank in diploma"
+msgstr ""
+
 msgid "Recommendation letters"
 msgstr ""
 
@@ -854,6 +1025,12 @@ msgstr ""
 msgid "Residential address"
 msgstr ""
 
+msgid "Result"
+msgstr ""
+
+msgid "Results"
+msgstr ""
+
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Research scholarship"
 
@@ -865,6 +1042,9 @@ msgstr "Signing in progress"
 
 msgid "SUBMITTED"
 msgstr "Submitted"
+
+msgid "Satisfaction"
+msgstr "Satisfaction"
 
 msgid "Save"
 msgstr ""
@@ -888,6 +1068,9 @@ msgid "Secondary studies"
 msgstr ""
 
 msgid "Sector"
+msgstr ""
+
+msgid "Semesters"
 msgstr ""
 
 msgctxt "admission"
@@ -925,7 +1108,25 @@ msgstr ""
 msgid "Street number"
 msgstr ""
 
+msgid "Studies"
+msgstr ""
+
+msgid "Study cycle type"
+msgstr ""
+
+msgid "Study system"
+msgstr ""
+
 msgid "Submit my decision"
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "Success with residual credits"
+msgstr ""
+
+msgid "Success without distinction"
 msgstr ""
 
 msgid "Supervision"
@@ -935,6 +1136,12 @@ msgid "Teaching of general education"
 msgstr ""
 
 msgid "The Belgian national register number must consist of 11 digits."
+msgstr ""
+
+msgid "The curriculum has correctly been updated."
+msgstr ""
+
+msgid "The CV doesn't yet contain any experience."
 msgstr ""
 
 msgid "Thesis institute"
@@ -952,6 +1159,12 @@ msgstr ""
 msgid "This comment will only be visible to the administrators."
 msgstr ""
 
+msgid "This document must be detailed, dated and signed."
+msgstr ""
+
+msgid "This experience has been valuated."
+msgstr ""
+
 msgid "This field is required"
 msgstr ""
 
@@ -967,7 +1180,19 @@ msgstr ""
 msgid "Timetable"
 msgstr ""
 
+msgid "Training certificate, with dates, justifying this academic year."
+msgstr ""
+
 msgid "Transition method"
+msgstr ""
+
+msgid "Transcript"
+msgstr ""
+
+msgid "Transcript translation"
+msgstr ""
+
+msgid "Type"
 msgstr ""
 
 msgid "UCLOUVAIN_ASSISTANT"
@@ -976,10 +1201,31 @@ msgstr "Uclouvain assistant"
 msgid "Undecided"
 msgstr ""
 
+msgid "Unemployment"
+msgstr ""
+
+msgid "Unemployment certificate, with dates, justifying this academic year."
+msgstr ""
+
 msgid "Unknown birth date"
 msgstr ""
 
+msgid "Update"
+msgstr ""
+
+msgid "Update the experience"
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Upload your CV"
+msgstr ""
+
 msgid "View"
+msgstr ""
+
+msgid "Volunteering"
 msgstr ""
 
 msgid "WBI - Wallonie Bruxelles International"
@@ -1001,6 +1247,9 @@ msgctxt "admission"
 msgid "Widowed"
 msgstr ""
 
+msgid "Work"
+msgstr ""
+
 msgid "Work contract"
 msgstr ""
 
@@ -1014,6 +1263,9 @@ msgid "YES"
 msgstr "Yes"
 
 msgid "Yes"
+msgstr ""
+
+msgid "Yes,No"
 msgstr ""
 
 msgid "Yes I have a high school diploma"

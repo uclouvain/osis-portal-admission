@@ -1,4 +1,5 @@
-{% load admission %}
+{% load bootstrap3 %}
+
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -23,20 +24,21 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="panel panel-default {{ additional_class }}" {% for name, value in attributes.items %} {{ name }}="{{ value|stringformat:'s' }}"{% endfor %}>
-    {% if title %}
-    <div class="panel-heading">
-        <h{{ title_level }} class="panel-title">
-            {{ title }}
-        </h{{ title_level }}>
+<div class="modal fade" id="{% block modal_id %}modal{% endblock %}" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog {% block modal_class %}{% endblock %}" tabindex="-1" role="document">
+        <div class="modal-content" style="max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="myModalLabel">{% block modal_title %}{% endblock %}</h3>
+            </div>
+            <div class="modal-body" style="overflow:auto;">
+                {% block modal_body %}
+                {% endblock %}
+            </div>
+            <div class="modal-footer">
+                {% block modal_footer %}
+                {% endblock %}
+            </div>
+        </div>
     </div>
-    {% endif %}
-    <div class="panel-body">
-        {{ panel_body }}
-    </div>
-    {% if panel_footer|strip %}
-    <div class="panel-footer clearfix">
-      {{ panel_footer }}
-    </div>
-    {% endif %}
 </div>

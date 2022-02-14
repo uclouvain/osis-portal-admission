@@ -171,7 +171,7 @@ def doctorate_subtabs(context, admission=None):
     valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(admission=admission))
 
     return {
-        'subtabs': valid_tab_tree.get(get_active_parent(context['request'].resolver_match.url_name), []),
+        'subtabs': valid_tab_tree.get(get_active_parent(match.url_name), []),
         'subtab_labels': subtab_labels,
         'admission': admission,
         'detail_view': not is_form_view,
@@ -181,11 +181,13 @@ def doctorate_subtabs(context, admission=None):
 
 
 @register.inclusion_tag('admission/field_data.html')
-def field_data(name, data=None, css_class=None, hide_empty=False):
+def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
+    elif translate_data is True:
+        data = _(data)
     return {
         'name': name,
         'data': data,
@@ -195,13 +197,17 @@ def field_data(name, data=None, css_class=None, hide_empty=False):
 
 
 @register_panel('panel.html', takes_context=True)
-def panel(context, title='', **kwargs):
+def panel(context, title='', title_level=4, additional_class='', **kwargs):
     """
     Template tag for panel
     :param title: the panel title
+    :param title_level: the title level
+    :param additional_class: css class to add
     :type context: django.template.context.RequestContext
     """
     context['title'] = title
+    context['title_level'] = title_level
+    context['additional_class'] = additional_class
     context['attributes'] = kwargs
     return context
 
@@ -242,6 +248,12 @@ def can_read_tab(admission, tab_name):
 def can_update_tab(admission, tab_name):
     """Return true if the specified tab can be opened in writing mode for this admission, otherwise return False"""
     return _can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB)
+
+
+@register.filter
+def add_str(arg1, arg2):
+    """Return the concatenation of two arguments."""
+    return str(arg1) + str(arg2)
 
 
 @register.filter

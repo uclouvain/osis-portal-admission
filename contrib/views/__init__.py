@@ -28,12 +28,29 @@ from .autocomplete import *
 from .cancel import DoctorateAdmissionCancelView
 from .signatures import DoctorateAdmissionRequestSignaturesView
 from .list import *
+from .detail_tabs.coordonnees import DoctorateAdmissionCoordonneesDetailView
+from .detail_tabs.curriculum import DoctorateAdmissionCurriculumDetailView
+from .detail_tabs.person import DoctorateAdmissionPersonDetailView
+from .detail_tabs.project import DoctorateAdmissionProjectDetailView
+from .detail_tabs.coordonnees import DoctorateAdmissionCoordonneesDetailView
+from .form_tabs.coordonnees import DoctorateAdmissionCoordonneesFormView
+from .form_tabs.curriculum import DoctorateAdmissionCurriculumFormView
+from .form_tabs.person import DoctorateAdmissionPersonFormView
+from .form_tabs.project import DoctorateAdmissionProjectFormView
 from .form_tabs.supervision import DoctorateAdmissionRemoveActorView
 
 __all__ = [
     "DoctorateAutocomplete",
     "DoctorateAdmissionListView",
+    "DoctorateAdmissionProjectFormView",
+    "DoctorateAdmissionProjectDetailView",
+    "DoctorateAdmissionPersonFormView",
+    "DoctorateAdmissionPersonDetailView",
+    "DoctorateAdmissionCoordonneesFormView",
+    "DoctorateAdmissionCoordonneesDetailView",
     "DoctorateAdmissionRemoveActorView",
     "DoctorateAdmissionCancelView",
     "DoctorateAdmissionRequestSignaturesView",
+    "DoctorateAdmissionCurriculumFormView",
+    "DoctorateAdmissionCurriculumDetailView",
 ]

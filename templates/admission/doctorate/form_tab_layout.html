@@ -133,49 +133,51 @@
 
     {% url "admission:doctorate-detail:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
-    <form class="osis-form" method="post" action="">
-        {% csrf_token %}
-        {% block form_content %}
-            {% doctorate_tabs admission %}
-            <div class="row">
-                <div class="col-md-2">
-                    {% doctorate_subtabs admission %}
-                    {% block submit_button_affix %}
-                        <hr />
-                        <div
-                            data-spy="affix"
-                            data-offset-top="500"
-                            style="top:90px"
-                        >
-                            <div>
-                                <button
-                                    type="submit" class="btn btn-primary"
-                                    {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
-                                    disabled
-                                    {% endif %}
-                                >
-                                <span
-                                    class="glyphicon glyphicon-floppy-save"
-                                    aria-hidden="true"
-                                ></span>
-                                    {% trans 'Save' %}
-                                </button>
+    {% block tab_content %}
+        <form class="osis-form" method="post" action="">
+            {% csrf_token %}
+            {% block form_content %}
+                {% doctorate_tabs admission %}
+                <div class="row">
+                    <div class="col-md-2">
+                        {% doctorate_subtabs admission %}
+                        {% block submit_button_affix %}
+                            <hr />
+                            <div
+                                data-spy="affix"
+                                data-offset-top="500"
+                                style="top:90px"
+                            >
+                                <div>
+                                    <button
+                                        type="submit" class="btn btn-primary"
+                                        {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
+                                        disabled
+                                        {% endif %}
+                                    >
+                                    <span
+                                        class="glyphicon glyphicon-floppy-save"
+                                        aria-hidden="true"
+                                    ></span>
+                                        {% trans 'Save' %}
+                                    </button>
+                                </div>
+                                {% if cancel_url and admission|can_read_tab:request.resolver_match.url_name %}
+                                    <a
+                                        href="{{ cancel_url }}"
+                                        class="text-danger btn"
+                                    >
+                                        {% trans "Cancel" %}
+                                    </a>
+                                {% endif %}
                             </div>
-                            {% if cancel_url and admission|can_read_tab:request.resolver_match.url_name %}
-                                <a
-                                    href="{{ cancel_url }}"
-                                    class="text-danger btn"
-                                >
-                                    {% trans "Cancel" %}
-                                </a>
-                            {% endif %}
-                        </div>
-                    {% endblock submit_button_affix %}
+                        {% endblock submit_button_affix %}
+                    </div>
+                    <div class="col-md-10">
+                        {% block form %}{% endblock %}
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    {% block form %}{% endblock %}
-                </div>
-            </div>
-        {% endblock form_content %}
-    </form>
+            {% endblock form_content %}
+        </form>
+    {% endblock %}
 {% endblock %}

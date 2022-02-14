@@ -34,7 +34,7 @@ app_name = "admission"
 
 def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, detail_only=False):
     """Generates tab urls for a each action, views must exists"""
-    tab_names = ["project", "person", "coordonnees", "education", "languages"]
+    tab_names = ["project", "person", "coordonnees", "curriculum", "education", "languages"]
     # pattern_names = ["person", "details", "education", "curriculum", "project"]
     if not create_only:
         tab_names += [
@@ -69,6 +69,15 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
                 'remove-member/<type>/<matricule>',
                 views.DoctorateAdmissionRemoveActorView.as_view(),
                 name='remove-actor'
+            )
+        )
+
+    if not detail_only:
+        includes.append(
+            path(
+                'curriculum/<uuid:experience_id>/',
+                views.DoctorateAdmissionCurriculumFormView.as_view(),
+                name='curriculum',
             )
         )
 

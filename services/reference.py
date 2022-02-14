@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from functools import lru_cache
+
 from osis_reference_sdk import ApiClient, ApiException
 from osis_reference_sdk.api import academic_years_api, cities_api, countries_api, languages_api
 
@@ -49,6 +51,7 @@ class CountriesService(metaclass=ServiceMeta):
         ).results
 
     @classmethod
+    @lru_cache()
     def get_country(cls, person=None, *args, **kwargs):
         return CountriesAPIClient().countries_list(
             *args,
@@ -110,6 +113,7 @@ class LanguageService(metaclass=ServiceMeta):
         ).results
 
     @classmethod
+    @lru_cache()
     def get_language(cls, code, person=None):
         # Search is only on name and name_en so we need to iter on whole list to search on code
         languages = cls.get_languages(person)
