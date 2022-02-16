@@ -102,6 +102,13 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def verify_proposition(cls, person: Person, uuid):
+        return AdmissionPropositionAPIClient().verify_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
@@ -127,6 +134,59 @@ class PropositionBusinessException(Enum):
     CotutelleDoitAvoirAuMoinsUnPromoteurExterneException = "PROPOSITION-21"
     GroupeSupervisionCompletPourPromoteursException = "PROPOSITION-22"
     GroupeSupervisionCompletPourMembresCAException = "PROPOSITION-23"
+    CandidatNonTrouveException = "PROPOSITION-24"
+    IdentificationNonCompleteeException = "PROPOSITION-25"
+    NumeroIdentiteNonSpecifieException = "PROPOSITION-26"
+    NumeroIdentiteBelgeNonSpecifieException = "PROPOSITION-27"
+    DateOuAnneeNaissanceNonSpecifieeException = "PROPOSITION-28"
+    DetailsPasseportNonSpecifiesException = "PROPOSITION-29"
+    CarteIdentiteeNonSpecifieeException = "PROPOSITION-30"
+    AdresseDomicileLegalNonCompleteeException = "PROPOSITION-31"
+    AdresseCorrespondanceNonCompleteeException = "PROPOSITION-32"
+    LanguesConnuesNonSpecifieesException = "PROPOSITION-33"
+    FichierCurriculumNonRenseigneException = "PROPOSITION-34"
+    AnneesCurriculumNonSpecifieesException = "PROPOSITION-35"
+    ProcedureDemandeSignatureNonLanceeException = "PROPOSITION-36"
+    PropositionNonApprouveeParPromoteurException = "PROPOSITION-37"
+    MembreCAPasReponduException = "PROPOSITION-38"
+    PropositionNonApprouveeParMembreCAException = "PROPOSITION-39"
+
+
+BUSINESS_EXCEPTIONS_BY_TAB = {
+    'person': {
+        PropositionBusinessException.IdentificationNonCompleteeException,
+        PropositionBusinessException.NumeroIdentiteNonSpecifieException,
+        PropositionBusinessException.NumeroIdentiteBelgeNonSpecifieException,
+        PropositionBusinessException.DateOuAnneeNaissanceNonSpecifieeException,
+        PropositionBusinessException.DetailsPasseportNonSpecifiesException,
+        PropositionBusinessException.CarteIdentiteeNonSpecifieeException,
+    },
+    'coordonnees': {
+        PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,
+        PropositionBusinessException.AdresseCorrespondanceNonCompleteeException,
+    },
+    'education': set(),
+    'curriculum': {
+        PropositionBusinessException.FichierCurriculumNonRenseigneException,
+        PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
+    },
+    'languages': {
+        PropositionBusinessException.LanguesConnuesNonSpecifieesException
+    },
+    'project': set(),
+    'cotutelle': set(),
+    'supervision': {
+        PropositionBusinessException.ProcedureDemandeSignatureNonLanceeException,
+        PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
+        PropositionBusinessException.PropositionNonApprouveeParMembreCAException,
+        PropositionBusinessException.MembreCAPasReponduException,
+    },
+}
+
+TAB_OF_BUSINESS_EXCEPTION = {}
+for tab in BUSINESS_EXCEPTIONS_BY_TAB:
+    for exception in BUSINESS_EXCEPTIONS_BY_TAB[tab]:
+        TAB_OF_BUSINESS_EXCEPTION[exception.value] = tab
 
 
 class AdmissionCotutelleService(metaclass=ServiceMeta):
@@ -158,7 +218,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
 
     @classmethod
     def get_signature_conditions(cls, person, uuid) -> SupervisionDTO:
-        return AdmissionPropositionAPIClient().retrieve_verify_proposition(
+        return AdmissionPropositionAPIClient().retrieve_verify_project(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
