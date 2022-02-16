@@ -43,3 +43,12 @@ class ChoixProximityCommissionCDSS(ChoiceEnum):
     DENT = _("Proximity Commission for Dental Sciences (DENT)")
     DFAR = _("Proximity Commission for Pharmaceutical Sciences (DFAR)")
     MOTR = _("Proximity Commission for Motricity Sciences (MOTR)")
+
+
+class ChoixSousDomaineSciences(ChoiceEnum):
+    PHYSICS = _("PHYSICS")
+    CHEMISTRY = _("CHEMISTRY")
+    MATHEMATICS = _("MATHEMATICS")
+    STATISTICS = _("STATISTICS")
+    BIOLOGY = _("BIOLOGY")
+    GEOGRAPHY = _("GEOGRAPHY")

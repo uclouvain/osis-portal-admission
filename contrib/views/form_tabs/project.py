@@ -95,13 +95,14 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
         )
         data['commission_proximite'] = (
             data.get('commission_proximite_cde')
-            if data.get('commission_proximite_cde') != ''
-            else data.get('commission_proximite_cdss')
+            or data.get('commission_proximite_cdss')
+            or data.get('sous_domaine')
         )
         data.pop('type_contrat_travail_other')
         data.pop('bourse_recherche_other')
         data.pop('commission_proximite_cde')
         data.pop('commission_proximite_cdss')
+        data.pop('sous_domaine')
 
         return data
 

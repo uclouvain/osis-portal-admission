@@ -33,7 +33,7 @@ from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import CitiesService, CountriesService, LanguageService
-from admission.utils import format_entity_title, format_entity_address
+from admission.utils import format_entity_address, format_entity_title
 
 __all__ = [
     "DoctorateAutocomplete",
@@ -56,6 +56,7 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def results(self, results):
         return [dict(
             id="{result.sigle}-{result.annee}".format(result=result),
+            sigle=result.sigle,
             sigle_entite_gestion=result.sigle_entite_gestion,
             text="{sigle} - {intitule}".format(
                 sigle=result.sigle,

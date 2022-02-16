@@ -51,6 +51,7 @@ class AutocompleteTestCase(TestCase):
         self.assertEqual(response.json(), {
             'results': [{
                 'id': 'FOOBAR-2021',
+                'sigle': 'FOOBAR',
                 'sigle_entite_gestion': 'CDE',
                 'text': 'FOOBAR - Foobar'
             }],

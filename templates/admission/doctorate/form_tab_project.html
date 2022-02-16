@@ -56,7 +56,7 @@
                 {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
             {% endif %}
             {% if admission.commission_proximite %}
-                {% field_data _("Proximity commission") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS' %}
+                {% field_data _("Proximity commission") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
             {% endif %}
         {% endif %}
         <div class="row" id="commission_proximite_cde">
@@ -69,6 +69,11 @@
                 {% bootstrap_field form.commission_proximite_cdss %}
             </div>
         </div>
+      <div class="row" id="sous_domaine">
+        <div class="col-md-4">
+          {% bootstrap_field form.sous_domaine %}
+        </div>
+      </div>
     {% endpanel %}
 
     {% panel _("Financing") %}
@@ -213,6 +218,23 @@
                                 data = [initialData];
                             }
                             if (data.length && data[0].sigle_entite_gestion === 'CDSS') {
+                                return true;
+                            }
+                        }
+                    },
+                },
+            }, { valueOnDisable: '' });
+
+            $('#sous_domaine').dependsOn({
+                '#id_doctorate': {
+                    changed: function () {
+                        var $doctorate = $('#id_doctorate');
+                        if ($doctorate.hasClass('select2-hidden-accessible')) {
+                            var data = $doctorate.select2('data')
+                            if (initialData && data[0].id === initialData.id) {
+                                data = [initialData];
+                            }
+                            if (data.length && data[0].sigle === 'SC3DP') {
                                 return true;
                             }
                         }

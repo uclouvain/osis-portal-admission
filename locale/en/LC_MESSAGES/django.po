@@ -220,6 +220,9 @@ msgstr ""
 msgid "B2"
 msgstr ""
 
+msgid "BIOLOGY"
+msgstr "Biology"
+
 msgid "Bachelor"
 msgstr "Bachelier"
 
@@ -267,6 +270,9 @@ msgstr ""
 
 msgid "CANCELLED"
 msgstr "Cancelled"
+
+msgid "CHEMISTRY"
+msgstr "Chemistry"
 
 msgid "CSC - China Scholarship Council"
 msgstr ""
@@ -541,6 +547,9 @@ msgstr ""
 msgid "Full-time equivalent (as %)"
 msgstr "Full-time equivalent (as %)"
 
+msgid "GEOGRAPHY"
+msgstr "Geography"
+
 msgid "Gantt graph"
 msgstr "4-year gantt graph"
 
@@ -712,6 +721,9 @@ msgstr ""
 msgid "MANAGEMENT"
 msgstr "Management"
 
+msgid "MATHEMATICS"
+msgstr "Mathematics"
+
 msgid "Male"
 msgstr ""
 
@@ -876,6 +888,9 @@ msgstr "Partially"
 
 msgid "PDF file"
 msgstr ""
+
+msgid "PHYSICS"
+msgstr "Physics"
 
 msgid "Passport"
 msgstr ""
@@ -1052,6 +1067,9 @@ msgstr "Self-funding"
 msgid "SIGNING_IN_PROGRESS"
 msgstr "Signing in progress"
 
+msgid "STATISTICS"
+msgstr "Statistics"
+
 msgid "SUBMITTED"
 msgstr "Submitted"
 
@@ -1128,6 +1146,9 @@ msgstr ""
 
 msgid "Study system"
 msgstr ""
+
+msgid "Subdomain"
+msgstr "Sous-domaine"
 
 msgid "Submit"
 msgstr ""
