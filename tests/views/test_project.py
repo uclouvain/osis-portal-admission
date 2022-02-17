@@ -35,7 +35,12 @@ from rest_framework import status
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.enums.projet import ChoixStatutProposition
-from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
+from admission.contrib.enums.proximity_commission import (
+    ChoixProximityCommissionCDE,
+    ChoixProximityCommissionCDSS,
+    ChoixSousDomaineSciences,
+)
+from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
@@ -100,13 +105,21 @@ class ProjectViewTestCase(TestCase):
                 intitule_fr='Foobarbaz',
                 intitule_en='Foobarbaz',
                 annee=2021,
-                sigle_entite_gestion="CDSS",
+                sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
             ),
             Mock(
                 sigle='BARBAZ',
                 intitule_fr='Barbaz',
                 intitule_en='Barbaz',
+                annee=2021,
+                sigle_entite_gestion="AZERT",
+                links=[],
+            ),
+            Mock(
+                sigle=SCIENCE_DOCTORATE,
+                intitule_fr='FooBarbaz',
+                intitule_en='FooBarbaz',
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
@@ -142,6 +155,7 @@ class ProjectViewTestCase(TestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'commission_proximite_cde', _("This field is required."))
+
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
@@ -152,9 +166,27 @@ class ProjectViewTestCase(TestCase):
         self.assertFormError(response, 'form', 'commission_proximite_cdss', _("This field is required."))
         self.assertFormError(response, 'form', 'raison_non_soutenue', _("This field is required."))
 
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sector': 'SSH',
+            'doctorate': 'SC3DP-2021',
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'sous_domaine', _("This field is required."))
+
         self.mock_proposition_api.return_value.create_proposition.return_value = {
             'uuid': "3c5cdc60-2537-4a12-a396-64d2e9e34876",
         }
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sector': 'SSH',
+            'doctorate': 'SC3DP-2021',
+            'sous_domaine': ChoixSousDomaineSciences.CHEMISTRY.name,
+        })
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
@@ -207,6 +239,17 @@ class ProjectViewTestCase(TestCase):
             'annee_doctorat': '2021',
             'bourse_recherche': "Something other",
             "commission_proximite": ChoixProximityCommissionCDSS.ECLI.name,
+        }
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = SCIENCE_DOCTORATE
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+            'code_secteur_formation': "SSH",
+            'sigle_doctorat': 'FOOBARBAZ',
+            'annee_doctorat': '2021',
+            'bourse_recherche': "Something other",
+            "commission_proximite": ChoixSousDomaineSciences.CHEMISTRY.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
