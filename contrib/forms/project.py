@@ -50,6 +50,12 @@ from admission.contrib.forms import (
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
 
+SCIENCE_DOCTORATE = 'SC3DP'
+
+COMMISSION_CDSS = 'CDSS'
+
+COMMISSIONS_CDE_CLSM = ['CDE', 'CLSM']
+
 
 class DoctorateAdmissionProjectForm(forms.Form):
     type_admission = forms.ChoiceField(
@@ -242,11 +248,11 @@ class DoctorateAdmissionProjectForm(forms.Form):
                 self.initial.get('sector'),
                 self.initial.get('doctorate'),
             )
-            if doctorate.sigle_entite_gestion in ['CDE', 'CLSM']:
+            if doctorate.sigle_entite_gestion in COMMISSIONS_CDE_CLSM:
                 self.initial['commission_proximite_cde'] = self.initial['commission_proximite']
-            elif doctorate.sigle_entite_gestion == 'CDSS':
+            elif doctorate.sigle_entite_gestion == COMMISSION_CDSS:
                 self.initial['commission_proximite_cdss'] = self.initial['commission_proximite']
-            elif doctorate.sigle == 'SC3DP':  # pragma: no branch
+            elif doctorate.sigle == SCIENCE_DOCTORATE:  # pragma: no branch
                 self.initial['sous_domaine'] = self.initial['commission_proximite']
 
         # Hide proximity commission fields
@@ -353,15 +359,15 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        if (self.doctorate_data.get('sigle_entite_gestion') in ['CDE', 'CLSM']
-                and not cleaned_data.get('commission_proximite_cde')):
+        if (self.doctorate_data.get('sigle_entite_gestion') in COMMISSIONS_CDE_CLSM
+            and not cleaned_data.get('commission_proximite_cde')):
             self.add_error('commission_proximite_cde', _("This field is required."))
 
-        if (self.doctorate_data.get('sigle_entite_gestion') == 'CDSS'
-                and not cleaned_data.get('commission_proximite_cdss')):
+        if (self.doctorate_data.get('sigle_entite_gestion') == COMMISSION_CDSS
+            and not cleaned_data.get('commission_proximite_cdss')):
             self.add_error('commission_proximite_cdss', _("This field is required."))
 
-        if self.doctorate_data.get('sigle') == 'SC3DP' and not cleaned_data.get('sous_domaine'):
+        if self.doctorate_data.get('sigle') == SCIENCE_DOCTORATE and not cleaned_data.get('sous_domaine'):
             self.add_error('sous_domaine', _("This field is required."))
 
         return cleaned_data

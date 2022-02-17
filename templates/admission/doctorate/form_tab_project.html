@@ -200,7 +200,8 @@
                             if (initialData && data[0].id === initialData.id) {
                                 data = [initialData];
                             }
-                            if (data.length && ['CDE', 'CLSM'].includes(data[0].sigle_entite_gestion)) {
+                            var commissions = {{ COMMISSIONS_CDE_CLSM|safe }};
+                            if (data.length && commissions.includes(data[0].sigle_entite_gestion)) {
                                 return true;
                             }
                         }
@@ -217,7 +218,7 @@
                             if (initialData && data[0].id === initialData.id) {
                                 data = [initialData];
                             }
-                            if (data.length && data[0].sigle_entite_gestion === 'CDSS') {
+                            if (data.length && data[0].sigle_entite_gestion === '{{ COMMISSION_CDSS }}') {
                                 return true;
                             }
                         }
@@ -234,7 +235,7 @@
                             if (initialData && data[0].id === initialData.id) {
                                 data = [initialData];
                             }
-                            if (data.length && data[0].sigle === 'SC3DP') {
+                            if (data.length && data[0].sigle === '{{ SCIENCE_DOCTORATE }}') {
                                 return true;
                             }
                         }

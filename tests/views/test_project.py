@@ -40,6 +40,7 @@ from admission.contrib.enums.proximity_commission import (
     ChoixProximityCommissionCDSS,
     ChoixSousDomaineSciences,
 )
+from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
@@ -104,7 +105,7 @@ class ProjectViewTestCase(TestCase):
                 intitule_fr='Foobarbaz',
                 intitule_en='Foobarbaz',
                 annee=2021,
-                sigle_entite_gestion="CDSS",
+                sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
             ),
             Mock(
@@ -116,7 +117,7 @@ class ProjectViewTestCase(TestCase):
                 links=[],
             ),
             Mock(
-                sigle='SC3DP',
+                sigle=SCIENCE_DOCTORATE,
                 intitule_fr='FooBarbaz',
                 intitule_en='FooBarbaz',
                 annee=2021,
@@ -242,7 +243,7 @@ class ProjectViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'SC3DP'
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = SCIENCE_DOCTORATE
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
             'code_secteur_formation': "SSH",
             'sigle_doctorat': 'FOOBARBAZ',

@@ -32,7 +32,13 @@ from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
-from admission.contrib.forms.project import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
+from admission.contrib.forms.project import (
+    COMMISSIONS_CDE_CLSM,
+    COMMISSION_CDSS,
+    DoctorateAdmissionProjectCreateForm,
+    DoctorateAdmissionProjectForm,
+    SCIENCE_DOCTORATE,
+)
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
@@ -124,6 +130,9 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['COMMISSIONS_CDE_CLSM'] = COMMISSIONS_CDE_CLSM
+        context['COMMISSION_CDSS'] = COMMISSION_CDSS
+        context['SCIENCE_DOCTORATE'] = SCIENCE_DOCTORATE
         if self.is_update_form:
             context['admission'] = self.proposition
             # Lookup sector label from API

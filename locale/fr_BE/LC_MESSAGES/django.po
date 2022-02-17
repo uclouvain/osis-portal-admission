@@ -1203,7 +1203,7 @@ msgid "Study system"
 msgstr "Système d'études"
 
 msgid "Subdomain"
-msgstr ""
+msgstr "Sous-domaine"
 
 msgid "Submit"
 msgstr "Soumettre"
