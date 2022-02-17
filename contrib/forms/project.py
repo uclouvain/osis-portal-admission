@@ -359,12 +359,16 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        if (self.doctorate_data.get('sigle_entite_gestion') in COMMISSIONS_CDE_CLSM
-            and not cleaned_data.get('commission_proximite_cde')):
+        if (
+            self.doctorate_data.get('sigle_entite_gestion') in COMMISSIONS_CDE_CLSM
+            and not cleaned_data.get('commission_proximite_cde')
+        ):
             self.add_error('commission_proximite_cde', _("This field is required."))
 
-        if (self.doctorate_data.get('sigle_entite_gestion') == COMMISSION_CDSS
-            and not cleaned_data.get('commission_proximite_cdss')):
+        if (
+            self.doctorate_data.get('sigle_entite_gestion') == COMMISSION_CDSS
+            and not cleaned_data.get('commission_proximite_cdss')
+        ):
             self.add_error('commission_proximite_cdss', _("This field is required."))
 
         if self.doctorate_data.get('sigle') == SCIENCE_DOCTORATE and not cleaned_data.get('sous_domaine'):
