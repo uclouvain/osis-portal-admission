@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest.mock import Mock, patch, ANY
+from unittest.mock import ANY, Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
@@ -87,7 +87,7 @@ class SupervisionTestCase(TestCase):
                         prenom="Marie-Odile",
                         nom="Troufignon",
                     ),
-                    status=ChoixEtatSignature.APPROVED.name,
+                    statut=ChoixEtatSignature.APPROVED.name,
                     commentaire_externe="A public comment to display",
                 ),
                 Mock(
@@ -96,7 +96,7 @@ class SupervisionTestCase(TestCase):
                         prenom="John",
                         nom="Doe",
                     ),
-                    status=ChoixEtatSignature.REFUSED.name,
+                    statut=ChoixEtatSignature.REFUSED.name,
                     commentaire_externe="A public comment to display",
                 ),
             ],

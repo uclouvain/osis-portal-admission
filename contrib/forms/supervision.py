@@ -26,10 +26,10 @@
 from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from osis_document.contrib.forms import FileUploadField
 
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.enums.supervision import DecisionApprovalEnum
+from osis_document.contrib.forms import FileUploadField
 
 
 class DoctorateAdmissionSupervisionForm(forms.Form):
@@ -84,7 +84,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         help_text=_("This comment will only be visible to the administrators."),
     )
     commentaire_externe = forms.CharField(
-        label=_('External comment'),
+        label=_('Comment for the candidate'),
         required=False,
         widget=forms.Textarea(
             attrs={

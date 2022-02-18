@@ -28,17 +28,19 @@
 {% block submit_button_affix %}{% endblock %}
 
 {% block content %}
+  {% if admission and admission.matricule_candidat != user.person.global_id %}
+    {% url 'admission:supervised-list' as list_url %}
+  {% else %}
+    {% url 'admission:doctorate-list' as list_url %}
+  {% endif %}
     <div class="page-header h3">
     <span class="d-inline-block">
       {{ admission.intitule_doctorat_fr }}
     </span>
-        <a
-            href="{% url 'admission:doctorate-list' %}"
-            class="pull-right h5 text-primary"
-        >
-            <span class="fa fa-stream"></span>
-            {% trans "Back to my requests" %}
-        </a>
+      <a href="{{ list_url }}" class="pull-right h5 text-primary">
+        <span class="fa fa-stream"></span>
+        {% trans "Back to requests" %}
+      </a>
     </div>
 
     <div class="well">
@@ -180,19 +182,17 @@
     .approval-form textarea {
         resize: vertical;
     }
-    .signature-item summary {
-        display: flex;
-        align-items: center;
-        margin-left: 1em;
-    }
     .signature-item blockquote {
         font-size: 1em;
         font-style: italic;
         margin: 10px 0 0;
         white-space: pre-line;
     }
-    .signature-item summary > div:first-child {
-        display: list-item;
+
+    .signature-item + .well dl,
+    .signature-item + .well .media-list,
+    .signature-item + .well .media-heading {
+      margin-bottom: 0;
     }
   </style>
 {% endblock %}

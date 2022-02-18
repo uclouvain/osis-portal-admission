@@ -65,13 +65,22 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                Approve on behalf of %(first_name)s %(last_name)s\n"
-"                by uploading a file\n"
-"              "
+"                    Approve on behalf of %(first_name)s %(last_name)s\n"
+"                    by uploading a file\n"
+"                  "
 msgstr ""
 "\n"
 "Approuver de la part de %(first_name)s %(last_name)s en téléversant un "
 "fichier"
+
+#, python-format
+msgid ""
+"\n"
+"            %(state)s on %(date)s\n"
+"          "
+msgstr ""
+"\n"
+"%(state)s le %(date)s"
 
 #, python-format
 msgid ""
@@ -295,6 +304,9 @@ msgstr "Bachelier"
 msgid "Back to my requests"
 msgstr "Retour à mes demandes"
 
+msgid "Back to requests"
+msgstr "Retour aux demandes"
+
 msgid "Belgian diploma"
 msgstr "Diplôme belge"
 
@@ -367,6 +379,9 @@ msgstr "État civil"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Comment for the candidate"
+msgstr "Commentaire à destination du candidat"
 
 msgid "Comment to the candidate:"
 msgstr "Commentaire à destination du candidat :"
@@ -558,9 +573,6 @@ msgstr "Crédits de l'Union Européenne"
 
 msgid "Exchange with UCLouvain"
 msgstr "Échanges avec l'UCLouvain"
-
-msgid "External comment"
-msgstr "Commentaire externe"
 
 msgid "FNRS"
 msgstr "FNRS"
@@ -1503,6 +1515,9 @@ msgstr ""
 
 msgid "Your data has been saved"
 msgstr "Vos données ont été enregistrées"
+
+msgid "Your decision has been saved."
+msgstr "Votre décision a bien été enregistrée."
 
 msgid ""
 "Your enrolment can be confirmed as all the necessary conditions have been "

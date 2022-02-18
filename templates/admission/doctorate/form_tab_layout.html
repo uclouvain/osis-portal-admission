@@ -68,22 +68,32 @@
   </script>
 {% endblock %}
 
-{% block breadcrumb %}
-    <ol class="breadcrumb">
-        <li>
-            <a href="{% url 'admission:doctorate-list' %}">
-                {% trans "Doctorate admissions" %}
-            </a>
-        </li>
-        {% if admission %}
-            <li class="active">{{ admission.intitule_doctorat_fr }}</li>
-        {% else %}
-            <li class="active">{% trans "Create new doctorate admission" %}</li>
-        {% endif %}
-    </ol>
+{% block breadcrumb_area %}
+  {% if admission and admission.matricule_candidat != user.person.global_id %}
+    {% url 'admission:supervised-list' as list_url %}
+  {% else %}
+    {% url 'admission:doctorate-list' as list_url %}
+  {% endif %}
+  <ol class="breadcrumb">
+    <li>
+      <a href="{{ list_url }}">{% trans "Doctorate admissions" %}</a>
+    </li>
+    {% if admission %}
+      <li class="active">
+        {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
+      </li>
+    {% else %}
+      <li class="active">{% trans "Create new doctorate admission" %}</li>
+    {% endif %}
+  </ol>
 {% endblock %}
 
 {% block content %}
+  {% if admission and admission.matricule_candidat != user.person.global_id %}
+    {% url 'admission:supervised-list' as list_url %}
+  {% else %}
+    {% url 'admission:doctorate-list' as list_url %}
+  {% endif %}
     <div class="page-header h3">
     <span class="d-inline-block">
       {% if admission %}
@@ -92,13 +102,10 @@
           {% trans "Create new doctorate admission" %}
       {% endif %}
     </span>
-        <a
-            href="{% url 'admission:doctorate-list' %}"
-            class="pull-right h5 text-primary"
-        >
-            <span class="fa fa-stream"></span>
-            {% trans "Back to my requests" %}
-        </a>
+      <a href="{{ list_url }}" class="pull-right h5 text-primary">
+        <span class="fa fa-stream"></span>
+        {% trans "Back to requests" %}
+      </a>
     </div>
 
     <div class="well">

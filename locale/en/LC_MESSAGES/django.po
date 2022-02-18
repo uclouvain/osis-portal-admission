@@ -46,9 +46,16 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                Approve on behalf of %(first_name)s %(last_name)s\n"
-"                by uploading a file\n"
-"              "
+"                    Approve on behalf of %(first_name)s %(last_name)s\n"
+"                    by uploading a file\n"
+"                  "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"            %(state)s on %(date)s\n"
+"          "
 msgstr ""
 
 #, python-format
@@ -255,6 +262,9 @@ msgstr "Bachelier"
 msgid "Back to my requests"
 msgstr ""
 
+msgid "Back to requests"
+msgstr ""
+
 msgid "Belgian diploma"
 msgstr ""
 
@@ -324,6 +334,9 @@ msgid "Civil status"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "Comment for the candidate"
 msgstr ""
 
 msgid "Comment to the candidate:"
@@ -509,9 +522,6 @@ msgid "European Union credits"
 msgstr ""
 
 msgid "Exchange with UCLouvain"
-msgstr ""
-
-msgid "External comment"
 msgstr ""
 
 msgid "FNRS"
@@ -1389,6 +1399,9 @@ msgid ""
 msgstr ""
 
 msgid "Your data has been saved"
+msgstr ""
+
+msgid "Your decision has been saved."
 msgstr ""
 
 msgid ""
