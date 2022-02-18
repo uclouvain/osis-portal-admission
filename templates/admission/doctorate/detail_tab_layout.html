@@ -29,18 +29,22 @@
 {% endblock %}
 
 {% block breadcrumb_area %}
-    <ol class="breadcrumb">
-        <li>
-            <a href="{% url 'admission:doctorate-list' %}">{% trans "Doctorate admissions" %}</a>
-        </li>
-        {% if admission %}
-            <li class="active">
-                {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
-            </li>
-        {% else %}
-            <li class="active">{% trans "Create new doctorate admission" %}</li>
-        {% endif %}
-    </ol>
+  <ol class="breadcrumb">
+    <li>
+      {% if admission and admission.matricule_candidat != user.person.global_id %}
+        <a href="{% url 'admission:supervised-list' %}">{% trans "Doctorate admissions" %}</a>
+      {% else %}
+        <a href="{% url 'admission:doctorate-list' %}">{% trans "Doctorate admissions" %}</a>
+      {% endif %}
+    </li>
+    {% if admission %}
+      <li class="active">
+        {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
+      </li>
+    {% else %}
+      <li class="active">{% trans "Create new doctorate admission" %}</li>
+    {% endif %}
+  </ol>
 {% endblock %}
 
 {% block script %}
@@ -57,13 +61,17 @@
             {% trans "Create new doctorate admission" %}
         {% endif %}
         </span>
-        <a
-            href="{% url 'admission:doctorate-list' %}"
-            class="pull-right h5 text-primary"
-        >
-            <span class="fa fa-stream"></span>
-            {% trans "Back to my requests" %}
-        </a>
+      <a
+        {% if admission and admission.matricule_candidat != user.person.global_id %}
+          href="{% url 'admission:supervised-list' %}"
+        {% else %}
+          href="{% url 'admission:doctorate-list' %}"
+        {% endif %}
+          class="pull-right h5 text-primary"
+      >
+        <span class="fa fa-stream"></span>
+        {% trans "Back to my requests" %}
+      </a>
     </div>
 
     <div class="well">

@@ -27,114 +27,119 @@
 
 {% url 'admission:doctorate-update:remove-actor' view.kwargs.pk type member.matricule as remove_url %}{% get_dashboard_links as links %}
 
-{# Determine if there is a comment to show #}
-{% if 'url' in links.list_supervised %}
-  {% firstof signature.commentaire_externe signature.commentaire_interne as has_comment %}
-{% else %}
-  {% firstof signature.commentaire_externe as has_comment %}
-{% endif %}
-
-{% if has_comment %}
-  <details class="signature-item">
-  <summary class="row">
-{% else %}
+<div class="signature-item">
   <div class="row">
-{% endif %}
+    <div class="col-md-9">
+      <div>
+        <strong>
+          {% if member.titre %}{{ member.titre }} {% endif %}
+          {{ member.prenom }} {{ member.nom }}
+        </strong>
+        (<a href="mailto:{{ member.email }}">{{ member.email }}</a>)
+        {% if member.institution %} - {{ member.institution }} {% endif %}
+        {% if member.ville %} - {{ member.ville }} {% endif %}
+        {% if member.pays %}({{ member.pays }}){% endif %}
+      </div>
+      <em>
+        {% if signature.date %}
+          {% blocktrans with state=signature.statut|enum_display:'ChoixEtatSignature' date=signature.date %}
+            {{ state }} on {{ date }}
+          {% endblocktrans %}
+        {% else %}
+          {{ signature.statut|enum_display:'ChoixEtatSignature' }}
+        {% endif %}
+      </em>
+    </div>
 
-<div class="col-md-9">
-  <div>
-    <strong>
-      {% if member.titre %}{{ member.titre }} {% endif %}
-      {{ member.prenom }} {{ member.nom }}
-    </strong>
-    (<a href="mailto:{{ member.email }}">{{ member.email }}</a>)
-    {% if member.ville or member.pays %}
-      - {% if member.ville %}{{ member.ville }} {% endif %}
-      {% if member.pays %}({{ member.pays }}){% endif %}
+    {% if admission|can_make_action:'remove_member' %}
+      <div class="col-md-3">
+        <a href="{{ remove_url }}" class="btn btn-danger pull-right">
+          <i class="glyphicon glyphicon-trash"></i>
+          {% trans "Remove" %}
+        </a>
+      </div>
     {% endif %}
-  </div>
-  <em>{{ signature.status|enum_display:'ChoixEtatSignature' }}</em>
-</div>
-
-{% if admission|can_make_action:'remove_member' %}
-  <div class="col-md-3">
-    <a href="{{ remove_url }}" class="btn btn-danger pull-right">
-      <i class="glyphicon glyphicon-trash"></i>
-      {% trans "Remove" %}
-    </a>
-  </div>
-{% endif %}
 
 
-
-{% if admission|can_make_action:'approve_by_pdf' and signature.status == 'INVITED' %}
-  <div class="col-md-3">
-    <button class="btn btn-default pull-right" data-toggle="modal" data-target="#approve-by-pdf-{{ member.matricule }}">
-      <i class="glyphicon glyphicon-check"></i>
-      {% trans "Approve by PDF" %}
-    </button>
-    <div id="approve-by-pdf-{{ member.matricule }}" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="{% trans "Close" %}"
-            ><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">
-              {% blocktrans with first_name=member.prenom last_name=member.nom %}
-                Approve on behalf of {{ first_name }} {{ last_name }}
-                by uploading a file
-              {% endblocktrans %}
-            </h4>
+    {% if admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
+      <div class="col-md-3">
+        <button
+          class="btn btn-default pull-right"
+          data-toggle="modal"
+          data-target="#approve-by-pdf-{{ member.matricule }}"
+        >
+          <i class="glyphicon glyphicon-check"></i>
+          {% trans "Approve by PDF" %}
+        </button>
+        <div
+          id="approve-by-pdf-{{ member.matricule }}"
+          class="modal fade"
+          tabindex="-1"
+          role="dialog"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="{% trans "Close" %}"
+                ><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                  {% blocktrans with first_name=member.prenom last_name=member.nom %}
+                    Approve on behalf of {{ first_name }} {{ last_name }}
+                    by uploading a file
+                  {% endblocktrans %}
+                </h4>
+              </div>
+              <form
+                action="{% url 'admission:doctorate-detail:approve-by-pdf' pk=admission.uuid %}"
+                method="post"
+              >
+                <div class="modal-body">
+                  {% csrf_token %}
+                  {{ approve_by_pdf_form.pdf }}
+                  <input
+                    type="hidden"
+                    name="matricule"
+                    value="{{ member.matricule }}"
+                  >
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button" class="btn btn-default" data-dismiss="modal"
+                  >
+                    {% trans "Close" %}
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    {% trans "Submit" %}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <form action="{% url 'admission:doctorate-detail:approve-by-pdf' pk=admission.uuid %}" method="post">
-            <div class="modal-body">
-              {% csrf_token %}
-              {{ approve_by_pdf_form.pdf }}
-              <input
-                type="hidden"
-                name="matricule"
-                value="{{ member.matricule }}"
-              >
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-default"
-                data-dismiss="modal"
-              >
-                {% trans "Close" %}
-              </button>
-              <button type="submit" class="btn btn-primary">
-                {% trans "Submit" %}
-              </button>
-            </div>
-          </form>
         </div>
       </div>
-    </div>
+    {% endif %}
   </div>
-{% endif %}
 
-{% if has_comment %}
-  </summary>
+  {% if signature.motif_refus %}
+    <blockquote><strong>{% trans "Rejection reason" %}</strong>
+      {{ signature.motif_refus|linebreaks }}</blockquote>
+  {% endif %}
+
   {% if signature.commentaire_externe %}
     <blockquote><strong>{% trans "Comment to the candidate:" %}</strong>
       {{ signature.commentaire_externe|linebreaks }}</blockquote>
   {% endif %}
 
-  {% if 'url' in links.list_supervised and signature.commentaire_interne %}
+  {% if member.matricule == user.person.global_id and signature.commentaire_interne %}
     <blockquote><strong>{% trans "Internal comment:" %}</strong>
       {{ signature.commentaire_interne|linebreaks }}</blockquote>
   {% endif %}
 
-  </details>
-{% else %}
-  </div>
-{% endif %}
+</div>
 
 {% if signature.pdf %}
   <div class="well">

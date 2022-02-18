@@ -26,9 +26,9 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, resolve_url
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
-from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
@@ -87,6 +87,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
         )
 
     def get_success_url(self):
+        messages.info(self.request, _("Your decision has been saved."))
         return self.request.get_full_path()
 
 
