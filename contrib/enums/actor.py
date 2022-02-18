@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.models.utils.utils import ChoiceEnum
 from django.utils.translation import gettext_lazy as _
+
+from base.models.utils.utils import ChoiceEnum
 
 
 class ActorType(ChoiceEnum):
@@ -36,4 +37,4 @@ class ChoixEtatSignature(ChoiceEnum):
     NOT_INVITED = _('NOT_INVITED')  # Pas encore envoyée au signataire
     INVITED = _('INVITED')  # Envoyée au signataire
     APPROVED = _('APPROVED')  # Approuvée par le signataire
-    REFUSED = _('REFUSED')  # Refusée par le signataire
+    DECLINED = _('REFUSED')  # Refusée par le signataire

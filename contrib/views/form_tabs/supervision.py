@@ -89,7 +89,10 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
                 person=self.person,
                 uuid=str(self.kwargs['pk']),
             )
-            supervision = AdmissionSupervisionService.get_supervision(person=self.person, uuid=str(self.kwargs['pk']))
+            supervision = AdmissionSupervisionService.get_supervision(
+                person=self.person,
+                uuid=str(self.kwargs['pk']),
+            ).to_dict()
             context['member'] = self.get_member(supervision)
         except (ApiException, AttributeError, KeyError):
             raise Http404(_('Member not found'))
@@ -97,11 +100,11 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_member(self, supervision):
         collection_name, attr_name = self.actor_type_mapping[self.kwargs['type']]
-        for signature in getattr(supervision, collection_name):
-            person = getattr(signature, attr_name)
-            if person.matricule == self.kwargs['matricule']:
+        for signature in supervision[collection_name]:
+            person = signature[attr_name]
+            if person['matricule'] == self.kwargs['matricule']:
                 return person
-        raise AttributeError
+        raise KeyError
 
     def prepare_data(self, data):
         return {

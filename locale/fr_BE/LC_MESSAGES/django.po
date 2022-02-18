@@ -235,6 +235,9 @@ msgstr "Ajouter un promoteur ou un membre du CA"
 msgid "Add another"
 msgstr "Ajouter une autre"
 
+msgid "Address of the office or lab where the thesis is done (if known)."
+msgstr "Adresse du bureau ou labo. où est effectuée la thèse (si connue)."
+
 msgid "Admission"
 msgstr "Admission"
 
@@ -994,10 +997,6 @@ msgstr "Grade obtenu"
 msgid "Ongoing request"
 msgstr "En cours de demande"
 
-msgid "Only to provide if the address is not available in the previous field."
-msgstr ""
-"À ne spécifier que si l'adresse n'est pas disponible dans le champ précédent."
-
 msgid ""
 "Only to provide if you are in possession of a Belgian document of identity. "
 "If you are of Belgian nationality and you live in Belgium this field is "
@@ -1039,9 +1038,6 @@ msgstr "Autres prénoms"
 
 msgid "Other program"
 msgstr "Autre programme"
-
-msgid "Other thesis location"
-msgstr "Autre lieu de la thèse"
 
 msgid "Others"
 msgstr "Autres"
