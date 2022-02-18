@@ -59,7 +59,6 @@
         {% field_data _("Thesis redacting language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
         {% field_data _("Thesis institute") admission.institut_these|default_if_none:'' %}
         {% field_data _("Thesis location") admission.lieu_these %}
-        {% field_data _("Other thesis location") admission.autre_lieu_these %}
         {% field_data _("Project documents") admission.documents_projet %}
         {% field_data _("Gantt graph") admission.graphe_gantt %}
         {% field_data _("Doctoral program proposition") admission.proposition_programme_doctoral %}

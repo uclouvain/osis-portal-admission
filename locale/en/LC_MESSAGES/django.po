@@ -193,6 +193,9 @@ msgstr ""
 msgid "Add another"
 msgstr ""
 
+msgid "Address of the office or lab where the thesis is done (if known)."
+msgstr ""
+
 msgid "Admission"
 msgstr ""
 
@@ -904,9 +907,6 @@ msgstr ""
 msgid "Ongoing request"
 msgstr ""
 
-msgid "Only to provide if the address is not available in the previous field."
-msgstr ""
-
 msgid ""
 "Only to provide if you are in possession of a Belgian document of identity. "
 "If you are of Belgian nationality and you live in Belgium this field is "
@@ -944,9 +944,6 @@ msgid "Other names"
 msgstr ""
 
 msgid "Other program"
-msgstr ""
-
-msgid "Other thesis location"
 msgstr ""
 
 msgid "Others"

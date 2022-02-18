@@ -68,24 +68,29 @@
         </div>
         <div class="col-md-10">
 
-            {% if admission|can_make_action:'add_approval' and approval_form %}
-                {% panel _("Proposition approval") %}
-                    {% bootstrap_form_errors approval_form %}
-                    <form class="osis-form approval-form" method="post" action="">
-                        {% csrf_token %}
-                        {% bootstrap_field approval_form.decision %}
-                        {% bootstrap_field approval_form.motif_refus %}
-                        <div class="row">
-                            <div class="col-md-6">
-                                {% bootstrap_field approval_form.commentaire_interne %}
-                            </div>
-                            <div class="col-md-6">
-                                {% bootstrap_field approval_form.commentaire_externe %}
-                            </div>
-                        </div>
-                        {% bootstrap_button button_type="submit" content=_("Submit my decision") name="approval_submit" button_class="btn btn-primary" %}
-                    </form>
-                {% endpanel %}
+            {% if admission|can_make_action:'add_approval' and form %}
+              {% panel _("Proposition approval") %}
+                {% bootstrap_form_errors form %}
+                <form class="osis-form approval-form" method="post" action="">
+                  {% csrf_token %}
+                  {% bootstrap_field form.decision %}
+                  {% bootstrap_field form.motif_refus %}
+                  {% if form.institut_these %}
+                    <div id="institut_these">
+                      {% bootstrap_field form.institut_these %}
+                    </div>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col-md-6">
+                      {% bootstrap_field form.commentaire_interne %}
+                    </div>
+                    <div class="col-md-6">
+                      {% bootstrap_field form.commentaire_externe %}
+                    </div>
+                  </div>
+                  {% bootstrap_button button_type="submit" content=_("Submit my decision") name="approval_submit" button_class="btn btn-primary" %}
+                </form>
+              {% endpanel %}
             {% endif %}
 
             {% panel _("Promoters") %}
@@ -129,9 +134,7 @@
             {% endif %}
 
             {% if admission|can_make_action:'request_signatures' %}
-                <!-- Button trigger modal -->
                 <div class="text-center">
-
                     <button
                         type="button"
                         class="btn btn-success btn-lg"
@@ -152,7 +155,6 @@
 {% endblock content %}
 
 {% block script %}
-    {{ block.super }}
     {{ form.media }}
     {{ approve_by_pdf_form.media }}
     <script type="application/javascript">
@@ -172,6 +174,9 @@
         }, {
             duration: 0,
         });
+        $('#institut_these').length && $('#institut_these').dependsOn({
+            'input[name="decision"]': { not: ['REJECTED'] }
+        }, { duration: 0 });
     });
     </script>
 {% endblock %}

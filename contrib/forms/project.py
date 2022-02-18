@@ -148,19 +148,8 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     lieu_these = forms.CharField(
         label=_("Thesis location"),
-        widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:institute-location",
-            forward=['institut_these'],
-            attrs={
-                'data-minimum-results-for-search': 'Infinity',  # Hide the search box
-            },
-        ),
         required=False,
-    )
-    autre_lieu_these = forms.CharField(
-        label=_("Other thesis location"),
-        required=False,
-        help_text=_("Only to provide if the address is not available in the previous field."),
+        help_text=_("Address of the office or lab where the thesis is done (if known)."),
     )
     resume_projet = forms.CharField(
         label=_("Project resume"),
@@ -264,7 +253,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         # Add the specified institute in the choices of the related field
         self.fields['institut_these'].widget.choices = get_thesis_institute_initial_choices(
             self.data.get(self.add_prefix("institut_these"), self.initial.get("institut_these")),
-            self.person
+            self.person,
         )
 
         # Add the specified thesis position in the choices of the related field
@@ -360,17 +349,20 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
         cleaned_data = super().clean()
 
         if (
+            # Commission CDE/CLSM is required but not set
             self.doctorate_data.get('sigle_entite_gestion') in COMMISSIONS_CDE_CLSM
             and not cleaned_data.get('commission_proximite_cde')
         ):
             self.add_error('commission_proximite_cde', _("This field is required."))
 
         if (
+            # Commission CDSS is required but not set
             self.doctorate_data.get('sigle_entite_gestion') == COMMISSION_CDSS
             and not cleaned_data.get('commission_proximite_cdss')
         ):
             self.add_error('commission_proximite_cdss', _("This field is required."))
 
+        # Science doctorate but no subdomain set
         if self.doctorate_data.get('sigle') == SCIENCE_DOCTORATE and not cleaned_data.get('sous_domaine'):
             self.add_error('sous_domaine', _("This field is required."))
 

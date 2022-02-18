@@ -29,6 +29,7 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.enums.supervision import DecisionApprovalEnum
+from admission.contrib.forms import get_thesis_institute_initial_choices
 from osis_document.contrib.forms import FileUploadField
 
 
@@ -93,11 +94,38 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         ),
         help_text=_("This comment will be visible to all users who have access to this page."),
     )
+    institut_these = forms.CharField(
+        label=_("Thesis institute"),
+        required=False,
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:institute",
+            attrs={
+                'data-minimum-input-length': 3,
+            },
+        ),
+    )
+
+    def __init__(self, *args, include_institut_these=False, person=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not include_institut_these:
+            del self.fields['institut_these']
+        else:
+            # Add the specified institute in the choices of the related field
+            self.fields['institut_these'].widget.choices = get_thesis_institute_initial_choices(
+                self.data.get(self.add_prefix("institut_these"), self.initial.get("institut_these")),
+                person,
+            )
 
     def clean(self):
         data = super().clean()
         if data.get('decision') == DecisionApprovalEnum.REJECTED.name and not data.get('motif_refus'):
             self.add_error('motif_refus', _("This field is required."))
+        if (
+            data.get('decision') == DecisionApprovalEnum.APPROVED.name
+            and 'institut_these' in self.fields
+            and not data.get('institut_these')
+        ):
+            self.add_error('institut_these', _("This field is required."))
 
     class Media:
         js = ('dependsOn.min.js',)

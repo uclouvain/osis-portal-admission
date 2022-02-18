@@ -26,9 +26,11 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, resolve_url
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
+from osis_signature.enums import SignatureState
 
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
@@ -45,25 +47,52 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
         context = self.get_context_data(**kwargs)
         # If not signing in progress and ability to update supervision, redirect on update page
         if (
-            context['admission'].statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
-            and 'url' in context['admission'].links['request_signatures']
+            self.proposition.statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
+            and 'url' in self.proposition.links['request_signatures']
         ):
             return redirect('admission:doctorate-update:supervision', **self.kwargs)
         return self.render_to_response(context)
 
+    @cached_property
+    def supervision(self):
+        return AdmissionSupervisionService.get_supervision(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+        ).to_dict()
+
+    @cached_property
+    def proposition(self):
+        return AdmissionPropositionService.get_proposition(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
-        context['supervision'] = AdmissionSupervisionService.get_supervision(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
-        context['approval_form'] = DoctorateAdmissionApprovalForm(self.request.POST or None)
+        context['admission'] = self.proposition
+        context['supervision'] = self.supervision
         context['approve_by_pdf_form'] = DoctorateAdmissionApprovalByPdfForm()
         return context
+
+    def get_initial(self):
+        return {
+            'institut_these': self.proposition.institut_these,
+        }
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['person'] = self.person
+        kwargs['include_institut_these'] = (
+            # User is a promoter
+            self.person.global_id
+            in [signature['promoteur']['matricule'] for signature in self.supervision['signatures_promoteurs']]
+            # No one has answered yet
+            and all(
+                signature['statut'] == SignatureState.INVITED.name
+                for signature in self.supervision['signatures_promoteurs']
+            )
+        )
+        return kwargs
 
     def prepare_data(self, data):
         data["matricule"] = self.person.global_id
