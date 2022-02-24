@@ -22,7 +22,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import resolve_url
+from django.utils.translation import gettext as _
 from django.views.generic import FormView
 
 from admission.contrib.forms.confirmation import (
@@ -42,14 +45,10 @@ from admission.templatetags.admission import SUBTAB_LABELS
 class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_confirm.html'
 
-    def __init__(self, **kwargs):
-        super(DoctorateAdmissionConfirmFormView, self).__init__(**kwargs)
-        self.has_belgian_diploma = None
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        proposition_uuid = self.kwargs.get('pk')
+        proposition_uuid = str(self.kwargs.get('pk', ''))
 
         # Retrieve the admission
         context['admission'] = AdmissionPropositionService.get_proposition(
@@ -83,7 +82,7 @@ class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin,
         # Check that the person related to the admission has a belgian diploma
         high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
             person=self.person,
-            uuid=self.kwargs.get('pk'),
+            uuid=str(self.kwargs.get('pk', '')),
         )
         return high_school_diploma.belgian_diploma is not None
 
@@ -93,6 +92,12 @@ class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin,
         else:
             return DoctorateAdmissionConfirmationForm
 
+    def get_success_url(self):
+        messages.info(self.request, _("Your proposition has been confirmed."))
+        return resolve_url('admission:doctorate-detail:project', pk=self.kwargs.get('pk'))
+
     def call_webservice(self, data):
-        # TODO submit the proposition
-        pass
+        AdmissionPropositionService.submit_proposition(
+            person=self.person,
+            uuid=str(self.kwargs.get('pk', '')),
+        )

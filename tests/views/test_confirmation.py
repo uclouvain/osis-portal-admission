@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, ANY
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
@@ -41,6 +41,13 @@ class ConfirmationTestCase(TestCase):
         cls.person = PersonFactory()
         cls.detail_url = resolve_url('admission:doctorate-detail:confirm', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         cls.form_url = resolve_url('admission:doctorate-update:confirm', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        cls.default_kwargs = {
+            'accept_language': ANY,
+            'x_user_first_name': ANY,
+            'x_user_last_name': ANY,
+            'x_user_email': ANY,
+            'x_user_global_id': ANY,
+        }
 
     def setUp(self):
         self.client.force_login(self.person.user)
@@ -48,6 +55,7 @@ class ConfirmationTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
         self.mock_proposition_api.return_value.verify_proposition.return_value = Mock().return_value = []
+        self.mock_proposition_api.return_value.submit_proposition.return_value = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
         self.addCleanup(propositions_api_patcher.stop)
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
@@ -102,7 +110,7 @@ class ConfirmationTestCase(TestCase):
     def test_get_with_incomplete_admission(self):
         self.mock_proposition_api.return_value.verify_proposition.return_value = Mock().return_value = [
             Mock(status_code='PROPOSITION-25', detail='Some data is missing.'),
-            Mock(status_code='PROPOSITION-39', detail='Every promoter must approve the proposition.'),
+            Mock(status_code='PROPOSITION-38', detail='Every promoter must approve the proposition.'),
         ]
 
         response = self.client.get(self.form_url)
@@ -181,4 +189,8 @@ class ConfirmationTestCase(TestCase):
             'accept_regulated_professions_rules': True,
             'accept_max_response_time': True,
         })
+        self.mock_proposition_api.return_value.submit_proposition.assert_called_with(
+            uuid="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            **self.default_kwargs,
+        )
         self.assertEqual(response.status_code, 302)

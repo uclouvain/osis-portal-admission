@@ -109,6 +109,13 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def submit_proposition(cls, person: Person, uuid):
+        return AdmissionPropositionAPIClient().submit_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
@@ -148,8 +155,7 @@ class PropositionBusinessException(Enum):
     AnneesCurriculumNonSpecifieesException = "PROPOSITION-35"
     ProcedureDemandeSignatureNonLanceeException = "PROPOSITION-36"
     PropositionNonApprouveeParPromoteurException = "PROPOSITION-37"
-    MembreCAPasReponduException = "PROPOSITION-38"
-    PropositionNonApprouveeParMembreCAException = "PROPOSITION-39"
+    PropositionNonApprouveeParMembresCAException = "PROPOSITION-38"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -178,8 +184,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'supervision': {
         PropositionBusinessException.ProcedureDemandeSignatureNonLanceeException,
         PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
-        PropositionBusinessException.PropositionNonApprouveeParMembreCAException,
-        PropositionBusinessException.MembreCAPasReponduException,
+        PropositionBusinessException.PropositionNonApprouveeParMembresCAException,
     },
 }
 
