@@ -1006,7 +1006,7 @@ msgstr ""
 msgid "Proximity Commission for Pharmaceutical Sciences (DFAR)"
 msgstr ""
 
-msgid "Proximity commission"
+msgid "Proximity commission / Subdomain"
 msgstr ""
 
 msgid ""
@@ -1146,9 +1146,6 @@ msgstr ""
 
 msgid "Study system"
 msgstr ""
-
-msgid "Subdomain"
-msgstr "Sous-domaine"
 
 msgid "Submit"
 msgstr ""

@@ -49,28 +49,28 @@
                 </div>
             </div>
         {% else %}
-            {% field_data _("Sector") sector_label %}
-            {% if LANGUAGE_CODE == 'en' %}
-                {% field_data _("Doctorate") admission.intitule_doctorat_en %}
-            {% else %}
-                {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
-            {% endif %}
-            {% if admission.commission_proximite %}
-                {% field_data _("Proximity commission") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
-            {% endif %}
+          {% field_data _("Sector") sector_label %}
+          {% if LANGUAGE_CODE == 'en' %}
+            {% field_data _("Doctorate") admission.intitule_doctorat_en %}
+          {% else %}
+            {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
+          {% endif %}
+          {% if admission.commission_proximite %}
+            {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
+          {% endif %}
         {% endif %}
-        <div class="row" id="commission_proximite_cde">
-            <div class="col-md-4">
-                {% bootstrap_field form.commission_proximite_cde %}
-            </div>
+      <div class="row" id="commission_proximite_cde">
+        <div class="col-md-6">
+          {% bootstrap_field form.commission_proximite_cde %}
         </div>
-        <div class="row" id="commission_proximite_cdss">
-            <div class="col-md-4">
-                {% bootstrap_field form.commission_proximite_cdss %}
-            </div>
+      </div>
+      <div class="row" id="commission_proximite_cdss">
+        <div class="col-md-9">
+          {% bootstrap_field form.commission_proximite_cdss %}
         </div>
+      </div>
       <div class="row" id="sous_domaine">
-        <div class="col-md-4">
+        <div class="col-md-6">
           {% bootstrap_field form.sous_domaine %}
         </div>
       </div>

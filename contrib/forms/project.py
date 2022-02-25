@@ -73,17 +73,17 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     commission_proximite_cde = forms.ChoiceField(
-        label=_("Proximity commission"),
+        label=_("Proximity commission / Subdomain"),
         choices=EMPTY_CHOICE + ChoixProximityCommissionCDE.choices(),
         required=False,
     )
     commission_proximite_cdss = forms.ChoiceField(
-        label=_("Proximity commission"),
+        label=_("Proximity commission / Subdomain"),
         choices=EMPTY_CHOICE + ChoixProximityCommissionCDSS.choices(),
         required=False,
     )
     sous_domaine = forms.ChoiceField(
-        label=_("Subdomain"),
+        label=_("Proximity commission / Subdomain"),
         choices=EMPTY_CHOICE + ChoixSousDomaineSciences.choices(),
         required=False,
     )
