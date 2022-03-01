@@ -264,21 +264,21 @@ class SupervisionTestCase(TestCase):
 
     def test_should_not_display_confirmation_if_errors(self):
         url = resolve_url("admission:doctorate-update:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_api.return_value.retrieve_verify_proposition.return_value = [
+        self.mock_api.return_value.retrieve_verify_project.return_value = [
             {'detail': "Nope"}
         ]
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_api.return_value.retrieve_verify_proposition.assert_called()
+        self.mock_api.return_value.retrieve_verify_project.assert_called()
         self.assertNotContains(response, _("Are you sure you want to request signatures for this admission?"))
         self.assertContains(response, "Nope")
 
     def test_should_redirect_to_supervision_without_buttons(self):
         url = resolve_url("admission:doctorate-update:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_api.return_value.retrieve_verify_proposition.return_value = []
+        self.mock_api.return_value.retrieve_verify_project.return_value = []
         response = self.client.get(url, {})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_api.return_value.retrieve_verify_proposition.assert_called()
+        self.mock_api.return_value.retrieve_verify_project.assert_called()
         self.assertContains(response, _("Are you sure you want to request signatures for this admission?"))
 
         # Success

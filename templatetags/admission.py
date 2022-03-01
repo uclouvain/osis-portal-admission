@@ -83,6 +83,7 @@ TAB_TREE = {
     PERSONAL: ['person', 'coordonnees'],
     ParentTab(_('Previous experience'), 'list-alt'): ['education', 'curriculum', 'languages'],
     ParentTab(_('Doctorate'), 'graduation-cap'): ['project', 'cotutelle', 'supervision'],
+    ParentTab(_('Confirmation'), 'check-circle'): ['confirm'],
 }
 
 
@@ -147,32 +148,33 @@ def doctorate_tabs(context, admission=None):
     }
 
 
+SUBTAB_LABELS = {
+    'person': _("Identification"),
+    'coordonnees': _("Contact details"),
+    'education': _("Secondary studies"),
+    'curriculum': _("Curriculum"),
+    'languages': _("Languages knowledge"),
+    'project': _("Doctoral project"),
+    'cotutelle': _("Cotutelle"),
+    'supervision': _("Supervision"),
+    'confirm': _("Confirmation"),
+    'confirm_paper': _("Confirmation paper"),
+    'training': _("Doctoral training"),
+    'jury': _("Jury"),
+    'private_defense': _("Private defense"),
+    'public_defense': _("Public defense"),
+}
+
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None):
     match = context['request'].resolver_match
     is_form_view = match.namespaces[1] == 'doctorate-update'
 
-    subtab_labels = {
-        'person': _("Identification"),
-        'coordonnees': _("Contact details"),
-        'education': _("Secondary studies"),
-        'curriculum': _("Curriculum"),
-        'languages': _("Languages knowledge"),
-        'project': _("Doctoral project"),
-        'cotutelle': _("Cotutelle"),
-        'supervision': _("Supervision"),
-        'confirm': _("Confirmation"),
-        'confirm_paper': _("Confirmation paper"),
-        'training': _("Doctoral training"),
-        'jury': _("Jury"),
-        'private_defense': _("Private defense"),
-        'public_defense': _("Public defense"),
-    }
     valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(admission=admission))
 
     return {
         'subtabs': valid_tab_tree.get(get_active_parent(match.url_name), []),
-        'subtab_labels': subtab_labels,
+        'subtab_labels': SUBTAB_LABELS,
         'admission': admission,
         'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),

@@ -40,7 +40,7 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
         tab_names += [
             "cotutelle",
             "supervision",
-            # "confirm",
+            "confirm",
             # "confirm-paper",
             # "training",
             # "jury",
