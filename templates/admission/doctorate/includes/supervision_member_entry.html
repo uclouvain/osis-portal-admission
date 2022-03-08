@@ -124,7 +124,7 @@
     {% endif %}
   </div>
 
-  {% if signature.motif_refus %}
+  {% if signature.motif_refus and signature.statut == 'DECLINED' %}
     <blockquote><strong>{% trans "Rejection reason" %}</strong>
       {{ signature.motif_refus|linebreaks }}</blockquote>
   {% endif %}
@@ -141,7 +141,7 @@
 
 </div>
 
-{% if signature.pdf %}
+{% if signature.pdf and signature.statut == 'APPROVED' %}
   <div class="well">
     {% field_data "" signature.pdf %}
   </div>
