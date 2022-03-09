@@ -65,22 +65,20 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    Approve on behalf of %(first_name)s %(last_name)s\n"
-"                    by uploading a file\n"
-"                  "
-msgstr ""
-"\n"
-"Approuver de la part de %(first_name)s %(last_name)s en téléversant un "
-"fichier"
-
-#, python-format
-msgid ""
-"\n"
 "            %(state)s on %(date)s\n"
 "          "
 msgstr ""
 "\n"
 "%(state)s le %(date)s"
+
+#, python-format
+msgid ""
+"\n"
+"            Approve on behalf of %(first_name)s %(last_name)s\n"
+"          "
+msgstr ""
+"\n"
+"Approuver de la part de %(first_name)s %(last_name)s"
 
 #, python-format
 msgid ""
@@ -1309,9 +1307,6 @@ msgstr "Type du cycle d'études"
 
 msgid "Study system"
 msgstr "Système d'études"
-
-msgid "Submit"
-msgstr "Soumettre"
 
 msgid "Submit my decision"
 msgstr "Soumettre ma décision"
