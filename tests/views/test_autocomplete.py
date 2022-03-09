@@ -43,8 +43,8 @@ class AutocompleteTestCase(TestCase):
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
         api.return_value.list_doctorat_dtos.return_value = [
-            Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE"),
-            Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
+            Mock(sigle='FOOBAR', intitule='Foobar', annee=2021, sigle_entite_gestion="CDE"),
+            Mock(sigle='BARBAZ', intitule='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
         ]
         url = reverse('admission:autocomplete:doctorate')
         response = self.client.get(url, {'forward': json.dumps({'sector': 'SSH'}), 'q': 'foo'})

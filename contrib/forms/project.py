@@ -315,8 +315,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                 + [
                     (sector.sigle, "{sigle} - {intitule}".format(
                         sigle=sector.sigle,
-                        intitule=sector.intitule_fr if get_language() == settings.LANGUAGE_CODE
-                        else sector.intitule_en,
+                        intitule=sector.intitule,
                     ))
                     for sector in AdmissionAutocompleteService.get_sectors(person)
                 ]
@@ -333,8 +332,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                     "{doctorat.sigle}-{doctorat.annee}".format(doctorat=doctorate),
                     "{sigle} - {intitule}".format(
                         sigle=doctorate.sigle,
-                        intitule=doctorate.intitule_fr if get_language() == settings.LANGUAGE_CODE
-                        else doctorate.intitule_en,
+                        intitule=doctorate.intitule,
                     ),
                 )
             ]
