@@ -46,15 +46,14 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    Approve on behalf of %(first_name)s %(last_name)s\n"
-"                    by uploading a file\n"
-"                  "
+"            %(state)s on %(date)s\n"
+"          "
 msgstr ""
 
 #, python-format
 msgid ""
 "\n"
-"            %(state)s on %(date)s\n"
+"            Approve on behalf of %(first_name)s %(last_name)s\n"
 "          "
 msgstr ""
 
@@ -1211,9 +1210,6 @@ msgid "Study cycle type"
 msgstr ""
 
 msgid "Study system"
-msgstr ""
-
-msgid "Submit"
 msgstr ""
 
 msgid "Submit my decision"

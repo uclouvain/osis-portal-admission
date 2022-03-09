@@ -64,62 +64,23 @@
     {% if admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
       <div class="col-md-3">
         <button
-          class="btn btn-default pull-right"
-          data-toggle="modal"
-          data-target="#approve-by-pdf-{{ member.matricule }}"
+          class="btn btn-default pull-right" data-toggle="collapse" data-target="#approve-by-pdf-{{ member.matricule }}"
         >
           <i class="glyphicon glyphicon-check"></i>
           {% trans "Approve by PDF" %}
         </button>
-        <div
-          id="approve-by-pdf-{{ member.matricule }}"
-          class="modal fade"
-          tabindex="-1"
-          role="dialog"
-        >
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="{% trans "Close" %}"
-                ><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">
-                  {% blocktrans with first_name=member.prenom last_name=member.nom %}
-                    Approve on behalf of {{ first_name }} {{ last_name }}
-                    by uploading a file
-                  {% endblocktrans %}
-                </h4>
-              </div>
-              <form
-                action="{% url 'admission:doctorate-detail:approve-by-pdf' pk=admission.uuid %}"
-                method="post"
-              >
-                <div class="modal-body">
-                  {% csrf_token %}
-                  {{ approve_by_pdf_form.pdf }}
-                  <input
-                    type="hidden"
-                    name="matricule"
-                    value="{{ member.matricule }}"
-                  >
-                </div>
-                <div class="modal-footer">
-                  <button
-                    type="button" class="btn btn-default" data-dismiss="modal"
-                  >
-                    {% trans "Close" %}
-                  </button>
-                  <button type="submit" class="btn btn-primary">
-                    {% trans "Submit" %}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+      </div>
+      <div id="approve-by-pdf-{{ member.matricule }}" class="col-md-12 collapse">
+        <form action="{% url 'admission:doctorate-detail:approve-by-pdf' pk=admission.uuid %}" method="post">
+          {% csrf_token %}
+          {{ approve_by_pdf_form.pdf }}
+          <input type="hidden" name="matricule" value="{{ member.matricule }}" />
+          <button type="submit" class="btn btn-primary">
+            {% blocktrans with first_name=member.prenom last_name=member.nom %}
+            Approve on behalf of {{ first_name }} {{ last_name }}
+          {% endblocktrans %}
+          </button>
+        </form>
       </div>
     {% endif %}
   </div>
