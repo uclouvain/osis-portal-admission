@@ -29,7 +29,7 @@
         <div class="row">
             {% field_data _("Admission type") admission.type_admission|enum_display:'AdmissionType' "col-md-4" %}
             {% field_data _("Sector") sector_label "col-md-4" %}
-            {% field_data _("Doctorate") admission.intitule_doctorat_fr "col-md-4" %}
+            {% field_data _("Doctorate") admission.intitule_doctorat "col-md-4" %}
         </div>
         {% if admission.commission_proximite %}
             {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}

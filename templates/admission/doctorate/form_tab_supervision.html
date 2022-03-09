@@ -35,7 +35,7 @@
   {% endif %}
     <div class="page-header h3">
     <span class="d-inline-block">
-      {{ admission.intitule_doctorat_fr }}
+      {{ admission.intitule_doctorat }}
     </span>
       <a href="{{ list_url }}" class="pull-right h5 text-primary">
         <span class="fa fa-stream"></span>
@@ -46,7 +46,7 @@
     <div class="well">
         <div>
             {% trans "Reference:" %}
-            {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
+            {{ admission.intitule_doctorat }} ({{ admission.reference }})
         </div>
         <div>
             {% trans "Status:" %}

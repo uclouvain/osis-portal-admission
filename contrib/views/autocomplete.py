@@ -60,7 +60,7 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             sigle_entite_gestion=result.sigle_entite_gestion,
             text="{sigle} - {intitule}".format(
                 sigle=result.sigle,
-                intitule=result.intitule_fr if get_language() == settings.LANGUAGE_CODE else result.intitule_en,
+                intitule=result.intitule,
             )
         ) for result in results]
 
@@ -68,7 +68,7 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         """Return list of strings that match the autocomplete query."""
         return [x for x in results if self.q.lower() in "{sigle} - {intitule}".format(
             sigle=x.sigle,
-            intitule=x.intitule_fr if get_language() == settings.LANGUAGE_CODE else x.intitule_en,
+            intitule=x.intitule,
         ).lower()]
 
 

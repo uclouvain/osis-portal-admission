@@ -67,9 +67,8 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
         # xgettext:no-python-format
         context_data['fte_label'] = _("Full-time equivalent (as %)")
         # Lookup sector label from API
-        attr_name = 'intitule_fr' if get_language() == settings.LANGUAGE_CODE else 'intitule_en'
         context_data['sector_label'] = [
-            getattr(s, attr_name)
+            s.intitule
             for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
             if s.sigle == context_data['admission'].code_secteur_formation
         ][0]

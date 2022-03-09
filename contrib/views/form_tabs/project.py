@@ -136,9 +136,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
         if self.is_update_form:
             context['admission'] = self.proposition
             # Lookup sector label from API
-            attr_name = 'intitule_fr' if get_language() == settings.LANGUAGE_CODE else 'intitule_en'
             context['sector_label'] = [
-                getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
+                s.intitule for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
                 if s.sigle == self.proposition.code_secteur_formation
             ][0]
         return context

@@ -87,39 +87,35 @@ class ProjectViewTestCase(TestCase):
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")
         self.mock_autocomplete_api = autocomplete_api_patcher.start()
         self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = [
-            Mock(sigle='SSH', intitule_fr='Foobar', intitule_en='Foobar'),
-            Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
-            Mock(sigle='SSS', intitule_fr='Foobarbaz', intitule_en='Foobarbaz'),
+            Mock(sigle='SSH', intitule='Foobar'),
+            Mock(sigle='SST', intitule='Barbaz'),
+            Mock(sigle='SSS', intitule='Foobarbaz'),
         ]
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
             Mock(
                 sigle='FOOBAR',
-                intitule_fr='Foobar',
-                intitule_en='Foobar',
+                intitule='Foobar',
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 links=[],
             ),
             Mock(
                 sigle='FOOBARBAZ',
-                intitule_fr='Foobarbaz',
-                intitule_en='Foobarbaz',
+                intitule='Foobarbaz',
                 annee=2021,
                 sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
             ),
             Mock(
                 sigle='BARBAZ',
-                intitule_fr='Barbaz',
-                intitule_en='Barbaz',
+                intitule='Barbaz',
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
             ),
             Mock(
                 sigle=SCIENCE_DOCTORATE,
-                intitule_fr='FooBarbaz',
-                intitule_en='FooBarbaz',
+                intitule='FooBarbaz',
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],

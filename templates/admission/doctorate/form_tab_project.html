@@ -50,11 +50,7 @@
             </div>
         {% else %}
           {% field_data _("Sector") sector_label %}
-          {% if LANGUAGE_CODE == 'en' %}
-            {% field_data _("Doctorate") admission.intitule_doctorat_en %}
-          {% else %}
-            {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
-          {% endif %}
+          {% field_data _("Doctorate") admission.intitule_doctorat %}
           {% if admission.commission_proximite %}
             {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
           {% endif %}
