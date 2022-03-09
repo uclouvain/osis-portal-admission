@@ -66,8 +66,8 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         if form_cleaned_data['be_postal_code']:
             form_cleaned_data['postal_code'] = form_cleaned_data['be_postal_code']
             form_cleaned_data['city'] = form_cleaned_data['be_city']
-            form_cleaned_data.pop('be_postal_code')
-            form_cleaned_data.pop('be_city')
+        form_cleaned_data.pop('be_postal_code')
+        form_cleaned_data.pop('be_city')
 
     def prepare_data(self, main_form_data):
         # Process the form data to match API
@@ -77,9 +77,11 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         data = forms['main_form'].cleaned_data
         data['residential'] = forms['residential'].cleaned_data
         self.prepare_be_city(data['residential'])
-        data['contact'] = forms['contact'].cleaned_data
-        self.prepare_be_city(data['contact'])
-        data.pop('show_contact')
+        if data.pop('show_contact'):
+            data['contact'] = forms['contact'].cleaned_data
+            self.prepare_be_city(data['contact'])
+        else:
+            data['contact'] = None
         data.pop('email')
         return data
 
