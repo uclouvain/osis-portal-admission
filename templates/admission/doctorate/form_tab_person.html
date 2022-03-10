@@ -78,7 +78,7 @@
       </div>
     </div>
 
-    {% bootstrap_field form.id_photo %}
+    {% bootstrap_field form.id_photo form_group_class="form-group required_field" %}
 
     <div class="row">
       <div class="col-md-4">
@@ -88,7 +88,7 @@
   {% endpanel %}
 
   {% panel _("Proof of identity") %}
-    <p>
+    <p class="required_text">
       {% blocktrans %}
         Please refer to your identity document in order to complete the
         form. If you have a Belgian national register number, please
@@ -112,8 +112,8 @@
       </div>
     </div>
 
-    {% bootstrap_field form.id_card %}
-    {% bootstrap_field form.passport %}
+    {% bootstrap_field form.id_card form_group_class="form-group id_card" %}
+    {% bootstrap_field form.passport form_group_class="form-group passport"  %}
   {% endpanel %}
 
   {% panel _("Have you previously been registered at UCLouvain?") %}
@@ -138,6 +138,22 @@
       $('#id_last_registration_year').dependsOn({
           'input[name=already_registered]': { values: ['1'] },
       }, { valueOnDisable: '' });
+
+      const regexHasAtLeastOneCharacter = new RegExp('.+');
+      const requiredField = {
+        toggleClass: 'required_field',
+        disable: false,
+        hide: false,
+      };
+
+      $('.id_card').dependsOn({
+        '#id_national_number': { match: regexHasAtLeastOneCharacter },
+      }, requiredField).or({
+        '#id_id_card_number': { match: regexHasAtLeastOneCharacter },
+      });
+      $('.passport').dependsOn({
+        '#id_passport_number': { match: regexHasAtLeastOneCharacter },
+      }, requiredField);
 
       $.applyDataMask();
   });

@@ -27,7 +27,7 @@
 {% block style %}
   <link href="{% static "admission/admission.css" %}" rel="stylesheet"/>
   <style>
-    .form-group.required_field .control-label:after {
+    .form-group.required_field .control-label:after, .required_text:after {
       content: " *";
       color: red;
     }
