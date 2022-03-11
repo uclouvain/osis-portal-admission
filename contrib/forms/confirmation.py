@@ -30,26 +30,27 @@ from django.utils.translation import gettext_lazy as _
 class DoctorateAdmissionConfirmationForm(forms.Form):
     accept_regulations = forms.BooleanField(
         label=_(
-            "In accordance with the information at "
+            "In accordance with the information on the "
             "<a href='https://uclouvain.be/en/study/inscriptions/reglementations.html' target='blank'>"
-            "https://uclouvain.be/en/study/inscriptions/reglementations.html</a>, "
+            "Reglementations</a> page, "
             "I declare that I have read and accept the terms of the university regulations."
         ),
         required=True,
     )
     accept_data_protection_policy = forms.BooleanField(
         label=_(
-            "In accordance with the information at <a href='https://uclouvain.be/en/study/inscriptions/vie-privee.html'"
-            " target='blank'>https://uclouvain.be/en/study/inscriptions/vie-privee.html</a>, I declare that I have"
+            "In accordance with the information on the "
+            "<a href='https://uclouvain.be/en/study/inscriptions/vie-privee.html'"
+            " target='blank'>Data protection policy</a> page, I declare that I have"
             " read and accept the terms of the data protection policy of the University of Louvain."
         ),
         required=True,
     )
     accept_regulated_professions_rules = forms.BooleanField(
         label=_(
-            "In accordance with the information at "
+            "In accordance with the information on the "
             "<a href='https://uclouvain.be/en/study/inscriptions/acces-aux-professions-reglementees.html' "
-            "target='blank'>https://uclouvain.be/en/study/inscriptions/acces-aux-professions-reglementees.html</a>, "
+            "target='blank'>Access to regulated professions</a> page, "
             "should it apply to me, I declare that I have received the information relating to the admission and "
             "graduation requirements and to the particular rules and restrictions of accreditation and professional "
             "establishment to which the professional or teacher training title is subject and I accept the terms."
@@ -59,7 +60,7 @@ class DoctorateAdmissionConfirmationForm(forms.Form):
     accept_max_response_time = forms.BooleanField(
         label=_(
             "The Enrolment Department reserves the right to ask you for any additional supporting documents it deems "
-            "useful. This must imperatively reach us within 15 calendar days. "
+            "useful. This must <strong>imperatively reach us within 15 calendar days</strong>. "
             "Otherwise, your enrolment request will be closed."
         ),
         required=True,
