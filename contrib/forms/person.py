@@ -42,16 +42,16 @@ NO = '0'
 class DoctorateAdmissionPersonForm(forms.Form):
     first_name = forms.CharField(
         label=_("First name"),
-        help_text=_("(e.g.: Frédéric) <del>frederic FREDERIC</del>)"),
+        help_text=_("(e.g.: Frédéric <del>frederic FREDERIC</del>)"),
     )
     middle_name = forms.CharField(
         required=False,
         label=_("Other names"),
-        help_text=_("(e.g.: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"),
+        help_text=_("(e.g.: Pierre, Paul, Jacques <del>pierre, paul, JACQUES)</del>"),
     )
     last_name = forms.CharField(
         label=_("Last name"),
-        help_text=_("(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"),
+        help_text=_("(e.g.: Van der Elst / Vanderelst <del>VANDERELST</del>)"),
     )
     first_name_in_use = forms.CharField(required=False, label=_("First name in use"))
     sex = forms.ChoiceField(
@@ -89,7 +89,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
     birth_place = forms.CharField(
         required=False,
         label=_("Birth place"),
-        help_text=_("(e.g.: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"),
+        help_text=_("(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"),
     )
     country_of_citizenship = forms.CharField(
         required=False,

@@ -144,20 +144,20 @@ msgstr "(ex: +32 490 00 00 00)"
 msgid "(e.g.: 1234)"
 msgstr "(ex: 1234)"
 
-msgid "(e.g.: Frédéric) <del>frederic FREDERIC</del>)"
-msgstr "(ex: Frédéric) <del>frederic FREDERIC</del>)"
+msgid "(e.g.: Frédéric <del>frederic FREDERIC</del>)"
+msgstr "(ex: Frédéric <del>frederic FREDERIC</del>)"
 
-msgid "(e.g.: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"
-msgstr "(ex: Louvain-la-Neuve) <del>louvain-la-neuve</del>)"
+msgid "(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
+msgstr "(ex: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
 
-msgid "(e.g.: Louvain-la-Neuve) louvain-la-neuve)"
-msgstr "(ex: Louvain-la-Neuve) louvain-la-neuve)"
+msgid "(e.g.: Louvain-la-Neuve louvain-la-neuve)"
+msgstr "(ex: Louvain-la-Neuve louvain-la-neuve)"
 
-msgid "(e.g.: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
-msgstr "(ex: Pierre, Paul, Jacques) <del>pierre, paul, JACQUES)</del>"
+msgid "(e.g.: Pierre, Paul, Jacques <del>pierre, paul, JACQUES)</del>"
+msgstr "(ex: Pierre, Paul, Jacques <del>pierre, paul, JACQUES)</del>"
 
-msgid "(e.g.: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
-msgstr "(ex: Van der Elst / Vanderelst) <del>VANDERELST</del>)"
+msgid "(e.g.: Van der Elst / Vanderelst <del>VANDERELST</del>)"
+msgstr "(ex: Van der Elst / Vanderelst <del>VANDERELST</del>)"
 
 msgid "A certified translation of your high school diploma"
 msgstr ""
