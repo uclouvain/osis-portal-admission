@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_organisation_sdk import ApiClient
+from osis_organisation_sdk import ApiClient, ApiException
 from osis_organisation_sdk.api import entites_api
 
 from admission.constants import UCL_CODE
+from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import organisation as organisation_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
@@ -37,7 +38,9 @@ class EntitiesAPIClient:
         return entites_api.EntitesApi(ApiClient(configuration=api_config))
 
 
-class EntitiesService:
+class EntitiesService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def get_ucl_entities(cls, person, entity_type, *args, **kwargs):
         return EntitiesAPIClient().get_entities(
@@ -60,20 +63,29 @@ class EntitiesService:
 
     @classmethod
     def get_ucl_entity_addresses(cls, person, uuid, *args, **kwargs):
-        has_next = True
+        # TODO will become (again) a list of results
         offset = 0
-        results = []
-        while has_next:
-            paginated_results = EntitiesAPIClient().get_entity_addresses(
-                organisation_code=UCL_CODE,
-                uuid=uuid,
-                offset=offset,
-                *args,
-                **kwargs,
-                **build_mandatory_auth_headers(person)
-            )
-            has_next = paginated_results.next is not None
-            results += paginated_results.results
-            offset = len(results)
-
-        return results
+        return [EntitiesAPIClient().get_entity_addresses(
+            organisation_code=UCL_CODE,
+            uuid=uuid,
+            offset=offset,
+            *args,
+            **kwargs,
+            **build_mandatory_auth_headers(person)
+        )]
+        # has_next = True
+        # results = []
+        # while has_next:
+        #     paginated_results = EntitiesAPIClient().get_entity_addresses(
+        #         organisation_code=UCL_CODE,
+        #         uuid=uuid,
+        #         offset=offset,
+        #         *args,
+        #         **kwargs,
+        #         **build_mandatory_auth_headers(person)
+        #     )
+        #     has_next = paginated_results.next is not None
+        #     results += paginated_results.results
+        #     offset = len(results)
+        #
+        # return results

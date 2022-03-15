@@ -49,26 +49,27 @@
                 </div>
             </div>
         {% else %}
-            {% field_data _("Sector") sector_label %}
-            {% if LANGUAGE_CODE == 'en' %}
-                {% field_data _("Doctorate") admission.intitule_doctorat_en %}
-            {% else %}
-                {% field_data _("Doctorate") admission.intitule_doctorat_fr %}
-            {% endif %}
-            {% if admission.commission_proximite %}
-                {% field_data _("Proximity commission") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS' %}
-            {% endif %}
+          {% field_data _("Sector") sector_label %}
+          {% field_data _("Doctorate") admission.intitule_doctorat %}
+          {% if admission.commission_proximite %}
+            {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
+          {% endif %}
         {% endif %}
-        <div class="row" id="commission_proximite_cde">
-            <div class="col-md-4">
-                {% bootstrap_field form.commission_proximite_cde %}
-            </div>
+      <div class="row" id="commission_proximite_cde">
+        <div class="col-md-6">
+          {% bootstrap_field form.commission_proximite_cde %}
         </div>
-        <div class="row" id="commission_proximite_cdss">
-            <div class="col-md-4">
-                {% bootstrap_field form.commission_proximite_cdss %}
-            </div>
+      </div>
+      <div class="row" id="commission_proximite_cdss">
+        <div class="col-md-9">
+          {% bootstrap_field form.commission_proximite_cdss %}
         </div>
+      </div>
+      <div class="row" id="sous_domaine">
+        <div class="col-md-6">
+          {% bootstrap_field form.sous_domaine %}
+        </div>
+      </div>
     {% endpanel %}
 
     {% panel _("Financing") %}
@@ -118,20 +119,15 @@
             <div class="col-md-6">
                 {% bootstrap_field form.institut_these %}
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 {% bootstrap_field form.lieu_these %}
             </div>
-            <div class="col-md-6">
-                {% bootstrap_field form.autre_lieu_these %}
-            </div>
         </div>
         {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
-        {% bootstrap_field form.graphe_gantt form_group_class="form-group required_field" %}
-        {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group required_field"  %}
-        {% bootstrap_field form.projet_formation_complementaire form_group_class="form-group required_field"  %}
-        {% bootstrap_field form.lettres_recommandation form_group_class="form-group required_field"  %}
+        {% bootstrap_field form.graphe_gantt %}
+        {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group proposition_programme_doctoral" %}
+        {% bootstrap_field form.projet_formation_complementaire %}
+        {% bootstrap_field form.lettres_recommandation %}
     {% endpanel %}
 
     {% panel _("Previous research experience") %}
@@ -156,6 +152,7 @@
 {% endblock %}
 
 {% block script %}
+    {{ block.super }}
     {{ form.media }}
     <script type="application/javascript">
     $(function () {
@@ -194,7 +191,8 @@
                             if (initialData && data[0].id === initialData.id) {
                                 data = [initialData];
                             }
-                            if (data.length && ['CDE', 'CLSM'].includes(data[0].sigle_entite_gestion)) {
+                            var commissions = {{ COMMISSIONS_CDE_CLSM|safe }};
+                            if (data.length && commissions.includes(data[0].sigle_entite_gestion)) {
                                 return true;
                             }
                         }
@@ -211,7 +209,24 @@
                             if (initialData && data[0].id === initialData.id) {
                                 data = [initialData];
                             }
-                            if (data.length && data[0].sigle_entite_gestion === 'CDSS') {
+                            if (data.length && data[0].sigle_entite_gestion === '{{ COMMISSION_CDSS }}') {
+                                return true;
+                            }
+                        }
+                    },
+                },
+            }, { valueOnDisable: '' });
+
+            $('#sous_domaine').dependsOn({
+                '#id_doctorate': {
+                    changed: function () {
+                        var $doctorate = $('#id_doctorate');
+                        if ($doctorate.hasClass('select2-hidden-accessible')) {
+                            var data = $doctorate.select2('data')
+                            if (initialData && data[0].id === initialData.id) {
+                                data = [initialData];
+                            }
+                            if (data.length && data[0].sigle === '{{ SCIENCE_DOCTORATE }}') {
                                 return true;
                             }
                         }
@@ -245,19 +260,13 @@
             '#id_non_soutenue': { checked: false },
         }, { valueOnDisable: '' });
 
-        // Clear the fields related to the thesis place
-        const thesisPlace = context.find('select[name=lieu_these]');
-        const otherThesisPlace = context.find('input[name=autre_lieu_these]');
-
-        otherThesisPlace.on('focus', function () {
-            thesisPlace.val(null).change();
-        });
-        thesisPlace.on('change', function () {
-            otherThesisPlace.val(null);
-        })
-        context.find('select[name=institut_these]').on('change', function () {
-            thesisPlace.val(null).change();
-            otherThesisPlace.val(null);
+        // Mark proposition_programme_doctoral as required depending on type
+        $('.proposition_programme_doctoral').dependsOn({
+            'input[name=type_admission]': { values: ['ADMISSION'] }
+        }, {
+            disable: false,
+            hide: false,
+            toggleClass: 'required_field'
         });
     });
     </script>

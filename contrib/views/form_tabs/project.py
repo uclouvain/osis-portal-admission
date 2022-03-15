@@ -26,12 +26,19 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
-from admission.contrib.forms.project import DoctorateAdmissionProjectCreateForm, DoctorateAdmissionProjectForm
+from admission.contrib.forms.project import (
+    COMMISSIONS_CDE_CLSM,
+    COMMISSION_CDSS,
+    DoctorateAdmissionProjectCreateForm,
+    DoctorateAdmissionProjectForm,
+    SCIENCE_DOCTORATE,
+)
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
@@ -68,6 +75,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
                 person=self.person,
                 uuid=str(self.kwargs['pk']),
             )
+            if 'url' not in self.proposition.links['update_proposition']:
+                raise PermissionDenied(self.proposition.links['update_proposition']['error'])
             return {
                 **self.proposition.to_dict(),
                 'sector': self.proposition.code_secteur_formation,
@@ -92,13 +101,14 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
         )
         data['commission_proximite'] = (
             data.get('commission_proximite_cde')
-            if data.get('commission_proximite_cde') != ''
-            else data.get('commission_proximite_cdss')
+            or data.get('commission_proximite_cdss')
+            or data.get('sous_domaine')
         )
         data.pop('type_contrat_travail_other')
         data.pop('bourse_recherche_other')
         data.pop('commission_proximite_cde')
         data.pop('commission_proximite_cdss')
+        data.pop('sous_domaine')
 
         return data
 
@@ -120,12 +130,14 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['COMMISSIONS_CDE_CLSM'] = COMMISSIONS_CDE_CLSM
+        context['COMMISSION_CDSS'] = COMMISSION_CDSS
+        context['SCIENCE_DOCTORATE'] = SCIENCE_DOCTORATE
         if self.is_update_form:
             context['admission'] = self.proposition
             # Lookup sector label from API
-            attr_name = 'intitule_fr' if get_language() == settings.LANGUAGE_CODE else 'intitule_en'
             context['sector_label'] = [
-                getattr(s, attr_name) for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
+                s.intitule for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
                 if s.sigle == self.proposition.code_secteur_formation
             ][0]
         return context

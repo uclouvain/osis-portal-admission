@@ -25,45 +25,87 @@
 {% endcomment %}
 
 {% block style %}
+  <link href="{% static "admission/admission.css" %}" rel="stylesheet"/>
   <style>
-    .form-group.required_field .control-label:after {
+    .form-group.required_field .control-label:after, .required_text:after {
       content: " *";
       color: red;
     }
   </style>
 {% endblock %}
 
-{% block breadcrumb %}
-    <ol class="breadcrumb">
-        <li>
-            <a href="{% url 'admission:doctorate-list' %}">
-                {% trans "Doctorate admissions" %}
-            </a>
-        </li>
-        {% if admission %}
-            <li class="active">{{ admission.intitule_doctorat_fr }}</li>
-        {% else %}
-            <li class="active">{% trans "Create new doctorate admission" %}</li>
-        {% endif %}
-    </ol>
+{% block script %}
+  <script type="text/javascript">
+  // Notify user when something in a form has changed
+  var initialData = {};
+  var checkForm = true;
+  document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('form').forEach(function (form) {
+          var action = form.getAttribute('action');
+          var formData = new FormData(form);
+          var searchParams = new URLSearchParams(formData);
+          initialData[action] = searchParams.toString();
+          form.addEventListener('submit', function () {
+              checkForm = false;
+          });
+      });
+  });
+  window.addEventListener('beforeunload', function (e) {
+      if (checkForm) {
+          document.querySelectorAll('form').forEach(function (form) {
+              var action = form.getAttribute('action');
+              var formData = new FormData(form);
+              var searchParams = new URLSearchParams(formData);
+              if (initialData[action] !== searchParams.toString()) {
+                  // Cancel the event
+                  e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+                  // Chrome requires returnValue to be set
+                  return e.returnValue = "{% trans "You may lose your changes, are you sure you want to quit?" %}"
+              }
+          });
+      }
+  });
+  </script>
+{% endblock %}
+
+{% block breadcrumb_area %}
+  {% if admission and admission.matricule_candidat != user.person.global_id %}
+    {% url 'admission:supervised-list' as list_url %}
+  {% else %}
+    {% url 'admission:doctorate-list' as list_url %}
+  {% endif %}
+  <ol class="breadcrumb">
+    <li>
+      <a href="{{ list_url }}">{% trans "Doctorate admissions" %}</a>
+    </li>
+    {% if admission %}
+      <li class="active">
+        {{ admission.intitule_doctorat }} ({{ admission.reference }})
+      </li>
+    {% else %}
+      <li class="active">{% trans "Create new doctorate admission" %}</li>
+    {% endif %}
+  </ol>
 {% endblock %}
 
 {% block content %}
+  {% if admission and admission.matricule_candidat != user.person.global_id %}
+    {% url 'admission:supervised-list' as list_url %}
+  {% else %}
+    {% url 'admission:doctorate-list' as list_url %}
+  {% endif %}
     <div class="page-header h3">
     <span class="d-inline-block">
       {% if admission %}
-          {{ admission.intitule_doctorat_fr }}
+          {{ admission.intitule_doctorat }}
       {% else %}
           {% trans "Create new doctorate admission" %}
       {% endif %}
     </span>
-        <a
-            href="{% url 'admission:doctorate-list' %}"
-            class="pull-right h5 text-primary"
-        >
-            <span class="fa fa-stream"></span>
-            {% trans "Back to my requests" %}
-        </a>
+      <a href="{{ list_url }}" class="pull-right h5 text-primary">
+        <span class="fa fa-stream"></span>
+        {% trans "Back to requests" %}
+      </a>
     </div>
 
     <div class="well">
@@ -72,7 +114,7 @@
             {% if not admission %}
                 {% trans "No reference yet - Go to Project tab" %}
             {% else %}
-                {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
+                {{ admission.intitule_doctorat }} ({{ admission.reference }})
             {% endif %}
         </div>
         <div>
@@ -99,49 +141,43 @@
 
     {% url "admission:doctorate-detail:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
-    <form class="osis-form" method="post" action="">
-        {% csrf_token %}
-        {% block form_content %}
-            {% doctorate_tabs admission %}
-            <div class="row">
-                <div class="col-md-2">
-                    {% doctorate_subtabs admission %}
-                    {% block submit_button_affix %}
-                        <hr />
-                        <div
-                            data-spy="affix"
-                            data-offset-top="500"
-                            style="top:90px"
-                        >
-                            <div>
-                                <button
-                                    type="submit" class="btn btn-primary"
-                                    {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
-                                    disabled
-                                    {% endif %}
-                                >
-                                <span
-                                    class="glyphicon glyphicon-floppy-save"
-                                    aria-hidden="true"
-                                ></span>
-                                    {% trans 'Save' %}
-                                </button>
+    {% block tab_content %}
+        <form class="osis-form" method="post" action="">
+            {% csrf_token %}
+            {% block form_content %}
+                {% doctorate_tabs admission %}
+                <div class="row">
+                    <div class="col-md-2">
+                        {% doctorate_subtabs admission %}
+                        {% block submit_button_affix %}
+                            <hr />
+                            <div
+                                data-spy="affix"
+                                data-offset-top="500"
+                                style="top:90px"
+                            >
+                                <div>
+                                    <button
+                                        type="submit" class="btn btn-primary"
+                                        {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
+                                        disabled
+                                        {% endif %}
+                                    >
+                                    <span
+                                        class="glyphicon glyphicon-floppy-save"
+                                        aria-hidden="true"
+                                    ></span>
+                                        {% trans 'Save' %}
+                                    </button>
+                                </div>
                             </div>
-                            {% if cancel_url and admission|can_read_tab:request.resolver_match.url_name %}
-                                <a
-                                    href="{{ cancel_url }}"
-                                    class="text-danger btn"
-                                >
-                                    {% trans "Cancel" %}
-                                </a>
-                            {% endif %}
-                        </div>
-                    {% endblock submit_button_affix %}
+                        {% endblock submit_button_affix %}
+                    </div>
+                    <div class="col-md-10">
+                        {% block form %}{% endblock %}
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    {% block form %}{% endblock %}
-                </div>
-            </div>
-        {% endblock form_content %}
-    </form>
+            {% endblock form_content %}
+        </form>
+    {% endblock %}
 {% endblock %}

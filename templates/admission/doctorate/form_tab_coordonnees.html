@@ -80,6 +80,7 @@
 {% endblock %}
 
 {% block script %}
+    {{ block.super }}
     {{ main_form.media }}
     {{ residential.media }}
     <script type="application/javascript">

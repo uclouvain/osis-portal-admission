@@ -23,13 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums.projet import ChoixStatutProposition
 from base.tests.factories.person import PersonFactory
 
 
@@ -47,6 +48,9 @@ class CotutelleTestCase(TestCase):
         self.mock_api = api_patcher.start()
         self.addCleanup(api_patcher.stop)
 
+        self.mock_api.return_value.retrieve_proposition.return_value = Mock(
+            links={'update_cotutelle': {'url': 'ok'}},
+        )
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
             cotutelle=True,
             motivation="Foobar",
@@ -55,10 +59,23 @@ class CotutelleTestCase(TestCase):
             autres_documents=[],
         )
 
+    def test_update_no_permission(self):
+        self.mock_api.return_value.retrieve_proposition.return_value.links = {
+            'update_cotutelle': {'error': 'no access'},
+        }
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_cotutelle_get(self):
         url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
         self.assertContains(response, "Foobar")
+
+    def test_cotutelle_detail_should_redirect_if_not_signing(self):
+        self.mock_api.return_value.retrieve_proposition.return_value.statut = ChoixStatutProposition.IN_PROGRESS.name
+        url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.get(url)
+        self.assertRedirects(response, self.url)
 
     def test_cotutelle_get_form(self):
         response = self.client.get(self.url)

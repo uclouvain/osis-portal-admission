@@ -42,7 +42,7 @@ from base.tests.factories.academic_year import get_current_year
 
 LINGUISTIC_REGIMES_WITHOUT_TRANSLATION = ['FR', 'DE', 'EN', 'IT', 'PT', 'ES']
 
-educational_types_that_require_schedule = [
+EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
     EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
     EducationalType.TRANSITION_METHOD.name,
     EducationalType.ARTISTIC_TRANSITION.name,
@@ -67,6 +67,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
             'EUROPEAN_BACHELOR': 'admission/images/schola_europa.png',
         }
         context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+        context_data['educational_types_requiring_schedule'] = EDUCATIONAL_TYPES_REQUIRING_SCHEDULE
         return context_data
 
     def get_initial(self):
@@ -88,21 +89,28 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         foreign_diploma = forms["foreign_diploma_form"]
         self.check_bound_and_set_required_attr(foreign_diploma)
 
+        # Cross-form check: make schedule required for some belgian diploma educational types
         if forms["belgian_diploma_form"].is_valid():
             educational_type_data = forms["belgian_diploma_form"].cleaned_data.get("educational_type")
-            if educational_type_data in educational_types_that_require_schedule:
+            if educational_type_data in EDUCATIONAL_TYPES_REQUIRING_SCHEDULE:
                 self.check_bound_and_set_required_attr(forms["schedule_form"])
             else:
-                forms["schedule_form"].is_bound = False
+                forms["schedule_form"].is_bound = False  # drop data if schedule is not required
 
         main_form = forms["main_form"]
-        if (main_form.is_valid()
-                and main_form.cleaned_data.get("got_diploma") == GotDiploma.YES.name
-                and foreign_diploma.is_valid()
-                and foreign_diploma.cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
-                and not foreign_diploma.cleaned_data.get("high_school_diploma_translation")):
+        # Cross-form check: translated diploma required for some foreign diploma linguistic regime
+        if (main_form.is_bound and foreign_diploma.is_bound
+                and main_form.data.get(main_form.add_prefix("got_diploma")) == GotDiploma.YES.name
+                and foreign_diploma.data.get(foreign_diploma.add_prefix("linguistic_regime"))
+                not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+                and not foreign_diploma.fields['high_school_diploma_translation'].widget.value_from_datadict(
+                    foreign_diploma.data,
+                    foreign_diploma.files,
+                    foreign_diploma.add_prefix("high_school_diploma_translation")
+                )):
             foreign_diploma.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
 
+        # Page is valid if all bound forms are valid
         if all(not form.is_bound or form.is_valid() for form in forms.values()):
             return self.form_valid(main_form)
         return self.form_invalid(main_form)
@@ -164,7 +172,15 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         data[diploma] = forms["{}_form".format(diploma)].cleaned_data
         data[diploma]["academic_graduation_year"] = data.pop("academic_graduation_year")
         data[diploma]["high_school_transcript"] = data.pop("high_school_transcript")
-        data[diploma]["high_school_diploma"] = data.pop("high_school_diploma")
+        if data[diploma]["academic_graduation_year"] == get_current_year():
+            # Drop diploma info for current year
+            data.pop("high_school_diploma")
+            data[diploma]["high_school_diploma"] = []
+            data[diploma].pop("high_school_diploma_translation", None)
+            data[diploma]["high_school_diploma_translation"] = []
+        else:
+            # Include diploma info
+            data[diploma]["high_school_diploma"] = data.pop("high_school_diploma")
 
     def prepare_data(self, main_form_data):
         # Process the form data to match API
@@ -185,7 +201,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
             self.prepare_diploma(data, forms, "belgian_diploma")
             schedule = forms.get("schedule_form")
             educational_type = forms.get("belgian_diploma_form").cleaned_data.get("educational_type")
-            if schedule and educational_type in educational_types_that_require_schedule:
+            if schedule and educational_type in EDUCATIONAL_TYPES_REQUIRING_SCHEDULE:
                 data["belgian_diploma"]["schedule"] = schedule.cleaned_data
 
         else:

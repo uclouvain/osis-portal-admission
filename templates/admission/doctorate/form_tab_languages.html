@@ -26,6 +26,9 @@
 {% endcomment %}
 
 {% block style %}
+
+    {{ block.super }}
+
   <style>
     label {
       display: block;
@@ -55,6 +58,7 @@
 {% endblock %}
 
 {% block script %}
+  {{ block.super }}
   {{ form.media }}
   <script type="text/javascript">
     $(function() {

@@ -31,8 +31,9 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from admission.services.organisation import EntitiesService
-from admission.services.reference import CountriesService, LanguageService
+from admission.services.reference import CountriesService, LanguageService, AcademicYearService
 from admission.utils import format_entity_title
+from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
 
@@ -71,6 +72,14 @@ def get_thesis_location_initial_choices(value):
     """Return the unique initial choice for a thesis location when data is either set from initial or webservice."""
     return EMPTY_CHOICE if not value else EMPTY_CHOICE + ((value, value),)
 
+
+def get_past_academic_years_choices(person):
+    """Return a list of choices of past academic years."""
+    return EMPTY_CHOICE + tuple(
+        (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
+        for academic_year in AcademicYearService.get_academic_years(person)
+        if academic_year.year <= get_current_year()
+    )
 
 CustomDateInput = partial(
     forms.DateInput,

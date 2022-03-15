@@ -28,23 +28,25 @@
 {% block submit_button_affix %}{% endblock %}
 
 {% block content %}
+  {% if admission and admission.matricule_candidat != user.person.global_id %}
+    {% url 'admission:supervised-list' as list_url %}
+  {% else %}
+    {% url 'admission:doctorate-list' as list_url %}
+  {% endif %}
     <div class="page-header h3">
     <span class="d-inline-block">
-      {{ admission.intitule_doctorat_fr }}
+      {{ admission.intitule_doctorat }}
     </span>
-        <a
-            href="{% url 'admission:doctorate-list' %}"
-            class="pull-right h5 text-primary"
-        >
-            <span class="fa fa-stream"></span>
-            {% trans "Back to my requests" %}
-        </a>
+      <a href="{{ list_url }}" class="pull-right h5 text-primary">
+        <span class="fa fa-stream"></span>
+        {% trans "Back to requests" %}
+      </a>
     </div>
 
     <div class="well">
         <div>
             {% trans "Reference:" %}
-            {{ admission.intitule_doctorat_fr }} ({{ admission.reference }})
+            {{ admission.intitule_doctorat }} ({{ admission.reference }})
         </div>
         <div>
             {% trans "Status:" %}
@@ -66,24 +68,29 @@
         </div>
         <div class="col-md-10">
 
-            {% if admission|can_make_action:'add_approval' and approval_form %}
-                {% panel _("Proposition approval") %}
-                    {% bootstrap_form_errors approval_form %}
-                    <form class="osis-form approval-form" method="post" action="">
-                        {% csrf_token %}
-                        {% bootstrap_field approval_form.decision %}
-                        {% bootstrap_field approval_form.motif_refus %}
-                        <div class="row">
-                            <div class="col-md-6">
-                                {% bootstrap_field approval_form.commentaire_interne %}
-                            </div>
-                            <div class="col-md-6">
-                                {% bootstrap_field approval_form.commentaire_externe %}
-                            </div>
-                        </div>
-                        {% bootstrap_button button_type="submit" content=_("Submit my decision") name="approval_submit" button_class="btn btn-primary" %}
-                    </form>
-                {% endpanel %}
+            {% if admission|can_make_action:'add_approval' and form %}
+              {% panel _("Proposition approval") %}
+                {% bootstrap_form_errors form %}
+                <form class="osis-form approval-form" method="post" action="">
+                  {% csrf_token %}
+                  {% bootstrap_field form.decision %}
+                  {% bootstrap_field form.motif_refus %}
+                  {% if form.institut_these %}
+                    <div id="institut_these">
+                      {% bootstrap_field form.institut_these %}
+                    </div>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col-md-6">
+                      {% bootstrap_field form.commentaire_interne %}
+                    </div>
+                    <div class="col-md-6">
+                      {% bootstrap_field form.commentaire_externe %}
+                    </div>
+                  </div>
+                  {% bootstrap_button button_type="submit" content=_("Submit my decision") name="approval_submit" button_class="btn btn-primary" %}
+                </form>
+              {% endpanel %}
             {% endif %}
 
             {% panel _("Promoters") %}
@@ -127,9 +134,7 @@
             {% endif %}
 
             {% if admission|can_make_action:'request_signatures' %}
-                <!-- Button trigger modal -->
                 <div class="text-center">
-
                     <button
                         type="button"
                         class="btn btn-success btn-lg"
@@ -151,6 +156,7 @@
 
 {% block script %}
     {{ form.media }}
+    {{ approve_by_pdf_form.media }}
     <script type="application/javascript">
     $(function () {
         // Display autocompletion based on member type
@@ -168,19 +174,18 @@
         }, {
             duration: 0,
         });
+        $('#institut_these').length && $('#institut_these').dependsOn({
+            'input[name="decision"]': { not: ['REJECTED'] }
+        }, { duration: 0 });
     });
     </script>
 {% endblock %}
 
 {% block style %}
+  <link href="{% static "admission/admission.css" %}" rel="stylesheet"/>
   <style>
     .approval-form textarea {
         resize: vertical;
-    }
-    .signature-item summary {
-        display: flex;
-        align-items: center;
-        margin-left: 1em;
     }
     .signature-item blockquote {
         font-size: 1em;
@@ -188,8 +193,11 @@
         margin: 10px 0 0;
         white-space: pre-line;
     }
-    .signature-item summary > div:first-child {
-        display: list-item;
+
+    .signature-item + .well dl,
+    .signature-item + .well .media-list,
+    .signature-item + .well .media-heading {
+      margin-bottom: 0;
     }
   </style>
 {% endblock %}

@@ -30,7 +30,6 @@ from django.test import TestCase
 from django.urls import reverse
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
-from osis_organisation_sdk.model.paginated_addresses import PaginatedAddresses
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
@@ -44,14 +43,15 @@ class AutocompleteTestCase(TestCase):
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
         api.return_value.list_doctorat_dtos.return_value = [
-            Mock(sigle='FOOBAR', intitule_fr='Foobar', intitule_en='Foobar', annee=2021, sigle_entite_gestion="CDE"),
-            Mock(sigle='BARBAZ', intitule_fr='Barbaz', intitule_en='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
+            Mock(sigle='FOOBAR', intitule='Foobar', annee=2021, sigle_entite_gestion="CDE"),
+            Mock(sigle='BARBAZ', intitule='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
         ]
         url = reverse('admission:autocomplete:doctorate')
         response = self.client.get(url, {'forward': json.dumps({'sector': 'SSH'}), 'q': 'foo'})
         self.assertEqual(response.json(), {
             'results': [{
                 'id': 'FOOBAR-2021',
+                'sigle': 'FOOBAR',
                 'sigle_entite_gestion': 'CDE',
                 'text': 'FOOBAR - Foobar'
             }],
@@ -152,6 +152,16 @@ class AutocompleteTestCase(TestCase):
         self.assertEqual(api.return_value.cities_list.call_args[1]['zip_code'], '1111')
         self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')
 
+        # Without the postal code
+        response = self.client.get(url, {'forward': json.dumps({'postal_code': ''}), 'q': 'Mont'})
+        self.assertEqual(response.json(), {
+            'results': [{
+                'id': 'Montreuil-les-Sardouille',
+                'text': 'Montreuil-les-Sardouille'
+            }]
+        })
+        self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')
+
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_tutors(self, api):
         api.return_value.list_tutors.return_value = {'results': [
@@ -243,10 +253,12 @@ class AutocompleteTestCase(TestCase):
                 is_main=True,
             ),
         ]
-        api.return_value.get_entity_addresses.return_value = PaginatedAddresses(
-            results=mock_locations,
-            next=None,
-        )
+        # TODO This will become (again) paginated later
+        # api.return_value.get_entity_addresses.return_value = PaginatedAddresses(
+        #     results=mock_locations,
+        #     next=None,
+        # )
+        api.return_value.get_entity_addresses.return_value = mock_locations[0]
         url = reverse('admission:autocomplete:institute-location')
 
         response = self.client.get(url, {'forward': json.dumps({'institut_these': ''})}, {'uuid': 'uuid1'})
@@ -260,9 +272,9 @@ class AutocompleteTestCase(TestCase):
                 {
                     'id': 'Place de l\'université 1, 1348 Ottignies-Louvain-la-Neuve, Belgique',
                     'text': 'Place de l\'université 1, 1348 Ottignies-Louvain-la-Neuve, Belgique',
-                }, {
-                    'id': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
-                    'text': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                    # }, {
+                    #     'id': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                    #     'text': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
                 },
             ],
         })

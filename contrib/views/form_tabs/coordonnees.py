@@ -26,23 +26,22 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView
 
+from admission.constants import BE_ISO_CODE
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm, DoctorateAdmissionCoordonneesForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
-from admission.services.reference import CountriesService
 
 
 class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_coordonnees.html'
     form_class = DoctorateAdmissionCoordonneesForm
     forms = None
-    BE_ISO_CODE = None
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update(self.get_forms())
-        context_data["BE_ISO_CODE"] = self.BE_ISO_CODE
+        context_data["BE_ISO_CODE"] = BE_ISO_CODE
         if 'pk' in self.kwargs:
             context_data['admission'] = AdmissionPropositionService.get_proposition(
                 person=self.person, uuid=str(self.kwargs['pk'])
@@ -67,8 +66,8 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         if form_cleaned_data['be_postal_code']:
             form_cleaned_data['postal_code'] = form_cleaned_data['be_postal_code']
             form_cleaned_data['city'] = form_cleaned_data['be_city']
-            form_cleaned_data.pop('be_postal_code')
-            form_cleaned_data.pop('be_city')
+        form_cleaned_data.pop('be_postal_code')
+        form_cleaned_data.pop('be_city')
 
     def prepare_data(self, main_form_data):
         # Process the form data to match API
@@ -78,9 +77,11 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         data = forms['main_form'].cleaned_data
         data['residential'] = forms['residential'].cleaned_data
         self.prepare_be_city(data['residential'])
-        data['contact'] = forms['contact'].cleaned_data
-        self.prepare_be_city(data['contact'])
-        data.pop('show_contact')
+        if data.pop('show_contact'):
+            data['contact'] = forms['contact'].cleaned_data
+            self.prepare_be_city(data['contact'])
+        else:
+            data['contact'] = None
         data.pop('email')
         return data
 
@@ -93,7 +94,6 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
 
     def get_forms(self):
         if not self.forms:
-            self.BE_ISO_CODE = CountriesService.get_country(person=self.person, name="Belgique").iso_code
             kwargs = self.get_form_kwargs()
             kwargs.pop('prefix')
             initial = kwargs.pop('initial')
@@ -103,14 +103,12 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
                     person=self.person,
                     prefix='contact',
                     initial=initial['contact'],
-                    be_iso_code=self.BE_ISO_CODE,
                     **kwargs,
                 ),
                 'residential': DoctorateAdmissionAddressForm(
                     person=self.person,
                     prefix='residential',
                     initial=initial['residential'],
-                    be_iso_code=self.BE_ISO_CODE,
                     **kwargs,
                 ),
             }

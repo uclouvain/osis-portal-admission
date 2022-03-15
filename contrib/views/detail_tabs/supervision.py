@@ -23,13 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, resolve_url
+from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
+from django.views.generic.edit import BaseFormView
+from osis_signature.enums import SignatureState
 
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
-from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
+from admission.contrib.forms.supervision import DoctorateAdmissionApprovalByPdfForm, DoctorateAdmissionApprovalForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
 
@@ -40,22 +45,54 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        if context['admission'].statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name:
+        # If not signing in progress and ability to update supervision, redirect on update page
+        if (
+            self.proposition.statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
+            and 'url' in self.proposition.links['request_signatures']
+        ):
             return redirect('admission:doctorate-update:supervision', **self.kwargs)
         return self.render_to_response(context)
 
+    @cached_property
+    def supervision(self):
+        return AdmissionSupervisionService.get_supervision(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+        ).to_dict()
+
+    @cached_property
+    def proposition(self):
+        return AdmissionPropositionService.get_proposition(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
-        context['supervision'] = AdmissionSupervisionService.get_supervision(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
-        context['approval_form'] = DoctorateAdmissionApprovalForm(self.request.POST or None)
+        context['admission'] = self.proposition
+        context['supervision'] = self.supervision
+        context['approve_by_pdf_form'] = DoctorateAdmissionApprovalByPdfForm()
         return context
+
+    def get_initial(self):
+        return {
+            'institut_these': self.proposition.institut_these,
+        }
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['person'] = self.person
+        kwargs['include_institut_these'] = (
+            # User is a promoter
+            self.person.global_id
+            in [signature['promoteur']['matricule'] for signature in self.supervision['signatures_promoteurs']]
+            # No one has answered yet
+            and all(
+                signature['statut'] == SignatureState.INVITED.name
+                for signature in self.supervision['signatures_promoteurs']
+            )
+        )
+        return kwargs
 
     def prepare_data(self, data):
         data["matricule"] = self.person.global_id
@@ -79,4 +116,22 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
         )
 
     def get_success_url(self):
+        messages.info(self.request, _("Your decision has been saved."))
         return self.request.get_full_path()
+
+
+class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+    form_class = DoctorateAdmissionApprovalByPdfForm
+
+    def call_webservice(self, data):
+        return AdmissionSupervisionService.approve_by_pdf(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+            **data,
+        )
+
+    def get_success_url(self):
+        return resolve_url('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
+
+    def form_invalid(self, form):
+        return redirect('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])

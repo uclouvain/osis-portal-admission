@@ -30,7 +30,7 @@ from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 
 from base.models.person import Person
-from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
+from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException, api_exception_handler
 
 
 class WebServiceFormMixin:
@@ -65,16 +65,35 @@ class WebServiceFormMixin:
     def call_webservice(self, data):
         raise NotImplementedError
 
+    def get_detail_url(self):
+        tab_name = self.request.resolver_match.url_name
+        return resolve_url('admission:doctorate-detail:' + tab_name, pk=self.kwargs.get('pk'))
+
     def get_success_url(self):
         messages.info(self.request, _("Your data has been saved"))
         pk = self.kwargs.get('pk')
         if pk:
             # On update, redirect on admission detail
-            tab_name = self.request.resolver_match.url_name
-            return resolve_url('admission:doctorate-detail:' + tab_name, pk=pk)
+            return self.get_detail_url()
         # On creation, display a message and redirect on same form
         return self.request.get_full_path()
 
     @property
     def person(self) -> Person:
         return self.request.user.person
+
+
+class ServiceMeta(type):
+    """
+    A metaclass that decorates all class methods with exception handler.
+
+    'api_exception_cls' must be specified as attribute
+    """
+
+    def __new__(mcs, name, bases, attrs):
+        if 'api_exception_cls' not in attrs:
+            raise AttributeError("{name} must declare 'api_exception_cls' attribute".format(name=name))
+        for attr_name, attr_value in attrs.items():
+            if isinstance(attr_value, classmethod):
+                attrs[attr_name] = classmethod(api_exception_handler(attrs['api_exception_cls'])(attr_value.__func__))
+        return super().__new__(mcs, name, bases, attrs)

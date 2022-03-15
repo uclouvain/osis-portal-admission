@@ -29,7 +29,6 @@ from django.conf import settings
 from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
 from admission.contrib.enums.financement import (
     BourseRecherche,
@@ -37,10 +36,25 @@ from admission.contrib.enums.financement import (
     ChoixTypeFinancement,
 )
 from admission.contrib.enums.projet import ChoixLangueRedactionThese
-from admission.contrib.forms import CustomDateInput, EMPTY_CHOICE, get_thesis_institute_initial_choices, \
-    get_thesis_location_initial_choices
+from admission.contrib.enums.proximity_commission import (
+    ChoixProximityCommissionCDE,
+    ChoixProximityCommissionCDSS,
+    ChoixSousDomaineSciences,
+)
+from admission.contrib.forms import (
+    CustomDateInput,
+    EMPTY_CHOICE,
+    get_thesis_institute_initial_choices,
+    get_thesis_location_initial_choices,
+)
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
+
+SCIENCE_DOCTORATE = 'SC3DP'
+
+COMMISSION_CDSS = 'CDSS'
+
+COMMISSIONS_CDE_CLSM = ['CDE', 'CLSM']
 
 
 class DoctorateAdmissionProjectForm(forms.Form):
@@ -59,13 +73,18 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     commission_proximite_cde = forms.ChoiceField(
-        label=_("Proximity commission"),
+        label=_("Proximity commission / Subdomain"),
         choices=EMPTY_CHOICE + ChoixProximityCommissionCDE.choices(),
         required=False,
     )
     commission_proximite_cdss = forms.ChoiceField(
-        label=_("Proximity commission"),
+        label=_("Proximity commission / Subdomain"),
         choices=EMPTY_CHOICE + ChoixProximityCommissionCDSS.choices(),
+        required=False,
+    )
+    sous_domaine = forms.ChoiceField(
+        label=_("Proximity commission / Subdomain"),
+        choices=EMPTY_CHOICE + ChoixSousDomaineSciences.choices(),
         required=False,
     )
 
@@ -129,19 +148,8 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     lieu_these = forms.CharField(
         label=_("Thesis location"),
-        widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:institute-location",
-            forward=['institut_these'],
-            attrs={
-                'data-minimum-results-for-search': 'Infinity',  # Hide the search box
-            },
-        ),
         required=False,
-    )
-    autre_lieu_these = forms.CharField(
-        label=_("Other thesis location"),
-        required=False,
-        help_text=_("Only to provide if the address is not available in the previous field."),
+        help_text=_("Address of the office or lab where the thesis is done (if known)."),
     )
     resume_projet = forms.CharField(
         label=_("Project resume"),
@@ -225,23 +233,27 @@ class DoctorateAdmissionProjectForm(forms.Form):
 
         # Set proximity commission fields value from API data
         if self.initial.get('commission_proximite'):
-            sigle_entite_gestion = self.get_selected_doctorate(
-                self.initial.get('sector'), self.initial.get('doctorate'),
-            ).sigle_entite_gestion
-            if sigle_entite_gestion in ['CDE', 'CLSM']:
+            doctorate = self.get_selected_doctorate(
+                self.initial.get('sector'),
+                self.initial.get('doctorate'),
+            )
+            if doctorate.sigle_entite_gestion in COMMISSIONS_CDE_CLSM:
                 self.initial['commission_proximite_cde'] = self.initial['commission_proximite']
-            elif sigle_entite_gestion == 'CDSS':  # pragma: no branch
+            elif doctorate.sigle_entite_gestion == COMMISSION_CDSS:
                 self.initial['commission_proximite_cdss'] = self.initial['commission_proximite']
+            elif doctorate.sigle == SCIENCE_DOCTORATE:  # pragma: no branch
+                self.initial['sous_domaine'] = self.initial['commission_proximite']
 
         # Hide proximity commission fields
         if hide_proximity_commission_fields:
             self.fields['commission_proximite_cde'].widget = forms.HiddenInput()
             self.fields['commission_proximite_cdss'].widget = forms.HiddenInput()
+            self.fields['sous_domaine'].widget = forms.HiddenInput()
 
         # Add the specified institute in the choices of the related field
         self.fields['institut_these'].widget.choices = get_thesis_institute_initial_choices(
             self.data.get(self.add_prefix("institut_these"), self.initial.get("institut_these")),
-            self.person
+            self.person,
         )
 
         # Add the specified thesis position in the choices of the related field
@@ -303,8 +315,7 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                 + [
                     (sector.sigle, "{sigle} - {intitule}".format(
                         sigle=sector.sigle,
-                        intitule=sector.intitule_fr if get_language() == settings.LANGUAGE_CODE
-                        else sector.intitule_en,
+                        intitule=sector.intitule,
                     ))
                     for sector in AdmissionAutocompleteService.get_sectors(person)
                 ]
@@ -321,26 +332,36 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
                     "{doctorat.sigle}-{doctorat.annee}".format(doctorat=doctorate),
                     "{sigle} - {intitule}".format(
                         sigle=doctorate.sigle,
-                        intitule=doctorate.intitule_fr if get_language() == settings.LANGUAGE_CODE
-                        else doctorate.intitule_en,
+                        intitule=doctorate.intitule,
                     ),
                 )
             ]
             # This is used in the template to make proximity commission field appear
             self.doctorate_data = dict(
                 id="{result.sigle}-{result.annee}".format(result=doctorate),
+                sigle=doctorate.sigle,
                 sigle_entite_gestion=doctorate.sigle_entite_gestion,
             )
 
     def clean(self):
         cleaned_data = super().clean()
 
-        if (self.doctorate_data.get('sigle_entite_gestion') in ['CDE', 'CLSM']
-                and not cleaned_data.get('commission_proximite_cde')):
+        if (
+            # Commission CDE/CLSM is required but not set
+            self.doctorate_data.get('sigle_entite_gestion') in COMMISSIONS_CDE_CLSM
+            and not cleaned_data.get('commission_proximite_cde')
+        ):
             self.add_error('commission_proximite_cde', _("This field is required."))
 
-        if (self.doctorate_data.get('sigle_entite_gestion') == 'CDSS'
-                and not cleaned_data.get('commission_proximite_cdss')):
+        if (
+            # Commission CDSS is required but not set
+            self.doctorate_data.get('sigle_entite_gestion') == COMMISSION_CDSS
+            and not cleaned_data.get('commission_proximite_cdss')
+        ):
             self.add_error('commission_proximite_cdss', _("This field is required."))
+
+        # Science doctorate but no subdomain set
+        if self.doctorate_data.get('sigle') == SCIENCE_DOCTORATE and not cleaned_data.get('sous_domaine'):
+            self.add_error('sous_domaine', _("This field is required."))
 
         return cleaned_data

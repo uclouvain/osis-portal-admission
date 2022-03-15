@@ -25,9 +25,10 @@
 # ##############################################################################
 from enum import Enum
 
+from admission.services.mixins import ServiceMeta
 from base.models.person import Person
 from frontoffice.settings.osis_sdk import admission as admission_sdk
-from frontoffice.settings.osis_sdk.utils import api_exception_handler, build_mandatory_auth_headers
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
@@ -41,9 +42,19 @@ class AdmissionPropositionAPIClient:
         return propositions_api.PropositionsApi(ApiClient(configuration=api_config))
 
 
-class AdmissionPropositionService:
+class AdmissionPropositionService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
+    def get_dashboard_links(cls, person: Person):
+        return (
+            AdmissionPropositionAPIClient()
+            .retrieve_dashboard(**build_mandatory_auth_headers(person))
+            .to_dict()
+            .get('links', {})
+        )
+
+    @classmethod
     def create_proposition(cls, person: Person, **kwargs):
         return AdmissionPropositionAPIClient().create_proposition(
             initier_proposition_command=kwargs,
@@ -51,7 +62,6 @@ class AdmissionPropositionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def update_proposition(cls, person: Person, **kwargs):
         return AdmissionPropositionAPIClient().update_proposition(
             uuid=kwargs['uuid'],
@@ -73,6 +83,12 @@ class AdmissionPropositionService:
         )
 
     @classmethod
+    def get_supervised_propositions(cls, person: Person):
+        return AdmissionPropositionAPIClient().list_supervised_propositions(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def cancel_proposition(cls, person: Person, uuid):
         return AdmissionPropositionAPIClient().destroy_proposition(
             uuid=uuid,
@@ -80,9 +96,22 @@ class AdmissionPropositionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def request_signatures(cls, person: Person, uuid):
         return AdmissionPropositionAPIClient().create_signatures(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def verify_proposition(cls, person: Person, uuid):
+        return AdmissionPropositionAPIClient().verify_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def submit_proposition(cls, person: Person, uuid):
+        return AdmissionPropositionAPIClient().submit_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
@@ -112,11 +141,63 @@ class PropositionBusinessException(Enum):
     CotutelleDoitAvoirAuMoinsUnPromoteurExterneException = "PROPOSITION-21"
     GroupeSupervisionCompletPourPromoteursException = "PROPOSITION-22"
     GroupeSupervisionCompletPourMembresCAException = "PROPOSITION-23"
+    CandidatNonTrouveException = "PROPOSITION-24"
+    IdentificationNonCompleteeException = "PROPOSITION-25"
+    NumeroIdentiteNonSpecifieException = "PROPOSITION-26"
+    NumeroIdentiteBelgeNonSpecifieException = "PROPOSITION-27"
+    DateOuAnneeNaissanceNonSpecifieeException = "PROPOSITION-28"
+    DetailsPasseportNonSpecifiesException = "PROPOSITION-29"
+    CarteIdentiteeNonSpecifieeException = "PROPOSITION-30"
+    AdresseDomicileLegalNonCompleteeException = "PROPOSITION-31"
+    AdresseCorrespondanceNonCompleteeException = "PROPOSITION-32"
+    LanguesConnuesNonSpecifieesException = "PROPOSITION-33"
+    FichierCurriculumNonRenseigneException = "PROPOSITION-34"
+    AnneesCurriculumNonSpecifieesException = "PROPOSITION-35"
+    ProcedureDemandeSignatureNonLanceeException = "PROPOSITION-36"
+    PropositionNonApprouveeParPromoteurException = "PROPOSITION-37"
+    PropositionNonApprouveeParMembresCAException = "PROPOSITION-38"
 
 
-class AdmissionCotutelleService:
+BUSINESS_EXCEPTIONS_BY_TAB = {
+    'person': {
+        PropositionBusinessException.IdentificationNonCompleteeException,
+        PropositionBusinessException.NumeroIdentiteNonSpecifieException,
+        PropositionBusinessException.NumeroIdentiteBelgeNonSpecifieException,
+        PropositionBusinessException.DateOuAnneeNaissanceNonSpecifieeException,
+        PropositionBusinessException.DetailsPasseportNonSpecifiesException,
+        PropositionBusinessException.CarteIdentiteeNonSpecifieeException,
+    },
+    'coordonnees': {
+        PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,
+        PropositionBusinessException.AdresseCorrespondanceNonCompleteeException,
+    },
+    'education': set(),
+    'curriculum': {
+        PropositionBusinessException.FichierCurriculumNonRenseigneException,
+        PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
+    },
+    'languages': {
+        PropositionBusinessException.LanguesConnuesNonSpecifieesException
+    },
+    'project': set(),
+    'cotutelle': set(),
+    'supervision': {
+        PropositionBusinessException.ProcedureDemandeSignatureNonLanceeException,
+        PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
+        PropositionBusinessException.PropositionNonApprouveeParMembresCAException,
+    },
+}
+
+TAB_OF_BUSINESS_EXCEPTION = {}
+for tab in BUSINESS_EXCEPTIONS_BY_TAB:
+    for exception in BUSINESS_EXCEPTIONS_BY_TAB[tab]:
+        TAB_OF_BUSINESS_EXCEPTION[exception.value] = tab
+
+
+class AdmissionCotutelleService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def update_cotutelle(cls, person, **kwargs):
         uuid = str(kwargs.pop('uuid'))
         return AdmissionPropositionAPIClient().update_cotutelle(
@@ -133,20 +214,21 @@ class AdmissionCotutelleService:
         )
 
 
-class AdmissionSupervisionService:
+class AdmissionSupervisionService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def get_supervision(cls, person, uuid) -> SupervisionDTO:
         return AdmissionPropositionAPIClient().retrieve_supervision(uuid=uuid, **build_mandatory_auth_headers(person))
 
     @classmethod
     def get_signature_conditions(cls, person, uuid) -> SupervisionDTO:
-        return AdmissionPropositionAPIClient().retrieve_verify_proposition(
+        return AdmissionPropositionAPIClient().retrieve_verify_project(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def add_member(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().add_member(
             uuid=uuid,
@@ -155,7 +237,6 @@ class AdmissionSupervisionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def remove_member(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().remove_member(
             uuid=uuid,
@@ -164,19 +245,25 @@ class AdmissionSupervisionService:
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def approve_proposition(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().approve_proposition(
             uuid=uuid,
             approuver_proposition_command=kwargs,
-            **build_mandatory_auth_headers(person)
+            **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    @api_exception_handler(api_exception_cls=ApiException)
     def reject_proposition(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().reject_proposition(
             uuid=uuid,
             refuser_proposition_command=kwargs,
-            **build_mandatory_auth_headers(person)
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def approve_by_pdf(cls, person, uuid, **kwargs):
+        return AdmissionPropositionAPIClient().approve_by_pdf(
+            uuid=uuid,
+            approuver_proposition_par_pdf_command=kwargs,
+            **build_mandatory_auth_headers(person),
         )

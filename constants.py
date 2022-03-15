@@ -32,7 +32,7 @@ READ_ACTIONS_BY_TAB = {
     'languages': 'retrieve_languages',
     'project': 'retrieve_proposition',
     'supervision': 'retrieve_supervision',
-    'confirm': '',
+    'confirm': 'submit_proposition',
     'confirm-paper': '',
     'training': '',
     'jury': '',
@@ -50,8 +50,8 @@ UPDATE_ACTIONS_BY_TAB = {
     'person': 'update_person',
     'languages': 'update_languages',
     'project': 'update_proposition',
-    'supervision': 'retrieve_supervision',
-    'confirm': '',
+    'supervision': 'request_signatures',
+    'confirm': 'submit_proposition',
     'confirm-paper': '',
     'training': '',
     'jury': '',
@@ -61,3 +61,5 @@ UPDATE_ACTIONS_BY_TAB = {
 }
 
 UCL_CODE = 'UCL'
+
+BE_ISO_CODE = 'BE'

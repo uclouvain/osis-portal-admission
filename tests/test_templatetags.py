@@ -47,20 +47,12 @@ class TemplateTagsTestCase(TestCase):
     def setUpTestData(cls):
         class Admission:
             def __init__(self, links=None):
-                self.links = links if links is not None else {
-                    'retrieve_coordinates': {
-                        'url': 'my_url',
-                        'method': 'GET'
-                    },
-                    'update_coordinates': {
-                        'url': 'my_url',
-                        'method': 'POST'
-                    },
-                    'retrieve_person': {
-                        'error': 'Method not allowed',
-                        'method': 'GET',
-                    }
+                self.links = links or {
+                    'retrieve_coordinates': {'url': 'my_url', 'method': 'GET'},
+                    'update_coordinates': {'url': 'my_url', 'method': 'POST'},
+                    'retrieve_person': {'error': 'Method not allowed', 'method': 'GET'},
                 }
+
         cls.Admission = Admission
 
     def test_normal_panel(self):
@@ -81,37 +73,25 @@ class TemplateTagsTestCase(TestCase):
             FOO = "Bar"
 
         template = Template("{% load admission %}{{ value|enum_display:'TestEnum' }}")
-        rendered = template.render(Context({
-            'value': "TEST",
-        }))
+        rendered = template.render(Context({'value': "TEST"}))
         self.assertEqual('TEST', rendered)
 
-        rendered = template.render(Context({
-            'value': "",
-        }))
+        rendered = template.render(Context({'value': ""}))
         self.assertEqual('', rendered)
 
-        rendered = template.render(Context({
-            'value': None,
-        }))
+        rendered = template.render(Context({'value': None}))
         self.assertEqual('None', rendered)
 
         obj = Mock()
         obj.__str__ = lambda _: "obj"
-        rendered = template.render(Context({
-            'value': obj,
-        }))
+        rendered = template.render(Context({'value': obj}))
         self.assertEqual('obj', rendered)
 
-        rendered = template.render(Context({
-            'value': "FOO",
-        }))
+        rendered = template.render(Context({'value': "FOO"}))
         self.assertEqual('Bar', rendered)
 
         template = Template("{% load admission %}{{ value|enum_display:'InexistantEnum' }}")
-        rendered = template.render(Context({
-            'value': "TEST",
-        }))
+        rendered = template.render(Context({'value': "TEST"}))
         self.assertEqual('TEST', rendered)
 
     def test_tabs(self):
@@ -124,32 +104,36 @@ class TemplateTagsTestCase(TestCase):
 
         request = RequestFactory().get(person_tab_url)
         request.resolver_match = resolve(person_tab_url)
-        rendered = template.render(Context({
-            'view': MockedFormView(),
-            'request': request,
-        }))
+        rendered = template.render(Context({'view': MockedFormView(), 'request': request}))
         self.assertNotIn('confirm-paper', rendered)
-        self.assertInHTML("""<li role="presentation" class="active">
+        self.assertInHTML(
+            """<li role="presentation" class="active">
             <a href="/admission/doctorates/create/person">
                 <span class="fa fa-user"></span>
                 {}
             </a>
-        </li>""".format(_("Personal data")), rendered)
+        </li>""".format(
+                _("Personal data")
+            ),
+            rendered,
+        )
 
         # Should work on non-tab urls
         another_tab_url = '/admission/doctorates/55375049-9d61-4c11-9f41-7460463a5ae3/remove-member/type/matricule'
         request = RequestFactory().get(another_tab_url)
         request.resolver_match = resolve(another_tab_url)
-        rendered = template.render(Context({
-            'view': MockedFormView(),
-            'request': request,
-        }))
-        self.assertInHTML("""<li role="presentation">
+        rendered = template.render(Context({'view': MockedFormView(), 'request': request}))
+        self.assertInHTML(
+            """<li role="presentation">
             <a href="/admission/doctorates/create/person">
                 <span class="fa fa-user"></span>
                 {}
             </a>
-        </li>""".format(_("Personal data")), rendered)
+        </li>""".format(
+                _("Personal data")
+            ),
+            rendered,
+        )
 
     def test_field_data(self):
         template = Template("{% load admission %}{% field_data 'title' data 'col-md-12' %}")
@@ -158,6 +142,11 @@ class TemplateTagsTestCase(TestCase):
         self.assertIn('title', rendered)
         self.assertIn('<dd>', rendered)
         self.assertIn('class="col-md-12"', rendered)
+
+    def test_field_data_translated(self):
+        template = Template("{% load admission %}{% field_data 'title' data translate_data=True %}")
+        rendered = template.render(Context({'data': "Personal data"}))
+        self.assertIn(str(_('Personal data')), rendered)
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
     @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
@@ -170,11 +159,7 @@ class TemplateTagsTestCase(TestCase):
 
     def test_valid_tab_tree_no_admission(self):
         # No admission is specified -> return the original tab tree
-        valid_tab_tree = get_valid_tab_tree(
-            admission=None,
-            original_tab_tree=TAB_TREE,
-            is_form_view=True,
-        )
+        valid_tab_tree = get_valid_tab_tree(admission=None)
         self.assertEqual(valid_tab_tree, TAB_TREE)
 
     def test_valid_tab_tree_read_mode(self):
@@ -182,11 +167,7 @@ class TemplateTagsTestCase(TestCase):
 
         admission = self.Admission()
 
-        valid_tab_tree = get_valid_tab_tree(
-            admission=admission,
-            original_tab_tree=TAB_TREE,
-            is_form_view=True,
-        )
+        valid_tab_tree = get_valid_tab_tree(admission=admission)
 
         parent_tabs = list(valid_tab_tree.keys())
 
@@ -201,11 +182,7 @@ class TemplateTagsTestCase(TestCase):
         # Only one form tab is allowed -> return it and its parent
 
         admission = self.Admission()
-        valid_tab_tree = get_valid_tab_tree(
-            admission=admission,
-            original_tab_tree=TAB_TREE,
-            is_form_view=True,
-        )
+        valid_tab_tree = get_valid_tab_tree(admission=admission)
 
         parent_tabs = list(valid_tab_tree.keys())
 

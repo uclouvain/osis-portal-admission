@@ -29,10 +29,10 @@
         <div class="row">
             {% field_data _("Admission type") admission.type_admission|enum_display:'AdmissionType' "col-md-4" %}
             {% field_data _("Sector") sector_label "col-md-4" %}
-            {% field_data _("Doctorate") admission.intitule_doctorat_fr "col-md-4" %}
+            {% field_data _("Doctorate") admission.intitule_doctorat "col-md-4" %}
         </div>
         {% if admission.commission_proximite %}
-            {% field_data _("Proximity commission") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS' %}
+            {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
         {% endif %}
         {% if admission.justification %}
             {% field_data _("Brief justification") admission.justification|linebreaks %}
@@ -59,7 +59,6 @@
         {% field_data _("Thesis redacting language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
         {% field_data _("Thesis institute") admission.institut_these|default_if_none:'' %}
         {% field_data _("Thesis location") admission.lieu_these %}
-        {% field_data _("Other thesis location") admission.autre_lieu_these %}
         {% field_data _("Project documents") admission.documents_projet %}
         {% field_data _("Gantt graph") admission.graphe_gantt %}
         {% field_data _("Doctoral program proposition") admission.proposition_programme_doctoral %}

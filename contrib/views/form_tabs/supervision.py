@@ -27,7 +27,7 @@
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import resolve_url
+from django.shortcuts import redirect, resolve_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
@@ -58,6 +58,12 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
         )
         return context
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        if 'url' not in context['admission'].links['request_signatures']:
+            return redirect('admission:doctorate-detail:supervision', **self.kwargs)
+        return self.render_to_response(context)
+
     def prepare_data(self, data):
         return {
             'type': data['type'],
@@ -83,7 +89,10 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
                 person=self.person,
                 uuid=str(self.kwargs['pk']),
             )
-            supervision = AdmissionSupervisionService.get_supervision(person=self.person, uuid=str(self.kwargs['pk']))
+            supervision = AdmissionSupervisionService.get_supervision(
+                person=self.person,
+                uuid=str(self.kwargs['pk']),
+            ).to_dict()
             context['member'] = self.get_member(supervision)
         except (ApiException, AttributeError, KeyError):
             raise Http404(_('Member not found'))
@@ -91,11 +100,11 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_member(self, supervision):
         collection_name, attr_name = self.actor_type_mapping[self.kwargs['type']]
-        for signature in getattr(supervision, collection_name):
-            person = getattr(signature, attr_name)
-            if person.matricule == self.kwargs['matricule']:
+        for signature in supervision[collection_name]:
+            person = signature[attr_name]
+            if person['matricule'] == self.kwargs['matricule']:
                 return person
-        raise AttributeError
+        raise KeyError
 
     def prepare_data(self, data):
         return {

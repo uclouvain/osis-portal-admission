@@ -23,10 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
-from osis_admission_sdk import ApiClient
-
+from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import admission as admission_sdk
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
+from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import person_api
 
 
@@ -36,7 +36,9 @@ class AdmissionPersonAPIClient:
         return person_api.PersonApi(ApiClient(configuration=api_config))
 
 
-class AdmissionPersonService:
+class AdmissionPersonService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def retrieve_person(cls, person, uuid=None):
         if uuid:
@@ -90,7 +92,8 @@ class AdmissionPersonService:
         if uuid:
             return AdmissionPersonAPIClient().retrieve_high_school_diploma_admission(
                 uuid=str(uuid),
-                **build_mandatory_auth_headers(person))
+                **build_mandatory_auth_headers(person),
+            )
         return AdmissionPersonAPIClient().retrieve_high_school_diploma(**build_mandatory_auth_headers(person))
 
     @classmethod
@@ -114,5 +117,92 @@ class AdmissionPersonService:
     def update_languages_knowledge(cls, person, data):
         return AdmissionPersonAPIClient().create_language_knowledge(
             language_knowledge=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    # Curriculum
+    @classmethod
+    def list_curriculum_experiences(cls, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().list_curriculum_experiences_admission(
+                uuid=uuid,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().list_curriculum_experiences(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_curriculum_experience(cls, experience_id, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().retrieve_curriculum_experience_admission(
+                uuid=uuid,
+                xp=experience_id,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().retrieve_curriculum_experience(
+            xp=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_curriculum_experience(cls, experience_id, person, data, uuid=None):
+        common_params = {
+            'xp': experience_id,
+            'experience_input': data,
+            **build_mandatory_auth_headers(person),
+        }
+        if uuid:
+            return AdmissionPersonAPIClient().update_curriculum_experience_admission(uuid=uuid, **common_params)
+        return AdmissionPersonAPIClient().update_curriculum_experience(**common_params)
+
+    @classmethod
+    def create_curriculum_experience(cls, person, data, uuid=None):
+        common_params = {
+            'experience_input': data,
+            **build_mandatory_auth_headers(person),
+        }
+
+        if uuid:
+            return AdmissionPersonAPIClient().create_curriculum_experience_admission(
+                uuid=uuid,
+                **common_params,
+            )
+        return AdmissionPersonAPIClient().create_curriculum_experience(**common_params)
+
+    @classmethod
+    def delete_curriculum_experience(cls, experience_id, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().destroy_curriculum_experience_admission(
+                uuid=uuid,
+                xp=experience_id,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().destroy_curriculum_experience(
+            xp=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_curriculum_file(cls, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().retrieve_curriculum_file_admission(
+                uuid=str(uuid),
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().retrieve_curriculum_file(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_curriculum_file(cls, person, data, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().update_curriculum_file_admission(
+                uuid=str(uuid),
+                curriculum_file=data,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().update_curriculum_file(
+            curriculum_file=data,
             **build_mandatory_auth_headers(person),
         )

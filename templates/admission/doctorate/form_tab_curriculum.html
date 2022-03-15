@@ -1,0 +1,212 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}
+{% load bootstrap3 i18n static admission %}
+
+{% block tab_content %}
+    {% doctorate_tabs admission %}
+    <div class="row">
+        <div class="col-md-2">
+            {% doctorate_subtabs admission %}
+        </div>
+        <div class="col-md-10">
+
+            <div class="flex-container">
+                <button
+                    class="btn btn-primary"
+                    data-toggle="modal"
+                    data-target="#{{ forms.creation_form.prefix }}"
+                    data-confirmed-id="{{ experience.id }}"
+                >
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    {% trans "Add a new experience" %}
+                </button>
+                <button
+                    class="btn btn-default"
+                    data-toggle="modal"
+                    data-target="#curriculum_upload"
+                >
+                    <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
+                    {% trans "Upload your CV" %}
+                </button>
+            </div>
+
+            <!-- List of experiences -->
+            {% include 'admission/doctorate/includes/curriculum/experience_list.html' with with_editing_options=True %}
+
+        </div>
+    </div>
+    <!-- Upload file modal -->
+    {% include 'admission/doctorate/includes/curriculum/file_upload_modal.html' with form=curriculum_upload %}
+
+    <!-- Delete confirmation modal -->
+    {% include 'admission/modal/confirmation_modal.html' with confirmation_text=_("Are you sure you want to delete this experience?") %}
+
+    <!-- Experience creation modal -->
+    {% if forms.creation_form %}
+        {% include 'admission/doctorate/includes/curriculum/experience_form_modal.html' with form=forms.creation_form modal_title=_("Add a new experience") %}
+    {% endif %}
+
+    <!-- Experience updating modal -->
+    {% if forms.update_form %}
+        {% include 'admission/doctorate/includes/curriculum/experience_form_modal.html' with form=forms.update_form modal_title=_("Update the experience")%}
+    {% endif %}
+
+
+{% endblock %}
+
+{% block style %}
+
+    {{ block.super }}
+
+    <style>
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 1em;
+        }
+        hr {
+            margin-top: 0;
+        }
+        .experience-year {
+            padding: 1em;
+            border: 1px solid #cccc;
+            font-size: 16px;
+        }
+        .experience .panel-heading h6 {
+            font-size: 15px;
+        }
+        .experience .panel-heading h5 {
+            display: list-item;
+            font-size: 15px;
+            margin-left: 1em;
+        }
+        .experience > .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+        .form-group.required_field .control-label:after {
+            content: " *";
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block script %}
+    {{ forms.creation_form.media }}
+    <script type="application/javascript">
+        $(function () {
+            // Delete confirmation modal
+            $('#confirmation-modal').on('show.bs.modal', function (event) {
+                const triggeredButton = $(event.relatedTarget);
+                const modal = $(this);
+                modal.find('input[name="confirmed-id"]').val(triggeredButton.data('confirmed-id'));
+            });
+
+            const BE_ISO_CODE = '{{ BE_ISO_CODE }}';
+
+            const ACTIVITY_CERTIFICATE_HELP_TEXT = {
+                ILLNESS: "{% trans 'Medical certificate, with dates, justifying this academic year.' %}",
+                INTERNSHIP: "{% trans 'Training certificate, with dates, justifying this academic year.' %}",
+                OTHER: "{% trans 'Document justifying your activity for this academic year.' %}",
+                UNEMPLOYMENT: "{% trans 'Unemployment certificate, with dates, justifying this academic year.' %}",
+                VOLUNTEERING: "{% trans 'Certificate, with dates, justifying your volunteer activities during this academic year.' %}",
+                WORK: "{% trans 'Employment certificate from the employer, with dates, justifying this academic year.' %}",
+            };
+
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {}; // Fix to use select2 into a bootstrap modal
+
+            {% for key, form in forms.items %}
+
+                // Show or hide the inputs depending on the values of other fields
+                // Higher education part
+                $('#{{ form.prefix }} .experience-form-education').dependsOn({
+                    'input[name="{{ form.prefix }}-type"]': { values: ['HIGHER_EDUCATION'], checked: true },
+                    '#id_{{ form.prefix }}-country': { not: [null] },
+                })
+                $('#{{ form.prefix }} .experience-form-education-institute').dependsOn({
+                    '#id_{{ form.prefix }}-country': { values: [BE_ISO_CODE] },
+                }).or({
+                    '#id_{{ form.prefix }}-study_cycle_type': { not: ['', null, 'OTHER_HIGHER_EDUCATION' ]},
+                });
+                $('#{{ form.prefix }} .institute_not_found_container').dependsOn({
+                    '#id_{{ form.prefix }}-institute_not_found': { checked: true }
+                });
+                $('#id_{{ form.prefix }}-graduation_year').dependsOn({
+                    '#id_{{ form.prefix }}-result': {
+                        values: [
+                            'SUCCESS',
+                            'SUCCESS_WITH_RESIDUAL_CREDITS',
+                        ],
+                    },
+                });
+                $('#{{ form.prefix }} .graduation-year-results-fields').dependsOn({
+                    '#id_{{ form.prefix }}-graduation_year': { checked: true },
+                });
+                $('#id_{{ form.prefix }}-education_name').dependsOn({
+                    '#id_{{ form.prefix }}-country': { not: [BE_ISO_CODE] },
+                }).or({
+                    'input[name="{{ form.prefix }}-belgian_education_community"]': {
+                        values: [
+                            'FLEMISH_SPEAKING',
+                            'GERMAN_SPEAKING',
+                        ],
+                        checked: true,
+                    },
+                });
+                // Belgian studies part
+                $('#{{ form.prefix }} .belgian-education-fields').dependsOn({
+                    '#id_{{ form.prefix }}-country': { values: [BE_ISO_CODE] },
+                });
+                $('#{{ form.prefix }} .french-community-fields').dependsOn({
+                    'input[name="{{ form.prefix }}-belgian_education_community"]': { values: ['FRENCH_SPEAKING'], checked: true, },
+                });
+                $('#id_{{ form.prefix }}-other_program').dependsOn({
+                    '#id_{{ form.prefix }}-program_not_found': { checked: true },
+                });
+                // Foreign studies part
+                $('#{{ form.prefix }} .foreign-education-fields').dependsOn({
+                    '#id_{{ form.prefix }}-country': { not: [BE_ISO_CODE] },
+                });
+                $('#{{ form.prefix }} .translation-fields').dependsOn({
+                    '#id_{{ form.prefix }}-linguistic_regime': { not: ['FR', 'NE', 'DE', 'EN', 'IT', 'ES', 'PT'] },
+                })
+                // Other occupation part
+                $('#{{ form.prefix }} .experience-form-activity').dependsOn({
+                    'input[name="{{ form.prefix }}-type"]': { values: ['OTHER_ACTIVITY'], checked: true, },
+                });
+                $('#id_{{ form.prefix }}-other_activity_type').dependsOn({
+                    'input[name="{{ form.prefix }}-activity_type"]': { values: ['OTHER'], checked: true, },
+                });
+                $('#{{ form.prefix }} .other-active-activity').dependsOn({
+                    'input[name="{{ form.prefix }}-activity_type"]': {
+                        values:
+                            [
+                                'WORK',
+                                'INTERNSHIP',
+                                'VOLUNTEERING',
+                                'OTHER',
+                            ],
+                        checked: true,
+                    },
+                });
+                $('input[name="{{ form.prefix }}-activity_type"]').change(function () {
+                    const value = $('input[name="{{ form.prefix }}-activity_type"]:checked').val();
+                    $('#{{ form.prefix }} .activity-certificate-help-text').text(value ? ACTIVITY_CERTIFICATE_HELP_TEXT[value] : '');
+                }).change();
+
+                // Disable the hidden inputs when submitting the form to prevent to send undesired values
+                $('#{{ form.prefix }} form').submit(function () {
+                    $('#{{ form.prefix }} form div:hidden').children(':input').prop("disabled", true);
+                });
+            {% endfor %}
+
+            // Modal to display
+            {% if form_to_display %}
+                $('#{{ form_to_display }}').modal('show');
+            {% endif %}
+
+        });
+    </script>
+{% endblock %}

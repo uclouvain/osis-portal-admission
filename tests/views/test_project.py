@@ -35,7 +35,12 @@ from rest_framework import status
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.enums.projet import ChoixStatutProposition
-from admission.contrib.enums.proximity_commission import ChoixProximityCommissionCDE, ChoixProximityCommissionCDSS
+from admission.contrib.enums.proximity_commission import (
+    ChoixProximityCommissionCDE,
+    ChoixProximityCommissionCDSS,
+    ChoixSousDomaineSciences,
+)
+from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
@@ -74,7 +79,7 @@ class ProjectViewTestCase(TestCase):
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
             lettres_recommandation=[],
-            links={},
+            links={'update_proposition': {'url': 'ok'}},
         )
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -82,31 +87,35 @@ class ProjectViewTestCase(TestCase):
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")
         self.mock_autocomplete_api = autocomplete_api_patcher.start()
         self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = [
-            Mock(sigle='SSH', intitule_fr='Foobar', intitule_en='Foobar'),
-            Mock(sigle='SST', intitule_fr='Barbaz', intitule_en='Barbaz'),
-            Mock(sigle='SSS', intitule_fr='Foobarbaz', intitule_en='Foobarbaz'),
+            Mock(sigle='SSH', intitule='Foobar'),
+            Mock(sigle='SST', intitule='Barbaz'),
+            Mock(sigle='SSS', intitule='Foobarbaz'),
         ]
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = [
             Mock(
                 sigle='FOOBAR',
-                intitule_fr='Foobar',
-                intitule_en='Foobar',
+                intitule='Foobar',
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 links=[],
             ),
             Mock(
                 sigle='FOOBARBAZ',
-                intitule_fr='Foobarbaz',
-                intitule_en='Foobarbaz',
+                intitule='Foobarbaz',
                 annee=2021,
-                sigle_entite_gestion="CDSS",
+                sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
             ),
             Mock(
                 sigle='BARBAZ',
-                intitule_fr='Barbaz',
-                intitule_en='Barbaz',
+                intitule='Barbaz',
+                annee=2021,
+                sigle_entite_gestion="AZERT",
+                links=[],
+            ),
+            Mock(
+                sigle=SCIENCE_DOCTORATE,
+                intitule='FooBarbaz',
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
@@ -142,6 +151,7 @@ class ProjectViewTestCase(TestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'commission_proximite_cde', _("This field is required."))
+
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
@@ -152,9 +162,27 @@ class ProjectViewTestCase(TestCase):
         self.assertFormError(response, 'form', 'commission_proximite_cdss', _("This field is required."))
         self.assertFormError(response, 'form', 'raison_non_soutenue', _("This field is required."))
 
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sector': 'SSH',
+            'doctorate': 'SC3DP-2021',
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'sous_domaine', _("This field is required."))
+
         self.mock_proposition_api.return_value.create_proposition.return_value = {
             'uuid': "3c5cdc60-2537-4a12-a396-64d2e9e34876",
         }
+        response = self.client.post(url, {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sector': 'SSH',
+            'doctorate': 'SC3DP-2021',
+            'sous_domaine': ChoixSousDomaineSciences.CHEMISTRY.name,
+        })
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+
         response = self.client.post(url, {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
@@ -211,6 +239,17 @@ class ProjectViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = SCIENCE_DOCTORATE
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+            'code_secteur_formation': "SSH",
+            'sigle_doctorat': 'FOOBARBAZ',
+            'annee_doctorat': '2021',
+            'bourse_recherche': "Something other",
+            "commission_proximite": ChoixSousDomaineSciences.CHEMISTRY.name,
+        }
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         # Check that the thesis institute field is well initialized with existing value
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
             'code_secteur_formation': "SST",
@@ -227,6 +266,14 @@ class ProjectViewTestCase(TestCase):
             'type_admission': AdmissionType.ADMISSION.name,
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+    def test_update_no_permission(self):
+        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.links = {
+            'update_proposition': {'error': 'no access'},
+        }
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_consistency_errors(self):
         url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -282,6 +329,15 @@ class ProjectViewTestCase(TestCase):
             'bourse_recherche': BourseRecherche.ARES.name,
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+    def test_project_detail_should_redirect_if_not_signing(self):
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.statut = (
+            ChoixStatutProposition.IN_PROGRESS.name
+        )
+        url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.get(url)
+        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
     def test_detail(self):
         url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

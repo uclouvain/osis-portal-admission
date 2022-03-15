@@ -23,9 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_reference_sdk import ApiClient
+from functools import lru_cache
+
+from osis_reference_sdk import ApiClient, ApiException
 from osis_reference_sdk.api import academic_years_api, cities_api, countries_api, languages_api
 
+from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import reference as reference_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
@@ -36,7 +39,9 @@ class CountriesAPIClient:
         return countries_api.CountriesApi(ApiClient(configuration=api_config))
 
 
-class CountriesService:
+class CountriesService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def get_countries(cls, person=None, *args, **kwargs):
         return CountriesAPIClient().countries_list(
@@ -46,6 +51,7 @@ class CountriesService:
         ).results
 
     @classmethod
+    @lru_cache()
     def get_country(cls, person=None, *args, **kwargs):
         return CountriesAPIClient().countries_list(
             *args,
@@ -60,7 +66,9 @@ class CitiesAPIClient:
         return cities_api.CitiesApi(ApiClient(configuration=api_config))
 
 
-class CitiesService:
+class CitiesService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def get_cities(cls, person: None, *args, **kwargs):
         return CitiesAPIClient().cities_list(
@@ -75,7 +83,9 @@ class AcademicYearAPIClient:
         return academic_years_api.AcademicYearsApi(ApiClient(configuration=api_config))
 
 
-class AcademicYearService:
+class AcademicYearService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def get_academic_years(cls, person):
         return AcademicYearAPIClient().get_academic_years(
@@ -90,7 +100,9 @@ class LanguagesAPIClient:
         return languages_api.LanguagesApi(ApiClient(configuration=api_config))
 
 
-class LanguageService:
+class LanguageService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
     @classmethod
     def get_languages(cls, person, *args, **kwargs):
         return LanguagesAPIClient().languages_list(
@@ -101,6 +113,7 @@ class LanguageService:
         ).results
 
     @classmethod
+    @lru_cache()
     def get_language(cls, code, person=None):
         # Search is only on name and name_en so we need to iter on whole list to search on code
         languages = cls.get_languages(person)

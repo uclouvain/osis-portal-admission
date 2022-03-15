@@ -34,13 +34,13 @@ app_name = "admission"
 
 def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, detail_only=False):
     """Generates tab urls for a each action, views must exists"""
-    tab_names = ["project", "person", "coordonnees", "education", "languages"]
+    tab_names = ["project", "person", "coordonnees", "curriculum", "education", "languages"]
     # pattern_names = ["person", "details", "education", "curriculum", "project"]
     if not create_only:
         tab_names += [
             "cotutelle",
             "supervision",
-            # "confirm",
+            "confirm",
             # "confirm-paper",
             # "training",
             # "jury",
@@ -55,20 +55,38 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
 
     # Add pattern for each tab
     includes = [
-        path(tab_name, import_string(module_path.format(
-            tab=tab_name,
-            view='DoctorateAdmission{}{}'.format(tab_name.title().replace('-', ''), view_suffix),
-        )).as_view(), name=tab_name)
+        path(
+            tab_name,
+            import_string(
+                module_path.format(
+                    tab=tab_name,
+                    view='DoctorateAdmission{}{}'.format(tab_name.title().replace('-', ''), view_suffix),
+                )
+            ).as_view(),
+            name=tab_name,
+        )
         for tab_name in tab_names
     ]
 
     # Some extra actions
     if not create_only:
+        includes.extend(
+            [
+                path(
+                    'remove-member/<type>/<matricule>',
+                    views.DoctorateAdmissionRemoveActorView.as_view(),
+                    name='remove-actor',
+                ),
+                path('approve-by-pdf', views.DoctorateAdmissionApprovalByPdfView.as_view(), name='approve-by-pdf'),
+            ]
+        )
+
+    if not detail_only:
         includes.append(
             path(
-                'remove-member/<type>/<matricule>',
-                views.DoctorateAdmissionRemoveActorView.as_view(),
-                name='remove-actor'
+                'curriculum/<uuid:experience_id>/',
+                views.DoctorateAdmissionCurriculumFormView.as_view(),
+                name='curriculum',
             )
         )
 
@@ -81,6 +99,7 @@ def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, deta
 
 urlpatterns = [
     path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
+    path("supervised/", views.DoctorateAdmissionMemberListView.as_view(), name="supervised-list"),
     path("autocomplete/", include((
         [
             path("tutor/", views.TutorAutocomplete.as_view(), name="tutor"),

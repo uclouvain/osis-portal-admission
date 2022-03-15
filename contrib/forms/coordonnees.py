@@ -27,6 +27,7 @@ from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
+from admission.constants import BE_ISO_CODE
 from admission.contrib.forms import get_country_initial_choices
 
 
@@ -87,16 +88,14 @@ class DoctorateAdmissionAddressForm(forms.Form):
             forward=(forward.Field('be_postal_code', 'postal_code'),),
         ),
     )
-    BE_ISO_CODE = None
 
     def __init__(self, person=None, *args, **kwargs):
-        self.BE_ISO_CODE = kwargs.pop("be_iso_code", None)
         super().__init__(*args, **kwargs)
         self.fields['country'].widget.choices = get_country_initial_choices(
             self.data.get(self.add_prefix("country"), self.initial.get("country")),
             person,
         )
-        if self.data.get(self.add_prefix('country'), self.initial.get('country')) == self.BE_ISO_CODE:
+        if self.data.get(self.add_prefix('country'), self.initial.get('country')) == BE_ISO_CODE:
             self.initial["be_postal_code"] = self.initial.get("postal_code")
             self.initial["be_city"] = self.initial.get("city")
             initial_choice_needed = self.data.get(self.add_prefix('be_city'), self.initial.get("be_city"))
@@ -109,11 +108,12 @@ class DoctorateAdmissionAddressForm(forms.Form):
         mandatory_address_fields = [
             "street_number",
             "country",
+            "street",
         ]
 
         # Either one of following data couple is mandatory :
         # (postal_code / city) or (be_postal_code / be_city)
-        if cleaned_data.get("country") == self.BE_ISO_CODE:
+        if cleaned_data.get("country") == BE_ISO_CODE:
             mandatory_address_fields.extend(["be_postal_code", "be_city"])
         else:
             mandatory_address_fields.extend(["postal_code", "city"])
@@ -124,13 +124,5 @@ class DoctorateAdmissionAddressForm(forms.Form):
             for field in mandatory_address_fields:
                 if not cleaned_data.get(field):
                     self.add_error(field, _("This field is required."))
-
-            street = cleaned_data.get("street")
-            postal_box = cleaned_data.get("postal_box")
-
-            if not any([postal_box, street]):
-                error_message = _("Please set either street or postal_box")
-                self.add_error('postal_box', error_message)
-                self.add_error('street', error_message)
 
         return cleaned_data

@@ -24,20 +24,38 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
+from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.services.proposition import AdmissionCotutelleService, AdmissionPropositionService
 
 
 class DoctorateAdmissionCotutelleDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'admission/doctorate/detail_cotutelle.html'
 
+    def get_admission(self):
+        if not hasattr(self, 'admission'):
+            self.admission = AdmissionPropositionService.get_proposition(
+                person=self.request.user.person,
+                uuid=str(self.kwargs['pk']),
+            )
+        return self.admission
+
+    def get(self, request, *args, **kwargs):
+        # Always redirect to update form as long as signatures are not sent
+        admission = self.get_admission()
+        if (
+            admission.statut == ChoixStatutProposition.IN_PROGRESS.name
+            and 'url' in admission.links['update_cotutelle']
+        ):
+            return redirect('admission:doctorate-update:cotutelle', **self.kwargs)
+
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
+        context_data['admission'] = self.get_admission()
         context_data['cotutelle'] = AdmissionCotutelleService.get_cotutelle(
             person=self.request.user.person,
             uuid=str(self.kwargs['pk']),

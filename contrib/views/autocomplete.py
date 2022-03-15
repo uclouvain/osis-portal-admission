@@ -33,7 +33,7 @@ from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import CitiesService, CountriesService, LanguageService
-from admission.utils import format_entity_title, format_entity_address
+from admission.utils import format_entity_address, format_entity_title
 
 __all__ = [
     "DoctorateAutocomplete",
@@ -56,10 +56,11 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def results(self, results):
         return [dict(
             id="{result.sigle}-{result.annee}".format(result=result),
+            sigle=result.sigle,
             sigle_entite_gestion=result.sigle_entite_gestion,
             text="{sigle} - {intitule}".format(
                 sigle=result.sigle,
-                intitule=result.intitule_fr if get_language() == settings.LANGUAGE_CODE else result.intitule_en,
+                intitule=result.intitule,
             )
         ) for result in results]
 
@@ -67,7 +68,7 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         """Return list of strings that match the autocomplete query."""
         return [x for x in results if self.q.lower() in "{sigle} - {intitule}".format(
             sigle=x.sigle,
-            intitule=x.intitule_fr if get_language() == settings.LANGUAGE_CODE else x.intitule_en,
+            intitule=x.intitule,
         ).lower()]
 
 
@@ -94,10 +95,15 @@ class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
     def autocomplete_results(self, results):
         """Return list of strings that match the autocomplete query."""
+        query_params = {
+            'person': self.request.user.person,
+            'search': self.q,
+        }
+        if self.forwarded['postal_code']:
+            query_params['zip_code'] = self.forwarded['postal_code']
+
         return CitiesService.get_cities(
-            person=self.request.user.person,
-            zip_code=self.forwarded['postal_code'],
-            search=self.q,
+            **query_params,
         )
 
     def results(self, results):
