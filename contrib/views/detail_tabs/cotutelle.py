@@ -49,7 +49,7 @@ class DoctorateAdmissionCotutelleDetailView(LoginRequiredMixin, TemplateView):
             admission.statut == ChoixStatutProposition.IN_PROGRESS.name
             and 'url' in admission.links['update_cotutelle']
         ):
-            return redirect('admission:doctorate-update:cotutelle', **self.kwargs)
+            return redirect('admission:doctorate:update:cotutelle', **self.kwargs)
 
         return super().get(request, *args, **kwargs)
 

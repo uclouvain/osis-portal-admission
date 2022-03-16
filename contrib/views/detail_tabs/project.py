@@ -23,10 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
 from admission.contrib.enums.projet import ChoixStatutProposition
@@ -54,7 +53,7 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
             admission.statut == ChoixStatutProposition.IN_PROGRESS.name
             and 'url' in admission.links['update_proposition']
         ):
-            return redirect('admission:doctorate-update:project', **self.kwargs)
+            return redirect('admission:doctorate:update:project', **self.kwargs)
 
         return super().get(request, *args, **kwargs)
 

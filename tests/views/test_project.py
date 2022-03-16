@@ -180,7 +180,7 @@ class ProjectViewTestCase(TestCase):
             'sous_domaine': ChoixSousDomaineSciences.CHEMISTRY.name,
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
         response = self.client.post(url, {
@@ -189,7 +189,7 @@ class ProjectViewTestCase(TestCase):
             'doctorate': 'BARBAZ-2021',
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
         self.mock_proposition_api.return_value.create_proposition.side_effect = MultipleApiBusinessException(
@@ -214,7 +214,7 @@ class ProjectViewTestCase(TestCase):
         self.assertContains(response, "Something went wrong globally")
 
     def test_update(self):
-        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBAR'
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.annee_doctorat = '2021'
@@ -268,7 +268,7 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_update_no_permission(self):
-        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.links = {
             'update_proposition': {'error': 'no access'},
         }
@@ -276,7 +276,7 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_consistency_errors(self):
-        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
             'code_secteur_formation': "SST",
         }
@@ -334,13 +334,13 @@ class ProjectViewTestCase(TestCase):
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.statut = (
             ChoixStatutProposition.IN_PROGRESS.name
         )
-        url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
-        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
     def test_detail(self):
-        url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             langue_redaction_these="",
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
@@ -368,7 +368,7 @@ class ProjectViewTestCase(TestCase):
         self.assertContains(response, _("Proximity commission for experimental and clinical research (ECLI)"))
 
     def test_cancel(self):
-        url = resolve_url('admission:doctorate-cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             statut=ChoixStatutProposition.IN_PROGRESS.name,
             links={},

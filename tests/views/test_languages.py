@@ -38,7 +38,7 @@ class LanguagesTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.detail_url = resolve_url('admission:doctorate-detail:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        cls.detail_url = resolve_url('admission:doctorate:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         cls.form_url = resolve_url('admission:doctorate-create:languages')
 
     def setUp(self):
@@ -176,7 +176,7 @@ class LanguagesTestCase(TestCase):
         }])
 
     def test_update_admission_in_context(self):
-        url = resolve_url('admission:doctorate-update:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.list_language_knowledges.assert_called()

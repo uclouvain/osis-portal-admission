@@ -27,16 +27,16 @@
 
 {% if detail_view and admission|can_read_tab:tab_name %}
   {# We're on a detail view, display detail siblings #}
-  {% url 'admission:doctorate-detail:'|add:tab_name admission_uuid as tab_url %}
+  {% url 'admission:doctorate:'|add:tab_name admission_uuid as tab_url %}
 {% elif not admission %}
   {# We've not submitted an admission yet, display creation siblings #}
   {% url 'admission:doctorate-create:'|add:tab_name as tab_url %}
 {% elif admission|can_update_tab:tab_name %}
   {# We can update admission, display update siblings #}
-  {% url 'admission:doctorate-update:'|add:tab_name admission_uuid as tab_url %}
+  {% url 'admission:doctorate:update:'|add:tab_name admission_uuid as tab_url %}
 {% elif for_navigation and admission|can_read_tab:tab_name %}
   {# We cannot update admission and we're in navigation mode, try to display detail siblings #}
-  {% url 'admission:doctorate-detail:'|add:tab_name admission_uuid as tab_url %}
+  {% url 'admission:doctorate:'|add:tab_name admission_uuid as tab_url %}
 {% endif %}
 <li
   role="presentation"

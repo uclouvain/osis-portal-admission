@@ -13,7 +13,7 @@
     <button type="submit" class="btn btn-danger">
         {% trans "Confirm" %}
     </button>
-    {% url 'admission:doctorate-update:supervision' view.kwargs.pk as cancel_url %}
+    {% url 'admission:doctorate:update:supervision' view.kwargs.pk as cancel_url %}
     <a href="{{ cancel_url }}">
         {% trans "Cancel" %}
     </a>
