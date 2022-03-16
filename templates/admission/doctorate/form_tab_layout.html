@@ -139,7 +139,7 @@
 
     {% include "template_messages.html" %}
 
-    {% url "admission:doctorate-detail:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
+    {% url "admission:doctorate:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
     {% block tab_content %}
         <form class="osis-form" method="post" action="">

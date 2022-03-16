@@ -26,18 +26,17 @@
 import enum
 
 from django.contrib import messages
-from django.utils.translation import gettext as _
-
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
+from django.utils.translation import gettext as _
 
-
-from osis_admission_sdk import ApiException
-
-from admission.contrib.forms.curriculum import DoctorateAdmissionCurriculumExperienceForm, \
-    DoctorateAdmissionCurriculumFileForm
+from admission.contrib.forms.curriculum import (
+    DoctorateAdmissionCurriculumExperienceForm,
+    DoctorateAdmissionCurriculumFileForm,
+)
 from admission.contrib.views import DoctorateAdmissionCurriculumDetailView
 from admission.services.person import AdmissionPersonService
+from osis_admission_sdk import ApiException
 
 
 class CurriculumForm(enum.Enum):
@@ -204,6 +203,6 @@ class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailVie
     def get_success_url(self):
         pk = self.kwargs.get('pk')
         if pk:
-            return resolve_url('admission:doctorate-update:curriculum', pk=pk)
+            return resolve_url('admission:doctorate:update:curriculum', pk=pk)
         else:
             return resolve_url('admission:doctorate-create:curriculum')

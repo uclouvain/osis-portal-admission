@@ -25,7 +25,7 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% url 'admission:doctorate-update:remove-actor' view.kwargs.pk type member.matricule as remove_url %}{% get_dashboard_links as links %}
+{% url 'admission:doctorate:remove-actor' view.kwargs.pk type member.matricule as remove_url %}{% get_dashboard_links as links %}
 
 <div class="signature-item">
   <div class="row">
@@ -71,7 +71,7 @@
         </button>
       </div>
       <div id="approve-by-pdf-{{ member.matricule }}" class="col-md-12 collapse">
-        <form action="{% url 'admission:doctorate-detail:approve-by-pdf' pk=admission.uuid %}" method="post">
+        <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
           {% csrf_token %}
           {{ approve_by_pdf_form.pdf }}
           <input type="hidden" name="matricule" value="{{ member.matricule }}" />

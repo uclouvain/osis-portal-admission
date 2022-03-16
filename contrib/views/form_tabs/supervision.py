@@ -61,7 +61,7 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
         if 'url' not in context['admission'].links['request_signatures']:
-            return redirect('admission:doctorate-detail:supervision', **self.kwargs)
+            return redirect('admission:doctorate:supervision', **self.kwargs)
         return self.render_to_response(context)
 
     def prepare_data(self, data):
@@ -116,4 +116,4 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
         AdmissionSupervisionService.remove_member(person=self.person, uuid=str(self.kwargs['pk']), **data)
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
+        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])

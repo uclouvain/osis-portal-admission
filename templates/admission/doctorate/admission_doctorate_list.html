@@ -67,7 +67,7 @@
         {% if admission|can_make_action:'destroy_proposition' %}
           <a
             class="btn btn-danger"
-            href="{% url "admission:doctorate-cancel" admission.uuid %}"
+            href="{% url "admission:doctorate:cancel" admission.uuid %}"
           >
             {% trans "Delete" %}
           </a>

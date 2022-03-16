@@ -48,7 +48,7 @@ class EducationTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.detail_url = resolve_url('admission:doctorate-detail:education', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        cls.detail_url = resolve_url('admission:doctorate:education', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         cls.form_url = resolve_url('admission:doctorate-create:education')
 
     def setUp(self):
@@ -392,7 +392,7 @@ class EducationTestCase(TestCase):
         self.assertIn('linguistic_regime', response.context['foreign_diploma_form'].errors)
 
     def test_update_admission_in_context(self):
-        url = resolve_url('admission:doctorate-update:education', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:education', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
             "belgian_diploma": {},
             "foreign_diploma": {

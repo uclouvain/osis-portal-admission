@@ -48,7 +48,7 @@ class ListTestCase(TestCase):
         }
         url = reverse('admission:doctorate-list')
         response = self.client.get(url)
-        detail_url = resolve_url('admission:doctorate-detail:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        detail_url = resolve_url('admission:doctorate:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
         self.assertContains(response, detail_url)
 
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
@@ -63,5 +63,5 @@ class ListTestCase(TestCase):
         ]
         url = reverse('admission:supervised-list')
         response = self.client.get(url)
-        detail_url = resolve_url('admission:doctorate-detail:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        detail_url = resolve_url('admission:doctorate:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
         self.assertContains(response, detail_url)

@@ -50,7 +50,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
             self.proposition.statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
             and 'url' in self.proposition.links['request_signatures']
         ):
-            return redirect('admission:doctorate-update:supervision', **self.kwargs)
+            return redirect('admission:doctorate:update:supervision', **self.kwargs)
         return self.render_to_response(context)
 
     @cached_property
@@ -131,7 +131,7 @@ class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixi
         )
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
+        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
     def form_invalid(self, form):
-        return redirect('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
+        return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])

@@ -47,8 +47,8 @@ class SupervisionTestCase(TestCase):
         self.pk = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
 
         self.client.force_login(self.person.user)
-        self.update_url = resolve_url("admission:doctorate-update:supervision", pk=self.pk)
-        self.detail_url = resolve_url("admission:doctorate-detail:supervision", pk=self.pk)
+        self.update_url = resolve_url("admission:doctorate:update:supervision", pk=self.pk)
+        self.detail_url = resolve_url("admission:doctorate:supervision", pk=self.pk)
         self.default_kwargs = {
             'accept_language': ANY,
             'x_user_first_name': ANY,
@@ -147,7 +147,7 @@ class SupervisionTestCase(TestCase):
 
     def test_should_remove_supervision_member(self):
         url = resolve_url(
-            "admission:doctorate-detail:remove-actor",
+            "admission:doctorate:remove-actor",
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
             type=ActorType.PROMOTER.name,
             matricule="0123456978",
@@ -161,7 +161,7 @@ class SupervisionTestCase(TestCase):
 
     def test_should_not_remove_supervision_member_if_not_found(self):
         url = resolve_url(
-            "admission:doctorate-detail:remove-actor",
+            "admission:doctorate:remove-actor",
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
             type=ActorType.CA_MEMBER.name,
             matricule="1234569780",
@@ -170,7 +170,7 @@ class SupervisionTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         url = resolve_url(
-            "admission:doctorate-detail:remove-actor",
+            "admission:doctorate:remove-actor",
             pk=self.pk,
             type=ActorType.PROMOTER.name,
             matricule="1234569780",
@@ -316,13 +316,13 @@ class SupervisionTestCase(TestCase):
         self.assertContains(response, _("Are you sure you want to request signatures for this admission?"))
 
         # Success
-        post_url = resolve_url("admission:doctorate-request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        post_url = resolve_url("admission:doctorate:request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.post(post_url, {})
         self.assertRedirects(response, self.update_url)
         self.mock_api.return_value.create_signatures.assert_called()
 
         # Failure
-        post_url = resolve_url("admission:doctorate-request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        post_url = resolve_url("admission:doctorate:request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_api.return_value.create_signatures.side_effect = MultipleApiBusinessException(
             exceptions={
                 ApiBusinessException(status_code=42, detail="Something went wrong globally"),
@@ -338,12 +338,12 @@ class SupervisionTestCase(TestCase):
         return_value={'name': 'myfile', 'mimetype': 'application/pdf'},
     )
     def test_should_approval_by_pdf_redirect_without_errors(self, *args):
-        url = resolve_url("admission:doctorate-update:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.post(url, {'matricule': "test", 'pdf_0': 'some_file'})
-        expected_url = resolve_url("admission:doctorate-detail:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        expected_url = resolve_url("admission:doctorate:supervision", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url)
 
     def test_should_approval_by_pdf_redirect_with_errors(self):
-        url = resolve_url("admission:doctorate-update:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.post(url, {})
         self.assertRedirects(response, self.detail_url)

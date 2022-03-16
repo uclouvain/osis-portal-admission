@@ -23,12 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
@@ -147,4 +146,4 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             return super().get_success_url()
         # On creation, display a message and redirect on same form (but with uuid now that we have it)
         messages.info(self.request, _("Your data has been saved"))
-        return resolve_url('admission:doctorate-update:project', pk=self.uuid)
+        return resolve_url('admission:doctorate:update:project', pk=self.uuid)

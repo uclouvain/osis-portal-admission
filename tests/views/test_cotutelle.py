@@ -41,7 +41,7 @@ class CotutelleTestCase(TestCase):
         cls.person = PersonFactory()
 
     def setUp(self):
-        self.url = resolve_url("admission:doctorate-update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.url = resolve_url("admission:doctorate:update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
         api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -67,13 +67,13 @@ class CotutelleTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_cotutelle_get(self):
-        url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
         self.assertContains(response, "Foobar")
 
     def test_cotutelle_detail_should_redirect_if_not_signing(self):
         self.mock_api.return_value.retrieve_proposition.return_value.statut = ChoixStatutProposition.IN_PROGRESS.name
-        url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
         self.assertRedirects(response, self.url)
 

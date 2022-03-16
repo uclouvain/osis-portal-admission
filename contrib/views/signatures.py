@@ -48,4 +48,4 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, SuccessMessage
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return resolve_url("admission:doctorate-update:supervision", pk=self.kwargs.get('pk'))
+        return resolve_url("admission:doctorate:update:supervision", pk=self.kwargs.get('pk'))

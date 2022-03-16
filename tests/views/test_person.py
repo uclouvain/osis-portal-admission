@@ -98,7 +98,7 @@ class PersonViewTestCase(TestCase):
         self.mock_person_api.return_value.update_person_identification.assert_called()
 
     def test_update(self):
-        url = resolve_url('admission:doctorate-update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
         mocking_dict = self.mock_person_api.return_value.retrieve_person_identification_admission.return_value
@@ -153,7 +153,7 @@ class PersonViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):
-        url = resolve_url('admission:doctorate-detail:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
         mocking_dict_return = self.mock_person_api.return_value.retrieve_person_identification_admission.return_value

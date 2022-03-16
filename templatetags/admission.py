@@ -133,7 +133,7 @@ def get_valid_tab_tree(admission):
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
 def doctorate_tabs(context, admission=None):
     match = context['request'].resolver_match
-    is_form_view = match.namespaces[1] == 'doctorate-update'
+    is_form_view = match.namespaces[1:2] == ('doctorate', 'update')
 
     # Create a new tab tree based on the default one but depending on the permissions links
     context['valid_tab_tree'] = get_valid_tab_tree(admission=admission)
@@ -165,10 +165,11 @@ SUBTAB_LABELS = {
     'public_defense': _("Public defense"),
 }
 
+
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None):
     match = context['request'].resolver_match
-    is_form_view = match.namespaces[1] == 'doctorate-update'
+    is_form_view = match.namespaces[1:2] == ('doctorate', 'update')
 
     valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(admission=admission))
 

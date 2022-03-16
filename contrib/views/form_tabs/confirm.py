@@ -94,7 +94,7 @@ class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_success_url(self):
         messages.info(self.request, _("Your proposition has been confirmed."))
-        return resolve_url('admission:doctorate-detail:project', pk=self.kwargs.get('pk'))
+        return resolve_url('admission:doctorate:project', pk=self.kwargs.get('pk'))
 
     def call_webservice(self, data):
         AdmissionPropositionService.submit_proposition(
