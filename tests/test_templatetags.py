@@ -40,6 +40,8 @@ from admission.templatetags.admission import (
     get_valid_tab_tree,
 )
 from base.models.utils.utils import ChoiceEnum
+from base.tests.factories.person import PersonFactory
+from osis_admission_sdk.exceptions import UnauthorizedException
 
 
 class TemplateTagsTestCase(TestCase):
@@ -240,3 +242,15 @@ class TemplateTagsTestCase(TestCase):
         # The tab action is specified in the admission as allowed -> return True
         admission = self.Admission()
         self.assertTrue(can_update_tab(admission, 'coordonnees'))
+
+    def test_get_dashboard_links_tag(self):
+        template = Template(
+            """{% load admission %}{% get_dashboard_links %}
+            {% if 'url' in links.list_propositions %}coucou{% endif %}"""
+        )
+        with patch('admission.services.proposition.AdmissionPropositionService') as mock_api:
+            mock_api.side_effect = UnauthorizedException
+            request = RequestFactory()
+            request.user = PersonFactory().user
+            rendered = template.render(Context({'request': request}))
+        self.assertNotIn('coucou', rendered)

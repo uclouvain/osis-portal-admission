@@ -25,6 +25,7 @@
 # ##############################################################################
 import functools
 from collections import namedtuple
+from contextlib import suppress
 from inspect import getfullargspec
 
 from django import template
@@ -32,8 +33,8 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
-from admission.services.proposition import AdmissionPropositionService
 from base.models.utils.utils import ChoiceEnum
+from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
 
@@ -217,7 +218,11 @@ def panel(context, title='', title_level=4, additional_class='', **kwargs):
 
 @register.simple_tag(takes_context=True)
 def get_dashboard_links(context):
-    return AdmissionPropositionService.get_dashboard_links(context['request'].user.person)
+    from admission.services.proposition import AdmissionPropositionService
+
+    with suppress(UnauthorizedException, NotFoundException, ForbiddenException):
+        return AdmissionPropositionService.get_dashboard_links(context['request'].user.person)
+    return {}
 
 
 @register.filter
