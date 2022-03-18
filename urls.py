@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from .contrib import views
 
@@ -86,6 +87,11 @@ urlpatterns = [
     # Autocompletes
     path("autocomplete/", include((autocomplete_paths, "autocomplete"))),
     # Creation
+    path(
+        "doctorates/create/",
+        RedirectView.as_view(pattern_name="admission:doctorate-create:project"),
+        name="doctorate-create",
+    ),
     path("doctorates/create/", include((creation_paths, "doctorate-create"))),
     # Detail
     path("doctorates/<uuid:pk>/", include((detail_paths, "doctorate"))),
