@@ -34,6 +34,18 @@ from base.tests.factories.person import PersonFactory
 
 class ListTestCase(TestCase):
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
+    def test_list_empty(self, api, *args):
+        self.client.force_login(PersonFactory().user)
+        api.return_value.list_propositions.return_value = {
+            'propositions': [],
+            'links': {'create_proposition': {'url': 'access granted'}},
+        }
+        url = reverse('admission:doctorate-list')
+        response = self.client.get(url)
+        create_url = resolve_url('admission:doctorate-create')
+        self.assertContains(response, create_url)
+
+    @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
     def test_list(self, api, *args):
         self.client.force_login(PersonFactory().user)
         api.return_value.list_propositions.return_value = {
