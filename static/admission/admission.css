@@ -29,3 +29,60 @@
 .nav-pills.nav-grey > li.active > a:hover {
   background-color: #aaa;
 }
+
+
+@media (min-width: 990px) {
+  .tabsbar-collapse {
+    width: auto;
+    border-top: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none
+  }
+
+  .tabsbar-collapse.collapse {
+    display: block !important;
+    height: auto !important;
+    padding-bottom: 0;
+    overflow: visible !important
+  }
+
+  .tabsbar-collapse.in {
+    overflow-y: visible
+  }
+
+  .tabsbar-toggle {
+    display: none
+  }
+}
+
+@media (max-width: 990px) {
+  .navbar-toggle.tabsbar-toggle {
+    display: block;
+  }
+
+  .tabsbar-collapse > .navbar-nav {
+    float: none;
+    margin: 0;
+    clear: both;
+  }
+
+  .tabsbar-collapse > .navbar-nav > li {
+    float: none;
+    clear: both;
+  }
+}
+
+.tabsbar-collapse.collapsing {
+  width: 100%;
+}
+
+.tabsbar-collapse {
+  border-top: 1px solid #e7e7e7;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+
+select.select2-hidden-accessible + span {
+  width: auto;
+  min-width: auto;
+}

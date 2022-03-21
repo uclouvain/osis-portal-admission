@@ -94,19 +94,19 @@
   {% else %}
     {% url 'admission:doctorate-list' as list_url %}
   {% endif %}
-    <div class="page-header h3">
+  <div class="page-header h3 clearfix">
     <span class="d-inline-block">
       {% if admission %}
-          {{ admission.intitule_doctorat }}
+        {{ admission.intitule_doctorat }}
       {% else %}
-          {% trans "Create new doctorate admission" %}
+        {% trans "Create new doctorate admission" %}
       {% endif %}
     </span>
-      <a href="{{ list_url }}" class="pull-right h5 text-primary">
-        <span class="fa fa-stream"></span>
-        {% trans "Back to requests" %}
-      </a>
-    </div>
+    <a href="{{ list_url }}" class="pull-right h5 text-primary">
+      <span class="fa fa-stream"></span>
+      {% trans "Back to requests" %}
+    </a>
+  </div>
 
     <div class="well">
         <div>
@@ -145,18 +145,15 @@
         <form class="osis-form" method="post" action="">
             {% csrf_token %}
             {% block form_content %}
-                {% doctorate_tabs admission %}
+                {% doctorate_tabs admission with_submit=True %}
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-2 visible-md visible-lg">
                         {% doctorate_subtabs admission %}
-                        {% block submit_button_affix %}
-                            <hr />
-                            <div
-                                data-spy="affix"
-                                data-offset-top="500"
-                                style="top:90px"
-                            >
-                                <div>
+                    </div>
+                    <div class="col-md-10">
+                        {% block form %}{% endblock %}
+                        {% block submit_button_bottom %}
+                                <div class="text-right form-group">
                                     <button
                                         type="submit" class="btn btn-primary"
                                         {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
@@ -170,11 +167,7 @@
                                         {% trans 'Save' %}
                                     </button>
                                 </div>
-                            </div>
-                        {% endblock submit_button_affix %}
-                    </div>
-                    <div class="col-md-10">
-                        {% block form %}{% endblock %}
+                        {% endblock submit_button_bottom %}
                     </div>
                 </div>
             {% endblock form_content %}

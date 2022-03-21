@@ -1,38 +1,119 @@
 {% load i18n admission %}
 
 {% comment "License" %}
-* OSIS stands for Open Student Information System. It's an application
-* designed to manage the core business of higher education institutions,
-* such as universities, faculties, institutes and professional schools.
-* The core business involves the administration of students, teachers,
-* courses, programs and so on.
-*
-* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* A copy of this license - GNU General Public License - is available
-* at the root of the source code of this program.  If not,
-* see http://www.gnu.org/licenses/.
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% comment "Usage" %}
+  You can use this template tag by displaying {% doctorate_tabs admission %}.
+  If these tabs are diplaying a form and you need a submit button inside tab bar, use
+  {% doctorate_tabs admission with_submit=True %}.
+
+  It also display subtabs while on mobile displays, but you need to show
+  {% doctorate_subtabs admission %} for other displays.
 {% endcomment %}
 
 <div class="form-group">
-    <ul class="nav nav-tabs">
+  {# Nav for mobile display #}
+  <nav class="navbar navbar-default visible-xs visible-sm">
+    {# Toggle for better mobile display #}
+    <button
+      type="button"
+      class="navbar-toggle tabsbar-toggle collapsed"
+      data-toggle="collapse"
+      data-target="#admission-navbar"
+      aria-expanded="false"
+    >
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    {# While collapsed: display only the current item #}
+    <div class="visible-xs visible-sm navbar-text col-xs-9">
+      <strong>
+        {% if active_parent.icon %}
+          <span class="fa fa-{{ active_parent.icon }}"></span>
+        {% endif %}
+        {{ active_parent.label }}
+      </strong>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse tabsbar-collapse" id="admission-navbar">
+      <ul class="nav navbar-nav">
         {% for parent, children in tab_tree.items %}
-            {% if parent == active_parent %}
-                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon for_navigation=1 %}
-            {% else %}
-                {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon for_navigation=1 %}
-            {% endif %}
+          {% if parent == active_parent %}
+            {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon for_navigation=1 %}
+            <div class="col-xs-offset-1">
+              {% doctorate_subtabs admission %}
+            </div>
+          {% else %}
+            {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon for_navigation=1 %}
+          {% endif %}
         {% endfor %}
         {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") %}
-    </ul>
+    </div><!-- /.navbar-collapse -->
+  </nav>
+
+  {# Nav for desktop display #}
+  <ul class="nav nav-tabs visible-md visible-lg">
+    {% for parent, children in tab_tree.items %}
+      {% if parent == active_parent %}
+        {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon for_navigation=1 %}
+      {% else %}
+        {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon for_navigation=1 %}
+      {% endif %}
+    {% endfor %}
+    {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") %}
+
+    {# Submit button if needed (mobile display) #}
+    {% if with_submit %}
+      <div class="text-right visible-md visible-lg">
+        <button
+          type="submit" class="btn btn-primary"
+          {% if not admission|can_update_tab:request.resolver_match.url_name %}
+          disabled
+          {% endif %}
+        >
+          <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+          {% trans 'Save' %}
+        </button>
+      </div>
+    {% endif %}
+  </ul>
+
+  {# Submit button if needed (mobile display) #}
+  {% if with_submit %}
+    <div class="text-right visible-xs visible-sm">
+      <button
+        type="submit" class="btn btn-primary"
+        {% if not admission|can_update_tab:request.resolver_match.url_name %}
+        disabled
+        {% endif %}
+      >
+        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+        {% trans 'Save' %}
+      </button>
+    </div>
+  {% endif %}
 </div>
