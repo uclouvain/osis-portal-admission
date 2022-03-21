@@ -53,8 +53,9 @@ class ListTestCase(TestCase):
                 Mock(
                     uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                     links={'retrieve_proposition': {'url': 'access granted'}},
+                    erreurs=[],
                 ),
-                Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}),
+                Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}, erreurs=[]),
             ],
             'links': {},
         }
@@ -70,8 +71,9 @@ class ListTestCase(TestCase):
             Mock(
                 uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                 links={'retrieve_proposition': {'url': 'access granted'}},
+                erreurs=[],
             ),
-            Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}),
+            Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}, erreurs=[]),
         ]
         url = reverse('admission:supervised-list')
         response = self.client.get(url)

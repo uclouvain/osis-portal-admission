@@ -24,8 +24,8 @@
 #
 # ##############################################################################
 import functools
-from collections import namedtuple
 from contextlib import suppress
+from dataclasses import dataclass
 from inspect import getfullargspec
 
 from django import template
@@ -33,6 +33,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from base.models.utils.utils import ChoiceEnum
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
@@ -78,13 +79,19 @@ def register_panel(filename, takes_context=None, name=None):
     return dec
 
 
-ParentTab = namedtuple('ParentTab', ['label', 'icon'])
-PERSONAL = ParentTab(_('Personal data'), 'user')
+@dataclass(frozen=True)
+class ParentTab:
+    label: str
+    icon: str
+    name: str
+
+
+PERSONAL = ParentTab(_('Personal data'), 'user', 'personal')
 TAB_TREE = {
     PERSONAL: ['person', 'coordonnees'],
-    ParentTab(_('Previous experience'), 'list-alt'): ['education', 'curriculum', 'languages'],
-    ParentTab(_('Doctorate'), 'graduation-cap'): ['project', 'cotutelle', 'supervision'],
-    ParentTab(_('Confirmation'), 'check-circle'): ['confirm'],
+    ParentTab(_('Previous experience'), 'list-alt', 'experience'): ['education', 'curriculum', 'languages'],
+    ParentTab(_('Doctorate'), 'graduation-cap', 'doctorate'): ['project', 'cotutelle', 'supervision'],
+    ParentTab(_('Confirmation'), 'check-circle', 'confirmation'): ['confirm'],
 }
 
 
@@ -268,3 +275,24 @@ def add_str(arg1, arg2):
 def can_update_something(admission):
     """Return true if any update tab can be opened for this admission, otherwise return False"""
     return any(_can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB) for tab_name in UPDATE_ACTIONS_BY_TAB)
+
+
+@register.filter
+def has_error_in_tab(admission, tab):
+    """Return true if the tab (or subtab) has errors"""
+    if not admission or not hasattr(admission, 'erreurs'):
+        return False
+    if tab not in BUSINESS_EXCEPTIONS_BY_TAB:
+        children = next((children for parent, children in TAB_TREE.items() if parent.name == tab), None)
+        if children is None:
+            raise Exception(
+                f"{tab} has no children and is not in BUSINESS_EXCEPTIONS_BY_TAB, use no_status=1 or correct name"
+            )
+        return any(
+            erreur['status_code'] in [e.value for e in BUSINESS_EXCEPTIONS_BY_TAB[subtab]]
+            for subtab in children
+            for erreur in admission.erreurs
+        )
+    return any(
+        erreur['status_code'] in [e.value for e in BUSINESS_EXCEPTIONS_BY_TAB[tab]] for erreur in admission.erreurs
+    )

@@ -177,10 +177,14 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
     },
     'languages': {
-        PropositionBusinessException.LanguesConnuesNonSpecifieesException
+        PropositionBusinessException.LanguesConnuesNonSpecifieesException,
     },
-    'project': set(),
-    'cotutelle': set(),
+    'project': {
+        PropositionBusinessException.DetailProjetNonCompleteException,
+    },
+    'cotutelle': {
+        PropositionBusinessException.CotutelleNonCompleteException,
+    },
     'supervision': {
         PropositionBusinessException.ProcedureDemandeSignatureNonLanceeException,
         PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
