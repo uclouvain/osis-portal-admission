@@ -44,7 +44,8 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
         context_data = super().get_context_data(**kwargs)
         if "pk" in self.kwargs:
             context_data["admission"] = AdmissionPropositionService.get_proposition(
-                person=self.person, uuid=str(self.kwargs["pk"]),
+                person=self.person,
+                uuid=str(self.kwargs["pk"]),
             )
         template_empty_form = """
             {% load bootstrap3 i18n static admission %}
@@ -63,8 +64,7 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
     def get_initial(self):
         return [
             language_knowledge.to_dict()
-            for language_knowledge
-            in AdmissionPersonService.retrieve_languages_knowledge(self.person)
+            for language_knowledge in AdmissionPersonService.retrieve_languages_knowledge(self.person)
         ]
 
     def get_form_kwargs(self):
@@ -73,7 +73,7 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
         return kwargs
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_languages_knowledge(self.person, data)
+        AdmissionPersonService.update_languages_knowledge(self.person, data, uuid=self.kwargs.get('pk'))
 
     def form_valid(self, formset):
         data = [form.cleaned_data for form in formset.forms if form not in formset.deleted_forms]

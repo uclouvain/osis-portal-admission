@@ -114,7 +114,13 @@ class AdmissionPersonService(metaclass=ServiceMeta):
         return AdmissionPersonAPIClient().list_language_knowledges(**build_mandatory_auth_headers(person))
 
     @classmethod
-    def update_languages_knowledge(cls, person, data):
+    def update_languages_knowledge(cls, person, data, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().create_language_knowledge_admission(
+                uuid=str(uuid),
+                language_knowledge=data,
+                **build_mandatory_auth_headers(person),
+            )
         return AdmissionPersonAPIClient().create_language_knowledge(
             language_knowledge=data,
             **build_mandatory_auth_headers(person),

@@ -190,6 +190,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
         PropositionBusinessException.PropositionNonApprouveeParMembresCAException,
     },
+    'confirm': set(),
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}
