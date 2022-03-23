@@ -48,7 +48,7 @@
       <span class="fa fa-{{ icon }}"></span>
     {% endif %}
     {{ tab_label }}
-    {% if not no_status and admission %}
+    {% if not no_status and admission and tab_name != 'confirm' %}
       {% firstof parent.name tab_name as error_tab_name %}
       {% if admission|has_error_in_tab:error_tab_name %}
         <span class="fa fa-times-circle text-danger"></span>

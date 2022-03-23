@@ -91,7 +91,7 @@ TAB_TREE = {
     PERSONAL: ['person', 'coordonnees'],
     ParentTab(_('Previous experience'), 'list-alt', 'experience'): ['education', 'curriculum', 'languages'],
     ParentTab(_('Doctorate'), 'graduation-cap', 'doctorate'): ['project', 'cotutelle', 'supervision'],
-    ParentTab(_('Confirmation'), 'check-circle', 'confirmation'): ['confirm'],
+    ParentTab(_('Confirmation'), 'check-circle', 'confirm'): ['confirm'],
 }
 
 
