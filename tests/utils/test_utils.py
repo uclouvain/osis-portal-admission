@@ -23,26 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import uuid
 
 from django.test import TestCase
+from osis_organisation_sdk.model.address import Address
+from osis_organisation_sdk.model.entite import Entite
 
 from admission.utils import format_entity_address, format_entity_title
-from osis_organisation_sdk.model.entite import Entite
-from osis_organisation_sdk.model.address import Address
 
 
 class UtilsTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.address = Address(
+    def setUp(self) -> None:
+        self.address = Address(
             city="Louvain-la-Neuve",
             street="Route de Blocry",
             street_number="5",
             postal_code="1348",
             state="Belgique",
         )
-        cls.entity = Entite(
+        self.entity = Entite(
             uuid='uuid',
             organization_name='Université Catholique de Louvain',
             organization_acronym='UCL',
