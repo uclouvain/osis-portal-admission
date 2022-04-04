@@ -59,7 +59,12 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
         return data
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = (
+            'dependsOn.min.js',
+            # Add osis-document script in case of approved-by-pdf documents
+            'osis_document/osis-document.umd.min.js',
+        )
+        css = {'all': ('osis_document/osis-document.css',)}
 
 
 class DoctorateAdmissionApprovalForm(forms.Form):
