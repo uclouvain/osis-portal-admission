@@ -28,6 +28,7 @@ from unittest.mock import ANY, Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk import ApiException
 from rest_framework import status
 
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
@@ -35,7 +36,6 @@ from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
-from osis_admission_sdk import ApiException
 
 
 class SupervisionTestCase(TestCase):
@@ -97,7 +97,16 @@ class SupervisionTestCase(TestCase):
                     commentaire_externe="A public comment to display",
                 ),
             ],
-            signatures_membres_ca=[],
+            signatures_membres_CA=[
+                dict(
+                    membre_CA=dict(
+                        matricule=self.person.global_id,
+                        prenom="Jacques-Eudes",
+                        nom="Birlimpette",
+                    ),
+                    statut=ChoixEtatSignature.INVITED.name,
+                ),
+            ],
         )
 
     def test_should_detail_redirect_to_form_when_not_signing(self):

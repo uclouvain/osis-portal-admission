@@ -42,6 +42,7 @@ from admission.services.proposition import AdmissionPropositionService, Admissio
 class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/form_tab_supervision.html'
     form_class = DoctorateAdmissionApprovalForm
+    rejecting = False
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -109,6 +110,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
                 uuid=str(self.kwargs['pk']),
                 **data,
             )
+        self.rejecting = True
         return AdmissionSupervisionService.reject_proposition(
             person=self.person,
             uuid=str(self.kwargs['pk']),
@@ -117,6 +119,12 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
 
     def get_success_url(self):
         messages.info(self.request, _("Your decision has been saved."))
+        if (
+            self.person.global_id
+            in [signature['membre_CA']['matricule'] for signature in self.supervision['signatures_membres_CA']]
+            and self.rejecting
+        ):
+            return resolve_url('admission:supervised-list')
         return self.request.get_full_path()
 
 
