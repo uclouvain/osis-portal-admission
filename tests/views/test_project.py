@@ -51,7 +51,9 @@ class ProjectViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.mock_entities = [
+
+    def setUp(self):
+        self.mock_entities = [
             Entite(
                 uuid='uuid1',
                 organization_name='Université Catholique de Louvain',
@@ -67,8 +69,6 @@ class ProjectViewTestCase(TestCase):
                 acronym='IFL',
             ),
         ]
-
-    def setUp(self):
         # Mock proposition sdk api
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
