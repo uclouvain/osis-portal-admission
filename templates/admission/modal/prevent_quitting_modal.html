@@ -1,0 +1,78 @@
+{# Modal form leaving confirmation #}
+{% load i18n %}
+
+<div
+  class="modal fade"
+  id="prevent-quitting-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="prevent-quitting-label"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="prevent-quitting-label">
+          {% trans "Leave the page?" %}
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          {% trans "You seem to have unsaved modifications, they will be lost." %}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-default"
+          data-dismiss="modal"
+        >
+          {% trans "Cancel" %}
+        </button>
+        <a
+          class="btn btn-primary"
+          id="continue-link"
+          href="#"
+        >
+          {% trans "Exit" %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+// Notify user when something in a form has changed
+const initialData = {};
+let checkForm = true;
+document.addEventListener('DOMContentLoaded', function () {
+    // Save all initial data on page load
+    document.querySelectorAll('form').forEach(function (form) {
+        const searchParams = new URLSearchParams(new FormData(form));
+        initialData[form.getAttribute('action')] = searchParams.toString();
+        form.addEventListener('submit', function () {
+            checkForm = false;
+        });
+    });
+});
+window.addEventListener('click', function (e) {
+    // If the click is an opening anchor refreshing the window
+    const isOpeningAnchor = e.target.tagName === 'A' && ['', '_self'].includes(e.target.target);
+    // But not continue link (from modal) itself
+    if (isOpeningAnchor && e.target.id !== 'continue-link') {
+        // Loop over the forms on the page
+        document.querySelectorAll('form').forEach(function (form) {
+            // Check the link is not part of the form
+            if (!(form.querySelector('.quitting-context-excluded') || form).contains(e.target)) {
+                // Check the form has changed
+                const searchParams = new URLSearchParams(new FormData(form));
+                if (initialData[form.getAttribute('action')] !== searchParams.toString()) {
+                    e.preventDefault();
+                    $('#prevent-quitting-modal').modal('show');
+                    document.querySelector('a#continue-link').setAttribute('href', e.target.href)
+                    return false;
+                }
+            }
+        });
+    }
+});
+</script>
