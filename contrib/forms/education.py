@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete
+from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -146,7 +146,7 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
     institute = forms.CharField(
         label=_("Institute"),
         required=False,
-        help_text=_("You can perform a search based on the location or postal code.")
+        help_text=_("You can perform a search based on the location or postal code."),
     )
     other_institute = forms.CharField(
         label=_("Other institute, please specify"),
@@ -165,9 +165,8 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         educational_type = cleaned_data.get("educational_type")
         educational_other = cleaned_data.get("educational_other")
 
-        if (
-            community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name
-            and not (educational_type or educational_other)
+        if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name and not (
+            educational_type or educational_other
         ):
             self.add_error("educational_type", _("Educational type is required with this community of education"))
 
@@ -273,17 +272,21 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         widget=forms.RadioSelect,
     )
     equivalence = forms.ChoiceField(
-        label=_("Has this diploma been subject to a decision of equivalence provided by the "
-                "French-speaking community of Belgium?"),
+        label=_(
+            "Has this diploma been subject to a decision of equivalence provided by the "
+            "French-speaking community of Belgium?"
+        ),
         required=False,
-        help_text=_('If you have it, you must provide a photocopy of both sides of the final equivalence decision '
-                    'issued by the Ministry of the French Community of Belgium. If you do not have it, a request for '
-                    'equivalence MUST be submitted in strict accordance with the instructions given by the '
-                    '<a href="http://www.equivalences.cfwb.be/" target="blank">CFWB</a>, only '
-                    'in the case of a request for enrolment in BACHELOR degree. As a reminder, for any secondary '
-                    'school diploma <strong>from a country outside the European Union, the admission application '
-                    'must contain the equivalence of your diploma</strong> issued by the Wallonia-Brussels Federation '
-                    '(French Community of Belgium).'),
+        help_text=_(
+            'If you have it, you must provide a photocopy of both sides of the final equivalence decision '
+            'issued by the Ministry of the French Community of Belgium. If you do not have it, a request for '
+            'equivalence MUST be submitted in strict accordance with the instructions given by the '
+            '<a href="http://www.equivalences.cfwb.be/" target="blank">CFWB</a>, only '
+            'in the case of a request for enrolment in BACHELOR degree. As a reminder, for any secondary '
+            'school diploma <strong>from a country outside the European Union, the admission application '
+            'must contain the equivalence of your diploma</strong> issued by the Wallonia-Brussels Federation '
+            '(French Community of Belgium).'
+        ),
         choices=Equivalence.choices(),
         widget=forms.RadioSelect,
     )
@@ -298,7 +301,10 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     )
     country = forms.CharField(
         label=_("Organizing country"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:country",
+            forward=[forward.Const(True, 'exclude_be')],
+        ),
     )
     result = forms.ChoiceField(
         label=_("What result did you get?"),
@@ -306,8 +312,9 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         widget=forms.RadioSelect,
     )
     high_school_transcript_translation = FileUploadField(
-        label=_("A certified translation of your official transcript of marks for your final year of "
-                "secondary education"),
+        label=_(
+            "A certified translation of your official transcript of marks for your final year of secondary education"
+        ),
         max_files=1,
         required=False,
     )
@@ -331,16 +338,21 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         from admission.contrib.views.form_tabs.education import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
             self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))
 
-        # Translation of transcript required depending on linguistic regime
-        if (cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
-                and not cleaned_data.get('high_school_transcript_translation')):
+        if (
+            cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+            # Translation of transcript required depending on linguistic regime
+            and not cleaned_data.get('high_school_transcript_translation')
+        ):
             self.add_error("high_school_transcript_translation", FIELD_REQUIRED_MESSAGE)
 
-        # Equivalence required depending on national bachelor
-        if (cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name
-                and not cleaned_data.get('equivalence')):
+        if (
+            cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name
+            # Equivalence required depending on national bachelor
+            and not cleaned_data.get('equivalence')
+        ):
             self.add_error('equivalence', FIELD_REQUIRED_MESSAGE)
         return cleaned_data
