@@ -112,9 +112,6 @@ msgstr ""
 msgid "(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
 msgstr ""
 
-msgid "(e.g.: Louvain-la-Neuve louvain-la-neuve)"
-msgstr ""
-
 msgid "(e.g.: Pierre, Paul, Jacques <del>pierre, paul, JACQUES)</del>"
 msgstr ""
 
@@ -526,6 +523,9 @@ msgstr ""
 msgid "Exchange with UCLouvain"
 msgstr ""
 
+msgid "Exit"
+msgstr ""
+
 msgid "FNRS"
 msgstr ""
 
@@ -773,6 +773,9 @@ msgid "Last registration year"
 msgstr ""
 
 msgid "Latin"
+msgstr ""
+
+msgid "Leave the page?"
 msgstr ""
 
 msgctxt "admission"
@@ -1384,11 +1387,11 @@ msgstr ""
 msgid "You have now reached the confirmation tab of your enrolment request."
 msgstr ""
 
-msgid "You may lose your changes, are you sure you want to quit?"
-msgstr ""
-
 msgid ""
 "You must correct your proposition before being able to request signatures."
+msgstr ""
+
+msgid "You seem to have unsaved modifications, they will be lost."
 msgstr ""
 
 msgid "Your data has been saved"
