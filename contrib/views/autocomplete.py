@@ -30,6 +30,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import get_language
 from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 
+from admission.constants import BE_ISO_CODE
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import CitiesService, CountriesService, LanguageService
@@ -54,57 +55,53 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         return AdmissionAutocompleteService.get_doctorates(self.request.user.person, self.forwarded['sector'])
 
     def results(self, results):
-        return [dict(
-            id="{result.sigle}-{result.annee}".format(result=result),
-            sigle=result.sigle,
-            sigle_entite_gestion=result.sigle_entite_gestion,
-            text="{sigle} - {intitule}".format(
+        return [
+            dict(
+                id="{result.sigle}-{result.annee}".format(result=result),
                 sigle=result.sigle,
-                intitule=result.intitule,
+                sigle_entite_gestion=result.sigle_entite_gestion,
+                text="{sigle} - {intitule}".format(sigle=result.sigle, intitule=result.intitule),
             )
-        ) for result in results]
+            for result in results
+        ]
 
     def autocomplete_results(self, results):
         """Return list of strings that match the autocomplete query."""
-        return [x for x in results if self.q.lower() in "{sigle} - {intitule}".format(
-            sigle=x.sigle,
-            intitule=x.intitule,
-        ).lower()]
+        return [
+            x
+            for x in results
+            if self.q.lower() in "{sigle} - {intitule}".format(sigle=x.sigle, intitule=x.intitule).lower()
+        ]
 
 
 class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return CountriesService.get_countries(person=self.request.user.person)
-
-    def autocomplete_results(self, results):
         return CountriesService.get_countries(person=self.request.user.person, search=self.q)
 
+    def autocomplete_results(self, results):
+        return results
+
     def results(self, results):
-        return [dict(
-            id=country.iso_code,
-            text=country.name if get_language() == settings.LANGUAGE_CODE else country.name_en,
-        ) for country in results]
+        return [
+            dict(
+                id=country.iso_code,
+                text=country.name if get_language() == settings.LANGUAGE_CODE else country.name_en,
+            )
+            for country in results
+            if not self.forwarded.get('exclude_be', False) or country.iso_code != BE_ISO_CODE
+        ]
 
 
 class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
         return CitiesService.get_cities(
             person=self.request.user.person,
-            zip_code=self.forwarded['postal_code'],
+            search=self.q,
+            zip_code=self.forwarded.get('postal_code', ''),
         )
 
     def autocomplete_results(self, results):
-        """Return list of strings that match the autocomplete query."""
-        query_params = {
-            'person': self.request.user.person,
-            'search': self.q,
-        }
-        if self.forwarded['postal_code']:
-            query_params['zip_code'] = self.forwarded['postal_code']
-
-        return CitiesService.get_cities(
-            **query_params,
-        )
+        return results
 
     def results(self, results):
         """Return the result dictionary."""
@@ -113,30 +110,36 @@ class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
 class LanguageAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        return LanguageService.get_languages(person=self.request.user.person)
-
-    def autocomplete_results(self, results):
         return LanguageService.get_languages(person=self.request.user.person, search=self.q)
 
+    def autocomplete_results(self, results):
+        return results
+
     def results(self, results):
-        return [dict(
-            id=language.code,
-            text=language.name if get_language() == settings.LANGUAGE_CODE else language.name_en,
-        ) for language in results]
+        return [
+            dict(
+                id=language.code,
+                text=language.name if get_language() == settings.LANGUAGE_CODE else language.name_en,
+            )
+            for language in results
+        ]
 
 
 class TutorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
         return AdmissionAutocompleteService.autocomplete_tutors(
             person=self.request.user.person,
-            search=(self.request.GET.get('q', '')),
+            search=self.q,
         )
 
     def results(self, results):
-        return [dict(
-            id=result.global_id,
-            text="{result.first_name} {result.last_name}".format(result=result)
-        ) for result in results]
+        return [
+            dict(
+                id=result.global_id,
+                text="{result.first_name} {result.last_name}".format(result=result),
+            )
+            for result in results
+        ]
 
     def autocomplete_results(self, results):
         return results
@@ -146,7 +149,7 @@ class PersonAutocomplete(TutorAutocomplete):
     def get_list(self):
         return AdmissionAutocompleteService.autocomplete_persons(
             person=self.request.user.person,
-            search=self.request.GET.get('q', ''),
+            search=self.q,
         )
 
 
@@ -166,10 +169,13 @@ class InstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         return results
 
     def results(self, results):
-        return [dict(
-            id=entity.uuid,
-            text=format_entity_title(entity=entity),
-        ) for entity in results]
+        return [
+            dict(
+                id=entity.uuid,
+                text=format_entity_title(entity=entity),
+            )
+            for entity in results
+        ]
 
 
 class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
@@ -177,18 +183,14 @@ class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2List
         # Return a list of addresses related to the thesis institute, if defined
         if not self.forwarded['institut_these']:
             return []
-        else:
-            return EntitiesService.get_ucl_entity_addresses(
-                person=self.request.user.person,
-                uuid=self.forwarded['institut_these'],
-            )
+        return EntitiesService.get_ucl_entity_addresses(
+            person=self.request.user.person,
+            uuid=self.forwarded['institut_these'],
+        )
 
     def results(self, results):
         formatted_results = []
         for address in results:
             formatted_address = format_entity_address(address)
-            formatted_results.append(dict(
-                id=formatted_address,
-                text=formatted_address,
-            ))
+            formatted_results.append({'id': formatted_address, 'text': formatted_address})
         return formatted_results
