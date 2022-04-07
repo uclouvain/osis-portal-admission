@@ -91,7 +91,9 @@
       </div>
       <div class="row">
         {% bootstrap_field foreign_diploma_form.linguistic_regime form_group_class="form-group required_field col-md-5" %}
-        {% bootstrap_field foreign_diploma_form.other_linguistic_regime placeholder="" form_group_class="form-group col-md-7" %}
+        <div id="linguistic-regime-other">
+          {% bootstrap_field foreign_diploma_form.other_linguistic_regime placeholder="" form_group_class="form-group col-md-7" %}
+        </div>
       </div>
       {% bootstrap_field foreign_diploma_form.result form_group_class="form-group required_field" %}
 
@@ -102,7 +104,9 @@
 
       <div id="education-type" class="row">
         {% bootstrap_field belgian_diploma_form.educational_type form_group_class="form-group required_field col-md-6" %}
-        {% bootstrap_field belgian_diploma_form.educational_other placeholder="" form_group_class="form-group col-md-6" %}
+        <div id="educational-other">
+          {% bootstrap_field belgian_diploma_form.educational_other placeholder="" form_group_class="form-group col-md-6" %}
+        </div>
       </div>
 
       {% bootstrap_field belgian_diploma_form.result form_group_class="form-group required_field" %}
@@ -302,21 +306,29 @@
       var education = context.find('select[name=belgian_diploma-educational_type]');
       var otherEducation = context.find('input[name=belgian_diploma-educational_other]');
 
-      otherEducation.on('keyup', function () {
-          otherEducation.val() && education.val(null).trigger('change');
-      });
       education.on('select2:select', function () {
           education.val() && otherEducation.val(null);
+          education.trigger('change');
+      });
+
+      $('#educational-other').dependsOn({
+          'select[name=belgian_diploma-educational_type]': { values: ['', null] },
+      }, {
+          valueOnDisable: '',
       });
 
       var linguistic_regime = context.find('select[name=foreign_diploma-linguistic_regime]');
       var other_linguistic_regime = context.find('input[name=foreign_diploma-other_linguistic_regime]');
 
-      other_linguistic_regime.on('keyup', function () {
-          other_linguistic_regime.val() && linguistic_regime.val(null).change();
-      });
       linguistic_regime.on('select2:select', function () {
           linguistic_regime.val() && other_linguistic_regime.val(null);
+          linguistic_regime.trigger('change');
+      });
+
+      $('#linguistic-regime-other').dependsOn({
+          'select[name=foreign_diploma-linguistic_regime]': { values: ['', null] },
+      }, {
+          valueOnDisable: '',
       });
   });
   </script>
