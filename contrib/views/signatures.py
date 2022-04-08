@@ -45,7 +45,7 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, SuccessMessage
 
     def form_invalid(self, form):
         messages.error(self.request, _("Please correct the errors first"))
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(resolve_url("admission:doctorate:update:supervision", pk=self.kwargs.get('pk')))
 
     def get_success_url(self):
-        return resolve_url("admission:doctorate:update:supervision", pk=self.kwargs.get('pk'))
+        return resolve_url("admission:doctorate:supervision", pk=self.kwargs.get('pk'))

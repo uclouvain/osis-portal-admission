@@ -327,7 +327,7 @@ class SupervisionTestCase(TestCase):
         # Success
         post_url = resolve_url("admission:doctorate:request-signatures", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.post(post_url, {})
-        self.assertRedirects(response, self.update_url)
+        self.assertRedirects(response, self.detail_url)
         self.mock_api.return_value.create_signatures.assert_called()
 
         # Failure
