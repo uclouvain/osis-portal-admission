@@ -42,7 +42,8 @@ class DoctorateAdmissionLanguagesDetailView(LoginRequiredMixin, TemplateView):
             person=self.request.user.person, uuid=str(self.kwargs['pk']),
         )
         context_data["languages_knowledge"] = AdmissionPersonService.retrieve_languages_knowledge(
-            self.request.user.person
+            self.request.user.person,
+            uuid=self.kwargs.get('pk'),
         )
         translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
         if len(context_data["languages_knowledge"]):
