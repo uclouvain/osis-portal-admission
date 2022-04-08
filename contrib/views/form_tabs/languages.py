@@ -64,7 +64,10 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
     def get_initial(self):
         return [
             language_knowledge.to_dict()
-            for language_knowledge in AdmissionPersonService.retrieve_languages_knowledge(self.person)
+            for language_knowledge in AdmissionPersonService.retrieve_languages_knowledge(
+                self.person,
+                uuid=self.kwargs.get('pk'),
+            )
         ]
 
     def get_form_kwargs(self):

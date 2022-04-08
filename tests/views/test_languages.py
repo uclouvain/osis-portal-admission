@@ -50,7 +50,7 @@ class LanguagesTestCase(TestCase):
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = person_api_patcher.start()
-        self.mock_person_api.return_value.list_language_knowledges.return_value = [Mock(**{
+        mock_languages = [Mock(**{
             "language": 'FR',
             "listening_comprehension": "A1",
             "speaking_ability": "A1",
@@ -61,18 +61,34 @@ class LanguagesTestCase(TestCase):
             "speaking_ability": "C2",
             "writing_ability": "A1",
         })]
-        self.mock_person_api.return_value.list_language_knowledges.return_value[0].to_dict.return_value = {
+        mock_languages_dict_0 = {
             "language": 'FR',
             "listening_comprehension": "A1",
             "speaking_ability": "A1",
             "writing_ability": "B1",
         }
-        self.mock_person_api.return_value.list_language_knowledges.return_value[1].to_dict.return_value = {
+        mock_languages_dict_1 = {
             "language": 'EN',
             "listening_comprehension": "C1",
             "speaking_ability": "C2",
             "writing_ability": "A1",
         }
+        self.mock_person_api.return_value.list_language_knowledges.return_value = mock_languages
+        self.mock_person_api.return_value.list_language_knowledges.return_value[0].to_dict.return_value = (
+            mock_languages_dict_0
+        )
+        self.mock_person_api.return_value.list_language_knowledges.return_value[1].to_dict.return_value = (
+            mock_languages_dict_1
+        )
+
+        self.mock_person_api.return_value.list_language_knowledges_admission.return_value = mock_languages
+        self.mock_person_api.return_value.list_language_knowledges_admission.return_value[0].to_dict.return_value = (
+            mock_languages_dict_0
+        )
+        self.mock_person_api.return_value.list_language_knowledges_admission.return_value[1].to_dict.return_value = (
+            mock_languages_dict_1
+        )
+
         self.addCleanup(person_api_patcher.stop)
 
         languages_api_patcher = patch("osis_reference_sdk.api.languages_api.LanguagesApi")
@@ -179,7 +195,7 @@ class LanguagesTestCase(TestCase):
         url = resolve_url('admission:doctorate:update:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.list_language_knowledges.assert_called()
+        self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
 
@@ -193,5 +209,5 @@ class LanguagesTestCase(TestCase):
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Français")
-        self.mock_person_api.return_value.list_language_knowledges.assert_called()
+        self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
         self.assertIn('admission', response.context)
