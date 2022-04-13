@@ -100,7 +100,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         help_text=_("This comment will be visible to all users who have access to this page."),
     )
     institut_these = forms.CharField(
-        label=_("Thesis institute"),
+        label=_("Research institute"),
         required=False,
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:institute",

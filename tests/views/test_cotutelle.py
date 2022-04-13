@@ -54,6 +54,8 @@ class CotutelleTestCase(TestCase):
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
             cotutelle=True,
             motivation="Foobar",
+            institution="",
+            institution_fwb=False,
             demande_ouverture=[],
             convention=[],
             autres_documents=[],
@@ -86,6 +88,8 @@ class CotutelleTestCase(TestCase):
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
             cotutelle=False,
             motivation="",
+            institution="",
+            institution_fwb=None,
             demande_ouverture=[],
             convention=[],
             autres_documents=[],
@@ -97,6 +101,8 @@ class CotutelleTestCase(TestCase):
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
             cotutelle=None,
             motivation="",
+            institution="",
+            institution_fwb=None,
             demande_ouverture=[],
             convention=[],
             autres_documents=[],
@@ -107,14 +113,18 @@ class CotutelleTestCase(TestCase):
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
     @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
     def test_cotutelle_update_with_data(self, *args):
-        response = self.client.post(self.url, {
-            'cotutelle': "YES",
-            'motivation': "Barbaz",
-            'institution': "Bazbar",
-            'demande_ouverture_0': "foobar2000",
-            'convention': [],
-            'autres_documents': [],
-        })
+        response = self.client.post(
+            self.url,
+            {
+                'cotutelle': "YES",
+                'motivation': "Barbaz",
+                'institution': "Bazbar",
+                'institution_fwb': False,
+                'demande_ouverture_0': "foobar2000",
+                'convention': [],
+                'autres_documents': [],
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_api.return_value.update_cotutelle.assert_called()
         last_call_kwargs = self.mock_api.return_value.update_cotutelle.call_args[1]
@@ -122,18 +132,12 @@ class CotutelleTestCase(TestCase):
         self.assertEqual(last_call_kwargs['definir_cotutelle_command']['motivation'], "Barbaz")
 
     def test_cotutelle_update_without_data(self):
-        response = self.client.post(self.url, {
-            "cotutelle": "NO",
-            "motivation": "Barbaz",
-        })
+        response = self.client.post(self.url, {"cotutelle": "NO", "motivation": "Barbaz"})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         last_call_kwargs = self.mock_api.return_value.update_cotutelle.call_args[1]
         self.assertEqual(last_call_kwargs['definir_cotutelle_command']['motivation'], "")
 
     def test_cotutelle_update_missing_data(self):
-        response = self.client.post(self.url, {
-            "cotutelle": "YES",
-            "motivation": "Barbaz",
-        })
+        response = self.client.post(self.url, {"cotutelle": "YES", "motivation": "Barbaz"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'institution', _("This field is required."))

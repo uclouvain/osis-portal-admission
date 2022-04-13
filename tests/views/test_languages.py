@@ -26,7 +26,7 @@
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
@@ -34,6 +34,7 @@ from admission.tests.utils import MockLanguage
 from base.tests.factories.person import PersonFactory
 
 
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class LanguagesTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -50,44 +51,49 @@ class LanguagesTestCase(TestCase):
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = person_api_patcher.start()
-        mock_languages = [Mock(**{
-            "language": 'FR',
-            "listening_comprehension": "A1",
-            "speaking_ability": "A1",
-            "writing_ability": "B1",
-        }), Mock(**{
-            "language": 'EN',
-            "listening_comprehension": "C1",
-            "speaking_ability": "C2",
-            "writing_ability": "A1",
-        })]
+        mock_languages = [
+            Mock(
+                **{
+                    "language": 'FR',
+                    "listening_comprehension": "A1",
+                    "speaking_ability": "A1",
+                    "writing_ability": "B1",
+                    "certificate": [],
+                }
+            ),
+            Mock(
+                **{
+                    "language": 'EN',
+                    "listening_comprehension": "C1",
+                    "speaking_ability": "C2",
+                    "writing_ability": "A1",
+                    "certificate": [],
+                }
+            ),
+        ]
         mock_languages_dict_0 = {
             "language": 'FR',
             "listening_comprehension": "A1",
             "speaking_ability": "A1",
             "writing_ability": "B1",
+            "certificate": [],
         }
         mock_languages_dict_1 = {
             "language": 'EN',
             "listening_comprehension": "C1",
             "speaking_ability": "C2",
             "writing_ability": "A1",
+            "certificate": [],
         }
-        self.mock_person_api.return_value.list_language_knowledges.return_value = mock_languages
-        self.mock_person_api.return_value.list_language_knowledges.return_value[0].to_dict.return_value = (
-            mock_languages_dict_0
-        )
-        self.mock_person_api.return_value.list_language_knowledges.return_value[1].to_dict.return_value = (
-            mock_languages_dict_1
-        )
+        mock_list = self.mock_person_api.return_value.list_language_knowledges
+        mock_list.return_value = mock_languages
+        mock_list.return_value[0].to_dict.return_value = mock_languages_dict_0
+        mock_list.return_value[1].to_dict.return_value = mock_languages_dict_1
 
-        self.mock_person_api.return_value.list_language_knowledges_admission.return_value = mock_languages
-        self.mock_person_api.return_value.list_language_knowledges_admission.return_value[0].to_dict.return_value = (
-            mock_languages_dict_0
-        )
-        self.mock_person_api.return_value.list_language_knowledges_admission.return_value[1].to_dict.return_value = (
-            mock_languages_dict_1
-        )
+        mock_list_admission = self.mock_person_api.return_value.list_language_knowledges_admission
+        mock_list_admission.return_value = mock_languages
+        mock_list_admission.return_value[0].to_dict.return_value = mock_languages_dict_0
+        mock_list_admission.return_value[1].to_dict.return_value = mock_languages_dict_1
 
         self.addCleanup(person_api_patcher.stop)
 
@@ -116,80 +122,97 @@ class LanguagesTestCase(TestCase):
         self.mock_person_api.return_value.list_language_knowledges.assert_called()
         self.mock_proposition_api.assert_not_called()
 
-        response = self.client.post(self.form_url, {
-            "form-INITIAL_FORMS": 0,
-            "form-TOTAL_FORMS": 0,
-        })
+        response = self.client.post(self.form_url, {"form-INITIAL_FORMS": 0, "form-TOTAL_FORMS": 0})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
         self.assertFormsetError(response, "form", None, None, _("Mandatory languages are missing."))
 
     def test_form_language_duplicate(self):
-        response = self.client.post(self.form_url, {
-            "form-0-language": 'FR',
-            "form-0-listening_comprehension": "1",
-            "form-0-speaking_ability": "1",
-            "form-0-writing_ability": "3",
-            "form-1-language": 'EN',
-            "form-1-listening_comprehension": "4",
-            "form-1-speaking_ability": "5",
-            "form-1-writing_ability": "1",
-            "form-2-language": 'EN',
-            "form-2-listening_comprehension": "4",
-            "form-2-speaking_ability": "5",
-            "form-2-writing_ability": "1",
-            "form-INITIAL_FORMS": 0,
-            "form-TOTAL_FORMS": 3,
-        })
+        response = self.client.post(
+            self.form_url,
+            {
+                "form-0-language": 'FR',
+                "form-0-listening_comprehension": "1",
+                "form-0-speaking_ability": "1",
+                "form-0-writing_ability": "3",
+                "form-1-language": 'EN',
+                "form-1-listening_comprehension": "4",
+                "form-1-speaking_ability": "5",
+                "form-1-writing_ability": "1",
+                "form-2-language": 'EN',
+                "form-2-listening_comprehension": "4",
+                "form-2-speaking_ability": "5",
+                "form-2-writing_ability": "1",
+                "form-INITIAL_FORMS": 0,
+                "form-TOTAL_FORMS": 3,
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
         self.assertFormsetError(
-            response, "form", None, None,
+            response,
+            "form",
+            None,
+            None,
             _("You cannot fill in a language more than once, please correct the form."),
         )
 
     def test_form_language_required(self):
         self.mock_person_api.return_value.list_language_knowledges.return_value = []
-        response = self.client.post(self.form_url, {
-            "form-0-language": 'FR',
-            "form-0-listening_comprehension": "1",
-            "form-1-language": 'EN',
-            "form-1-speaking_ability": "6",
-            "form-1-writing_ability": "1",
-            "form-INITIAL_FORMS": 0,
-            "form-TOTAL_FORMS": 2,
-        })
+        response = self.client.post(
+            self.form_url,
+            {
+                "form-0-language": 'FR',
+                "form-0-listening_comprehension": "1",
+                "form-1-language": 'EN',
+                "form-1-speaking_ability": "6",
+                "form-1-writing_ability": "1",
+                "form-INITIAL_FORMS": 0,
+                "form-TOTAL_FORMS": 2,
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
         self.assertFormsetError(response, "form", 0, 'speaking_ability', _("This field is required."))
 
     def test_form_ok(self):
-        response = self.client.post(self.form_url, {
-            "form-0-language": 'FR',
-            "form-0-listening_comprehension": "1",
-            "form-0-speaking_ability": "1",
-            "form-0-writing_ability": "3",
-            "form-1-language": 'EN',
-            "form-1-listening_comprehension": "5",
-            "form-1-speaking_ability": "6",
-            "form-1-writing_ability": "1",
-            "form-INITIAL_FORMS": 0,
-            "form-TOTAL_FORMS": 2,
-        })
+        response = self.client.post(
+            self.form_url,
+            {
+                "form-0-language": 'FR',
+                "form-0-listening_comprehension": "1",
+                "form-0-speaking_ability": "1",
+                "form-0-writing_ability": "3",
+                "form-1-language": 'EN',
+                "form-1-listening_comprehension": "5",
+                "form-1-speaking_ability": "6",
+                "form-1-writing_ability": "1",
+                "form-INITIAL_FORMS": 0,
+                "form-TOTAL_FORMS": 2,
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.create_language_knowledge.assert_called()
         sent = self.mock_person_api.return_value.create_language_knowledge.call_args[1]["language_knowledge"]
-        self.assertEqual(sent, [{
-            "language": 'FR',
-            "listening_comprehension": "A1",
-            "speaking_ability": "A1",
-            "writing_ability": "B1",
-        }, {
-            "language": 'EN',
-            "listening_comprehension": "C1",
-            "speaking_ability": "C2",
-            "writing_ability": "A1",
-        }])
+        self.assertEqual(
+            sent,
+            [
+                {
+                    "language": 'FR',
+                    "listening_comprehension": "A1",
+                    "speaking_ability": "A1",
+                    "writing_ability": "B1",
+                    "certificate": [],
+                },
+                {
+                    "language": 'EN',
+                    "listening_comprehension": "C1",
+                    "speaking_ability": "C2",
+                    "writing_ability": "A1",
+                    "certificate": [],
+                },
+            ],
+        )
 
     def test_update_admission_in_context(self):
         url = resolve_url('admission:doctorate:update:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

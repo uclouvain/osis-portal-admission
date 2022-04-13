@@ -43,9 +43,17 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
     motivation = forms.CharField(
         label=_("Cotutelle motivation"),
         required=False,
-        widget=forms.Textarea(attrs={
-            'rows': 2,
-        }),
+        widget=forms.Textarea(attrs={'rows': 2}),
+    )
+    institution_fwb = forms.NullBooleanField(
+        label=_("Is it an institution of the Wallonia-Brussels Federation?"),
+        required=False,
+        widget=forms.RadioSelect(
+            choices=(
+                ('true', _('Yes')),
+                ('false', _('No')),
+            ),
+        ),
     )
     institution = forms.CharField(
         label=_("Cotutelle institution"),
@@ -76,5 +84,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
             for field in ['motivation', 'institution', 'demande_ouverture']:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
+            if cleaned_data.get('institution_fwb') is None:
+                self.add_error('institution_fwb', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data

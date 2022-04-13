@@ -21,26 +21,27 @@
 *
 * A copy of this license - GNU General Public License - is available
 * at the root of the source code of this program.  If not,
-* see http://www.gnu.org/licenses/.
+  * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block form %}
-    {% bootstrap_form_errors form %}
+  {% bootstrap_form_errors form %}
 
-    {% panel _("Cotutelle") %}
-        {% bootstrap_field form.cotutelle form_group_class="form-group required_field" %}
-        <div id="cotutelle">
-            {% bootstrap_field form.motivation form_group_class="form-group required_field" %}
-            <div class="row">
-                <div class="col-md-5">
-                    {% bootstrap_field form.institution form_group_class="form-group required_field" %}
-                </div>
-            </div>
-            {% bootstrap_field form.demande_ouverture form_group_class="form-group required_field" %}
-            {% bootstrap_field form.convention %}
-            {% bootstrap_field form.autres_documents %}
+  {% panel _("Cotutelle") %}
+    {% bootstrap_field form.cotutelle form_group_class="form-group required_field" %}
+    <div id="cotutelle">
+      {% bootstrap_field form.institution_fwb form_group_class="form-group required_field" %}
+      <div class="row">
+        <div class="col-md-5">
+          {% bootstrap_field form.institution form_group_class="form-group required_field" %}
         </div>
-    {% endpanel %}
+      </div>
+      {% bootstrap_field form.motivation form_group_class="form-group required_field" %}
+      {% bootstrap_field form.demande_ouverture form_group_class="form-group required_field" %}
+      {% bootstrap_field form.convention %}
+      {% bootstrap_field form.autres_documents %}
+    </div>
+  {% endpanel %}
 
 {% endblock %}
 
