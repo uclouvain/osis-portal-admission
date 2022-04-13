@@ -94,6 +94,15 @@ msgid ""
 "      "
 msgstr ""
 
+msgid ""
+"\n"
+"        The format of the documents to be uploaded below may vary from one\n"
+"        Doctoral Domain Commission (DDC) to another; be sure to check with "
+"your\n"
+"        file manager and respect the usage provided by your DDC.\n"
+"      "
+msgstr ""
+
 msgid " (h/w)"
 msgstr ""
 
@@ -184,7 +193,7 @@ msgid "Add a new experience"
 msgstr ""
 
 msgid "Add a promoter or a CA member"
-msgstr ""
+msgstr "Add a promoter or a supervision member"
 
 msgid "Add another"
 msgstr ""
@@ -298,10 +307,10 @@ msgid "C2"
 msgstr ""
 
 msgid "CA Member"
-msgstr ""
+msgstr "Supervision member"
 
 msgid "CA members"
-msgstr ""
+msgstr "Supervision members"
 
 msgid "CANCELLED"
 msgstr "Cancelled"
@@ -313,6 +322,9 @@ msgid "CSC - China Scholarship Council"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Certificate of language knowledge"
 msgstr ""
 
 msgid ""
@@ -626,6 +638,9 @@ msgid ""
 "French-speaking community of Belgium?"
 msgstr ""
 
+msgid "Have you ever started or completed a PhD?"
+msgstr ""
+
 msgid "Have you previously been registered at UCLouvain?"
 msgstr ""
 
@@ -650,7 +665,7 @@ msgid "I will have a high school diploma this year"
 msgstr ""
 
 msgid "INVITED"
-msgstr ""
+msgstr "Invited to sign"
 
 msgid "IN_PROGRESS"
 msgstr "In progress"
@@ -743,6 +758,9 @@ msgid "International Baccalaureate"
 msgstr ""
 
 msgid "Internship"
+msgstr ""
+
+msgid "Is it an institution of the Wallonia-Brussels Federation?"
 msgstr ""
 
 msgid "Is it your graduation year?"
@@ -846,7 +864,7 @@ msgid "NO"
 msgstr "No"
 
 msgid "NOT_INVITED"
-msgstr "Not invited"
+msgstr "Not invited to sign"
 
 msgid "Name of the diploma or of the education"
 msgstr ""
@@ -974,9 +992,6 @@ msgstr ""
 msgid "Personal information"
 msgstr ""
 
-msgid "PhD already done"
-msgstr ""
-
 msgid "Physic"
 msgstr ""
 
@@ -1034,11 +1049,6 @@ msgstr ""
 
 msgid "Program"
 msgstr ""
-
-msgid "Project documents"
-msgstr ""
-"Project (research questions, state of the art, objectives, methods, "
-"chronology, bibliography)"
 
 msgid "Project resume"
 msgstr ""
@@ -1114,6 +1124,12 @@ msgid "Remove"
 msgstr ""
 
 msgid "Request signatures"
+msgstr ""
+
+msgid "Research institute"
+msgstr ""
+
+msgid "Research project"
 msgstr ""
 
 msgid "Residential address"
@@ -1246,9 +1262,6 @@ msgid ""
 msgstr ""
 
 msgid "The curriculum has correctly been updated."
-msgstr ""
-
-msgid "Thesis institute"
 msgstr ""
 
 msgid "Thesis location"

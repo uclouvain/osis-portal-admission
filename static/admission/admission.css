@@ -83,6 +83,6 @@
 }
 
 select.select2-hidden-accessible + span {
-  width: auto;
+  width: 100% !important;
   min-width: auto;
 }

@@ -28,7 +28,6 @@
 {% block submit_button_affix %}{% endblock %}
 
 {% block content %}
-  {% include "admission/modal/prevent_quitting_modal.html" %}
   {% if admission and admission.matricule_candidat != user.person.global_id %}
     {% url 'admission:supervised-list' as list_url %}
   {% else %}
@@ -70,6 +69,7 @@
         <div class="col-md-10 quitting-context-excluded">
 
             {% if admission|can_make_action:'add_approval' and form %}
+              {% include "admission/modal/prevent_quitting_modal.html" %}
               {% panel _("Proposition approval") %}
                 {% bootstrap_form_errors form %}
                 <form class="osis-form approval-form" method="post" action="">

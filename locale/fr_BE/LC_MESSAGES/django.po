@@ -132,6 +132,20 @@ msgstr ""
 "Veuillez fournir au moins un numéro d'identité. Si vous avez un numéro de "
 "registre national belge, merci de l'indiquer en priorité."
 
+msgid ""
+"\n"
+"        The format of the documents to be uploaded below may vary from one\n"
+"        Doctoral Domain Commission (DDC) to another; be sure to check with "
+"your\n"
+"        file manager and respect the usage provided by your DDC.\n"
+"      "
+msgstr ""
+"\n"
+"Le format des documents à téléverser ci-dessous peut varier d'une "
+"commission doctorale de domaine (CDD) à l'autre; veillez à vous informer "
+"auprès de votre gestionnaire de dossier et respecter l'usage prévu par votre "
+"CDD."
+
 msgid " (h/w)"
 msgstr " (h/s)"
 
@@ -225,7 +239,7 @@ msgid "Add a new experience"
 msgstr "Ajouter une nouvelle expérience"
 
 msgid "Add a promoter or a CA member"
-msgstr "Ajouter un promoteur ou un membre du CA"
+msgstr "Ajouter un promoteur ou un membre du comité d'accompagnement"
 
 msgid "Add another"
 msgstr "Ajouter une autre"
@@ -339,10 +353,10 @@ msgid "C2"
 msgstr "C2"
 
 msgid "CA Member"
-msgstr "Membre du CA"
+msgstr "Membre du comité d'accompagnement"
 
 msgid "CA members"
-msgstr "Membres du CA"
+msgstr "Membres du comité d'accompagnement"
 
 msgid "CANCELLED"
 msgstr "Annulée"
@@ -355,6 +369,9 @@ msgstr "CSC - China Scholarship Council"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Certificate of language knowledge"
+msgstr "Certificat de connaissance des langues"
 
 msgid ""
 "Certificate, with dates, justifying your volunteer activities during this "
@@ -677,6 +694,9 @@ msgstr ""
 "Ce diplôme a-t-il fait l'objet d'une décision d'équivalence par les services "
 "de la Communauté française de Belgique ?"
 
+msgid "Have you ever started or completed a PhD?"
+msgstr "Avez-vous déjà entamé ou réalisé un doctorat ?"
+
 msgid "Have you previously been registered at UCLouvain?"
 msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
 
@@ -705,7 +725,7 @@ msgid "I will have a high school diploma this year"
 msgstr "Je vais l'avoir dans l'année"
 
 msgid "INVITED"
-msgstr "Invité"
+msgstr "Invité à signer"
 
 msgid "IN_PROGRESS"
 msgstr "En cours"
@@ -826,6 +846,9 @@ msgstr "Baccalauréat international (IBO)"
 msgid "Internship"
 msgstr "Stage"
 
+msgid "Is it an institution of the Wallonia-Brussels Federation?"
+msgstr "S'agit-il d'une institution de la Fédération Wallonie-Bruxelles ?"
+
 msgid "Is it your graduation year?"
 msgstr "Est-ce l'année au cours de laquelle vous avez obtenu votre diplôme ?"
 
@@ -933,7 +956,7 @@ msgid "NO"
 msgstr "Non"
 
 msgid "NOT_INVITED"
-msgstr "Non invité"
+msgstr "Pas encore invité à signer"
 
 msgid "Name of the diploma or of the education"
 msgstr "Intitulé du diplôme ou de la formation"
@@ -1064,9 +1087,6 @@ msgstr "Données personnelles"
 msgid "Personal information"
 msgstr "Coordonnées"
 
-msgid "PhD already done"
-msgstr "Doctorat déjà réalisé"
-
 msgid "Physic"
 msgstr "Physique"
 
@@ -1126,11 +1146,6 @@ msgstr "Enseignement professionnel + Examen de maturité"
 
 msgid "Program"
 msgstr "Programme"
-
-msgid "Project documents"
-msgstr ""
-"Projet (question de recherche, état de l'art, objectifs, méthodes, "
-"chronologie, références bibliographiques)"
 
 msgid "Project resume"
 msgstr "Résumé du projet"
@@ -1209,6 +1224,12 @@ msgstr "Retirer"
 
 msgid "Request signatures"
 msgstr "Demander les signatures"
+
+msgid "Research institute"
+msgstr "Institut de recherche"
+
+msgid "Research project"
+msgstr "Projet de recherche"
 
 msgid "Residential address"
 msgstr "Domicile légal"
@@ -1345,9 +1366,6 @@ msgstr ""
 
 msgid "The curriculum has correctly been updated."
 msgstr "Le curriculum a bien été mis à jour."
-
-msgid "Thesis institute"
-msgstr "Institut de la thèse"
 
 msgid "Thesis location"
 msgstr "Lieu de la thèse"

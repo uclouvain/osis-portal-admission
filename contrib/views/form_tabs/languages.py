@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.template import Context, Template
 from django.urls import reverse_lazy
 from django.views.generic import FormView
@@ -90,4 +91,4 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
                 else:
                     formset.add_error(None, exception.detail)
             return self.form_invalid(formset)
-        return super().form_valid(formset)
+        return HttpResponseRedirect(self.get_success_url())

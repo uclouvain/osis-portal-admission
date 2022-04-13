@@ -259,7 +259,6 @@ class ProjectViewTestCase(TestCase):
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
         self.assertContains(response, "A random postal address")
 
         response = self.client.post(url, {

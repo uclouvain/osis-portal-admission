@@ -25,8 +25,7 @@
 # ##############################################################################
 from dal import autocomplete
 from django import forms
-from django.conf import settings
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
@@ -44,7 +43,6 @@ from admission.contrib.enums.proximity_commission import (
 from admission.contrib.forms import (
     CustomDateInput,
     EMPTY_CHOICE,
-    get_thesis_institute_initial_choices,
     get_thesis_location_initial_choices,
 )
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -66,10 +64,12 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     justification = forms.CharField(
         label=_("Brief justification"),
-        widget=forms.Textarea(attrs={
-            'rows': 2,
-            'placeholder': _("Detail here the reasons which justify the recourse to a provisory admission.")
-        }),
+        widget=forms.Textarea(
+            attrs={
+                'rows': 2,
+                'placeholder': _("Detail here the reasons which justify the recourse to a provisory admission."),
+            }
+        ),
         required=False,
     )
     commission_proximite_cde = forms.ChoiceField(
@@ -136,16 +136,6 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Project title"),
         required=False,
     )
-    institut_these = forms.CharField(
-        label=_("Thesis institute"),
-        widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:institute",
-            attrs={
-                'data-minimum-input-length': 3,
-            },
-        ),
-        required=False,
-    )
     lieu_these = forms.CharField(
         label=_("Thesis location"),
         required=False,
@@ -157,7 +147,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         widget=forms.Textarea,
     )
     documents_projet = FileUploadField(
-        label=_("Project documents"),
+        label=_("Research project"),
         required=False,
     )
     graphe_gantt = FileUploadField(
@@ -183,7 +173,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     doctorat_deja_realise = forms.ChoiceField(
-        label=_("PhD already done"),
+        label=_("Have you ever started or completed a PhD?"),
         choices=ChoixDoctoratDejaRealise.choices(),
         initial=ChoixDoctoratDejaRealise.NO.name,
         required=False,
@@ -203,9 +193,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     raison_non_soutenue = forms.CharField(
         label=_("No defense reason"),
-        widget=forms.Textarea(attrs={
-            'rows': 2,
-        }),
+        widget=forms.Textarea(attrs={'rows': 2}),
         required=False,
     )
 
@@ -217,17 +205,14 @@ class DoctorateAdmissionProjectForm(forms.Form):
         super().__init__(*args, **kwargs)
         # Set type_contrat_travail to OTHER if value is not from enum
         if (
-                self.initial.get('type_contrat_travail')
-                and self.initial['type_contrat_travail'] not in ChoixTypeContratTravail.get_names()
+            self.initial.get('type_contrat_travail')
+            and self.initial['type_contrat_travail'] not in ChoixTypeContratTravail.get_names()
         ):
             self.initial['type_contrat_travail_other'] = self.initial['type_contrat_travail']
             self.initial['type_contrat_travail'] = ChoixTypeContratTravail.OTHER.name
 
         # Set bourse_recherche to OTHER if value is not from enum
-        if (
-                self.initial.get('bourse_recherche')
-                and self.initial['bourse_recherche'] not in BourseRecherche.get_names()
-        ):
+        if self.initial.get('bourse_recherche') and self.initial['bourse_recherche'] not in BourseRecherche.get_names():
             self.initial['bourse_recherche_other'] = self.initial['bourse_recherche']
             self.initial['bourse_recherche'] = BourseRecherche.OTHER.name
 
@@ -249,12 +234,6 @@ class DoctorateAdmissionProjectForm(forms.Form):
             self.fields['commission_proximite_cde'].widget = forms.HiddenInput()
             self.fields['commission_proximite_cdss'].widget = forms.HiddenInput()
             self.fields['sous_domaine'].widget = forms.HiddenInput()
-
-        # Add the specified institute in the choices of the related field
-        self.fields['institut_these'].widget.choices = get_thesis_institute_initial_choices(
-            self.data.get(self.add_prefix("institut_these"), self.initial.get("institut_these")),
-            self.person,
-        )
 
         # Add the specified thesis position in the choices of the related field
         self.fields['lieu_these'].widget.choices = get_thesis_location_initial_choices(
@@ -280,8 +259,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
             if not data.get('bourse_recherche') and not data.get('bourse_recherche_other'):
                 self.add_error('bourse_recherche', _("This field is required."))
-            elif (data.get('bourse_recherche') == BourseRecherche.OTHER.name
-                  and not data.get('bourse_recherche_other')):
+            elif data.get('bourse_recherche') == BourseRecherche.OTHER.name and not data.get('bourse_recherche_other'):
                 self.add_error('bourse_recherche_other', _("This field is required."))
 
         if data.get('non_soutenue') and not data.get('raison_non_soutenue'):
