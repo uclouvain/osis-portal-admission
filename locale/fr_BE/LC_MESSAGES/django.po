@@ -134,6 +134,33 @@ msgstr ""
 
 msgid ""
 "\n"
+"        The \"doctoral training\" must be updated before the confirmation "
+"paper and made available to the accompanying\n"
+"        committee on the day of the test.\n"
+"      "
+msgstr ""
+"\n"
+"La « formation doctorale » doit être mise à jour avant l’épreuve de "
+"confirmation et mise à disposition du comité d’accompagnement le jour de "
+"l’épreuve."
+
+msgid ""
+"\n"
+"        The format of the documents to be uploaded below as well as the "
+"deadlines for submission may vary from\n"
+"        one DDC to another; please check with your dossier manager and "
+"respect the usage foreseen by your domain\n"
+"        doctoral committee.\n"
+"      "
+msgstr ""
+"\n"
+"Le format des documents à téléverser ci-dessous ainsi que les échéances de "
+"dépôt peuvent varier d’une CDD à l’autre; veillez à vous informer auprès de "
+"votre gestionnaire de dossier et respecter l’usage prévu par votre "
+"commission doctorale de domaine."
+
+msgid ""
+"\n"
 "        The format of the documents to be uploaded below may vary from one\n"
 "        Doctoral Domain Commission (DDC) to another; be sure to check with "
 "your\n"
@@ -141,16 +168,30 @@ msgid ""
 "      "
 msgstr ""
 "\n"
-"Le format des documents à téléverser ci-dessous peut varier d'une "
-"commission doctorale de domaine (CDD) à l'autre; veillez à vous informer "
-"auprès de votre gestionnaire de dossier et respecter l'usage prévu par votre "
-"CDD."
+"Le format des documents à téléverser ci-dessous peut varier d'une commission "
+"doctorale de domaine (CDD) à l'autre; veillez à vous informer auprès de "
+"votre gestionnaire de dossier et respecter l'usage prévu par votre CDD."
+
+msgid ""
+"\n"
+"      The framework of the supervisory panel report must be sent to the "
+"accompanying committee during the test.\n"
+"      It can be downloaded <a href=\"#\">here</a>.\n"
+"    "
+msgstr ""
+"\n"
+"Le canevas de procès-verbal doit être transmis au comité d’accompagnement "
+"durant l’épreuve. Il est téléchargeable <a href=\"#\">ici</a>."
 
 msgid " (h/w)"
 msgstr " (h/s)"
 
 msgid " on "
 msgstr " sur "
+
+#, python-format
+msgid "%(label)s:"
+msgstr "%(label)s :"
 
 msgid "(e.g. +32 490 00 00 00)"
 msgstr "(ex: +32 490 00 00 00)"
@@ -192,6 +233,12 @@ msgstr "A1"
 
 msgid "A2"
 msgstr "A2"
+
+msgid "ADMISSION_IN_PROGRESS"
+msgstr "Admission en cours"
+
+msgid "ADMITTED"
+msgstr "Admis"
 
 msgid "APPROVED"
 msgstr "Approuvé"
@@ -364,11 +411,20 @@ msgstr "Annulée"
 msgid "CHEMISTRY"
 msgstr "Chimie"
 
+msgid "CONFIRMATION_TO_BE_REPEATED"
+msgstr "Confirmation à représenter"
+
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Certificate of achievement"
+msgstr "Attestation de réussite"
+
+msgid "Certificate of failure"
+msgstr "Attestation d'échec"
 
 msgid "Certificate of language knowledge"
 msgstr "Certificat de connaissance des langues"
@@ -417,7 +473,7 @@ msgid "Confirmation"
 msgstr "Confirmation"
 
 msgid "Confirmation paper"
-msgstr "Lettre de confirmation"
+msgstr "Epreuve de confirmation"
 
 msgid "Contact"
 msgstr "Contact"
@@ -477,11 +533,20 @@ msgstr "Type de crédits"
 msgid "Curriculum"
 msgstr "Curriculum"
 
+msgid "Date of confirmation"
+msgstr "Date de l'épreuve de confirmation"
+
+msgid "Deadline for confirmation"
+msgstr "Date limite pour la confirmation"
+
 msgid "Decision"
 msgstr "Décision"
 
 msgid "Defense date"
 msgstr "Date de soutenance"
+
+msgid "Definitive admission date"
+msgstr "Date de l'admission définitive"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -531,6 +596,9 @@ msgstr "Néerlandais"
 
 msgid "ECONOMY"
 msgstr "Economie"
+
+msgid "ENROLLED"
+msgstr "Inscrit"
 
 msgid "ERC - European Research Council"
 msgstr "ERC - European Research Council"
@@ -779,6 +847,9 @@ msgstr ""
 msgid "Illness"
 msgstr "Maladie"
 
+msgid "Important information:"
+msgstr "Informations importantes :"
+
 msgid ""
 "In accordance with the information on the <a href='https://uclouvain.be/en/"
 "study/inscriptions/acces-aux-professions-reglementees.html' "
@@ -955,6 +1026,9 @@ msgstr "Ma demande d'inscription"
 msgid "NO"
 msgstr "Non"
 
+msgid "NOT_ALLOWED_TO_CONTINUE"
+msgstr "Non autorisé à poursuivre"
+
 msgid "NOT_INVITED"
 msgstr "Pas encore invité à signer"
 
@@ -1027,6 +1101,9 @@ msgstr ""
 "vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
 "obligatoire."
 
+msgid "Opinion on the renewal of the research mandate"
+msgstr "Avis sur le renouvellement du mandat de recherche"
+
 msgid "Organizing country"
 msgstr "Pays organisateur"
 
@@ -1066,6 +1143,9 @@ msgstr "Autres"
 msgid "PARTIAL"
 msgstr "En partie"
 
+msgid "PASSED_CONFIRMATION"
+msgstr "Epreuve de confirmation réussie"
+
 msgid "PDF file"
 msgstr "Fichier PDF"
 
@@ -1080,6 +1160,9 @@ msgstr "Date d'expiration du passeport"
 
 msgid "Passport number"
 msgstr "Numéro de passeport"
+
+msgid "Past confirmation papers"
+msgstr "Epreuves de confirmation passées"
 
 msgid "Personal data"
 msgstr "Données personnelles"
@@ -1222,6 +1305,9 @@ msgstr "Motif de refus"
 msgid "Remove"
 msgstr "Retirer"
 
+msgid "Report of the supervisory panel"
+msgstr "Procès-verbal du comité d'accompagnement"
+
 msgid "Request signatures"
 msgstr "Demander les signatures"
 
@@ -1230,6 +1316,9 @@ msgstr "Institut de recherche"
 
 msgid "Research project"
 msgstr "Projet de recherche"
+
+msgid "Research report"
+msgstr "Rapport de recherche"
 
 msgid "Residential address"
 msgstr "Domicile légal"
@@ -1254,6 +1343,9 @@ msgstr "Statistiques"
 
 msgid "SUBMITTED"
 msgstr "Soumis"
+
+msgid "SUBMITTED_CONFIRMATION"
+msgstr "Confirmation soumise"
 
 msgid "Satisfaction"
 msgstr "Satisfaction"
@@ -1328,6 +1420,9 @@ msgstr "Type du cycle d'études"
 
 msgid "Study system"
 msgstr "Système d'études"
+
+msgid "Submit and notify the DDC"
+msgstr "Soumettre et avertir la CDD"
 
 msgid "Submit my decision"
 msgstr "Soumettre ma décision"
@@ -1404,6 +1499,14 @@ msgstr "Grille horaire"
 
 msgid "Title of the dissertation"
 msgstr "Titre du mémoire"
+
+msgid ""
+"To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH "
+"grant. The framework for this opinion is provided by your research fund."
+msgstr ""
+"A téléverser obligatoirement si vous êtes boursier.ère du F.R.S.-FNRS (y "
+"compris Télévie), du FRIA ou du FRESH. Le canevas de cet avis est fourni par "
+"votre fonds de recherche."
 
 msgid "Training certificate, with dates, justifying this academic year."
 msgstr ""

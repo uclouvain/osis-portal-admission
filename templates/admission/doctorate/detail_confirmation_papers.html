@@ -1,0 +1,79 @@
+{% extends "admission/doctorate/detail_doctorate_tab_layout.html" %}
+{% load bootstrap3 i18n static admission %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block tab_content %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">{% trans "Confirmation paper" %}</h4>
+    </div>
+    <div class="panel-body">
+      {% include 'admission/doctorate/includes/confirmation_papers_description.html' %}
+      <div>
+        {% field_data _("Definitive admission date") doctorate.admission_acceptee_le inline=True %}
+        {% field_data _("Deadline for confirmation") current_confirmation_paper.date_limite inline=True %}
+        {% field_data _("Date of confirmation") current_confirmation_paper.date inline=True %}
+        {% field_data _("Research report") current_confirmation_paper.rapport_recherche %}
+        {% field_data _("Report of the supervisory panel") current_confirmation_paper.proces_verbal_ca %}
+        {% field_data _("Certificate of achievement") current_confirmation_paper.attestation_reussite hide_empty=True %}
+        {% field_data _("Certificate of failure") current_confirmation_paper.attestation_echec hide_empty=True %}
+        {% field_data _("Opinion on the renewal of the research mandate") current_confirmation_paper.avis_renouvellement_mandat_recherche %}
+      </div>
+    </div>
+  </div>
+  {% if previous_confirmation_papers %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans "Past confirmation papers" %}</h4>
+      </div>
+      <div class="panel-body">
+        {% for confirmation_paper in previous_confirmation_papers %}
+          <div class="past-confirmation-paper">
+            {% field_data _("Date of confirmation") confirmation_paper.date inline=True %}
+            {% field_data _("Research report") confirmation_paper.rapport_recherche %}
+            {% field_data _("Report of the supervisory panel") confirmation_paper.proces_verbal_ca %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+      .past-confirmation-paper:after {
+          content: '';
+          border-bottom: 1px solid #ddd;
+          display: block;
+          width: 80%;
+          margin: 2em auto;
+      }
+      .past-confirmation-paper:last-child:after {
+          border: none;
+      }
+  </style>
+
+{% endblock %}
