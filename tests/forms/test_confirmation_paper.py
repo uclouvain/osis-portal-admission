@@ -23,21 +23,29 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import gettext_lazy as _
+import datetime
 
-from base.models.utils.utils import ChoiceEnum
+from django.test import TestCase
 
-
-class ChoixLangueRedactionThese(ChoiceEnum):
-    FRENCH = _('French')
-    ENGLISH = _('English')
-    OTHER = _('Other')
-    UNDECIDED = _('Undecided')
+from admission.contrib.forms.confirmation_paper import ConfirmationPaperForm
 
 
-class ChoixStatutProposition(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
-    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
-    ENROLLED = _('ENROLLED')
+class ConfirmationPaperFormTestCase(TestCase):
+    def test_confirmation_paper_form_valid_data(self):
+        form = ConfirmationPaperForm(data={'date': datetime.date(2022, 12, 31)})
+
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.cleaned_data,
+            {
+                'date': datetime.date(2022, 12, 31),
+                'rapport_recherche': [],
+                'proces_verbal_ca': [],
+                'avis_renouvellement_mandat_recherche': [],
+            },
+        )
+
+    def test_confirmation_paper_form_without_required_data(self):
+        form = ConfirmationPaperForm(data={})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors.get('date'), ['Ce champ est requis.'])

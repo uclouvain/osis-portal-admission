@@ -24,6 +24,27 @@
  *
  */
 
+.inline-field-data dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.media-list .media {
+    margin-top: 0.5em;
+    border: 1px solid #ddd;
+    padding: 1em;
+}
+
+.min_field {
+    width: max-content;
+}
+
+.form-group.required_field .control-label:after, .required_text:after {
+    content: " *";
+    color: red;
+}
+
 .nav-pills.nav-grey > li.active > a,
 .nav-pills.nav-grey > li.active > a:focus,
 .nav-pills.nav-grey > li.active > a:hover {

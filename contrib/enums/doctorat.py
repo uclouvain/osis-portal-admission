@@ -23,21 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
 from django.utils.translation import gettext_lazy as _
 
 from base.models.utils.utils import ChoiceEnum
 
 
-class ChoixLangueRedactionThese(ChoiceEnum):
-    FRENCH = _('French')
-    ENGLISH = _('English')
-    OTHER = _('Other')
-    UNDECIDED = _('Undecided')
-
-
-class ChoixStatutProposition(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
-    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
-    ENROLLED = _('ENROLLED')
+class ChoixStatutDoctorat(ChoiceEnum):
+    # Before enrolment
+    ADMISSION_IN_PROGRESS = _('ADMISSION_IN_PROGRESS')
+    # After enrolment
+    ADMITTED = _('ADMITTED')
+    # Confirmation paper
+    SUBMITTED_CONFIRMATION = _('SUBMITTED_CONFIRMATION')
+    PASSED_CONFIRMATION = _('PASSED_CONFIRMATION')
+    NOT_ALLOWED_TO_CONTINUE = _('NOT_ALLOWED_TO_CONTINUE')
+    CONFIRMATION_TO_BE_REPEATED = _('CONFIRMATION_TO_BE_REPEATED')

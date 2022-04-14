@@ -90,7 +90,12 @@ PERSONAL = ParentTab(_('Personal data'), 'user', 'personal')
 TAB_TREE = {
     PERSONAL: ['person', 'coordonnees'],
     ParentTab(_('Previous experience'), 'list-alt', 'experience'): ['education', 'curriculum', 'languages'],
-    ParentTab(_('Doctorate'), 'graduation-cap', 'doctorate'): ['project', 'cotutelle', 'supervision'],
+    ParentTab(_('Doctorate'), 'graduation-cap', 'doctorate'): [
+        'project',
+        'cotutelle',
+        'supervision',
+        'confirmation-paper',
+    ],
     ParentTab(_('Confirmation'), 'check-circle', 'confirm'): ['confirm'],
 }
 
@@ -166,7 +171,7 @@ SUBTAB_LABELS = {
     'cotutelle': _("Cotutelle"),
     'supervision': _("Supervision"),
     'confirm': _("Confirmation"),
-    'confirm_paper': _("Confirmation paper"),
+    'confirmation-paper': _("Confirmation paper"),
     'training': _("Doctoral training"),
     'jury': _("Jury"),
     'private_defense': _("Private defense"),
@@ -192,13 +197,18 @@ def doctorate_subtabs(context, admission=None):
 
 
 @register.inclusion_tag('admission/field_data.html')
-def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False):
+def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False, inline=False):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
     elif translate_data is True:
         data = _(data)
+
+    if inline is True:
+        name = _("%(label)s:") % {'label': name}
+        css_class = (css_class + ' inline-field-data') if css_class else 'inline-field-data'
+
     return {
         'name': name,
         'data': data,

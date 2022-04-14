@@ -24,6 +24,11 @@
 #
 # ##############################################################################
 from enum import Enum
+from typing import List
+
+from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
+from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
+from osis_admission_sdk.model.doctorate_identity_dto import DoctorateIdentityDTO
 
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
@@ -191,6 +196,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.PropositionNonApprouveeParMembresCAException,
     },
     'confirm': set(),
+    'confirmation-paper': set(),
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}
@@ -270,5 +276,38 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         return AdmissionPropositionAPIClient().approve_by_pdf(
             uuid=uuid,
             approuver_proposition_par_pdf_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class AdmissionDoctorateService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_doctorate(cls, person, uuid) -> DoctorateDTO:
+        return AdmissionPropositionAPIClient().retrieve_doctorate_dto(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_confirmation_papers(cls, person, uuid) -> List[ConfirmationPaperDTO]:
+        return AdmissionPropositionAPIClient().retrieve_confirmation_papers(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_last_confirmation_paper(cls, person, uuid) -> ConfirmationPaperDTO:
+        return AdmissionPropositionAPIClient().retrieve_last_confirmation_paper(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def submit_confirmation_paper(cls, person, uuid, **kwargs) -> DoctorateIdentityDTO:
+        return AdmissionPropositionAPIClient().submit_confirmation_paper(
+            uuid=uuid,
+            submit_confirmation_paper_command=kwargs,
             **build_mandatory_auth_headers(person),
         )
