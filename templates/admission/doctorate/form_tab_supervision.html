@@ -178,6 +178,8 @@
         $('#institut_these').length && $('#institut_these').dependsOn({
             'input[name="decision"]': { not: ['REJECTED'] }
         }, { duration: 0 });
+
+        document.dispatchEvent(new Event('refreshFormInitial'));
     });
     </script>
 {% endblock %}

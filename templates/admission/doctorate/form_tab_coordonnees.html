@@ -138,6 +138,8 @@
             '#id_show_contact': { checked: true },
             '#id_contact-country': { not: [null] },
         }, { valueOnDisable: '', hide: false });
+
+        document.dispatchEvent(new Event('refreshFormInitial'));
     });
     </script>
 {% endblock %}

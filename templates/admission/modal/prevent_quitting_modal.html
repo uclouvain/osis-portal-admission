@@ -44,28 +44,31 @@
 // Notify user when something in a form has changed
 const initialData = {};
 let checkForm = true;
-document.addEventListener('DOMContentLoaded', function () {
+let listener = function () {
     // Save all initial data on page load
-    document.querySelectorAll('form').forEach(function (form) {
+    document.querySelectorAll('form:not(.no-prevent-quitting)').forEach(function (form) {
         const searchParams = new URLSearchParams(new FormData(form));
         initialData[form.getAttribute('action')] = searchParams.toString();
         form.addEventListener('submit', function () {
             checkForm = false;
         });
     });
-});
+};
+document.addEventListener('DOMContentLoaded', listener);
+document.addEventListener('refreshFormInitial', listener);
 window.addEventListener('click', function (e) {
     // If the click is an opening anchor refreshing the window
     const isOpeningAnchor = e.target.tagName === 'A' && ['', '_self'].includes(e.target.target);
     // But not continue link (from modal) itself
     if (isOpeningAnchor && e.target.id !== 'continue-link') {
         // Loop over the forms on the page
-        document.querySelectorAll('form').forEach(function (form) {
+        document.querySelectorAll('form:not(.no-prevent-quitting)').forEach(function (form) {
             // Check the link is not part of the form
             if (!(form.querySelector('.quitting-context-excluded') || form).contains(e.target)) {
                 // Check the form has changed
                 const searchParams = new URLSearchParams(new FormData(form));
                 if (initialData[form.getAttribute('action')] !== searchParams.toString()) {
+                    console.log(form.getAttribute('action'), initialData[form.getAttribute('action')], searchParams.toString())
                     e.preventDefault();
                     $('#prevent-quitting-modal').modal('show');
                     document.querySelector('a#continue-link').setAttribute('href', e.target.href)
