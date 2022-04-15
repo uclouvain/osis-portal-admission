@@ -77,7 +77,7 @@
             {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="cotutelle" tab_label=_("Cotutelle") no_status=True %}
             {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="supervision" tab_label=_("Supervision") no_status=True %}
             {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="confirm" tab_label=_("Confirmation") no_status=True %}
-            {% if admission.is_valid %}
+            {% if admission.statut == 'ENROLLED' %}
               <li role="separator" class="divider"></li>
               {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="confirmation-paper" tab_label=_("Confirmation paper") no_status=True %}
               {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="training" tab_label=_("Doctoral training") no_status=True %}

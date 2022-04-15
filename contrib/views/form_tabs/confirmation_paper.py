@@ -23,6 +23,8 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Optional
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -31,14 +33,12 @@ from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
 from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
-from admission.contrib.forms.confirmation_paper import ConfirmationPaperForm
+from admission.contrib.forms.confirmation_paper import ConfirmationPaperForm, PromoterConfirmationPaperForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionDoctorateService
 
 
 class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_confirmation_papers.html'
-    form_class = ConfirmationPaperForm
 
     @cached_property
     def doctorate(self) -> DoctorateDTO:
@@ -54,12 +54,30 @@ class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebService
             uuid=str(self.kwargs['pk']),
         )
 
+    @cached_property
+    def is_doctorate_student(self):
+        return self.doctorate.matricule_doctorant == self.request.user.person.global_id
+
+    def get_template_names(self):
+        if self.is_doctorate_student:
+            return 'admission/doctorate/form_tab_confirmation_papers.html'
+        else:
+            return 'admission/doctorate/promoter_form_tab_confirmation_papers.html'
+
+    def get_form_class(self):
+        if self.is_doctorate_student:
+            return ConfirmationPaperForm
+        else:
+            return PromoterConfirmationPaperForm
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
         context_data['doctorate'] = self.doctorate
         context_data['confirmation_paper'] = self.confirmation_paper
-        context_data['submit_label'] = _('Submit and notify the DDC')
+
+        if self.is_doctorate_student:
+            context_data['submit_label'] = _('Submit and notify the DDC')
 
         return context_data
 
@@ -72,8 +90,15 @@ class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebService
         } if self.confirmation_paper else {}
 
     def call_webservice(self, data):
-        AdmissionDoctorateService.submit_confirmation_paper(
-            person=self.person,
-            uuid=str(self.kwargs.get('pk')),
-            **data,
-        )
+        if self.is_doctorate_student:
+            AdmissionDoctorateService.submit_confirmation_paper(
+                person=self.person,
+                uuid=str(self.kwargs.get('pk')),
+                **data,
+            )
+        else:
+            AdmissionDoctorateService.complete_confirmation_paper_by_promoter(
+                person=self.person,
+                uuid=str(self.kwargs.get('pk')),
+                **data,
+            )

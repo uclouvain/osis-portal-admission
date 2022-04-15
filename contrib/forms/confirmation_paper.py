@@ -30,17 +30,7 @@ from osis_document.contrib import FileUploadField
 from admission.contrib.forms import CustomDateInput
 
 
-class ConfirmationPaperForm(forms.Form):
-    date = forms.DateField(
-        label=_('Date of confirmation'),
-        required=True,
-        widget=CustomDateInput(),
-    )
-    rapport_recherche = FileUploadField(
-        label=_('Research report'),
-        required=False,
-        max_files=1,
-    )
+class PromoterConfirmationPaperForm(forms.Form):
     proces_verbal_ca = FileUploadField(
         label=_('Report of the supervisory panel'),
         required=False,
@@ -52,4 +42,17 @@ class ConfirmationPaperForm(forms.Form):
         max_files=1,
         help_text=_("To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH grant. "
                     "The framework for this opinion is provided by your research fund."),
+    )
+
+
+class ConfirmationPaperForm(PromoterConfirmationPaperForm):
+    date = forms.DateField(
+        label=_('Date of confirmation'),
+        required=True,
+        widget=CustomDateInput(),
+    )
+    rapport_recherche = FileUploadField(
+        label=_('Research report'),
+        required=False,
+        max_files=1,
     )

@@ -37,10 +37,10 @@ from base.tests.factories.person import PersonFactory
 class ConfirmationPaperDetailViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.person = PersonFactory()
+        cls.phd_student = PersonFactory()
 
     def setUp(self):
-        self.client.force_login(self.person.user)
+        self.client.force_login(self.phd_student.user)
 
         self.url = resolve_url("admission:doctorate:confirmation-paper", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
@@ -54,7 +54,7 @@ class ConfirmationPaperDetailViewTestCase(TestCase):
             statut=ChoixStatutDoctorat.ADMITTED.name,
             sigle_formation='INFO',
             annee_formation=2022,
-            matricule_doctorant='matricule_candidat_1',
+            matricule_doctorant=self.phd_student.global_id,
             prenom_doctorant='John',
             nom_doctorantig='Doe',
             uuid='uuid1',
@@ -123,7 +123,8 @@ class ConfirmationPaperDetailViewTestCase(TestCase):
 class ConfirmationPaperFormViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.person = PersonFactory()
+        cls.phd_student = PersonFactory()
+        cls.promoter = PersonFactory()
         cls.api_default_params = {
             'accept_language': ANY,
             'x_user_first_name': ANY,
@@ -133,8 +134,6 @@ class ConfirmationPaperFormViewTestCase(TestCase):
         }
 
     def setUp(self):
-        self.client.force_login(self.person.user)
-
         self.url = resolve_url(
             "admission:doctorate:update:confirmation-paper",
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
@@ -150,7 +149,7 @@ class ConfirmationPaperFormViewTestCase(TestCase):
             statut=ChoixStatutDoctorat.ADMITTED.name,
             sigle_formation='INFO',
             annee_formation=2022,
-            matricule_doctorant='matricule_candidat_1',
+            matricule_doctorant=self.phd_student.global_id,
             prenom_doctorant='John',
             nom_doctorantig='Doe',
             uuid='uuid1',
@@ -180,7 +179,9 @@ class ConfirmationPaperFormViewTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def test_get_several_confirmation_papers(self):
+    def test_get_several_confirmation_papers_with_a_phd_student(self):
+        self.client.force_login(self.phd_student.user)
+
         response = self.client.get(self.url)
 
         # Load the doctorate information
@@ -199,7 +200,9 @@ class ConfirmationPaperFormViewTestCase(TestCase):
         self.assertEqual(response.context.get('form').initial['avis_renouvellement_mandat_recherche'], ['f2'])
         self.assertEqual(response.context.get('form').initial['proces_verbal_ca'], ['f3'])
 
-    def test_get_no_confirmation_paper(self):
+    def test_get_no_confirmation_paper_with_a_phd_student(self):
+        self.client.force_login(self.phd_student.user)
+
         self.mock_api.return_value.retrieve_last_confirmation_paper.return_value = None
 
         response = self.client.get(self.url)
@@ -214,7 +217,9 @@ class ConfirmationPaperFormViewTestCase(TestCase):
         self.assertIsNone(response.context.get('confirmation_paper'))
         self.assertEqual(response.context.get('form').initial, {})
 
-    def test_post_a_confirmation_paper(self):
+    def test_post_a_confirmation_paper_with_a_phd_student(self):
+        self.client.force_login(self.phd_student.user)
+
         self.client.post(self.url, data={
             'date': datetime.date(2022, 4, 4),
             'rapport_recherche_0': ['f11'],
@@ -228,6 +233,61 @@ class ConfirmationPaperFormViewTestCase(TestCase):
             submit_confirmation_paper_command={
                 'date': datetime.date(2022, 4, 4),
                 'rapport_recherche': ['f11'],
+                'avis_renouvellement_mandat_recherche': ['f22'],
+                'proces_verbal_ca': ['f33'],
+
+            },
+            **self.api_default_params,
+        )
+
+    def test_get_several_confirmation_papers_with_another_user(self):
+        self.client.force_login(self.promoter.user)
+
+        response = self.client.get(self.url)
+
+        # Load the doctorate information
+        self.mock_api.return_value.retrieve_doctorate_dto.assert_called()
+        self.assertEqual(response.context.get('doctorate').uuid, 'uuid1')
+
+        # Load the confirmation papers information
+        self.mock_api.return_value.retrieve_last_confirmation_paper.assert_called()
+
+        self.assertIsNotNone(response.context.get('confirmation_paper'))
+        self.assertEqual(response.context.get('confirmation_paper').uuid, 'c1')
+
+        # Initialize the form
+        self.assertEqual(response.context.get('form').initial['avis_renouvellement_mandat_recherche'], ['f2'])
+        self.assertEqual(response.context.get('form').initial['proces_verbal_ca'], ['f3'])
+
+    def test_get_no_confirmation_paper_with_another_user(self):
+        self.client.force_login(self.promoter.user)
+
+        self.mock_api.return_value.retrieve_last_confirmation_paper.return_value = None
+
+        response = self.client.get(self.url)
+
+        # Load the doctorate information
+        self.mock_api.return_value.retrieve_doctorate_dto.assert_called()
+        self.assertEqual(response.context.get('doctorate').uuid, 'uuid1')
+
+        # Load the confirmation papers information
+        self.mock_api.return_value.retrieve_last_confirmation_paper.assert_called()
+
+        self.assertIsNone(response.context.get('confirmation_paper'))
+        self.assertEqual(response.context.get('form').initial, {})
+
+    def test_post_a_confirmation_paper_with_another_user(self):
+        self.client.force_login(self.promoter.user)
+
+        self.client.post(self.url, data={
+            'avis_renouvellement_mandat_recherche_0': ['f22'],
+            'proces_verbal_ca_0': ['f33'],
+        })
+        # Call the API with the right data
+        self.mock_api.return_value.complete_confirmation_paper_by_promoter.assert_called()
+        self.mock_api.return_value.complete_confirmation_paper_by_promoter.assert_called_with(
+            uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+            complete_confirmation_paper_by_promoter_command={
                 'avis_renouvellement_mandat_recherche': ['f22'],
                 'proces_verbal_ca': ['f33'],
 
