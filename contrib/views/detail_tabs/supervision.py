@@ -30,7 +30,6 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
-from osis_signature.enums import SignatureState
 
 import osis_admission_sdk
 from admission.contrib.enums.projet import ChoixStatutProposition
@@ -88,11 +87,8 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
             # User is a promoter
             self.person.global_id
             in [signature['promoteur']['matricule'] for signature in self.supervision['signatures_promoteurs']]
-            # No one has answered yet
-            and all(
-                signature['statut'] == SignatureState.INVITED.name
-                for signature in self.supervision['signatures_promoteurs']
-            )
+            # institut_these is not yet set
+            and not self.proposition.institut_these
         )
         return kwargs
 
