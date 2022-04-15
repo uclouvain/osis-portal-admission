@@ -32,6 +32,7 @@ from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
 from osis_signature.enums import SignatureState
 
+import osis_admission_sdk
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalByPdfForm, DoctorateAdmissionApprovalForm
@@ -121,9 +122,15 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
         messages.info(self.request, _("Your decision has been saved."))
         if (
             self.person.global_id
-            in [signature['membre_CA']['matricule'] for signature in self.supervision['signatures_membres_CA']]
+            in [signature['membre_ca']['matricule'] for signature in self.supervision['signatures_membres_ca']]
             and self.rejecting
         ):
+            try:
+                AdmissionPropositionService().get_supervised_propositions(self.request.user.person)
+            except osis_admission_sdk.exceptions.ForbiddenException:
+                # That may be the last admission the member has access to, if so, redirect to homepage
+                return resolve_url('home')
+            # Redirect on list
             return resolve_url('admission:supervised-list')
         return self.request.get_full_path()
 
