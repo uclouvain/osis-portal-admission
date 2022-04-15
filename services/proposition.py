@@ -311,3 +311,11 @@ class AdmissionDoctorateService(metaclass=ServiceMeta):
             submit_confirmation_paper_command=kwargs,
             **build_mandatory_auth_headers(person),
         )
+
+    @classmethod
+    def complete_confirmation_paper_by_promoter(cls, person, uuid, **kwargs) -> DoctorateIdentityDTO:
+        return AdmissionPropositionAPIClient().complete_confirmation_paper_by_promoter(
+            uuid=uuid,
+            complete_confirmation_paper_by_promoter_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
