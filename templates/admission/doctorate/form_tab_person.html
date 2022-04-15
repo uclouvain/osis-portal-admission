@@ -141,21 +141,22 @@
 
       const regexHasAtLeastOneCharacter = new RegExp('.+');
       const requiredField = {
-        toggleClass: 'required_field',
-        disable: false,
-        hide: false,
+          toggleClass: 'required_field',
+          disable: false,
+          hide: false,
       };
 
       $('.id_card').dependsOn({
-        '#id_national_number': { match: regexHasAtLeastOneCharacter },
+          '#id_national_number': { match: regexHasAtLeastOneCharacter },
       }, requiredField).or({
-        '#id_id_card_number': { match: regexHasAtLeastOneCharacter },
+          '#id_id_card_number': { match: regexHasAtLeastOneCharacter },
       });
       $('.passport').dependsOn({
-        '#id_passport_number': { match: regexHasAtLeastOneCharacter },
+          '#id_passport_number': { match: regexHasAtLeastOneCharacter },
       }, requiredField);
 
       $.applyDataMask();
+      document.dispatchEvent(new Event('refreshFormInitial'));
   });
   </script>
 {% endblock %}

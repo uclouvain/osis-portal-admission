@@ -207,6 +207,7 @@
                 $('#{{ form_to_display }}').modal('show');
             {% endif %}
 
+            document.dispatchEvent(new Event('refreshFormInitial'));
         });
     </script>
 {% endblock %}

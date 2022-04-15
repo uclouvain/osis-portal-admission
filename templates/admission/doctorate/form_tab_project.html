@@ -266,12 +266,14 @@
 
         // Mark proposition_programme_doctoral as required depending on type
         $('.proposition_programme_doctoral').dependsOn({
-            'input[name=type_admission]': { values: ['ADMISSION'] }
+            'input[name=type_admission]': { values: ['ADMISSION'] },
         }, {
             disable: false,
             hide: false,
-            toggleClass: 'required_field'
+            toggleClass: 'required_field',
         });
+
+        document.dispatchEvent(new Event('refreshFormInitial'));
     });
     </script>
 {% endblock %}

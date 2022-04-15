@@ -330,6 +330,8 @@
       }, {
           valueOnDisable: '',
       });
+
+      document.dispatchEvent(new Event('refreshFormInitial'));
   });
   </script>
 {% endblock %}

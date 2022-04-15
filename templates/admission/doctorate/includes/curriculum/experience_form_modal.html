@@ -31,22 +31,22 @@
 {% block modal_class %}modal-lg{% endblock %}
 
 {% block modal_body %}
-    {% bootstrap_form_errors form %}
-    {% if form.errors %}
-        <div class="alert alert-danger">{% trans "Please correct the errors below" %}</div>
-    {% endif %}
+  {% bootstrap_form_errors form %}
+  {% if form.errors %}
+    <div class="alert alert-danger">{% trans "Please correct the errors below" %}</div>
+  {% endif %}
 
-    <form class="osis-form" method="post" action="" id="{{ form.prefix }}_form">
-        {% csrf_token %}
+  <form class="osis-form" method="post" action="#{{ form.prefix }}" id="{{ form.prefix }}_form">
+    {% csrf_token %}
 
-        {% panel _('General information') additional_class="experience-form-general" %}
-            <div class="row">
-                <div class="col-md-6">{% bootstrap_field form.academic_year form_group_class="form-group required_field" %}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">{% bootstrap_field form.type form_group_class="form-group required_field" %}</div>
-            </div>
-            <div class="row">
+    {% panel _('General information') additional_class="experience-form-general" %}
+      <div class="row">
+        <div class="col-md-6">{% bootstrap_field form.academic_year form_group_class="form-group required_field" %}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">{% bootstrap_field form.type form_group_class="form-group required_field" %}</div>
+      </div>
+      <div class="row">
                 <div class="col-md-6">{% bootstrap_field form.country form_group_class="form-group required_field" %}</div>
             </div>
         {% endpanel %}
