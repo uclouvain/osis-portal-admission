@@ -174,6 +174,25 @@ msgstr ""
 
 msgid ""
 "\n"
+"      If the circumstances justify it, the deadline may be extended by the "
+"support\n"
+"      committee, with the agreement of the DDC on the proposed deadline. "
+"This deadline may also be shortened due to\n"
+"      constraints imposed by the funder, e.g. in the context of the renewal "
+"of the mandate or the doctoral scholarship\n"
+"      (e.g. the renewal of the mandate of the F.R.S.-FNRS candidates).\n"
+"    "
+msgstr ""
+"\n"
+"Si les circonstances le justifient, le délai peut être prolongé par le "
+"comité d’accompagnement, avec l'accord de la CDD sur l'échéance proposée. Ce "
+"délai peut également être raccourci en raison de contraintes imposées par le "
+"bailleur de fonds, par exemple dans le cadre du renouvellement du mandat ou "
+"de la bourse de doctorat (exemple : le renouvellement du mandat des "
+"aspirant·es du F.R.S.-FNRS)."
+
+msgid ""
+"\n"
 "      The framework of the supervisory panel report must be sent to the "
 "accompanying committee during the test.\n"
 "      It can be downloaded <a href=\"#\">here</a>.\n"
@@ -182,6 +201,31 @@ msgstr ""
 "\n"
 "Le canevas de procès-verbal doit être transmis au comité d’accompagnement "
 "durant l’épreuve. Il est téléchargeable <a href=\"#\">ici</a>."
+
+msgid ""
+"\n"
+"      The purpose of the confirmation test is to establish, on the basis of "
+"the state of progress of the research work,\n"
+"      that it can lead to the production of a doctoral thesis (art. 2.3.1. "
+"of the doctoral regulations).\n"
+"    "
+msgstr ""
+"\n"
+" L’épreuve de confirmation a pour objectif de constater, sur la base de "
+"l’état d’avancement des travaux de recherche, que ceux-ci sont bien de "
+"nature à aboutir à la présentation d’une thèse de doctorat (art. 2.3.1. du "
+"règlement doctoral)."
+
+msgid ""
+"\n"
+"      Within a maximum period of 24 months from the date of admission to the "
+"doctorate by the DDC, the candidate shall\n"
+"      present a confirmation paper.\n"
+"    "
+msgstr ""
+"\n"
+"Dans un délai maximum de 24 mois à compter de la date d'admission au "
+"doctorat par la CDD, le ou la candidate présente une épreuve de confirmation."
 
 msgid " (h/w)"
 msgstr " (h/s)"
@@ -405,6 +449,9 @@ msgstr "Membres du comité d'accompagnement"
 
 msgid "CANCELLED"
 msgstr "Annulée"
+
+msgid "DDC opinion"
+msgstr "Avis de la CDD"
 
 msgid "CHEMISTRY"
 msgstr "Chimie"
@@ -808,6 +855,13 @@ msgstr "Numéro de carte d'identité"
 msgid "Identity picture"
 msgstr "Photo d'identité"
 
+msgid ""
+"If applicable, please upload here the opinion of your support committee on "
+"the extension request."
+msgstr ""
+"Le cas échéant, veuillez téléverser ici l’avis de votre comité "
+"d’accompagnement sur la demande de prolongation."
+
 msgid "If other language, please specify"
 msgstr "Si autre langue, précisez"
 
@@ -934,6 +988,9 @@ msgstr "Date de délivrance du diplôme"
 msgid "Jury"
 msgstr "Jury"
 
+msgid "Justification letter"
+msgstr "Lettre de justification"
+
 msgid "Language"
 msgstr "Langue"
 
@@ -1035,6 +1092,9 @@ msgstr "Baccalauréat national (ou diplôme d'état, ...)"
 
 msgid "National registry number"
 msgstr "Numéro de registre national"
+
+msgid "New deadline"
+msgstr "Nouvelle échéance"
 
 msgid "No"
 msgstr "Non"
@@ -1240,6 +1300,9 @@ msgstr "Promoteurs"
 msgid "Proof of identity"
 msgstr "Pièce d'identité"
 
+msgid "Proposed new deadline"
+msgstr "Nouvelle échéance proposée"
+
 msgid "Proposition approval"
 msgstr "Approbation de la proposition"
 
@@ -1300,6 +1363,9 @@ msgstr "Retirer"
 
 msgid "Report of the supervisory panel"
 msgstr "Procès-verbal du comité d'accompagnement"
+
+msgid "Request a new deadline for the confirmation paper"
+msgstr "Demander une nouvelle échéance pour l'épreuve de confirmation"
 
 msgid "Request signatures"
 msgstr "Demander les signatures"
@@ -1420,6 +1486,9 @@ msgstr "Soumettre et avertir la CDD"
 msgid "Submit my decision"
 msgstr "Soumettre ma décision"
 
+msgid "Submit my new deadline"
+msgstr "Soumettre ma nouvelle échéance"
+
 msgid "Success"
 msgstr "Réussite"
 
@@ -1454,6 +1523,9 @@ msgstr ""
 
 msgid "The curriculum has correctly been updated."
 msgstr "Le curriculum a bien été mis à jour."
+
+msgid "There is no request for a new deadline."
+msgstr "Il n'y a pas de demande de nouvelle échéance."
 
 msgid "Thesis location"
 msgstr "Lieu de la thèse"

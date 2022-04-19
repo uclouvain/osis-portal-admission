@@ -123,9 +123,38 @@ msgstr ""
 
 msgid ""
 "\n"
+"      If the circumstances justify it, the deadline may be extended by the "
+"support\n"
+"      committee, with the agreement of the DDC on the proposed deadline. "
+"This deadline may also be shortened due to\n"
+"      constraints imposed by the funder, e.g. in the context of the renewal "
+"of the mandate or the doctoral scholarship\n"
+"      (e.g. the renewal of the mandate of the F.R.S.-FNRS candidates).\n"
+"    "
+msgstr ""
+
+msgid ""
+"\n"
 "      The framework of the supervisory panel report must be sent to the "
 "accompanying committee during the test.\n"
 "      It can be downloaded <a href=\"#\">here</a>.\n"
+"    "
+msgstr ""
+
+msgid ""
+"\n"
+"      The purpose of the confirmation test is to establish, on the basis of "
+"the state of progress of the research work,\n"
+"      that it can lead to the production of a doctoral thesis (art. 2.3.1. "
+"of the doctoral regulations).\n"
+"    "
+msgstr ""
+
+msgid ""
+"\n"
+"      Within a maximum period of 24 months from the date of admission to the "
+"doctorate by the DDC, the candidate shall\n"
+"      present a confirmation paper.\n"
 "    "
 msgstr ""
 
@@ -472,6 +501,9 @@ msgstr ""
 msgid "Curriculum"
 msgstr ""
 
+msgid "DDC opinion"
+msgstr ""
+
 msgid "Date of confirmation"
 msgstr ""
 
@@ -737,6 +769,11 @@ msgstr ""
 msgid "Identity picture"
 msgstr ""
 
+msgid ""
+"If applicable, please upload here the opinion of your support committee on "
+"the extension request."
+msgstr ""
+
 msgid "If other language, please specify"
 msgstr ""
 
@@ -831,6 +868,9 @@ msgid "Issue diploma date"
 msgstr ""
 
 msgid "Jury"
+msgstr ""
+
+msgid "Justification letter"
 msgstr ""
 
 msgid "Language"
@@ -931,6 +971,9 @@ msgid "National Bachelor (or government diploma, ...)"
 msgstr ""
 
 msgid "National registry number"
+msgstr ""
+
+msgid "New deadline"
 msgstr ""
 
 msgid "No"
@@ -1132,6 +1175,9 @@ msgstr ""
 msgid "Proof of identity"
 msgstr ""
 
+msgid "Proposed new deadline"
+msgstr ""
+
 msgid "Proposition approval"
 msgstr ""
 
@@ -1189,6 +1235,9 @@ msgid "Remove"
 msgstr ""
 
 msgid "Report of the supervisory panel"
+msgstr ""
+
+msgid "Request a new deadline for the confirmation paper"
 msgstr ""
 
 msgid "Request signatures"
@@ -1310,6 +1359,9 @@ msgstr ""
 msgid "Submit my decision"
 msgstr ""
 
+msgid "Submit my new deadline"
+msgstr ""
+
 msgid "Success"
 msgstr ""
 
@@ -1339,6 +1391,9 @@ msgid ""
 msgstr ""
 
 msgid "The curriculum has correctly been updated."
+msgstr ""
+
+msgid "There is no request for a new deadline."
 msgstr ""
 
 msgid "Thesis location"
