@@ -123,7 +123,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
 
     def clean(self):
         data = super().clean()
-        if data.get('decision') == DecisionApprovalEnum.REJECTED.name and not data.get('motif_refus'):
+        if data.get('decision') == DecisionApprovalEnum.DECLINED.name and not data.get('motif_refus'):
             self.add_error('motif_refus', _("This field is required."))
         if (
             data.get('decision') == DecisionApprovalEnum.APPROVED.name

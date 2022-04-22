@@ -241,7 +241,7 @@ class SupervisionTestCase(TestCase):
         response = self.client.post(
             self.detail_url,
             {
-                'decision': DecisionApprovalEnum.REJECTED.name,
+                'decision': DecisionApprovalEnum.DECLINED.name,
                 'commentaire_interne': "The internal comment",
                 'commentaire_externe': "The public comment",
                 'motif_refus': "The reason",
@@ -283,7 +283,7 @@ class SupervisionTestCase(TestCase):
         response = self.client.post(
             self.detail_url,
             {
-                'decision': DecisionApprovalEnum.REJECTED.name,
+                'decision': DecisionApprovalEnum.DECLINED.name,
                 'commentaire_interne': "The internal comment",
                 'commentaire_externe': "The public comment",
             },
