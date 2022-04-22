@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.utils.translation import pgettext_lazy
+
 from base.models.utils.utils import ChoiceEnum
-from django.utils.translation import gettext_lazy as _
 
 
 class DecisionApprovalEnum(ChoiceEnum):
-    APPROVED = _("Approved")
-    REJECTED = _("Rejected")
+    APPROVED = pgettext_lazy("admission decision", "Approved")
+    DECLINED = pgettext_lazy("admission decision", "Rejected")

@@ -170,13 +170,13 @@
         // Hide the reason input if the the promoter approves the proposition
         $('#id_motif_refus').length && $('#id_motif_refus').dependsOn({
             'input[name="decision"]': {
-                values: ['REJECTED'],
+                values: ['DECLINED'],
             }
         }, {
             duration: 0,
         });
         $('#institut_these').length && $('#institut_these').dependsOn({
-            'input[name="decision"]': { not: ['REJECTED'] }
+            'input[name="decision"]': { not: ['DECLINED'] }
         }, { duration: 0 });
 
         document.dispatchEvent(new Event('refreshFormInitial'));

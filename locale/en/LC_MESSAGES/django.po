@@ -147,9 +147,6 @@ msgstr ""
 msgid "A2"
 msgstr ""
 
-msgid "APPROVED"
-msgstr "Approved"
-
 msgid "ARC - Action de Recherche Concertée"
 msgstr ""
 
@@ -231,6 +228,7 @@ msgstr ""
 msgid "Approve by PDF"
 msgstr ""
 
+msgctxt "admission decision"
 msgid "Approved"
 msgstr ""
 
@@ -486,9 +484,6 @@ msgid "ERC - European Research Council"
 msgstr ""
 
 msgid "Economic sciences"
-msgstr ""
-
-msgid "Edit"
 msgstr ""
 
 msgid "Education community"
@@ -1102,9 +1097,6 @@ msgstr ""
 msgid "Qualification method"
 msgstr ""
 
-msgid "REFUSED"
-msgstr "Refused"
-
 msgid "Rank in diploma"
 msgstr ""
 
@@ -1114,6 +1106,7 @@ msgstr ""
 msgid "Reference:"
 msgstr ""
 
+msgctxt "admission decision"
 msgid "Rejected"
 msgstr ""
 

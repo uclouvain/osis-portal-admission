@@ -75,7 +75,7 @@
           {% csrf_token %}
           {{ approve_by_pdf_form.pdf }}
           <input type="hidden" name="matricule" value="{{ member.matricule }}" />
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary pull-right">
             {% blocktrans with first_name=member.prenom last_name=member.nom %}
             Approve on behalf of {{ first_name }} {{ last_name }}
           {% endblocktrans %}

@@ -141,10 +141,9 @@ msgid ""
 "      "
 msgstr ""
 "\n"
-"Le format des documents à téléverser ci-dessous peut varier d'une "
-"commission doctorale de domaine (CDD) à l'autre; veillez à vous informer "
-"auprès de votre gestionnaire de dossier et respecter l'usage prévu par votre "
-"CDD."
+"Le format des documents à téléverser ci-dessous peut varier d'une commission "
+"doctorale de domaine (CDD) à l'autre; veillez à vous informer auprès de "
+"votre gestionnaire de dossier et respecter l'usage prévu par votre CDD."
 
 msgid " (h/w)"
 msgstr " (h/s)"
@@ -192,9 +191,6 @@ msgstr "A1"
 
 msgid "A2"
 msgstr "A2"
-
-msgid "APPROVED"
-msgstr "Approuvé"
 
 msgid "ARC - Action de Recherche Concertée"
 msgstr "ARC - Action de Recherche Concertée"
@@ -277,6 +273,7 @@ msgstr "Autre établissement"
 msgid "Approve by PDF"
 msgstr "Approuver via PDF"
 
+msgctxt "admission decision"
 msgid "Approved"
 msgstr "Approuvée"
 
@@ -537,9 +534,6 @@ msgstr "ERC - European Research Council"
 
 msgid "Economic sciences"
 msgstr "Sciences économiques"
-
-msgid "Edit"
-msgstr "Modifier"
 
 msgid "Education community"
 msgstr "Communauté d'enseignement"
@@ -1201,9 +1195,6 @@ msgstr "Soutenance publique"
 msgid "Qualification method"
 msgstr "Technique de qualification"
 
-msgid "REFUSED"
-msgstr "Refusé"
-
 msgid "Rank in diploma"
 msgstr "Rang dans le diplôme"
 
@@ -1213,6 +1204,7 @@ msgstr "Lettres de recommandation"
 msgid "Reference:"
 msgstr "Référence :"
 
+msgctxt "admission decision"
 msgid "Rejected"
 msgstr "Rejetée"
 

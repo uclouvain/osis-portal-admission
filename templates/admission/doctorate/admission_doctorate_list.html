@@ -73,41 +73,6 @@
           </a>
         {% endif %}
 
-        {% if admission|can_update_something %}
-        <div class="dropdown pull-right">
-          <button
-            type="button"
-            class="btn btn-default dropdown-toggle"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <span class="glyphicon glyphicon-pencil"></span>
-            {% trans "Edit" %}
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="person" tab_label=_("Identification") no_status=True %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="coordonnees" tab_label=_("Contact details") no_status=True %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="education" tab_label=_("Secondary studies") no_status=True %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="languages" tab_label=_("Languages knowledge") no_status=True %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="curriculum" tab_label=_("Curriculum") no_status=True %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="project" tab_label=_("Doctoral project") no_status=True %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="cotutelle" tab_label=_("Cotutelle") no_status=True %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="supervision" tab_label=_("Supervision") no_status=True %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="confirm" tab_label=_("Confirmation") no_status=True %}
-            {% if admission.is_valid %}
-              <li role="separator" class="divider"></li>
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="confirm-paper" tab_label=_("Confirmation paper") no_status=True %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="training" tab_label=_("Doctoral training") no_status=True %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="jury" tab_label=_("Jury") no_status=True %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="private-defense" tab_label=_("Private defense") no_status=True %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="public-defense" tab_label=_("Public defense") no_status=True %}
-            {% endif %}
-          </ul>
-        </div>
-        {% endif %}
-
         <div class="dropdown pull-right">
           <button
             type="button"
@@ -130,7 +95,7 @@
             {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="cotutelle" tab_label=_("Cotutelle") no_status=True %}
             {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="supervision" tab_label=_("Supervision") no_status=True %}
             {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="confirm" tab_label=_("Confirmation") no_status=True %}
-            {% if admission.is_valid %}
+            {% if admission.statut == 'ENROLLED' %}
               <li role="separator" class="divider"></li>
               {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="confirm-paper" tab_label=_("Confirmation paper") no_status=True %}
               {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab_name="training" tab_label=_("Doctoral training") no_status=True %}
