@@ -25,13 +25,13 @@
 # ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
 
-import osis_admission_sdk
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalByPdfForm, DoctorateAdmissionApprovalForm
@@ -123,7 +123,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
         ):
             try:
                 AdmissionPropositionService().get_supervised_propositions(self.request.user.person)
-            except osis_admission_sdk.exceptions.ForbiddenException:
+            except PermissionDenied:
                 # That may be the last admission the member has access to, if so, redirect to homepage
                 return resolve_url('home')
             # Redirect on list
