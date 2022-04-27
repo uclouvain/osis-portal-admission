@@ -95,6 +95,7 @@ TAB_TREE = {
         'cotutelle',
         'supervision',
         'confirmation-paper',
+        'extension-request',
     ],
     ParentTab(_('Confirmation'), 'check-circle', 'confirm'): ['confirm'],
 }
@@ -162,16 +163,23 @@ def doctorate_tabs(context, admission=None, with_submit=False):
 
 
 SUBTAB_LABELS = {
+    # Personal data
     'person': _("Identification"),
     'coordonnees': _("Contact details"),
+    # Previous experience
     'education': _("Secondary studies"),
     'curriculum': _("Curriculum"),
     'languages': _("Languages knowledge"),
+    # Project
     'project': _("Doctoral project"),
     'cotutelle': _("Cotutelle"),
     'supervision': _("Supervision"),
+    # Confirmation
     'confirm': _("Confirmation"),
+    # Confirmation paper
     'confirmation-paper': _("Confirmation paper"),
+    'extension-request': _("New deadline"),
+    # Others
     'training': _("Doctoral training"),
     'jury': _("Jury"),
     'private_defense': _("Private defense"),
