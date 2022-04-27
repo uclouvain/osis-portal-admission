@@ -96,7 +96,7 @@
           {% endif %}
         >
           <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-          {% trans 'Save' %}
+          {{ submit_label|default:_("Save") }}
         </button>
       </div>
     {% endif %}
@@ -112,7 +112,7 @@
         {% endif %}
       >
         <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-        {% trans 'Save' %}
+        {{ submit_label|default:_("Save") }}
       </button>
     </div>
   {% endif %}

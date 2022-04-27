@@ -96,6 +96,24 @@ msgstr ""
 
 msgid ""
 "\n"
+"        The \"doctoral training\" must be updated before the confirmation "
+"paper and made available to the accompanying\n"
+"        committee on the day of the test.\n"
+"      "
+msgstr ""
+
+msgid ""
+"\n"
+"        The format of the documents to be uploaded below as well as the "
+"deadlines for submission may vary from\n"
+"        one DDC to another; please check with your dossier manager and "
+"respect the usage foreseen by your domain\n"
+"        doctoral committee.\n"
+"      "
+msgstr ""
+
+msgid ""
+"\n"
 "        The format of the documents to be uploaded below may vary from one\n"
 "        Doctoral Domain Commission (DDC) to another; be sure to check with "
 "your\n"
@@ -103,10 +121,51 @@ msgid ""
 "      "
 msgstr ""
 
+msgid ""
+"\n"
+"      If the circumstances justify it, the deadline may be extended by the "
+"support\n"
+"      committee, with the agreement of the DDC on the proposed deadline. "
+"This deadline may also be shortened due to\n"
+"      constraints imposed by the funder, e.g. in the context of the renewal "
+"of the mandate or the doctoral scholarship\n"
+"      (e.g. the renewal of the mandate of the F.R.S.-FNRS candidates).\n"
+"    "
+msgstr ""
+
+msgid ""
+"\n"
+"      The framework of the supervisory panel report must be sent to the "
+"accompanying committee during the test.\n"
+"      It can be downloaded <a href=\"#\">here</a>.\n"
+"    "
+msgstr ""
+
+msgid ""
+"\n"
+"      The purpose of the confirmation test is to establish, on the basis of "
+"the state of progress of the research work,\n"
+"      that it can lead to the production of a doctoral thesis (art. 2.3.1. "
+"of the doctoral regulations).\n"
+"    "
+msgstr ""
+
+msgid ""
+"\n"
+"      Within a maximum period of 24 months from the date of admission to the "
+"doctorate by the DDC, the candidate shall\n"
+"      present a confirmation paper.\n"
+"    "
+msgstr ""
+
 msgid " (h/w)"
 msgstr ""
 
 msgid " on "
+msgstr ""
+
+#, python-format
+msgid "%(label)s:"
 msgstr ""
 
 msgid "(e.g. +32 490 00 00 00)"
@@ -146,6 +205,12 @@ msgstr ""
 
 msgid "A2"
 msgstr ""
+
+msgid "ADMISSION_IN_PROGRESS"
+msgstr "Admission in progress"
+
+msgid "ADMITTED"
+msgstr "Admitted"
 
 msgid "ARC - Action de Recherche Concertée"
 msgstr ""
@@ -316,10 +381,19 @@ msgstr "Cancelled"
 msgid "CHEMISTRY"
 msgstr "Chemistry"
 
+msgid "CONFIRMATION_TO_BE_REPEATED"
+msgstr "Confirmation to be repeated"
+
 msgid "CSC - China Scholarship Council"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Certificate of achievement"
+msgstr ""
+
+msgid "Certificate of failure"
 msgstr ""
 
 msgid "Certificate of language knowledge"
@@ -427,10 +501,22 @@ msgstr ""
 msgid "Curriculum"
 msgstr ""
 
+msgid "DDC opinion"
+msgstr ""
+
+msgid "Date of confirmation"
+msgstr ""
+
+msgid "Deadline for confirmation"
+msgstr ""
+
 msgid "Decision"
 msgstr ""
 
 msgid "Defense date"
+msgstr ""
+
+msgid "Definitive admission date"
 msgstr ""
 
 msgid "Delete"
@@ -479,6 +565,9 @@ msgstr ""
 
 msgid "ECONOMY"
 msgstr "Economy"
+
+msgid "ENROLLED"
+msgstr "Enrolled"
 
 msgid "ERC - European Research Council"
 msgstr ""
@@ -680,6 +769,11 @@ msgstr ""
 msgid "Identity picture"
 msgstr ""
 
+msgid ""
+"If applicable, please upload here the opinion of your support committee on "
+"the extension request."
+msgstr ""
+
 msgid "If other language, please specify"
 msgstr ""
 
@@ -702,6 +796,9 @@ msgid ""
 msgstr ""
 
 msgid "Illness"
+msgstr ""
+
+msgid "Important information:"
 msgstr ""
 
 msgid ""
@@ -771,6 +868,9 @@ msgid "Issue diploma date"
 msgstr ""
 
 msgid "Jury"
+msgstr ""
+
+msgid "Justification letter"
 msgstr ""
 
 msgid "Language"
@@ -858,6 +958,9 @@ msgstr ""
 msgid "NO"
 msgstr "No"
 
+msgid "NOT_ALLOWED_TO_CONTINUE"
+msgstr "Not allowed to continue"
+
 msgid "NOT_INVITED"
 msgstr "Not invited to sign"
 
@@ -868,6 +971,9 @@ msgid "National Bachelor (or government diploma, ...)"
 msgstr ""
 
 msgid "National registry number"
+msgstr ""
+
+msgid "New deadline"
 msgstr ""
 
 msgid "No"
@@ -927,6 +1033,9 @@ msgid ""
 "mandatory."
 msgstr ""
 
+msgid "Opinion on the renewal of the research mandate"
+msgstr ""
+
 msgid "Organizing country"
 msgstr ""
 
@@ -966,6 +1075,9 @@ msgstr ""
 msgid "PARTIAL"
 msgstr "Partially"
 
+msgid "PASSED_CONFIRMATION"
+msgstr "Passed confirmation"
+
 msgid "PDF file"
 msgstr ""
 
@@ -979,6 +1091,9 @@ msgid "Passport expiration date"
 msgstr ""
 
 msgid "Passport number"
+msgstr ""
+
+msgid "Past confirmation papers"
 msgstr ""
 
 msgid "Personal data"
@@ -1060,6 +1175,9 @@ msgstr ""
 msgid "Proof of identity"
 msgstr ""
 
+msgid "Proposed new deadline"
+msgstr ""
+
 msgid "Proposition approval"
 msgstr ""
 
@@ -1116,6 +1234,12 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
+msgid "Report of the supervisory panel"
+msgstr ""
+
+msgid "Request a new deadline for the confirmation paper"
+msgstr ""
+
 msgid "Request signatures"
 msgstr ""
 
@@ -1123,6 +1247,9 @@ msgid "Research institute"
 msgstr ""
 
 msgid "Research project"
+msgstr ""
+
+msgid "Research report"
 msgstr ""
 
 msgid "Residential address"
@@ -1148,6 +1275,9 @@ msgstr "Statistics"
 
 msgid "SUBMITTED"
 msgstr "Submitted"
+
+msgid "SUBMITTED_CONFIRMATION"
+msgstr "Submitted confirmation"
 
 msgid "Satisfaction"
 msgstr "Satisfaction"
@@ -1223,7 +1353,13 @@ msgstr ""
 msgid "Study system"
 msgstr ""
 
+msgid "Submit and notify the DDC"
+msgstr ""
+
 msgid "Submit my decision"
+msgstr ""
+
+msgid "Submit my new deadline"
 msgstr ""
 
 msgid "Success"
@@ -1255,6 +1391,9 @@ msgid ""
 msgstr ""
 
 msgid "The curriculum has correctly been updated."
+msgstr ""
+
+msgid "There is no request for a new deadline."
 msgstr ""
 
 msgid "Thesis location"
@@ -1291,6 +1430,11 @@ msgid "Timetable"
 msgstr ""
 
 msgid "Title of the dissertation"
+msgstr ""
+
+msgid ""
+"To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH "
+"grant. The framework for this opinion is provided by your research fund."
 msgstr ""
 
 msgid "Training certificate, with dates, justifying this academic year."

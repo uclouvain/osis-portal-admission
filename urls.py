@@ -61,6 +61,8 @@ update_paths = [
     path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
     path("cotutelle", views.DoctorateAdmissionCotutelleFormView.as_view(), name="cotutelle"),
     path("supervision", views.DoctorateAdmissionSupervisionFormView.as_view(), name="supervision"),
+    path("confirmation", views.DoctorateAdmissionConfirmationPaperFormView.as_view(), name="confirmation-paper"),
+    path("extension-request", views.DoctorateAdmissionExtensionRequestFormView.as_view(), name="extension-request"),
 ]
 
 detail_paths = [
@@ -78,6 +80,8 @@ detail_paths = [
     path("update/", include((update_paths, "update"))),
     path("cancel", views.DoctorateAdmissionCancelView.as_view(), name="cancel"),
     path("confirm", views.DoctorateAdmissionConfirmFormView.as_view(), name="confirm"),
+    path("confirmation", views.DoctorateAdmissionConfirmationPaperDetailView.as_view(), name="confirmation-paper"),
+    path("extension-request", views.DoctorateAdmissionExtensionRequestDetailView.as_view(), name="extension-request"),
 ]
 
 urlpatterns = [

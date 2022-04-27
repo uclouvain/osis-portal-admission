@@ -134,6 +134,33 @@ msgstr ""
 
 msgid ""
 "\n"
+"        The \"doctoral training\" must be updated before the confirmation "
+"paper and made available to the accompanying\n"
+"        committee on the day of the test.\n"
+"      "
+msgstr ""
+"\n"
+"La « formation doctorale » doit être mise à jour avant l’épreuve de "
+"confirmation et mise à disposition du comité d’accompagnement le jour de "
+"l’épreuve."
+
+msgid ""
+"\n"
+"        The format of the documents to be uploaded below as well as the "
+"deadlines for submission may vary from\n"
+"        one DDC to another; please check with your dossier manager and "
+"respect the usage foreseen by your domain\n"
+"        doctoral committee.\n"
+"      "
+msgstr ""
+"\n"
+"Le format des documents à téléverser ci-dessous ainsi que les échéances de "
+"dépôt peuvent varier d’une CDD à l’autre; veillez à vous informer auprès de "
+"votre gestionnaire de dossier et respecter l’usage prévu par votre "
+"commission doctorale de domaine."
+
+msgid ""
+"\n"
 "        The format of the documents to be uploaded below may vary from one\n"
 "        Doctoral Domain Commission (DDC) to another; be sure to check with "
 "your\n"
@@ -145,11 +172,70 @@ msgstr ""
 "doctorale de domaine (CDD) à l'autre; veillez à vous informer auprès de "
 "votre gestionnaire de dossier et respecter l'usage prévu par votre CDD."
 
+msgid ""
+"\n"
+"      If the circumstances justify it, the deadline may be extended by the "
+"support\n"
+"      committee, with the agreement of the DDC on the proposed deadline. "
+"This deadline may also be shortened due to\n"
+"      constraints imposed by the funder, e.g. in the context of the renewal "
+"of the mandate or the doctoral scholarship\n"
+"      (e.g. the renewal of the mandate of the F.R.S.-FNRS candidates).\n"
+"    "
+msgstr ""
+"\n"
+"Si les circonstances le justifient, le délai peut être prolongé par le "
+"comité d’accompagnement, avec l'accord de la CDD sur l'échéance proposée. Ce "
+"délai peut également être raccourci en raison de contraintes imposées par le "
+"bailleur de fonds, par exemple dans le cadre du renouvellement du mandat ou "
+"de la bourse de doctorat (exemple : le renouvellement du mandat des "
+"aspirant·es du F.R.S.-FNRS)."
+
+msgid ""
+"\n"
+"      The framework of the supervisory panel report must be sent to the "
+"accompanying committee during the test.\n"
+"      It can be downloaded <a href=\"#\">here</a>.\n"
+"    "
+msgstr ""
+"\n"
+"Le canevas de procès-verbal doit être transmis au comité d’accompagnement "
+"durant l’épreuve. Il est téléchargeable <a href=\"#\">ici</a>."
+
+msgid ""
+"\n"
+"      The purpose of the confirmation test is to establish, on the basis of "
+"the state of progress of the research work,\n"
+"      that it can lead to the production of a doctoral thesis (art. 2.3.1. "
+"of the doctoral regulations).\n"
+"    "
+msgstr ""
+"\n"
+" L’épreuve de confirmation a pour objectif de constater, sur la base de "
+"l’état d’avancement des travaux de recherche, que ceux-ci sont bien de "
+"nature à aboutir à la présentation d’une thèse de doctorat (art. 2.3.1. du "
+"règlement doctoral)."
+
+msgid ""
+"\n"
+"      Within a maximum period of 24 months from the date of admission to the "
+"doctorate by the DDC, the candidate shall\n"
+"      present a confirmation paper.\n"
+"    "
+msgstr ""
+"\n"
+"Dans un délai maximum de 24 mois à compter de la date d'admission au "
+"doctorat par la CDD, le ou la candidate présente une épreuve de confirmation."
+
 msgid " (h/w)"
 msgstr " (h/s)"
 
 msgid " on "
 msgstr " sur "
+
+#, python-format
+msgid "%(label)s:"
+msgstr "%(label)s :"
 
 msgid "(e.g. +32 490 00 00 00)"
 msgstr "(ex: +32 490 00 00 00)"
@@ -191,6 +277,12 @@ msgstr "A1"
 
 msgid "A2"
 msgstr "A2"
+
+msgid "ADMISSION_IN_PROGRESS"
+msgstr "Admission en cours"
+
+msgid "ADMITTED"
+msgstr "Admis"
 
 msgid "ARC - Action de Recherche Concertée"
 msgstr "ARC - Action de Recherche Concertée"
@@ -358,14 +450,26 @@ msgstr "Membres du comité d'accompagnement"
 msgid "CANCELLED"
 msgstr "Annulée"
 
+msgid "DDC opinion"
+msgstr "Avis de la CDD"
+
 msgid "CHEMISTRY"
 msgstr "Chimie"
+
+msgid "CONFIRMATION_TO_BE_REPEATED"
+msgstr "Confirmation à représenter"
 
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Certificate of achievement"
+msgstr "Attestation de réussite"
+
+msgid "Certificate of failure"
+msgstr "Attestation d'échec"
 
 msgid "Certificate of language knowledge"
 msgstr "Certificat de connaissance des langues"
@@ -414,7 +518,7 @@ msgid "Confirmation"
 msgstr "Confirmation"
 
 msgid "Confirmation paper"
-msgstr "Lettre de confirmation"
+msgstr "Epreuve de confirmation"
 
 msgid "Contact"
 msgstr "Contact"
@@ -474,11 +578,20 @@ msgstr "Type de crédits"
 msgid "Curriculum"
 msgstr "Curriculum"
 
+msgid "Date of confirmation"
+msgstr "Date de l'épreuve de confirmation"
+
+msgid "Deadline for confirmation"
+msgstr "Date limite pour la confirmation"
+
 msgid "Decision"
 msgstr "Décision"
 
 msgid "Defense date"
 msgstr "Date de soutenance"
+
+msgid "Definitive admission date"
+msgstr "Date de l'admission définitive"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -528,6 +641,9 @@ msgstr "Néerlandais"
 
 msgid "ECONOMY"
 msgstr "Economie"
+
+msgid "ENROLLED"
+msgstr "Inscrit"
 
 msgid "ERC - European Research Council"
 msgstr "ERC - European Research Council"
@@ -739,6 +855,13 @@ msgstr "Numéro de carte d'identité"
 msgid "Identity picture"
 msgstr "Photo d'identité"
 
+msgid ""
+"If applicable, please upload here the opinion of your support committee on "
+"the extension request."
+msgstr ""
+"Le cas échéant, veuillez téléverser ici l’avis de votre comité "
+"d’accompagnement sur la demande de prolongation."
+
 msgid "If other language, please specify"
 msgstr "Si autre langue, précisez"
 
@@ -772,6 +895,9 @@ msgstr ""
 
 msgid "Illness"
 msgstr "Maladie"
+
+msgid "Important information:"
+msgstr "Informations importantes :"
 
 msgid ""
 "In accordance with the information on the <a href='https://uclouvain.be/en/"
@@ -862,6 +988,9 @@ msgstr "Date de délivrance du diplôme"
 msgid "Jury"
 msgstr "Jury"
 
+msgid "Justification letter"
+msgstr "Lettre de justification"
+
 msgid "Language"
 msgstr "Langue"
 
@@ -949,6 +1078,9 @@ msgstr "Ma demande d'inscription"
 msgid "NO"
 msgstr "Non"
 
+msgid "NOT_ALLOWED_TO_CONTINUE"
+msgstr "Non autorisé à poursuivre"
+
 msgid "NOT_INVITED"
 msgstr "Pas encore invité à signer"
 
@@ -960,6 +1092,9 @@ msgstr "Baccalauréat national (ou diplôme d'état, ...)"
 
 msgid "National registry number"
 msgstr "Numéro de registre national"
+
+msgid "New deadline"
+msgstr "Nouvelle échéance"
 
 msgid "No"
 msgstr "Non"
@@ -1021,6 +1156,9 @@ msgstr ""
 "vous êtes de nationalité belge et que vous résidez en Belgique, ce champ est "
 "obligatoire."
 
+msgid "Opinion on the renewal of the research mandate"
+msgstr "Avis sur le renouvellement du mandat de recherche"
+
 msgid "Organizing country"
 msgstr "Pays organisateur"
 
@@ -1060,6 +1198,9 @@ msgstr "Autres"
 msgid "PARTIAL"
 msgstr "En partie"
 
+msgid "PASSED_CONFIRMATION"
+msgstr "Epreuve de confirmation réussie"
+
 msgid "PDF file"
 msgstr "Fichier PDF"
 
@@ -1074,6 +1215,9 @@ msgstr "Date d'expiration du passeport"
 
 msgid "Passport number"
 msgstr "Numéro de passeport"
+
+msgid "Past confirmation papers"
+msgstr "Epreuves de confirmation passées"
 
 msgid "Personal data"
 msgstr "Données personnelles"
@@ -1156,6 +1300,9 @@ msgstr "Promoteurs"
 msgid "Proof of identity"
 msgstr "Pièce d'identité"
 
+msgid "Proposed new deadline"
+msgstr "Nouvelle échéance proposée"
+
 msgid "Proposition approval"
 msgstr "Approbation de la proposition"
 
@@ -1214,6 +1361,12 @@ msgstr "Motif de refus"
 msgid "Remove"
 msgstr "Retirer"
 
+msgid "Report of the supervisory panel"
+msgstr "Procès-verbal du comité d'accompagnement"
+
+msgid "Request a new deadline for the confirmation paper"
+msgstr "Demander une nouvelle échéance pour l'épreuve de confirmation"
+
 msgid "Request signatures"
 msgstr "Demander les signatures"
 
@@ -1222,6 +1375,9 @@ msgstr "Institut de recherche"
 
 msgid "Research project"
 msgstr "Projet de recherche"
+
+msgid "Research report"
+msgstr "Rapport de recherche"
 
 msgid "Residential address"
 msgstr "Domicile légal"
@@ -1246,6 +1402,9 @@ msgstr "Statistiques"
 
 msgid "SUBMITTED"
 msgstr "Soumis"
+
+msgid "SUBMITTED_CONFIRMATION"
+msgstr "Confirmation soumise"
 
 msgid "Satisfaction"
 msgstr "Satisfaction"
@@ -1321,8 +1480,14 @@ msgstr "Type du cycle d'études"
 msgid "Study system"
 msgstr "Système d'études"
 
+msgid "Submit and notify the DDC"
+msgstr "Soumettre et avertir la CDD"
+
 msgid "Submit my decision"
 msgstr "Soumettre ma décision"
+
+msgid "Submit my new deadline"
+msgstr "Soumettre ma nouvelle échéance"
 
 msgid "Success"
 msgstr "Réussite"
@@ -1358,6 +1523,9 @@ msgstr ""
 
 msgid "The curriculum has correctly been updated."
 msgstr "Le curriculum a bien été mis à jour."
+
+msgid "There is no request for a new deadline."
+msgstr "Il n'y a pas de demande de nouvelle échéance."
 
 msgid "Thesis location"
 msgstr "Lieu de la thèse"
@@ -1396,6 +1564,14 @@ msgstr "Grille horaire"
 
 msgid "Title of the dissertation"
 msgstr "Titre du mémoire"
+
+msgid ""
+"To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH "
+"grant. The framework for this opinion is provided by your research fund."
+msgstr ""
+"A téléverser obligatoirement si vous êtes boursier.ère du F.R.S.-FNRS (y "
+"compris Télévie), du FRIA ou du FRESH. Le canevas de cet avis est fourni par "
+"votre fonds de recherche."
 
 msgid "Training certificate, with dates, justifying this academic year."
 msgstr ""

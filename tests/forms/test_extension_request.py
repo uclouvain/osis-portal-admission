@@ -23,21 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import gettext_lazy as _
+import datetime
 
-from base.models.utils.utils import ChoiceEnum
+from django.test import TestCase
 
-
-class ChoixLangueRedactionThese(ChoiceEnum):
-    FRENCH = _('French')
-    ENGLISH = _('English')
-    OTHER = _('Other')
-    UNDECIDED = _('Undecided')
+from admission.contrib.forms.extension_request import ExtensionRequestForm
 
 
-class ChoixStatutProposition(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
-    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
-    ENROLLED = _('ENROLLED')
+class ExtensionRequestFormTestCase(TestCase):
+    def test_extension_request_form_valid_data(self):
+        form = ExtensionRequestForm(data={
+            'nouvelle_echeance': datetime.date(2022, 12, 31),
+            'justification_succincte': 'My reason',
+            'lettre_justification': [],
+        })
+
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.cleaned_data,
+            {
+                'nouvelle_echeance': datetime.date(2022, 12, 31),
+                'justification_succincte': 'My reason',
+                'lettre_justification': [],
+            },
+        )
+
+    def test_extension_request_form_without_required_data(self):
+        form = ExtensionRequestForm(data={})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors.get('nouvelle_echeance'), ['Ce champ est requis.'])
+        self.assertEqual(form.errors.get('justification_succincte'), ['Ce champ est requis.'])

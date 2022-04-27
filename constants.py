@@ -24,16 +24,23 @@
 
 # Association between a read-only tab name (path name) and an action link key
 READ_ACTIONS_BY_TAB = {
+    # Personal data
     'coordonnees': 'retrieve_coordinates',
     'cotutelle': 'retrieve_cotutelle',
+    'person': 'retrieve_person',
+    # Previous experience
     'curriculum': 'retrieve_curriculum',
     'education': 'retrieve_secondary_studies',
-    'person': 'retrieve_person',
     'languages': 'retrieve_languages',
+    # Project
     'project': 'retrieve_proposition',
     'supervision': 'retrieve_supervision',
+    # Confirmation
     'confirm': 'submit_proposition',
-    'confirm-paper': '',
+    # Confirmation paper
+    'confirmation-paper': 'retrieve_confirmation',
+    'extension-request': 'retrieve_confirmation',
+    # Others
     'training': '',
     'jury': '',
     'private-defense': '',
@@ -43,16 +50,23 @@ READ_ACTIONS_BY_TAB = {
 
 # Association between a write-only tab name (path name) and an action link key
 UPDATE_ACTIONS_BY_TAB = {
+    # Personal data
     'coordonnees': 'update_coordinates',
     'cotutelle': 'update_cotutelle',
+    'person': 'update_person',
+    # Previous experience
     'curriculum': 'update_curriculum',
     'education': 'update_secondary_studies',
-    'person': 'update_person',
     'languages': 'update_languages',
+    # Project
     'project': 'update_proposition',
     'supervision': 'request_signatures',
+    # Confirmation
     'confirm': 'submit_proposition',
-    'confirm-paper': '',
+    # Confirmation paper
+    'confirmation-paper': 'update_confirmation',
+    'extension-request': 'update_confirmation',
+    # Others
     'training': '',
     'jury': '',
     'private-defense': '',
