@@ -68,7 +68,7 @@
         </div>
         <div class="col-md-10 quitting-context-excluded">
 
-            {% if admission|can_make_action:'add_approval' and form %}
+            {% if admission|can_make_action:'add_approval' and form and form.decision %}
               {% include "admission/modal/prevent_quitting_modal.html" %}
               {% panel _("Proposition approval") %}
                 {% bootstrap_form_errors form %}
@@ -110,7 +110,7 @@
                 {% endfor %}
             {% endpanel %}
 
-            {% if admission|can_make_action:'add_member' and form %}
+            {% if admission|can_make_action:'add_member' and form and form.type %}
                 <form class="osis-form" method="post" action="">
                     {% csrf_token %}
                     {% bootstrap_form_errors form %}
