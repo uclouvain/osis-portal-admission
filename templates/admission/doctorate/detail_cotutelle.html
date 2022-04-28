@@ -30,6 +30,7 @@
             {% trans "Cotutelle is not defined yet" %}
         {% elif cotutelle.cotutelle %}
             {% field_data _("Cotutelle motivation") cotutelle.motivation|linebreaks %}
+            {% field_data _("Is it an institution of the Wallonia-Brussels Federation?") cotutelle.institution_fwb|yesno %}
             {% field_data _("Cotutelle institution") cotutelle.institution %}
             {% field_data _("Cotutelle opening request") cotutelle.demande_ouverture %}
             {% field_data _("Cotutelle convention") cotutelle.convention %}
