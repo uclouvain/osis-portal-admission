@@ -197,6 +197,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     },
     'confirm': set(),
     'confirmation-paper': set(),
+    'extension-request': set(),
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}
