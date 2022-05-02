@@ -26,6 +26,7 @@
 import datetime
 
 from django.test import TestCase
+from django.utils.translation import gettext as _
 
 from admission.contrib.forms.confirmation_paper import ConfirmationPaperForm
 
@@ -48,4 +49,4 @@ class ConfirmationPaperFormTestCase(TestCase):
     def test_confirmation_paper_form_without_required_data(self):
         form = ConfirmationPaperForm(data={})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors.get('date'), ['Ce champ est requis.'])
+        self.assertEqual(form.errors.get('date'), [_('This field is required.')])

@@ -1547,11 +1547,8 @@ msgstr "Ce document doit être détaillé, daté et signé."
 msgid "This experience has been valuated."
 msgstr "Cette expérience a été valorisée."
 
-msgid "This field is required"
-msgstr "Ce champ est requis"
-
 msgid "This field is required."
-msgstr "Ce champ est requis."
+msgstr "Ce champ est obligatoire."
 
 msgid "This is a diploma from"
 msgstr "Il s'agit d'un diplôme"
