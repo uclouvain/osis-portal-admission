@@ -26,6 +26,7 @@
 import datetime
 
 from django.test import TestCase
+from django.utils.translation import gettext as _
 
 from admission.contrib.forms.extension_request import ExtensionRequestForm
 
@@ -51,5 +52,5 @@ class ExtensionRequestFormTestCase(TestCase):
     def test_extension_request_form_without_required_data(self):
         form = ExtensionRequestForm(data={})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors.get('nouvelle_echeance'), ['Ce champ est requis.'])
-        self.assertEqual(form.errors.get('justification_succincte'), ['Ce champ est requis.'])
+        self.assertEqual(form.errors.get('nouvelle_echeance'), [_('This field is required.')])
+        self.assertEqual(form.errors.get('justification_succincte'), [_('This field is required.')])
