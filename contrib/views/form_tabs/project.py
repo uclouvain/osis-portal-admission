@@ -30,7 +30,9 @@ from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
-from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
+from admission.contrib.enums.admission_type import AdmissionType
+from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
+from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.forms.project import (
     COMMISSIONS_CDE_CLSM,
     COMMISSION_CDSS,
@@ -88,6 +90,36 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def prepare_data(self, data):
         # Process the form data to match API
+        if data['type_admission'] != AdmissionType.PRE_ADMISSION.name:
+            data['justification'] = ''
+
+        if data['type_financement'] != ChoixTypeFinancement.WORK_CONTRACT.name:
+            data['type_contrat_travail'] = ''
+            data['type_contrat_travail_other'] = ''
+            data['eft'] = None
+
+        if data['type_financement'] != ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
+            data['bourse_recherche'] = ''
+            data['bourse_recherche_other'] = ''
+
+        if not data['type_financement']:
+            data['duree_prevue'] = None
+            data['temps_consacre'] = None
+
+        if data['doctorat_deja_realise'] not in [
+            ChoixDoctoratDejaRealise.YES.name,
+            ChoixDoctoratDejaRealise.PARTIAL.name,
+        ]:
+            data['institution'] = ''
+            data['non_soutenue'] = None
+            data['date_soutenance'] = None
+            data['raison_non_soutenue'] = ''
+
+        if data['non_soutenue']:
+            data['date_soutenance'] = None
+        else:
+            data['raison_non_soutenue'] = ''
+
         data['type_contrat_travail'] = (
             data['type_contrat_travail_other']
             if data['type_contrat_travail'] == ChoixTypeContratTravail.OTHER.name

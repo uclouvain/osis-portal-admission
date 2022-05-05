@@ -165,7 +165,7 @@
         // Justification depends on pre-admission
         $('#justification').dependsOn({
             'input[name=type_admission]': { values: ['PRE_ADMISSION'] },
-        }, { valueOnDisable: '' });
+        });
 
         {% if not admission %}
             // Reset doctorate when changing sector
@@ -241,28 +241,28 @@
 
         $('#work').dependsOn({
             '#id_type_financement': { values: ['WORK_CONTRACT'] },
-        }, { valueOnDisable: '' });
+        });
         $('#scholarship').dependsOn({
             '#id_type_financement': { values: ['SEARCH_SCHOLARSHIP'] },
-        }, { valueOnDisable: '' });
+        });
         $('#financing-details').dependsOn({
             '#id_type_financement': { not: [''] },
-        }, { valueOnDisable: '' });
+        });
         $('#type_contrat_travail_other').dependsOn({
             '#id_type_contrat_travail': { values: ['OTHER'] },
-        }, { valueOnDisable: '' });
+        });
         $('#bourse_recherche_other').dependsOn({
             '#id_bourse_recherche': { values: ['OTHER'] },
-        }, { valueOnDisable: '' });
+        });
         $('#previous_experience').dependsOn({
             '#id_doctorat_deja_realise': { values: ['YES', 'PARTIAL'] },
-        }, { valueOnDisable: '' });
+        });
         $('#non-soutenue').dependsOn({
             '#id_non_soutenue': { checked: true },
-        }, { valueOnDisable: '' });
+        });
         $('#soutenue').dependsOn({
             '#id_non_soutenue': { checked: false },
-        }, { valueOnDisable: '' });
+        });
 
         // Mark proposition_programme_doctoral as required depending on type
         $('.proposition_programme_doctoral').dependsOn({

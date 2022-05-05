@@ -67,7 +67,7 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
     def prepare_data(self, data):
         return {
             'type': data['type'],
-            'member': data['person'] or data['tutor'],
+            'member': data['person' if data['type'] == ActorType.CA_MEMBER.name else 'tutor'],
         }
 
     def call_webservice(self, data):

@@ -177,10 +177,10 @@
         // Display autocompletion based on member type
         $('#person').length && $('#person').dependsOn({
             'input[name=type]': { values: ['CA_MEMBER'] },
-        }, { valueOnDisable: '', duration: 0 });
+        }, { duration: 0 });
         $('#tutor').length && $('#tutor').dependsOn({
             'input[name=type]': { values: ['MAIN_PROMOTER', 'PROMOTER'] },
-        }, { valueOnDisable: '', duration: 0 });
+        }, { duration: 0 });
         // Hide the reason input if the the promoter approves the proposition
         $('#id_motif_refus').length && $('#id_motif_refus').dependsOn({
             'input[name="decision"]': {
