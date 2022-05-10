@@ -161,6 +161,9 @@ class PropositionBusinessException(Enum):
     ProcedureDemandeSignatureNonLanceeException = "PROPOSITION-36"
     PropositionNonApprouveeParPromoteurException = "PROPOSITION-37"
     PropositionNonApprouveeParMembresCAException = "PROPOSITION-38"
+    InstitutTheseObligatoireException = "PROPOSITION-39"
+    NomEtPrenomNonSpecifiesException = "PROPOSITION-40"
+    SpecifierNOMASiDejaInscritException = "PROPOSITION-41"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -171,6 +174,8 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.DateOuAnneeNaissanceNonSpecifieeException,
         PropositionBusinessException.DetailsPasseportNonSpecifiesException,
         PropositionBusinessException.CarteIdentiteeNonSpecifieeException,
+        PropositionBusinessException.NomEtPrenomNonSpecifiesException,
+        PropositionBusinessException.SpecifierNOMASiDejaInscritException,
     },
     'coordonnees': {
         PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,

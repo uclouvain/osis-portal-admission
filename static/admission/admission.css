@@ -40,6 +40,12 @@
     width: max-content;
 }
 
+.popover-buttons {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+}
+
 .form-group.required_field .control-label:after, .required_text:after {
     content: " *";
     color: red;

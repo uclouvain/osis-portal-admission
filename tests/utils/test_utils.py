@@ -29,6 +29,7 @@ from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 
 from admission.utils import format_entity_address, format_entity_title
+from admission.utils.utils import force_title
 
 
 class UtilsTestCase(TestCase):
@@ -89,3 +90,23 @@ class UtilsTestCase(TestCase):
             format_entity_address(address=address),
             '{state}'.format_map(address),
         )
+
+    def test_force_title_empty_string(self):
+        result = force_title('')
+        self.assertEqual(result, '')
+
+    def test_force_title_uppercase_string_single_word(self):
+        result = force_title('FRÉDÉRIC')
+        self.assertEqual(result, 'Frédéric')
+
+    def test_force_title_uppercase_string_several_words_separated_by_spaces(self):
+        result = force_title('FRÉDÉRIC DE LOUVAIN')
+        self.assertEqual(result, 'Frédéric De Louvain')
+
+    def test_force_title_string_several_words_separated_by_spaces(self):
+        result = force_title('Frédéric de LouVAIN')
+        self.assertEqual(result, 'Frédéric de Louvain')
+
+    def test_force_title_string_several_words_separated_by_commas(self):
+        result = force_title('Pierre,pAUL,JACQUES')
+        self.assertEqual(result, 'Pierre,paul,Jacques')
