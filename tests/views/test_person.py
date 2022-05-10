@@ -24,13 +24,15 @@
 #
 # ##############################################################################
 import datetime
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, ANY
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums.person import CivilState
+from admission.contrib.forms.person import YES, NO
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
 
@@ -40,6 +42,13 @@ class PersonViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
+        cls.default_kwargs = {
+            'accept_language': ANY,
+            'x_user_first_name': ANY,
+            'x_user_last_name': ANY,
+            'x_user_email': ANY,
+            'x_user_global_id': ANY,
+        }
 
     def setUp(self):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -65,8 +74,27 @@ class PersonViewTestCase(TestCase):
         self.mock_countries_api.return_value.countries_list.side_effect = get_countries
         self.addCleanup(countries_api_patcher.stop)
 
+        self.current_year = datetime.date.today().year
+
+        # Mock document api
+        patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        def get_academic_years(**kwargs):
+            years = [
+                Mock(year=self.current_year - 2),
+                Mock(year=self.current_year + 2),
+            ]
+            return Mock(results=years)
+
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
+        self.mock_academic_year_api.return_value.get_academic_years.side_effect = get_academic_years
+
         self.addCleanup(academic_year_api_patcher.stop)
 
     def test_form(self):
@@ -88,12 +116,18 @@ class PersonViewTestCase(TestCase):
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.mock_proposition_api.assert_not_called()
 
-        response = self.client.post(url, {
-            'first_name': "Joe",
-            'last_name': "Doe",
-            'sex': 'M',
-            'gender': 'X',
-        })
+        response = self.client.post(
+            url,
+            {
+                'first_name': "Joe",
+                'last_name': "Doe",
+                'sex': 'M',
+                'gender': 'X',
+                'civil_state': CivilState.MARRIED.name,
+                'birth_country': 'BE',
+                'birth_place': 'Louvain-la-Neuve',
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification.assert_called()
 
@@ -122,35 +156,128 @@ class PersonViewTestCase(TestCase):
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
 
-        response = self.client.post(url, {
-            'first_name': "Joe",
-            'last_name': "Doe",
-            'unknown_birth_date': True,
-            'country_of_citizenship': "BE",
-            'already_registered': 'YES',
-            'passport_number': 'ABC123',
-        })
+        response = self.client.post(
+            url,
+            {
+                'unknown_birth_date': True,
+                'country_of_citizenship': "BE",
+                'already_registered': YES,
+                'civil_state': CivilState.MARRIED.name,
+                'birth_country': 'BE',
+                'birth_place': 'Louvain-la-Neuve',
+                'id_card_number': '0123456789',
+                'passport_number': '0123456789',
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
+        self.assertFormError(response, 'form', 'last_registration_id', _("This field is required."))
         self.assertFormError(response, 'form', 'passport_expiration_date', _("This field is required."))
         self.assertFormError(response, 'form', 'national_number', _("This field is required."))
+        self.assertFormError(response, 'form', 'first_name', _("This field is required if the last name is missing."))
+        self.assertFormError(response, 'form', 'last_name', _("This field is required if the first name is missing."))
+        self.assertFormError(response, 'form', 'id_card', _("This field is required."))
+        self.assertFormError(response, 'form', 'passport', _("This field is required."))
 
-        response = self.client.post(url, {
-            'first_name': "Joe",
-            'last_name': "Doe",
-            'passport_expiration_date': '22/11/2021',
-        })
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, 'form', 'passport_number', _("This field is required."))
+    def test_post_update(self):
+        url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.client.force_login(self.person.user)
 
-        response = self.client.post(url, {
-            'first_name': "Joe",
-            'last_name': "Doe",
+        mocking_dict = self.mock_person_api.return_value.retrieve_person_identification_admission.return_value
+        mocking_dict.to_dict.return_value = dict(
+            first_name="John",
+            last_name="Doe",
+            id_card=[],
+            passport=[],
+            id_photo=[],
+            birth_country="BE",
+            country_of_citizenship="FR",
+            last_registration_year=2021,
+        )
+
+        data = {
+            'first_name': "JOE",
+            'last_name': "DOE",
+            'middle_name': 'JIM,JoHN,Jean-PiERRE',
+            'birth_date': datetime.date(2022, 5, 1),
+            'civil_state': CivilState.MARRIED.name,
+            'birth_country': 'BE',
+            'birth_place': 'Louvain-la-Neuve',
+            'birth_year': 1990,
             'sex': 'M',
             'gender': 'X',
+            'last_registration_year': self.current_year - 2,
+            'last_registration_id': '12345678',
+            'passport_number': '0123456789',
+            'passport_0': 'test',
+            'passport_expiration_date': datetime.date(2025, 1, 1),
+        }
+
+        person_kwargs = {
+            'first_name': 'Joe',
+            'middle_name': 'Jim,John,Jean-Pierre',
+            'last_name': 'Doe',
+            'first_name_in_use': '',
+            'sex': 'M',
+            'gender': 'X',
+            'birth_year': 1990,
+            'civil_state': CivilState.MARRIED.name,
+            'birth_country': 'BE',
+            'birth_place': 'Louvain-la-Neuve',
+            'country_of_citizenship': '',
+            'language': '',
+            'id_card': [],
+            'passport': ['test'],
+            'national_number': '',
+            'id_card_number': '',
+            'passport_number': '0123456789',
+            'passport_expiration_date': datetime.date(2025, 1, 1),
+            'id_photo': [],
+            'last_registration_year': self.current_year - 2,
+            'last_registration_id': '12345678',
+            'birth_date': datetime.date(2022, 5, 1),
+        }
+
+        response = self.client.post(url, {
+            **data,
+            'unknown_birth_date': True,
+            'already_registered': NO,
         })
+
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
+            uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+            person_identification={
+                **person_kwargs,
+                'unknown_birth_date': True,
+                'already_registered': False,
+                # Clean some fields depending on other fields values
+                'birth_date': None,
+                'last_registration_year': None,
+                'last_registration_id': '',
+            },
+            **self.default_kwargs,
+        )
+
+        response = self.client.post(url, {
+            **data,
+            'unknown_birth_date': False,
+            'already_registered': YES,
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
+            uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+            person_identification={
+                **person_kwargs,
+                'unknown_birth_date': False,
+                'already_registered': True,
+                # Clean some fields depending on other fields values
+                'birth_year': None,
+            },
+            **self.default_kwargs,
+        )
 
     def test_detail(self):
         url = resolve_url('admission:doctorate:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

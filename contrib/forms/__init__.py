@@ -75,14 +75,24 @@ def get_thesis_location_initial_choices(value):
 
 def get_past_academic_years_choices(person):
     """Return a list of choices of past academic years."""
+    current_year = get_current_year()
+    lower_year = current_year - 100
     return EMPTY_CHOICE + tuple(
-        (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
+        (academic_year.year, f"{academic_year.year}-{academic_year.year + 1}")
         for academic_year in AcademicYearService.get_academic_years(person)
-        if academic_year.year <= get_current_year()
+        if current_year >= academic_year.year >= lower_year
     )
+
 
 CustomDateInput = partial(
     forms.DateInput,
-    attrs={'placeholder': _("dd/mm/yyyy")},
+    attrs={
+        'placeholder': _("dd/mm/yyyy"),
+        'data-mask''': '00/00/0000',
+    },
     format='%d/%m/%Y',
 )
+
+
+def get_example_text(example: str):
+    return _("e.g.: %(example)s") % {'example': example}
