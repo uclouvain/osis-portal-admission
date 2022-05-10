@@ -174,16 +174,7 @@ msgstr ""
 msgid "(e.g.: 1234)"
 msgstr ""
 
-msgid "(e.g.: Frédéric <del>frederic FREDERIC</del>)"
-msgstr ""
-
 msgid "(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
-msgstr ""
-
-msgid "(e.g.: Pierre, Paul, Jacques <del>pierre, paul, JACQUES)</del>"
-msgstr ""
-
-msgid "(e.g.: Van der Elst / Vanderelst <del>VANDERELST</del>)"
 msgstr ""
 
 msgid "A certified translation of your high school diploma"
@@ -337,6 +328,9 @@ msgid "Back to requests"
 msgstr ""
 
 msgid "Belgian diploma"
+msgstr ""
+
+msgid "Belgian national registry number (SSIN)"
 msgstr ""
 
 msgid "Between 65 and 75%"
@@ -973,9 +967,6 @@ msgstr ""
 msgid "National Bachelor (or government diploma, ...)"
 msgstr ""
 
-msgid "National registry number"
-msgstr ""
-
 msgid "New deadline"
 msgstr ""
 
@@ -1100,9 +1091,6 @@ msgid "Past confirmation papers"
 msgstr ""
 
 msgid "Personal data"
-msgstr ""
-
-msgid "Personal information"
 msgstr ""
 
 msgid "Physic"
@@ -1425,6 +1413,12 @@ msgstr ""
 msgid "This experience has been valuated."
 msgstr ""
 
+msgid "This field is required if the first name is missing."
+msgstr ""
+
+msgid "This field is required if the last name is missing."
+msgstr ""
+
 msgid "This field is required."
 msgstr ""
 
@@ -1505,6 +1499,9 @@ msgstr ""
 msgid "What result did you get?"
 msgstr ""
 
+msgid "What was your NOMA (registration id) ?"
+msgstr ""
+
 msgid "What was your last year of UCLouvain enrollment?"
 msgstr ""
 
@@ -1568,6 +1565,9 @@ msgid ""
 "to do it."
 msgstr ""
 
+msgid "Your previous NOMA (registration id)"
+msgstr ""
+
 msgid "Your proposition has been confirmed."
 msgstr ""
 
@@ -1575,6 +1575,10 @@ msgid "belgian"
 msgstr ""
 
 msgid "dd/mm/yyyy"
+msgstr ""
+
+#, python-format
+msgid "e.g.: %(example)s"
 msgstr ""
 
 msgid "foreign or international"

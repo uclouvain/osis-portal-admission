@@ -314,3 +314,12 @@ def has_error_in_tab(admission, tab):
     return any(
         erreur['status_code'] in [e.value for e in BUSINESS_EXCEPTIONS_BY_TAB[tab]] for erreur in admission.erreurs
     )
+
+
+@register.inclusion_tag('admission/bootstrap_field_with_tooltip.html')
+def bootstrap_field_with_tooltip(field, classes='', show_help=False):
+    return {
+        'field': field,
+        'classes': classes,
+        'show_help': show_help,
+    }

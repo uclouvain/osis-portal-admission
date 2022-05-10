@@ -15,3 +15,16 @@ def format_entity_address(address: Address):
         address.state,
     ]
     return ', '.join(filter(lambda part: part and len(part) > 1, address_parts))
+
+
+def force_title(string: str):
+    """
+    Return a string in which all words are lowercase, except for the first letter of each one, which can written in
+    upper or lower case"""
+    title_string = list(string.title())
+
+    for index, char in enumerate(title_string):
+        if char.isupper() and string[index].islower():
+            title_string[index] = string[index]
+
+    return ''.join(title_string)

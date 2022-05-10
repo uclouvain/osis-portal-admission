@@ -243,17 +243,8 @@ msgstr "(ex: +32 490 00 00 00)"
 msgid "(e.g.: 1234)"
 msgstr "(ex: 1234)"
 
-msgid "(e.g.: Frédéric <del>frederic FREDERIC</del>)"
-msgstr "(ex: Frédéric <del>frederic FREDERIC</del>)"
-
 msgid "(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
 msgstr "(ex: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
-
-msgid "(e.g.: Pierre, Paul, Jacques <del>pierre, paul, JACQUES)</del>"
-msgstr "(ex: Pierre, Paul, Jacques <del>pierre, paul, JACQUES)</del>"
-
-msgid "(e.g.: Van der Elst / Vanderelst <del>VANDERELST</del>)"
-msgstr "(ex: Van der Elst / Vanderelst <del>VANDERELST</del>)"
 
 msgid "A certified translation of your high school diploma"
 msgstr ""
@@ -410,6 +401,9 @@ msgstr "Retour aux demandes"
 
 msgid "Belgian diploma"
 msgstr "Diplôme belge"
+
+msgid "Belgian national registry number (SSIN)"
+msgstr "Numéro de registre national belge (NISS)"
 
 msgid "Between 65 and 75%"
 msgstr "Entre 65 et 75%"
@@ -611,7 +605,7 @@ msgstr "Distinction"
 
 msgctxt "admission"
 msgid "Divorced"
-msgstr "Divorcé(e)"
+msgstr "Divorcé·e"
 
 msgid "Do you have a high school diploma?"
 msgstr "Avez-vous un diplôme de fin d'études secondaires ?"
@@ -1014,7 +1008,7 @@ msgstr "Quitter la page ?"
 
 msgctxt "admission"
 msgid "Legal cohabitant"
-msgstr "Cohabitant(e) légal(e)"
+msgstr "Cohabitant·e légal·e"
 
 msgid "Less than 65%"
 msgstr "Moins de 65%"
@@ -1049,7 +1043,7 @@ msgstr "Des langues obligatoires sont manquantes."
 
 msgctxt "admission"
 msgid "Married"
-msgstr "Marié(e)"
+msgstr "Marié·e"
 
 msgid "Master"
 msgstr "Master"
@@ -1092,9 +1086,6 @@ msgstr "Intitulé du diplôme ou de la formation"
 
 msgid "National Bachelor (or government diploma, ...)"
 msgstr "Baccalauréat national (ou diplôme d'état, ...)"
-
-msgid "National registry number"
-msgstr "Numéro de registre national"
 
 msgid "New deadline"
 msgstr "Nouvelle échéance"
@@ -1224,9 +1215,6 @@ msgstr "Epreuves de confirmation passées"
 
 msgid "Personal data"
 msgstr "Données personnelles"
-
-msgid "Personal information"
-msgstr "Coordonnées"
 
 msgid "Physic"
 msgstr "Physique"
@@ -1441,7 +1429,7 @@ msgstr "Semestres"
 
 msgctxt "admission"
 msgid "Separate"
-msgstr "Séparé(e)"
+msgstr "Séparé·e"
 
 msgid "Sex"
 msgstr "Sexe"
@@ -1560,6 +1548,12 @@ msgstr "Ce document doit être détaillé, daté et signé."
 msgid "This experience has been valuated."
 msgstr "Cette expérience a été valorisée."
 
+msgid "This field is required if the first name is missing."
+msgstr "Ce champ est obligatoire si le prénom est manquant."
+
+msgid "This field is required if the last name is missing."
+msgstr "Ce champ est obligatoire si le nom est manquant."
+
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."
 
@@ -1647,12 +1641,15 @@ msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"
 msgid "What result did you get?"
 msgstr "Quel résultat avez-vous obtenu ?"
 
+msgid "What was your NOMA (registration id) ?"
+msgstr "Quel était votre NOMA (numéro de matricule) ?"
+
 msgid "What was your last year of UCLouvain enrollment?"
 msgstr "Quelle a été votre dernière année d'inscription à l'UCLouvain ?"
 
 msgctxt "admission"
 msgid "Widowed"
-msgstr "Veuf(ve)"
+msgstr "Veuf.ve"
 
 msgid "Work"
 msgstr "Travail"
@@ -1722,6 +1719,9 @@ msgstr ""
 "Votre inscription ne peut être confirmée. Toutes les conditions suivantes "
 "doivent être réunies pour cela."
 
+msgid "Your previous NOMA (registration id)"
+msgstr "Votre ancien NOMA (numéro de matricule)"
+
 msgid "Your proposition has been confirmed."
 msgstr "Votre proposition a été confirmée."
 
@@ -1730,6 +1730,10 @@ msgstr "belge"
 
 msgid "dd/mm/yyyy"
 msgstr "jj/mm/aaaa"
+
+#, python-format
+msgid "e.g.: %(example)s"
+msgstr "ex: %(example)s"
 
 msgid "foreign or international"
 msgstr "étranger ou international"

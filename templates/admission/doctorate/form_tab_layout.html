@@ -141,3 +141,17 @@
         </form>
     {% endblock %}
 {% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script type="application/javascript">
+      $(function () {
+          // Tooltips
+          $('[data-toggle="popover"]').popover();
+
+          $('body').on('click', '.popover-buttons', e => {
+              e.preventDefault();
+          });
+      });
+  </script>
+{% endblock %}
