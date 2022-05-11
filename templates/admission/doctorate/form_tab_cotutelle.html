@@ -52,7 +52,7 @@
   $(function () {
       $('#cotutelle').dependsOn({
           'input[name=cotutelle]': { values: ['YES'] },
-      }, { valueOnDisable: '' });
+      });
 
       document.dispatchEvent(new Event('refreshFormInitial'));
   });
