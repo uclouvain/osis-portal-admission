@@ -51,6 +51,8 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
 
         belgian_diploma = high_school_diploma.get('belgian_diploma')
         foreign_diploma = high_school_diploma.get('foreign_diploma')
+        high_school_diploma_alternative = high_school_diploma.get('high_school_diploma_alternative')
+
         if belgian_diploma:
             context_data["belgian_diploma"] = high_school_diploma["belgian_diploma"]
         elif foreign_diploma:
@@ -67,5 +69,6 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
                     person=self.request.user.person,
                 )
                 context_data["foreign_diploma"]['linguistic_regime'] = getattr(linguistic_regime, translated_field)
-
+        elif high_school_diploma_alternative:
+            context_data["high_school_diploma_alternative"] = high_school_diploma_alternative
         return context_data

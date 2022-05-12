@@ -192,8 +192,8 @@ class CurriculumTestCase(ExtendedTestCase):
 
         def get_countries(**kwargs):
             countries = [
-                MockCountry(iso_code='FR', name='France', name_en='France'),
-                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
+                MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
+                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium', european_union=True),
             ]
             if kwargs.get('iso_code'):
                 return Mock(results=[c for c in countries if c.iso_code == kwargs.get('iso_code')])

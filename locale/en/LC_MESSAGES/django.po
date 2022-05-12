@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-16 16:35+0100\n"
+"POT-Creation-Date: 2022-05-16 11:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,6 +43,24 @@ msgid ""
 "                    "
 msgstr ""
 
+msgid ""
+"\n"
+"              If you do not have an equivalence decision, you will have to "
+"submit a request for equivalence in\n"
+"              strict compliance with the instructions given by the\n"
+"              <a href='http://www.equivalences.cfwb.be/' "
+"target='_blank'>French Community</a> of Belgium.\n"
+"            "
+msgstr ""
+
+msgid ""
+"\n"
+"              Please complete the schedule information of your last year\n"
+"              of high school. We invite you to indicate the number of\n"
+"              hours of education your followed per domain and per week.\n"
+"              "
+msgstr ""
+
 #, python-format
 msgid ""
 "\n"
@@ -75,14 +93,6 @@ msgid ""
 "            state of progress of your enrolment request which you can "
 "interrupt\n"
 "            and resume at any moment.\n"
-"        "
-msgstr ""
-
-msgid ""
-"\n"
-"          Please complete here below the schedule of your last year\n"
-"          of high school, indicating for each domain the number of\n"
-"          hours of education followed per week (h/w).\n"
 "        "
 msgstr ""
 
@@ -185,10 +195,21 @@ msgid ""
 "year of secondary education"
 msgstr ""
 
+msgid "A double-sided copy of the final equivalence decision"
+msgstr ""
+
+msgid ""
+"A double-sided copy of the final equivalence decision issued by the Ministry "
+"of the French Community of Belgium"
+msgstr ""
+
 msgid "A field of the schedule must at least be set."
 msgstr ""
 
 msgid "A transcript or your last year at high school"
+msgstr ""
+
+msgid "A translation of your certificate of enrolment or school attendance"
 msgstr ""
 
 msgid "A1"
@@ -387,10 +408,23 @@ msgstr ""
 msgid "Certificate of achievement"
 msgstr ""
 
+msgid "Certificate of enrolment or school attendance"
+msgstr ""
+
 msgid "Certificate of failure"
 msgstr ""
 
 msgid "Certificate of language knowledge"
+msgstr ""
+
+msgid ""
+"Certificate of successful completion of the admission test for restrictive "
+"equivalence"
+msgstr ""
+
+msgid ""
+"Certificate of successful completion of the admission test for the first "
+"cycle of higher education"
 msgstr ""
 
 msgid ""
@@ -518,6 +552,9 @@ msgstr ""
 
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
+msgstr ""
+
+msgid "Diploma of Aptitude for Access to Higher Education (DAES)"
 msgstr ""
 
 msgid "Dissertation score"
@@ -662,6 +699,13 @@ msgstr ""
 msgid "Fondation St Luc"
 msgstr ""
 
+msgid ""
+"For any high-school diploma from a country outside the European Union, the "
+"admission request <strong>must contain the equivalence</strong> of your "
+"diploma delivered by the <a href='http://www.equivalences.cfwb.be/' "
+"target='_blank'>French Community</a> of Belgium."
+msgstr ""
+
 msgid "Foreign diploma"
 msgstr ""
 
@@ -725,6 +769,16 @@ msgstr ""
 msgid "High school diploma"
 msgstr ""
 
+msgid ""
+"High school diploma or, if not available, a certificate of enrolment or "
+"school attendance."
+msgstr ""
+
+msgid ""
+"High school in Belgium is the level of education between the end of primary "
+"school and the beginning of higher education."
+msgstr ""
+
 msgid "Higher education"
 msgstr ""
 
@@ -739,7 +793,8 @@ msgstr ""
 msgid "I don't find my program in the list."
 msgstr ""
 
-msgid "I will have a high school diploma this year"
+#, python-format
+msgid "I will have a high school diploma this year %s"
 msgstr ""
 
 msgid "INVITED"
@@ -768,6 +823,9 @@ msgid ""
 "the extension request."
 msgstr ""
 
+msgid "If other education type, please specify"
+msgstr ""
+
 msgid "If other language, please specify"
 msgstr ""
 
@@ -778,15 +836,21 @@ msgid "If other optional domains, please specify"
 msgstr ""
 
 msgid ""
-"If you have it, you must provide a photocopy of both sides of the final "
-"equivalence decision issued by the Ministry of the French Community of "
-"Belgium. If you do not have it, a request for equivalence MUST be submitted "
-"in strict accordance with the instructions given by the <a href=\"http://www."
-"equivalences.cfwb.be/\" target=\"blank\">CFWB</a>, only in the case of a "
-"request for enrolment in BACHELOR degree. As a reminder, for any secondary "
-"school diploma <strong>from a country outside the European Union, the "
-"admission application must contain the equivalence of your diploma</strong> "
-"issued by the Wallonia-Brussels Federation (French Community of Belgium)."
+"If you do not yet have a final equivalence decision issued by the <a "
+"href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> "
+"of Belgium, you must provide a double-sided copy of this document as soon as "
+"possible. You are therefore asked to provide proof of the application in the "
+"meantime: receipt of the application and proof of payment, acknowledgement "
+"of receipt of the application, etc."
+msgstr ""
+
+msgid "If you don't find your institute in the list, please specify"
+msgstr ""
+
+msgid ""
+"If you have a final equivalence decision issued by the <a href='http://www."
+"equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you "
+"must provide a double-sided copy of this document."
 msgstr ""
 
 msgid "Illness"
@@ -970,9 +1034,6 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-msgid "No I don't have a high school diploma"
-msgstr ""
-
 msgid "No cotutelle"
 msgstr ""
 
@@ -1001,9 +1062,6 @@ msgid "No secondary studies provided."
 msgstr ""
 
 msgid "Non European Union credits"
-msgstr ""
-
-msgid "Not known yet"
 msgstr ""
 
 msgid "Not submitted"
@@ -1042,13 +1100,13 @@ msgstr ""
 msgid "Other documents concerning cotutelle"
 msgstr ""
 
-msgid "Other education, please specify"
-msgstr ""
-
 msgid "Other higher education"
 msgstr ""
 
-msgid "Other institute, please specify"
+msgid "Other institute address"
+msgstr ""
+
+msgid "Other institute name"
 msgstr ""
 
 msgid "Other linguistic regime"
@@ -1124,6 +1182,10 @@ msgstr ""
 msgid "Please set one of institute or other institute fields"
 msgstr ""
 
+msgid ""
+"Please specify either your high school diploma or your enrolment certificate"
+msgstr ""
+
 msgid "Postal code"
 msgstr ""
 
@@ -1161,6 +1223,9 @@ msgid "Promoters"
 msgstr ""
 
 msgid "Proof of identity"
+msgstr ""
+
+msgid "Proof of the final equivalence decision"
 msgstr ""
 
 msgid "Proposed new deadline"
@@ -1314,6 +1379,9 @@ msgstr ""
 msgid "Social sciences"
 msgstr ""
 
+msgid "Spanish"
+msgstr ""
+
 msgid "Speaking ability"
 msgstr ""
 
@@ -1379,6 +1447,11 @@ msgid ""
 msgstr ""
 
 msgid "The curriculum has correctly been updated."
+msgstr ""
+
+msgid ""
+"The high school diploma is the Certificate of Higher Secondary Education "
+"(CESS). It is commonly referred to as the baccalaureate in many countries."
 msgstr ""
 
 msgid "There is no request for a new deadline."
@@ -1516,9 +1589,6 @@ msgstr "Yes"
 msgid "Yes"
 msgstr ""
 
-msgid "Yes I have a high school diploma"
-msgstr ""
-
 msgid "Yes,No"
 msgstr ""
 
@@ -1529,6 +1599,9 @@ msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
 
 msgid "You have now reached the confirmation tab of your enrolment request."
+msgstr ""
+
+msgid "You indicated that you don't have a high school diploma."
 msgstr ""
 
 msgid ""
@@ -1570,7 +1643,7 @@ msgstr ""
 msgid "e.g.: %(example)s"
 msgstr ""
 
-msgid "foreign or international"
+msgid "foreign"
 msgstr ""
 
 msgid "h/w"

@@ -86,6 +86,7 @@ class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             dict(
                 id=country.iso_code,
                 text=country.name if get_language() == settings.LANGUAGE_CODE else country.name_en,
+                european_union=country.european_union,
             )
             for country in results
             if not self.forwarded.get('exclude_be', False) or country.iso_code != BE_ISO_CODE
