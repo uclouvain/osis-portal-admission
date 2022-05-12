@@ -46,7 +46,7 @@
   </div>
 
   {% for admission in admissions %}
-    {% panel %}
+    {% panel additional_class="admission-item" cy_matricule=user.person.global_id cy_type="doctorat" cy_state=admission.statut %}
       <h3 style="margin-top: 0">
         {{ admission.intitule_doctorat }} ({{ admission.reference }})
         <div><small>{{ admission.intitule_secteur_formation }}</small></div>

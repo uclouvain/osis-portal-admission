@@ -27,7 +27,7 @@
 
 {% url 'admission:doctorate:remove-actor' view.kwargs.pk type member.matricule as remove_url %}{% get_dashboard_links as links %}
 
-<div class="signature-item">
+<div class="signature-item" cy-matricule="{{ member.matricule }}" cy-state="{{ signature.statut }}">
   <div class="row">
     <div class="col-md-9">
       <div>
