@@ -237,7 +237,7 @@ def panel(context, title='', title_level=4, additional_class='', **kwargs):
     context['title'] = title
     context['title_level'] = title_level
     context['additional_class'] = additional_class
-    context['attributes'] = kwargs
+    context['attributes'] = {k.replace('_', '-'): v for k, v in kwargs.items()}
     return context
 
 
