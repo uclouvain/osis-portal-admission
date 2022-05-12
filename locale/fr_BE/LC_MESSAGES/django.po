@@ -450,9 +450,6 @@ msgstr "Membres du comité d'accompagnement"
 msgid "CANCELLED"
 msgstr "Annulée"
 
-msgid "DDC opinion"
-msgstr "Avis de la CDD"
-
 msgid "CHEMISTRY"
 msgstr "Chimie"
 
@@ -578,6 +575,9 @@ msgstr "Type de crédits"
 msgid "Curriculum"
 msgstr "Curriculum"
 
+msgid "DDC opinion"
+msgstr "Avis de la CDD"
+
 msgid "Date of confirmation"
 msgstr "Date de l'épreuve de confirmation"
 
@@ -635,6 +635,9 @@ msgid "Document justifying your activity for this academic year."
 msgstr ""
 "Document justifiant votre activité : poinçonneur, pour cette année "
 "académique."
+
+msgid "Download as PDF"
+msgstr "Télécharger en tant que PDF"
 
 msgid "Dutch"
 msgstr "Néerlandais"
@@ -1498,6 +1501,9 @@ msgstr "Réussite avec crédits résiduels"
 msgid "Success without distinction"
 msgstr "Réussite sans mention"
 
+msgid "Summary of the proposition"
+msgstr "Résumé de la proposition"
+
 msgid "Supervision"
 msgstr "Supervision"
 
@@ -1523,6 +1529,13 @@ msgstr ""
 
 msgid "The curriculum has correctly been updated."
 msgstr "Le curriculum a bien été mis à jour."
+
+msgid ""
+"The summary of the proposal in PDF format is being generated, please come "
+"back later to get it."
+msgstr ""
+"Le résumé de la proposition au format PDF est en cours de génération, "
+"veuillez revenir plus tard pour y accéder."
 
 msgid "There is no request for a new deadline."
 msgstr "Il n'y a pas de demande de nouvelle échéance."
