@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
+{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission osis_document %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -67,6 +67,20 @@
             {% doctorate_subtabs admission %}
         </div>
         <div class="col-md-10 quitting-context-excluded">
+
+            {% if admission.statut != "IN_PROGRESS" %}
+              {% panel _("Summary of the proposition") %}
+                  {% if admission.fiche_archive_signatures_envoyees %}
+                      {% get_file_url admission.fiche_archive_signatures_envoyees.0 as file_url %}
+                      <a href="{{ file_url }}" class="btn btn-default" target="_blank">
+                        <span class="fa fa-file-download"></span>
+                        {% trans "Download as PDF" %}
+                      </a>
+                  {% else %}
+                      <p>{% trans "The summary of the proposal in PDF format is being generated, please come back later to get it." %}</p>
+                  {% endif %}
+              {% endpanel %}
+            {% endif %}
 
             {% if admission|can_make_action:'add_approval' and form and form.decision %}
               {% include "admission/modal/prevent_quitting_modal.html" %}

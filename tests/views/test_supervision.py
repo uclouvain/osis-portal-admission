@@ -68,6 +68,7 @@ class SupervisionTestCase(TestCase):
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
             lettres_recommandation=[],
+            fiche_archive_signatures_envoyees=[],
             statut=ChoixStatutProposition.SIGNING_IN_PROGRESS.name,
             links={
                 'add_approval': {'error': 'nope'},

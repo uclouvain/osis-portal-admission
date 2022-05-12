@@ -560,6 +560,9 @@ msgstr ""
 msgid "Document justifying your activity for this academic year."
 msgstr ""
 
+msgid "Download as PDF"
+msgstr ""
+
 msgid "Dutch"
 msgstr ""
 
@@ -1371,6 +1374,9 @@ msgstr ""
 msgid "Success without distinction"
 msgstr ""
 
+msgid "Summary of the proposition"
+msgstr ""
+
 msgid "Supervision"
 msgstr ""
 
@@ -1391,6 +1397,11 @@ msgid ""
 msgstr ""
 
 msgid "The curriculum has correctly been updated."
+msgstr ""
+
+msgid ""
+"The summary of the proposal in PDF format is being generated, please come "
+"back later to get it."
 msgstr ""
 
 msgid "There is no request for a new deadline."
