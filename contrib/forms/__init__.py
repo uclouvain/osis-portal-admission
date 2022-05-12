@@ -38,11 +38,11 @@ from base.tests.factories.academic_year import get_current_year
 EMPTY_CHOICE = (('', ' - '),)
 
 
-def get_country_initial_choices(iso_code, person):
+def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):
     """Return the unique initial choice for a country when data is either set from initial or from webservice."""
-    if not iso_code:
+    if not iso_code and not loaded_country:
         return EMPTY_CHOICE
-    country = CountriesService.get_country(iso_code=iso_code, person=person)
+    country = loaded_country if loaded_country else CountriesService.get_country(iso_code=iso_code, person=person)
     return EMPTY_CHOICE + (
         (country.iso_code, country.name if get_language() == settings.LANGUAGE_CODE else country.name_en),
     )
