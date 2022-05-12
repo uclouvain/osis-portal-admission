@@ -61,30 +61,33 @@ class AutocompleteTestCase(TestCase):
     @patch('osis_reference_sdk.api.countries_api.CountriesApi')
     def test_autocomplete_country(self, api):
         api.return_value.countries_list.return_value = Mock(results=[
-            MockCountry(iso_code='FR', name='France', name_en='France'),
-            MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
+            MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
+            MockCountry(iso_code='BE', name='Belgique', name_en='Belgium', european_union=True),
         ])
         url = reverse('admission:autocomplete:country')
         response = self.client.get(url, {'q': ''})
         self.assertEqual(response.json(), {
             'results': [{
                 'id': 'FR',
-                'text': 'France'
+                'text': 'France',
+                'european_union': True,
             }, {
                 'id': 'BE',
-                'text': 'Belgique'
+                'text': 'Belgique',
+                'european_union': True,
             }]
         })
         api.return_value.countries_list.assert_called()
 
         api.return_value.countries_list.return_value = Mock(results=[
-            MockCountry(iso_code='FR', name='France', name_en='France'),
+            MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
         ])
         response = self.client.get(url, {'q': 'F'})
         self.assertEqual(response.json(), {
             'results': [{
                 'id': 'FR',
-                'text': 'France'
+                'text': 'France',
+                'european_union': True,
             }]
         })
         self.assertEqual(api.return_value.countries_list.call_args[1]['search'], 'F')

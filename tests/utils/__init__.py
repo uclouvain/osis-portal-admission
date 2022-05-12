@@ -26,6 +26,6 @@
 from collections import namedtuple
 
 # Can't use Mock because 'name' property is reserved
-MockCountry = namedtuple('MockCountry', ['iso_code', 'name', 'name_en'])
+MockCountry = namedtuple('MockCountry', ['iso_code', 'name', 'name_en', 'european_union'])
 MockCity = namedtuple('MockCity', ['name'])
 MockLanguage = namedtuple('MockLanguage', ['code', 'name', 'name_en'])
