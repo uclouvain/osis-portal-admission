@@ -26,7 +26,10 @@
 
 from .autocomplete import *
 from .cancel import DoctorateAdmissionCancelView
-from .detail_tabs.confirmation_paper import DoctorateAdmissionConfirmationPaperDetailView
+from .detail_tabs.confirmation_paper import (
+    DoctorateAdmissionConfirmationPaperDetailView,
+    DoctorateAdmissionConfirmationPaperCanvasExportView,
+)
 from .detail_tabs.coordonnees import DoctorateAdmissionCoordonneesDetailView
 from .detail_tabs.cotutelle import DoctorateAdmissionCotutelleDetailView
 from .detail_tabs.curriculum import DoctorateAdmissionCurriculumDetailView
@@ -60,6 +63,7 @@ __all__ = [
     "DoctorateAdmissionConfirmFormView",
     "DoctorateAdmissionConfirmationPaperDetailView",
     "DoctorateAdmissionConfirmationPaperFormView",
+    "DoctorateAdmissionConfirmationPaperCanvasExportView",
     "DoctorateAdmissionCoordonneesDetailView",
     "DoctorateAdmissionCoordonneesFormView",
     "DoctorateAdmissionCotutelleDetailView",

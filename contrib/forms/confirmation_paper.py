@@ -41,7 +41,7 @@ class PromoterConfirmationPaperForm(forms.Form):
         required=False,
         max_files=1,
         help_text=_("To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH grant. "
-                    "The framework for this opinion is provided by your research fund."),
+                    "The canvas for this opinion is provided by your research fund."),
     )
 
 

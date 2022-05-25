@@ -42,9 +42,10 @@
     </li>
   </ul>
   <p>
+    {% url 'admission:doctorate:confirmation-paper-canvas' view.kwargs.pk as canvas_url %}
     {% blocktrans %}
-      The framework of the supervisory panel report must be sent to the accompanying committee during the test.
-      It can be downloaded <a href="#">here</a>.
+      The canvas of the supervisory panel report must be sent to the accompanying committee during the test.
+      It can be downloaded <a href="{{ canvas_url }}" target="_blank">here</a>.
     {% endblocktrans %}
   </p>
 </div>

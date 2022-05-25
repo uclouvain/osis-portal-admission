@@ -81,6 +81,11 @@ detail_paths = [
     path("cancel", views.DoctorateAdmissionCancelView.as_view(), name="cancel"),
     path("confirm", views.DoctorateAdmissionConfirmFormView.as_view(), name="confirm"),
     path("confirmation", views.DoctorateAdmissionConfirmationPaperDetailView.as_view(), name="confirmation-paper"),
+    path(
+        "confirmation-paper-canvas",
+        views.DoctorateAdmissionConfirmationPaperCanvasExportView.as_view(),
+        name="confirmation-paper-canvas",
+    ),
     path("extension-request", views.DoctorateAdmissionExtensionRequestDetailView.as_view(), name="extension-request"),
 ]
 

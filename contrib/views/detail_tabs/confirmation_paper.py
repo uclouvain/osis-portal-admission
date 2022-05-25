@@ -24,7 +24,8 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
+from osis_document.utils import get_file_url
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.services.proposition import AdmissionDoctorateService
@@ -52,3 +53,19 @@ class DoctorateAdmissionConfirmationPaperDetailView(LoginRequiredMixin, Template
         context_data['previous_confirmation_papers'] = all_confirmation_papers
 
         return context_data
+
+
+class DoctorateAdmissionConfirmationPaperCanvasExportView(LoginRequiredMixin, RedirectView):
+    def get(self, request, *args, **kwargs):
+        from osis_document.api.utils import get_remote_token
+
+        canvas_uuid = AdmissionDoctorateService.get_last_confirmation_paper_canvas(
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk'])
+        ).uuid
+
+        reading_token = get_remote_token(canvas_uuid)
+
+        self.url = get_file_url(reading_token)
+
+        return super().get(request, *args, **kwargs)

@@ -26,6 +26,7 @@
 from enum import Enum
 from typing import List
 
+from osis_admission_sdk.model.confirmation_paper_canvas import ConfirmationPaperCanvas
 from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
 from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
 from osis_admission_sdk.model.doctorate_identity_dto import DoctorateIdentityDTO
@@ -306,6 +307,13 @@ class AdmissionDoctorateService(metaclass=ServiceMeta):
     @classmethod
     def get_last_confirmation_paper(cls, person, uuid) -> ConfirmationPaperDTO:
         return AdmissionPropositionAPIClient().retrieve_last_confirmation_paper(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_last_confirmation_paper_canvas(cls, person, uuid) -> ConfirmationPaperCanvas:
+        return AdmissionPropositionAPIClient().retrieve_last_confirmation_paper_canvas(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
