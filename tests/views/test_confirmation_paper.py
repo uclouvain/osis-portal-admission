@@ -28,6 +28,7 @@ from unittest.mock import Mock, patch, ANY
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
+from rest_framework.status import HTTP_302_FOUND
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from base.tests.factories.person import PersonFactory
@@ -294,3 +295,80 @@ class ConfirmationPaperFormViewTestCase(TestCase):
             },
             **self.api_default_params,
         )
+
+
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
+class DoctorateAdmissionConfirmationPaperCanvasExportViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.phd_student = PersonFactory()
+        cls.api_default_params = {
+            'accept_language': ANY,
+            'x_user_first_name': ANY,
+            'x_user_last_name': ANY,
+            'x_user_email': ANY,
+            'x_user_global_id': ANY,
+        }
+
+    def setUp(self):
+        self.url = resolve_url(
+            "admission:doctorate:confirmation-paper-canvas",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+        )
+
+        api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
+        self.mock_api = api_patcher.start()
+
+        self.mock_api.return_value.retrieve_doctorate_dto.return_value = Mock(
+            links={'update_confirmation': {'url': 'ok'}},
+            reference='21-300001',
+            intitule_formation='Informatique',
+            statut=ChoixStatutDoctorat.ADMITTED.name,
+            sigle_formation='INFO',
+            annee_formation=2022,
+            matricule_doctorant=self.phd_student.global_id,
+            prenom_doctorant='John',
+            nom_doctorantig='Doe',
+            uuid='uuid1',
+        )
+        self.mock_api.return_value.retrieve_last_confirmation_paper.return_value = Mock(
+            uuid='c1',
+            date_limite='2022-06-10',
+            date='2022-04-03',
+            rapport_recherche=['f1'],
+            avis_renouvellement_mandat_recherche=['f2'],
+            proces_verbal_ca=['f3'],
+            to_dict=dict(
+                uuid='c1',
+                date_limite='2022-06-10',
+                date='2022-04-03',
+                rapport_recherche=['f1'],
+                avis_renouvellement_mandat_recherche=['f2'],
+                proces_verbal_ca=['f3'],
+            ),
+        )
+        self.mock_api.return_value.retrieve_last_confirmation_paper_canvas.return_value = Mock(
+            uuid='9a9adc60-2537-4a12-a396-64d2e9e34879',
+        )
+        self.addCleanup(api_patcher.stop)
+
+        get_remote_token_patcher = patch('osis_document.api.utils.get_remote_token')
+        patched = get_remote_token_patcher.start()
+        patched.return_value = 'b-token'
+        self.addCleanup(get_remote_token_patcher.stop)
+
+    def test_redirection_to_canvas_file_url_with_a_phd_student(self):
+        self.client.force_login(self.phd_student.user)
+
+        response = self.client.get(self.url)
+
+        # Call the API with the right data
+        self.mock_api.return_value.retrieve_last_confirmation_paper_canvas.assert_called()
+        self.mock_api.return_value.retrieve_last_confirmation_paper_canvas.assert_called_with(
+            uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+            **self.api_default_params,
+        )
+
+        # Check the redirection
+        self.assertEqual(response.status_code, HTTP_302_FOUND)
+        self.assertEqual(response.url, 'http://dummyurl/file/b-token')

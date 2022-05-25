@@ -143,11 +143,13 @@ msgid ""
 "    "
 msgstr ""
 
+#, python-format
 msgid ""
 "\n"
-"      The framework of the supervisory panel report must be sent to the "
+"      The canvas of the supervisory panel report must be sent to the "
 "accompanying committee during the test.\n"
-"      It can be downloaded <a href=\"#\">here</a>.\n"
+"      It can be downloaded <a href=\"%(canvas_url)s\" target=\"_blank"
+"\">here</a>.\n"
 "    "
 msgstr ""
 
@@ -1509,7 +1511,7 @@ msgstr ""
 
 msgid ""
 "To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH "
-"grant. The framework for this opinion is provided by your research fund."
+"grant. The canvas for this opinion is provided by your research fund."
 msgstr ""
 
 msgid "Training certificate, with dates, justifying this academic year."
