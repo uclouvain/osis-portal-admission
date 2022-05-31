@@ -193,7 +193,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
     )
     last_registration_id = forms.CharField(
         required=False,
-        label=_('What was your NOMA (registration id) ?'),
+        label=_('What was your NOMA (registration id)?'),
         widget=forms.TextInput(
             attrs={
                 "data-mask": "00000000",

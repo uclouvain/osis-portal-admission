@@ -32,7 +32,9 @@ from django.urls import reverse
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
+from osis_reference_sdk.model.diploma import Diploma
 from osis_reference_sdk.model.high_school import HighSchool
+from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
 
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
@@ -307,6 +309,32 @@ class AutocompleteTestCase(TestCase):
                 }, {
                     'id': self.second_high_school_uuid,
                     'text': 'HighSchool 2 (Bruxelles)',
+                },
+            ],
+        })
+
+    @patch('osis_reference_sdk.api.diplomas_api.DiplomasApi')
+    def test_autocomplete_diploma_list(self, api):
+        self.first_diploma_uuid = str(uuid.uuid4())
+        self.second_diploma_uuid = str(uuid.uuid4())
+
+        mock_diplomas = [
+            Diploma(uuid=self.first_diploma_uuid, title="Computer science"),
+            Diploma(uuid=self.second_diploma_uuid, title="Human sciences"),
+        ]
+        api.return_value.diplomas_list.return_value = PaginatedDiploma(
+            results=mock_diplomas,
+        )
+        url = reverse('admission:autocomplete:diploma')
+        response = self.client.get(url, {'q': 'science'})
+        self.assertEqual(response.json(), {
+            'results': [
+                {
+                    'id': self.first_diploma_uuid,
+                    'text': 'Computer science',
+                }, {
+                    'id': self.second_diploma_uuid,
+                    'text': 'Human sciences',
                 },
             ],
         })

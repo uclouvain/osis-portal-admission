@@ -24,13 +24,20 @@
 #
 # ##############################################################################
 from typing import List, Mapping, Optional, Union
+from functools import partial
 
 from django import forms
 from django.conf import settings
 from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.services.organisation import EntitiesService
-from admission.services.reference import AcademicYearService, CountriesService, HighSchoolService, LanguageService
+from admission.services.reference import (
+    CountriesService,
+    LanguageService,
+    AcademicYearService,
+    DiplomaService,
+    HighSchoolService,
+)
 from admission.utils import format_entity_title, format_high_school_title
 from base.tests.factories.academic_year import get_current_year
 
@@ -63,6 +70,16 @@ def get_thesis_institute_initial_choices(uuid, person):
         return EMPTY_CHOICE
     institute = EntitiesService.get_ucl_entity(person=person, uuid=uuid)
     return EMPTY_CHOICE + ((institute.uuid, format_entity_title(entity=institute)),)
+
+
+def get_diploma_initial_choices(uuid, person):
+    """Return the diploma choices when data is either set from initial or webservice."""
+    if not uuid:
+        return EMPTY_CHOICE
+    diploma = DiplomaService.get_diploma(person=person, uuid=uuid)
+    return EMPTY_CHOICE + (
+        (diploma.uuid, diploma.title),
+    )
 
 
 def get_thesis_location_initial_choices(value):
@@ -108,6 +125,15 @@ class CustomDateInput(forms.DateInput):
 
     class Media:
         js = ('jquery.mask.min.js',)
+
+
+RadioBooleanField = partial(
+    forms.TypedChoiceField,
+    coerce=lambda value: value == 'True',
+    choices=((True, _('Yes')), (False, _('No'))),
+    widget=forms.RadioSelect,
+    empty_value=None,
+)
 
 
 def get_example_text(example: str):

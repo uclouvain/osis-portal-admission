@@ -28,7 +28,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
-from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.constants import FIELD_REQUIRED_MESSAGE, LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
 from admission.contrib.enums.secondary_studies import (
     DiplomaTypes,
     EducationalType,
@@ -48,8 +48,6 @@ from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from base.tests.factories.academic_year import get_current_year
-
-LINGUISTIC_REGIMES_WITHOUT_TRANSLATION = ['FR', 'NL', 'DE', 'EN', 'IT', 'ES', 'PT']
 
 EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
     EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,

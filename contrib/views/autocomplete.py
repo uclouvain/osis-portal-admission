@@ -33,7 +33,13 @@ from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 from admission.constants import BE_ISO_CODE
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
-from admission.services.reference import CitiesService, CountriesService, LanguageService, HighSchoolService
+from admission.services.reference import (
+    CitiesService,
+    CountriesService,
+    LanguageService,
+    DiplomaService,
+    HighSchoolService,
+)
 from admission.utils import format_entity_address, format_entity_title, format_high_school_title
 
 from base.models.enums.entity_type import INSTITUTE
@@ -48,6 +54,7 @@ __all__ = [
     "InstituteAutocomplete",
     "InstituteLocationAutocomplete",
     "HighSchoolAutocomplete",
+    "DiplomaAutocomplete",
 ]
 
 
@@ -218,3 +225,23 @@ class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2List
             formatted_address = format_entity_address(address)
             formatted_results.append({'id': formatted_address, 'text': formatted_address})
         return formatted_results
+
+
+class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return DiplomaService.get_diplomas(
+            person=self.request.user.person,
+            search=self.q,
+        )
+
+    def results(self, results):
+        return [
+            dict(
+                id=result.uuid,
+                text=result.title,
+            )
+            for result in results
+        ]
+
+    def autocomplete_results(self, results):
+        return results

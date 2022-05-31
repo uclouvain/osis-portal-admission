@@ -40,13 +40,60 @@ autocomplete_paths = [
     path("institute/", views.InstituteAutocomplete.as_view(), name="institute"),
     path("institute-location/", views.InstituteLocationAutocomplete.as_view(), name="institute-location"),
     path("high-school/", views.HighSchoolAutocomplete.as_view(), name="high-school"),
+    path("diploma/", views.DiplomaAutocomplete.as_view(), name="diploma"),
+]
+
+curriculum_read_paths = [
+    path(
+        "educational/<uuid:experience_id>/",
+        views.DoctorateAdmissionCurriculumEducationalExperienceDetailView.as_view(),
+        name="educational_read",
+    ),
+    path(
+        "professional/<uuid:experience_id>/",
+        views.DoctorateAdmissionCurriculumProfessionalExperienceDetailView.as_view(),
+        name="professional_read",
+    ),
+]
+
+curriculum_update_paths = [
+    path(
+        "educational/<uuid:experience_id>/update",
+        views.DoctorateAdmissionCurriculumEducationalExperienceFormView.as_view(),
+        name="educational_update",
+    ),
+    path(
+        "educational/<uuid:experience_id>/delete",
+        views.DoctorateAdmissionCurriculumEducationalExperienceDeleteView.as_view(),
+        name="educational_delete",
+    ),
+    path(
+        "educational/create",
+        views.DoctorateAdmissionCurriculumEducationalExperienceFormView.as_view(),
+        name="educational_create",
+    ),
+    path(
+        "professional/<uuid:experience_id>/update",
+        views.DoctorateAdmissionCurriculumProfessionalExperienceFormView.as_view(),
+        name="professional_update",
+    ),
+    path(
+        "professional/<uuid:experience_id>/delete",
+        views.DoctorateAdmissionCurriculumProfessionalExperienceDeleteView.as_view(),
+        name="professional_delete",
+    ),
+    path(
+        "professional/create",
+        views.DoctorateAdmissionCurriculumProfessionalExperienceFormView.as_view(),
+        name="professional_create",
+    ),
 ]
 
 creation_paths = [
     path("person", views.DoctorateAdmissionPersonFormView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
     path("curriculum", views.DoctorateAdmissionCurriculumFormView.as_view(), name="curriculum"),
-    path('curriculum/<uuid:experience_id>/', views.DoctorateAdmissionCurriculumFormView.as_view(), name='curriculum'),
+    path("curriculum/", include((curriculum_update_paths, "curriculum"))),
     path("education", views.DoctorateAdmissionEducationFormView.as_view(), name="education"),
     path("languages", views.DoctorateAdmissionLanguagesFormView.as_view(), name="languages"),
     path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
@@ -56,7 +103,7 @@ update_paths = [
     path("person", views.DoctorateAdmissionPersonFormView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
     path("curriculum", views.DoctorateAdmissionCurriculumFormView.as_view(), name="curriculum"),
-    path('curriculum/<uuid:experience_id>/', views.DoctorateAdmissionCurriculumFormView.as_view(), name='curriculum'),
+    path("curriculum/", include((curriculum_update_paths, "curriculum"))),
     path("education", views.DoctorateAdmissionEducationFormView.as_view(), name="education"),
     path("languages", views.DoctorateAdmissionLanguagesFormView.as_view(), name="languages"),
     path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
@@ -77,6 +124,7 @@ doctorate_paths = [
     path("person", views.DoctorateAdmissionPersonDetailView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesDetailView.as_view(), name="coordonnees"),
     path("curriculum", views.DoctorateAdmissionCurriculumDetailView.as_view(), name="curriculum"),
+    path("curriculum/", include((curriculum_read_paths, "curriculum"))),
     path("education", views.DoctorateAdmissionEducationDetailView.as_view(), name="education"),
     path("languages", views.DoctorateAdmissionLanguagesDetailView.as_view(), name="languages"),
     path("project", views.DoctorateAdmissionProjectDetailView.as_view(), name="project"),

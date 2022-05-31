@@ -33,7 +33,11 @@ from .detail_tabs.confirmation_paper import (
 )
 from .detail_tabs.coordonnees import DoctorateAdmissionCoordonneesDetailView
 from .detail_tabs.cotutelle import DoctorateAdmissionCotutelleDetailView
-from .detail_tabs.curriculum import DoctorateAdmissionCurriculumDetailView
+from .detail_tabs.curriculum import (
+    DoctorateAdmissionCurriculumDetailView,
+    DoctorateAdmissionCurriculumProfessionalExperienceDetailView,
+    DoctorateAdmissionCurriculumEducationalExperienceDetailView,
+)
 from .detail_tabs.education import DoctorateAdmissionEducationDetailView
 from .detail_tabs.extension_request import DoctorateAdmissionExtensionRequestDetailView
 from .detail_tabs.languages import DoctorateAdmissionLanguagesDetailView
@@ -44,7 +48,7 @@ from .form_tabs.confirm import DoctorateAdmissionConfirmFormView
 from .form_tabs.confirmation_paper import DoctorateAdmissionConfirmationPaperFormView
 from .form_tabs.coordonnees import DoctorateAdmissionCoordonneesFormView
 from .form_tabs.cotutelle import DoctorateAdmissionCotutelleFormView
-from .form_tabs.curriculum import DoctorateAdmissionCurriculumFormView
+from .form_tabs.curriculum import *
 from .form_tabs.education import DoctorateAdmissionEducationFormView
 from .form_tabs.extension_request import DoctorateAdmissionExtensionRequestFormView
 from .form_tabs.languages import DoctorateAdmissionLanguagesFormView
@@ -73,6 +77,12 @@ __all__ = [
     "DoctorateAdmissionCotutelleFormView",
     "DoctorateAdmissionCurriculumDetailView",
     "DoctorateAdmissionCurriculumFormView",
+    "DoctorateAdmissionCurriculumProfessionalExperienceDeleteView",
+    "DoctorateAdmissionCurriculumEducationalExperienceDetailView",
+    "DoctorateAdmissionCurriculumEducationalExperienceFormView",
+    "DoctorateAdmissionCurriculumProfessionalExperienceDeleteView",
+    "DoctorateAdmissionCurriculumProfessionalExperienceDetailView",
+    "DoctorateAdmissionCurriculumProfessionalExperienceFormView",
     "DoctorateAdmissionEducationDetailView",
     "DoctorateAdmissionEducationFormView",
     "DoctorateAdmissionLanguagesDetailView",
