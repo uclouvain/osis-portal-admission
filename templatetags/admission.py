@@ -39,7 +39,6 @@ from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums import *
 from admission.contrib.enums.training import CategorieActivite, StatutActivite
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
-from base.models.utils.utils import ChoiceEnum
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
@@ -172,13 +171,22 @@ def get_valid_tab_tree(tab_tree, admission):
     return tab_tree
 
 
+def get_current_tab_name(context):
+    match = context['request'].resolver_match
+    namespace_size = len(match.namespaces)
+    if namespace_size > 3:
+        # Sub tabs - update mode (e.g: admission:doctorate:update:curriculum:experience_detail)
+        return match.namespaces[3]
+    if namespace_size == 3 and match.namespaces[2] != 'update':
+        # Sub tabs - read mode (e.g: admission:doctorate:curriculum:experience_detail)
+        return match.namespaces[2]
+    # Main tabs (e.g: admission:doctorate:curriculum or admission:doctorate:update:curriculum)
+    return match.url_name
+
+
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
 def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
-    match = context['request'].resolver_match
-
-    current_tab_name = match.url_name
-    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
-        current_tab_name = match.namespaces[2]
+    current_tab_name = get_current_tab_name(context)
 
     # Create a new tab tree based on the default one but depending on the permissions links
     tab_tree = TAB_TREES['doctorate']
@@ -201,12 +209,16 @@ def get_subtab_label(tab_name):
 
 
 @register.simple_tag(takes_context=True)
-def get_current_tab(context):
-    match = context['request'].resolver_match
+def current_subtabs(context):
+    current_tab_name = get_current_tab_name(context)
     current_tab_tree = TAB_TREES['doctorate']
-    current_tab_name = match.url_name
-    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
-        current_tab_name = match.namespaces[2]
+    return current_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), [])
+
+
+@register.simple_tag(takes_context=True)
+def get_current_tab(context):
+    current_tab_name = get_current_tab_name(context)
+    current_tab_tree = TAB_TREES['doctorate']
     return next(
         (tab for subtabs in current_tab_tree.values() for tab in subtabs if tab.name == current_tab_name),
         None,
@@ -215,12 +227,7 @@ def get_current_tab(context):
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None, no_status=False):
-    match = context['request'].resolver_match
-
-    current_tab_name = match.url_name
-    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
-        current_tab_name = match.namespaces[2]
-
+    current_tab_name = get_current_tab_name(context)
     current_tab_tree = TAB_TREES['doctorate']
     valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(current_tab_tree, admission))
     return {
@@ -464,3 +471,9 @@ def training_categories(activities):
         'added': added,
         'validated': validated,
     }
+
+
+@register.filter
+def get_academic_year(year: int):
+    """Return the academic year related to a specific year."""
+    return f'{year}-{year+1}'
