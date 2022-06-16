@@ -167,6 +167,7 @@ class PersonViewTestCase(TestCase):
                 'birth_place': 'Louvain-la-Neuve',
                 'id_card_number': '0123456789',
                 'passport_number': '0123456789',
+                'last_registration_id': '0123456A',
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -179,6 +180,7 @@ class PersonViewTestCase(TestCase):
         self.assertFormError(response, 'form', 'last_name', _("This field is required if the first name is missing."))
         self.assertFormError(response, 'form', 'id_card', _("This field is required."))
         self.assertFormError(response, 'form', 'passport', _("This field is required."))
+        self.assertFormError(response, 'form', 'last_registration_id', _("The NOMA must contain 8 digits."))
 
     def test_post_update(self):
         url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

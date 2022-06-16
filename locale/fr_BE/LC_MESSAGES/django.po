@@ -220,7 +220,8 @@ msgid ""
 msgstr ""
 "\n"
 "Le canevas de procès-verbal doit être transmis au comité d’accompagnement "
-"durant l’épreuve. Il est téléchargeable <a href=\"%(canvas_url)s\" target=\"_blank\">ici</a>."
+"durant l’épreuve. Il est téléchargeable <a href=\"%(canvas_url)s\" target="
+"\"_blank\">ici</a>."
 
 msgid ""
 "\n"
@@ -407,9 +408,6 @@ msgstr "Artistique de qualification"
 
 msgid "Artistic transition"
 msgstr "Artistique de transition"
-
-msgid "At which result level do you consider yourself?"
-msgstr "Quel résultat avez-vous obtenu ?"
 
 msgid "Attachments"
 msgstr "Pièces jointes"
@@ -1611,15 +1609,11 @@ msgstr ""
 "parvenir <strong>impérativement dans les 15 jours calendrier</strong>. A "
 "défaut, votre demande sera clôturée."
 
+msgid "The NOMA must contain 8 digits."
+msgstr "Le NOMA doit contenir exactement 8 chiffres."
+
 msgid "The curriculum has correctly been updated."
 msgstr "Le curriculum a bien été mis à jour."
-
-msgid ""
-"The summary of the proposal in PDF format is being generated, please come "
-"back later to get it."
-msgstr ""
-"Le résumé de la proposition au format PDF est en cours de génération, "
-"veuillez revenir plus tard pour y accéder."
 
 msgid ""
 "The high school diploma is the Certificate of Higher Secondary Education "
@@ -1628,6 +1622,13 @@ msgstr ""
 "Le diplôme de fin d’études secondaires correspond au Certificat "
 "d’Enseignement Secondaire Supérieur (CESS). Il est couramment nommé "
 "baccalauréat dans de nombreux pays."
+
+msgid ""
+"The summary of the proposal in PDF format is being generated, please come "
+"back later to get it."
+msgstr ""
+"Le résumé de la proposition au format PDF est en cours de génération, "
+"veuillez revenir plus tard pour y accéder."
 
 msgid "There is no request for a new deadline."
 msgstr "Il n'y a pas de demande de nouvelle échéance."

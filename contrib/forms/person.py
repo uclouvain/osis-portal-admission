@@ -200,6 +200,9 @@ class DoctorateAdmissionPersonForm(forms.Form):
                 "placeholder": get_example_text("10581300"),
             },
         ),
+        validators=[
+            validators.RegexValidator(r'^[0-9]{8}$', _('The NOMA must contain 8 digits.')),
+        ],
     )
 
     class Media:

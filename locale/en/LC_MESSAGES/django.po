@@ -326,9 +326,6 @@ msgstr ""
 msgid "Artistic transition"
 msgstr ""
 
-msgid "At which result level do you consider yourself?"
-msgstr ""
-
 msgid "Attachments"
 msgstr ""
 
@@ -1454,17 +1451,20 @@ msgid ""
 "be closed."
 msgstr ""
 
-msgid "The curriculum has correctly been updated."
+msgid "The NOMA must contain 8 digits."
 msgstr ""
 
-msgid ""
-"The summary of the proposal in PDF format is being generated, please come "
-"back later to get it."
+msgid "The curriculum has correctly been updated."
 msgstr ""
 
 msgid ""
 "The high school diploma is the Certificate of Higher Secondary Education "
 "(CESS). It is commonly referred to as the baccalaureate in many countries."
+msgstr ""
+
+msgid ""
+"The summary of the proposal in PDF format is being generated, please come "
+"back later to get it."
 msgstr ""
 
 msgid "There is no request for a new deadline."
