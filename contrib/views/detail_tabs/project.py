@@ -32,7 +32,7 @@ from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
 from admission.services.proposition import AdmissionPropositionService
-from admission.utils.utils import format_entity_title
+from admission.utils import format_entity_title
 
 
 class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):

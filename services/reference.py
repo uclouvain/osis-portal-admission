@@ -26,7 +26,7 @@
 from functools import lru_cache
 
 from osis_reference_sdk import ApiClient, ApiException
-from osis_reference_sdk.api import academic_years_api, cities_api, countries_api, languages_api
+from osis_reference_sdk.api import academic_years_api, cities_api, countries_api, languages_api, high_schools_api
 
 from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import reference as reference_sdk
@@ -118,3 +118,27 @@ class LanguageService(metaclass=ServiceMeta):
         # Search is only on name and name_en so we need to iter on whole list to search on code
         languages = cls.get_languages(person)
         return next((lang for lang in languages if lang.code == code), None)  # pragma: no branch
+
+
+class HighSchoolAPIClient:
+    def __new__(cls):
+        api_config = reference_sdk.build_configuration()
+        return high_schools_api.HighSchoolsApi(ApiClient(configuration=api_config))
+
+
+class HighSchoolService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_high_schools(cls, person, **kwargs):
+        return HighSchoolAPIClient().high_schools_list(
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        ).results
+
+    @classmethod
+    def get_high_school(cls, person, uuid):
+        return HighSchoolAPIClient().high_school_read(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )

@@ -38,6 +38,7 @@ from admission.contrib.enums.secondary_studies import (
 )
 from admission.contrib.forms import (
     get_country_initial_choices,
+    get_high_school_initial_choices,
     get_language_initial_choices,
     get_past_academic_years_choices,
     EMPTY_CHOICE,
@@ -176,6 +177,7 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         label=_("Institute"),
         required=False,
         help_text=_("You can perform a search based on the location or postal code."),
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:high-school"),
     )
     other_institute = forms.BooleanField(
         label=_("If you don't find your institute in the list, please specify"),
@@ -195,9 +197,13 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         widget=forms.RadioSelect,
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, person, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['other_institute'] = bool(self.initial.get('other_institute_name'))
+        self.fields['institute'].widget.choices = get_high_school_initial_choices(
+            self.data.get(self.add_prefix("institute"), self.initial.get("institute")),
+            person,
+        )
 
     def clean(self):
         cleaned_data = super().clean()

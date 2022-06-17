@@ -124,7 +124,6 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
                 main_form.data, main_form.files, main_form.add_prefix("enrolment_certificate")
             )
 
-            country = foreign_diploma_form.data.get(foreign_diploma_form.add_prefix("country"))
             linguistic_regime = foreign_diploma_form.data.get(foreign_diploma_form.add_prefix("linguistic_regime"))
 
             high_school_diploma_translation = foreign_diploma_form.fields[
@@ -191,6 +190,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
             self.forms = {
                 "main_form": context_data.pop('form') if 'form' in context_data else self.get_form(),
                 "belgian_diploma_form": DoctorateAdmissionEducationBelgianDiplomaForm(
+                    person=self.person,
                     prefix="belgian_diploma",
                     initial=initial.get("belgian_diploma"),
                     empty_permitted=True,

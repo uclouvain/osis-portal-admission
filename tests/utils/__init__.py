@@ -29,3 +29,4 @@ from collections import namedtuple
 MockCountry = namedtuple('MockCountry', ['iso_code', 'name', 'name_en', 'european_union'])
 MockCity = namedtuple('MockCity', ['name'])
 MockLanguage = namedtuple('MockLanguage', ['code', 'name', 'name_en'])
+MockHighSchool = namedtuple('MockHighSchool', ['name', 'city', 'uuid'])

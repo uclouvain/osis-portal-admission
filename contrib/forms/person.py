@@ -41,7 +41,7 @@ from admission.contrib.forms import (
 )
 from osis_document.contrib.forms import FileUploadField
 
-from admission.utils.utils import force_title
+from admission.utils import force_title
 
 YES = '1'
 NO = '0'

@@ -46,14 +46,10 @@
 
       {% field_data _("What result did you get?") belgian_diploma.result|enum_display:'DiplomaResults' %}
 
-      {% if belgian_diploma.institute %}
-        {% field_data _("Institute") belgian_diploma.institute %}
-      {% else %}
-        <dl>
-          <dt>{% translate "Another institute" %}</dt>
-          <dd>{{ belgian_diploma.other_institute_name }} ({{ belgian_diploma.other_institute_address }})</dd>
-        </dl>
-      {% endif %}
+      <dl>
+        <dt>{% translate "Institute" %}</dt>
+        <dd>{{ belgian_diploma.institute_name }} ({{ belgian_diploma.institute_address }})</dd>
+      </dl>
 
       {% if belgian_diploma.schedule %}
         <dl>

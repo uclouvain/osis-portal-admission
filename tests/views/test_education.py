@@ -23,11 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import uuid
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
+from osis_reference_sdk.model.high_school import HighSchool
 from rest_framework import status
 from rest_framework.status import HTTP_200_OK, HTTP_302_FOUND
 
@@ -40,7 +42,7 @@ from admission.contrib.enums.secondary_studies import (
     ForeignDiplomaTypes,
     GotDiploma,
 )
-from admission.tests.utils import MockCountry, MockLanguage
+from admission.tests.utils import MockCountry, MockLanguage, MockHighSchool
 from base.tests.factories.academic_year import get_current_year
 from base.tests.factories.person import PersonFactory
 
@@ -135,6 +137,27 @@ class EducationTestCase(TestCase):
         self.mock_languages_api.return_value.languages_list.side_effect = get_languages
         self.addCleanup(languages_api_patcher.stop)
 
+        high_schools_api_patcher = patch("osis_reference_sdk.api.high_schools_api.HighSchoolsApi")
+        self.mock_high_schools_api = high_schools_api_patcher.start()
+
+        self.first_high_school_uuid = str(uuid.uuid4())
+        self.second_high_school_uuid = str(uuid.uuid4())
+        self.third_high_school_uuid = str(uuid.uuid4())
+
+        def get_high_schools(**kwargs):
+            high_schools = [
+                HighSchool(uuid=self.first_high_school_uuid, name="HighSchool 1", city="Louvain-La-Neuve"),
+                HighSchool(uuid=self.second_high_school_uuid, name="HighSchool 2", city="Louvain-La-Neuve"),
+                HighSchool(uuid=self.third_high_school_uuid, name="HighSchool 3", city="Bruxelles"),
+            ]
+            if kwargs.get("uuid"):
+                return next((school for school in high_schools if school.uuid == kwargs["uuid"]), None)
+            return Mock(results=high_schools)
+
+        self.mock_high_schools_api.return_value.high_schools_list.side_effect = get_high_schools
+        self.mock_high_schools_api.return_value.high_school_read.side_effect = get_high_schools
+        self.addCleanup(high_schools_api_patcher.stop)
+
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
         self.addCleanup(academic_year_api_patcher.stop)
@@ -162,7 +185,7 @@ class EducationTestCase(TestCase):
                 "academic_graduation_year": 2020,
                 "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
-                "belgian_diploma-institute": "UCL",
+                "belgian_diploma-institute": self.first_high_school_uuid,
                 "belgian_diploma-other_institute": False,
                 "belgian_diploma-other_institute_name": "Special school",
                 # Even if we send data for schedule, it should be stripped from data sent to WS
@@ -184,7 +207,7 @@ class EducationTestCase(TestCase):
                     "enrolment_certificate": [],
                     "result": DiplomaResults.GT_75_RESULT.name,
                     # Clean other institute
-                    "institute": "UCL",
+                    "institute": self.first_high_school_uuid,
                     "other_institute_name": "",
                     "other_institute_address": "",
                     # Clean education type
@@ -838,6 +861,7 @@ class EducationTestCase(TestCase):
             "belgian_diploma": {
                 "academic_graduation_year": 2020,
                 "other_institute_name": "Special school",
+                "other_institute_address": "Louvain-La-Neuve",
                 "schedule": {
                     "latin": 10,
                     "greek": 10,
@@ -850,9 +874,23 @@ class EducationTestCase(TestCase):
 
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "Special school")
+        self.assertContains(response, "Special school (Louvain-La-Neuve)")
         self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
         self.assertIn("admission", response.context)
+
+        # With specified institute
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
+            "belgian_diploma": {
+                "academic_graduation_year": 2020,
+                "institute": self.first_high_school_uuid,
+            },
+            "foreign_diploma": {},
+            "high_school_diploma_alternative": {},
+        }
+
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "HighSchool 1 (Louvain-La-Neuve)")
 
     def test_detail_foreign_diploma(self):
         self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
