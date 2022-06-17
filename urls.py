@@ -39,6 +39,7 @@ autocomplete_paths = [
     path("language/", views.LanguageAutocomplete.as_view(), name="language"),
     path("institute/", views.InstituteAutocomplete.as_view(), name="institute"),
     path("institute-location/", views.InstituteLocationAutocomplete.as_view(), name="institute-location"),
+    path("high-school/", views.HighSchoolAutocomplete.as_view(), name="high-school"),
 ]
 
 creation_paths = [

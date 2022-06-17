@@ -28,8 +28,7 @@ from django.test import TestCase
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 
-from admission.utils import format_entity_address, format_entity_title
-from admission.utils.utils import force_title
+from admission.utils import format_entity_address, format_entity_title, force_title
 
 
 class UtilsTestCase(TestCase):

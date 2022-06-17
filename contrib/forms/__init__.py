@@ -31,8 +31,8 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from admission.services.organisation import EntitiesService
-from admission.services.reference import CountriesService, LanguageService, AcademicYearService
-from admission.utils import format_entity_title
+from admission.services.reference import CountriesService, LanguageService, AcademicYearService, HighSchoolService
+from admission.utils import format_entity_title, format_high_school_title
 from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
@@ -71,6 +71,16 @@ def get_thesis_institute_initial_choices(uuid, person):
 def get_thesis_location_initial_choices(value):
     """Return the unique initial choice for a thesis location when data is either set from initial or webservice."""
     return EMPTY_CHOICE if not value else EMPTY_CHOICE + ((value, value),)
+
+
+def get_high_school_initial_choices(uuid, person):
+    """Return the unique initial choice for an high school when data is either set from initial or webservice."""
+    if not uuid:
+        return EMPTY_CHOICE
+    high_school = HighSchoolService.get_high_school(person=person, uuid=uuid)
+    return EMPTY_CHOICE + (
+        (high_school.uuid, format_high_school_title(high_school=high_school)),
+    )
 
 
 def get_past_academic_years_choices(person):

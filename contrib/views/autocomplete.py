@@ -33,8 +33,10 @@ from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 from admission.constants import BE_ISO_CODE
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
-from admission.services.reference import CitiesService, CountriesService, LanguageService
-from admission.utils import format_entity_address, format_entity_title
+from admission.services.reference import CitiesService, CountriesService, LanguageService, HighSchoolService
+from admission.utils import format_entity_address, format_entity_title, format_high_school_title
+
+from base.models.enums.entity_type import INSTITUTE
 
 __all__ = [
     "DoctorateAutocomplete",
@@ -45,9 +47,8 @@ __all__ = [
     "PersonAutocomplete",
     "InstituteAutocomplete",
     "InstituteLocationAutocomplete",
+    "HighSchoolAutocomplete",
 ]
-
-from base.models.enums.entity_type import INSTITUTE
 
 
 class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
@@ -152,6 +153,28 @@ class PersonAutocomplete(TutorAutocomplete):
             person=self.request.user.person,
             search=self.q,
         )
+
+
+class HighSchoolAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        # Return a list of high schools whose name / city / postal code city is specified by the user
+        return HighSchoolService.get_high_schools(
+            limit=10,
+            person=self.request.user.person,
+            search=self.q,
+        )
+
+    def autocomplete_results(self, results):
+        return results
+
+    def results(self, results):
+        return [
+            dict(
+                id=high_school.uuid,
+                text=format_high_school_title(high_school),
+            )
+            for high_school in results
+        ]
 
 
 class InstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):

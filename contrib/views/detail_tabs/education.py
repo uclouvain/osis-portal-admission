@@ -30,7 +30,7 @@ from django.views.generic import TemplateView
 
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
-from admission.services.reference import CountriesService, LanguageService
+from admission.services.reference import CountriesService, LanguageService, HighSchoolService
 
 
 class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
@@ -40,7 +40,8 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
         context_data = super().get_context_data(**kwargs)
         # Admission
         context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person, uuid=str(self.kwargs['pk']),
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
         )
         # Person
         high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
@@ -54,7 +55,23 @@ class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
         high_school_diploma_alternative = high_school_diploma.get('high_school_diploma_alternative')
 
         if belgian_diploma:
-            context_data["belgian_diploma"] = high_school_diploma["belgian_diploma"]
+            context_data['belgian_diploma'] = high_school_diploma['belgian_diploma']
+            institute_uuid = context_data['belgian_diploma'].get('institute')
+            if institute_uuid:
+                institute = HighSchoolService.get_high_school(
+                    uuid=institute_uuid,
+                    person=self.request.user.person,
+                )
+                context_data['belgian_diploma']['institute_name'] = institute['name']
+                context_data['belgian_diploma']['institute_address'] = institute['city']
+            else:
+                context_data['belgian_diploma']['institute_name'] = context_data['belgian_diploma'].pop(
+                    'other_institute_name'
+                )
+                context_data['belgian_diploma']['institute_address'] = context_data['belgian_diploma'].pop(
+                    'other_institute_address'
+                )
+
         elif foreign_diploma:
             context_data["foreign_diploma"] = high_school_diploma["foreign_diploma"]
             if context_data["foreign_diploma"].get("country"):
