@@ -189,6 +189,10 @@ msgstr ""
 msgid "(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
 msgstr ""
 
+msgid ""
+"A certified translation of your certificate of enrolment or school attendance"
+msgstr ""
+
 msgid "A certified translation of your high school diploma"
 msgstr ""
 
@@ -209,9 +213,6 @@ msgid "A field of the schedule must at least be set."
 msgstr ""
 
 msgid "A transcript or your last year at high school"
-msgstr ""
-
-msgid "A translation of your certificate of enrolment or school attendance"
 msgstr ""
 
 msgid "A1"
@@ -417,13 +418,13 @@ msgid "Certificate of language knowledge"
 msgstr ""
 
 msgid ""
-"Certificate of successful completion of the admission test for restrictive "
-"equivalence"
+"Certificate of successful completion of the admission test for the first "
+"cycle of higher education"
 msgstr ""
 
 msgid ""
 "Certificate of successful completion of the admission test for the first "
-"cycle of higher education"
+"cycle of higher education in case of restrictive equivalence"
 msgstr ""
 
 msgid ""
@@ -617,12 +618,6 @@ msgstr ""
 msgid "Educational community"
 msgstr ""
 
-msgid "Educational qualification"
-msgstr ""
-
-msgid "Educational transition"
-msgstr ""
-
 msgid "Educational type is required with this community of education"
 msgstr ""
 
@@ -714,7 +709,7 @@ msgstr ""
 msgid "French"
 msgstr ""
 
-msgid "French-speaking Community of Belgium"
+msgid "French-speaking Community"
 msgstr ""
 
 msgid "Full-time education"
