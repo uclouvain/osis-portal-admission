@@ -59,22 +59,18 @@ class DiplomaResults(ChoiceEnum):
 
 
 class BelgianCommunitiesOfEducation(ChoiceEnum):
-    FRENCH_SPEAKING = _("French-speaking Community of Belgium")
+    FRENCH_SPEAKING = _("French-speaking Community")
     FLEMISH_SPEAKING = _("Flemish-speaking Community")
     GERMAN_SPEAKING = _("German-speaking Community")
 
 
 EDUCATIONAL_TYPES = (
     ("TEACHING_OF_GENERAL_EDUCATION", _("Teaching of general education")),
+    ("TRANSITION_METHOD", _("Transition method")),
+    ("ARTISTIC_TRANSITION", _("Artistic transition")),
+    ("QUALIFICATION_METHOD", _("Qualification method")),
+    ("ARTISTIC_QUALIFICATION", _("Artistic qualification")),
     ("PROFESSIONAL_EDUCATION", _("Professional education")),
-    (_("Educational transition"), (
-        ("TRANSITION_METHOD", _("Transition method")),
-        ("ARTISTIC_TRANSITION", _("Artistic transition")),
-    )),
-    (_("Educational qualification"), (
-        ("QUALIFICATION_METHOD", _("Qualification method")),
-        ("ARTISTIC_QUALIFICATION", _("Artistic qualification")),
-    )),
 )
 
 
@@ -97,5 +93,5 @@ class ForeignDiplomaTypes(ChoiceEnum):
 
 class Equivalence(ChoiceEnum):
     YES = _("Yes")
-    NO = _("No")
     PENDING = _("Ongoing request")
+    NO = _("No")

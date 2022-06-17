@@ -326,7 +326,7 @@ class EducationTestCase(TestCase):
         self.assertFormError(
             response,
             "main_form",
-            None,
+            "high_school_diploma",
             _("Please specify either your high school diploma or your enrolment certificate"),
         )
 
@@ -703,7 +703,7 @@ class EducationTestCase(TestCase):
         self.assertFormError(
             response,
             "main_form",
-            None,
+            "high_school_diploma",
             _("Please specify either your high school diploma or your enrolment certificate"),
         )
         response = self.client.post(

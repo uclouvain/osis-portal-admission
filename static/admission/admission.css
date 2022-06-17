@@ -25,30 +25,46 @@
  */
 
 .inline-field-data dl {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .media-list .media {
-    margin-top: 0.5em;
-    border: 1px solid #ddd;
-    padding: 1em;
+  margin-top: 0.5em;
+  border: 1px solid #ddd;
+  padding: 1em;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .min_field {
-    width: max-content;
+  width: max-content;
 }
 
 .popover-buttons {
-    cursor: pointer;
-    border: none;
-    background: transparent;
+  color: initial !important;
+  text-decoration: none !important;
+  margin-left: 5px;
 }
 
-.form-group.required_field .control-label:after, .required_text:after {
-    content: " *";
-    color: red;
+.field-with-tooltip .label-container {
+  max-width: 100%;
+  margin-bottom: 5px;
+}
+
+.field-with-tooltip label {
+  display: initial;
+}
+
+.required_field .control-label:after, .required_text:after {
+  content: " *";
+  color: red;
 }
 
 .nav-pills.nav-grey > li.active > a,

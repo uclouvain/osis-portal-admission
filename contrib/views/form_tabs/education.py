@@ -146,9 +146,9 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
                 if foreign_diploma_form.fields['country'].is_ue_country:
                     if not high_school_diploma and not enrolment_certificate:
                         main_form.add_error(
-                            None, _('Please specify either your high school diploma or your enrolment certificate')
+                            'high_school_diploma',
+                            _('Please specify either your high school diploma or your enrolment certificate'),
                         )
-                        main_form.add_error("high_school_diploma", '')
                         main_form.add_error("enrolment_certificate", '')
                 else:
                     if not high_school_diploma:

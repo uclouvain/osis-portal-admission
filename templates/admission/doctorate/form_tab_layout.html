@@ -149,8 +149,9 @@
           // Tooltips
           $('[data-toggle="popover"]').popover();
 
-          $('body').on('click', '.popover-buttons', e => {
-              e.preventDefault();
+          $('body').on('mousedown', '.popover', function(e) {
+            e.preventDefault();
+            return false;
           });
       });
   </script>

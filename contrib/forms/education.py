@@ -141,9 +141,9 @@ class DoctorateAdmissionEducationForm(forms.Form):
                 if diploma_type == DiplomaTypes.BELGIAN.name:
                     if not cleaned_data.get("high_school_diploma") and not cleaned_data.get("enrolment_certificate"):
                         self.add_error(
-                            None, _('Please specify either your high school diploma or your enrolment certificate')
+                            'high_school_diploma',
+                            _('Please specify either your high school diploma or your enrolment certificate'),
                         )
-                        self.add_error("high_school_diploma", "")
                         self.add_error("enrolment_certificate", "")
 
             if not diploma_type:
@@ -356,7 +356,7 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         required=False,
     )
     enrolment_certificate_translation = FileUploadField(
-        label=_("A translation of your certificate of enrolment or school attendance"),
+        label=_("A certified translation of your certificate of enrolment or school attendance"),
         max_files=1,
         required=False,
     )
@@ -401,7 +401,10 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         required=False,
     )
     restrictive_equivalence_admission_test = FileUploadField(
-        label=_("Certificate of successful completion of the admission test for restrictive equivalence"),
+        label=_(
+            "Certificate of successful completion of the admission test for the first "
+            "cycle of higher education in case of restrictive equivalence"
+        ),
         max_files=1,
         required=False,
     )

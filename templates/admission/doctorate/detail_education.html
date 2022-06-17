@@ -28,9 +28,9 @@
 {% block tab_content %}
   {% if belgian_diploma %}
 
-    {% field_data _("Academic graduation year") belgian_diploma.academic_graduation_year|display_as_academic_year %}
-
     {% panel _("Belgian diploma") %}
+
+      {% field_data _("Academic graduation year") belgian_diploma.academic_graduation_year|display_as_academic_year %}
 
       {% field_data _("Community of education") belgian_diploma.community|enum_display:'BelgianCommunitiesOfEducation' %}
 
@@ -56,101 +56,106 @@
       {% endif %}
 
       {% if belgian_diploma.schedule %}
-        <div class="row">
-          <div class="col-md-4">
-            {% panel _("Ancient languages") %}
-              <p>
-                <strong>{% trans _("Latin")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.latin }}
-              </p>
-              <p>
-                <strong>{% trans _("Greek")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.greek }}
-              </p>
-            {% endpanel %}
-            {% panel _("Sciences") %}
-              <p>
-                <strong>{% trans _("Chemistry")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.chemistry }}
-              </p>
-              <p>
-                <strong>{% trans _("Physic")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.physic }}
-              </p>
-              <p>
-                <strong>{% trans _("Biology")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.biology }}
-              </p>
-            {% endpanel %}
-          </div>
-          <div class="col-md-4">
-            {% panel _("Modern languages") %}
-              <p>
-                <strong>{% trans _("French")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.french }}
-              </p>
-              <p>
-                <strong>{% trans _("English")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.english }}
-              </p>
-              <p>
-                <strong>{% trans _("Dutch")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.dutch }}
-              </p>
-              <p>
-                <strong>{% trans _("Spanish")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.spanish }}
-              </p>
-              <p>
-                <strong>{% trans _("German")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.german }}
-              </p>
-              {% if belgian_diploma.schedule.modern_languages_other_label %}
-                <p>
-                  <strong>
-                    {% trans "Other" %} :
-                    {{ belgian_diploma.schedule.modern_languages_other_label }}
-                    {% trans " (h/w)" %}
-                  </strong>
-                  {{ belgian_diploma.schedule.modern_languages_other_hours }}
-                </p>
-              {% endif %}
-            {% endpanel %}
-          </div>
-          <div class="col-md-4">
-            {% panel _("Others") %}
-              <p>
-                <strong>{% trans _("Mathematics")|add:_(" (h/w)") %}
-                  :</strong>
-                {{ belgian_diploma.schedule.mathematics }}
-              </p>
-              <p>
-                <strong>{% trans _("IT")|add:_(" (h/w)") %} :</strong>
-                {{ belgian_diploma.schedule.it }}
-              </p>
-              <p>
-                <strong>{% trans _("Social sciences")|add:_(" (h/w)") %}
-                  :</strong>
-                {{ belgian_diploma.schedule.social_sciences }}
-              </p>
-              <p>
-                <strong>{% trans _("Economic sciences")|add:_(" (h/w)") %}
-                  :</strong>
-                {{ belgian_diploma.schedule.economic_sciences }}
-              </p>
-              {% if belgian_diploma.schedule.other_label %}
-                <p>
-                  <strong>
-                    {% trans "Other" %} :
-                    {{ belgian_diploma.schedule.other_label }}
-                    {% trans " (h/w)" %} :
-                  </strong>
-                  {{ belgian_diploma.schedule.other_hours }}
-                </p>
-              {% endif %}
-            {% endpanel %}
-          </div>
-        </div>
+        <dl>
+          <dt>{% translate "Timetable" %}</dt>
+          <dd>
+            <div class="row" style="margin-top: 0.5em;">
+              <div class="col-md-4">
+                {% panel _("Ancient languages") %}
+                  <p>
+                    <strong>{% trans _("Latin")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.latin }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("Greek")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.greek }}
+                  </p>
+                {% endpanel %}
+                {% panel _("Sciences") %}
+                  <p>
+                    <strong>{% trans _("Chemistry")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.chemistry }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("Physic")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.physic }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("Biology")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.biology }}
+                  </p>
+                {% endpanel %}
+              </div>
+              <div class="col-md-4">
+                {% panel _("Modern languages") %}
+                  <p>
+                    <strong>{% trans _("French")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.french }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("English")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.english }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("Dutch")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.dutch }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("Spanish")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.spanish }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("German")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.german }}
+                  </p>
+                  {% if belgian_diploma.schedule.modern_languages_other_label %}
+                    <p>
+                      <strong>
+                        {% trans "Other" %} :
+                        {{ belgian_diploma.schedule.modern_languages_other_label }}
+                        {% trans " (h/w)" %}
+                      </strong>
+                      {{ belgian_diploma.schedule.modern_languages_other_hours }}
+                    </p>
+                  {% endif %}
+                {% endpanel %}
+              </div>
+              <div class="col-md-4">
+                {% panel _("Others") %}
+                  <p>
+                    <strong>{% trans _("Mathematics")|add:_(" (h/w)") %}
+                      :</strong>
+                    {{ belgian_diploma.schedule.mathematics }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("IT")|add:_(" (h/w)") %} :</strong>
+                    {{ belgian_diploma.schedule.it }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("Social sciences")|add:_(" (h/w)") %}
+                      :</strong>
+                    {{ belgian_diploma.schedule.social_sciences }}
+                  </p>
+                  <p>
+                    <strong>{% trans _("Economic sciences")|add:_(" (h/w)") %}
+                      :</strong>
+                    {{ belgian_diploma.schedule.economic_sciences }}
+                  </p>
+                  {% if belgian_diploma.schedule.other_label %}
+                    <p>
+                      <strong>
+                        {% trans "Other" %} :
+                        {{ belgian_diploma.schedule.other_label }}
+                        {% trans " (h/w)" %} :
+                      </strong>
+                      {{ belgian_diploma.schedule.other_hours }}
+                    </p>
+                  {% endif %}
+                {% endpanel %}
+              </div>
+            </div>
+          </dd>
+        </dl>
       {% endif %}
     {% endpanel %}
 
@@ -161,9 +166,9 @@
 
   {% elif foreign_diploma %}
 
-    {% field_data _("Academic graduation year") foreign_diploma.academic_graduation_year|display_as_academic_year %}
-
     {% panel _("Foreign diploma") %}
+
+      {% field_data _("Academic graduation year") foreign_diploma.academic_graduation_year|display_as_academic_year %}
 
       {% field_data _("What diploma did you get (or will you get)?") foreign_diploma.foreign_diploma_type|enum_display:'ForeignDiplomaTypes' %}
 
@@ -188,13 +193,13 @@
       {% field_data _("A certified translation of your high school diploma") foreign_diploma.high_school_diploma_translation hide_empty=True %}
 
       {% field_data _("Certificate of enrolment or school attendance") foreign_diploma.enrolment_certificate hide_empty=True %}
-      {% field_data _("A translation of your certificate of enrolment or school attendance") foreign_diploma.enrolment_certificate_translation hide_empty=True %}
+      {% field_data _("A certified translation of your certificate of enrolment or school attendance") foreign_diploma.enrolment_certificate_translation hide_empty=True %}
 
       {% field_data _("A transcript or your last year at high school") foreign_diploma.high_school_transcript hide_empty=True %}
       {% field_data _("A certified translation of your official transcript of marks for your final year of secondary education") foreign_diploma.high_school_transcript_translation hide_empty=True %}
 
       {% field_data _("Diploma of Aptitude for Access to Higher Education (DAES)") foreign_diploma.restrictive_equivalence_daes hide_empty=True %}
-      {% field_data _("Certificate of successful completion of the admission test for restrictive equivalence") foreign_diploma.restrictive_equivalence_admission_test hide_empty=True %}
+      {% field_data _("Certificate of successful completion of the admission test for the first cycle of higher education in case of restrictive equivalence") foreign_diploma.restrictive_equivalence_admission_test hide_empty=True %}
     {% endpanel %}
 
   {% elif high_school_diploma_alternative %}
