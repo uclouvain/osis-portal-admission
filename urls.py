@@ -92,17 +92,17 @@ detail_paths = [
 
 urlpatterns = [
     # Lists
-    path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
+    path("doctorate/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
     path("supervised/", views.DoctorateAdmissionMemberListView.as_view(), name="supervised-list"),
     # Autocompletes
     path("autocomplete/", include((autocomplete_paths, "autocomplete"))),
     # Creation
     path(
-        "doctorates/create/",
+        "doctorate/create/",
         RedirectView.as_view(pattern_name="admission:doctorate-create:project"),
         name="doctorate-create",
     ),
-    path("doctorates/create/", include((creation_paths, "doctorate-create"))),
+    path("doctorate/create/", include((creation_paths, "doctorate-create"))),
     # Detail
-    path("doctorates/<uuid:pk>/", include((detail_paths, "doctorate"))),
+    path("doctorate/<uuid:pk>/", include((detail_paths, "doctorate"))),
 ]

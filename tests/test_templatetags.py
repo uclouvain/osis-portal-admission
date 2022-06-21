@@ -101,7 +101,7 @@ class TemplateTagsTestCase(TestCase):
             def __new__(cls, *args, **kwargs):
                 return Mock(kwargs={}, spec=cls)
 
-        person_tab_url = '/admission/doctorates/create/person'
+        person_tab_url = '/admission/doctorate/create/person'
         template = Template("{% load admission %}{% doctorate_tabs %}")
 
         request = RequestFactory().get(person_tab_url)
@@ -110,7 +110,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertNotIn('confirm-paper', rendered)
         self.assertInHTML(
             """<li role="presentation" class="active">
-            <a href="/admission/doctorates/create/person">
+            <a href="/admission/doctorate/create/person">
                 <span class="fa fa-user"></span>
                 {}
             </a>
@@ -121,13 +121,13 @@ class TemplateTagsTestCase(TestCase):
         )
 
         # Should work on non-tab urls
-        another_tab_url = '/admission/doctorates/55375049-9d61-4c11-9f41-7460463a5ae3/remove-member/type/matricule'
+        another_tab_url = '/admission/doctorate/55375049-9d61-4c11-9f41-7460463a5ae3/remove-member/type/matricule'
         request = RequestFactory().get(another_tab_url)
         request.resolver_match = resolve(another_tab_url)
         rendered = template.render(Context({'view': MockedFormView(), 'request': request}))
         self.assertInHTML(
             """<li role="presentation">
-            <a href="/admission/doctorates/create/person">
+            <a href="/admission/doctorate/create/person">
                 <span class="fa fa-user"></span>
                 {}
             </a>
