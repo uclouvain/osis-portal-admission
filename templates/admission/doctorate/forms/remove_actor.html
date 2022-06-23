@@ -2,7 +2,7 @@
 
 {% block form_content %}
     <h4>
-        {% blocktrans with first_name=member.prenom last_name=member.nom role=view.kwargs.type|enum_display:'ActorType' %}
+        {% blocktrans with first_name=member.prenom last_name=member.nom role=view.kwargs.type|enum_display:'ActorType' trimmed %}
             Are you sure you want to remove {{ first_name }}
             {{ last_name }} as {{ role }}?
         {% endblocktrans %}

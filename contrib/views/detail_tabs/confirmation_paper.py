@@ -32,7 +32,7 @@ from admission.services.proposition import AdmissionDoctorateService
 
 
 class DoctorateAdmissionConfirmationPaperDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_confirmation_papers.html'
+    template_name = 'admission/doctorate/details/confirmation_papers.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -61,7 +61,7 @@ class DoctorateAdmissionConfirmationPaperCanvasExportView(LoginRequiredMixin, Re
 
         canvas_uuid = AdmissionDoctorateService.get_last_confirmation_paper_canvas(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk'])
+            uuid=str(self.kwargs['pk']),
         ).uuid
 
         reading_token = get_remote_token(canvas_uuid)

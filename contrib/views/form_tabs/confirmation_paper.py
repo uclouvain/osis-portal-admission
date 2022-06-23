@@ -23,23 +23,21 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import Optional
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic import FormView
-from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
-from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.forms.confirmation_paper import ConfirmationPaperForm, PromoterConfirmationPaperForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionDoctorateService
+from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
+from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
 
 
 class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-
     @cached_property
     def doctorate(self) -> DoctorateDTO:
         return AdmissionDoctorateService.get_doctorate(
@@ -60,9 +58,9 @@ class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebService
 
     def get_template_names(self):
         if self.is_doctorate_student:
-            return 'admission/doctorate/form_tab_confirmation_papers.html'
+            return 'admission/doctorate/forms/confirmation_papers.html'
         else:
-            return 'admission/doctorate/promoter_form_tab_confirmation_papers.html'
+            return 'admission/doctorate/forms/promoter_confirmation_papers.html'
 
     def get_form_class(self):
         if self.is_doctorate_student:
@@ -82,12 +80,16 @@ class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebService
         return context_data
 
     def get_initial(self):
-        return {
-            'date': self.confirmation_paper.date,
-            'rapport_recherche': self.confirmation_paper.rapport_recherche,
-            'proces_verbal_ca': self.confirmation_paper.proces_verbal_ca,
-            'avis_renouvellement_mandat_recherche': self.confirmation_paper.avis_renouvellement_mandat_recherche,
-        } if self.confirmation_paper else {}
+        return (
+            {
+                'date': self.confirmation_paper.date,
+                'rapport_recherche': self.confirmation_paper.rapport_recherche,
+                'proces_verbal_ca': self.confirmation_paper.proces_verbal_ca,
+                'avis_renouvellement_mandat_recherche': self.confirmation_paper.avis_renouvellement_mandat_recherche,
+            }
+            if self.confirmation_paper
+            else {}
+        )
 
     def call_webservice(self, data):
         if self.is_doctorate_student:

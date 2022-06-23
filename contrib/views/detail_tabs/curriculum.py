@@ -25,13 +25,11 @@
 # ##############################################################################
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.translation import get_language
+from django.views.generic import TemplateView
 
 # Do not remove the following import as it is used by enum_display templatetag
-from django.utils.translation import get_language
-
 from admission.contrib.enums.curriculum import *
-
-from django.views.generic import TemplateView
 
 from admission.constants import BE_ISO_CODE
 from admission.services.person import AdmissionPersonService
@@ -40,7 +38,7 @@ from admission.services.reference import CountriesService, LanguageService
 
 
 class DoctorateAdmissionCurriculumDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_curriculum.html'
+    template_name = 'admission/doctorate/details/curriculum.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

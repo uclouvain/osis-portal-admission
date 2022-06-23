@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/detail_doctorate_tab_layout.html" %}
+{% extends "admission/doctorate/forms/doctorate_tab_layout.html" %}
 {% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
@@ -24,25 +24,24 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-{% block tab_content %}
+
+{% block form %}
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">{% trans "Request a new deadline for the confirmation paper" %}</h4>
     </div>
     <div class="panel-body">
       {% include 'admission/doctorate/includes/new_deadline_description.html' %}
-      {% if confirmation_paper.demande_prolongation %}
-      <div>
-        {% field_data _("Proposed new deadline") confirmation_paper.demande_prolongation.nouvelle_echeance inline=True %}
-        {% field_data _("Brief justification") confirmation_paper.demande_prolongation.justification_succincte %}
-        {% field_data _("Justification letter") confirmation_paper.demande_prolongation.lettre_justification %}
-        {% field_data _("DDC opinion") confirmation_paper.demande_prolongation.avis_cdd hide_empty=True %}
-      </div>
-      {% else %}
-        <p class="bold">
-          <strong>{% trans "There is no request for a new deadline." %}</strong>
-        </p>
-      {% endif %}
+
+      {% bootstrap_form_errors form %}
+
+      {% csrf_token %}
+
+      {% bootstrap_field form.nouvelle_echeance form_group_class="form-group min_field required_field" %}
+      {% bootstrap_field form.justification_succincte form_group_class="form-group required_field" %}
+      {% bootstrap_field form.lettre_justification %}
+
     </div>
   </div>
+
 {% endblock %}

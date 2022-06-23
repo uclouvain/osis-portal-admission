@@ -46,7 +46,7 @@ from admission.services.proposition import AdmissionPropositionService, Proposit
 
 
 class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_project.html'
+    template_name = 'admission/doctorate/forms/project.html'
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',
@@ -168,7 +168,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             context['admission'] = self.proposition
             # Lookup sector label from API
             context['sector_label'] = [
-                s.intitule for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
+                s.intitule
+                for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
                 if s.sigle == self.proposition.code_secteur_formation
             ][0]
         return context

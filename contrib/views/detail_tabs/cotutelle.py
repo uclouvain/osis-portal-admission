@@ -32,7 +32,7 @@ from admission.services.proposition import AdmissionCotutelleService, AdmissionP
 
 
 class DoctorateAdmissionCotutelleDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_cotutelle.html'
+    template_name = 'admission/doctorate/details/cotutelle.html'
 
     def get_admission(self):
         if not hasattr(self, 'admission'):
@@ -47,6 +47,7 @@ class DoctorateAdmissionCotutelleDetailView(LoginRequiredMixin, TemplateView):
         admission = self.get_admission()
         if (
             admission.statut == ChoixStatutProposition.IN_PROGRESS.name
+            # we have access if url is present
             and 'url' in admission.links['update_cotutelle']
         ):
             return redirect('admission:doctorate:update:cotutelle', **self.kwargs)

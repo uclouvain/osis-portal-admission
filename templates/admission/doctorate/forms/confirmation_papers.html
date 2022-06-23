@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/form_tab_doctorate_tab_layout.html" %}
+{% extends "admission/doctorate/forms/doctorate_tab_layout.html" %}
 {% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
@@ -31,15 +31,19 @@
       <h4 class="panel-title">{% trans "Confirmation paper" %}</h4>
     </div>
     <div class="panel-body">
-      {% bootstrap_form_errors form %}
       {% include 'admission/doctorate/includes/confirmation_papers_description.html' %}
 
-      {% field_data _("Date of confirmation") confirmation_paper.date inline=True %}
+      {% bootstrap_form_errors form %}
+
+      {% field_data _("Definitive admission date") doctorate.admission_acceptee_le inline=True %}
+      {% field_data _("Deadline for confirmation") confirmation_paper.date_limite inline=True %}
 
       {% csrf_token %}
 
+      {% bootstrap_field form.date form_group_class="form-group min_field required_field" %}
+      {% bootstrap_field form.rapport_recherche %}
       {% bootstrap_field form.proces_verbal_ca %}
-      {% bootstrap_field form.avis_renouvellement_mandat_recherche show_help=False %}
+      {% bootstrap_field form.avis_renouvellement_mandat_recherche %}
 
     </div>
   </div>

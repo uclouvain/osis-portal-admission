@@ -33,7 +33,7 @@ from admission.services.proposition import AdmissionPropositionService
 
 
 class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_person.html'
+    template_name = 'admission/doctorate/forms/person.html'
     form_class = DoctorateAdmissionPersonForm
 
     def get_form_kwargs(self):

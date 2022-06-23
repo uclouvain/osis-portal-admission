@@ -95,7 +95,7 @@
     </div>
 
     <p><em>
-        {% blocktrans %}
+        {% blocktrans trimmed %}
             The online enrolment request procedure is split up into several
             sheet. The enrolment request can only be validated as soon as all
             sheets have been duly completed. The icons will remind you of the
@@ -120,20 +120,21 @@
                     <div class="col-md-10 quitting-context-excluded">
                         {% block form %}{% endblock %}
                         {% block submit_button_bottom %}
-                                <div class="text-right form-group">
-                                    <button
-                                        type="submit" class="btn btn-primary"
-                                        {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
-                                        disabled
-                                        {% endif %}
-                                    >
-                                    <span
-                                        class="glyphicon glyphicon-floppy-save"
-                                        aria-hidden="true"
-                                    ></span>
-                                        {% trans 'Save' %}
-                                    </button>
-                                </div>
+                            {% get_current_tab as current_tab %}
+                            <div class="text-right form-group">
+                                <button
+                                    type="submit" class="btn btn-primary"
+                                    {% if cancel_url and not admission|can_update_tab:current_tab %}
+                                    disabled
+                                    {% endif %}
+                                >
+                                <span
+                                  class="glyphicon glyphicon-floppy-save"
+                                  aria-hidden="true"
+                                ></span>
+                                  {% trans 'Save' %}
+                                </button>
+                            </div>
                         {% endblock submit_button_bottom %}
                     </div>
                 </div>

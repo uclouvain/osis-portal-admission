@@ -32,6 +32,7 @@ __all__ = [
 ]
 
 from admission.services.proposition import AdmissionPropositionService
+from admission.templatetags.admission import TAB_TREES
 
 
 class DoctorateAdmissionListView(LoginRequiredMixin, TemplateView):
@@ -42,6 +43,7 @@ class DoctorateAdmissionListView(LoginRequiredMixin, TemplateView):
         result = AdmissionPropositionService().get_propositions(self.request.user.person)
         context["admissions"] = result['propositions']
         context["global_links"] = result['links']
+        context["tab_tree"] = TAB_TREES['doctorate']
         return context
 
 
@@ -51,4 +53,5 @@ class DoctorateAdmissionMemberListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["admissions"] = AdmissionPropositionService().get_supervised_propositions(self.request.user.person)
+        context["tab_tree"] = TAB_TREES['doctorate']
         return context

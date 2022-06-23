@@ -34,12 +34,13 @@ from admission.services.reference import LanguageService
 
 
 class DoctorateAdmissionLanguagesDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_languages.html'
+    template_name = 'admission/doctorate/details/languages.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person, uuid=str(self.kwargs['pk']),
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
         )
         context_data["languages_knowledge"] = AdmissionPersonService.retrieve_languages_knowledge(
             self.request.user.person,

@@ -34,7 +34,7 @@ from admission.services.proposition import AdmissionPropositionService
 
 
 class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_coordonnees.html'
+    template_name = 'admission/doctorate/forms/coordonnees.html'
     form_class = DoctorateAdmissionCoordonneesForm
     forms = None
 

@@ -63,15 +63,14 @@
       <ul class="nav navbar-nav">
         {% for parent, children in tab_tree.items %}
           {% if parent == active_parent %}
-            {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon for_navigation=True %}
+            {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True %}
             <div class="col-xs-offset-1">
               {% doctorate_subtabs admission %}
             </div>
           {% else %}
-            {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon for_navigation=True %}
+            {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True %}
           {% endif %}
         {% endfor %}
-        {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") no_status=True %}
     </div><!-- /.navbar-collapse -->
   </nav>
 
@@ -79,19 +78,19 @@
   <ul class="nav nav-tabs visible-md visible-lg">
     {% for parent, children in tab_tree.items %}
       {% if parent == active_parent %}
-        {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label is_active=True icon=parent.icon for_navigation=True %}
+        {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True %}
       {% else %}
-        {% include 'admission/doctorate_tab_entry.html' with tab_name=children.0 tab_label=parent.label icon=parent.icon for_navigation=True %}
+        {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True %}
       {% endif %}
     {% endfor %}
-    {% include 'admission/doctorate_tab_entry.html' with tab_name="messages" icon='envelope' tab_label=_("Exchange with UCLouvain") no_status=True %}
 
     {# Submit button if needed (mobile display) #}
+    {% get_current_tab as current_tab %}
     {% if with_submit %}
       <div class="text-right visible-md visible-lg">
         <button
           type="submit" class="btn btn-primary"
-          {% if not admission|can_update_tab:request.resolver_match.url_name %}
+          {% if not admission|can_update_tab:current_tab %}
           disabled
           {% endif %}
         >
@@ -107,7 +106,7 @@
     <div class="text-right visible-xs visible-sm">
       <button
         type="submit" class="btn btn-primary"
-        {% if not admission|can_update_tab:request.resolver_match.url_name %}
+        {% if not admission|can_update_tab:current_tab %}
         disabled
         {% endif %}
       >

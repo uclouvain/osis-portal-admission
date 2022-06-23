@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/form_tab_doctorate_tab_layout.html" %}
+{% extends "admission/doctorate/details/doctorate_tab_layout.html" %}
 {% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
@@ -24,28 +24,25 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-{% block form %}
+{% block tab_content %}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h4 class="panel-title">{% trans "Confirmation paper" %}</h4>
+      <h4 class="panel-title">{% trans "Request a new deadline for the confirmation paper" %}</h4>
     </div>
     <div class="panel-body">
-      {% include 'admission/doctorate/includes/confirmation_papers_description.html' %}
-
-      {% bootstrap_form_errors form %}
-
-      {% field_data _("Definitive admission date") doctorate.admission_acceptee_le inline=True %}
-      {% field_data _("Deadline for confirmation") confirmation_paper.date_limite inline=True %}
-
-      {% csrf_token %}
-
-      {% bootstrap_field form.date form_group_class="form-group min_field required_field" %}
-      {% bootstrap_field form.rapport_recherche %}
-      {% bootstrap_field form.proces_verbal_ca %}
-      {% bootstrap_field form.avis_renouvellement_mandat_recherche %}
-
+      {% include 'admission/doctorate/includes/new_deadline_description.html' %}
+      {% if confirmation_paper.demande_prolongation %}
+      <div>
+        {% field_data _("Proposed new deadline") confirmation_paper.demande_prolongation.nouvelle_echeance inline=True %}
+        {% field_data _("Brief justification") confirmation_paper.demande_prolongation.justification_succincte %}
+        {% field_data _("Justification letter") confirmation_paper.demande_prolongation.lettre_justification %}
+        {% field_data _("DDC opinion") confirmation_paper.demande_prolongation.avis_cdd hide_empty=True %}
+      </div>
+      {% else %}
+        <p class="bold">
+          <strong>{% trans "There is no request for a new deadline." %}</strong>
+        </p>
+      {% endif %}
     </div>
   </div>
-
 {% endblock %}
