@@ -32,7 +32,7 @@ from admission.services.proposition import AdmissionCotutelleService, AdmissionP
 
 
 class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_cotutelle.html'
+    template_name = 'admission/doctorate/forms/cotutelle.html'
     form_class = DoctorateAdmissionCotutelleForm
 
     def get_initial(self):

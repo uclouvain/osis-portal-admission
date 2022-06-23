@@ -39,7 +39,7 @@ from osis_admission_sdk import ApiException
 
 
 class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_supervision.html'
+    template_name = 'admission/doctorate/forms/supervision.html'
     form_class = DoctorateAdmissionSupervisionForm
 
     def get_context_data(self, **kwargs):
@@ -76,7 +76,7 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
 
 class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     form_class = forms.Form
-    template_name = 'admission/doctorate/form_tab_remove_actor.html'
+    template_name = 'admission/doctorate/forms/remove_actor.html'
     actor_type_mapping = {
         ActorType.PROMOTER.name: ('signatures_promoteurs', 'promoteur'),
         ActorType.CA_MEMBER.name: ('signatures_membres_ca', 'membre_ca'),

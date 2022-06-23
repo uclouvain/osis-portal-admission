@@ -26,6 +26,6 @@
 
 <ul class="nav nav-pills nav-stacked nav-grey">
     {% for child in subtabs %}
-        {% include 'admission/doctorate_tab_entry.html' with tab_name=child tab_label=subtab_labels|get_item:child %}
+        {% include 'admission/doctorate_tab_entry.html' with tab=child %}
     {% endfor %}
 </ul>

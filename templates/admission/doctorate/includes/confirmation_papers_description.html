@@ -28,13 +28,13 @@
   <p>{% trans "Important information:" %}</p>
   <ul>
     <li>
-      {% blocktrans %}
+      {% blocktrans trimmed %}
         The "doctoral training" must be updated before the confirmation paper and made available to the accompanying
         committee on the day of the test.
       {% endblocktrans %}
     </li>
     <li>
-      {% blocktrans %}
+      {% blocktrans trimmed %}
         The format of the documents to be uploaded below as well as the deadlines for submission may vary from
         one DDC to another; please check with your dossier manager and respect the usage foreseen by your domain
         doctoral committee.
@@ -43,7 +43,7 @@
   </ul>
   <p>
     {% url 'admission:doctorate:confirmation-paper-canvas' view.kwargs.pk as canvas_url %}
-    {% blocktrans %}
+    {% blocktrans trimmed %}
       The canvas of the supervisory panel report must be sent to the accompanying committee during the test.
       It can be downloaded <a href="{{ canvas_url }}" target="_blank">here</a>.
     {% endblocktrans %}

@@ -42,7 +42,7 @@
       </div>
       <em>
         {% if signature.date %}
-          {% blocktrans with state=signature.statut|enum_display:'ChoixEtatSignature' date=signature.date %}
+          {% blocktrans with state=signature.statut|enum_display:'ChoixEtatSignature' date=signature.date trimmed %}
             {{ state }} on {{ date }}
           {% endblocktrans %}
         {% else %}
@@ -76,7 +76,7 @@
           {{ approve_by_pdf_form.pdf }}
           <input type="hidden" name="matricule" value="{{ member.matricule }}" />
           <button type="submit" class="btn btn-primary pull-right">
-            {% blocktrans with first_name=member.prenom last_name=member.nom %}
+            {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
             Approve on behalf of {{ first_name }} {{ last_name }}
           {% endblocktrans %}
           </button>

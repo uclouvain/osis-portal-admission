@@ -26,18 +26,17 @@
 from enum import Enum
 from typing import List
 
-from osis_admission_sdk.model.confirmation_paper_canvas import ConfirmationPaperCanvas
-from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
-from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
-from osis_admission_sdk.model.doctorate_identity_dto import DoctorateIdentityDTO
-
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
 from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
+from osis_admission_sdk.model.confirmation_paper_canvas import ConfirmationPaperCanvas
+from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
+from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
+from osis_admission_sdk.model.doctorate_identity_dto import DoctorateIdentityDTO
 from osis_admission_sdk.model.proposition_dto import PropositionDTO
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 

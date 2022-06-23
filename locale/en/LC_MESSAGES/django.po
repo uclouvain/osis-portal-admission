@@ -19,155 +19,12 @@ msgstr ""
 
 msgid ""
 "\n"
-"                        Any false declaration or deliberate omission "
-"regarding the constitution of the application file\n"
-"                        constitues a fraud on registration. Anyone suspected "
-"of fraud will be invited to provide further\n"
-"                        explanation or clarification (Article 16 et 17 - "
-"Section 2 du Chapitre 1 du Titre III du\n"
-"                        Règlement général des études et des examens de "
-"l'UCLouvain).\n"
-"                    "
-msgstr ""
-
-msgid ""
-"\n"
-"                        BEFORE proceeding to confirmation here below, please "
-"read again the data you entered in the previous tabs in order to\n"
-"                        be sure you did not enter any errors or forgot to "
-"complete certain fields. It are indeed these same data that will be used\n"
-"                        during the complete period of your university "
-"studies.\n"
-"                        If all data seem correct according to you, please "
-"proceed to the confirmation of your enrolment request here below.\n"
-"                    "
-msgstr ""
-
-msgid ""
-"\n"
 "              If you do not have an equivalence decision, you will have to "
 "submit a request for equivalence in\n"
 "              strict compliance with the instructions given by the\n"
 "              <a href='http://www.equivalences.cfwb.be/' "
 "target='_blank'>French Community</a> of Belgium.\n"
 "            "
-msgstr ""
-
-msgid ""
-"\n"
-"              Please complete the schedule information of your last year\n"
-"              of high school. We invite you to indicate the number of\n"
-"              hours of education your followed per domain and per week.\n"
-"              "
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"            %(state)s on %(date)s\n"
-"          "
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"            Approve on behalf of %(first_name)s %(last_name)s\n"
-"          "
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"            Are you sure you want to remove %(first_name)s\n"
-"            %(last_name)s as %(role)s?\n"
-"        "
-msgstr ""
-
-msgid ""
-"\n"
-"            The online enrolment request procedure is split up into several\n"
-"            sheet. The enrolment request can only be validated as soon as "
-"all\n"
-"            sheets have been duly completed. The icons will remind you of "
-"the\n"
-"            state of progress of your enrolment request which you can "
-"interrupt\n"
-"            and resume at any moment.\n"
-"        "
-msgstr ""
-
-msgid ""
-"\n"
-"        Please refer to your identity document in order to complete the\n"
-"        form. If you have a Belgian national register number, please\n"
-"        indicate it as a priority.\n"
-"      "
-msgstr ""
-
-msgid ""
-"\n"
-"        The \"doctoral training\" must be updated before the confirmation "
-"paper and made available to the accompanying\n"
-"        committee on the day of the test.\n"
-"      "
-msgstr ""
-
-msgid ""
-"\n"
-"        The format of the documents to be uploaded below as well as the "
-"deadlines for submission may vary from\n"
-"        one DDC to another; please check with your dossier manager and "
-"respect the usage foreseen by your domain\n"
-"        doctoral committee.\n"
-"      "
-msgstr ""
-
-msgid ""
-"\n"
-"        The format of the documents to be uploaded below may vary from one\n"
-"        Doctoral Domain Commission (DDC) to another; be sure to check with "
-"your\n"
-"        file manager and respect the usage provided by your DDC.\n"
-"      "
-msgstr ""
-
-msgid ""
-"\n"
-"      If the circumstances justify it, the deadline may be extended by the "
-"support\n"
-"      committee, with the agreement of the DDC on the proposed deadline. "
-"This deadline may also be shortened due to\n"
-"      constraints imposed by the funder, e.g. in the context of the renewal "
-"of the mandate or the doctoral scholarship\n"
-"      (e.g. the renewal of the mandate of the F.R.S.-FNRS candidates).\n"
-"    "
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"      The canvas of the supervisory panel report must be sent to the "
-"accompanying committee during the test.\n"
-"      It can be downloaded <a href=\"%(canvas_url)s\" target=\"_blank"
-"\">here</a>.\n"
-"    "
-msgstr ""
-
-msgid ""
-"\n"
-"      The purpose of the confirmation test is to establish, on the basis of "
-"the state of progress of the research work,\n"
-"      that it can lead to the production of a doctoral thesis (art. 2.3.1. "
-"of the doctoral regulations).\n"
-"    "
-msgstr ""
-
-msgid ""
-"\n"
-"      Within a maximum period of 24 months from the date of admission to the "
-"doctorate by the DDC, the candidate shall\n"
-"      present a confirmation paper.\n"
-"    "
 msgstr ""
 
 msgid " (h/w)"
@@ -178,6 +35,10 @@ msgstr ""
 
 #, python-format
 msgid "%(label)s:"
+msgstr ""
+
+#, python-format
+msgid "%(state)s on %(date)s"
 msgstr ""
 
 msgid "(e.g. +32 490 00 00 00)"
@@ -302,10 +163,19 @@ msgstr ""
 msgid "Ancient languages"
 msgstr ""
 
-msgid "Another institute"
+msgid ""
+"Any false declaration or deliberate omission regarding the constitution of "
+"the application file constitues a fraud on registration. Anyone suspected of "
+"fraud will be invited to provide further explanation or clarification "
+"(Article 16 et 17 - Section 2 du Chapitre 1 du Titre III du Règlement "
+"général des études et des examens de l'UCLouvain)."
 msgstr ""
 
 msgid "Approve by PDF"
+msgstr ""
+
+#, python-format
+msgid "Approve on behalf of %(first_name)s %(last_name)s"
 msgstr ""
 
 msgctxt "admission decision"
@@ -316,6 +186,11 @@ msgid "Are you sure you want to cancel this request?"
 msgstr ""
 
 msgid "Are you sure you want to delete this experience?"
+msgstr ""
+
+#, python-format
+msgid ""
+"Are you sure you want to remove %(first_name)s %(last_name)s as %(role)s?"
 msgstr ""
 
 msgid "Are you sure you want to request signatures for this admission?"
@@ -334,6 +209,15 @@ msgid "B1"
 msgstr ""
 
 msgid "B2"
+msgstr ""
+
+msgid ""
+"BEFORE proceeding to confirmation here below, please read again the data you "
+"entered in the previous tabs in order to be sure you did not enter any "
+"errors or forgot to complete certain fields. It are indeed these same data "
+"that will be used during the complete period of your university studies. If "
+"all data seem correct according to you, please proceed to the confirmation "
+"of your enrolment request here below."
 msgstr ""
 
 msgid "BIOLOGY"
@@ -579,9 +463,6 @@ msgstr ""
 msgid "Doctoral project"
 msgstr ""
 
-msgid "Doctoral training"
-msgstr ""
-
 msgid "Doctorate"
 msgstr ""
 
@@ -642,9 +523,6 @@ msgid "European Bachelor (Schola Europaea)"
 msgstr ""
 
 msgid "European Union credits"
-msgstr ""
-
-msgid "Exchange with UCLouvain"
 msgstr ""
 
 msgid "Exit"
@@ -833,6 +711,14 @@ msgid "If other optional domains, please specify"
 msgstr ""
 
 msgid ""
+"If the circumstances justify it, the deadline may be extended by the support "
+"committee, with the agreement of the DDC on the proposed deadline. This "
+"deadline may also be shortened due to constraints imposed by the funder, e."
+"g. in the context of the renewal of the mandate or the doctoral scholarship "
+"(e.g. the renewal of the mandate of the F.R.S.-FNRS candidates)."
+msgstr ""
+
+msgid ""
 "If you do not yet have a final equivalence decision issued by the <a "
 "href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> "
 "of Belgium, you must provide a double-sided copy of this document as soon as "
@@ -920,9 +806,6 @@ msgid "Is your thesis joint with another secondary institute?"
 msgstr ""
 
 msgid "Issue diploma date"
-msgstr ""
-
-msgid "Jury"
 msgstr ""
 
 msgid "Justification letter"
@@ -1152,6 +1035,12 @@ msgid "Place"
 msgstr ""
 
 msgid ""
+"Please complete the schedule information of your last year of high school. "
+"We invite you to indicate the number of hours of education your followed per "
+"domain and per week."
+msgstr ""
+
+msgid ""
 "Please contact the Enrolment Office if you wish to change your contact email."
 msgstr ""
 
@@ -1171,6 +1060,11 @@ msgid "Please rate your speaking ability"
 msgstr ""
 
 msgid "Please rate your writing ability"
+msgstr ""
+
+msgid ""
+"Please refer to your identity document in order to complete the form. If you "
+"have a Belgian national register number, please indicate it as a priority."
 msgstr ""
 
 msgid "Please set either the linguistic regime or other field."
@@ -1193,9 +1087,6 @@ msgid "Previous experience"
 msgstr ""
 
 msgid "Previous research experience"
-msgstr ""
-
-msgid "Private defense"
 msgstr ""
 
 msgid "Professional education"
@@ -1257,9 +1148,6 @@ msgid "Proximity commission for experimental and clinical research (ECLI)"
 msgstr ""
 
 msgid "Proximity commission for public health, health and society (SPSS)"
-msgstr ""
-
-msgid "Public defense"
 msgstr ""
 
 msgid "Qualification method"
@@ -1433,6 +1321,11 @@ msgstr ""
 msgid "Teaching of general education"
 msgstr ""
 
+msgid ""
+"The \"doctoral training\" must be updated before the confirmation paper and "
+"made available to the accompanying committee on the day of the test."
+msgstr ""
+
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr ""
 
@@ -1449,12 +1342,45 @@ msgstr ""
 msgid "The NOMA must contain 8 digits."
 msgstr ""
 
+#, python-format
+msgid ""
+"The canvas of the supervisory panel report must be sent to the accompanying "
+"committee during the test. It can be downloaded <a href=\"%(canvas_url)s\" "
+"target=\"_blank\">here</a>."
+msgstr ""
+
 msgid "The curriculum has correctly been updated."
+msgstr ""
+
+msgid ""
+"The format of the documents to be uploaded below as well as the deadlines "
+"for submission may vary from one DDC to another; please check with your "
+"dossier manager and respect the usage foreseen by your domain doctoral "
+"committee."
+msgstr ""
+
+msgid ""
+"The format of the documents to be uploaded below may vary from one Doctoral "
+"Domain Commission (DDC) to another; be sure to check with your file manager "
+"and respect the usage provided by your DDC."
 msgstr ""
 
 msgid ""
 "The high school diploma is the Certificate of Higher Secondary Education "
 "(CESS). It is commonly referred to as the baccalaureate in many countries."
+msgstr ""
+
+msgid ""
+"The online enrolment request procedure is split up into several sheet. The "
+"enrolment request can only be validated as soon as all sheets have been duly "
+"completed. The icons will remind you of the state of progress of your "
+"enrolment request which you can interrupt and resume at any moment."
+msgstr ""
+
+msgid ""
+"The purpose of the confirmation test is to establish, on the basis of the "
+"state of progress of the research work, that it can lead to the production "
+"of a doctoral thesis (art. 2.3.1. of the doctoral regulations)."
 msgstr ""
 
 msgid ""
@@ -1507,6 +1433,9 @@ msgstr ""
 msgid ""
 "To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH "
 "grant. The canvas for this opinion is provided by your research fund."
+msgstr ""
+
+msgid "Training"
 msgstr ""
 
 msgid "Training certificate, with dates, justifying this academic year."
@@ -1577,6 +1506,11 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Widowed"
+msgstr ""
+
+msgid ""
+"Within a maximum period of 24 months from the date of admission to the "
+"doctorate by the DDC, the candidate shall present a confirmation paper."
 msgstr ""
 
 msgid "Work"

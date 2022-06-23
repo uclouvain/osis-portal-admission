@@ -91,11 +91,12 @@
                     </div>
                     <div class="col-md-10 quitting-context-excluded">
                         {% block form %}{% endblock %}
+                            {% get_current_tab as current_tab %}
                             <div class="text-right form-group">
                                 <button
                                     type="submit"
                                     class="btn btn-primary"
-                                    {% if not doctorate|can_update_tab:request.resolver_match.url_name %}
+                                    {% if not doctorate|can_update_tab:current_tab %}
                                     disabled
                                     {% endif %}
                                 >

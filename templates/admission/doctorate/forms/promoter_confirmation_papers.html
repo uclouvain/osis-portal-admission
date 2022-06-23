@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/form_tab_doctorate_tab_layout.html" %}
+{% extends "admission/doctorate/forms/doctorate_tab_layout.html" %}
 {% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
@@ -28,18 +28,18 @@
 {% block form %}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h4 class="panel-title">{% trans "Request a new deadline for the confirmation paper" %}</h4>
+      <h4 class="panel-title">{% trans "Confirmation paper" %}</h4>
     </div>
     <div class="panel-body">
-      {% include 'admission/doctorate/includes/new_deadline_description.html' %}
-
       {% bootstrap_form_errors form %}
+      {% include 'admission/doctorate/includes/confirmation_papers_description.html' %}
+
+      {% field_data _("Date of confirmation") confirmation_paper.date inline=True %}
 
       {% csrf_token %}
 
-      {% bootstrap_field form.nouvelle_echeance form_group_class="form-group min_field required_field" %}
-      {% bootstrap_field form.justification_succincte form_group_class="form-group required_field" %}
-      {% bootstrap_field form.lettre_justification %}
+      {% bootstrap_field form.proces_verbal_ca %}
+      {% bootstrap_field form.avis_renouvellement_mandat_recherche show_help=False %}
 
     </div>
   </div>

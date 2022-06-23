@@ -37,7 +37,7 @@ from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
 class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/form_tab_languages.html"
+    template_name = "admission/doctorate/forms/languages.html"
     success_url = reverse_lazy("admission:doctorate-list")
     form_class = DoctorateAdmissionLanguagesKnowledgeFormSet
 

@@ -58,7 +58,7 @@ EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
 
 
 class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/form_tab_education.html"
+    template_name = "admission/doctorate/forms/education.html"
     success_url = reverse_lazy("admission:doctorate-list")
     form_class = DoctorateAdmissionEducationForm
     forms = None

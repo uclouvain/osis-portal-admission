@@ -31,7 +31,7 @@ from admission.services.proposition import AdmissionDoctorateService
 
 
 class DoctorateAdmissionExtensionRequestDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_extension_request.html'
+    template_name = 'admission/doctorate/details/extension_request.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

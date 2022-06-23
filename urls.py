@@ -66,7 +66,7 @@ update_paths = [
     path("extension-request", views.DoctorateAdmissionExtensionRequestFormView.as_view(), name="extension-request"),
 ]
 
-detail_paths = [
+doctorate_paths = [
     path("person", views.DoctorateAdmissionPersonDetailView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesDetailView.as_view(), name="coordonnees"),
     path("curriculum", views.DoctorateAdmissionCurriculumDetailView.as_view(), name="curriculum"),
@@ -104,5 +104,5 @@ urlpatterns = [
     ),
     path("doctorate/create/", include((creation_paths, "doctorate-create"))),
     # Detail
-    path("doctorate/<uuid:pk>/", include((detail_paths, "doctorate"))),
+    path("doctorate/<uuid:pk>/", include((doctorate_paths, "doctorate"))),
 ]

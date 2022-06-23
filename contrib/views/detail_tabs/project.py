@@ -36,7 +36,7 @@ from admission.utils import format_entity_title
 
 
 class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_project.html'
+    template_name = 'admission/doctorate/details/project.html'
 
     def get_admission(self):
         if not hasattr(self, 'admission'):

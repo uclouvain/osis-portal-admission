@@ -40,7 +40,7 @@ from admission.services.proposition import AdmissionPropositionService, Admissio
 
 
 class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_supervision.html'
+    template_name = 'admission/doctorate/forms/supervision.html'
     form_class = DoctorateAdmissionApprovalForm
     rejecting = False
 

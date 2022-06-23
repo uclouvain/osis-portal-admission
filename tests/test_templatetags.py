@@ -33,7 +33,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.templatetags.admission import (
-    TAB_TREE,
+    TAB_TREES,
+    Tab,
     can_make_action,
     can_read_tab,
     can_update_tab,
@@ -161,15 +162,15 @@ class TemplateTagsTestCase(TestCase):
 
     def test_valid_tab_tree_no_admission(self):
         # No admission is specified -> return the original tab tree
-        valid_tab_tree = get_valid_tab_tree(admission=None)
-        self.assertEqual(valid_tab_tree, TAB_TREE)
+        valid_tab_tree = get_valid_tab_tree(TAB_TREES['doctorate'], admission=None)
+        self.assertEqual(valid_tab_tree, TAB_TREES['doctorate'])
 
     def test_valid_tab_tree_read_mode(self):
         # Only one read tab is allowed -> return it and its parent
 
         admission = self.Admission()
 
-        valid_tab_tree = get_valid_tab_tree(admission=admission)
+        valid_tab_tree = get_valid_tab_tree(TAB_TREES['doctorate'], admission)
 
         parent_tabs = list(valid_tab_tree.keys())
 
@@ -184,7 +185,7 @@ class TemplateTagsTestCase(TestCase):
         # Only one form tab is allowed -> return it and its parent
 
         admission = self.Admission()
-        valid_tab_tree = get_valid_tab_tree(admission=admission)
+        valid_tab_tree = get_valid_tab_tree(TAB_TREES['doctorate'], admission)
 
         parent_tabs = list(valid_tab_tree.keys())
 
@@ -213,35 +214,35 @@ class TemplateTagsTestCase(TestCase):
     def test_can_read_tab_valid_existing_tab(self):
         # The tab action is specified in the admission as allowed -> return True
         admission = self.Admission()
-        self.assertTrue(can_read_tab(admission, 'coordonnees'))
+        self.assertTrue(can_read_tab(admission, Tab('coordonnees', '')))
 
     def test_can_read_tab_invalid_existing_tab(self):
         # The tab action is well configured as not allowed -> return False
         admission = self.Admission()
-        self.assertFalse(can_read_tab(admission, 'person'))
+        self.assertFalse(can_read_tab(admission, Tab('person', '')))
 
     def test_can_read_tab_not_returned_action(self):
         # The tab action is not specified in the admission -> return False
         admission = self.Admission()
-        self.assertFalse(can_read_tab(admission, 'project'))
+        self.assertFalse(can_read_tab(admission, Tab('project', '')))
 
     def test_can_read_tab_unknown_tab(self):
         # The tab action is unknown -> raise an exception
         admission = self.Admission()
         with self.assertRaisesMessage(ImproperlyConfigured, 'unknown'):
-            can_read_tab(admission, 'unknown')
+            can_read_tab(admission, Tab('unknown', ''))
 
     def test_can_read_tab_no_admission_links(self):
         # The tab action is unknown -> raise an exception
         admission = self.Admission()
         delattr(admission, 'links')
         with self.assertRaisesMessage(ImproperlyConfigured, 'links'):
-            can_read_tab(admission, 'coordonnees')
+            can_read_tab(admission, Tab('coordonnees', ''))
 
     def test_can_update_tab_valid_existing_action(self):
         # The tab action is specified in the admission as allowed -> return True
         admission = self.Admission()
-        self.assertTrue(can_update_tab(admission, 'coordonnees'))
+        self.assertTrue(can_update_tab(admission, Tab('coordonnees', '')))
 
     def test_get_dashboard_links_tag(self):
         template = Template(

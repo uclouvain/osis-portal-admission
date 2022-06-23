@@ -34,7 +34,7 @@ from admission.services.reference import CountriesService, LanguageService, High
 
 
 class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_education.html'
+    template_name = 'admission/doctorate/details/education.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

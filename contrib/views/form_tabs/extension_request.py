@@ -27,17 +27,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic import FormView
-from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
-from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.forms.extension_request import ExtensionRequestForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionDoctorateService
+from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
+from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
 
 
 class DoctorateAdmissionExtensionRequestFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_extension_request.html'
+    template_name = 'admission/doctorate/forms/extension_request.html'
     form_class = ExtensionRequestForm
 
     @cached_property
@@ -63,11 +63,15 @@ class DoctorateAdmissionExtensionRequestFormView(LoginRequiredMixin, WebServiceF
         return context_data
 
     def get_initial(self):
-        return {
-            'nouvelle_echeance': self.confirmation_paper.demande_prolongation.nouvelle_echeance,
-            'justification_succincte': self.confirmation_paper.demande_prolongation.justification_succincte,
-            'lettre_justification': self.confirmation_paper.demande_prolongation.lettre_justification,
-        } if self.confirmation_paper and self.confirmation_paper.demande_prolongation else {}
+        return (
+            {
+                'nouvelle_echeance': self.confirmation_paper.demande_prolongation.nouvelle_echeance,
+                'justification_succincte': self.confirmation_paper.demande_prolongation.justification_succincte,
+                'lettre_justification': self.confirmation_paper.demande_prolongation.lettre_justification,
+            }
+            if self.confirmation_paper and self.confirmation_paper.demande_prolongation
+            else {}
+        )
 
     def call_webservice(self, data):
         AdmissionDoctorateService.submit_confirmation_paper_extension_request(
