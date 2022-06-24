@@ -49,3 +49,8 @@ class ExtensionRequestForm(forms.Form):
             'If applicable, please upload here the opinion of your support committee on the extension request.'
         ),
     )
+
+    class Media:
+        js = (
+            'jquery.mask.min.js',
+        )

@@ -59,8 +59,8 @@ msgstr "(ex: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
-"Traduction du certificat d'inscription ou de fréquentation scolaire par un "
-"traducteur juré"
+"Une traduction du certificat d'inscription ou de fréquentation scolaire par "
+"un traducteur juré"
 
 msgid "A certified translation of your high school diploma"
 msgstr ""
@@ -251,9 +251,6 @@ msgstr "Biologie"
 msgid "Bachelor"
 msgstr "Bachelier"
 
-msgid "Back to my requests"
-msgstr "Retour à mes demandes"
-
 msgid "Back to requests"
 msgstr "Retour aux demandes"
 
@@ -319,9 +316,6 @@ msgstr "Attestation de réussite"
 
 msgid "Certificate of enrolment or school attendance"
 msgstr "Certificat d'inscription ou de fréquentation scolaire"
-
-msgid "Certificate of failure"
-msgstr "Attestation d'échec"
 
 msgid "Certificate of language knowledge"
 msgstr "Certificat de connaissance des langues"
@@ -790,7 +784,7 @@ msgstr ""
 "Si vous ne possédez pas encore une décision d’équivalence définitive "
 "délivrée par la <a href='http://www.equivalences.cfwb.be/' "
 "target='_blank'>Communauté française</a> de Belgique, vous devrez fournir "
-"une copie recto-verso de ce document dès que possible. Il est vous est donc "
+"une copie recto-verso de ce document dès que possible. Il vous est donc "
 "demandé de fournir la preuve de la demande de celle-ci entre temps : "
 "récépissé de l'envoi et preuve de payement, accusé de réception du "
 "dossier, ..."
@@ -1037,6 +1031,9 @@ msgstr "Pas d'études secondaires renseignées."
 
 msgid "Non European Union credits"
 msgstr "Crédits non UE"
+
+msgid "Not specified"
+msgstr "Non renseigné(e)"
 
 msgid "Not submitted"
 msgstr "Non soumis"
@@ -1466,6 +1463,13 @@ msgstr ""
 "Le canevas de procès-verbal doit être transmis au comité d’accompagnement "
 "durant l’épreuve. Il est téléchargeable <a href=\"%(canvas_url)s\" target="
 "\"_blank\">ici</a>."
+
+msgid ""
+"The certificate of achievement of the confirmation paper in PDF format is "
+"being generated, please come back later to get it."
+msgstr ""
+"L'attestation de réussite de l'épreuve de confirmation au format PDF est en cours de génération, "
+"veuillez revenir plus tard pour y accéder."
 
 msgid "The curriculum has correctly been updated."
 msgstr "Le curriculum a bien été mis à jour."

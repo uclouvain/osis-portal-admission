@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
@@ -40,12 +39,13 @@ from admission.contrib.forms.project import (
     DoctorateAdmissionProjectForm,
     SCIENCE_DOCTORATE,
 )
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
 
 
-class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/forms/project.html'
     proposition = None
     error_mapping = {
@@ -72,18 +72,14 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_initial(self):
         if self.is_update_form:
-            self.proposition = AdmissionPropositionService.get_proposition(
-                person=self.person,
-                uuid=str(self.kwargs['pk']),
-            )
-            if 'url' not in self.proposition.links['update_proposition']:
-                raise PermissionDenied(self.proposition.links['update_proposition']['error'])
+            if 'url' not in self.admission.links['update_proposition']:
+                raise PermissionDenied(self.admission.links['update_proposition']['error'])
             return {
-                **self.proposition.to_dict(),
-                'sector': self.proposition.code_secteur_formation,
+                **self.admission.to_dict(),
+                'sector': self.admission.code_secteur_formation,
                 'doctorate': "{sigle}-{annee}".format(
-                    sigle=self.proposition.sigle_doctorat,
-                    annee=self.proposition.annee_doctorat,
+                    sigle=self.admission.sigle_doctorat,
+                    annee=self.admission.annee_doctorat,
                 ),
             }
         return super().get_initial()
@@ -156,7 +152,7 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             response = AdmissionPropositionService.create_proposition(person=self.person, **data)
             self.uuid = response['uuid']
         else:
-            data['uuid'] = str(self.kwargs['pk'])
+            data['uuid'] = self.admission_uuid
             AdmissionPropositionService.update_proposition(person=self.person, **data)
 
     def get_context_data(self, **kwargs):
@@ -165,17 +161,16 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
         context['COMMISSION_CDSS'] = COMMISSION_CDSS
         context['SCIENCE_DOCTORATE'] = SCIENCE_DOCTORATE
         if self.is_update_form:
-            context['admission'] = self.proposition
             # Lookup sector label from API
             context['sector_label'] = [
                 s.intitule
                 for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
-                if s.sigle == self.proposition.code_secteur_formation
+                if s.sigle == self.admission.code_secteur_formation
             ][0]
         return context
 
     def get_success_url(self):
-        if self.kwargs.get('pk'):
+        if self.admission_uuid:
             return super().get_success_url()
         # On creation, display a message and redirect on same form (but with uuid now that we have it)
         messages.info(self.request, _("Your data has been saved"))

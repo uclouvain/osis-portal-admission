@@ -26,12 +26,6 @@
 
 {% block style %}
   <link href="{% static "admission/admission.css" %}" rel="stylesheet"/>
-  <style>
-    .form-group.required_field .control-label:after, .required_text:after {
-      content: " *";
-      color: red;
-    }
-  </style>
 {% endblock %}
 
 {% block breadcrumb_area %}
@@ -64,7 +58,7 @@
   <div class="page-header h3 clearfix">
     <span class="d-inline-block">
       {% if admission %}
-        {{ admission.intitule_doctorat }}
+        {{ admission.intitule_doctorat }} ({{ admission.reference }})
       {% else %}
         {% trans "Create new doctorate admission" %}
       {% endif %}
@@ -104,7 +98,9 @@
         {% endblocktrans %}
     </em></p>
 
-    {% include "template_messages.html" %}
+    <div id="template-messages-container">
+     {% include "template_messages.html" %}
+    </div>
 
     {% url "admission:doctorate:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 

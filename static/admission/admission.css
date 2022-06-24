@@ -24,6 +24,13 @@
  *
  */
 
+blockquote {
+  padding: 5px 10px;
+  font-size: 1em;
+  font-style: italic;
+  white-space: pre-line;
+}
+
 .inline-field-data dl {
   display: flex;
   flex-wrap: wrap;
@@ -65,6 +72,15 @@
 .required_field .control-label:after, .required_text:after {
   content: " *";
   color: red;
+}
+
+#template-messages-container > .panel-body {
+  padding: 0;
+  margin: 1em 0;
+}
+
+#template-messages-container > .panel-body > #pnl_error_messages {
+  margin: 0;
 }
 
 .nav-pills.nav-grey > li.active > a,

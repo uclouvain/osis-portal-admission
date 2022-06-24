@@ -65,7 +65,7 @@ UPDATE_ACTIONS_BY_TAB = {
     'confirm': 'submit_proposition',
     # Confirmation paper
     'confirmation-paper': 'update_confirmation',
-    'extension-request': 'update_confirmation',
+    'extension-request': 'update_confirmation_extension',
     # Others
     'training': '',
     'jury': '',

@@ -38,10 +38,15 @@
       {% csrf_token %}
 
       {% bootstrap_field form.nouvelle_echeance form_group_class="form-group min_field required_field" %}
-      {% bootstrap_field form.justification_succincte form_group_class="form-group required_field" %}
+      {% bootstrap_field form.justification_succincte placeholder="" form_group_class="form-group required_field" %}
       {% bootstrap_field form.lettre_justification %}
 
     </div>
   </div>
 
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {{ form.media }}
 {% endblock %}

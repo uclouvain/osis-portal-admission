@@ -23,16 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView
 
 from admission.contrib.forms.person import DoctorateAdmissionPersonForm
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
-from admission.services.proposition import AdmissionPropositionService
 
 
-class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/forms/person.html'
     form_class = DoctorateAdmissionPersonForm
 
@@ -42,7 +41,7 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
         return kwargs
 
     def get_initial(self):
-        return AdmissionPersonService.retrieve_person(self.person, uuid=self.kwargs.get('pk')).to_dict()
+        return AdmissionPersonService.retrieve_person(self.person, uuid=self.admission_uuid).to_dict()
 
     def prepare_data(self, data):
         if not data['already_registered']:
@@ -61,12 +60,4 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
         return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_person(person=self.person, uuid=self.kwargs.get('pk'), **data)
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        if 'pk' in self.kwargs:
-            context_data['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.person, uuid=str(self.kwargs['pk'])
-            )
-        return context_data
+        AdmissionPersonService.update_person(person=self.person, uuid=self.admission_uuid, **data)

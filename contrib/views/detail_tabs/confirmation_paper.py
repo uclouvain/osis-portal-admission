@@ -23,28 +23,22 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, RedirectView
 from osis_document.utils import get_file_url
 
-from admission.contrib.enums.doctorat import ChoixStatutDoctorat
+from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.proposition import AdmissionDoctorateService
 
 
-class DoctorateAdmissionConfirmationPaperDetailView(LoginRequiredMixin, TemplateView):
+class DoctorateAdmissionConfirmationPaperDetailView(LoadDoctorateViewMixin, TemplateView):
     template_name = 'admission/doctorate/details/confirmation_papers.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        context_data['doctorate'] = AdmissionDoctorateService.get_doctorate(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
-
         all_confirmation_papers = AdmissionDoctorateService.get_confirmation_papers(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         )
 
         if all_confirmation_papers:
@@ -55,13 +49,13 @@ class DoctorateAdmissionConfirmationPaperDetailView(LoginRequiredMixin, Template
         return context_data
 
 
-class DoctorateAdmissionConfirmationPaperCanvasExportView(LoginRequiredMixin, RedirectView):
+class DoctorateAdmissionConfirmationPaperCanvasExportView(LoadDoctorateViewMixin, RedirectView):
     def get(self, request, *args, **kwargs):
         from osis_document.api.utils import get_remote_token
 
         canvas_uuid = AdmissionDoctorateService.get_last_confirmation_paper_canvas(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         ).uuid
 
         reading_token = get_remote_token(canvas_uuid)

@@ -24,29 +24,23 @@
 #
 # ##############################################################################
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import AdmissionPersonService
-from admission.services.proposition import AdmissionPropositionService
 from admission.services.reference import CountriesService, LanguageService, HighSchoolService
 
 
-class DoctorateAdmissionEducationDetailView(LoginRequiredMixin, TemplateView):
+class DoctorateAdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
     template_name = 'admission/doctorate/details/education.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        # Admission
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
         # Person
         high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
             person=self.request.user.person,
-            uuid=self.kwargs.get('pk'),
+            uuid=self.admission_uuid,
         ).to_dict()
         translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
 

@@ -49,3 +49,8 @@
   </div>
 
 {% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {{ form.media }}
+{% endblock %}

@@ -27,11 +27,12 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic import FormView
 
 from admission.contrib.forms.cotutelle import DoctorateAdmissionCotutelleForm
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionCotutelleService, AdmissionPropositionService
+from admission.services.proposition import AdmissionCotutelleService
 
 
-class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
+class DoctorateAdmissionCotutelleFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/forms/cotutelle.html'
     form_class = DoctorateAdmissionCotutelleForm
 
@@ -66,10 +67,6 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.person,
-            uuid=str(self.kwargs['pk']),
-        )
         if 'url' not in context['admission'].links['update_cotutelle']:
             raise PermissionDenied(context['admission'].links['update_cotutelle']['error'])
         return context
