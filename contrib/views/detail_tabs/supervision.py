@@ -35,11 +35,12 @@ from django.views.generic.edit import BaseFormView
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalByPdfForm, DoctorateAdmissionApprovalForm
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
 
 
-class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/forms/supervision.html'
     form_class = DoctorateAdmissionApprovalForm
     rejecting = False
@@ -48,8 +49,8 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
         context = self.get_context_data(**kwargs)
         # If not signing in progress and ability to update supervision, redirect on update page
         if (
-            self.proposition.statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
-            and 'url' in self.proposition.links['request_signatures']
+            self.admission.statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
+            and 'url' in self.admission.links['request_signatures']
         ):
             return redirect('admission:doctorate:update:supervision', **self.kwargs)
         return self.render_to_response(context)
@@ -58,26 +59,18 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
     def supervision(self):
         return AdmissionSupervisionService.get_supervision(
             person=self.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         ).to_dict()
-
-    @cached_property
-    def proposition(self):
-        return AdmissionPropositionService.get_proposition(
-            person=self.person,
-            uuid=str(self.kwargs['pk']),
-        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['admission'] = self.proposition
         context['supervision'] = self.supervision
         context['approve_by_pdf_form'] = DoctorateAdmissionApprovalByPdfForm()
         return context
 
     def get_initial(self):
         return {
-            'institut_these': self.proposition.institut_these,
+            'institut_these': self.admission.institut_these,
         }
 
     def get_form_kwargs(self):
@@ -88,7 +81,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
             self.person.global_id
             in [signature['promoteur']['matricule'] for signature in self.supervision['signatures_promoteurs']]
             # institut_these is not yet set
-            and not self.proposition.institut_these
+            and not self.admission.institut_these
         )
         return kwargs
 
@@ -104,13 +97,13 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
         if decision == DecisionApprovalEnum.APPROVED.name:
             return AdmissionSupervisionService.approve_proposition(
                 person=self.person,
-                uuid=str(self.kwargs['pk']),
+                uuid=self.admission_uuid,
                 **data,
             )
         self.rejecting = True
         return AdmissionSupervisionService.reject_proposition(
             person=self.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
             **data,
         )
 

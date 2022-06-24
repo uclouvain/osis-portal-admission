@@ -83,10 +83,10 @@
                 {% bootstrap_field form.type_contrat_travail %}
             </div>
             <div class="col-md-4" id="type_contrat_travail_other">
-                {% bootstrap_field form.type_contrat_travail_other %}
+                {% bootstrap_field form.type_contrat_travail_other placeholder="" %}
             </div>
             <div class="col-md-4">
-                {% bootstrap_field form.eft %}
+                {% bootstrap_field form.eft placeholder="" %}
             </div>
         </div>
       <div class="row" id="scholarship">
@@ -94,22 +94,22 @@
           {% bootstrap_field form.bourse_recherche %}
         </div>
         <div class="col-md-4" id="bourse_recherche_other">
-          {% bootstrap_field form.bourse_recherche_other %}
+          {% bootstrap_field form.bourse_recherche_other placeholder="" %}
         </div>
       </div>
       <div id="financing-details" class="row">
         <div class="col-md-6">
-          {% bootstrap_field form.duree_prevue %}
+          {% bootstrap_field form.duree_prevue placeholder="" %}
         </div>
         <div class="col-md-6">
-          {% bootstrap_field form.temps_consacre %}
+          {% bootstrap_field form.temps_consacre placeholder="" %}
         </div>
       </div>
     {% endpanel %}
 
   {% panel _("Doctoral project") %}
-    {% bootstrap_field form.titre_projet form_group_class="form-group required_field" %}
-    {% bootstrap_field form.resume_projet form_group_class="form-group required_field" %}
+    {% bootstrap_field form.titre_projet form_group_class="form-group required_field" placeholder="" %}
+    {% bootstrap_field form.resume_projet form_group_class="form-group required_field" placeholder="" %}
     <div class="row">
       <div class="col-md-4">
         {% bootstrap_field form.langue_redaction_these form_group_class="form-group required_field" %}
@@ -117,7 +117,7 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        {% bootstrap_field form.lieu_these %}
+        {% bootstrap_field form.lieu_these placeholder="" %}
       </div>
     </div>
     <p>
@@ -139,7 +139,7 @@
     <div id="previous_experience">
       <div class="row">
         <div class="col-md-6">
-          {% bootstrap_field form.institution %}
+          {% bootstrap_field form.institution placeholder="" %}
         </div>
       </div>
       {% bootstrap_field form.non_soutenue %}
@@ -149,7 +149,7 @@
         </div>
       </div>
       <div id="non-soutenue">
-        {% bootstrap_field form.raison_non_soutenue form_group_class="form-group required_field" %}
+        {% bootstrap_field form.raison_non_soutenue form_group_class="form-group required_field" placeholder="" %}
       </div>
     </div>
   {% endpanel %}

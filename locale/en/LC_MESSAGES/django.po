@@ -226,9 +226,6 @@ msgstr "Biology"
 msgid "Bachelor"
 msgstr "Bachelier"
 
-msgid "Back to my requests"
-msgstr ""
-
 msgid "Back to requests"
 msgstr ""
 
@@ -293,9 +290,6 @@ msgid "Certificate of achievement"
 msgstr ""
 
 msgid "Certificate of enrolment or school attendance"
-msgstr ""
-
-msgid "Certificate of failure"
 msgstr ""
 
 msgid "Certificate of language knowledge"
@@ -944,6 +938,9 @@ msgstr ""
 msgid "Non European Union credits"
 msgstr ""
 
+msgid "Not specified"
+msgstr ""
+
 msgid "Not submitted"
 msgstr ""
 
@@ -1347,6 +1344,11 @@ msgid ""
 "The canvas of the supervisory panel report must be sent to the accompanying "
 "committee during the test. It can be downloaded <a href=\"%(canvas_url)s\" "
 "target=\"_blank\">here</a>."
+msgstr ""
+
+msgid ""
+"The certificate of achievement of the confirmation paper in PDF format is "
+"being generated, please come back later to get it."
 msgstr ""
 
 msgid "The curriculum has correctly been updated."

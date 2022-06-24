@@ -56,3 +56,8 @@ class ConfirmationPaperForm(PromoterConfirmationPaperForm):
         required=False,
         max_files=1,
     )
+
+    class Media:
+        js = (
+            'jquery.mask.min.js',
+        )

@@ -63,12 +63,12 @@
       <ul class="nav navbar-nav">
         {% for parent, children in tab_tree.items %}
           {% if parent == active_parent %}
-            {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True %}
+            {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
             <div class="col-xs-offset-1">
               {% doctorate_subtabs admission %}
             </div>
           {% else %}
-            {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True %}
+            {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
           {% endif %}
         {% endfor %}
     </div><!-- /.navbar-collapse -->
@@ -78,9 +78,9 @@
   <ul class="nav nav-tabs visible-md visible-lg">
     {% for parent, children in tab_tree.items %}
       {% if parent == active_parent %}
-        {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True %}
+        {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
       {% else %}
-        {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True %}
+        {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
       {% endif %}
     {% endfor %}
 
@@ -98,7 +98,20 @@
           {{ submit_label|default:_("Save") }}
         </button>
       </div>
+    {% else %}
+        {% url 'admission:doctorate:update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
+        {% if change_url and change_url != request.path and admission|can_update_tab:current_tab %}
+            <div class="text-right">
+                <a href="{{ change_url }}" class="btn btn-primary">
+                    <span
+                        class="glyphicon glyphicon-floppy-save" aria-hidden="true"
+                    ></span>
+                    {% trans 'Change my submission' %}
+                </a>
+            </div>
+        {% endif %}
     {% endif %}
+
   </ul>
 
   {# Submit button if needed (mobile display) #}

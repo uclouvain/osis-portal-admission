@@ -168,12 +168,11 @@ def get_valid_tab_tree(tab_tree, admission):
 
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
-def doctorate_tabs(context, admission=None, with_submit=False):
+def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
     match = context['request'].resolver_match
-    is_form_view = match.namespaces[1:2] == ('doctorate', 'update')
 
     current_tab_name = match.url_name
-    if len(match.namespaces) > 2:
+    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
         current_tab_name = match.namespaces[2]
 
     # Create a new tab tree based on the default one but depending on the permissions links
@@ -183,9 +182,9 @@ def doctorate_tabs(context, admission=None, with_submit=False):
     return {
         'active_parent': _get_active_parent(tab_tree, current_tab_name),
         'admission': admission,
-        'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'with_submit': with_submit,
+        'no_status': no_status,
         **context.flatten(),
     }
 
@@ -220,9 +219,8 @@ def get_current_tab(context):
 
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
-def doctorate_subtabs(context, admission=None):
+def doctorate_subtabs(context, admission=None, no_status=False):
     match = context['request'].resolver_match
-    is_form_view = match.namespaces[1:] == ['doctorate', 'update']
 
     current_tab_name = match.url_name
     if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
@@ -233,14 +231,15 @@ def doctorate_subtabs(context, admission=None):
     return {
         'subtabs': valid_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), []),
         'admission': admission,
-        'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
+        'no_status': no_status,
+        'active_tab': current_tab_name,
         **context.flatten(),
     }
 
 
 @register.inclusion_tag('admission/field_data.html')
-def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False, inline=False):
+def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False, inline=False, html_tag=''):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
@@ -257,6 +256,7 @@ def field_data(name, data=None, css_class=None, hide_empty=False, translate_data
         'data': data,
         'css_class': css_class,
         'hide_empty': hide_empty,
+        'html_tag': html_tag,
     }
 
 

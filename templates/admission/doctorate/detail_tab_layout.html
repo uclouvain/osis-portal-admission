@@ -70,7 +70,7 @@
           class="pull-right h5 text-primary"
       >
         <span class="fa fa-stream"></span>
-        {% trans "Back to my requests" %}
+        {% trans "Back to requests" %}
       </a>
     </div>
 
@@ -104,12 +104,14 @@
         {% endblocktrans %}
     </em></p>
 
-    {% include "template_messages.html" %}
+    <div id="template-messages-container">
+     {% include "template_messages.html" %}
+    </div>
 
     {% url 'admission:doctorate:update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
     {% get_current_tab as current_tab %}
-    {% if change_url and admission|can_update_tab:current_tab %}
-        <div class="text-right">
+    {% if change_url and change_url != request.path and admission|can_update_tab:current_tab %}
+        <div class="text-right visible-xs visible-sm">
             <a href="{{ change_url }}" class="btn btn-primary">
                 <span
                     class="glyphicon glyphicon-floppy-save" aria-hidden="true"

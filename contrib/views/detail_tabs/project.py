@@ -23,35 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
 from admission.contrib.enums.projet import ChoixStatutProposition
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
-from admission.services.proposition import AdmissionPropositionService
 from admission.utils import format_entity_title
 
 
-class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
+class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):
     template_name = 'admission/doctorate/details/project.html'
-
-    def get_admission(self):
-        if not hasattr(self, 'admission'):
-            self.admission = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person,
-                uuid=str(self.kwargs['pk']),
-            )
-        return self.admission
 
     def get(self, request, *args, **kwargs):
         # Always redirect to update form as long as signatures are not sent
-        admission = self.get_admission()
         if (
-            admission.statut == ChoixStatutProposition.IN_PROGRESS.name
-            and 'url' in admission.links['update_proposition']
+            self.admission.statut == ChoixStatutProposition.IN_PROGRESS.name
+            and 'url' in self.admission.links['update_proposition']
         ):
             return redirect('admission:doctorate:update:project', **self.kwargs)
 
@@ -59,7 +49,6 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = self.get_admission()
 
         # There is a bug with translated strings with percent signs
         # https://docs.djangoproject.com/en/3.2/topics/i18n/translation/#troubleshooting-gettext-incorrectly-detects-python-format-in-strings-with-percent-signs

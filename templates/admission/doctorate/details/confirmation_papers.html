@@ -37,8 +37,12 @@
         {% field_data _("Date of confirmation") current_confirmation_paper.date inline=True %}
         {% field_data _("Research report") current_confirmation_paper.rapport_recherche %}
         {% field_data _("Report of the supervisory panel") current_confirmation_paper.proces_verbal_ca %}
-        {% field_data _("Certificate of achievement") current_confirmation_paper.attestation_reussite hide_empty=True %}
-        {% field_data _("Certificate of failure") current_confirmation_paper.attestation_echec hide_empty=True %}
+        {% if doctorate.statut == "PASSED_CONFIRMATION" and not current_confirmation_paper.attestation_reussite %}
+          {% translate "The certificate of achievement of the confirmation paper in PDF format is being generated, please come back later to get it." as is_generating_text %}
+          {% field_data _("Certificate of achievement") is_generating_text %}
+        {% else %}
+          {% field_data _("Certificate of achievement") current_confirmation_paper.attestation_reussite hide_empty=True %}
+        {% endif %}
         {% field_data _("Opinion on the renewal of the research mandate") current_confirmation_paper.avis_renouvellement_mandat_recherche %}
       </div>
     </div>
@@ -64,16 +68,16 @@
 {% block style %}
   {{ block.super }}
   <style>
-      .past-confirmation-paper:after {
-          content: '';
-          border-bottom: 1px solid #ddd;
-          display: block;
-          width: 80%;
-          margin: 2em auto;
-      }
-      .past-confirmation-paper:last-child:after {
-          border: none;
-      }
+    .past-confirmation-paper:after {
+      content: '';
+      border-bottom: 1px solid #ddd;
+      display: block;
+      width: 80%;
+      margin: 2em auto;
+    }
+    .past-confirmation-paper:last-child:after {
+      border: none;
+    }
   </style>
 
 {% endblock %}

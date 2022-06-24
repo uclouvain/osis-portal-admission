@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -45,9 +44,9 @@ from admission.contrib.forms.education import (
     DoctorateAdmissionEducationScheduleForm,
     FIELD_REQUIRED_MESSAGE,
 )
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
-from admission.services.proposition import AdmissionPropositionService
 from base.tests.factories.academic_year import get_current_year
 
 LINGUISTIC_REGIMES_WITHOUT_TRANSLATION = ['FR', 'NL', 'DE', 'EN', 'IT', 'ES', 'PT']
@@ -57,7 +56,7 @@ EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
 ]
 
 
-class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionEducationFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = "admission/doctorate/forms/education.html"
     success_url = reverse_lazy("admission:doctorate-list")
     form_class = DoctorateAdmissionEducationForm
@@ -66,11 +65,6 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update(self.get_forms(context_data))
-        if 'pk' in self.kwargs:
-            context_data['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.person,
-                uuid=str(self.kwargs['pk']),
-            )
         context_data['foreign_diploma_type_images'] = {
             'INTERNATIONAL_BACCALAUREATE': 'admission/images/IBO.png',
             'EUROPEAN_BACHELOR': 'admission/images/schola_europa.png',
@@ -83,7 +77,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
     def high_school_diploma(self):
         return AdmissionPersonService.retrieve_high_school_diploma(
             person=self.person,
-            uuid=self.kwargs.get('pk'),
+            uuid=self.admission_uuid,
         ).to_dict()
 
     def get_initial(self):
@@ -225,7 +219,7 @@ class DoctorateAdmissionEducationFormView(LoginRequiredMixin, WebServiceFormMixi
         AdmissionPersonService.update_high_school_diploma(
             self.person,
             data,
-            uuid=self.kwargs.get('pk'),
+            uuid=self.admission_uuid,
         )
 
     @staticmethod
