@@ -104,5 +104,6 @@ urlpatterns = [
     ),
     path("doctorate/create/", include((creation_paths, "doctorate-create"))),
     # Detail
+    path("doctorate/<uuid:pk>/", views.redirect_detail, name="doctorate"),
     path("doctorate/<uuid:pk>/", include((doctorate_paths, "doctorate"))),
 ]

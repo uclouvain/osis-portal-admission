@@ -26,6 +26,7 @@
 
 from .autocomplete import *
 from .cancel import DoctorateAdmissionCancelView
+from .detail_tabs import redirect_detail
 from .detail_tabs.confirmation_paper import (
     DoctorateAdmissionConfirmationPaperCanvasExportView,
     DoctorateAdmissionConfirmationPaperDetailView,
@@ -58,6 +59,7 @@ from .signatures import (
 )
 
 __all__ = [
+    "redirect_detail",
     "DoctorateAdmissionApprovalByPdfView",
     "DoctorateAdmissionCancelView",
     "DoctorateAdmissionConfirmFormView",
