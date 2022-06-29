@@ -336,9 +336,9 @@ def has_error_in_tab(admission, tab):
     if not admission or not hasattr(admission, 'erreurs'):
         return False
     if tab not in BUSINESS_EXCEPTIONS_BY_TAB:
-        children = TAB_TREES['doctorate'][tab]
+        children = TAB_TREES['doctorate'].get(tab)
         if children is None:
-            raise Exception(
+            raise ImproperlyConfigured(
                 f"{tab} has no children and is not in BUSINESS_EXCEPTIONS_BY_TAB, use no_status=1 or correct name"
             )
         return any(

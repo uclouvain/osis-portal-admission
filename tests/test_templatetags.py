@@ -39,6 +39,7 @@ from admission.templatetags.admission import (
     can_read_tab,
     can_update_tab,
     get_valid_tab_tree,
+    has_error_in_tab,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
@@ -243,6 +244,33 @@ class TemplateTagsTestCase(TestCase):
         # The tab action is specified in the admission as allowed -> return True
         admission = self.Admission()
         self.assertTrue(can_update_tab(admission, Tab('coordonnees', '')))
+
+    def test_has_error_in_tab(self):
+        erreurs = [
+            {
+                'detail': "Merci de spécifier au-moins un numéro d'identité.",
+                'status_code': 'PROPOSITION-26',
+            },
+            {
+                'detail': 'Merci de compléter intégralement les informations',
+                'status_code': 'PROPOSITION-25',
+            },
+            {
+                'detail': "Merci de compléter l'onglet 'Parcours antérieur'",
+                'status_code': 'PROPOSITION-35',
+            },
+            {
+                'detail': 'Merci de fournir une copie de votre curriculum.',
+                'status_code': 'PROPOSITION-34',
+            },
+        ]
+        admission = Mock(erreurs=erreurs)
+        self.assertFalse(has_error_in_tab('', 'personal'))
+        self.assertTrue(has_error_in_tab(admission, 'personal'))
+        with self.assertRaises(ImproperlyConfigured):
+            has_error_in_tab(admission, 'unknown')
+        self.assertTrue(has_error_in_tab(admission, 'curriculum'))
+        self.assertFalse(has_error_in_tab(admission, 'coordonnees'))
 
     def test_get_dashboard_links_tag(self):
         template = Template(
