@@ -24,15 +24,19 @@
 #
 # ##############################################################################
 import functools
+import re
 from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
 
 from django import template
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.safestring import SafeString
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from admission.contrib.enums import *
+from admission.contrib.enums.training import StatutActivite
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from base.models.utils.utils import ChoiceEnum
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
@@ -192,17 +196,7 @@ def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
 def get_subtab_label(tab_name):
     return next(
         subtab for subtabs in TAB_TREES['doctorate'].values() for subtab in subtabs if subtab.name == tab_name
-    ).label
-
-
-@register.simple_tag(takes_context=True)
-def current_subtabs(context):
-    match = context['request'].resolver_match
-    current_tab_name = match.url_name
-    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
-        current_tab_name = match.namespaces[2]
-    current_tab_tree = TAB_TREES['doctorate']
-    return current_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), [])
+    ).label  # pragma : no branch
 
 
 @register.simple_tag(takes_context=True)
@@ -286,15 +280,6 @@ def get_dashboard_links(context):
 
 
 @register.filter
-def enum_display(value, enum_name):
-    if value and isinstance(value, str):
-        for enum in ChoiceEnum.__subclasses__():
-            if enum.__name__ == enum_name:
-                return enum.get_value(value)
-    return value
-
-
-@register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
 
@@ -325,12 +310,6 @@ def add_str(arg1, arg2):
 
 
 @register.filter
-def can_update_something(admission):
-    """Return true if any update tab can be opened for this admission, otherwise return False"""
-    return any(_can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB) for tab_name in UPDATE_ACTIONS_BY_TAB)
-
-
-@register.filter
 def has_error_in_tab(admission, tab):
     """Return true if the tab (or subtab) has errors"""
     if not admission or not hasattr(admission, 'erreurs'):
@@ -358,3 +337,63 @@ def bootstrap_field_with_tooltip(field, classes='', show_help=False):
         'classes': classes,
         'show_help': show_help,
     }
+
+
+@register.filter
+def status_as_class(activity):
+    status = activity
+    if hasattr(activity, 'status'):
+        status = activity.status
+    elif isinstance(activity, dict):
+        status = activity['status']
+    return {
+        StatutActivite.SOUMISE.name: "warning",
+        StatutActivite.ACCEPTEE.name: "success",
+        StatutActivite.REFUSEE.name: "danger",
+    }.get(str(status), 'info')
+
+
+@register.simple_tag
+def display(*args):
+    """Display args if their value is not empty, can be wrapped by parenthesis, or separated by comma or dash"""
+    ret = []
+    iterargs = iter(args)
+    nextarg = next(iterargs)
+    while nextarg != StopIteration:
+        if nextarg == "(":
+            reduce_wrapping = [next(iterargs, None)]
+            while reduce_wrapping[-1] != ")":
+                reduce_wrapping.append(next(iterargs, None))
+            ret.append(reduce_wrapping_parenthesis(*reduce_wrapping[:-1]))
+        elif nextarg == ",":
+            ret.append(reduce_list_separated(ret.pop(), next(iterargs, None)))
+        elif nextarg == "-":
+            ret.append(reduce_list_separated(ret.pop(), next(iterargs, None), separator=" - "))
+        elif isinstance(nextarg, str) and len(nextarg) > 1 and re.match(r'\s', nextarg[0]):
+            suffixed_val = ret.pop()
+            ret.append(f"{suffixed_val}{nextarg}" if suffixed_val else "")
+        else:
+            ret.append(SafeString(nextarg) if nextarg else '')
+        nextarg = next(iterargs, StopIteration)
+    return SafeString("".join(ret))
+
+
+@register.simple_tag
+def reduce_wrapping_parenthesis(*args):
+    """Display args given their value, wrapped by parenthesis"""
+    ret = display(*args)
+    if ret:
+        return SafeString(f"({ret})")
+    return ret
+
+
+@register.simple_tag
+def reduce_list_separated(arg1, arg2, separator=", "):
+    """Display args given their value, joined by separator"""
+    if arg1 and arg2:
+        return separator.join([SafeString(arg1), SafeString(arg2)])
+    elif arg1:
+        return SafeString(arg1)
+    elif arg2:
+        return SafeString(arg2)
+    return ""

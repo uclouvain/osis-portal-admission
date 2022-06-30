@@ -24,12 +24,21 @@
 #
 # ##############################################################################
 from enum import Enum
+from importlib import import_module
 from typing import List
 
+from django.http import HttpResponseBadRequest, HttpResponseForbidden
+
 from admission.services.mixins import ServiceMeta
+from admission.utils.utils import to_snake_case
 from base.models.person import Person
 from frontoffice.settings.osis_sdk import admission as admission_sdk
-from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
+from frontoffice.settings.osis_sdk.utils import (
+    ApiBusinessException,
+    MultipleApiBusinessException,
+    api_exception_handler,
+    build_mandatory_auth_headers,
+)
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
 from osis_admission_sdk.model.confirmation_paper_canvas import ConfirmationPaperCanvas
@@ -341,3 +350,80 @@ class AdmissionDoctorateService(metaclass=ServiceMeta):
             submit_confirmation_paper_extension_request_command=kwargs,
             **build_mandatory_auth_headers(person),
         )
+
+
+class ActivityApiBusinessException(ApiBusinessException):
+    def __init__(self, activite_id=None, **kwargs):
+        self.activite_id = activite_id
+        super().__init__(**kwargs)
+
+
+class AdmissionDoctorateTrainingService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_activity_list(cls, person, uuid):
+        return AdmissionPropositionAPIClient().list_doctoral_trainings(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_config(cls, person, uuid):
+        return AdmissionPropositionAPIClient().retrieve_doctoral_training_config(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_activity(cls, person, doctorate_uuid, activity_uuid):
+        return AdmissionPropositionAPIClient().retrieve_doctoral_training(
+            uuid=doctorate_uuid,
+            activity_id=activity_uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def create_activity(cls, person, uuid, **kwargs):
+        return AdmissionPropositionAPIClient().create_doctoral_training(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+            doctoral_training_activity=cls._get_activity(kwargs),
+        )
+
+    @classmethod
+    def update_activity(cls, person, doctorate_uuid, activity_uuid, **kwargs):
+        return AdmissionPropositionAPIClient().update_doctoral_training(
+            uuid=doctorate_uuid,
+            activity_id=activity_uuid,
+            **build_mandatory_auth_headers(person),
+            doctoral_training_activity=cls._get_activity(kwargs),
+        )
+
+    @classmethod
+    def _get_activity(cls, kwargs):
+        class_name = kwargs["object_type"]
+        module = import_module(f'osis_admission_sdk.model.{to_snake_case(class_name)}')
+        activity_class = getattr(module, class_name)
+        return activity_class(**kwargs)
+
+    @classmethod
+    def submit_activities(cls, person, uuid, **kwargs):
+        try:
+            return AdmissionPropositionAPIClient().submit_doctoral_training(
+                uuid=uuid,
+                **build_mandatory_auth_headers(person),
+                doctoral_training_batch=kwargs,
+            )
+        except ApiException as api_exception:
+            # We need special API handling to add activity info
+            if api_exception.status == HttpResponseBadRequest.status_code:
+                import json
+
+                api_business_exceptions = set()
+
+                body_json = json.loads(api_exception.body)
+                for key, exceptions in body_json.items():
+                    api_business_exceptions |= {ActivityApiBusinessException(**exception) for exception in exceptions}
+                raise MultipleApiBusinessException(exceptions=api_business_exceptions)
+            raise api_exception

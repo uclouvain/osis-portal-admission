@@ -34,6 +34,10 @@ msgid " on "
 msgstr ""
 
 #, python-format
+msgid "%(added)s ECTS added with %(validated)s validated by the CDD."
+msgstr ""
+
+#, python-format
 msgid "%(label)s:"
 msgstr ""
 
@@ -76,6 +80,9 @@ msgstr ""
 msgid "A2"
 msgstr ""
 
+msgid "ACCEPTEE"
+msgstr ""
+
 msgid "ADMISSION_IN_PROGRESS"
 msgstr "Admission in progress"
 
@@ -94,6 +101,9 @@ msgstr ""
 msgid "Academic year"
 msgstr ""
 
+msgid "Accepted"
+msgstr ""
+
 msgid "Access certificate after a 60 master"
 msgstr ""
 
@@ -101,6 +111,12 @@ msgid "Access my doctoral students' requests"
 msgstr ""
 
 msgid "Acquired credit number"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Activities"
 msgstr ""
 
 msgid "Activity"
@@ -112,10 +128,31 @@ msgstr ""
 msgid "Activity position"
 msgstr ""
 
+msgid "Activity subtype"
+msgstr ""
+
 msgid "Activity type"
 msgstr ""
 
 msgid "Add"
+msgstr ""
+
+msgid "Add a VAE"
+msgstr ""
+
+msgid "Add a communication"
+msgstr ""
+
+msgid "Add a communication to this conference"
+msgstr ""
+
+msgid "Add a communication to this residency"
+msgstr ""
+
+msgid "Add a communication to this seminar"
+msgstr ""
+
+msgid "Add a conference"
 msgstr ""
 
 msgid "Add a language"
@@ -127,6 +164,24 @@ msgstr ""
 msgid "Add a promoter or a CA member"
 msgstr "Add a promoter or a supervision member"
 
+msgid "Add a publication"
+msgstr ""
+
+msgid "Add a publication to this conference"
+msgstr ""
+
+msgid "Add a residency"
+msgstr ""
+
+msgid "Add a seminar"
+msgstr ""
+
+msgid "Add a service"
+msgstr ""
+
+msgid "Add an activity"
+msgstr ""
+
 msgid "Add another"
 msgstr ""
 
@@ -137,6 +192,10 @@ msgid "Admission"
 msgstr ""
 
 msgid "Admission type"
+msgstr ""
+
+msgctxt "filters"
+msgid "All"
 msgstr ""
 
 msgid "Allocated time for the thesis (in EFT)"
@@ -199,6 +258,12 @@ msgstr ""
 msgid "Attachments"
 msgstr ""
 
+msgid "Attestation of the communication"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
 msgid "B1"
 msgstr ""
 
@@ -221,6 +286,9 @@ msgid "Bachelor"
 msgstr "Bachelier"
 
 msgid "Back to requests"
+msgstr ""
+
+msgid "Begin date"
 msgstr ""
 
 msgid "Belgian diploma"
@@ -271,6 +339,12 @@ msgstr "Cancelled"
 msgid "CHEMISTRY"
 msgstr "Chemistry"
 
+msgid "COMMUNICATION"
+msgstr ""
+
+msgid "CONFERENCE"
+msgstr ""
+
 msgid "CONFIRMATION_TO_BE_REPEATED"
 msgstr "Confirmation to be repeated"
 
@@ -280,6 +354,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Category"
+msgstr ""
+
 msgid "Certificate of achievement"
 msgstr ""
 
@@ -287,6 +364,9 @@ msgid "Certificate of enrolment or school attendance"
 msgstr ""
 
 msgid "Certificate of language knowledge"
+msgstr ""
+
+msgid "Certificate of participation in the presentation"
 msgstr ""
 
 msgid ""
@@ -319,10 +399,19 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Comment"
+msgstr ""
+
 msgid "Comment for the candidate"
 msgstr ""
 
 msgid "Comment to the candidate:"
+msgstr ""
+
+msgid "Comments"
+msgstr ""
+
+msgid "Communication attestation"
 msgstr ""
 
 msgid "Community of education"
@@ -407,6 +496,15 @@ msgstr ""
 msgid "Date of confirmation"
 msgstr ""
 
+msgid "Date of presentation"
+msgstr ""
+
+msgid "Date of the activity"
+msgstr ""
+
+msgid "Date of the publication"
+msgstr ""
+
 msgid "Deadline for confirmation"
 msgstr ""
 
@@ -422,8 +520,17 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+msgid "Description"
+msgstr ""
+
+msgid "Description of the activity"
+msgstr ""
+
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
+msgstr ""
+
+msgid "Detailed curriculum vitae"
 msgstr ""
 
 msgid "Diploma of Aptitude for Access to Higher Education (DAES)"
@@ -451,6 +558,9 @@ msgstr ""
 msgid "Doctoral project"
 msgstr ""
 
+msgid "Doctoral training"
+msgstr ""
+
 msgid "Doctorate"
 msgstr ""
 
@@ -469,6 +579,19 @@ msgstr ""
 msgid "ECONOMY"
 msgstr "Economy"
 
+msgid "ECTS"
+msgstr ""
+
+msgctxt "summary"
+msgid "ECTS added"
+msgstr ""
+
+msgid "ECTS credits"
+msgstr ""
+
+msgid "ECTS for participating"
+msgstr ""
+
 msgid "ENROLLED"
 msgstr "Enrolled"
 
@@ -476,6 +599,13 @@ msgid "ERC - European Research Council"
 msgstr ""
 
 msgid "Economic sciences"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+#, python-format
+msgid "Edit %(title)s"
 msgstr ""
 
 msgid "Education community"
@@ -495,6 +625,9 @@ msgid ""
 "academic year."
 msgstr ""
 
+msgid "End date"
+msgstr ""
+
 msgid "English"
 msgstr ""
 
@@ -508,6 +641,15 @@ msgid "European Bachelor (Schola Europaea)"
 msgstr ""
 
 msgid "European Union credits"
+msgstr ""
+
+msgid "Event description"
+msgstr ""
+
+msgid "Event participation"
+msgstr ""
+
+msgid "Event website"
 msgstr ""
 
 msgid "Exit"
@@ -695,6 +837,9 @@ msgstr ""
 msgid "If other optional domains, please specify"
 msgstr ""
 
+msgid "If other, specify"
+msgstr ""
+
 msgid ""
 "If the circumstances justify it, the deadline may be extended by the support "
 "committee, with the agreement of the DDC on the proposed deadline. This "
@@ -751,6 +896,12 @@ msgid ""
 "protection policy of the University of Louvain."
 msgstr ""
 
+msgid "In person"
+msgstr ""
+
+msgid "In review"
+msgstr ""
+
 msgid "Institute"
 msgstr ""
 
@@ -793,7 +944,13 @@ msgstr ""
 msgid "Issue diploma date"
 msgstr ""
 
+msgid "Journal"
+msgstr ""
+
 msgid "Justification letter"
+msgstr ""
+
+msgid "Keywords"
 msgstr ""
 
 msgid "Language"
@@ -878,8 +1035,14 @@ msgstr ""
 msgid "My enrolment request"
 msgstr ""
 
+msgid "N/A"
+msgstr ""
+
 msgid "NO"
 msgstr "No"
+
+msgid "NON_SOUMISE"
+msgstr ""
 
 msgid "NOT_ALLOWED_TO_CONTINUE"
 msgstr "Not allowed to continue"
@@ -887,7 +1050,19 @@ msgstr "Not allowed to continue"
 msgid "NOT_INVITED"
 msgstr "Not invited to sign"
 
+msgid "Name in the language of the manifestation"
+msgstr ""
+
+msgid "Name of the activity"
+msgstr ""
+
 msgid "Name of the diploma or of the education"
+msgstr ""
+
+msgid "Name of the event"
+msgstr ""
+
+msgid "Name of the manifestation"
 msgstr ""
 
 msgid "National Bachelor (or government diploma, ...)"
@@ -897,6 +1072,9 @@ msgid "New deadline"
 msgstr ""
 
 msgid "No"
+msgstr ""
+
+msgid "No activity created yet"
 msgstr ""
 
 msgid "No cotutelle"
@@ -938,6 +1116,9 @@ msgstr ""
 msgid "Number"
 msgstr ""
 
+msgid "Number of days participating"
+msgstr ""
+
 msgid "OTHER"
 msgstr "Other"
 
@@ -945,6 +1126,12 @@ msgid "Obtained grade"
 msgstr ""
 
 msgid "Ongoing request"
+msgstr ""
+
+msgid "Online"
+msgstr ""
+
+msgid "Online or in person"
 msgstr ""
 
 msgid ""
@@ -956,7 +1143,16 @@ msgstr ""
 msgid "Opinion on the renewal of the research mandate"
 msgstr ""
 
+msgid "Oral communication"
+msgstr ""
+
+msgid "Oral exposé"
+msgstr ""
+
 msgid "Organizing country"
+msgstr ""
+
+msgid "Organizing institution"
 msgstr ""
 
 msgid "Other"
@@ -1003,6 +1199,15 @@ msgstr ""
 
 msgid "PHYSICS"
 msgstr "Physics"
+
+msgid "PUBLICATION"
+msgstr ""
+
+msgid "Participation"
+msgstr ""
+
+msgid "Participation certification"
+msgstr ""
 
 msgid "Passport"
 msgstr ""
@@ -1070,6 +1275,9 @@ msgstr ""
 msgid "Postal code"
 msgstr ""
 
+msgid "Poster"
+msgstr ""
+
 msgid "Pre-Admission"
 msgstr ""
 
@@ -1103,7 +1311,22 @@ msgstr ""
 msgid "Promoters"
 msgstr ""
 
+msgid "Proof"
+msgstr ""
+
+msgid "Proof (if needed)"
+msgstr ""
+
+msgid "Proof of acceptation by the committee"
+msgstr ""
+
+msgid "Proof of acceptation or publication"
+msgstr ""
+
 msgid "Proof of identity"
+msgstr ""
+
+msgid "Proof of participation for the whole activity"
 msgstr ""
 
 msgid "Proof of the final equivalence decision"
@@ -1143,7 +1366,19 @@ msgstr ""
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr ""
 
+msgid "Publication status"
+msgstr ""
+
+msgid "Published"
+msgstr ""
+
 msgid "Qualification method"
+msgstr ""
+
+msgid "REFUSEE"
+msgstr ""
+
+msgid "RESIDENCY"
 msgstr ""
 
 msgid "Rank in diploma"
@@ -1192,14 +1427,29 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
+msgid "Role"
+msgstr ""
+
+msgid "Référence DIAL.Pr"
+msgstr ""
+
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Research scholarship"
 
 msgid "SELF_FUNDING"
 msgstr "Self-funding"
 
+msgid "SEMINAR"
+msgstr ""
+
+msgid "SERVICE"
+msgstr ""
+
 msgid "SIGNING_IN_PROGRESS"
 msgstr "Signing in progress"
+
+msgid "SOUMISE"
+msgstr ""
 
 msgid "STATISTICS"
 msgstr "Statistics"
@@ -1237,6 +1487,12 @@ msgstr ""
 msgid "Sector"
 msgstr ""
 
+msgid "Select for batch action"
+msgstr ""
+
+msgid "Selection committee"
+msgstr ""
+
 msgid "Semesters"
 msgstr ""
 
@@ -1245,6 +1501,9 @@ msgid "Separate"
 msgstr ""
 
 msgid "Sex"
+msgstr ""
+
+msgid "Show details"
 msgstr ""
 
 msgid "Signatures requests sent"
@@ -1260,6 +1519,9 @@ msgstr ""
 msgid "Spanish"
 msgstr ""
 
+msgid "Speaker"
+msgstr ""
+
 msgid "Speaking ability"
 msgstr ""
 
@@ -1267,6 +1529,9 @@ msgid "Specify scholarship grant"
 msgstr ""
 
 msgid "Specify work contract"
+msgstr ""
+
+msgid "Status"
 msgstr ""
 
 msgid "Status:"
@@ -1293,6 +1558,12 @@ msgstr ""
 msgid "Submit my new deadline"
 msgstr ""
 
+msgid "Submit these activities"
+msgstr ""
+
+msgid "Submitted"
+msgstr ""
+
 msgid "Success"
 msgstr ""
 
@@ -1300,6 +1571,13 @@ msgid "Success with residual credits"
 msgstr ""
 
 msgid "Success without distinction"
+msgstr ""
+
+msgctxt "paper summary"
+msgid "Summary"
+msgstr ""
+
+msgid "Summary of the communication"
 msgstr ""
 
 msgid "Summary of the proposition"
@@ -1422,7 +1700,16 @@ msgstr ""
 msgid "Timetable"
 msgstr ""
 
+msgid "Title"
+msgstr ""
+
+msgid "Title of the communication"
+msgstr ""
+
 msgid "Title of the dissertation"
+msgstr ""
+
+msgid "Title of the publication"
 msgstr ""
 
 msgid ""
@@ -1448,6 +1735,15 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
+msgid "Type of activity"
+msgstr ""
+
+msgid "Type of communication"
+msgstr ""
+
+msgid "Type of publication"
+msgstr ""
+
 msgid "UCLOUVAIN_ASSISTANT"
 msgstr "Uclouvain assistant"
 
@@ -1463,6 +1759,9 @@ msgstr ""
 msgid "Unknown birth date"
 msgstr ""
 
+msgid "Unsubmitted"
+msgstr ""
+
 msgid "Update"
 msgstr ""
 
@@ -1473,6 +1772,12 @@ msgid "Upload"
 msgstr ""
 
 msgid "Upload your CV"
+msgstr ""
+
+msgid "VAE"
+msgstr ""
+
+msgid "Validated"
 msgstr ""
 
 msgid "View"
@@ -1486,6 +1791,9 @@ msgstr ""
 
 msgid "WORK_CONTRACT"
 msgstr "Work contract"
+
+msgid "Website"
+msgstr ""
 
 msgid "What diploma did you get (or will you get)?"
 msgstr ""
@@ -1581,6 +1889,10 @@ msgid "e.g.: %(example)s"
 msgstr ""
 
 msgid "foreign"
+msgstr ""
+
+#, python-format
+msgid "from %(start)s to %(end)s"
 msgstr ""
 
 msgid "h/w"

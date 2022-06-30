@@ -207,7 +207,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     class Media:
         js = (
-            'dependsOn.min.js',
+            'js/dependsOn.min.js',
             'jquery.mask.min.js',
         )
 

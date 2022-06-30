@@ -238,7 +238,7 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
     )
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = ('js/dependsOn.min.js',)
 
     def __init__(self, person, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -57,6 +57,7 @@ from .signatures import (
     DoctorateAdmissionRequestSignaturesView,
     DoctorateAdmissionRequestSignaturesView,
 )
+from .training import *
 
 __all__ = [
     "redirect_detail",
@@ -88,4 +89,6 @@ __all__ = [
     "DoctorateAdmissionSupervisionDetailView",
     "DoctorateAdmissionSupervisionFormView",
     "DoctorateAutocomplete",
+    "DoctorateAdmissionTrainingView",
+    "DoctorateTrainingActivityAddView",
 ]
