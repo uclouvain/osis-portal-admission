@@ -34,3 +34,7 @@ def force_title(string: str):
             title_string[index] = string[index]
 
     return ''.join(title_string)
+
+
+def to_snake_case(value):
+    return ''.join(['_' + i.lower() if i.isupper() else i for i in value]).lstrip('_')

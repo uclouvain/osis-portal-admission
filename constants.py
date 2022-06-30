@@ -43,7 +43,7 @@ READ_ACTIONS_BY_TAB = {
     'confirmation-paper': 'retrieve_confirmation',
     'extension-request': 'retrieve_confirmation',
     # Others
-    'training': '',
+    'training': 'retrieve_training',
     'jury': '',
     'private-defense': '',
     'public-defense': '',

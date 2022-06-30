@@ -60,7 +60,7 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
 
     class Media:
         js = (
-            'dependsOn.min.js',
+            'js/dependsOn.min.js',
             # Add osis-document script in case of approved-by-pdf documents
             'osis_document/osis-document.umd.min.js',
         )
@@ -133,7 +133,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
             self.add_error('institut_these', _("This field is required."))
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = ('js/dependsOn.min.js',)
 
 
 class DoctorateAdmissionApprovalByPdfForm(forms.Form):

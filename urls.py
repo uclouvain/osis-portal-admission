@@ -66,6 +66,13 @@ update_paths = [
     path("extension-request", views.DoctorateAdmissionExtensionRequestFormView.as_view(), name="extension-request"),
 ]
 
+training_paths = [
+    path("add/<str:category>", views.DoctorateTrainingActivityAddView.as_view(), name="add"),
+    path('edit/<uuid:activity_id>', views.DoctorateTrainingActivityEditView.as_view(), name='edit'),
+    path("submit/<uuid:activity_id>", views.DoctorateAdmissionTrainingView.as_view(), name="submit"),
+    path("delete/<uuid:activity_id>", views.DoctorateAdmissionTrainingView.as_view(), name="delete"),
+]
+
 doctorate_paths = [
     path("person", views.DoctorateAdmissionPersonDetailView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesDetailView.as_view(), name="coordonnees"),
@@ -88,6 +95,8 @@ doctorate_paths = [
         name="confirmation-paper-canvas",
     ),
     path("extension-request", views.DoctorateAdmissionExtensionRequestDetailView.as_view(), name="extension-request"),
+    path("training", views.DoctorateAdmissionTrainingView.as_view(), name="training"),
+    path("training/", include((training_paths, "training"))),
 ]
 
 urlpatterns = [

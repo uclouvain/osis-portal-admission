@@ -198,7 +198,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = ('js/dependsOn.min.js',)
 
     def __init__(self, hide_proximity_commission_fields=True, *args, **kwargs):
         self.person = getattr(self, 'person', kwargs.pop('person', None))

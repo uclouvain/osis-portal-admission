@@ -63,9 +63,7 @@ def get_thesis_institute_initial_choices(uuid, person):
     if not uuid:
         return EMPTY_CHOICE
     institute = EntitiesService.get_ucl_entity(person=person, uuid=uuid)
-    return EMPTY_CHOICE + (
-        (institute.uuid, format_entity_title(entity=institute)),
-    )
+    return EMPTY_CHOICE + ((institute.uuid, format_entity_title(entity=institute)),)
 
 
 def get_thesis_location_initial_choices(value):
@@ -78,9 +76,7 @@ def get_high_school_initial_choices(uuid, person):
     if not uuid:
         return EMPTY_CHOICE
     high_school = HighSchoolService.get_high_school(person=person, uuid=uuid)
-    return EMPTY_CHOICE + (
-        (high_school.uuid, format_high_school_title(high_school=high_school)),
-    )
+    return EMPTY_CHOICE + ((high_school.uuid, format_high_school_title(high_school=high_school)),)
 
 
 def get_past_academic_years_choices(person):
@@ -94,14 +90,17 @@ def get_past_academic_years_choices(person):
     )
 
 
-CustomDateInput = partial(
-    forms.DateInput,
-    attrs={
-        'placeholder': _("dd/mm/yyyy"),
-        'data-mask''': '00/00/0000',
-    },
-    format='%d/%m/%Y',
-)
+class CustomDateInput(forms.DateInput):
+    def __init__(self, attrs=None, format='%d/%m/%Y'):
+        if attrs is None:
+            attrs = {
+                'placeholder': _("dd/mm/yyyy"),
+                'data-mask' '': '00/00/0000',
+            }
+        super().__init__(attrs, format)
+
+    class Media:
+        js = ('jquery.mask.min.js',)
 
 
 def get_example_text(example: str):

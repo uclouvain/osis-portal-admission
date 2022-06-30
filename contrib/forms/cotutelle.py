@@ -75,7 +75,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
     )
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = ('js/dependsOn.min.js',)
 
     def clean(self):
         cleaned_data = super().clean()
