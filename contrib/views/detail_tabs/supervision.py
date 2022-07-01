@@ -40,7 +40,11 @@ from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
 
 
-class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionSupervisionDetailView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/supervision.html'
     form_class = DoctorateAdmissionApprovalForm
     rejecting = False

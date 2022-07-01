@@ -32,7 +32,7 @@ from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.proposition import AdmissionCotutelleService
 
 
-class DoctorateAdmissionCotutelleDetailView(LoadDossierViewMixin, TemplateView):
+class DoctorateAdmissionCotutelleDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/cotutelle.html'
 
     def get(self, request, *args, **kwargs):

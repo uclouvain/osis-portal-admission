@@ -34,7 +34,11 @@ from admission.services.proposition import AdmissionDoctorateService
 from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
 
 
-class DoctorateAdmissionConfirmationPaperFormView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionConfirmationPaperFormView(
+    LoadDoctorateViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     @cached_property
     def confirmation_paper(self) -> ConfirmationPaperDTO:
         return AdmissionDoctorateService.get_last_confirmation_paper(

@@ -32,7 +32,11 @@ from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 
 
-class DoctorateAdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionCoordonneesFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/coordonnees.html'
     form_class = DoctorateAdmissionCoordonneesForm
     forms = None

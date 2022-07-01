@@ -29,7 +29,10 @@ from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.proposition import AdmissionDoctorateService
 
 
-class DoctorateAdmissionExtensionRequestDetailView(LoadDoctorateViewMixin, TemplateView):
+class DoctorateAdmissionExtensionRequestDetailView(
+    LoadDoctorateViewMixin,
+    TemplateView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/extension_request.html'
 
     def get_context_data(self, **kwargs):
