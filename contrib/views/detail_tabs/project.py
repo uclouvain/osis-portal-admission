@@ -34,7 +34,7 @@ from admission.services.organisation import EntitiesService
 from admission.utils import format_entity_title
 
 
-class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):
+class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/project.html'
 
     def get(self, request, *args, **kwargs):

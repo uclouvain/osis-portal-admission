@@ -41,7 +41,11 @@ from admission.services.proposition import (
 from admission.templatetags.admission import get_subtab_label
 
 
-class DoctorateAdmissionConfirmFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionConfirmFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/confirm.html'
 
     def get_context_data(self, **kwargs):

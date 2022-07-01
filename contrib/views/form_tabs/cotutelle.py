@@ -32,7 +32,11 @@ from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionCotutelleService
 
 
-class DoctorateAdmissionCotutelleFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionCotutelleFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/cotutelle.html'
     form_class = DoctorateAdmissionCotutelleForm
 

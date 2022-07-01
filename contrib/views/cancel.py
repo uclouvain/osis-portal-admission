@@ -32,7 +32,11 @@ from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
 
 
-class DoctorateAdmissionCancelView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionCancelView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = "admission/doctorate/cancel.html"
     form_class = Form
 

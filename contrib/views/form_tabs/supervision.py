@@ -38,7 +38,11 @@ from admission.services.proposition import AdmissionSupervisionService
 from osis_admission_sdk import ApiException
 
 
-class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionSupervisionFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/supervision.html'
     form_class = DoctorateAdmissionSupervisionForm
 
@@ -70,7 +74,11 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
         return AdmissionSupervisionService.add_member(person=self.person, uuid=self.admission_uuid, **data)
 
 
-class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionRemoveActorView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     form_class = forms.Form
     template_name = 'admission/doctorate/forms/remove_actor.html'
     actor_type_mapping = {

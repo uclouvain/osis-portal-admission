@@ -45,7 +45,11 @@ from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
 
 
-class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionProjectFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/project.html'
     proposition = None
     error_mapping = {
@@ -127,9 +131,7 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
             else data['bourse_recherche']
         )
         data['commission_proximite'] = (
-            data.get('commission_proximite_cde')
-            or data.get('commission_proximite_cdss')
-            or data.get('sous_domaine')
+            data.get('commission_proximite_cde') or data.get('commission_proximite_cdss') or data.get('sous_domaine')
         )
         data.pop('type_contrat_travail_other')
         data.pop('bourse_recherche_other')

@@ -35,7 +35,11 @@ from admission.services.person import AdmissionPersonService
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
-class DoctorateAdmissionLanguagesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionLanguagesFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = "admission/doctorate/forms/languages.html"
     success_url = reverse_lazy("admission:doctorate-list")
     form_class = DoctorateAdmissionLanguagesKnowledgeFormSet

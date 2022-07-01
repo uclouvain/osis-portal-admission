@@ -30,7 +30,10 @@ from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.proposition import AdmissionDoctorateService
 
 
-class DoctorateAdmissionConfirmationPaperDetailView(LoadDoctorateViewMixin, TemplateView):
+class DoctorateAdmissionConfirmationPaperDetailView(
+    LoadDoctorateViewMixin,
+    TemplateView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/confirmation_papers.html'
 
     def get_context_data(self, **kwargs):
@@ -49,7 +52,10 @@ class DoctorateAdmissionConfirmationPaperDetailView(LoadDoctorateViewMixin, Temp
         return context_data
 
 
-class DoctorateAdmissionConfirmationPaperCanvasExportView(LoadDoctorateViewMixin, RedirectView):
+class DoctorateAdmissionConfirmationPaperCanvasExportView(
+    LoadDoctorateViewMixin,
+    RedirectView,
+):  # pylint: disable=too-many-ancestors
     def get(self, request, *args, **kwargs):
         from osis_document.api.utils import get_remote_token
 

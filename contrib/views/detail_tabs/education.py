@@ -32,7 +32,7 @@ from admission.services.person import AdmissionPersonService
 from admission.services.reference import CountriesService, LanguageService, HighSchoolService
 
 
-class DoctorateAdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
+class DoctorateAdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/education.html'
 
     def get_context_data(self, **kwargs):

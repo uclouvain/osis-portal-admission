@@ -56,7 +56,11 @@ EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
 ]
 
 
-class DoctorateAdmissionEducationFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionEducationFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = "admission/doctorate/forms/education.html"
     success_url = reverse_lazy("admission:doctorate-list")
     form_class = DoctorateAdmissionEducationForm
