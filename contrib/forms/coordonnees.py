@@ -27,8 +27,9 @@ from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
-from admission.constants import BE_ISO_CODE
-from admission.contrib.forms import get_country_initial_choices
+from admission.constants import BE_ISO_CODE, FIELD_REQUIRED_MESSAGE
+from admission.contrib.forms import get_country_initial_choices, get_example_text
+from admission.utils import force_title
 
 
 class DoctorateAdmissionCoordonneesForm(forms.Form):
@@ -39,13 +40,17 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
 
     email = forms.EmailField(
         disabled=True,
-        label=_("Email"),
-        help_text=_("Please contact the Enrolment Office if you wish to change your contact email.")
+        label=_("Private email"),
     )
     phone_mobile = forms.CharField(
         required=False,
         label=__('admission', "Mobile phone"),
-        help_text=_("(e.g. +32 490 00 00 00)"),
+        help_text=get_example_text("+32 490 00 00 00"),
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": get_example_text('+32 490 00 00 00'),
+            },
+        ),
     )
 
     class Media:
@@ -59,9 +64,18 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
 
 
 class DoctorateAdmissionAddressForm(forms.Form):
-    street = forms.CharField(required=False, label=_("Street"))
-    street_number = forms.CharField(required=False, label=_("Street number"))
-    place = forms.CharField(required=False, label=_("Place"))
+    street = forms.CharField(
+        required=False,
+        label=_("Street"),
+        help_text=get_example_text("Rue des ponts <del>rue des ponts</del> <del>RUE DES PONTS</del>"),
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": get_example_text('Rue des ponts'),
+            },
+        ),
+    )
+    street_number = forms.CharField(required=False, label=_("Number"))
+    place = forms.CharField(required=False, label=_("Place (optional)"))
     postal_box = forms.CharField(required=False, label=_("Box"))
     postal_code = forms.CharField(
         required=False,
@@ -71,7 +85,12 @@ class DoctorateAdmissionAddressForm(forms.Form):
     city = forms.CharField(
         required=False,
         label=_("City"),
-        help_text=_("(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"),
+        help_text=get_example_text("Louvain-la-Neuve <del>louvain-la-neuve</del>"),
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": get_example_text('Louvain-la-Neuve'),
+            },
+        ),
     )
     country = forms.CharField(
         required=False,
@@ -123,6 +142,11 @@ class DoctorateAdmissionAddressForm(forms.Form):
         if any(cleaned_data.get(f) for f in all_fields):
             for field in mandatory_address_fields:
                 if not cleaned_data.get(field):
-                    self.add_error(field, _("This field is required."))
+                    self.add_error(field, FIELD_REQUIRED_MESSAGE)
+
+        # Lowercase the specified fields
+        for field in ['street', 'place', 'city']:
+            if cleaned_data.get(field):
+                cleaned_data[field] = force_title(cleaned_data[field])
 
         return cleaned_data
