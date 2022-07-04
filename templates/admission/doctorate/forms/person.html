@@ -27,22 +27,21 @@
 
 {% block form %}
   {% bootstrap_form_errors form %}
-
   {% panel _("Identification") %}
     <div class="row">
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.last_name classes='required_field' %}
+        {% bootstrap_field_with_tooltip form.last_name classes='required_field formatted-fields' %}
       </div>
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.first_name %}
+        {% bootstrap_field_with_tooltip form.first_name classes='formatted-field' %}
       </div>
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.middle_name %}
+        {% bootstrap_field_with_tooltip form.middle_name classes='formatted-field' %}
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.first_name_in_use %}
+        {% bootstrap_field_with_tooltip form.first_name_in_use classes='formatted-field' %}
       </div>
       <div class="col-md-4">
         {% bootstrap_field form.sex form_group_class="form-group required_field" %}
@@ -128,6 +127,7 @@
 {% block script %}
   {{ block.super }}
   {{ form.media }}
+  <script src="{% static "admission/admission.js" %}"></script>
   <script type="application/javascript">
       $(function () {
           const is_falsy = val => !val;

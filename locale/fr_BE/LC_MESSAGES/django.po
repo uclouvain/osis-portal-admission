@@ -47,14 +47,8 @@ msgstr "%(label)s :"
 msgid "%(state)s on %(date)s"
 msgstr "%(state)s le %(date)s"
 
-msgid "(e.g. +32 490 00 00 00)"
-msgstr "(ex: +32 490 00 00 00)"
-
 msgid "(e.g.: 1234)"
 msgstr "(ex: 1234)"
-
-msgid "(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
-msgstr "(ex: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
 
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
@@ -530,9 +524,6 @@ msgid "Educational type is required with this community of education"
 msgstr ""
 "Le type d'enseignement doit obligatoirement être renseigné avec cette "
 "communauté d'enseignement"
-
-msgid "Email"
-msgstr "Email"
 
 msgid ""
 "Employment certificate from the employer, with dates, justifying this "
@@ -1038,6 +1029,9 @@ msgstr "Non renseigné(e)"
 msgid "Not submitted"
 msgstr "Non soumis"
 
+msgid "Number"
+msgstr "Numéro"
+
 msgid "OTHER"
 msgstr "Autre"
 
@@ -1128,6 +1122,9 @@ msgstr "Physique"
 msgid "Place"
 msgstr "Lieu-dit"
 
+msgid "Place (optional)"
+msgstr "Lieu-dit (optionnel)"
+
 msgid ""
 "Please complete the schedule information of your last year of high school. "
 "We invite you to indicate the number of hours of education your followed per "
@@ -1136,12 +1133,6 @@ msgstr ""
 "Veuillez encoder les informations relatives à votre gille horaire de votre "
 "dernière année d'études. Nous vous invitons à encoder le nombre d'heures par "
 "matière suivie et par semaine."
-
-msgid ""
-"Please contact the Enrolment Office if you wish to change your contact email."
-msgstr ""
-"Veuillez contacter le Service des Inscriptions si vous souhaitez modifier "
-"votre email de contact."
 
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
@@ -1191,6 +1182,9 @@ msgstr "Parcours antérieur"
 
 msgid "Previous research experience"
 msgstr "Expérience précédente de recherche"
+
+msgid "Private email"
+msgstr "E-mail privé"
 
 msgid "Professional education"
 msgstr "Enseignement professionnel"
@@ -1387,9 +1381,6 @@ msgstr "Statut :"
 msgid "Street"
 msgstr "Rue"
 
-msgid "Street number"
-msgstr "Numéro de la rue"
-
 msgid "Studies"
 msgstr "Études"
 
@@ -1468,8 +1459,8 @@ msgid ""
 "The certificate of achievement of the confirmation paper in PDF format is "
 "being generated, please come back later to get it."
 msgstr ""
-"L'attestation de réussite de l'épreuve de confirmation au format PDF est en cours de génération, "
-"veuillez revenir plus tard pour y accéder."
+"L'attestation de réussite de l'épreuve de confirmation au format PDF est en "
+"cours de génération, veuillez revenir plus tard pour y accéder."
 
 msgid "The curriculum has correctly been updated."
 msgstr "Le curriculum a bien été mis à jour."

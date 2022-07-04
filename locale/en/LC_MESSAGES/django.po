@@ -41,13 +41,7 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr ""
 
-msgid "(e.g. +32 490 00 00 00)"
-msgstr ""
-
 msgid "(e.g.: 1234)"
-msgstr ""
-
-msgid "(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"
 msgstr ""
 
 msgid ""
@@ -496,9 +490,6 @@ msgstr ""
 msgid "Educational type is required with this community of education"
 msgstr ""
 
-msgid "Email"
-msgstr ""
-
 msgid ""
 "Employment certificate from the employer, with dates, justifying this "
 "academic year."
@@ -944,6 +935,9 @@ msgstr ""
 msgid "Not submitted"
 msgstr ""
 
+msgid "Number"
+msgstr ""
+
 msgid "OTHER"
 msgstr "Other"
 
@@ -1031,14 +1025,13 @@ msgstr ""
 msgid "Place"
 msgstr ""
 
+msgid "Place (optional)"
+msgstr ""
+
 msgid ""
 "Please complete the schedule information of your last year of high school. "
 "We invite you to indicate the number of hours of education your followed per "
 "domain and per week."
-msgstr ""
-
-msgid ""
-"Please contact the Enrolment Office if you wish to change your contact email."
 msgstr ""
 
 msgid "Please correct the errors below"
@@ -1084,6 +1077,9 @@ msgid "Previous experience"
 msgstr ""
 
 msgid "Previous research experience"
+msgstr ""
+
+msgid "Private email"
 msgstr ""
 
 msgid "Professional education"
@@ -1277,9 +1273,6 @@ msgid "Status:"
 msgstr ""
 
 msgid "Street"
-msgstr ""
-
-msgid "Street number"
 msgstr ""
 
 msgid "Studies"

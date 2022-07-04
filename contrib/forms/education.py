@@ -27,6 +27,7 @@ from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
@@ -46,8 +47,6 @@ from admission.contrib.forms import (
 from admission.services.reference import CountriesService
 from base.tests.factories.academic_year import get_current_year
 from osis_document.contrib import FileUploadField
-
-FIELD_REQUIRED_MESSAGE = _("This field is required.")
 
 
 class DoctorateAdmissionEducationForm(forms.Form):

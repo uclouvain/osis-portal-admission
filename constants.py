@@ -23,6 +23,8 @@
 # ############################################################################
 
 # Association between a read-only tab name (path name) and an action link key
+from django.utils.translation import gettext_lazy as _
+
 READ_ACTIONS_BY_TAB = {
     # Personal data
     'coordonnees': 'retrieve_coordinates',
@@ -77,3 +79,5 @@ UPDATE_ACTIONS_BY_TAB = {
 UCL_CODE = 'UCL'
 
 BE_ISO_CODE = 'BE'
+
+FIELD_REQUIRED_MESSAGE = _("This field is required.")
