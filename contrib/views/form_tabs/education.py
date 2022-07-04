@@ -28,6 +28,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.secondary_studies import (
     DiplomaTypes,
     EducationalType,
@@ -42,7 +43,6 @@ from admission.contrib.forms.education import (
     DoctorateAdmissionEducationForeignDiplomaForm,
     DoctorateAdmissionEducationForm,
     DoctorateAdmissionEducationScheduleForm,
-    FIELD_REQUIRED_MESSAGE,
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin

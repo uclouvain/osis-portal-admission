@@ -28,7 +28,7 @@ from django.utils.translation import gettext_lazy as _
 
 from osis_document.contrib import FileUploadField
 
-FIELD_REQUIRED_MESSAGE = _("This field is required.")
+from admission.constants import FIELD_REQUIRED_MESSAGE
 
 
 class DoctorateAdmissionCotutelleForm(forms.Form):
