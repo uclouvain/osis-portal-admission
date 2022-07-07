@@ -1,0 +1,414 @@
+{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2022 Université catholique de Louvain
+  (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block form %}
+  {% bootstrap_form_errors main_form %}
+  {% bootstrap_form_errors foreign_diploma_form %}
+  {% bootstrap_form_errors belgian_diploma_form %}
+  {% bootstrap_form_errors schedule_form %}
+
+  {% bootstrap_field_with_tooltip main_form.got_diploma classes="required_field" %}
+
+  {# Hide it by default to prevent FOUC #}
+  <div id="got-diploma" style="display: none">
+    <div id="academic-year">
+      {% bootstrap_field main_form.academic_graduation_year form_group_class="form-group required_field" %}
+    </div>
+
+    {% bootstrap_field main_form.diploma_type form_group_class="form-group required_field" %}
+
+    {% panel _("Foreign diploma") id="foreign-diploma" %}
+
+      {# This deconstructed for image rendering #}
+      {% with field=foreign_diploma_form.foreign_diploma_type %}
+        <div class="form-group required_field {% if field.errors %}has-error{% elif foreign_diploma_form.is_bound %}has-success{% endif %}">
+          {% bootstrap_label field.label label_for=field.html_name label_class='control-label' %}
+          {% for radio_value, choice_label in field.field.widget.choices %}
+            <div class="radio">
+              <label
+                  for="id_{{ field.html_name }}_{{ forloop.counter0 }}"
+              >
+                <input
+                    id="id_{{ field.html_name }}_{{ forloop.counter0 }}"
+                    name="{{ field.html_name }}"
+                    type="{{ field.field.widget.input_type }}"
+                    value="{{ radio_value }}"
+                    style="position: relative"
+                    {% ifequal field.value radio_value %}
+                    checked="checked"
+                    {% endifequal %}/>
+                <span style="font-weight: normal">{{ choice_label }}</span>
+                {% if foreign_diploma_type_images|get_item:radio_value %}
+                  <img
+                      src="{% static foreign_diploma_type_images|get_item:radio_value %}"
+                      alt="{{ choice_label }}"
+                      height="40"
+                  />
+                {% endif %}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      {% endwith %}
+
+      <div class="row">
+        <div class="col-md-4">
+          {% bootstrap_field foreign_diploma_form.country form_group_class="form-group required_field" %}
+        </div>
+      </div>
+
+      <div class="row">
+        {% bootstrap_field foreign_diploma_form.linguistic_regime form_group_class="form-group required_field col-md-5" %}
+        <div id="linguistic-regime-other">
+          {% bootstrap_field foreign_diploma_form.other_linguistic_regime placeholder="" form_group_class="form-group col-md-7" %}
+        </div>
+      </div>
+
+      <div class="equivalence-fields">
+        {% bootstrap_field_with_tooltip foreign_diploma_form.final_equivalence_decision_not_ue classes="required_field" %}
+
+        <div id="equivalence_ue">
+          {% bootstrap_field foreign_diploma_form.equivalence form_group_class="form-group required_field" %}
+          <div id="final_equivalence_decision_ue">
+            {% bootstrap_field_with_tooltip foreign_diploma_form.final_equivalence_decision_ue classes="required_field" %}
+          </div>
+          <div id="equivalence_decision_proof">
+            {% bootstrap_field_with_tooltip foreign_diploma_form.equivalence_decision_proof classes="required_field" %}
+          </div>
+          <p id="equivalence_info">
+            {% blocktranslate %}
+              If you do not have an equivalence decision, you will have to submit a request for equivalence in
+              strict compliance with the instructions given by the
+              <a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium.
+            {% endblocktranslate %}
+          </p>
+        </div>
+      </div>
+
+      {% bootstrap_field foreign_diploma_form.result form_group_class="form-group required_field" %}
+
+    {% endpanel %}
+
+    {% panel _("Belgian diploma") id="belgian-diploma" %}
+      {% bootstrap_field belgian_diploma_form.community form_group_class="form-group required_field" %}
+
+      <div id="education-type" class="row">
+        {% bootstrap_field belgian_diploma_form.educational_type form_group_class="form-group required_field col-md-6" %}
+        <div id="educational-other">
+          {% bootstrap_field belgian_diploma_form.educational_other placeholder="" form_group_class="form-group col-md-6" %}
+        </div>
+      </div>
+
+      {% bootstrap_field belgian_diploma_form.result form_group_class="form-group required_field" %}
+
+      {% bootstrap_field belgian_diploma_form.institute placeholder="" form_group_class="form-group required_field" %}
+      {% bootstrap_field belgian_diploma_form.other_institute %}
+
+      <div id="other_institute" class="row">
+        {% bootstrap_field belgian_diploma_form.other_institute_name placeholder="" form_group_class="form-group required_field col-md-6" %}
+        {% bootstrap_field belgian_diploma_form.other_institute_address placeholder="" form_group_class="col-md-6 required_field form-group" %}
+      </div>
+
+      <div id="schedule">
+        <p>
+          <strong>{% trans "Timetable" %}</strong>
+          <a
+              class="fa fa-info-circle popover-buttons"
+              data-toggle="popover"
+              role="button"
+              tabindex="0"
+              data-trigger="focus"
+              data-content="{% blocktrans trimmed %}
+              Please complete the schedule information of your last year
+              of high school. We invite you to indicate the number of
+              hours of education your followed per domain and per week.
+              {% endblocktrans %}"
+          >
+          </a>
+        </p>
+
+        <div class="row">
+          <div class="col-md-4">
+            {% panel _("Ancient languages") %}
+              {% bootstrap_field schedule_form.latin addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.greek addon_after=_("h/w") %}
+            {% endpanel %}
+
+            {% panel _("Sciences") %}
+              {% bootstrap_field schedule_form.chemistry addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.physic addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.biology addon_after=_("h/w") %}
+            {% endpanel %}
+          </div>
+
+          <div class="col-md-4">
+            {% panel _("Modern languages") %}
+              {% bootstrap_field schedule_form.french addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.english addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.dutch addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.spanish addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.german addon_after=_("h/w") %}
+
+              <div
+                  class="form-group {% if schedule_form.modern_languages_other_label.errors or schedule_form.modern_languages_other_hours.errors %}has-error{% elif schedule_form.is_bound %}has-success{% endif %}"
+              >
+                {% bootstrap_label schedule_form.modern_languages_other_label.label label_for=schedule_form.modern_languages_other_label.id_for_label label_class="control-label" %}
+                <div class="input-group">
+                  {{ schedule_form.modern_languages_other_label }}
+                  <span class="input-group-addon">:</span>
+                  {{ schedule_form.modern_languages_other_hours }}
+                  <div class="input-group-addon">{% trans "h/w" %}</div>
+                </div>
+                {% if schedule_form.modern_languages_other_label.errors %}
+                  {% for error in schedule_form.modern_languages_other_label.errors %}
+                    <div class="help-block">{{ error|escape }}</div>
+                  {% endfor %}
+                {% endif %}
+                {% if schedule_form.modern_languages_other_hours.errors %}
+                  {% for error in schedule_form.modern_languages_other_hours.errors %}
+                    <div class="help-block">{{ error|escape }}</div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            {% endpanel %}
+          </div>
+
+          <div class="col-md-4">
+            {% panel _("Others")|add:_(" (h/w)") %}
+              {% bootstrap_field schedule_form.mathematics addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.it addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.social_sciences addon_after=_("h/w") %}
+              {% bootstrap_field schedule_form.economic_sciences addon_after=_("h/w") %}
+
+              <div
+                  class="form-group {% if schedule_form.other_label.errors or schedule_form.other_hours.errors %}has-error{% elif schedule_form.is_bound %}has-success{% endif %}"
+              >
+                {% bootstrap_label schedule_form.other_label.label label_for=schedule_form.other_label.id_for_label label_class="control-label" %}
+                <div class="input-group">
+                  {{ schedule_form.other_label }}
+                  <span class="input-group-addon">:</span>
+                  {{ schedule_form.other_hours }}
+                  <div class="input-group-addon">{% trans "h/w" %}</div>
+                </div>
+                {% if schedule_form.other_label.errors %}
+                  {% for error in schedule_form.other_label.errors %}
+                    <div class="help-block">{{ error|escape }}</div>
+                  {% endfor %}
+                {% endif %}
+                {% if schedule_form.other_hours.errors %}
+                  {% for error in schedule_form.other_hours.errors %}
+                    <div class="help-block">{{ error|escape }}</div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            {% endpanel %}
+          </div>
+        </div>
+      </div>
+    {% endpanel %}
+
+    {% panel _("Attachments") id="attachments" %}
+      <p class="enrolment-certificate">
+        {% translate 'High school diploma or, if not available, a certificate of enrolment or school attendance.' %}
+      </p>
+      <div class="row" >
+        {% bootstrap_field main_form.high_school_diploma form_group_class="form-group col-md-6 required_field high-school-diploma" %}
+        {% bootstrap_field main_form.enrolment_certificate form_group_class="form-group col-md-6 enrolment-certificate" %}
+      </div>
+      <div id="foreign-attachments">
+        <div class="row translated-fields">
+          {% bootstrap_field foreign_diploma_form.high_school_diploma_translation form_group_class="form-group col-md-6 required_field high-school-diploma" %}
+          {% bootstrap_field foreign_diploma_form.enrolment_certificate_translation form_group_class="form-group col-md-6 enrolment-certificate" %}
+        </div>
+        <div class="row">
+          <hr>
+          {% bootstrap_field foreign_diploma_form.high_school_transcript form_group_class="form-group required_field col-md-6" %}
+          {% bootstrap_field foreign_diploma_form.high_school_transcript_translation form_group_class="form-group required_field translated-fields col-md-6" %}
+        </div>
+        <div class="row equivalence-fields">
+          <hr>
+          {% bootstrap_field foreign_diploma_form.restrictive_equivalence_daes form_group_class="form-group col-md-6" %}
+          {% bootstrap_field foreign_diploma_form.restrictive_equivalence_admission_test form_group_class="form-group col-md-6" %}
+        </div>
+      </div>
+    {% endpanel %}
+  </div>
+
+  <div id="has-no-diploma" style="display: none">
+    {% panel _("Attachments") %}
+      {% bootstrap_field main_form.first_cycle_admission_exam form_group_class="form-group required_field" %}
+    {% endpanel %}
+  </div>
+
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {{ main_form.media }}
+  <script type="application/javascript">
+      $(function () {
+          const is_truthy = val => !!val;
+
+          const countriesData = $('#id_foreign_diploma-country').select2('data');
+
+          if (countriesData.length) {
+              {% if foreign_diploma_form.fields.country.is_ue_country %}
+                  countriesData[0].european_union = true;
+              {% else %}
+                  countriesData[0].european_union = false;
+              {% endif %}
+          }
+
+          const is_ue_country = () => {
+              const countryData = $('#id_foreign_diploma-country').select2('data');
+              return countryData.length > 0 && countryData[0].european_union;
+          }
+          const is_not_ue_country = () => !is_ue_country();
+
+          $('#got-diploma').dependsOn({
+              'input[name=got_diploma]': { values: ['YES', 'THIS_YEAR'] },
+          });
+
+          $('#academic-year').dependsOn({
+              'input[name=got_diploma]': { values: ['YES'] },
+          });
+
+          $('#has-no-diploma').dependsOn({
+              'input[name=got_diploma]': { values: ['NO'] },
+          })
+
+          $('#belgian-diploma').dependsOn({
+              'input[name=diploma_type]': { values: ['BELGIAN'] },
+          });
+          $('#foreign-diploma').dependsOn({
+              'input[name=diploma_type]': { values: ['FOREIGN'] },
+          });
+
+          {# Belgian diploma #}
+          $('#education-type').dependsOn({
+              'select[name=belgian_diploma-community]': { values: ['FRENCH_SPEAKING'] },
+          });
+
+          const context = $('.osis-form');
+
+          const education = context.find('select[name=belgian_diploma-educational_type]');
+          const otherEducation = context.find('input[name=belgian_diploma-educational_other]');
+
+          education.on('select2:select', function () {
+              education.val() && otherEducation.val(null);
+              education.trigger('change');
+          });
+
+          $('#educational-other').dependsOn({
+              'select[name=belgian_diploma-educational_type]': { values: ['', null] },
+          });
+
+          $('#other_institute').dependsOn({
+              '#id_belgian_diploma-other_institute': { checked: true},
+          })
+          $('#id_belgian_diploma-institute').dependsOn({
+              '#id_belgian_diploma-other_institute': { checked: false},
+          }, {
+              hide: false,
+          })
+
+          $('#schedule').dependsOn({
+              'select[name=belgian_diploma-community]': { values: ['FRENCH_SPEAKING'] },
+              'select[name=belgian_diploma-educational_type]': { values: {{ educational_types_requiring_schedule|safe }} },
+          });
+
+          {# Foreign diploma #}
+          const linguistic_regime = context.find('select[name=foreign_diploma-linguistic_regime]');
+          const other_linguistic_regime = context.find('input[name=foreign_diploma-other_linguistic_regime]');
+
+          linguistic_regime.on('select2:select', function () {
+              linguistic_regime.val() && other_linguistic_regime.val(null);
+              linguistic_regime.trigger('change');
+          });
+
+          $('#linguistic-regime-other').dependsOn({
+              'select[name=foreign_diploma-linguistic_regime]': { values: ['', null] },
+          });
+
+          {# Equivalence #}
+          $('.equivalence-fields').dependsOn({
+              'input[name=foreign_diploma-foreign_diploma_type]': { values: ['NATIONAL_BACHELOR'] },
+          });
+
+          {# Not UE equivalence #}
+          $('#container_final_equivalence_decision_not_ue').dependsOn({
+              '#id_foreign_diploma-country': { is_truthy, is_not_ue_country },
+          });
+
+          {# UE equivalence #}
+          $('#equivalence_ue').dependsOn({
+              '#id_foreign_diploma-country': { is_ue_country },
+          });
+
+          $('#final_equivalence_decision_ue').dependsOn({
+              'input[name=foreign_diploma-equivalence]': { values: ['YES'] },
+          });
+          $('#equivalence_decision_proof').dependsOn({
+              'input[name=foreign_diploma-equivalence]': { values: ['PENDING'] },
+          });
+          $('#equivalence_info').dependsOn({
+              'input[name=foreign_diploma-equivalence]': { values: ['NO'] },
+          });
+
+          {# Attachments #}
+          $('#attachments').dependsOn({
+              'input[name=diploma_type]': { is_truthy },
+          });
+
+          $('.high-school-diploma').dependsOn({
+              'input[name=got_diploma]': { values: ['THIS_YEAR', 'YES'] },
+          });
+
+          $('.enrolment-certificate').dependsOn({
+              'input[name=got_diploma]': { values: ['THIS_YEAR'] },
+              'input[name=diploma_type]': { values: ['BELGIAN'] },
+          }).or({
+              'input[name=got_diploma]': { values: ['THIS_YEAR'] },
+              'input[name=diploma_type]': { values: ['FOREIGN'] },
+              '#id_foreign_diploma-country': { is_ue_country },
+          });
+
+          $('#foreign-attachments').dependsOn({
+              'input[name=diploma_type]': { values: ['FOREIGN'] },
+          });
+
+          $('.translated-fields').dependsOn({
+              'select[name=foreign_diploma-linguistic_regime]': {
+                  is_truthy,
+                  not: {{ linguistic_regimes_without_translation|safe }},
+              },
+          });
+
+          document.dispatchEvent(new Event('refreshFormInitial'));
+      });
+  </script>
+{% endblock %}

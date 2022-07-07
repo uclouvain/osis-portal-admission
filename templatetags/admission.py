@@ -24,7 +24,8 @@
 #
 # ##############################################################################
 import functools
-from collections import namedtuple
+from contextlib import suppress
+from dataclasses import dataclass
 from inspect import getfullargspec
 
 from django import template
@@ -32,8 +33,9 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
-from admission.services.proposition import AdmissionPropositionService
+from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from base.models.utils.utils import ChoiceEnum
+from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
 
@@ -77,18 +79,53 @@ def register_panel(filename, takes_context=None, name=None):
     return dec
 
 
-ParentTab = namedtuple('ParentTab', ['label', 'icon'])
-PERSONAL = ParentTab(_('Personal data'), 'user')
-TAB_TREE = {
-    PERSONAL: ['person', 'coordonnees'],
-    ParentTab(_('Previous experience'), 'list-alt'): ['education', 'curriculum', 'languages'],
-    ParentTab(_('Doctorate'), 'graduation-cap'): ['project', 'cotutelle', 'supervision'],
-    ParentTab(_('Confirmation'), 'check-circle'): ['confirm'],
+@dataclass(frozen=True)
+class Tab:
+    name: str
+    label: str
+    icon: str = ''
+
+    def __eq__(self, o) -> bool:
+        if isinstance(o, Tab):
+            return o.name == self.name
+        return o == self.name
+
+    def __hash__(self):
+        # Only hash the name, as lazy strings have different memory addresses
+        return hash(self.name)
+
+
+TAB_TREES = {
+    'doctorate': {
+        Tab('personal', _('Personal data'), 'user'): [
+            Tab('person', _('Identification')),
+            Tab('coordonnees', _('Contact details')),
+        ],
+        Tab('experience', _('Previous experience'), 'list-alt'): [
+            Tab('education', _('Secondary studies')),
+            Tab('curriculum', _('Curriculum')),
+            Tab('languages', _('Languages knowledge')),
+        ],
+        Tab('doctorate', _('Doctorate'), 'graduation-cap'): [
+            Tab('project', _('Doctoral project')),
+            Tab('cotutelle', _('Cotutelle')),
+            Tab('supervision', _('Supervision')),
+            Tab('confirmation-paper', _('Confirmation paper')),
+            Tab('extension-request', _('New deadline')),
+            Tab('training', _('Training')),
+        ],
+        Tab('confirmation', _('Confirmation'), 'check-circle'): [
+            Tab('confirm', _('Confirmation')),
+        ],
+    }
 }
 
 
-def get_active_parent(tab_name):
-    return next((parent for parent, children in TAB_TREE.items() if tab_name in children), None)
+def _get_active_parent(tab_tree, tab_name):
+    return next(
+        (parent for parent, children in tab_tree.items() if any(child.name == tab_name for child in children)),
+        None,
+    )
 
 
 @register.filter
@@ -110,86 +147,111 @@ def _can_access_tab(admission, tab_name, actions_by_tab):
         )
 
 
-def get_valid_tab_tree(admission):
+def get_valid_tab_tree(tab_tree, admission):
     """
-    Return a tab tree based on the specified one but whose the tabs depending on the permissions links.
+    Return a tab tree based on the specified one but whose tabs depending on the permissions links.
     """
     if admission:
         valid_tab_tree = {}
 
         # Loop over the tabs of the original tab tree
-        for (parent_tab, sub_tabs) in TAB_TREE.items():
+        for (parent_tab, sub_tabs) in tab_tree.items():
             # Get the accessible sub tabs depending on the user permissions
-            valid_sub_tabs = [tab for tab in sub_tabs if _can_access_tab(admission, tab, READ_ACTIONS_BY_TAB)]
+            valid_sub_tabs = [tab for tab in sub_tabs if _can_access_tab(admission, tab.name, READ_ACTIONS_BY_TAB)]
             # Only add the parent tab if at least one sub tab is allowed
             if len(valid_sub_tabs) > 0:
                 valid_tab_tree[parent_tab] = valid_sub_tabs
 
         return valid_tab_tree
 
-    return TAB_TREE
+    return tab_tree
 
 
 @register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
-def doctorate_tabs(context, admission=None):
+def doctorate_tabs(context, admission=None, with_submit=False):
     match = context['request'].resolver_match
-    is_form_view = match.namespaces[1] == 'doctorate-update'
+    is_form_view = match.namespaces[1:2] == ('doctorate', 'update')
+
+    current_tab_name = match.url_name
+    if len(match.namespaces) > 2:
+        current_tab_name = match.namespaces[2]
 
     # Create a new tab tree based on the default one but depending on the permissions links
-    context['valid_tab_tree'] = get_valid_tab_tree(admission=admission)
+    tab_tree = TAB_TREES['doctorate']
+    context['tab_tree'] = get_valid_tab_tree(tab_tree, admission)
 
     return {
-        'tab_tree': context['valid_tab_tree'],
-        'active_parent': get_active_parent(match.url_name),
+        'active_parent': _get_active_parent(tab_tree, current_tab_name),
         'admission': admission,
         'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
-        'request': context['request'],
+        'with_submit': with_submit,
+        **context.flatten(),
     }
 
 
-SUBTAB_LABELS = {
-    'person': _("Identification"),
-    'coordonnees': _("Contact details"),
-    'education': _("Secondary studies"),
-    'curriculum': _("Curriculum"),
-    'languages': _("Languages knowledge"),
-    'project': _("Doctoral project"),
-    'cotutelle': _("Cotutelle"),
-    'supervision': _("Supervision"),
-    'confirm': _("Confirmation"),
-    'confirm_paper': _("Confirmation paper"),
-    'training': _("Doctoral training"),
-    'jury': _("Jury"),
-    'private_defense': _("Private defense"),
-    'public_defense': _("Public defense"),
-}
+def get_subtab_label(tab_name):
+    return next(
+        subtab for subtabs in TAB_TREES['doctorate'].values() for subtab in subtabs if subtab.name == tab_name
+    ).label
+
+
+@register.simple_tag(takes_context=True)
+def current_subtabs(context):
+    match = context['request'].resolver_match
+    current_tab_name = match.url_name
+    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
+        current_tab_name = match.namespaces[2]
+    current_tab_tree = TAB_TREES['doctorate']
+    return current_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), [])
+
+
+@register.simple_tag(takes_context=True)
+def get_current_tab(context):
+    match = context['request'].resolver_match
+    current_tab_tree = TAB_TREES['doctorate']
+    current_tab_name = match.url_name
+    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
+        current_tab_name = match.namespaces[2]
+    return next(
+        (tab for subtabs in current_tab_tree.values() for tab in subtabs if tab.name == current_tab_name),
+        None,
+    )
+
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None):
     match = context['request'].resolver_match
-    is_form_view = match.namespaces[1] == 'doctorate-update'
+    is_form_view = match.namespaces[1:] == ['doctorate', 'update']
 
-    valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(admission=admission))
+    current_tab_name = match.url_name
+    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
+        current_tab_name = match.namespaces[2]
 
+    current_tab_tree = TAB_TREES['doctorate']
+    valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(current_tab_tree, admission))
     return {
-        'subtabs': valid_tab_tree.get(get_active_parent(match.url_name), []),
-        'subtab_labels': SUBTAB_LABELS,
+        'subtabs': valid_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), []),
         'admission': admission,
         'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
-        'request': context['request'],
+        **context.flatten(),
     }
 
 
 @register.inclusion_tag('admission/field_data.html')
-def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False):
+def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False, inline=False):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
     elif translate_data is True:
         data = _(data)
+
+    if inline is True:
+        name = _("%(label)s:") % {'label': name}
+        css_class = (css_class + ' inline-field-data') if css_class else 'inline-field-data'
+
     return {
         'name': name,
         'data': data,
@@ -210,13 +272,17 @@ def panel(context, title='', title_level=4, additional_class='', **kwargs):
     context['title'] = title
     context['title_level'] = title_level
     context['additional_class'] = additional_class
-    context['attributes'] = kwargs
+    context['attributes'] = {k.replace('_', '-'): v for k, v in kwargs.items()}
     return context
 
 
 @register.simple_tag(takes_context=True)
 def get_dashboard_links(context):
-    return AdmissionPropositionService.get_dashboard_links(context['request'].user.person)
+    from admission.services.proposition import AdmissionPropositionService
+
+    with suppress(UnauthorizedException, NotFoundException, ForbiddenException):
+        return AdmissionPropositionService.get_dashboard_links(context['request'].user.person)
+    return {}
 
 
 @register.filter
@@ -241,15 +307,15 @@ def strip(value):
 
 
 @register.filter
-def can_read_tab(admission, tab_name):
+def can_read_tab(admission, tab):
     """Return true if the specified tab can be opened in reading mode for this admission, otherwise return False"""
-    return _can_access_tab(admission, tab_name, READ_ACTIONS_BY_TAB)
+    return _can_access_tab(admission, tab.name, READ_ACTIONS_BY_TAB)
 
 
 @register.filter
-def can_update_tab(admission, tab_name):
+def can_update_tab(admission, tab):
     """Return true if the specified tab can be opened in writing mode for this admission, otherwise return False"""
-    return _can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB)
+    return _can_access_tab(admission, tab.name, UPDATE_ACTIONS_BY_TAB)
 
 
 @register.filter
@@ -262,3 +328,33 @@ def add_str(arg1, arg2):
 def can_update_something(admission):
     """Return true if any update tab can be opened for this admission, otherwise return False"""
     return any(_can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB) for tab_name in UPDATE_ACTIONS_BY_TAB)
+
+
+@register.filter
+def has_error_in_tab(admission, tab):
+    """Return true if the tab (or subtab) has errors"""
+    if not admission or not hasattr(admission, 'erreurs'):
+        return False
+    if tab not in BUSINESS_EXCEPTIONS_BY_TAB:
+        children = TAB_TREES['doctorate'].get(tab)
+        if children is None:
+            raise ImproperlyConfigured(
+                f"{tab} has no children and is not in BUSINESS_EXCEPTIONS_BY_TAB, use no_status=1 or correct name"
+            )
+        return any(
+            erreur['status_code'] in [e.value for e in BUSINESS_EXCEPTIONS_BY_TAB[subtab]]
+            for subtab in children
+            for erreur in admission.erreurs
+        )
+    return any(
+        erreur['status_code'] in [e.value for e in BUSINESS_EXCEPTIONS_BY_TAB[tab]] for erreur in admission.erreurs
+    )
+
+
+@register.inclusion_tag('admission/bootstrap_field_with_tooltip.html')
+def bootstrap_field_with_tooltip(field, classes='', show_help=False):
+    return {
+        'field': field,
+        'classes': classes,
+        'show_help': show_help,
+    }

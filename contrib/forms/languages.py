@@ -32,6 +32,7 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.languages_knowledge import LanguageKnowledgeGrade
 from admission.contrib.forms import get_language_initial_choices
+from osis_document.contrib import FileUploadField
 
 MANDATORY_LANGUAGES = ["EN", "FR"]
 
@@ -39,14 +40,16 @@ MANDATORY_LANGUAGES = ["EN", "FR"]
 class SliderWidget(forms.widgets.TextInput):
     def __init__(self, choices=None, attrs=None):
         attrs = attrs or {}
-        attrs.update({
-            "data-provide": "slider",
-            "data-slider-ticks": json.dumps([number for number in range(1, len(choices) + 1)]),
-            "data-slider-ticks-labels": json.dumps([choice.name for choice in choices]),
-            "data-slider-min": "1",
-            "data-slider-max": str(len(choices)),
-            "data-slider-step": "1",
-        })
+        attrs.update(
+            {
+                "data-provide": "slider",
+                "data-slider-ticks": json.dumps([number for number in range(1, len(choices) + 1)]),
+                "data-slider-ticks-labels": json.dumps([choice.name for choice in choices]),
+                "data-slider-min": "1",
+                "data-slider-max": str(len(choices)),
+                "data-slider-step": "1",
+            }
+        )
         super().__init__(attrs)
 
     def value_from_datadict(self, data, files, name):
@@ -90,6 +93,12 @@ class DoctorateAdmissionLanguageForm(forms.Form):
         choices=LanguageKnowledgeGrade.choices(),
         widget=SliderWidget(choices=LanguageKnowledgeGrade),
     )
+    certificate = FileUploadField(
+        label=_("Certificate of language knowledge"),
+        required=False,
+        max_files=1,
+        mimetypes=['application/pdf'],
+    )
 
     def __init__(self, *args, person=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -107,7 +116,6 @@ class DoctorateAdmissionLanguageForm(forms.Form):
 
 
 class DoctorateAdmissionLanguagesBaseFormset(forms.BaseFormSet):
-
     def clean(self):
         """Check that no language have been set more than once and that mandatory languages are set."""
         if any(self.errors):

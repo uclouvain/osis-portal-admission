@@ -23,21 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
 from admission.services.proposition import AdmissionPropositionService
-from admission.utils.utils import format_entity_title
+from admission.utils import format_entity_title
 
 
 class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_project.html'
+    template_name = 'admission/doctorate/details/project.html'
 
     def get_admission(self):
         if not hasattr(self, 'admission'):
@@ -54,7 +53,7 @@ class DoctorateAdmissionProjectDetailView(LoginRequiredMixin, TemplateView):
             admission.statut == ChoixStatutProposition.IN_PROGRESS.name
             and 'url' in admission.links['update_proposition']
         ):
-            return redirect('admission:doctorate-update:project', **self.kwargs)
+            return redirect('admission:doctorate:update:project', **self.kwargs)
 
         return super().get(request, *args, **kwargs)
 

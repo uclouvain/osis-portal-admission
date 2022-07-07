@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from enum import Enum
+from typing import List
 
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
@@ -31,7 +32,11 @@ from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
+from osis_admission_sdk.model.confirmation_paper_canvas import ConfirmationPaperCanvas
+from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
+from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
+from osis_admission_sdk.model.doctorate_identity_dto import DoctorateIdentityDTO
 from osis_admission_sdk.model.proposition_dto import PropositionDTO
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
@@ -156,6 +161,9 @@ class PropositionBusinessException(Enum):
     ProcedureDemandeSignatureNonLanceeException = "PROPOSITION-36"
     PropositionNonApprouveeParPromoteurException = "PROPOSITION-37"
     PropositionNonApprouveeParMembresCAException = "PROPOSITION-38"
+    InstitutTheseObligatoireException = "PROPOSITION-39"
+    NomEtPrenomNonSpecifiesException = "PROPOSITION-40"
+    SpecifierNOMASiDejaInscritException = "PROPOSITION-41"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -166,6 +174,8 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.DateOuAnneeNaissanceNonSpecifieeException,
         PropositionBusinessException.DetailsPasseportNonSpecifiesException,
         PropositionBusinessException.CarteIdentiteeNonSpecifieeException,
+        PropositionBusinessException.NomEtPrenomNonSpecifiesException,
+        PropositionBusinessException.SpecifierNOMASiDejaInscritException,
     },
     'coordonnees': {
         PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,
@@ -177,15 +187,23 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
     },
     'languages': {
-        PropositionBusinessException.LanguesConnuesNonSpecifieesException
+        PropositionBusinessException.LanguesConnuesNonSpecifieesException,
     },
-    'project': set(),
-    'cotutelle': set(),
+    'project': {
+        PropositionBusinessException.DetailProjetNonCompleteException,
+    },
+    'cotutelle': {
+        PropositionBusinessException.CotutelleNonCompleteException,
+    },
     'supervision': {
         PropositionBusinessException.ProcedureDemandeSignatureNonLanceeException,
         PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
         PropositionBusinessException.PropositionNonApprouveeParMembresCAException,
     },
+    'confirm': set(),
+    'confirmation-paper': set(),
+    'extension-request': set(),
+    'training': set(),
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}
@@ -265,5 +283,61 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         return AdmissionPropositionAPIClient().approve_by_pdf(
             uuid=uuid,
             approuver_proposition_par_pdf_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class AdmissionDoctorateService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_doctorate(cls, person, uuid) -> DoctorateDTO:
+        return AdmissionPropositionAPIClient().retrieve_doctorate_dto(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_confirmation_papers(cls, person, uuid) -> List[ConfirmationPaperDTO]:
+        return AdmissionPropositionAPIClient().retrieve_confirmation_papers(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_last_confirmation_paper(cls, person, uuid) -> ConfirmationPaperDTO:
+        return AdmissionPropositionAPIClient().retrieve_last_confirmation_paper(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_last_confirmation_paper_canvas(cls, person, uuid) -> ConfirmationPaperCanvas:
+        return AdmissionPropositionAPIClient().retrieve_last_confirmation_paper_canvas(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def submit_confirmation_paper(cls, person, uuid, **kwargs) -> DoctorateIdentityDTO:
+        return AdmissionPropositionAPIClient().submit_confirmation_paper(
+            uuid=uuid,
+            submit_confirmation_paper_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def complete_confirmation_paper_by_promoter(cls, person, uuid, **kwargs) -> DoctorateIdentityDTO:
+        return AdmissionPropositionAPIClient().complete_confirmation_paper_by_promoter(
+            uuid=uuid,
+            complete_confirmation_paper_by_promoter_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def submit_confirmation_paper_extension_request(cls, person, uuid, **kwargs) -> DoctorateIdentityDTO:
+        return AdmissionPropositionAPIClient().submit_confirmation_paper_extension_request(
+            uuid=uuid,
+            submit_confirmation_paper_extension_request_command=kwargs,
             **build_mandatory_auth_headers(person),
         )

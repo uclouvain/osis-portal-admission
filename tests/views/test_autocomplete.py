@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 import json
+import uuid
 from unittest.mock import Mock, patch
 
 from django.test import TestCase
@@ -31,6 +32,8 @@ from django.urls import reverse
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
+from osis_reference_sdk.model.high_school import HighSchool
+from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
 
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
@@ -61,30 +64,33 @@ class AutocompleteTestCase(TestCase):
     @patch('osis_reference_sdk.api.countries_api.CountriesApi')
     def test_autocomplete_country(self, api):
         api.return_value.countries_list.return_value = Mock(results=[
-            MockCountry(iso_code='FR', name='France', name_en='France'),
-            MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
+            MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
+            MockCountry(iso_code='BE', name='Belgique', name_en='Belgium', european_union=True),
         ])
         url = reverse('admission:autocomplete:country')
         response = self.client.get(url, {'q': ''})
         self.assertEqual(response.json(), {
             'results': [{
                 'id': 'FR',
-                'text': 'France'
+                'text': 'France',
+                'european_union': True,
             }, {
                 'id': 'BE',
-                'text': 'Belgique'
+                'text': 'Belgique',
+                'european_union': True,
             }]
         })
         api.return_value.countries_list.assert_called()
 
         api.return_value.countries_list.return_value = Mock(results=[
-            MockCountry(iso_code='FR', name='France', name_en='France'),
+            MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
         ])
         response = self.client.get(url, {'q': 'F'})
         self.assertEqual(response.json(), {
             'results': [{
                 'id': 'FR',
-                'text': 'France'
+                'text': 'France',
+                'european_union': True,
             }]
         })
         self.assertEqual(api.return_value.countries_list.call_args[1]['search'], 'F')
@@ -275,6 +281,32 @@ class AutocompleteTestCase(TestCase):
                     # }, {
                     #     'id': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
                     #     'text': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
+                },
+            ],
+        })
+
+    @patch('osis_reference_sdk.api.high_schools_api.HighSchoolsApi')
+    def test_autocomplete_high_school_list(self, api):
+        self.first_high_school_uuid = str(uuid.uuid4())
+        self.second_high_school_uuid = str(uuid.uuid4())
+
+        mock_schools = [
+            HighSchool(uuid=self.first_high_school_uuid, name="HighSchool 1", city="Louvain-La-Neuve"),
+            HighSchool(uuid=self.second_high_school_uuid, name="HighSchool 2", city="Bruxelles"),
+        ]
+        api.return_value.high_schools_list.return_value = PaginatedHighSchool(
+            results=mock_schools,
+        )
+        url = reverse('admission:autocomplete:high-school')
+        response = self.client.get(url, {'q': 'HighSchool'})
+        self.assertEqual(response.json(), {
+            'results': [
+                {
+                    'id': self.first_high_school_uuid,
+                    'text': 'HighSchool 1 (Louvain-La-Neuve)',
+                }, {
+                    'id': self.second_high_school_uuid,
+                    'text': 'HighSchool 2 (Bruxelles)',
                 },
             ],
         })

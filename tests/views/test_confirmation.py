@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest.mock import Mock, patch, ANY
+from unittest.mock import ANY, Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
@@ -39,8 +39,7 @@ class ConfirmationTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.detail_url = resolve_url('admission:doctorate-detail:confirm', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        cls.form_url = resolve_url('admission:doctorate-update:confirm', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        cls.url = resolve_url('admission:doctorate:confirm', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         cls.default_kwargs = {
             'accept_language': ANY,
             'x_user_first_name': ANY,
@@ -67,7 +66,7 @@ class ConfirmationTestCase(TestCase):
         self.addCleanup(person_api_patcher.stop)
 
     def test_get_without_errors_no_belgian_diploma(self):
-        response = self.client.get(self.form_url)
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
@@ -100,7 +99,7 @@ class ConfirmationTestCase(TestCase):
             foreign_diploma=None,
         )
 
-        response = self.client.get(self.form_url)
+        response = self.client.get(self.url)
 
         self.assertContains(response, _(
             "I authorize the UCLouvain to transmit to the secondary school in which I obtained my CESS, the information"
@@ -113,7 +112,7 @@ class ConfirmationTestCase(TestCase):
             Mock(status_code='PROPOSITION-38', detail='Every promoter must approve the proposition.'),
         ]
 
-        response = self.client.get(self.form_url)
+        response = self.client.get(self.url)
         # Display an error message as some conditions aren't meet
         self.assertContains(
             response, _('Your enrolment cannot be confirmed. All the following conditions must be met to do it.')
@@ -127,7 +126,7 @@ class ConfirmationTestCase(TestCase):
         )
 
     def test_post_with_incomplete_form_without_belgian_diploma(self):
-        response = self.client.post(self.form_url, data={})
+        response = self.client.post(self.url, data={})
 
         self.assertEqual(response.status_code, 200)
 
@@ -157,7 +156,7 @@ class ConfirmationTestCase(TestCase):
             foreign_diploma=None,
         )
 
-        response = self.client.post(self.form_url, data={})
+        response = self.client.post(self.url, data={})
 
         self.assertEqual(response.status_code, 200)
 
@@ -172,7 +171,7 @@ class ConfirmationTestCase(TestCase):
 
     def test_post_with_complete_form_but_bad_values(self):
         # One checkbox is not checked -> invalid
-        response = self.client.post(self.form_url, data={
+        response = self.client.post(self.url, data={
             'accept_regulations': True,
             'accept_data_protection_policy': False,
             'accept_regulated_professions_rules': True,
@@ -183,7 +182,7 @@ class ConfirmationTestCase(TestCase):
 
     def test_post_with_complete_form(self):
         # All checkboxes are checked -> valid
-        response = self.client.post(self.form_url, data={
+        response = self.client.post(self.url, data={
             'accept_regulations': True,
             'accept_data_protection_policy': True,
             'accept_regulated_professions_rules': True,

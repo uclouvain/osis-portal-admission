@@ -1,4 +1,5 @@
-{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission %}
+{% extends "admission/doctorate/forms/doctorate_tab_layout.html" %}
+{% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -25,33 +26,22 @@
 {% endcomment %}
 
 {% block form %}
-    {% bootstrap_form_errors form %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">{% trans "Request a new deadline for the confirmation paper" %}</h4>
+    </div>
+    <div class="panel-body">
+      {% include 'admission/doctorate/includes/new_deadline_description.html' %}
 
-    {% panel _("Cotutelle") %}
-        {% bootstrap_field form.cotutelle form_group_class="form-group required_field" %}
-        <div id="cotutelle">
-            {% bootstrap_field form.motivation form_group_class="form-group required_field" %}
-            <div class="row">
-                <div class="col-md-5">
-                    {% bootstrap_field form.institution form_group_class="form-group required_field" %}
-                </div>
-            </div>
-            {% bootstrap_field form.demande_ouverture form_group_class="form-group required_field" %}
-            {% bootstrap_field form.convention %}
-            {% bootstrap_field form.autres_documents %}
-        </div>
-    {% endpanel %}
+      {% bootstrap_form_errors form %}
 
-{% endblock %}
+      {% csrf_token %}
 
-{% block script %}
-    {{ block.super }}
-    {{ form.media }}
-    <script type="application/javascript">
-    $(function () {
-        $('#cotutelle').dependsOn({
-            'input[name=cotutelle]': { values: ['YES'] },
-        }, { valueOnDisable: '' });
-    });
-    </script>
+      {% bootstrap_field form.nouvelle_echeance form_group_class="form-group min_field required_field" %}
+      {% bootstrap_field form.justification_succincte form_group_class="form-group required_field" %}
+      {% bootstrap_field form.lettre_justification %}
+
+    </div>
+  </div>
+
 {% endblock %}

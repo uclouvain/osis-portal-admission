@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.template import Context, Template
 from django.urls import reverse_lazy
 from django.views.generic import FormView
@@ -36,7 +37,7 @@ from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
 class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/form_tab_languages.html"
+    template_name = "admission/doctorate/forms/languages.html"
     success_url = reverse_lazy("admission:doctorate-list")
     form_class = DoctorateAdmissionLanguagesKnowledgeFormSet
 
@@ -44,7 +45,8 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
         context_data = super().get_context_data(**kwargs)
         if "pk" in self.kwargs:
             context_data["admission"] = AdmissionPropositionService.get_proposition(
-                person=self.person, uuid=str(self.kwargs["pk"]),
+                person=self.person,
+                uuid=str(self.kwargs["pk"]),
             )
         template_empty_form = """
             {% load bootstrap3 i18n static admission %}
@@ -63,8 +65,10 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
     def get_initial(self):
         return [
             language_knowledge.to_dict()
-            for language_knowledge
-            in AdmissionPersonService.retrieve_languages_knowledge(self.person)
+            for language_knowledge in AdmissionPersonService.retrieve_languages_knowledge(
+                self.person,
+                uuid=self.kwargs.get('pk'),
+            )
         ]
 
     def get_form_kwargs(self):
@@ -73,7 +77,7 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
         return kwargs
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_languages_knowledge(self.person, data)
+        AdmissionPersonService.update_languages_knowledge(self.person, data, uuid=self.kwargs.get('pk'))
 
     def form_valid(self, formset):
         data = [form.cleaned_data for form in formset.forms if form not in formset.deleted_forms]
@@ -87,4 +91,4 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
                 else:
                     formset.add_error(None, exception.detail)
             return self.form_invalid(formset)
-        return super().form_valid(formset)
+        return HttpResponseRedirect(self.get_success_url())

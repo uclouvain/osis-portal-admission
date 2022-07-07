@@ -23,48 +23,54 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, gettext
+from django.utils.functional import lazy
 
 from base.models.utils.utils import ChoiceEnum
+from base.tests.factories.academic_year import get_current_year
+
+
+def get_formatted_current_year():
+    current_year = get_current_year()
+    return '{}-{}'.format(current_year, current_year + 1)
 
 
 class GotDiploma(ChoiceEnum):
-    YES = _("Yes I have a high school diploma")
-    THIS_YEAR = _("I will have a high school diploma this year")
-    NO = _("No I don't have a high school diploma")
+    YES = _("Yes")
+    THIS_YEAR = lazy(
+        lambda: gettext("I will have a high school diploma this year %s") % get_formatted_current_year(),
+        str,
+    )()
+    NO = _("No")
+
+
+HAS_DIPLOMA_CHOICES = {GotDiploma.YES.name, GotDiploma.THIS_YEAR.name}
 
 
 class DiplomaTypes(ChoiceEnum):
     BELGIAN = _("belgian")
-    FOREIGN = _("foreign or international")
+    FOREIGN = _("foreign")
 
 
 class DiplomaResults(ChoiceEnum):
-    NOT_KNOWN_YET_RESULT = _("Not known yet")
     LT_65_RESULT = _("Less than 65%")
     BTW_65_AND_75_RESULT = _("Between 65 and 75%")
     GT_75_RESULT = _("More than 75%")
 
 
 class BelgianCommunitiesOfEducation(ChoiceEnum):
-    FRENCH_SPEAKING = _("French-speaking Community of Belgium")
+    FRENCH_SPEAKING = _("French-speaking Community")
     FLEMISH_SPEAKING = _("Flemish-speaking Community")
     GERMAN_SPEAKING = _("German-speaking Community")
 
 
 EDUCATIONAL_TYPES = (
-    (_("Educational transition"), (
-        ("TEACHING_OF_GENERAL_EDUCATION", _("Teaching of general education")),
-        ("TRANSITION_METHOD", _("Transition method")),
-        ("ARTISTIC_TRANSITION", _("Artistic transition")),
-    )),
-    ("", ""),
-    (_("Educational qualification"), (
-        ("QUALIFICATION_METHOD", _("Qualification method")),
-        ("ARTISTIC_QUALIFICATION", _("Artistic qualification")),
-        ("PROFESSIONAL_EDUCATION", _("Professional education")),
-        ("PROFESSIONAL_EDUCATION_AND_MATURITY_EXAM", _("Professional education + Maturity exam")),
-    )),
+    ("TEACHING_OF_GENERAL_EDUCATION", _("Teaching of general education")),
+    ("TRANSITION_METHOD", _("Transition method")),
+    ("ARTISTIC_TRANSITION", _("Artistic transition")),
+    ("QUALIFICATION_METHOD", _("Qualification method")),
+    ("ARTISTIC_QUALIFICATION", _("Artistic qualification")),
+    ("PROFESSIONAL_EDUCATION", _("Professional education")),
 )
 
 
@@ -87,5 +93,5 @@ class ForeignDiplomaTypes(ChoiceEnum):
 
 class Equivalence(ChoiceEnum):
     YES = _("Yes")
-    NO = _("No")
     PENDING = _("Ongoing request")
+    NO = _("No")

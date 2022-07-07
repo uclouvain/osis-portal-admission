@@ -33,13 +33,17 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.templatetags.admission import (
-    TAB_TREE,
+    TAB_TREES,
+    Tab,
     can_make_action,
     can_read_tab,
     can_update_tab,
     get_valid_tab_tree,
+    has_error_in_tab,
 )
 from base.models.utils.utils import ChoiceEnum
+from base.tests.factories.person import PersonFactory
+from osis_admission_sdk.exceptions import UnauthorizedException
 
 
 class TemplateTagsTestCase(TestCase):
@@ -99,7 +103,7 @@ class TemplateTagsTestCase(TestCase):
             def __new__(cls, *args, **kwargs):
                 return Mock(kwargs={}, spec=cls)
 
-        person_tab_url = '/admission/doctorates/create/person'
+        person_tab_url = '/admission/doctorate/create/person'
         template = Template("{% load admission %}{% doctorate_tabs %}")
 
         request = RequestFactory().get(person_tab_url)
@@ -108,7 +112,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertNotIn('confirm-paper', rendered)
         self.assertInHTML(
             """<li role="presentation" class="active">
-            <a href="/admission/doctorates/create/person">
+            <a href="/admission/doctorate/create/person">
                 <span class="fa fa-user"></span>
                 {}
             </a>
@@ -119,13 +123,13 @@ class TemplateTagsTestCase(TestCase):
         )
 
         # Should work on non-tab urls
-        another_tab_url = '/admission/doctorates/55375049-9d61-4c11-9f41-7460463a5ae3/remove-member/type/matricule'
+        another_tab_url = '/admission/doctorate/55375049-9d61-4c11-9f41-7460463a5ae3/remove-member/type/matricule'
         request = RequestFactory().get(another_tab_url)
         request.resolver_match = resolve(another_tab_url)
         rendered = template.render(Context({'view': MockedFormView(), 'request': request}))
         self.assertInHTML(
             """<li role="presentation">
-            <a href="/admission/doctorates/create/person">
+            <a href="/admission/doctorate/create/person">
                 <span class="fa fa-user"></span>
                 {}
             </a>
@@ -159,15 +163,15 @@ class TemplateTagsTestCase(TestCase):
 
     def test_valid_tab_tree_no_admission(self):
         # No admission is specified -> return the original tab tree
-        valid_tab_tree = get_valid_tab_tree(admission=None)
-        self.assertEqual(valid_tab_tree, TAB_TREE)
+        valid_tab_tree = get_valid_tab_tree(TAB_TREES['doctorate'], admission=None)
+        self.assertEqual(valid_tab_tree, TAB_TREES['doctorate'])
 
     def test_valid_tab_tree_read_mode(self):
         # Only one read tab is allowed -> return it and its parent
 
         admission = self.Admission()
 
-        valid_tab_tree = get_valid_tab_tree(admission=admission)
+        valid_tab_tree = get_valid_tab_tree(TAB_TREES['doctorate'], admission)
 
         parent_tabs = list(valid_tab_tree.keys())
 
@@ -182,7 +186,7 @@ class TemplateTagsTestCase(TestCase):
         # Only one form tab is allowed -> return it and its parent
 
         admission = self.Admission()
-        valid_tab_tree = get_valid_tab_tree(admission=admission)
+        valid_tab_tree = get_valid_tab_tree(TAB_TREES['doctorate'], admission)
 
         parent_tabs = list(valid_tab_tree.keys())
 
@@ -211,32 +215,71 @@ class TemplateTagsTestCase(TestCase):
     def test_can_read_tab_valid_existing_tab(self):
         # The tab action is specified in the admission as allowed -> return True
         admission = self.Admission()
-        self.assertTrue(can_read_tab(admission, 'coordonnees'))
+        self.assertTrue(can_read_tab(admission, Tab('coordonnees', '')))
 
     def test_can_read_tab_invalid_existing_tab(self):
         # The tab action is well configured as not allowed -> return False
         admission = self.Admission()
-        self.assertFalse(can_read_tab(admission, 'person'))
+        self.assertFalse(can_read_tab(admission, Tab('person', '')))
 
     def test_can_read_tab_not_returned_action(self):
         # The tab action is not specified in the admission -> return False
         admission = self.Admission()
-        self.assertFalse(can_read_tab(admission, 'project'))
+        self.assertFalse(can_read_tab(admission, Tab('project', '')))
 
     def test_can_read_tab_unknown_tab(self):
         # The tab action is unknown -> raise an exception
         admission = self.Admission()
         with self.assertRaisesMessage(ImproperlyConfigured, 'unknown'):
-            can_read_tab(admission, 'unknown')
+            can_read_tab(admission, Tab('unknown', ''))
 
     def test_can_read_tab_no_admission_links(self):
         # The tab action is unknown -> raise an exception
         admission = self.Admission()
         delattr(admission, 'links')
         with self.assertRaisesMessage(ImproperlyConfigured, 'links'):
-            can_read_tab(admission, 'coordonnees')
+            can_read_tab(admission, Tab('coordonnees', ''))
 
     def test_can_update_tab_valid_existing_action(self):
         # The tab action is specified in the admission as allowed -> return True
         admission = self.Admission()
-        self.assertTrue(can_update_tab(admission, 'coordonnees'))
+        self.assertTrue(can_update_tab(admission, Tab('coordonnees', '')))
+
+    def test_has_error_in_tab(self):
+        erreurs = [
+            {
+                'detail': "Merci de spécifier au-moins un numéro d'identité.",
+                'status_code': 'PROPOSITION-26',
+            },
+            {
+                'detail': 'Merci de compléter intégralement les informations',
+                'status_code': 'PROPOSITION-25',
+            },
+            {
+                'detail': "Merci de compléter l'onglet 'Parcours antérieur'",
+                'status_code': 'PROPOSITION-35',
+            },
+            {
+                'detail': 'Merci de fournir une copie de votre curriculum.',
+                'status_code': 'PROPOSITION-34',
+            },
+        ]
+        admission = Mock(erreurs=erreurs)
+        self.assertFalse(has_error_in_tab('', 'personal'))
+        self.assertTrue(has_error_in_tab(admission, 'personal'))
+        with self.assertRaises(ImproperlyConfigured):
+            has_error_in_tab(admission, 'unknown')
+        self.assertTrue(has_error_in_tab(admission, 'curriculum'))
+        self.assertFalse(has_error_in_tab(admission, 'coordonnees'))
+
+    def test_get_dashboard_links_tag(self):
+        template = Template(
+            """{% load admission %}{% get_dashboard_links %}
+            {% if 'url' in links.list_propositions %}coucou{% endif %}"""
+        )
+        with patch('admission.services.proposition.AdmissionPropositionService') as mock_api:
+            mock_api.side_effect = UnauthorizedException
+            request = RequestFactory()
+            request.user = PersonFactory().user
+            rendered = template.render(Context({'request': request}))
+        self.assertNotIn('coucou', rendered)

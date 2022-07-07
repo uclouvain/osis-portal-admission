@@ -1,4 +1,5 @@
-# #
+# ##############################################################################
+#
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
@@ -22,8 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.contrib.views.form_tabs.confirm import DoctorateAdmissionConfirmFormView
+
+from django.utils.translation import gettext_lazy as _
+
+from base.models.utils.utils import ChoiceEnum
 
 
-class DoctorateAdmissionConfirmDetailView(DoctorateAdmissionConfirmFormView):
-    pass
+class ChoixStatutDoctorat(ChoiceEnum):
+    # Before enrolment
+    ADMISSION_IN_PROGRESS = _('ADMISSION_IN_PROGRESS')
+    # After enrolment
+    ADMITTED = _('ADMITTED')
+    # Confirmation paper
+    SUBMITTED_CONFIRMATION = _('SUBMITTED_CONFIRMATION')
+    PASSED_CONFIRMATION = _('PASSED_CONFIRMATION')
+    NOT_ALLOWED_TO_CONTINUE = _('NOT_ALLOWED_TO_CONTINUE')
+    CONFIRMATION_TO_BE_REPEATED = _('CONFIRMATION_TO_BE_REPEATED')

@@ -31,8 +31,15 @@ from django.test import TestCase
 from django.utils.translation import get_language
 
 from admission.constants import BE_ISO_CODE
-from admission.contrib.enums.curriculum import ExperienceType, Result, Grade, CreditType, StudySystem, \
-    ForeignStudyCycleType, ActivityType
+from admission.contrib.enums.curriculum import (
+    ExperienceType,
+    Result,
+    Grade,
+    CreditType,
+    StudySystem,
+    ForeignStudyCycleType,
+    ActivityType,
+)
 from admission.contrib.enums.secondary_studies import BelgianCommunitiesOfEducation
 from admission.contrib.forms.curriculum import DoctorateAdmissionCurriculumExperienceForm
 from admission.tests.utils import MockCountry, MockLanguage
@@ -53,8 +60,8 @@ class CurriculumFormTestCase(TestCase):
 
         def get_countries(**kwargs):
             countries = [
-                MockCountry(iso_code='FR', name='France', name_en='France'),
-                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
+                MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
+                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium', european_union=True),
             ]
             if kwargs.get('iso_code'):
                 return Mock(results=[c for c in countries if c.iso_code == kwargs.get('iso_code')])
@@ -87,10 +94,11 @@ class CurriculumFormTestCase(TestCase):
 
         def get_academic_years(**kwargs):
             years = [
-                Mock(year=self.current_year-2),
-                Mock(year=self.current_year+2),
+                Mock(year=self.current_year - 2),
+                Mock(year=self.current_year + 2),
             ]
             return Mock(results=years)
+
         self.mock_academic_year_api.return_value.get_academic_years.side_effect = get_academic_years
         self.addCleanup(academic_year_api_patcher.stop)
 
@@ -112,7 +120,7 @@ class CurriculumFormTestCase(TestCase):
 
         # Check that the choices are well initialized
         self.assertIn(
-            (self.current_year - 2, '{}-{}'.format(self.current_year - 2, (self.current_year - 1) % 100)),
+            (self.current_year - 2, f'{self.current_year - 2}-{self.current_year - 1}'),
             form.fields['academic_year'].choices,
         )
 
@@ -179,7 +187,7 @@ class CurriculumFormTestCase(TestCase):
             form.fields['institute_city_be'].widget.choices,
         )
         self.assertIn(
-            (self.current_year - 2, '{}-{}'.format(self.current_year - 2, (self.current_year - 1) % 100)),
+            (self.current_year - 2, f'{self.current_year - 2}-{self.current_year - 1}'),
             form.fields['academic_year'].choices,
         )
 
@@ -388,7 +396,7 @@ class CurriculumFormTestCase(TestCase):
             form.fields['linguistic_regime'].widget.choices,
         )
         self.assertIn(
-            (self.current_year - 2, '{}-{}'.format(self.current_year - 2, (self.current_year - 1) % 100)),
+            (self.current_year - 2, f'{self.current_year - 2}-{self.current_year - 1}'),
             form.fields['academic_year'].choices,
         )
 

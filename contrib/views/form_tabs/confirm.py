@@ -36,14 +36,13 @@ from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import (
     AdmissionPropositionService,
-    BUSINESS_EXCEPTIONS_BY_TAB,
     TAB_OF_BUSINESS_EXCEPTION,
 )
-from admission.templatetags.admission import SUBTAB_LABELS
+from admission.templatetags.admission import get_subtab_label
 
 
 class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_confirm.html'
+    template_name = 'admission/doctorate/forms/confirm.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -66,7 +65,17 @@ class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin,
         if proposition_completion_errors:
 
             proposition_completion_errors_by_tab = {
-                tab: {'name': SUBTAB_LABELS[tab], 'errors': []} for tab in BUSINESS_EXCEPTIONS_BY_TAB
+                tab: {'name': get_subtab_label(tab), 'errors': []}
+                for tab in [
+                    'person',
+                    'coordonnees',
+                    'education',
+                    'curriculum',
+                    'languages',
+                    'project',
+                    'cotutelle',
+                    'supervision',
+                ]
             }
 
             for error in proposition_completion_errors:
@@ -94,7 +103,7 @@ class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_success_url(self):
         messages.info(self.request, _("Your proposition has been confirmed."))
-        return resolve_url('admission:doctorate-detail:project', pk=self.kwargs.get('pk'))
+        return resolve_url('admission:doctorate:project', pk=self.kwargs.get('pk'))
 
     def call_webservice(self, data):
         AdmissionPropositionService.submit_proposition(

@@ -24,19 +24,19 @@
 #
 # ##############################################################################
 import uuid
-from unittest.mock import patch, Mock, ANY
+from unittest.mock import ANY, Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from osis_admission_sdk import ApiException
 from rest_framework.status import HTTP_200_OK
 
 from admission.constants import BE_ISO_CODE
-from admission.contrib.enums.curriculum import ExperienceType, ActivityType
+from admission.contrib.enums.curriculum import ActivityType, ExperienceType
 from admission.contrib.views.form_tabs.curriculum import CurriculumForm
 from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
+from osis_admission_sdk import ApiException
 
 
 class ExtendedTestCase(TestCase):
@@ -70,7 +70,7 @@ class CurriculumTestCase(ExtendedTestCase):
         }
 
     def setUp(self):
-        self.url = resolve_url("admission:doctorate-update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.url = resolve_url("admission:doctorate:update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
         # Mock proposition api
@@ -192,8 +192,8 @@ class CurriculumTestCase(ExtendedTestCase):
 
         def get_countries(**kwargs):
             countries = [
-                MockCountry(iso_code='FR', name='France', name_en='France'),
-                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
+                MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
+                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium', european_union=True),
             ]
             if kwargs.get('iso_code'):
                 return Mock(results=[c for c in countries if c.iso_code == kwargs.get('iso_code')])
@@ -227,7 +227,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.addCleanup(patcher.stop)
 
     def test_curriculum_get(self):
-        url = resolve_url("admission:doctorate-detail:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
 
         self.mock_person_api.return_value.list_curriculum_experiences_admission.assert_called()
@@ -235,7 +235,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertContains(response, "2020-2021")
 
     def test_curriculum_get_form(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
 
         self.mock_person_api.return_value.list_curriculum_experiences_admission.assert_called()
@@ -243,7 +243,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertContains(response, "2020-2021")
 
     def test_curriculum_get_form_with_specified_known_experience(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
                           experience_id=self.first_uuid)
         response = self.client.get(url)
 
@@ -252,7 +252,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertContains(response, "2020-2021")
 
     def test_curriculum_get_form_with_specified_unknown_experience(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
                           experience_id=self.other_uuid)
         response = self.client.get(url)
 
@@ -261,7 +261,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertContains(response, "2020-2021")
 
     def test_curriculum_post_upload_file_valid_update(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.post(url, data={
             'curriculum_upload': '',
             'curriculum_upload-curriculum_0': 'uuid1',
@@ -320,7 +320,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertEqual(_("An error has happened when uploading the file."), message.message)
 
     def test_curriculum_post_create_experience_valid_update(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         form_prefix = CurriculumForm.EXPERIENCE_CREATION.value
 
         response = self.client.post(url, data={
@@ -434,7 +434,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertRedirects(response, url)
 
     def test_curriculum_post_create_experience_invalid_form(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         form_prefix = CurriculumForm.EXPERIENCE_CREATION.value
 
         response = self.client.post(url, data={
@@ -474,9 +474,9 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertEqual(_("An error has happened when adding the experience."), message.message)
 
     def test_curriculum_post_update_experience_valid_update(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
                           experience_id=self.first_uuid)
-        redirect_url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        redirect_url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
 
         response = self.client.post(url, data={
@@ -590,7 +590,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertRedirects(response, redirect_url)
 
     def test_curriculum_post_update_experience_invalid_form(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
                           experience_id=self.first_uuid)
         form_prefix = CurriculumForm.EXPERIENCE_UPDATE.value
 
@@ -631,7 +631,7 @@ class CurriculumTestCase(ExtendedTestCase):
         self.assertEqual(_("An error has happened when updating the experience."), message.message)
 
     def test_curriculum_post_delete_experience_valid_update(self):
-        url = resolve_url("admission:doctorate-update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:update:curriculum", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         response = self.client.post(url, data={
             CurriculumForm.EXPERIENCE_DELETION.value: '',

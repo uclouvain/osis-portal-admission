@@ -53,13 +53,18 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
     def clean(self):
         data = super().clean()
         if data.get('type') == ActorType.CA_MEMBER.name and not data.get('person'):
-            self.add_error('person', _("This field is required"))
+            self.add_error('person', _("This field is required."))
         elif data.get('type') == ActorType.PROMOTER.name and not data.get('tutor'):
-            self.add_error('tutor', _("This field is required"))
+            self.add_error('tutor', _("This field is required."))
         return data
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = (
+            'dependsOn.min.js',
+            # Add osis-document script in case of approved-by-pdf documents
+            'osis_document/osis-document.umd.min.js',
+        )
+        css = {'all': ('osis_document/osis-document.css',)}
 
 
 class DoctorateAdmissionApprovalForm(forms.Form):
@@ -95,7 +100,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         help_text=_("This comment will be visible to all users who have access to this page."),
     )
     institut_these = forms.CharField(
-        label=_("Thesis institute"),
+        label=_("Research institute"),
         required=False,
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:institute",
@@ -118,7 +123,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
 
     def clean(self):
         data = super().clean()
-        if data.get('decision') == DecisionApprovalEnum.REJECTED.name and not data.get('motif_refus'):
+        if data.get('decision') == DecisionApprovalEnum.DECLINED.name and not data.get('motif_refus'):
             self.add_error('motif_refus', _("This field is required."))
         if (
             data.get('decision') == DecisionApprovalEnum.APPROVED.name

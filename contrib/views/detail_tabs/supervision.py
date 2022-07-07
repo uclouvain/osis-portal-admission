@@ -25,12 +25,12 @@
 # ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
-from osis_signature.enums import SignatureState
 
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
@@ -40,8 +40,9 @@ from admission.services.proposition import AdmissionPropositionService, Admissio
 
 
 class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_supervision.html'
+    template_name = 'admission/doctorate/forms/supervision.html'
     form_class = DoctorateAdmissionApprovalForm
+    rejecting = False
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -50,7 +51,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
             self.proposition.statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
             and 'url' in self.proposition.links['request_signatures']
         ):
-            return redirect('admission:doctorate-update:supervision', **self.kwargs)
+            return redirect('admission:doctorate:update:supervision', **self.kwargs)
         return self.render_to_response(context)
 
     @cached_property
@@ -86,11 +87,8 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
             # User is a promoter
             self.person.global_id
             in [signature['promoteur']['matricule'] for signature in self.supervision['signatures_promoteurs']]
-            # No one has answered yet
-            and all(
-                signature['statut'] == SignatureState.INVITED.name
-                for signature in self.supervision['signatures_promoteurs']
-            )
+            # institut_these is not yet set
+            and not self.proposition.institut_these
         )
         return kwargs
 
@@ -109,6 +107,7 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
                 uuid=str(self.kwargs['pk']),
                 **data,
             )
+        self.rejecting = True
         return AdmissionSupervisionService.reject_proposition(
             person=self.person,
             uuid=str(self.kwargs['pk']),
@@ -117,6 +116,18 @@ class DoctorateAdmissionSupervisionDetailView(LoginRequiredMixin, WebServiceForm
 
     def get_success_url(self):
         messages.info(self.request, _("Your decision has been saved."))
+        if (
+            self.person.global_id
+            in [signature['membre_ca']['matricule'] for signature in self.supervision['signatures_membres_ca']]
+            and self.rejecting
+        ):
+            try:
+                AdmissionPropositionService().get_supervised_propositions(self.request.user.person)
+            except PermissionDenied:
+                # That may be the last admission the member has access to, if so, redirect to homepage
+                return resolve_url('home')
+            # Redirect on list
+            return resolve_url('admission:supervised-list')
         return self.request.get_full_path()
 
 
@@ -131,7 +142,7 @@ class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixi
         )
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
+        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
     def form_invalid(self, form):
-        return redirect('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
+        return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])

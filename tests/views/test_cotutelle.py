@@ -41,7 +41,7 @@ class CotutelleTestCase(TestCase):
         cls.person = PersonFactory()
 
     def setUp(self):
-        self.url = resolve_url("admission:doctorate-update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.url = resolve_url("admission:doctorate:update:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)
 
         api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -54,6 +54,8 @@ class CotutelleTestCase(TestCase):
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
             cotutelle=True,
             motivation="Foobar",
+            institution="",
+            institution_fwb=False,
             demande_ouverture=[],
             convention=[],
             autres_documents=[],
@@ -67,13 +69,13 @@ class CotutelleTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_cotutelle_get(self):
-        url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
         self.assertContains(response, "Foobar")
 
     def test_cotutelle_detail_should_redirect_if_not_signing(self):
         self.mock_api.return_value.retrieve_proposition.return_value.statut = ChoixStatutProposition.IN_PROGRESS.name
-        url = resolve_url("admission:doctorate-detail:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url("admission:doctorate:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
         self.assertRedirects(response, self.url)
 
@@ -86,6 +88,8 @@ class CotutelleTestCase(TestCase):
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
             cotutelle=False,
             motivation="",
+            institution="",
+            institution_fwb=None,
             demande_ouverture=[],
             convention=[],
             autres_documents=[],
@@ -97,6 +101,8 @@ class CotutelleTestCase(TestCase):
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
             cotutelle=None,
             motivation="",
+            institution="",
+            institution_fwb=None,
             demande_ouverture=[],
             convention=[],
             autres_documents=[],
@@ -107,14 +113,18 @@ class CotutelleTestCase(TestCase):
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
     @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
     def test_cotutelle_update_with_data(self, *args):
-        response = self.client.post(self.url, {
-            'cotutelle': "YES",
-            'motivation': "Barbaz",
-            'institution': "Bazbar",
-            'demande_ouverture_0': "foobar2000",
-            'convention': [],
-            'autres_documents': [],
-        })
+        response = self.client.post(
+            self.url,
+            {
+                'cotutelle': "YES",
+                'motivation': "Barbaz",
+                'institution': "Bazbar",
+                'institution_fwb': False,
+                'demande_ouverture_0': "foobar2000",
+                'convention': [],
+                'autres_documents': [],
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_api.return_value.update_cotutelle.assert_called()
         last_call_kwargs = self.mock_api.return_value.update_cotutelle.call_args[1]
@@ -122,18 +132,12 @@ class CotutelleTestCase(TestCase):
         self.assertEqual(last_call_kwargs['definir_cotutelle_command']['motivation'], "Barbaz")
 
     def test_cotutelle_update_without_data(self):
-        response = self.client.post(self.url, {
-            "cotutelle": "NO",
-            "motivation": "Barbaz",
-        })
+        response = self.client.post(self.url, {"cotutelle": "NO", "motivation": "Barbaz"})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         last_call_kwargs = self.mock_api.return_value.update_cotutelle.call_args[1]
         self.assertEqual(last_call_kwargs['definir_cotutelle_command']['motivation'], "")
 
     def test_cotutelle_update_missing_data(self):
-        response = self.client.post(self.url, {
-            "cotutelle": "YES",
-            "motivation": "Barbaz",
-        })
+        response = self.client.post(self.url, {"cotutelle": "YES", "motivation": "Barbaz"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'institution', _("This field is required."))

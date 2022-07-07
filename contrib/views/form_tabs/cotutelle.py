@@ -32,7 +32,7 @@ from admission.services.proposition import AdmissionCotutelleService, AdmissionP
 
 
 class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_cotutelle.html'
+    template_name = 'admission/doctorate/forms/cotutelle.html'
     form_class = DoctorateAdmissionCotutelleForm
 
     def get_initial(self):
@@ -43,6 +43,8 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
         initial = cotutelle.to_dict()
         if initial['cotutelle'] is not None:
             initial['cotutelle'] = 'YES' if initial['cotutelle'] else 'NO'
+            if initial['institution_fwb'] is not None:
+                initial['institution_fwb'] = 'true' if initial['institution_fwb'] else 'false'
         return initial
 
     def call_webservice(self, data):
@@ -52,6 +54,7 @@ class DoctorateAdmissionCotutelleFormView(WebServiceFormMixin, FormView):
         if data['cotutelle'] == 'NO':
             data.update(
                 motivation="",
+                institution_fwb=None,
                 institution="",
                 demande_ouverture=[],
                 convention=[],

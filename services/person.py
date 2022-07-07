@@ -110,11 +110,24 @@ class AdmissionPersonService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def retrieve_languages_knowledge(cls, person):
-        return AdmissionPersonAPIClient().list_language_knowledges(**build_mandatory_auth_headers(person))
+    def retrieve_languages_knowledge(cls, person, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().list_language_knowledges_admission(
+                **build_mandatory_auth_headers(person),
+                uuid=str(uuid),
+            )
+        return AdmissionPersonAPIClient().list_language_knowledges(
+            **build_mandatory_auth_headers(person),
+        )
 
     @classmethod
-    def update_languages_knowledge(cls, person, data):
+    def update_languages_knowledge(cls, person, data, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().create_language_knowledge_admission(
+                uuid=str(uuid),
+                language_knowledge=data,
+                **build_mandatory_auth_headers(person),
+            )
         return AdmissionPersonAPIClient().create_language_knowledge(
             language_knowledge=data,
             **build_mandatory_auth_headers(person),

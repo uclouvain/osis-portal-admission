@@ -4,10 +4,10 @@
 {% block tab_content %}
     {% doctorate_tabs admission %}
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2 visible-md visible-lg">
             {% doctorate_subtabs admission %}
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10 quitting-context-excluded">
 
             <div class="flex-container">
                 <button
@@ -207,6 +207,7 @@
                 $('#{{ form_to_display }}').modal('show');
             {% endif %}
 
+            document.dispatchEvent(new Event('refreshFormInitial'));
         });
     </script>
 {% endblock %}

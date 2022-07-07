@@ -95,7 +95,7 @@
     </div>
 
     <p><em>
-        {% blocktrans %}
+        {% blocktrans trimmed %}
             The online enrolment request procedure is split up into several
             sheet. The enrolment request can only be validated as soon as all
             sheets have been duly completed. The icons will remind you of the
@@ -106,8 +106,9 @@
 
     {% include "template_messages.html" %}
 
-    {% url 'admission:doctorate-update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
-    {% if change_url and admission|can_update_tab:request.resolver_match.url_name %}
+    {% url 'admission:doctorate:update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
+    {% get_current_tab as current_tab %}
+    {% if change_url and admission|can_update_tab:current_tab %}
         <div class="text-right">
             <a href="{{ change_url }}" class="btn btn-primary">
                 <span
@@ -120,10 +121,10 @@
 
     {% doctorate_tabs admission %}
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2 visible-md visible-lg">
             {% doctorate_subtabs admission %}
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10 quitting-context-excluded">
             {% block tab_content %}{% endblock %}
         </div>
     </div>

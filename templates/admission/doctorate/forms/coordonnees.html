@@ -131,13 +131,14 @@
         // Activate the contact form if the 'show_contact' box is checked
         $('#contact_address').dependsOn({
             '#id_show_contact': { checked: true },
-        }, { valueOnDisable: '' });
+        });
 
         // "city" and "postal code" depends on "country" for contact
         $('#id_contact-city, #id_contact-postal_code').dependsOn({
-            '#id_show_contact': { checked: true },
             '#id_contact-country': { not: [null] },
         }, { valueOnDisable: '', hide: false });
+
+        document.dispatchEvent(new Event('refreshFormInitial'));
     });
     </script>
 {% endblock %}

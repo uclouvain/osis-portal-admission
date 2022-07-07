@@ -26,16 +26,31 @@
 
 from .autocomplete import *
 from .cancel import DoctorateAdmissionCancelView
-from .detail_tabs.coordonnees import DoctorateAdmissionCoordonneesDetailView, DoctorateAdmissionCoordonneesDetailView
+from .detail_tabs import redirect_detail
+from .detail_tabs.confirmation_paper import (
+    DoctorateAdmissionConfirmationPaperCanvasExportView,
+    DoctorateAdmissionConfirmationPaperDetailView,
+)
+from .detail_tabs.coordonnees import DoctorateAdmissionCoordonneesDetailView
+from .detail_tabs.cotutelle import DoctorateAdmissionCotutelleDetailView
 from .detail_tabs.curriculum import DoctorateAdmissionCurriculumDetailView
+from .detail_tabs.education import DoctorateAdmissionEducationDetailView
+from .detail_tabs.extension_request import DoctorateAdmissionExtensionRequestDetailView
+from .detail_tabs.languages import DoctorateAdmissionLanguagesDetailView
 from .detail_tabs.person import DoctorateAdmissionPersonDetailView
 from .detail_tabs.project import DoctorateAdmissionProjectDetailView
-from .detail_tabs.supervision import DoctorateAdmissionApprovalByPdfView
+from .detail_tabs.supervision import DoctorateAdmissionApprovalByPdfView, DoctorateAdmissionSupervisionDetailView
+from .form_tabs.confirm import DoctorateAdmissionConfirmFormView
+from .form_tabs.confirmation_paper import DoctorateAdmissionConfirmationPaperFormView
 from .form_tabs.coordonnees import DoctorateAdmissionCoordonneesFormView
+from .form_tabs.cotutelle import DoctorateAdmissionCotutelleFormView
 from .form_tabs.curriculum import DoctorateAdmissionCurriculumFormView
+from .form_tabs.education import DoctorateAdmissionEducationFormView
+from .form_tabs.extension_request import DoctorateAdmissionExtensionRequestFormView
+from .form_tabs.languages import DoctorateAdmissionLanguagesFormView
 from .form_tabs.person import DoctorateAdmissionPersonFormView
 from .form_tabs.project import DoctorateAdmissionProjectFormView
-from .form_tabs.supervision import DoctorateAdmissionRemoveActorView
+from .form_tabs.supervision import DoctorateAdmissionRemoveActorView, DoctorateAdmissionSupervisionFormView
 from .list import *
 from .signatures import (
     DoctorateAdmissionRequestSignaturesView,
@@ -44,18 +59,33 @@ from .signatures import (
 )
 
 __all__ = [
-    "DoctorateAutocomplete",
-    "DoctorateAdmissionListView",
-    "DoctorateAdmissionProjectFormView",
-    "DoctorateAdmissionProjectDetailView",
-    "DoctorateAdmissionPersonFormView",
-    "DoctorateAdmissionPersonDetailView",
-    "DoctorateAdmissionCoordonneesFormView",
-    "DoctorateAdmissionCoordonneesDetailView",
-    "DoctorateAdmissionRemoveActorView",
-    "DoctorateAdmissionCancelView",
-    "DoctorateAdmissionRequestSignaturesView",
-    "DoctorateAdmissionCurriculumFormView",
-    "DoctorateAdmissionCurriculumDetailView",
+    "redirect_detail",
     "DoctorateAdmissionApprovalByPdfView",
+    "DoctorateAdmissionCancelView",
+    "DoctorateAdmissionConfirmFormView",
+    "DoctorateAdmissionConfirmationPaperDetailView",
+    "DoctorateAdmissionConfirmationPaperFormView",
+    "DoctorateAdmissionConfirmationPaperCanvasExportView",
+    "DoctorateAdmissionCoordonneesDetailView",
+    "DoctorateAdmissionCoordonneesFormView",
+    "DoctorateAdmissionCotutelleDetailView",
+    "DoctorateAdmissionCotutelleFormView",
+    "DoctorateAdmissionCurriculumDetailView",
+    "DoctorateAdmissionCurriculumFormView",
+    "DoctorateAdmissionEducationDetailView",
+    "DoctorateAdmissionEducationFormView",
+    "DoctorateAdmissionLanguagesDetailView",
+    "DoctorateAdmissionLanguagesFormView",
+    "DoctorateAdmissionListView",
+    "DoctorateAdmissionExtensionRequestDetailView",
+    "DoctorateAdmissionExtensionRequestFormView",
+    "DoctorateAdmissionPersonDetailView",
+    "DoctorateAdmissionPersonFormView",
+    "DoctorateAdmissionProjectDetailView",
+    "DoctorateAdmissionProjectFormView",
+    "DoctorateAdmissionRemoveActorView",
+    "DoctorateAdmissionRequestSignaturesView",
+    "DoctorateAdmissionSupervisionDetailView",
+    "DoctorateAdmissionSupervisionFormView",
+    "DoctorateAutocomplete",
 ]

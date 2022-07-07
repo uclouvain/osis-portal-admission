@@ -46,7 +46,7 @@
   </div>
 
   {% for admission in admissions %}
-    {% panel %}
+    {% panel additional_class="admission-item" cy_matricule=user.person.global_id cy_type="doctorat" cy_state=admission.statut %}
       <h3 style="margin-top: 0">
         {{ admission.intitule_doctorat }} ({{ admission.reference }})
         <div><small>{{ admission.intitule_secteur_formation }}</small></div>
@@ -67,45 +67,10 @@
         {% if admission|can_make_action:'destroy_proposition' %}
           <a
             class="btn btn-danger"
-            href="{% url "admission:doctorate-cancel" admission.uuid %}"
+            href="{% url "admission:doctorate:cancel" admission.uuid %}"
           >
             {% trans "Delete" %}
           </a>
-        {% endif %}
-
-        {% if admission|can_update_something %}
-        <div class="dropdown pull-right">
-          <button
-            type="button"
-            class="btn btn-default dropdown-toggle"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <span class="glyphicon glyphicon-pencil"></span>
-            {% trans "Edit" %}
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="person" tab_label=_("Identification") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="coordonnees" tab_label=_("Contact details") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="education" tab_label=_("Secondary studies") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="languages" tab_label=_("Languages knowledge") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="curriculum" tab_label=_("Curriculum") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="project" tab_label=_("Doctoral project") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="cotutelle" tab_label=_("Cotutelle") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="supervision" tab_label=_("Supervision") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="confirm" tab_label=_("Confirmation") %}
-            {% if admission.is_valid %}
-              <li role="separator" class="divider"></li>
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="confirm-paper" tab_label=_("Confirmation paper") %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="training" tab_label=_("Doctoral training") %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="jury" tab_label=_("Jury") %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="private-defense" tab_label=_("Private defense") %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab_name="public-defense" tab_label=_("Public defense") %}
-            {% endif %}
-          </ul>
-        </div>
         {% endif %}
 
         <div class="dropdown pull-right">
@@ -121,23 +86,11 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="person" tab_label=_("Identification") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="coordonnees" tab_label=_("Contact details") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="education" tab_label=_("Secondary studies") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="languages" tab_label=_("Languages knowledge") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="curriculum" tab_label=_("Curriculum") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="project" tab_label=_("Doctoral project") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="cotutelle" tab_label=_("Cotutelle") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="supervision" tab_label=_("Supervision") %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="confirm" tab_label=_("Confirmation") %}
-            {% if admission.is_valid %}
-              <li role="separator" class="divider"></li>
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="confirm-paper" tab_label=_("Confirmation paper") %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="training" tab_label=_("Doctoral training") %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="jury" tab_label=_("Jury") %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="private-defense" tab_label=_("Private defense") %}
-              {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=1 tab_name="public-defense" tab_label=_("Public defense") %}
-            {% endif %}
+            {% for parent, subtabs in tab_tree.items %}
+              {% for subtab in subtabs %}
+                {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab=subtab no_status=True %}
+              {% endfor %}
+            {% endfor %}
           </ul>
         </div>
       {% endif %}

@@ -67,7 +67,7 @@ class WebServiceFormMixin:
 
     def get_detail_url(self):
         tab_name = self.request.resolver_match.url_name
-        return resolve_url('admission:doctorate-detail:' + tab_name, pk=self.kwargs.get('pk'))
+        return resolve_url('admission:doctorate:' + tab_name, pk=self.kwargs.get('pk'))
 
     def get_success_url(self):
         messages.info(self.request, _("Your data has been saved"))

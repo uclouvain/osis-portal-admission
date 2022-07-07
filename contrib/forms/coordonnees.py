@@ -71,7 +71,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
     city = forms.CharField(
         required=False,
         label=_("City"),
-        help_text=_("(e.g.: Louvain-la-Neuve) louvain-la-neuve)"),
+        help_text=_("(e.g.: Louvain-la-Neuve <del>louvain-la-neuve</del>)"),
     )
     country = forms.CharField(
         required=False,

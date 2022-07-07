@@ -49,7 +49,7 @@
                         data-toggle="modal"
                         data-target="#{{ forms.update_form.prefix }}"
                         {% elif view.kwargs.pk %}
-                        href="{% url 'admission:doctorate-update:curriculum' pk=view.kwargs.pk experience_id=experience.uuid %}"
+                        href="{% url 'admission:doctorate:update:curriculum' pk=view.kwargs.pk experience_id=experience.uuid %}"
                         {% else %}
                         href="{% url 'admission:doctorate-create:curriculum' experience_id=experience.uuid %}"
                         {% endif %}

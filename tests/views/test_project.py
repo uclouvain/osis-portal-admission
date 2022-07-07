@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
@@ -33,8 +34,9 @@ from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 from rest_framework import status
 
 from admission.contrib.enums.admission_type import AdmissionType
+from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
-from admission.contrib.enums.projet import ChoixStatutProposition
+from admission.contrib.enums.projet import ChoixStatutProposition, ChoixLangueRedactionThese
 from admission.contrib.enums.proximity_commission import (
     ChoixProximityCommissionCDE,
     ChoixProximityCommissionCDSS,
@@ -136,6 +138,13 @@ class ProjectViewTestCase(TestCase):
         self.mock_countries_api = countries_api_patcher.start()
         self.addCleanup(countries_api_patcher.stop)
 
+        patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch("osis_document.api.utils.get_remote_metadata", return_value={"name": "myfile"})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
         self.client.force_login(self.person.user)
 
     def test_create(self):
@@ -180,7 +189,7 @@ class ProjectViewTestCase(TestCase):
             'sous_domaine': ChoixSousDomaineSciences.CHEMISTRY.name,
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
         response = self.client.post(url, {
@@ -189,7 +198,7 @@ class ProjectViewTestCase(TestCase):
             'doctorate': 'BARBAZ-2021',
         })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
         self.mock_proposition_api.return_value.create_proposition.side_effect = MultipleApiBusinessException(
@@ -213,8 +222,168 @@ class ProjectViewTestCase(TestCase):
         self.assertContains(response, "Something wrong on a field")
         self.assertContains(response, "Something went wrong globally")
 
+    def test_sent_data_on_create(self):
+        url = resolve_url('admission:doctorate-create:project')
+
+        self.mock_proposition_api.return_value.create_proposition.return_value = {
+            'uuid': "3c5cdc60-2537-4a12-a396-64d2e9e34876",
+        }
+        expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+
+        data = {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sector': 'SSH',
+            'doctorate': 'BARBAZ-2021',
+            'justification': 'My justification related to the pre-admission',
+            'commission_proximite_cde': ChoixProximityCommissionCDE.ECONOMY.name,
+            'commission_proximite_cdss': ChoixProximityCommissionCDSS.ECLI.name,
+            'sous_domaine': ChoixSousDomaineSciences.CHEMISTRY.name,
+            'type_financement': ChoixTypeFinancement.SELF_FUNDING.name,
+            'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
+            'type_contrat_travail_other': 'Another working contract type',
+            'eft': 5,
+            'bourse_recherche': BourseRecherche.ARC.name,
+            'bourse_recherche_other': 'Another scholarship',
+            'duree_prevue': 10,
+            'temps_consacre': 20,
+            'titre_projet': 'Project title',
+            'lieu_these': 'Place',
+            'resume_projet': 'Resume',
+            'documents_projet_0': 'test',
+            'graphe_gantt_0': 'test',
+            'proposition_programme_doctoral_0': 'test',
+            'projet_formation_complementaire_0': 'test',
+            'lettres_recommandation_0': 'test',
+            'langue_redaction_these': ChoixLangueRedactionThese.ENGLISH.name,
+            'doctorat_deja_realise': ChoixDoctoratDejaRealise.NO.name,
+            'institution': 'Institution',
+            'non_soutenue': False,
+            'date_soutenance': datetime.date(2022, 5, 1),
+            'raison_non_soutenue': 'Reason',
+        }
+
+        default_kwargs = {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'sigle_formation': 'BARBAZ',
+            'annee_formation': 2021,
+            'matricule_candidat': self.person.global_id,
+            'justification': 'My justification related to the pre-admission',
+            'commission_proximite': ChoixProximityCommissionCDE.ECONOMY.name,
+            'type_financement': ChoixTypeFinancement.SELF_FUNDING.name,
+            'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
+            'eft': 5,
+            'bourse_recherche': BourseRecherche.ARC.name,
+            'duree_prevue': 10,
+            'temps_consacre': 20,
+            'titre_projet': 'Project title',
+            'lieu_these': 'Place',
+            'resume_projet': 'Resume',
+            'documents_projet': ['test'],
+            'graphe_gantt': ['test'],
+            'proposition_programme_doctoral': ['test'],
+            'projet_formation_complementaire': ['test'],
+            'lettres_recommandation': ['test'],
+            'langue_redaction_these': ChoixLangueRedactionThese.ENGLISH.name,
+            'doctorat_deja_realise': ChoixDoctoratDejaRealise.NO.name,
+            'institution': 'Institution',
+            'non_soutenue': False,
+            'date_soutenance': datetime.date(2022, 5, 1),
+            'raison_non_soutenue': 'Reason',
+        }
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+        sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
+        self.assertEqual(sent, {
+            **default_kwargs,
+            # Fields that are computed
+            'commission_proximite': ChoixProximityCommissionCDE.ECONOMY.name,
+            # Fields that are cleaned
+            'justification': '',
+            'type_contrat_travail': '',
+            'eft': None,
+            'bourse_recherche': '',
+            'institution': '',
+            'non_soutenue': None,
+            'date_soutenance': None,
+            'raison_non_soutenue': '',
+        })
+
+        response = self.client.post(url, {
+            **data,
+            'type_admission': AdmissionType.PRE_ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
+            'doctorat_deja_realise': ChoixDoctoratDejaRealise.YES.name,
+            'non_soutenue': True,
+            'commission_proximite_cde': '',
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+        sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
+        self.assertEqual(sent, {
+            **default_kwargs,
+            'type_admission': AdmissionType.PRE_ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
+            'doctorat_deja_realise': ChoixDoctoratDejaRealise.YES.name,
+            'non_soutenue': True,
+            # Fields that are computed
+            'commission_proximite': ChoixProximityCommissionCDSS.ECLI.name,
+            # Fields that are cleaned
+            'bourse_recherche': '',
+            'date_soutenance': None,
+        })
+
+        response = self.client.post(url, {
+            **data,
+            'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
+            'type_contrat_travail': ChoixTypeContratTravail.OTHER.name,
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+        sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
+        self.assertEqual(sent['type_contrat_travail'], 'Another working contract type')
+
+        response = self.client.post(url, {
+            **data,
+            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
+            'doctorat_deja_realise': ChoixDoctoratDejaRealise.PARTIAL.name,
+            'non_soutenue': False,
+            'commission_proximite_cde': '',
+            'commission_proximite_cdss': '',
+        })
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+        sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
+        self.assertEqual(sent, {
+            **default_kwargs,
+            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
+            'doctorat_deja_realise': ChoixDoctoratDejaRealise.PARTIAL.name,
+            'non_soutenue': False,
+            # Fields that are computed
+            'commission_proximite': ChoixSousDomaineSciences.CHEMISTRY.name,
+            # Fields that are cleaned
+            'justification': '',
+            'type_contrat_travail': '',
+            'eft': None,
+            'raison_non_soutenue': '',
+        })
+
+        response = self.client.post(url, {
+            **data,
+            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
+            'bourse_recherche': BourseRecherche.OTHER.name,
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+        sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
+        self.assertEqual(sent['bourse_recherche'], 'Another scholarship')
+
     def test_update(self):
-        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBAR'
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.annee_doctorat = '2021'
@@ -259,7 +428,6 @@ class ProjectViewTestCase(TestCase):
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
         self.assertContains(response, "A random postal address")
 
         response = self.client.post(url, {
@@ -268,7 +436,7 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_update_no_permission(self):
-        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.links = {
             'update_proposition': {'error': 'no access'},
         }
@@ -276,7 +444,7 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_consistency_errors(self):
-        url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
             'code_secteur_formation': "SST",
         }
@@ -334,13 +502,13 @@ class ProjectViewTestCase(TestCase):
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.statut = (
             ChoixStatutProposition.IN_PROGRESS.name
         )
-        url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
-        expected_url = resolve_url('admission:doctorate-update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
     def test_detail(self):
-        url = resolve_url('admission:doctorate-detail:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             langue_redaction_these="",
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
@@ -368,7 +536,7 @@ class ProjectViewTestCase(TestCase):
         self.assertContains(response, _("Proximity commission for experimental and clinical research (ECLI)"))
 
     def test_cancel(self):
-        url = resolve_url('admission:doctorate-cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             statut=ChoixStatutProposition.IN_PROGRESS.name,
             links={},

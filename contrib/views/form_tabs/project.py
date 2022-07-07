@@ -23,15 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
-from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail
+from admission.contrib.enums.admission_type import AdmissionType
+from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
+from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.forms.project import (
     COMMISSIONS_CDE_CLSM,
     COMMISSION_CDSS,
@@ -45,7 +46,7 @@ from admission.services.proposition import AdmissionPropositionService, Proposit
 
 
 class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_project.html'
+    template_name = 'admission/doctorate/forms/project.html'
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',
@@ -89,6 +90,36 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def prepare_data(self, data):
         # Process the form data to match API
+        if data['type_admission'] != AdmissionType.PRE_ADMISSION.name:
+            data['justification'] = ''
+
+        if data['type_financement'] != ChoixTypeFinancement.WORK_CONTRACT.name:
+            data['type_contrat_travail'] = ''
+            data['type_contrat_travail_other'] = ''
+            data['eft'] = None
+
+        if data['type_financement'] != ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
+            data['bourse_recherche'] = ''
+            data['bourse_recherche_other'] = ''
+
+        if not data['type_financement']:
+            data['duree_prevue'] = None
+            data['temps_consacre'] = None
+
+        if data['doctorat_deja_realise'] not in [
+            ChoixDoctoratDejaRealise.YES.name,
+            ChoixDoctoratDejaRealise.PARTIAL.name,
+        ]:
+            data['institution'] = ''
+            data['non_soutenue'] = None
+            data['date_soutenance'] = None
+            data['raison_non_soutenue'] = ''
+
+        if data['non_soutenue']:
+            data['date_soutenance'] = None
+        else:
+            data['raison_non_soutenue'] = ''
+
         data['type_contrat_travail'] = (
             data['type_contrat_travail_other']
             if data['type_contrat_travail'] == ChoixTypeContratTravail.OTHER.name
@@ -137,7 +168,8 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             context['admission'] = self.proposition
             # Lookup sector label from API
             context['sector_label'] = [
-                s.intitule for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
+                s.intitule
+                for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
                 if s.sigle == self.proposition.code_secteur_formation
             ][0]
         return context
@@ -147,4 +179,4 @@ class DoctorateAdmissionProjectFormView(LoginRequiredMixin, WebServiceFormMixin,
             return super().get_success_url()
         # On creation, display a message and redirect on same form (but with uuid now that we have it)
         messages.info(self.request, _("Your data has been saved"))
-        return resolve_url('admission:doctorate-update:project', pk=self.uuid)
+        return resolve_url('admission:doctorate:update:project', pk=self.uuid)

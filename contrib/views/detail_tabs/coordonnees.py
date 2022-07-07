@@ -34,12 +34,13 @@ from admission.services.reference import CountriesService
 
 
 class DoctorateAdmissionCoordonneesDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'admission/doctorate/detail_coordonnees.html'
+    template_name = 'admission/doctorate/details/coordonnees.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person, uuid=str(self.kwargs['pk']),
+            person=self.request.user.person,
+            uuid=str(self.kwargs['pk']),
         )
         coordonnees = AdmissionPersonService.retrieve_person_coordonnees(
             person=self.request.user.person,

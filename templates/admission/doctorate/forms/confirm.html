@@ -3,15 +3,15 @@
 
 {% block tab_content %}
     {% doctorate_tabs admission %}
-    <div class="row">
-        <div class="col-md-2">
-            {% doctorate_subtabs admission %}
+  <div class="row">
+    <div class="col-md-2 visible-md visible-lg">
+      {% doctorate_subtabs admission %}
         </div>
         <div class="col-md-10">
             <div class="alert alert-info confirmation-header">
                 <p>{% trans "You have now reached the confirmation tab of your enrolment request."%}</p>
                 <p class="text-justify">
-                    {% blocktrans %}
+                    {% blocktrans trimmed %}
                         BEFORE proceeding to confirmation here below, please read again the data you entered in the previous tabs in order to
                         be sure you did not enter any errors or forgot to complete certain fields. It are indeed these same data that will be used
                         during the complete period of your university studies.
@@ -59,7 +59,7 @@
                 {% csrf_token %}
                 {% bootstrap_form form %}
                 <p class="confirmation-warning">
-                    {% blocktrans %}
+                    {% blocktrans trimmed %}
                         Any false declaration or deliberate omission regarding the constitution of the application file
                         constitues a fraud on registration. Anyone suspected of fraud will be invited to provide further
                         explanation or clarification (Article 16 et 17 - Section 2 du Chapitre 1 du Titre III du

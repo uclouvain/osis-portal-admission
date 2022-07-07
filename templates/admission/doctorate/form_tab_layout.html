@@ -34,40 +34,6 @@
   </style>
 {% endblock %}
 
-{% block script %}
-  <script type="text/javascript">
-  // Notify user when something in a form has changed
-  var initialData = {};
-  var checkForm = true;
-  document.addEventListener('DOMContentLoaded', function () {
-      document.querySelectorAll('form').forEach(function (form) {
-          var action = form.getAttribute('action');
-          var formData = new FormData(form);
-          var searchParams = new URLSearchParams(formData);
-          initialData[action] = searchParams.toString();
-          form.addEventListener('submit', function () {
-              checkForm = false;
-          });
-      });
-  });
-  window.addEventListener('beforeunload', function (e) {
-      if (checkForm) {
-          document.querySelectorAll('form').forEach(function (form) {
-              var action = form.getAttribute('action');
-              var formData = new FormData(form);
-              var searchParams = new URLSearchParams(formData);
-              if (initialData[action] !== searchParams.toString()) {
-                  // Cancel the event
-                  e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-                  // Chrome requires returnValue to be set
-                  return e.returnValue = "{% trans "You may lose your changes, are you sure you want to quit?" %}"
-              }
-          });
-      }
-  });
-  </script>
-{% endblock %}
-
 {% block breadcrumb_area %}
   {% if admission and admission.matricule_candidat != user.person.global_id %}
     {% url 'admission:supervised-list' as list_url %}
@@ -89,24 +55,25 @@
 {% endblock %}
 
 {% block content %}
+  {% include "admission/modal/prevent_quitting_modal.html" %}
   {% if admission and admission.matricule_candidat != user.person.global_id %}
     {% url 'admission:supervised-list' as list_url %}
   {% else %}
     {% url 'admission:doctorate-list' as list_url %}
   {% endif %}
-    <div class="page-header h3">
+  <div class="page-header h3 clearfix">
     <span class="d-inline-block">
       {% if admission %}
-          {{ admission.intitule_doctorat }}
+        {{ admission.intitule_doctorat }}
       {% else %}
-          {% trans "Create new doctorate admission" %}
+        {% trans "Create new doctorate admission" %}
       {% endif %}
     </span>
-      <a href="{{ list_url }}" class="pull-right h5 text-primary">
-        <span class="fa fa-stream"></span>
-        {% trans "Back to requests" %}
-      </a>
-    </div>
+    <a href="{{ list_url }}" class="pull-right h5 text-primary">
+      <span class="fa fa-stream"></span>
+      {% trans "Back to requests" %}
+    </a>
+  </div>
 
     <div class="well">
         <div>
@@ -128,7 +95,7 @@
     </div>
 
     <p><em>
-        {% blocktrans %}
+        {% blocktrans trimmed %}
             The online enrolment request procedure is split up into several
             sheet. The enrolment request can only be validated as soon as all
             sheets have been duly completed. The icons will remind you of the
@@ -139,45 +106,54 @@
 
     {% include "template_messages.html" %}
 
-    {% url "admission:doctorate-detail:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
+    {% url "admission:doctorate:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
     {% block tab_content %}
         <form class="osis-form" method="post" action="">
             {% csrf_token %}
             {% block form_content %}
-                {% doctorate_tabs admission %}
+                {% doctorate_tabs admission with_submit=True %}
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-2 visible-md visible-lg">
                         {% doctorate_subtabs admission %}
-                        {% block submit_button_affix %}
-                            <hr />
-                            <div
-                                data-spy="affix"
-                                data-offset-top="500"
-                                style="top:90px"
-                            >
-                                <div>
-                                    <button
-                                        type="submit" class="btn btn-primary"
-                                        {% if cancel_url and not admission|can_update_tab:request.resolver_match.url_name %}
-                                        disabled
-                                        {% endif %}
-                                    >
-                                    <span
-                                        class="glyphicon glyphicon-floppy-save"
-                                        aria-hidden="true"
-                                    ></span>
-                                        {% trans 'Save' %}
-                                    </button>
-                                </div>
-                            </div>
-                        {% endblock submit_button_affix %}
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-10 quitting-context-excluded">
                         {% block form %}{% endblock %}
+                        {% block submit_button_bottom %}
+                            {% get_current_tab as current_tab %}
+                            <div class="text-right form-group">
+                                <button
+                                    type="submit" class="btn btn-primary"
+                                    {% if cancel_url and not admission|can_update_tab:current_tab %}
+                                    disabled
+                                    {% endif %}
+                                >
+                                <span
+                                  class="glyphicon glyphicon-floppy-save"
+                                  aria-hidden="true"
+                                ></span>
+                                  {% trans 'Save' %}
+                                </button>
+                            </div>
+                        {% endblock submit_button_bottom %}
                     </div>
                 </div>
             {% endblock form_content %}
         </form>
     {% endblock %}
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script type="application/javascript">
+      $(function () {
+          // Tooltips
+          $('[data-toggle="popover"]').popover();
+
+          $('body').on('mousedown', '.popover', function(e) {
+            e.preventDefault();
+            return false;
+          });
+      });
+  </script>
 {% endblock %}

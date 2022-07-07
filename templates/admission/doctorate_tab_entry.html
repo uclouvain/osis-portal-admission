@@ -25,18 +25,18 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% if detail_view and admission|can_read_tab:tab_name %}
+{% if detail_view and admission|can_read_tab:tab %}
   {# We're on a detail view, display detail siblings #}
-  {% url 'admission:doctorate-detail:'|add:tab_name admission_uuid as tab_url %}
+  {% url 'admission:doctorate:'|add:tab.name admission_uuid as tab_url %}
 {% elif not admission %}
   {# We've not submitted an admission yet, display creation siblings #}
-  {% url 'admission:doctorate-create:'|add:tab_name as tab_url %}
-{% elif admission|can_update_tab:tab_name %}
+  {% url 'admission:doctorate-create:'|add:tab.name as tab_url %}
+{% elif admission|can_update_tab:tab %}
   {# We can update admission, display update siblings #}
-  {% url 'admission:doctorate-update:'|add:tab_name admission_uuid as tab_url %}
-{% elif for_navigation and admission|can_read_tab:tab_name %}
+  {% url 'admission:doctorate:update:'|add:tab.name admission_uuid as tab_url %}
+{% elif for_navigation and admission|can_read_tab:tab %}
   {# We cannot update admission and we're in navigation mode, try to display detail siblings #}
-  {% url 'admission:doctorate-detail:'|add:tab_name admission_uuid as tab_url %}
+  {% url 'admission:doctorate:'|add:tab.name admission_uuid as tab_url %}
 {% endif %}
 <li
   role="presentation"
@@ -44,9 +44,19 @@
   {% elif not tab_url %}class="disabled"{% endif %}
 >
   <a href="{{ tab_url }}">
+    {% firstof icon tab.icon as icon %}
+    {% firstof label tab.label as label %}
     {% if icon %}
       <span class="fa fa-{{ icon }}"></span>
     {% endif %}
-    {{ tab_label }}
+    {{ label }}
+    {% if not no_status and admission and tab.name != 'confirm' %}
+      {% firstof parent.name tab.name as error_tab_name %}
+      {% if admission|has_error_in_tab:error_tab_name %}
+        <span class="fa fa-times-circle text-danger"></span>
+      {% else %}
+        <span class="fa fa-check-circle text-success"></span>
+      {% endif %}
+    {% endif %}
   </a>
 </li>

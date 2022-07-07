@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete
+from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -37,11 +37,13 @@ from admission.contrib.enums.secondary_studies import (
     GotDiploma,
 )
 from admission.contrib.forms import (
-    EMPTY_CHOICE,
     get_country_initial_choices,
+    get_high_school_initial_choices,
     get_language_initial_choices,
+    get_past_academic_years_choices,
+    EMPTY_CHOICE,
 )
-from admission.services.reference import AcademicYearService
+from admission.services.reference import CountriesService
 from base.tests.factories.academic_year import get_current_year
 from osis_document.contrib import FileUploadField
 
@@ -54,6 +56,16 @@ class DoctorateAdmissionEducationForm(forms.Form):
         choices=GotDiploma.choices(),
         widget=forms.RadioSelect,
         required=False,
+        help_text='{}<br><br>{}'.format(
+            _(
+                "High school in Belgium is the level of education between the end of primary school and the "
+                "beginning of higher education."
+            ),
+            _(
+                "The high school diploma is the Certificate of Higher Secondary Education (CESS). "
+                "It is commonly referred to as the baccalaureate in many countries."
+            ),
+        ),
     )
     academic_graduation_year = forms.IntegerField(
         label=_("Please mention the academic graduation year"),
@@ -66,13 +78,18 @@ class DoctorateAdmissionEducationForm(forms.Form):
         widget=forms.RadioSelect,
         required=False,
     )
-    high_school_transcript = FileUploadField(
-        label=_("A transcript or your last year at high school"),
+    high_school_diploma = FileUploadField(
+        label=_("High school diploma"),
         max_files=1,
         required=False,
     )
-    high_school_diploma = FileUploadField(
-        label=_("High school diploma"),
+    enrolment_certificate = FileUploadField(
+        label=_("Certificate of enrolment or school attendance"),
+        max_files=1,
+        required=False,
+    )
+    first_cycle_admission_exam = FileUploadField(
+        label=_("Certificate of successful completion of the admission test for the first cycle of higher education"),
         max_files=1,
         required=False,
     )
@@ -82,16 +99,12 @@ class DoctorateAdmissionEducationForm(forms.Form):
 
     def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        year_choices = tuple(
-            (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
-            for academic_year in AcademicYearService.get_academic_years(person)
-            if academic_year.year < get_current_year()
-        )
-        self.fields["academic_graduation_year"].widget.choices = EMPTY_CHOICE + year_choices
+        self.fields["academic_graduation_year"].widget.choices = get_past_academic_years_choices(person)
 
         belgian_diploma = self.initial.get("belgian_diploma")
         foreign_diploma = self.initial.get("foreign_diploma")
+        high_school_diploma_alternative = self.initial.get("high_school_diploma_alternative")
+
         diploma = belgian_diploma or foreign_diploma
         # Tick the got_diploma checkbox only if there is a saved diploma
         # and select the correct related type
@@ -103,26 +116,43 @@ class DoctorateAdmissionEducationForm(forms.Form):
                 DiplomaTypes.BELGIAN.name if belgian_diploma else DiplomaTypes.FOREIGN.name
             )
             self.fields["academic_graduation_year"].initial = diploma.get("academic_graduation_year")
-            self.fields['high_school_transcript'].initial = diploma.get("high_school_transcript")
             self.fields['high_school_diploma'].initial = diploma.get("high_school_diploma")
+            self.fields['enrolment_certificate'].initial = diploma.get("enrolment_certificate")
         else:
             self.fields["got_diploma"].initial = GotDiploma.NO.name
+            if high_school_diploma_alternative:
+                self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
+                    "first_cycle_admission_exam"
+                )
 
     def clean(self):
         cleaned_data = super().clean()
 
         got_diploma = cleaned_data.get("got_diploma")
+
         if got_diploma in [GotDiploma.THIS_YEAR.name, GotDiploma.YES.name]:
+            diploma_type = cleaned_data.get("diploma_type")
             if got_diploma == GotDiploma.YES.name:
                 if not cleaned_data.get("academic_graduation_year"):
                     self.add_error('academic_graduation_year', FIELD_REQUIRED_MESSAGE)
                 if not cleaned_data.get('high_school_diploma'):
                     self.add_error("high_school_diploma", FIELD_REQUIRED_MESSAGE)
-            if not cleaned_data.get('high_school_transcript'):
-                self.add_error("high_school_transcript", FIELD_REQUIRED_MESSAGE)
 
-            if not cleaned_data.get("diploma_type"):
+            else:
+                if diploma_type == DiplomaTypes.BELGIAN.name:
+                    if not cleaned_data.get("high_school_diploma") and not cleaned_data.get("enrolment_certificate"):
+                        self.add_error(
+                            'high_school_diploma',
+                            _('Please specify either your high school diploma or your enrolment certificate'),
+                        )
+                        self.add_error("enrolment_certificate", "")
+
+            if not diploma_type:
                 self.add_error('diploma_type', FIELD_REQUIRED_MESSAGE)
+
+        elif got_diploma == GotDiploma.NO.name:
+            if not cleaned_data.get('first_cycle_admission_exam'):
+                self.add_error('first_cycle_admission_exam', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data
 
@@ -130,34 +160,50 @@ class DoctorateAdmissionEducationForm(forms.Form):
 class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
     community = forms.ChoiceField(
         label=_("Educational community"),
-        choices=BelgianCommunitiesOfEducation.choices(),
+        choices=EMPTY_CHOICE + BelgianCommunitiesOfEducation.choices(),
         widget=autocomplete.ListSelect2,
     )
     educational_type = forms.ChoiceField(
         label=_("Education type"),
-        choices=EDUCATIONAL_TYPES,
+        choices=EMPTY_CHOICE + EDUCATIONAL_TYPES,
         widget=autocomplete.ListSelect2,
         required=False,
     )
     educational_other = forms.CharField(
-        label=_("Other education, please specify"),
+        label=_("If other education type, please specify"),
         required=False,
     )
     institute = forms.CharField(
         label=_("Institute"),
         required=False,
-        help_text=_("You can perform a search based on the location or postal code.")
+        help_text=_("You can perform a search based on the location or postal code."),
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:high-school"),
     )
-    other_institute = forms.CharField(
-        label=_("Other institute, please specify"),
+    other_institute = forms.BooleanField(
+        label=_("If you don't find your institute in the list, please specify"),
+        required=False,
+    )
+    other_institute_name = forms.CharField(
+        label=_("Other institute name"),
+        required=False,
+    )
+    other_institute_address = forms.CharField(
+        label=_("Other institute address"),
         required=False,
     )
     result = forms.ChoiceField(
-        label=_("At which result level do you consider yourself?"),
+        label=_("What result did you get?"),
         choices=DiplomaResults.choices(),
         widget=forms.RadioSelect,
-        required=False,
     )
+
+    def __init__(self, person, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial['other_institute'] = bool(self.initial.get('other_institute_name'))
+        self.fields['institute'].widget.choices = get_high_school_initial_choices(
+            self.data.get(self.add_prefix("institute"), self.initial.get("institute")),
+            person,
+        )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -165,9 +211,8 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         educational_type = cleaned_data.get("educational_type")
         educational_other = cleaned_data.get("educational_other")
 
-        if (
-            community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name
-            and not (educational_type or educational_other)
+        if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name and not (
+            educational_type or educational_other
         ):
             self.add_error("educational_type", _("Educational type is required with this community of education"))
 
@@ -175,9 +220,6 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
             institute_error_msg = _("Please set one of institute or other institute fields")
             self.add_error("institute", institute_error_msg)
             self.add_error("other_institute", institute_error_msg)
-
-        if not cleaned_data.get("result"):
-            self.add_error('result', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data
 
@@ -206,6 +248,7 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
     dutch = HourField(label=_("Dutch"))
     english = HourField(label=_("English"))
     french = HourField(label=_("French"))
+    spanish = HourField(label=_("Spanish"))
     modern_languages_other_label = forms.CharField(
         label=_("Other"),
         help_text=_("If other language, please specify"),
@@ -273,17 +316,11 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         widget=forms.RadioSelect,
     )
     equivalence = forms.ChoiceField(
-        label=_("Has this diploma been subject to a decision of equivalence provided by the "
-                "French-speaking community of Belgium?"),
+        label=_(
+            "Has this diploma been subject to a decision of equivalence provided by the "
+            "French-speaking community of Belgium?"
+        ),
         required=False,
-        help_text=_('If you have it, you must provide a photocopy of both sides of the final equivalence decision '
-                    'issued by the Ministry of the French Community of Belgium. If you do not have it, a request for '
-                    'equivalence MUST be submitted in strict accordance with the instructions given by the '
-                    '<a href="http://www.equivalences.cfwb.be/" target="blank">CFWB</a>, only '
-                    'in the case of a request for enrolment in BACHELOR degree. As a reminder, for any secondary '
-                    'school diploma <strong>from a country outside the European Union, the admission application '
-                    'must contain the equivalence of your diploma</strong> issued by the Wallonia-Brussels Federation '
-                    '(French Community of Belgium).'),
         choices=Equivalence.choices(),
         widget=forms.RadioSelect,
     )
@@ -298,16 +335,24 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     )
     country = forms.CharField(
         label=_("Organizing country"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:country",
+            forward=[forward.Const(True, 'exclude_be')],
+        ),
     )
     result = forms.ChoiceField(
         label=_("What result did you get?"),
         choices=DiplomaResults.choices(),
         widget=forms.RadioSelect,
     )
+    high_school_transcript = FileUploadField(
+        label=_("A transcript or your last year at high school"),
+        max_files=1,
+    )
     high_school_transcript_translation = FileUploadField(
-        label=_("A certified translation of your official transcript of marks for your final year of "
-                "secondary education"),
+        label=_(
+            "A certified translation of your official transcript of marks for your final year of secondary education"
+        ),
         max_files=1,
         required=False,
     )
@@ -316,31 +361,109 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         max_files=1,
         required=False,
     )
+    enrolment_certificate_translation = FileUploadField(
+        label=_("A certified translation of your certificate of enrolment or school attendance"),
+        max_files=1,
+        required=False,
+    )
+    final_equivalence_decision_not_ue = FileUploadField(
+        label=_(
+            "A double-sided copy of the final equivalence decision issued by the Ministry "
+            "of the French Community of Belgium"
+        ),
+        help_text=_(
+            "For any high-school diploma from a country outside the European Union, the admission request "
+            "<strong>must contain the equivalence</strong> of your diploma delivered by the "
+            "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium."
+        ),
+        max_files=1,
+        required=False,
+    )
+    final_equivalence_decision_ue = FileUploadField(
+        label=_("A double-sided copy of the final equivalence decision"),
+        help_text=_(
+            "If you have a final equivalence decision issued by the "
+            "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you must "
+            "provide a double-sided copy of this document."
+        ),
+        max_files=1,
+        required=False,
+    )
+    equivalence_decision_proof = FileUploadField(
+        label=_("Proof of the final equivalence decision"),
+        help_text=_(
+            "If you do not yet have a final equivalence decision issued by the "
+            "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you must "
+            "provide a double-sided copy of this document as soon as possible. You are therefore asked to "
+            "provide proof of the application in the meantime: receipt of the application and proof of payment, "
+            "acknowledgement of receipt of the application, etc."
+        ),
+        max_files=1,
+        required=False,
+    )
+    restrictive_equivalence_daes = FileUploadField(
+        label=_("Diploma of Aptitude for Access to Higher Education (DAES)"),
+        max_files=1,
+        required=False,
+    )
+    restrictive_equivalence_admission_test = FileUploadField(
+        label=_(
+            "Certificate of successful completion of the admission test for the first "
+            "cycle of higher education in case of restrictive equivalence"
+        ),
+        max_files=1,
+        required=False,
+    )
 
     def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        iso_code = self.data.get(self.add_prefix("country"), self.initial.get("country"))
+        country = CountriesService.get_country(iso_code=iso_code, person=person) if iso_code else None
+
+        self.fields['country'].is_ue_country = bool(country and country.european_union)
         self.fields['country'].widget.choices = get_country_initial_choices(
-            self.data.get(self.add_prefix("country"), self.initial.get("country")),
-            person,
+            iso_code=iso_code,
+            person=person,
+            loaded_country=country,
         )
+
         self.fields['linguistic_regime'].widget.choices = get_language_initial_choices(
             self.data.get(self.add_prefix("linguistic_regime"), self.initial.get("linguistic_regime")),
             person,
         )
 
+        self.fields[
+            'final_equivalence_decision_ue'
+            if self.fields['country'].is_ue_country
+            else 'final_equivalence_decision_not_ue'
+        ].initial = self.initial.get('final_equivalence_decision')
+
     def clean(self):
         cleaned_data = super().clean()
         from admission.contrib.views.form_tabs.education import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
             self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))
 
-        # Translation of transcript required depending on linguistic regime
-        if (cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
-                and not cleaned_data.get('high_school_transcript_translation')):
+        if (
+            cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+            # Translation of transcript required depending on linguistic regime
+            and not cleaned_data.get('high_school_transcript_translation')
+        ):
             self.add_error("high_school_transcript_translation", FIELD_REQUIRED_MESSAGE)
 
-        # Equivalence required depending on national bachelor
-        if (cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name
-                and not cleaned_data.get('equivalence')):
-            self.add_error('equivalence', FIELD_REQUIRED_MESSAGE)
+        if cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name:
+            # Equivalence
+            if self.fields['country'].is_ue_country:
+                equivalence = cleaned_data.get('equivalence')
+                if not equivalence:
+                    self.add_error('equivalence', FIELD_REQUIRED_MESSAGE)
+                elif equivalence == Equivalence.YES.name and not cleaned_data.get('final_equivalence_decision_ue'):
+                    self.add_error('final_equivalence_decision_ue', FIELD_REQUIRED_MESSAGE)
+                elif equivalence == Equivalence.PENDING.name and not cleaned_data.get('equivalence_decision_proof'):
+                    self.add_error('equivalence_decision_proof', FIELD_REQUIRED_MESSAGE)
+            elif not cleaned_data.get('final_equivalence_decision_not_ue'):
+                self.add_error('final_equivalence_decision_not_ue', FIELD_REQUIRED_MESSAGE)
+
         return cleaned_data

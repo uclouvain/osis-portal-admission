@@ -39,7 +39,7 @@ from osis_admission_sdk import ApiException
 
 
 class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_supervision.html'
+    template_name = 'admission/doctorate/forms/supervision.html'
     form_class = DoctorateAdmissionSupervisionForm
 
     def get_context_data(self, **kwargs):
@@ -61,13 +61,13 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
         if 'url' not in context['admission'].links['request_signatures']:
-            return redirect('admission:doctorate-detail:supervision', **self.kwargs)
+            return redirect('admission:doctorate:supervision', **self.kwargs)
         return self.render_to_response(context)
 
     def prepare_data(self, data):
         return {
             'type': data['type'],
-            'member': data['person'] or data['tutor'],
+            'member': data['person' if data['type'] == ActorType.CA_MEMBER.name else 'tutor'],
         }
 
     def call_webservice(self, data):
@@ -76,7 +76,7 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
 
 class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin, FormView):
     form_class = forms.Form
-    template_name = 'admission/doctorate/form_tab_remove_actor.html'
+    template_name = 'admission/doctorate/forms/remove_actor.html'
     actor_type_mapping = {
         ActorType.PROMOTER.name: ('signatures_promoteurs', 'promoteur'),
         ActorType.CA_MEMBER.name: ('signatures_membres_ca', 'membre_ca'),
@@ -116,4 +116,4 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
         AdmissionSupervisionService.remove_member(person=self.person, uuid=str(self.kwargs['pk']), **data)
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate-detail:supervision', pk=self.kwargs['pk'])
+        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])

@@ -89,66 +89,70 @@
                 {% bootstrap_field form.eft %}
             </div>
         </div>
-        <div class="row" id="scholarship">
-            <div class="col-md-4">
-                {% bootstrap_field form.bourse_recherche %}
-            </div>
-            <div class="col-md-4" id="bourse_recherche_other">
-                {% bootstrap_field form.bourse_recherche_other %}
-            </div>
+      <div class="row" id="scholarship">
+        <div class="col-md-4">
+          {% bootstrap_field form.bourse_recherche %}
         </div>
-        <div id="financing-details" class="row">
-            <div class="col-md-6">
-                {% bootstrap_field form.duree_prevue %}
-            </div>
-            <div class="col-md-6">
-                {% bootstrap_field form.temps_consacre %}
-            </div>
+        <div class="col-md-4" id="bourse_recherche_other">
+          {% bootstrap_field form.bourse_recherche_other %}
         </div>
+      </div>
+      <div id="financing-details" class="row">
+        <div class="col-md-6">
+          {% bootstrap_field form.duree_prevue %}
+        </div>
+        <div class="col-md-6">
+          {% bootstrap_field form.temps_consacre %}
+        </div>
+      </div>
     {% endpanel %}
 
-    {% panel _("Doctoral project") %}
-        {% bootstrap_field form.titre_projet form_group_class="form-group required_field" %}
-        {% bootstrap_field form.resume_projet form_group_class="form-group required_field" %}
-        <div class="row">
-            <div class="col-md-4">
-                {% bootstrap_field form.langue_redaction_these form_group_class="form-group required_field" %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                {% bootstrap_field form.institut_these %}
-            </div>
-            <div class="col-md-6">
-                {% bootstrap_field form.lieu_these %}
-            </div>
-        </div>
-        {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
-        {% bootstrap_field form.graphe_gantt %}
-        {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group proposition_programme_doctoral" %}
-        {% bootstrap_field form.projet_formation_complementaire %}
-        {% bootstrap_field form.lettres_recommandation %}
-    {% endpanel %}
+  {% panel _("Doctoral project") %}
+    {% bootstrap_field form.titre_projet form_group_class="form-group required_field" %}
+    {% bootstrap_field form.resume_projet form_group_class="form-group required_field" %}
+    <div class="row">
+      <div class="col-md-4">
+        {% bootstrap_field form.langue_redaction_these form_group_class="form-group required_field" %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        {% bootstrap_field form.lieu_these %}
+      </div>
+    </div>
+    <p>
+      {% blocktrans trimmed %}
+        The format of the documents to be uploaded below may vary from one
+        Doctoral Domain Commission (DDC) to another; be sure to check with your
+        file manager and respect the usage provided by your DDC.
+      {% endblocktrans %}
+    </p>
+    {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}
+    {% bootstrap_field form.graphe_gantt %}
+    {% bootstrap_field form.proposition_programme_doctoral form_group_class="form-group proposition_programme_doctoral" %}
+    {% bootstrap_field form.projet_formation_complementaire %}
+    {% bootstrap_field form.lettres_recommandation %}
+  {% endpanel %}
 
-    {% panel _("Previous research experience") %}
-        {% bootstrap_field form.doctorat_deja_realise %}
-        <div id="previous_experience">
-            <div class="row">
-                <div class="col-md-6">
-                    {% bootstrap_field form.institution %}
-                </div>
-            </div>
-            {% bootstrap_field form.non_soutenue %}
-            <div class="row" id="soutenue">
-                <div class="col-md-4">
-                    {% bootstrap_field form.date_soutenance %}
-                </div>
-            </div>
-            <div id="non-soutenue">
-                {% bootstrap_field form.raison_non_soutenue form_group_class="form-group required_field" %}
-            </div>
+  {% panel _("Previous research experience") %}
+    {% bootstrap_field form.doctorat_deja_realise %}
+    <div id="previous_experience">
+      <div class="row">
+        <div class="col-md-6">
+          {% bootstrap_field form.institution %}
         </div>
-    {% endpanel %}
+      </div>
+      {% bootstrap_field form.non_soutenue %}
+      <div class="row" id="soutenue">
+        <div class="col-md-4">
+          {% bootstrap_field form.date_soutenance %}
+        </div>
+      </div>
+      <div id="non-soutenue">
+        {% bootstrap_field form.raison_non_soutenue form_group_class="form-group required_field" %}
+      </div>
+    </div>
+  {% endpanel %}
 {% endblock %}
 
 {% block script %}
@@ -161,7 +165,7 @@
         // Justification depends on pre-admission
         $('#justification').dependsOn({
             'input[name=type_admission]': { values: ['PRE_ADMISSION'] },
-        }, { valueOnDisable: '' });
+        });
 
         {% if not admission %}
             // Reset doctorate when changing sector
@@ -237,37 +241,39 @@
 
         $('#work').dependsOn({
             '#id_type_financement': { values: ['WORK_CONTRACT'] },
-        }, { valueOnDisable: '' });
+        });
         $('#scholarship').dependsOn({
             '#id_type_financement': { values: ['SEARCH_SCHOLARSHIP'] },
-        }, { valueOnDisable: '' });
+        });
         $('#financing-details').dependsOn({
             '#id_type_financement': { not: [''] },
-        }, { valueOnDisable: '' });
+        });
         $('#type_contrat_travail_other').dependsOn({
             '#id_type_contrat_travail': { values: ['OTHER'] },
-        }, { valueOnDisable: '' });
+        });
         $('#bourse_recherche_other').dependsOn({
             '#id_bourse_recherche': { values: ['OTHER'] },
-        }, { valueOnDisable: '' });
+        });
         $('#previous_experience').dependsOn({
             '#id_doctorat_deja_realise': { values: ['YES', 'PARTIAL'] },
-        }, { valueOnDisable: '' });
+        });
         $('#non-soutenue').dependsOn({
             '#id_non_soutenue': { checked: true },
-        }, { valueOnDisable: '' });
+        });
         $('#soutenue').dependsOn({
             '#id_non_soutenue': { checked: false },
-        }, { valueOnDisable: '' });
+        });
 
         // Mark proposition_programme_doctoral as required depending on type
         $('.proposition_programme_doctoral').dependsOn({
-            'input[name=type_admission]': { values: ['ADMISSION'] }
+            'input[name=type_admission]': { values: ['ADMISSION'] },
         }, {
             disable: false,
             hide: false,
-            toggleClass: 'required_field'
+            toggleClass: 'required_field',
         });
+
+        document.dispatchEvent(new Event('refreshFormInitial'));
     });
     </script>
 {% endblock %}

@@ -26,18 +26,17 @@
 import enum
 
 from django.contrib import messages
-from django.utils.translation import gettext as _
-
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
+from django.utils.translation import gettext as _
 
-
-from osis_admission_sdk import ApiException
-
-from admission.contrib.forms.curriculum import DoctorateAdmissionCurriculumExperienceForm, \
-    DoctorateAdmissionCurriculumFileForm
+from admission.contrib.forms.curriculum import (
+    DoctorateAdmissionCurriculumExperienceForm,
+    DoctorateAdmissionCurriculumFileForm,
+)
 from admission.contrib.views import DoctorateAdmissionCurriculumDetailView
 from admission.services.person import AdmissionPersonService
+from osis_admission_sdk import ApiException
 
 
 class CurriculumForm(enum.Enum):
@@ -48,7 +47,7 @@ class CurriculumForm(enum.Enum):
 
 
 class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailView):
-    template_name = 'admission/doctorate/form_tab_curriculum.html'
+    template_name = 'admission/doctorate/forms/curriculum.html'
 
     def get_context_data(self, submitted_form=None, **kwargs):
         # The admission (if available), the experience list and the curriculum file are loaded from the parent
@@ -59,18 +58,26 @@ class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailVie
         submitted_form_prefix = submitted_form.prefix if submitted_form else ''
 
         # Form to upload a CV file
-        context_data['curriculum_upload'] = DoctorateAdmissionCurriculumFileForm(
-            prefix=CurriculumForm.CURRICULUM_UPLOAD.value,
-            initial=context_data['curriculum_file'],
-        ) if submitted_form_prefix != CurriculumForm.CURRICULUM_UPLOAD.value else submitted_form
+        context_data['curriculum_upload'] = (
+            DoctorateAdmissionCurriculumFileForm(
+                prefix=CurriculumForm.CURRICULUM_UPLOAD.value,
+                initial=context_data['curriculum_file'],
+            )
+            if submitted_form_prefix != CurriculumForm.CURRICULUM_UPLOAD.value
+            else submitted_form
+        )
 
         context_data['forms'] = dict()
 
         # Form to create a new experience
-        context_data['forms']['creation_form'] = DoctorateAdmissionCurriculumExperienceForm(
-            prefix=CurriculumForm.EXPERIENCE_CREATION.value,
-            person=self.request.user.person,
-        ) if submitted_form_prefix != CurriculumForm.EXPERIENCE_CREATION.value else submitted_form
+        context_data['forms']['creation_form'] = (
+            DoctorateAdmissionCurriculumExperienceForm(
+                prefix=CurriculumForm.EXPERIENCE_CREATION.value,
+                person=self.request.user.person,
+            )
+            if submitted_form_prefix != CurriculumForm.EXPERIENCE_CREATION.value
+            else submitted_form
+        )
 
         # Form to update an existing experience
         if experience_id:
@@ -78,7 +85,7 @@ class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailVie
                 context_data['forms']['update_form'] = submitted_form
             else:
                 experience = next(
-                    (exp for exp in context_data.get('curriculum_experiences') if exp.uuid == experience_id), None,
+                    (exp for exp in context_data.get('curriculum_experiences') if exp.uuid == experience_id), None
                 )
                 if experience:
                     context_data['forms']['update_form'] = DoctorateAdmissionCurriculumExperienceForm(
@@ -139,7 +146,7 @@ class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailVie
             form = DoctorateAdmissionCurriculumExperienceForm(
                 prefix=CurriculumForm.EXPERIENCE_UPDATE.value,
                 data=self.request.POST,
-                person=self.request.user.person
+                person=self.request.user.person,
             )
             if form.is_valid():
                 experience_id = str(self.kwargs.get('experience_id', ''))
@@ -204,6 +211,6 @@ class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailVie
     def get_success_url(self):
         pk = self.kwargs.get('pk')
         if pk:
-            return resolve_url('admission:doctorate-update:curriculum', pk=pk)
+            return resolve_url('admission:doctorate:update:curriculum', pk=pk)
         else:
             return resolve_url('admission:doctorate-create:curriculum')

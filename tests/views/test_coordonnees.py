@@ -49,8 +49,9 @@ class CoordonneesTestCase(TestCase):
         self.mock_person_api = person_api_patcher.start()
         self.addCleanup(person_api_patcher.stop)
 
-        self.mock_get = self.mock_person_api.return_value.retrieve_coordonnees.return_value.to_dict \
-            = self.mock_person_api.return_value.retrieve_coordonnees_admission.return_value.to_dict
+        self.mock_get = (
+            self.mock_person_api.return_value.retrieve_coordonnees.return_value.to_dict
+        ) = self.mock_person_api.return_value.retrieve_coordonnees_admission.return_value.to_dict
         self.mock_get.return_value = dict(
             email="john@example.org",
             phone_mobile="",
@@ -62,7 +63,7 @@ class CoordonneesTestCase(TestCase):
                 'street': "",
                 'street_number': "",
                 'postal_box': "",
-                'place': ""
+                'place': "",
             },
             contact={
                 'location': "",
@@ -72,7 +73,7 @@ class CoordonneesTestCase(TestCase):
                 'street': "",
                 'street_number': "",
                 'postal_box': "",
-                'place': ""
+                'place': "",
             },
         )
 
@@ -81,8 +82,8 @@ class CoordonneesTestCase(TestCase):
 
         def get_countries(**kwargs):
             countries = [
-                MockCountry(iso_code='FR', name='France', name_en='France'),
-                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium'),
+                MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
+                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium', european_union=True),
             ]
             if kwargs.get('iso_code'):
                 return Mock(results=[c for c in countries if c.iso_code == kwargs.get('iso_code')])
@@ -167,7 +168,7 @@ class CoordonneesTestCase(TestCase):
         })
 
     def test_update(self):
-        url = resolve_url('admission:doctorate-update:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:update:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         self.mock_get.return_value['residential']['country'] = "BE"
         self.mock_get.return_value['contact']['country'] = "BE"
@@ -184,7 +185,7 @@ class CoordonneesTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):
-        url = resolve_url('admission:doctorate-detail:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:doctorate:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         self.mock_get.return_value = {'residential': None, 'contact': None}
         response = self.client.get(url)

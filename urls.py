@@ -24,116 +24,86 @@
 #
 # ##############################################################################
 from django.urls import include, path
-from django.utils.module_loading import import_string
 from django.views.generic import RedirectView
 
 from .contrib import views
 
 app_name = "admission"
 
+autocomplete_paths = [
+    path("tutor/", views.TutorAutocomplete.as_view(), name="tutor"),
+    path("person/", views.PersonAutocomplete.as_view(), name="person"),
+    path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
+    path("country/", views.CountryAutocomplete.as_view(), name="country"),
+    path("city/", views.CityAutocomplete.as_view(), name="city"),
+    path("language/", views.LanguageAutocomplete.as_view(), name="language"),
+    path("institute/", views.InstituteAutocomplete.as_view(), name="institute"),
+    path("institute-location/", views.InstituteLocationAutocomplete.as_view(), name="institute-location"),
+    path("high-school/", views.HighSchoolAutocomplete.as_view(), name="high-school"),
+]
 
-def generate_tab_urls(pattern_prefix, view_suffix, name, create_only=False, detail_only=False):
-    """Generates tab urls for a each action, views must exists"""
-    tab_names = ["project", "person", "coordonnees", "curriculum", "education", "languages"]
-    # pattern_names = ["person", "details", "education", "curriculum", "project"]
-    if not create_only:
-        tab_names += [
-            "cotutelle",
-            "supervision",
-            "confirm",
-            # "confirm-paper",
-            # "training",
-            # "jury",
-            # "private-defense",
-            # "public-defense",
-        ]
-    # if detail_only:
-    #     pattern_names.append('messages')
+creation_paths = [
+    path("person", views.DoctorateAdmissionPersonFormView.as_view(), name="person"),
+    path("coordonnees", views.DoctorateAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
+    path("curriculum", views.DoctorateAdmissionCurriculumFormView.as_view(), name="curriculum"),
+    path('curriculum/<uuid:experience_id>/', views.DoctorateAdmissionCurriculumFormView.as_view(), name='curriculum'),
+    path("education", views.DoctorateAdmissionEducationFormView.as_view(), name="education"),
+    path("languages", views.DoctorateAdmissionLanguagesFormView.as_view(), name="languages"),
+    path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
+]
 
-    # Determine module file to import
-    module_path = 'admission.contrib.views.{}_tabs.{{tab}}.{{view}}'.format('detail' if detail_only else 'form')
+update_paths = [
+    path("person", views.DoctorateAdmissionPersonFormView.as_view(), name="person"),
+    path("coordonnees", views.DoctorateAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
+    path("curriculum", views.DoctorateAdmissionCurriculumFormView.as_view(), name="curriculum"),
+    path('curriculum/<uuid:experience_id>/', views.DoctorateAdmissionCurriculumFormView.as_view(), name='curriculum'),
+    path("education", views.DoctorateAdmissionEducationFormView.as_view(), name="education"),
+    path("languages", views.DoctorateAdmissionLanguagesFormView.as_view(), name="languages"),
+    path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
+    path("cotutelle", views.DoctorateAdmissionCotutelleFormView.as_view(), name="cotutelle"),
+    path("supervision", views.DoctorateAdmissionSupervisionFormView.as_view(), name="supervision"),
+    path("confirmation", views.DoctorateAdmissionConfirmationPaperFormView.as_view(), name="confirmation-paper"),
+    path("extension-request", views.DoctorateAdmissionExtensionRequestFormView.as_view(), name="extension-request"),
+]
 
-    # Add pattern for each tab
-    includes = [
-        path(
-            tab_name,
-            import_string(
-                module_path.format(
-                    tab=tab_name,
-                    view='DoctorateAdmission{}{}'.format(tab_name.title().replace('-', ''), view_suffix),
-                )
-            ).as_view(),
-            name=tab_name,
-        )
-        for tab_name in tab_names
-    ]
-
-    # Some extra actions
-    if not create_only:
-        includes.extend(
-            [
-                path(
-                    'remove-member/<type>/<matricule>',
-                    views.DoctorateAdmissionRemoveActorView.as_view(),
-                    name='remove-actor',
-                ),
-                path('approve-by-pdf', views.DoctorateAdmissionApprovalByPdfView.as_view(), name='approve-by-pdf'),
-            ]
-        )
-
-    if not detail_only:
-        includes.append(
-            path(
-                'curriculum/<uuid:experience_id>/',
-                views.DoctorateAdmissionCurriculumFormView.as_view(),
-                name='curriculum',
-            )
-        )
-
-    return [
-        # Add a pattern that redirects to the default tab
-        path(pattern_prefix, RedirectView.as_view(pattern_name='admission:{}:project'.format(name)), name=name),
-        path(pattern_prefix, include((includes, name))),
-    ]
-
+doctorate_paths = [
+    path("person", views.DoctorateAdmissionPersonDetailView.as_view(), name="person"),
+    path("coordonnees", views.DoctorateAdmissionCoordonneesDetailView.as_view(), name="coordonnees"),
+    path("curriculum", views.DoctorateAdmissionCurriculumDetailView.as_view(), name="curriculum"),
+    path("education", views.DoctorateAdmissionEducationDetailView.as_view(), name="education"),
+    path("languages", views.DoctorateAdmissionLanguagesDetailView.as_view(), name="languages"),
+    path("project", views.DoctorateAdmissionProjectDetailView.as_view(), name="project"),
+    path("cotutelle", views.DoctorateAdmissionCotutelleDetailView.as_view(), name="cotutelle"),
+    path("supervision", views.DoctorateAdmissionSupervisionDetailView.as_view(), name="supervision"),
+    path("request_signatures", views.DoctorateAdmissionRequestSignaturesView.as_view(), name="request-signatures"),
+    path('remove-member/<type>/<matricule>', views.DoctorateAdmissionRemoveActorView.as_view(), name='remove-actor'),
+    path('approve-by-pdf', views.DoctorateAdmissionApprovalByPdfView.as_view(), name='approve-by-pdf'),
+    path("update/", include((update_paths, "update"))),
+    path("cancel", views.DoctorateAdmissionCancelView.as_view(), name="cancel"),
+    path("confirm", views.DoctorateAdmissionConfirmFormView.as_view(), name="confirm"),
+    path("confirmation", views.DoctorateAdmissionConfirmationPaperDetailView.as_view(), name="confirmation-paper"),
+    path(
+        "confirmation-paper-canvas",
+        views.DoctorateAdmissionConfirmationPaperCanvasExportView.as_view(),
+        name="confirmation-paper-canvas",
+    ),
+    path("extension-request", views.DoctorateAdmissionExtensionRequestDetailView.as_view(), name="extension-request"),
+]
 
 urlpatterns = [
-    path("doctorates/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
+    # Lists
+    path("doctorate/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
     path("supervised/", views.DoctorateAdmissionMemberListView.as_view(), name="supervised-list"),
-    path("autocomplete/", include((
-        [
-            path("tutor/", views.TutorAutocomplete.as_view(), name="tutor"),
-            path("person/", views.PersonAutocomplete.as_view(), name="person"),
-            path("doctorate/", views.DoctorateAutocomplete.as_view(), name="doctorate"),
-            path("country/", views.CountryAutocomplete.as_view(), name="country"),
-            path("city/", views.CityAutocomplete.as_view(), name="city"),
-            path("language/", views.LanguageAutocomplete.as_view(), name="language"),
-            path("institute/", views.InstituteAutocomplete.as_view(), name="institute"),
-            path("institute-location/", views.InstituteLocationAutocomplete.as_view(), name="institute-location"),
-        ],
-        "autocomplete",
-    ))),
-    path("doctorates/<uuid:pk>/cancel/", views.DoctorateAdmissionCancelView.as_view(), name="doctorate-cancel"),
+    # Autocompletes
+    path("autocomplete/", include((autocomplete_paths, "autocomplete"))),
+    # Creation
     path(
-        "doctorates/<uuid:pk>/request_signatures/",
-        views.DoctorateAdmissionRequestSignaturesView.as_view(),
-        name="doctorate-request-signatures",
+        "doctorate/create/",
+        RedirectView.as_view(pattern_name="admission:doctorate-create:project"),
+        name="doctorate-create",
     ),
-    *generate_tab_urls(
-        pattern_prefix='doctorates/create/',
-        view_suffix='FormView',
-        name='doctorate-create',
-        create_only=True,
-    ),
-    *generate_tab_urls(
-        pattern_prefix='doctorates/<uuid:pk>/update/',
-        view_suffix='FormView',
-        name='doctorate-update',
-    ),
-    *generate_tab_urls(
-        pattern_prefix='doctorates/<pk>/',
-        view_suffix='DetailView',
-        name='doctorate-detail',
-        detail_only=True,
-    ),
+    path("doctorate/create/", include((creation_paths, "doctorate-create"))),
+    # Detail
+    path("doctorate/<uuid:pk>/", views.redirect_detail, name="doctorate"),
+    path("doctorate/<uuid:pk>/", include((doctorate_paths, "doctorate"))),
 ]

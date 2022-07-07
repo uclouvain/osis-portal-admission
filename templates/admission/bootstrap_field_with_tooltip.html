@@ -1,5 +1,4 @@
-{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission %}
-
+{% load bootstrap3 %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -23,19 +22,25 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-{% block tab_content %}
-    {% panel _("Cotutelle") %}
-        {% if cotutelle.cotutelle is None %}
-            {% trans "Cotutelle is not defined yet" %}
-        {% elif cotutelle.cotutelle %}
-            {% field_data _("Cotutelle motivation") cotutelle.motivation|linebreaks %}
-            {% field_data _("Cotutelle institution") cotutelle.institution %}
-            {% field_data _("Cotutelle opening request") cotutelle.demande_ouverture %}
-            {% field_data _("Cotutelle convention") cotutelle.convention %}
-            {% field_data _("Other documents concerning cotutelle") cotutelle.autres_documents %}
-        {% else %}
-            {% trans "No cotutelle" %}
-        {% endif %}
-    {% endpanel %}
-{% endblock %}
+<div
+    id="container_{{ field.name }}"
+    class="field-with-tooltip form-group {{ classes }} {% if field.errors %}has-error{% elif field.form.is_bound %}has-success{% endif %}"
+>
+  <div class="label-container">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {{ field.label }}
+    </label>
+    <a
+        tabindex="0"
+        class="fa fa-info-circle popover-buttons"
+        data-content="<p>{{ field.help_text }}</p>"
+        data-html="true"
+        data-placement="auto top"
+        data-toggle="popover"
+        data-trigger="focus"
+        role="button"
+        title="{{ title }}"
+    ></a>
+  </div>
+  {% bootstrap_field field show_help=False label='' %}
+</div>

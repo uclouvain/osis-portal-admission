@@ -75,7 +75,7 @@
                     class="osis-form"
                     id="request-signatures-form"
                     method="post"
-                    action="{% url 'admission:doctorate-request-signatures' view.kwargs.pk %}"
+                    action="{% url 'admission:doctorate:request-signatures' view.kwargs.pk %}"
                 >
                     {% csrf_token %}
                     <div class="modal-body">

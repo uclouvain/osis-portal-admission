@@ -34,6 +34,18 @@ from base.tests.factories.person import PersonFactory
 
 class ListTestCase(TestCase):
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
+    def test_list_empty(self, api, *args):
+        self.client.force_login(PersonFactory().user)
+        api.return_value.list_propositions.return_value = {
+            'propositions': [],
+            'links': {'create_proposition': {'url': 'access granted'}},
+        }
+        url = reverse('admission:doctorate-list')
+        response = self.client.get(url)
+        create_url = resolve_url('admission:doctorate-create')
+        self.assertContains(response, create_url)
+
+    @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
     def test_list(self, api, *args):
         self.client.force_login(PersonFactory().user)
         api.return_value.list_propositions.return_value = {
@@ -41,14 +53,15 @@ class ListTestCase(TestCase):
                 Mock(
                     uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                     links={'retrieve_proposition': {'url': 'access granted'}},
+                    erreurs=[],
                 ),
-                Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}),
+                Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}, erreurs=[]),
             ],
             'links': {},
         }
         url = reverse('admission:doctorate-list')
         response = self.client.get(url)
-        detail_url = resolve_url('admission:doctorate-detail:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        detail_url = resolve_url('admission:doctorate:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
         self.assertContains(response, detail_url)
 
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
@@ -58,10 +71,11 @@ class ListTestCase(TestCase):
             Mock(
                 uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                 links={'retrieve_proposition': {'url': 'access granted'}},
+                erreurs=[],
             ),
-            Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}),
+            Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}, erreurs=[]),
         ]
         url = reverse('admission:supervised-list')
         response = self.client.get(url)
-        detail_url = resolve_url('admission:doctorate-detail:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        detail_url = resolve_url('admission:doctorate:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
         self.assertContains(response, detail_url)

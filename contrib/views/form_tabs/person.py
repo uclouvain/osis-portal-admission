@@ -33,7 +33,7 @@ from admission.services.proposition import AdmissionPropositionService
 
 
 class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/form_tab_person.html'
+    template_name = 'admission/doctorate/forms/person.html'
     form_class = DoctorateAdmissionPersonForm
 
     def get_form_kwargs(self):
@@ -45,8 +45,19 @@ class DoctorateAdmissionPersonFormView(LoginRequiredMixin, WebServiceFormMixin, 
         return AdmissionPersonService.retrieve_person(self.person, uuid=self.kwargs.get('pk')).to_dict()
 
     def prepare_data(self, data):
-        data['last_registration_year'] = (int(data['last_registration_year'])
-                                          if data['last_registration_year'] else None)
+        if not data['already_registered']:
+            data['last_registration_year'] = None
+            data['last_registration_id'] = ''
+        else:
+            data['last_registration_year'] = (
+                int(data['last_registration_year']) if data['last_registration_year'] else None
+            )
+
+        if data['unknown_birth_date']:
+            data['birth_date'] = None
+        else:
+            data['birth_year'] = None
+
         return data
 
     def call_webservice(self, data):

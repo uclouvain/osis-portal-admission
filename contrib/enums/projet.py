@@ -40,3 +40,4 @@ class ChoixStatutProposition(ChoiceEnum):
     IN_PROGRESS = _('IN_PROGRESS')
     SUBMITTED = _('SUBMITTED')
     SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
+    ENROLLED = _('ENROLLED')

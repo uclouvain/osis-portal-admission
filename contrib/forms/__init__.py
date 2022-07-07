@@ -31,18 +31,18 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from admission.services.organisation import EntitiesService
-from admission.services.reference import CountriesService, LanguageService, AcademicYearService
-from admission.utils import format_entity_title
+from admission.services.reference import CountriesService, LanguageService, AcademicYearService, HighSchoolService
+from admission.utils import format_entity_title, format_high_school_title
 from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
 
 
-def get_country_initial_choices(iso_code, person):
+def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):
     """Return the unique initial choice for a country when data is either set from initial or from webservice."""
-    if not iso_code:
+    if not iso_code and not loaded_country:
         return EMPTY_CHOICE
-    country = CountriesService.get_country(iso_code=iso_code, person=person)
+    country = loaded_country if loaded_country else CountriesService.get_country(iso_code=iso_code, person=person)
     return EMPTY_CHOICE + (
         (country.iso_code, country.name if get_language() == settings.LANGUAGE_CODE else country.name_en),
     )
@@ -73,16 +73,36 @@ def get_thesis_location_initial_choices(value):
     return EMPTY_CHOICE if not value else EMPTY_CHOICE + ((value, value),)
 
 
+def get_high_school_initial_choices(uuid, person):
+    """Return the unique initial choice for an high school when data is either set from initial or webservice."""
+    if not uuid:
+        return EMPTY_CHOICE
+    high_school = HighSchoolService.get_high_school(person=person, uuid=uuid)
+    return EMPTY_CHOICE + (
+        (high_school.uuid, format_high_school_title(high_school=high_school)),
+    )
+
+
 def get_past_academic_years_choices(person):
     """Return a list of choices of past academic years."""
+    current_year = get_current_year()
+    lower_year = current_year - 100
     return EMPTY_CHOICE + tuple(
-        (academic_year.year, "{}-{}".format(academic_year.year, str(academic_year.year + 1)[2:]))
+        (academic_year.year, f"{academic_year.year}-{academic_year.year + 1}")
         for academic_year in AcademicYearService.get_academic_years(person)
-        if academic_year.year <= get_current_year()
+        if current_year >= academic_year.year >= lower_year
     )
+
 
 CustomDateInput = partial(
     forms.DateInput,
-    attrs={'placeholder': _("dd/mm/yyyy")},
+    attrs={
+        'placeholder': _("dd/mm/yyyy"),
+        'data-mask''': '00/00/0000',
+    },
     format='%d/%m/%Y',
 )
+
+
+def get_example_text(example: str):
+    return _("e.g.: %(example)s") % {'example': example}

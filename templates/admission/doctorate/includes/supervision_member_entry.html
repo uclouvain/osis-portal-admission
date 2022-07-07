@@ -25,9 +25,9 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% url 'admission:doctorate-update:remove-actor' view.kwargs.pk type member.matricule as remove_url %}{% get_dashboard_links as links %}
+{% url 'admission:doctorate:remove-actor' view.kwargs.pk type member.matricule as remove_url %}{% get_dashboard_links as links %}
 
-<div class="signature-item">
+<div class="signature-item" cy-matricule="{{ member.matricule }}" cy-state="{{ signature.statut }}">
   <div class="row">
     <div class="col-md-9">
       <div>
@@ -42,7 +42,7 @@
       </div>
       <em>
         {% if signature.date %}
-          {% blocktrans with state=signature.statut|enum_display:'ChoixEtatSignature' date=signature.date %}
+          {% blocktrans with state=signature.statut|enum_display:'ChoixEtatSignature' date=signature.date trimmed %}
             {{ state }} on {{ date }}
           {% endblocktrans %}
         {% else %}
@@ -71,12 +71,12 @@
         </button>
       </div>
       <div id="approve-by-pdf-{{ member.matricule }}" class="col-md-12 collapse">
-        <form action="{% url 'admission:doctorate-detail:approve-by-pdf' pk=admission.uuid %}" method="post">
+        <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
           {% csrf_token %}
           {{ approve_by_pdf_form.pdf }}
           <input type="hidden" name="matricule" value="{{ member.matricule }}" />
-          <button type="submit" class="btn btn-primary">
-            {% blocktrans with first_name=member.prenom last_name=member.nom %}
+          <button type="submit" class="btn btn-primary pull-right">
+            {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
             Approve on behalf of {{ first_name }} {{ last_name }}
           {% endblocktrans %}
           </button>

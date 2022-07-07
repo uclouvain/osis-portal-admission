@@ -25,16 +25,12 @@
 {% endcomment %}
 
 {% block tab_content %}
-    {% panel _("Personal information") %}
+    {% panel _("Identification") %}
         <div class="row">
             {% field_data _("Last name") person.last_name "col-md-4" %}
             {% field_data _("First name") person.first_name "col-md-4" %}
-            {% if person.first_name_in_use %}
-                {% field_data _("First name in use") person.first_name_in_use "col-md-4" %}
-            {% endif %}
-            {% if person.middle_name %}
-                {% field_data _("Other names") person.middle_name "col-md-4" %}
-            {% endif %}
+            {% field_data _("Other names") person.middle_name "col-md-4" hide_empty=True %}
+            {% field_data _("First name in use") person.first_name_in_use "col-md-4" hide_empty=True %}
             {% field_data _("Sex") person.sex|enum_display:'SexEnum' "col-md-4" %}
             {% field_data _("Gender") person.gender|enum_display:'GenderEnum' "col-md-4" %}
         </div>
@@ -47,14 +43,17 @@
             {% field_data _("Birth country") birth_country "col-md-4" %}
             {% field_data _("Birth place") person.birth_place "col-md-4" %}
         </div>
-        {% field_data _("Country of citizenship") country_of_citizenship %}
+        <div class="row">
+          {% field_data _("Civil status") person.civil_state|enum_display:'CivilState' "col-md-4" %}
+          {% field_data _("Country of citizenship") country_of_citizenship "col-md-4" %}
+        </div>
         {% field_data _("Identity picture") person.id_photo hide_empty=True %}
         {% field_data _("Contact language") contact_language %}
     {% endpanel %}
 
     {% panel _("Proof of identity") %}
         <div class="row">
-            {% field_data _("National registry number") person.national_number "col-md-6" %}
+            {% field_data _("Belgian national registry number (SSIN)") person.national_number "col-md-6" %}
             {% field_data _("Identity card number") person.id_card_number "col-md-6" %}
         </div>
         {% if person.passport_number %}
@@ -70,7 +69,10 @@
     {% panel _("Have you previously been registered at UCLouvain?") %}
         {% if person.last_registration_year %}
             <p>{% trans "Yes" %}</p>
-            {% field_data _("Last registration year") person.last_registration_year %}
+            <div class="row">
+              {% field_data _("Last registration year") person.last_registration_year "col-md-6" %}
+              {% field_data _("Your previous NOMA (registration id)") person.last_registration_id "col-md-6" hide_empty=True %}
+            </div>
         {% else %}
             {% trans "No" %}
         {% endif %}
