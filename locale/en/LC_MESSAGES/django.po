@@ -348,13 +348,13 @@ msgstr ""
 msgid "CONFIRMATION_TO_BE_REPEATED"
 msgstr "Confirmation to be repeated"
 
+msgid "COURS"
+msgstr "Courses"
+
 msgid "CSC - China Scholarship Council"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
-
-msgid "Category"
 msgstr ""
 
 msgid "Certificate of achievement"
@@ -414,6 +414,9 @@ msgstr ""
 msgid "Communication attestation"
 msgstr ""
 
+msgid "Scientific communication"
+msgstr ""
+
 msgid "Community of education"
 msgstr ""
 
@@ -469,6 +472,9 @@ msgid "Country"
 msgstr ""
 
 msgid "Country of citizenship"
+msgstr ""
+
+msgid "Courses and training"
 msgstr ""
 
 msgid "Course choice"
@@ -574,6 +580,9 @@ msgid "Download as PDF"
 msgstr ""
 
 msgid "Dutch"
+msgstr ""
+
+msgid "Thesis defences"
 msgstr ""
 
 msgid "ECONOMY"
@@ -1366,6 +1375,9 @@ msgstr ""
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr ""
 
+msgid "Publication"
+msgstr ""
+
 msgid "Publication status"
 msgstr ""
 
@@ -1401,6 +1413,9 @@ msgid "Remove"
 msgstr ""
 
 msgid "Report of the supervisory panel"
+msgstr ""
+
+msgid "Reporting categories"
 msgstr ""
 
 msgid "Request a new deadline for the confirmation paper"
@@ -1500,6 +1515,9 @@ msgctxt "admission"
 msgid "Separate"
 msgstr ""
 
+msgid "Services"
+msgstr ""
+
 msgid "Sex"
 msgstr ""
 
@@ -1584,6 +1602,9 @@ msgid "Summary of the proposition"
 msgstr ""
 
 msgid "Supervision"
+msgstr ""
+
+msgid "Scientific residencies"
 msgstr ""
 
 msgid "Teaching of general education"

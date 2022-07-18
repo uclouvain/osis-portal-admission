@@ -43,7 +43,7 @@ class CategorieActivite(ChoiceEnum):
     SERVICE = _("SERVICE")
     RESIDENCY = _("RESIDENCY")
     VAE = _("VAE")
-    # COURS = _("COURS")  # TODO
+    COURS = _("COURS")
 
 
 class ChoixComiteSelection(ChoiceEnum):

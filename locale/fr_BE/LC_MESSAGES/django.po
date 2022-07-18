@@ -373,14 +373,14 @@ msgstr "Conférences, colloques"
 msgid "CONFIRMATION_TO_BE_REPEATED"
 msgstr "Confirmation à représenter"
 
+msgid "COURS"
+msgstr "Cours, formation et écoles"
+
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
 
 msgid "Cancel"
 msgstr "Annuler"
-
-msgid "Category"
-msgstr "Catégorie"
 
 msgid "Certificate of achievement"
 msgstr "Attestation de réussite"
@@ -445,6 +445,9 @@ msgstr "Commentaires"
 msgid "Communication attestation"
 msgstr "Attestation de communication"
 
+msgid "Scientific communication"
+msgstr "Communication scientifique"
+
 msgid "Community of education"
 msgstr "Communauté d'enseignement"
 
@@ -501,6 +504,9 @@ msgstr "Pays"
 
 msgid "Country of citizenship"
 msgstr "Pays de nationalité"
+
+msgid "Courses and training"
+msgstr "Cours et formation"
 
 msgid "Course choice"
 msgstr "Choix de la formation"
@@ -608,6 +614,9 @@ msgstr "Télécharger en tant que PDF"
 
 msgid "Dutch"
 msgstr "Néerlandais"
+
+msgid "Thesis defences"
+msgstr "Défenses de thèse"
 
 msgid "ECONOMY"
 msgstr "Economie"
@@ -1472,6 +1481,9 @@ msgstr "Commission de proximité de recherche expérimentale et clinique (ECLI)"
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr "Commission de proximité de santé publique, santé et société (SPSS)"
 
+msgid "Publication"
+msgstr "Publication"
+
 msgid "Publication status"
 msgstr "Statut de publication"
 
@@ -1508,6 +1520,9 @@ msgstr "Retirer"
 
 msgid "Report of the supervisory panel"
 msgstr "Procès-verbal du comité d'accompagnement"
+
+msgid "Reporting categories"
+msgstr "Catégories de reporting"
 
 msgid "Request a new deadline for the confirmation paper"
 msgstr "Demander une nouvelle échéance pour l'épreuve de confirmation"
@@ -1606,6 +1621,9 @@ msgctxt "admission"
 msgid "Separate"
 msgstr "Séparé·e"
 
+msgid "Services"
+msgstr "Services"
+
 msgid "Sex"
 msgstr "Sexe"
 
@@ -1691,6 +1709,9 @@ msgstr "Résumé de la proposition"
 
 msgid "Supervision"
 msgstr "Supervision"
+
+msgid "Scientific residencies"
+msgstr "Séjours scientifiques"
 
 msgid "Teaching of general education"
 msgstr "Enseignement de formation générale"
