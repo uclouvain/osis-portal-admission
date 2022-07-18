@@ -198,7 +198,9 @@ class TrainingTestCase(TestCase):
         self.assertRedirects(response, f'{self.url}#uuid-edited')
 
     def test_submit(self):
-        self.mock_api.return_value.list_doctoral_trainings.return_value = [Mock(uuid='test')]
+        activity_mock = Mock(uuid='test', ects=10)
+        activity_mock.get = dict(uuid='test', ects=10).get
+        self.mock_api.return_value.list_doctoral_trainings.return_value = [activity_mock]
         data = {
             'activity_ids': ['test'],
         }
@@ -208,7 +210,9 @@ class TrainingTestCase(TestCase):
         self.assertRedirects(response, self.url)
 
     def test_submit_with_errors(self):
-        self.mock_api.return_value.list_doctoral_trainings.return_value = [Mock(uuid='test')]
+        activity_mock = Mock(uuid='test', ects=10)
+        activity_mock.get = dict(uuid='test', ects=10).get
+        self.mock_api.return_value.list_doctoral_trainings.return_value = [activity_mock]
         data = {
             'activity_ids': ['test'],
         }
