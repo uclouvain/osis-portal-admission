@@ -89,8 +89,7 @@ class ConfigurableActivityTypeField(forms.MultiValueField):
         values = self.choices or []
         if self.source:
             # Update radio choices from CDD configuration
-            config = form.config_types.get(self.source)
-            values = getattr(config, self.source, {}).get(get_language(), [])
+            values = form.config_types.get(self.source, {}).get(get_language(), [])
         self.widget.widgets[0].choices = list(zip(values, values)) + [('other', _("Other"))]
         return super().get_bound_field(form, field_name)
 
@@ -145,7 +144,11 @@ class ActivityFormMixin(forms.Form):
     journal = forms.CharField(label=_("Journal"), max_length=100)
     publication_status = forms.ChoiceField(choices=ChoixStatutPublication.choices())
     hour_volume = forms.CharField(max_length=100)
-    ects = forms.FloatField(label=_("ECTS credits"))
+    ects = forms.DecimalField(
+        label=_("ECTS credits"),
+        max_digits=4,
+        decimal_places=2,
+    )
     comment = forms.CharField(label=_("Comment"), widget=forms.Textarea())
 
     def __init__(self, config_types=None, *args, **kwargs) -> None:

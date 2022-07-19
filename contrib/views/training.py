@@ -154,10 +154,12 @@ class DoctorateTrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormM
         data['category'] = CategorieActivite(category.upper())
         if 'parent' not in data:
             data['parent'] = self.request.GET.get('parent')
-        if 'ects' in data and not data['ects']:
-            data['ects'] = 0.0
-        if 'participating_days' in data and not data['participating_days']:
-            data['participating_days'] = 0.0
+        for decimal_field in ['ects', 'participating_days']:
+            if decimal_field in data:
+                if not data[decimal_field]:
+                    data[decimal_field] = 0.0
+                else:
+                    data[decimal_field] = float(data[decimal_field])
         return data
 
     def get_form_kwargs(self):
