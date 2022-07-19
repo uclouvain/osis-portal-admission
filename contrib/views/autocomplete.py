@@ -159,7 +159,7 @@ class HighSchoolAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
         # Return a list of high schools whose name / city / postal code city is specified by the user
         return HighSchoolService.get_high_schools(
-            limit=10,
+            limit=100,
             person=self.request.user.person,
             search=self.q,
         )

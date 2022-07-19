@@ -176,7 +176,12 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         label=_("Institute"),
         required=False,
         help_text=_("You can perform a search based on the location or postal code."),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:high-school"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:high-school",
+            attrs={
+                'data-minimum-input-length': 3,
+            },
+        ),
     )
     other_institute = forms.BooleanField(
         label=_("If you don't find your institute in the list, please specify"),
