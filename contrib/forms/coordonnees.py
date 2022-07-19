@@ -40,7 +40,7 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
 
     email = forms.EmailField(
         disabled=True,
-        label=_("Private email"),
+        label=__("admission", "Private email"),
     )
     phone_mobile = forms.CharField(
         required=False,
@@ -85,7 +85,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
     city = forms.CharField(
         required=False,
         label=_("City"),
-        help_text=get_example_text("Louvain-la-Neuve <del>louvain-la-neuve</del>"),
+        help_text=get_example_text("Louvain-la-Neuve <del>louvain-la-neuve</del> <del>LOUVAIN-LA-NEUVE</del>"),
         widget=forms.TextInput(
             attrs={
                 "placeholder": get_example_text('Louvain-la-Neuve'),

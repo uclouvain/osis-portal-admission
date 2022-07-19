@@ -1425,6 +1425,10 @@ msgstr "Parcours antérieur"
 msgid "Previous research experience"
 msgstr "Expérience précédente de recherche"
 
+msgid "Private"
+msgstr "Privé"
+
+msgctxt "admission"
 msgid "Private email"
 msgstr "E-mail privé"
 
@@ -1891,6 +1895,18 @@ msgstr "Il s'agit d'un diplôme"
 
 msgid "This language is set more than once."
 msgstr "Cette langue est définie plusieurs fois."
+
+msgid "This value cannot be greater than the entered credits number"
+msgstr "Cette valeur ne peut être supérieure au nombre de crédits inscrits"
+
+#, python-format
+msgid "This value must be equal to or greater than %(MINIMUM_CREDITS_NUMBER)s"
+msgstr ""
+"Cette valeur doit être supérieure ou égale à %(MINIMUM_CREDITS_NUMBER)s"
+
+#, python-format
+msgid "This value must be greater than %(MINIMUM_CREDITS_NUMBER)s"
+msgstr "Cette valeur doit être supérieure à %(MINIMUM_CREDITS_NUMBER)s"
 
 msgid "Timetable"
 msgstr "Grille horaire"

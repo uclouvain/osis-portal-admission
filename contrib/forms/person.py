@@ -120,7 +120,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
     )
     birth_place = forms.CharField(
         label=_("Birth place"),
-        help_text=get_example_text("Louvain-la-Neuve <del>louvain-la-neuve</del>"),
+        help_text=get_example_text("Louvain-la-Neuve <del>louvain-la-neuve</del> <del>LOUVAIN-LA-NEUVE</del>"),
         widget=forms.TextInput(
             attrs={
                 "placeholder": get_example_text('Louvain-la-Neuve'),
