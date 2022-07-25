@@ -168,11 +168,17 @@ msgstr "Ajouter une communication à ce séminaire"
 msgid "Add a conference"
 msgstr "Ajouter une conférence"
 
+msgid "Add a course"
+msgstr "Ajouter un cours"
+
 msgid "Add a language"
 msgstr "Ajouter une langue"
 
 msgid "Add a new experience"
 msgstr "Ajouter une nouvelle expérience"
+
+msgid "Add a paper"
+msgstr "Ajouter une épreuve"
 
 msgid "Add a promoter or a CA member"
 msgstr "Ajouter un promoteur ou un membre du comité d'accompagnement"
@@ -370,10 +376,13 @@ msgstr "Communication orale (hors conférences)"
 msgid "CONFERENCE"
 msgstr "Conférences, colloques"
 
+msgid "CONFIRMATION_PAPER"
+msgstr "Épreuve de confirmation"
+
 msgid "CONFIRMATION_TO_BE_REPEATED"
 msgstr "Confirmation à représenter"
 
-msgid "COURS"
+msgid "COURSE"
 msgstr "Cours, formation et écoles"
 
 msgid "CSC - China Scholarship Council"
@@ -445,9 +454,6 @@ msgstr "Commentaires"
 msgid "Communication attestation"
 msgstr "Attestation de communication"
 
-msgid "Scientific communication"
-msgstr "Communication scientifique"
-
 msgid "Community of education"
 msgstr "Communauté d'enseignement"
 
@@ -505,11 +511,20 @@ msgstr "Pays"
 msgid "Country of citizenship"
 msgstr "Pays de nationalité"
 
-msgid "Courses and training"
-msgstr "Cours et formation"
-
 msgid "Course choice"
 msgstr "Choix de la formation"
+
+msgid "Course code (if needed)"
+msgstr "Code du cours (le cas échéant)"
+
+msgid "Course owner"
+msgstr "Titulaire du cours"
+
+msgid "Course owner if applicable"
+msgstr "Titulaire du cours (le cas échéant)"
+
+msgid "Courses and training"
+msgstr "Cours et formation"
 
 msgid "Create and manage my enrolment request for UCLouvain"
 msgstr "Créer et gérer ma demande d'inscription UCLouvain"
@@ -615,9 +630,6 @@ msgstr "Télécharger en tant que PDF"
 msgid "Dutch"
 msgstr "Néerlandais"
 
-msgid "Thesis defences"
-msgstr "Défenses de thèse"
-
 msgid "ECONOMY"
 msgstr "Economie"
 
@@ -649,6 +661,10 @@ msgstr "Modifier"
 #, python-format
 msgid "Edit %(title)s"
 msgstr "Modifier %(title)s"
+
+#, python-format
+msgid "Edit activity of type <em>%(category)s</em>"
+msgstr "Modifier l'activité de type <em>%(category)s</em>"
 
 msgid "Education community"
 msgstr "Communauté d'enseignement"
@@ -1294,6 +1310,9 @@ msgstr "Autre programme"
 msgid "Others"
 msgstr "Autres"
 
+msgid "PAPER"
+msgstr "Épreuve"
+
 msgid "PARTIAL"
 msgstr "Partiel"
 
@@ -1306,8 +1325,14 @@ msgstr "Fichier PDF"
 msgid "PHYSICS"
 msgstr "Physique"
 
+msgid "PRIVATE_DEFENSE"
+msgstr "Défense privée"
+
 msgid "PUBLICATION"
 msgstr "Publication"
+
+msgid "PUBLIC_DEFENSE"
+msgstr "Soutenance publique"
 
 msgid "Participation"
 msgstr "Participation"
@@ -1441,6 +1466,9 @@ msgstr "Pièce d'identité"
 
 msgid "Proof of participation for the whole activity"
 msgstr "Attestation de participation pour l'ensemble de l'activité"
+
+msgid "Proof of participation or success"
+msgstr "Certification de participation ou de succès"
 
 msgid "Proof of the final equivalence decision"
 msgstr "Preuve de la demande d'équivalence"
@@ -1596,6 +1624,12 @@ msgstr "Bourse de recherche"
 msgid "Sciences"
 msgstr "Sciences"
 
+msgid "Scientific communication"
+msgstr "Communication scientifique"
+
+msgid "Scientific residencies"
+msgstr "Séjours scientifiques"
+
 msgid "Search a person by name"
 msgstr "Rechercher une personne par son nom"
 
@@ -1710,9 +1744,6 @@ msgstr "Résumé de la proposition"
 msgid "Supervision"
 msgstr "Supervision"
 
-msgid "Scientific residencies"
-msgstr "Séjours scientifiques"
-
 msgid "Teaching of general education"
 msgstr "Enseignement de formation générale"
 
@@ -1823,6 +1854,9 @@ msgstr ""
 msgid "There is no request for a new deadline."
 msgstr "Il n'y a pas de demande de nouvelle échéance."
 
+msgid "Thesis defences"
+msgstr "Défenses de thèse"
+
 msgid "Thesis location"
 msgstr "Lieu de la thèse"
 
@@ -1906,6 +1940,9 @@ msgstr "Type d'activité"
 
 msgid "Type of communication"
 msgstr "Type de communication"
+
+msgid "Type of paper"
+msgstr "Type d'épreuve"
 
 msgid "Type of publication"
 msgstr "Type de publication"

@@ -145,3 +145,7 @@ select.select2-hidden-accessible + span {
   width: 100% !important;
   min-width: auto;
 }
+
+.d-block {
+  display: block;
+}

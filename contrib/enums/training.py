@@ -43,7 +43,8 @@ class CategorieActivite(ChoiceEnum):
     SERVICE = _("SERVICE")
     RESIDENCY = _("RESIDENCY")
     VAE = _("VAE")
-    COURS = _("COURS")
+    COURSE = _("COURSE")
+    PAPER = _("PAPER")
 
 
 class ChoixComiteSelection(ChoiceEnum):
@@ -58,3 +59,9 @@ class ChoixStatutPublication(ChoiceEnum):
     IN_REVIEW = _("In review")
     ACCEPTED = _("Accepted")
     PUBLISHED = _("Published")
+
+
+class ChoixTypeEpreuve(ChoiceEnum):
+    CONFIRMATION_PAPER = _("CONFIRMATION_PAPER")
+    PRIVATE_DEFENSE = _("PRIVATE_DEFENSE")
+    PUBLIC_DEFENSE = _("PUBLIC_DEFENSE")
