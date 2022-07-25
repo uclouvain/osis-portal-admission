@@ -23,7 +23,6 @@
   * at the root of the source code of this program.  If not,
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
 {% spaceless %}
   {% with widget=widget.subwidgets.0 %}
     {% include widget.template_name %}
@@ -31,7 +30,31 @@
   {% with widget=widget.subwidgets.1 %}
     </div>
     <div id="parent-{{ widget.attrs.id }}" class="form-group col-md-4">
+    {% if not widget.help_text %}
       <label for="{{ widget.attrs.id }}">{% trans "If other, specify" %}</label>
       {% include widget.template_name %}
+    {% else %}
+      <div
+        id="container_{{ widget.name }}"
+        class="field-with-tooltip form-group {{ classes }} {% if field.errors %}has-error{% elif field.form.is_bound %}has-success{% endif %}"
+      >
+        <div class="label-container">
+          <label class="control-label" for="{{ widget.attrs.id }}">
+            {% trans "If other, specify" %}
+          </label>
+          <a
+            tabindex="0"
+            class="fa fa-info-circle popover-buttons"
+            data-content="<p>{{ widget.help_text }}</p>"
+            data-html="true"
+            data-placement="auto top"
+            data-toggle="popover"
+            data-trigger="focus"
+            role="button"
+          ></a>
+        </div>
+        {% include widget.template_name %}
+      </div>
+    {% endif %}
   {% endwith %}
 {% endspaceless %}

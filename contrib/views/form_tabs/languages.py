@@ -23,15 +23,18 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.template import Context, Template
 from django.urls import reverse_lazy
+from django.utils.translation import get_language
 from django.views.generic import FormView
 
 from admission.contrib.forms.languages import DoctorateAdmissionLanguagesKnowledgeFormSet
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
+from admission.services.reference import LanguageService
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
@@ -58,6 +61,10 @@ class DoctorateAdmissionLanguagesFormView(
         context = Context({'language_form': context_data["form"].empty_form})
 
         context_data["empty_form"] = template.render(context)
+        context_data["languages"] = {
+            lang.code: lang.name if get_language() == settings.LANGUAGE_CODE else lang.name_en
+            for lang in LanguageService.get_languages(person=self.request.user.person)
+        }
         return context_data
 
     def get_initial(self):

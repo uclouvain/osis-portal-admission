@@ -37,7 +37,7 @@
         </div>
       </div>
       {% bootstrap_field form.motivation form_group_class="form-group required_field" placeholder="" %}
-      {% bootstrap_field form.demande_ouverture form_group_class="form-group required_field" %}
+      {% bootstrap_field_with_tooltip form.demande_ouverture classes="required_field" %}
       {% bootstrap_field form.convention %}
       {% bootstrap_field form.autres_documents %}
     </div>

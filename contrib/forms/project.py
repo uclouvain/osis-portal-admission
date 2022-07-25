@@ -43,6 +43,7 @@ from admission.contrib.enums.proximity_commission import (
 from admission.contrib.forms import (
     CustomDateInput,
     EMPTY_CHOICE,
+    SelectOrOtherField,
     get_thesis_location_initial_choices,
 )
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -93,14 +94,11 @@ class DoctorateAdmissionProjectForm(forms.Form):
         choices=EMPTY_CHOICE + ChoixTypeFinancement.choices(),
         required=False,
     )
-    type_contrat_travail = forms.ChoiceField(
+    type_contrat_travail = SelectOrOtherField(
         label=_("Work contract type"),
         choices=EMPTY_CHOICE + ChoixTypeContratTravail.choices(),
         required=False,
-    )
-    type_contrat_travail_other = forms.CharField(
-        label=_("Specify work contract"),
-        required=False,
+        help_text=_("Specify the employer and your function"),
     )
     eft = forms.IntegerField(
         # xgettext:no-python-format
@@ -109,14 +107,9 @@ class DoctorateAdmissionProjectForm(forms.Form):
         max_value=100,
         required=False,
     )
-    bourse_recherche = forms.ChoiceField(
+    bourse_recherche = SelectOrOtherField(
         label=_("Scholarship grant"),
         choices=EMPTY_CHOICE + BourseRecherche.choices(),
-        required=False,
-    )
-    bourse_recherche_other = forms.CharField(
-        label=_("Specify scholarship grant"),
-        max_length=255,
         required=False,
     )
     duree_prevue = forms.IntegerField(
@@ -126,23 +119,27 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     temps_consacre = forms.IntegerField(
-        label=_("Allocated time for the thesis (in EFT)"),
+        # xgettext:no-python-format
+        label=_("Allocated time for the thesis (in %)"),
         min_value=0,
-        max_value=1000,
+        max_value=100,
         required=False,
     )
 
-    titre_projet = forms.CharField(
-        label=_("Project title"),
-        required=False,
-    )
     lieu_these = forms.CharField(
         label=_("Thesis location"),
         required=False,
-        help_text=_("Address of the office or lab where the thesis is done (if known)."),
+        help_text=_(
+            "If known, indicate here the name of the laboratory, "
+            "clinical service or research centre where the thesis will be conducted"
+        ),
+    )
+    titre_projet = forms.CharField(
+        label=_("Project title (max. 100 characters)"),
+        required=False,
     )
     resume_projet = forms.CharField(
-        label=_("Project resume"),
+        label=_("Project resume (max. 2000 characters)"),
         required=False,
         widget=forms.Textarea,
     )
@@ -161,6 +158,11 @@ class DoctorateAdmissionProjectForm(forms.Form):
     projet_formation_complementaire = FileUploadField(
         label=_("Complementary training project"),
         required=False,
+        help_text=_(
+            "Depending on your previous experience and your research project, a complementary training "
+            "to the doctoral training may be imposed by the DDC, for a maximum of 60 credits. If so, "
+            "please indicate here a proposal for complementary training."
+        ),
     )
     lettres_recommandation = FileUploadField(
         label=_("Recommendation letters"),
@@ -177,6 +179,10 @@ class DoctorateAdmissionProjectForm(forms.Form):
         choices=ChoixDoctoratDejaRealise.choices(),
         initial=ChoixDoctoratDejaRealise.NO.name,
         required=False,
+        help_text=_(
+            "Indicate here any previous doctoral course, completed or interrupted, "
+            "in which you are no longer registered."
+        ),
     )
     institution = forms.CharField(
         label=_("Institution"),
@@ -203,18 +209,6 @@ class DoctorateAdmissionProjectForm(forms.Form):
     def __init__(self, hide_proximity_commission_fields=True, *args, **kwargs):
         self.person = getattr(self, 'person', kwargs.pop('person', None))
         super().__init__(*args, **kwargs)
-        # Set type_contrat_travail to OTHER if value is not from enum
-        if (
-            self.initial.get('type_contrat_travail')
-            and self.initial['type_contrat_travail'] not in ChoixTypeContratTravail.get_names()
-        ):
-            self.initial['type_contrat_travail_other'] = self.initial['type_contrat_travail']
-            self.initial['type_contrat_travail'] = ChoixTypeContratTravail.OTHER.name
-
-        # Set bourse_recherche to OTHER if value is not from enum
-        if self.initial.get('bourse_recherche') and self.initial['bourse_recherche'] not in BourseRecherche.get_names():
-            self.initial['bourse_recherche_other'] = self.initial['bourse_recherche']
-            self.initial['bourse_recherche'] = BourseRecherche.OTHER.name
 
         # Set proximity commission fields value from API data
         if self.initial.get('commission_proximite'):
@@ -247,20 +241,16 @@ class DoctorateAdmissionProjectForm(forms.Form):
 
         # Some consistency checks
         if data.get('type_financement') == ChoixTypeFinancement.WORK_CONTRACT.name:
-            if not data.get('type_contrat_travail') and not data.get('type_contrat_travail_other'):
+            if not data.get('type_contrat_travail'):
                 self.add_error('type_contrat_travail', _("This field is required."))
-            elif (data.get('type_contrat_travail') == ChoixTypeContratTravail.OTHER.name
-                  and not data.get('type_contrat_travail_other')):
-                self.add_error('type_contrat_travail_other', _("This field is required."))
 
             if not data.get('eft'):
                 self.add_error('eft', _("This field is required."))
 
-        elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
-            if not data.get('bourse_recherche') and not data.get('bourse_recherche_other'):
-                self.add_error('bourse_recherche', _("This field is required."))
-            elif data.get('bourse_recherche') == BourseRecherche.OTHER.name and not data.get('bourse_recherche_other'):
-                self.add_error('bourse_recherche_other', _("This field is required."))
+        elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name and not data.get(
+            'bourse_recherche'
+        ):
+            self.add_error('bourse_recherche', _("This field is required."))
 
         if data.get('non_soutenue') and not data.get('raison_non_soutenue'):
             self.add_error('raison_non_soutenue', _("This field is required."))
@@ -270,8 +260,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     def get_selected_doctorate(self, sector, doctorat):
         doctorats = AdmissionAutocompleteService.get_doctorates(self.person, sector)
         return next(  # pragma: no branch
-            d for d in doctorats
-            if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
+            d for d in doctorats if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
         )
 
 
@@ -288,16 +277,10 @@ class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
     def __init__(self, person=None, *args, **kwargs):
         self.person = person
         super().__init__(hide_proximity_commission_fields=False, *args, **kwargs)
-        self.fields['sector'].widget.choices = (
-                [('', '-')]
-                + [
-                    (sector.sigle, "{sigle} - {intitule}".format(
-                        sigle=sector.sigle,
-                        intitule=sector.intitule,
-                    ))
-                    for sector in AdmissionAutocompleteService.get_sectors(person)
-                ]
-        )
+        self.fields['sector'].widget.choices = [('', '-')] + [
+            (sector.sigle, f"{sector.sigle} - {sector.intitule}")
+            for sector in AdmissionAutocompleteService.get_sectors(person)
+        ]
 
         # If we have a POST value, set the doctorate
         data = kwargs.get('data', None)

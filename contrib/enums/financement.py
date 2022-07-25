@@ -37,7 +37,6 @@ class ChoixTypeFinancement(ChoiceEnum):
 
 class ChoixTypeContratTravail(ChoiceEnum):
     UCLOUVAIN_ASSISTANT = _('UCLOUVAIN_ASSISTANT')
-    OTHER = _('OTHER')
 
 
 class BourseRecherche(ChoiceEnum):
@@ -53,4 +52,3 @@ class BourseRecherche(ChoiceEnum):
     FRIA = _("FRIA")
     FRESH = _("FRESH")
     WBI = _("WBI - Wallonie Bruxelles International")
-    OTHER = _('OTHER')

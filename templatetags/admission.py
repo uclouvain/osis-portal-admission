@@ -29,6 +29,7 @@ from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
 
+from bootstrap3.templatetags.bootstrap3 import bootstrap_field
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.safestring import SafeString
@@ -105,11 +106,6 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('experience', _('Previous experience'), 'list-alt'): [
-            Tab('education', _('Secondary studies')),
-            Tab('curriculum', _('Curriculum')),
-            Tab('languages', _('Languages knowledge')),
-        ],
         Tab('doctorate', _('Doctorate'), 'graduation-cap'): [
             Tab('project', _('Doctoral project')),
             Tab('cotutelle', _('Cotutelle')),
@@ -117,6 +113,11 @@ TAB_TREES = {
             Tab('confirmation-paper', _('Confirmation paper')),
             Tab('extension-request', _('New deadline')),
             Tab('training', _('Training')),
+        ],
+        Tab('experience', _('Previous experience'), 'list-alt'): [
+            Tab('education', _('Secondary studies')),
+            Tab('curriculum', _('Curriculum')),
+            Tab('languages', _('Languages knowledge')),
         ],
         Tab('confirmation', _('Confirmation'), 'check-circle'): [
             Tab('confirm', _('Confirmation')),

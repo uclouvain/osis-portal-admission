@@ -103,10 +103,8 @@ class DoctorateAdmissionLanguageForm(forms.Form):
     def __init__(self, *args, person=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.empty_permitted = False
-        self.fields["language"].widget.choices = get_language_initial_choices(
-            self.data.get(self.add_prefix("language"), self.initial.get("language")),
-            person,
-        )
+        self.lang_code = self.data.get(self.add_prefix("language"), self.initial.get("language"))
+        self.fields["language"].widget.choices = get_language_initial_choices(self.lang_code, person)
         if self.initial.get("language") in MANDATORY_LANGUAGES:
             self.fields["language"].disabled = True
             self.fields["language"].help_text = _("Mandatory language")

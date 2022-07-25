@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List, Optional
+from typing import List, Mapping, Optional, Union
 
 from django import forms
 from django.conf import settings
@@ -144,8 +144,12 @@ class SelectOrOtherWidget(forms.MultiWidget):
 
     def get_context(self, name: str, value, attrs):
         context = super().get_context(name, value, attrs)
+        subwidgets = context['widget']['subwidgets']
+        # Remove the title attribute on first widget and handle tooltip
+        subwidgets[0]['attrs'].pop('help_text', None)
+        subwidgets[1]['help_text'] = subwidgets[1]['attrs'].pop('help_text', None)
         # Remove the required attribute on textinput
-        context['widget']['subwidgets'][1]['attrs']['required'] = False
+        subwidgets[1]['attrs']['required'] = False
         return context
 
 
@@ -155,10 +159,11 @@ class SelectOrOtherField(forms.MultiValueField):
     widget = SelectOrOtherWidget
     select_class = forms.ChoiceField
 
-    def __init__(self, choices: Optional[List[str]] = None, *args, **kwargs):
+    def __init__(self, choices: Optional[Union[List[str], Mapping[str, str]]] = None, *args, **kwargs):
         select_kwargs = {}
         if choices is not None:
-            select_kwargs['choices'] = self.choices = list(zip(choices, choices)) + [('other', _("Other"))]
+            choices = zip(choices, choices) if not isinstance(choices[0], (list, tuple)) else choices
+            select_kwargs['choices'] = self.choices = list(choices) + [('other', _("Other"))]
         fields = [self.select_class(required=False, **select_kwargs), forms.CharField(required=False)]
         super().__init__(fields, require_all_fields=False, *args, **kwargs)
 
@@ -173,8 +178,10 @@ class SelectOrOtherField(forms.MultiValueField):
 
     def compress(self, data_list):
         # On save, take the other value if "other" is chosen
-        radio, other = data_list
-        return radio if radio != "other" else other
+        if len(data_list) == 2:
+            radio, other = data_list
+            return radio if radio != "other" else other
+        return ''
 
     def clean(self, value):
         # Dispatch the correct values to each field before regular cleaning
@@ -182,3 +189,8 @@ class SelectOrOtherField(forms.MultiValueField):
         if hasattr(self, 'choices') and radio not in self.choices and other is None:
             value = ['other', radio]
         return super().clean(value)
+
+    def widget_attrs(self, widget):
+        if self.help_text:
+            return {'help_text': self.help_text}
+        return super().widget_attrs(widget)
