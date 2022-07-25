@@ -188,12 +188,6 @@ msgstr ""
 msgid "Add an activity"
 msgstr ""
 
-msgid "Add another"
-msgstr ""
-
-msgid "Address of the office or lab where the thesis is done (if known)."
-msgstr ""
-
 msgid "Admission"
 msgstr ""
 
@@ -204,7 +198,8 @@ msgctxt "filters"
 msgid "All"
 msgstr ""
 
-msgid "Allocated time for the thesis (in EFT)"
+#, no-python-format
+msgid "Allocated time for the thesis (in %)"
 msgstr ""
 
 msgid "An error has happened when adding the experience."
@@ -220,6 +215,15 @@ msgid "An error has happened when uploading the file."
 msgstr ""
 
 msgid "Ancient languages"
+msgstr ""
+
+msgid ""
+"Answer according to the European Framework of Reference for Languages (CEFR) "
+"classification. Detailed explanations of this framework can be found at <a "
+"href=\"https://www.coe.int/en/web/common-european-framework-reference-"
+"languages/table-1-cefr-3.3-common-reference-levels-global-scale\"> https://"
+"www.coe.int/en/web/common-european-framework-reference-languages/table-1-"
+"cefr-3.3-common-reference-levels-global-scale </a>"
 msgstr ""
 
 msgid ""
@@ -541,6 +545,13 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+msgid ""
+"Depending on your previous experience and your research project, a "
+"complementary training to the doctoral training may be imposed by the DDC, "
+"for a maximum of 60 credits. If so, please indicate here a proposal for "
+"complementary training."
+msgstr ""
+
 msgid "Description"
 msgstr ""
 
@@ -678,6 +689,21 @@ msgid "Event website"
 msgstr ""
 
 msgid "Exit"
+msgstr ""
+
+msgid ""
+"Extract from the Doctoral Regulations (Article 2.1):<br /> « Pre-admission "
+"is an optional stage of the doctoral programme. It aims to allow the "
+"candidate to complete the administrative and social formalities that would "
+"require a prior registration for the doctorate. [...] Pre-admission is valid "
+"for a maximum period of 12 months. Recourse to a pre-admission phase must be "
+"justified, the objectives to be achieved planned and the duration of the pre-"
+"admission period fixed in accordance with them. Unless exceptionally "
+"authorised by the CSD, FRIA or FNRS scholarship holders and, in general, "
+"doctoral candidates engaged in a research project that has already been "
+"defined, are not authorised to take a pre-admission phase for a doctorate. » "
+"<br /> Please also consult the special provisions of the field for all pre-"
+"admission conditions."
 msgstr ""
 
 msgid "FNRS"
@@ -850,6 +876,11 @@ msgid ""
 "the extension request."
 msgstr ""
 
+msgid ""
+"If known, indicate here the name of the laboratory, clinical service or "
+"research centre where the thesis will be conducted"
+msgstr ""
+
 msgid "If other education type, please specify"
 msgstr ""
 
@@ -925,6 +956,11 @@ msgid "In person"
 msgstr ""
 
 msgid "In review"
+msgstr ""
+
+msgid ""
+"Indicate here any previous doctoral course, completed or interrupted, in "
+"which you are no longer registered."
 msgstr ""
 
 msgid "Institute"
@@ -1144,9 +1180,6 @@ msgstr ""
 msgid "Number of days participating"
 msgstr ""
 
-msgid "OTHER"
-msgstr "Other"
-
 msgid "Obtained grade"
 msgstr ""
 
@@ -1273,6 +1306,11 @@ msgid ""
 "domain and per week."
 msgstr ""
 
+msgid ""
+"Please complete the « Application for a cotutelle » form (available here) "
+"and upload it here."
+msgstr ""
+
 msgid "Please correct the errors below"
 msgstr ""
 
@@ -1336,7 +1374,13 @@ msgstr ""
 msgid "Project resume"
 msgstr ""
 
+msgid "Project resume (max. 2000 characters)"
+msgstr ""
+
 msgid "Project title"
+msgstr ""
+
+msgid "Project title (max. 100 characters)"
 msgstr ""
 
 msgid "Promoter"
@@ -1577,10 +1621,7 @@ msgstr ""
 msgid "Speaking ability"
 msgstr ""
 
-msgid "Specify scholarship grant"
-msgstr ""
-
-msgid "Specify work contract"
+msgid "Specify the employer and your function"
 msgstr ""
 
 msgid "Status"
@@ -1686,8 +1727,8 @@ msgstr ""
 
 msgid ""
 "The format of the documents to be uploaded below may vary from one Doctoral "
-"Domain Commission (DDC) to another; be sure to check with your file manager "
-"and respect the usage provided by your DDC."
+"Domain Commission (DDC) to another. Please check the website of your DDC or "
+"contact your doctoral manager."
 msgstr ""
 
 msgid ""

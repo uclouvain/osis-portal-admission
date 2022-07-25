@@ -95,12 +95,10 @@ class DoctorateAdmissionProjectFormView(
 
         if data['type_financement'] != ChoixTypeFinancement.WORK_CONTRACT.name:
             data['type_contrat_travail'] = ''
-            data['type_contrat_travail_other'] = ''
             data['eft'] = None
 
         if data['type_financement'] != ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
             data['bourse_recherche'] = ''
-            data['bourse_recherche_other'] = ''
 
         if not data['type_financement']:
             data['duree_prevue'] = None
@@ -120,21 +118,9 @@ class DoctorateAdmissionProjectFormView(
         else:
             data['raison_non_soutenue'] = ''
 
-        data['type_contrat_travail'] = (
-            data['type_contrat_travail_other']
-            if data['type_contrat_travail'] == ChoixTypeContratTravail.OTHER.name
-            else data['type_contrat_travail']
-        )
-        data['bourse_recherche'] = (
-            data['bourse_recherche_other']
-            if data['bourse_recherche'] == BourseRecherche.OTHER.name
-            else data['bourse_recherche']
-        )
         data['commission_proximite'] = (
             data.get('commission_proximite_cde') or data.get('commission_proximite_cdss') or data.get('sous_domaine')
         )
-        data.pop('type_contrat_travail_other')
-        data.pop('bourse_recherche_other')
         data.pop('commission_proximite_cde')
         data.pop('commission_proximite_cdss')
         data.pop('sous_domaine')

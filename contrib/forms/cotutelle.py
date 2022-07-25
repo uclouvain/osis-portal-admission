@@ -63,6 +63,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         label=_("Cotutelle opening request"),
         required=False,
         max_files=1,
+        help_text=_("Please complete the « Application for a cotutelle » form (available here) and upload it here."),
     )
     convention = FileUploadField(
         label=_("Cotutelle convention"),

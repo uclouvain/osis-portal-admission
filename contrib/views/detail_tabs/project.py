@@ -54,6 +54,9 @@ class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):  
         # https://docs.djangoproject.com/en/3.2/topics/i18n/translation/#troubleshooting-gettext-incorrectly-detects-python-format-in-strings-with-percent-signs
         # xgettext:no-python-format
         context_data['fte_label'] = _("Full-time equivalent (as %)")
+        # xgettext:no-python-format
+        context_data['allocated_time_label'] = _("Allocated time for the thesis (in %)")
+
         # Lookup sector label from API
         context_data['sector_label'] = [
             s.intitule
