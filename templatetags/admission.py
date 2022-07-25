@@ -421,7 +421,7 @@ def report_ects(activity, categories, added, validated, parent_category=None):
         activity.get('parent') is None or parent_category == CategorieActivite.CONFERENCE.name
     ):
         categories[_("Publication")][index] += activity.ects
-    elif category == CategorieActivite.COURS.name:
+    elif category == CategorieActivite.COURSE.name:
         categories[_("Courses and training")][index] += activity.ects
     elif category == CategorieActivite.SERVICE.name:
         categories[_("Services")][index] += activity.ects

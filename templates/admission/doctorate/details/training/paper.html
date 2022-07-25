@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/forms/doctorate_tab_layout.html" %}{% load i18n static admission bootstrap3 %}
+{% load i18n osis_document admission enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -24,40 +24,41 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+<div
+  class="panel panel-{{ activity|status_as_class }}"
+  data-status="{{ activity.status }}"
+  data-type="{{ activity.category }}"
+>
+  <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
+    <h3 class="panel-title">
+      {% include "admission/doctorate/details/training/_panel_title.html" %}
 
-{% block form_content %}
-  {% doctorate_tabs doctorate %}
-  <div class="row">
-    <div class="col-md-2 visible-md visible-lg">
-      {% doctorate_subtabs doctorate %}
-    </div>
-    <div class="col-md-10 quitting-context-excluded">
-      {% include form.template_name %}
-      <div class="text-right form-group">
-        <a href="{% url "admission:doctorate:training" pk=view.kwargs.pk %}" class="text-danger">
-          {% trans "Cancel" %}
-        </a>
-        <button type="submit" class="btn btn-primary">
-          {% trans "Save" %}
-        </button>
-
+      {% display activity.ects|default:""|floatformat " ECTS" as ects %}
+      {% display activity.type|enum_display:'ChoixTypeEpreuve' "-" ects %}
+      <div class="clearfix"></div>
+    </h3>
+  </div>
+  <div
+    id="a-{{ activity.uuid }}"
+    class="panel-collapse collapse"
+    role="tabpanel"
+    aria-labelledby="h-{{ activity.uuid }}"
+  >
+    <div class="panel-body">
+      <div class="row">
+        {% if activity.ects %}
+          <p class="col-md-4">
+            <strong class="d-block">{% trans "ECTS" %}</strong>
+            {{ activity.ects|floatformat }}
+          </p>
+        {% endif %}
       </div>
+      {% if activity.comment %}
+        <div class="form-group">
+          <strong class="d-block">{% trans "Comments" %}</strong>
+          {{ activity.comment|linebreaks }}
+        </div>
+      {% endif %}
     </div>
   </div>
-{% endblock %}
-
-{% block script %}
-  {{ block.super }}
-  {{ form.media }}
-
-  <script>
-  $(function () {
-    $('.academic-year').dependsOn({
-      '#id_organizing_institution_0': { values: ['UCLouvain'] },
-    });
-    $('.dates').dependsOn({
-      '#id_organizing_institution_0': { values: ['other'] },
-    });
-  });
-  </script>
-{% endblock %}
+</div>

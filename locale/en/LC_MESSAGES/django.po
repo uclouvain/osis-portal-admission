@@ -155,10 +155,16 @@ msgstr ""
 msgid "Add a conference"
 msgstr ""
 
+msgid "Add a course"
+msgstr ""
+
 msgid "Add a language"
 msgstr ""
 
 msgid "Add a new experience"
+msgstr ""
+
+msgid "Add a paper"
 msgstr ""
 
 msgid "Add a promoter or a CA member"
@@ -345,11 +351,14 @@ msgstr ""
 msgid "CONFERENCE"
 msgstr ""
 
+msgid "CONFIRMATION_PAPER"
+msgstr "Confirmation paper"
+
 msgid "CONFIRMATION_TO_BE_REPEATED"
 msgstr "Confirmation to be repeated"
 
-msgid "COURS"
-msgstr "Courses"
+msgid "COURSE"
+msgstr "Course"
 
 msgid "CSC - China Scholarship Council"
 msgstr ""
@@ -414,9 +423,6 @@ msgstr ""
 msgid "Communication attestation"
 msgstr ""
 
-msgid "Scientific communication"
-msgstr ""
-
 msgid "Community of education"
 msgstr ""
 
@@ -474,10 +480,19 @@ msgstr ""
 msgid "Country of citizenship"
 msgstr ""
 
-msgid "Courses and training"
+msgid "Course choice"
 msgstr ""
 
-msgid "Course choice"
+msgid "Course code (if needed)"
+msgstr ""
+
+msgid "Course owner"
+msgstr ""
+
+msgid "Course owner if applicable"
+msgstr ""
+
+msgid "Courses and training"
 msgstr ""
 
 msgid "Create and manage my enrolment request for UCLouvain"
@@ -582,9 +597,6 @@ msgstr ""
 msgid "Dutch"
 msgstr ""
 
-msgid "Thesis defences"
-msgstr ""
-
 msgid "ECONOMY"
 msgstr "Economy"
 
@@ -615,6 +627,10 @@ msgstr ""
 
 #, python-format
 msgid "Edit %(title)s"
+msgstr ""
+
+#, python-format
+msgid "Edit activity of type <em>%(category)s</em>"
 msgstr ""
 
 msgid "Education community"
@@ -1197,6 +1213,9 @@ msgstr ""
 msgid "Others"
 msgstr ""
 
+msgid "PAPER"
+msgstr "Paper"
+
 msgid "PARTIAL"
 msgstr "Partially"
 
@@ -1209,8 +1228,14 @@ msgstr ""
 msgid "PHYSICS"
 msgstr "Physics"
 
+msgid "PRIVATE_DEFENSE"
+msgstr "Private defense"
+
 msgid "PUBLICATION"
 msgstr ""
+
+msgid "PUBLIC_DEFENSE"
+msgstr "Public defense"
 
 msgid "Participation"
 msgstr ""
@@ -1336,6 +1361,9 @@ msgid "Proof of identity"
 msgstr ""
 
 msgid "Proof of participation for the whole activity"
+msgstr ""
+
+msgid "Proof of participation or success"
 msgstr ""
 
 msgid "Proof of the final equivalence decision"
@@ -1490,6 +1518,12 @@ msgstr ""
 msgid "Sciences"
 msgstr ""
 
+msgid "Scientific communication"
+msgstr ""
+
+msgid "Scientific residencies"
+msgstr ""
+
 msgid "Search a person by name"
 msgstr ""
 
@@ -1604,9 +1638,6 @@ msgstr ""
 msgid "Supervision"
 msgstr ""
 
-msgid "Scientific residencies"
-msgstr ""
-
 msgid "Teaching of general education"
 msgstr ""
 
@@ -1685,6 +1716,9 @@ msgstr ""
 msgid "There is no request for a new deadline."
 msgstr ""
 
+msgid "Thesis defences"
+msgstr ""
+
 msgid "Thesis location"
 msgstr ""
 
@@ -1760,6 +1794,9 @@ msgid "Type of activity"
 msgstr ""
 
 msgid "Type of communication"
+msgstr ""
+
+msgid "Type of paper"
 msgstr ""
 
 msgid "Type of publication"

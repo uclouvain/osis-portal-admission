@@ -33,20 +33,7 @@ from django.utils.functional import cached_property
 from django.views.generic import FormView
 
 from admission.contrib.enums.training import CategorieActivite, StatutActivite
-from admission.contrib.forms.training import (
-    BatchActivityForm,
-    CommunicationForm,
-    ConferenceCommunicationForm,
-    ConferenceForm,
-    ConferencePublicationForm,
-    PublicationForm,
-    ResidencyCommunicationForm,
-    ResidencyForm,
-    SeminarCommunicationForm,
-    SeminarForm,
-    ServiceForm,
-    ValorisationForm,
-)
+from admission.contrib.forms.training import *
 from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionDoctorateTrainingService
@@ -118,6 +105,8 @@ class DoctorateTrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormM
         CategorieActivite.SEMINAR: SeminarForm,
         (CategorieActivite.SEMINAR, CategorieActivite.COMMUNICATION): SeminarCommunicationForm,
         CategorieActivite.VAE: ValorisationForm,
+        CategorieActivite.COURSE: CourseForm,
+        CategorieActivite.PAPER: PaperForm,
     }
     activity_uuid = None
 
@@ -145,13 +134,18 @@ class DoctorateTrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormM
 
     def prepare_data(self, data):
         data = super().prepare_data(data)
+        # Suggest object type
         pattern = re.compile("form", re.IGNORECASE)
         data['object_type'] = pattern.sub("", self.get_form_class().__name__)
-        from osis_admission_sdk.model.categorie_activite import CategorieActivite
 
         # Get category from edited object or view kwargs
+        from osis_admission_sdk.model.categorie_activite import CategorieActivite
+
         category = getattr(self, 'activity', self.kwargs).get('category')
         data['category'] = CategorieActivite(category.upper())
+
+        # Data cleanup and coercion
+        data.pop('academic_year', None)
         if 'parent' not in data:
             data['parent'] = self.request.GET.get('parent')
         for decimal_field in ['ects', 'participating_days']:
@@ -168,6 +162,7 @@ class DoctorateTrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormM
             person=self.person,
             uuid=str(self.kwargs['pk']),
         )
+        kwargs['person'] = self.person
         return kwargs
 
 
