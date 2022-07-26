@@ -291,10 +291,25 @@ class AutocompleteTestCase(TestCase):
     def test_autocomplete_high_school_list(self, api):
         self.first_high_school_uuid = str(uuid.uuid4())
         self.second_high_school_uuid = str(uuid.uuid4())
+        self.maxDiff = None
 
         mock_schools = [
-            HighSchool(uuid=self.first_high_school_uuid, name="HighSchool 1", city="Louvain-La-Neuve"),
-            HighSchool(uuid=self.second_high_school_uuid, name="HighSchool 2", city="Bruxelles"),
+            HighSchool(
+                uuid=self.first_high_school_uuid,
+                name="HighSchool 1",
+                city="Louvain-La-Neuve",
+                zipcode="1348",
+                street="Place de l'Université",
+                street_number="1",
+            ),
+            HighSchool(
+                uuid=self.second_high_school_uuid,
+                name="HighSchool 2",
+                city="Bruxelles",
+                zipcode="1000",
+                street="Boulevard du Triomphe",
+                street_number="1",
+            ),
         ]
         api.return_value.high_schools_list.return_value = PaginatedHighSchool(
             results=mock_schools,
@@ -305,10 +320,12 @@ class AutocompleteTestCase(TestCase):
             'results': [
                 {
                     'id': self.first_high_school_uuid,
-                    'text': 'HighSchool 1 (Louvain-La-Neuve)',
+                    'text': 'HighSchool 1 <span class="high-school-address">Place de l\'Université 1, '
+                            '1348 Louvain-La-Neuve</span>',
                 }, {
                     'id': self.second_high_school_uuid,
-                    'text': 'HighSchool 2 (Bruxelles)',
+                    'text': 'HighSchool 2 <span class="high-school-address">Boulevard du Triomphe 1, 1000 Bruxelles'
+                            '</span>',
                 },
             ],
         })

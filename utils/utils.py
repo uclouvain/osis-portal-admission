@@ -20,7 +20,11 @@ def format_entity_address(address: Address):
 
 def format_high_school_title(high_school: HighSchool):
     """Return the concatenation of the high school name and city."""
-    return '{name} ({city})'.format_map(high_school)
+    return '{} <span class="high-school-address">{}, {}</span>'.format(
+        high_school['name'],
+        ' '.join([high_school['street'], high_school['street_number']]),
+        ' '.join([high_school['zipcode'], high_school['city']]),
+    )
 
 
 def force_title(string: str):
