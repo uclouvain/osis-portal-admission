@@ -103,9 +103,14 @@ class DoctorateAdmissionEducationFormView(
         self.check_bound_and_set_required_attr(foreign_diploma_form)
 
         # Cross-form check: make schedule required for some belgian diploma educational types
-        if belgian_diploma_form.is_valid():
-            educational_type_data = belgian_diploma_form.cleaned_data.get("educational_type")
-            if educational_type_data in EDUCATIONAL_TYPES_REQUIRING_SCHEDULE:
+        if belgian_diploma_form.is_bound:
+            educational_type = belgian_diploma_form.data.get(belgian_diploma_form.add_prefix("educational_type"))
+            community = belgian_diploma_form.data.get(belgian_diploma_form.add_prefix("community"))
+
+            if (
+                community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name
+                and educational_type in EDUCATIONAL_TYPES_REQUIRING_SCHEDULE
+            ):
                 self.check_bound_and_set_required_attr(forms["schedule_form"])
             else:
                 forms["schedule_form"].is_bound = False  # drop data if schedule is not required
@@ -149,17 +154,58 @@ class DoctorateAdmissionEducationFormView(
                     if not high_school_diploma:
                         main_form.add_error("high_school_diploma", FIELD_REQUIRED_MESSAGE)
 
-            # Translated files required for some foreign diploma linguistic regime
+            # Translated files required for some foreign diploma linguistic regimes
             if linguistic_regime not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION:
-                if high_school_diploma and not high_school_diploma_translation:
-                    foreign_diploma_form.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
-                if enrolment_certificate and not enrolment_certificate_translation:
-                    foreign_diploma_form.add_error("enrolment_certificate_translation", FIELD_REQUIRED_MESSAGE)
+                self.clean_foreign_diploma_translation_fields(
+                    foreign_diploma_form,
+                    got_diploma,
+                    enrolment_certificate,
+                    enrolment_certificate_translation,
+                    high_school_diploma,
+                    high_school_diploma_translation,
+                )
 
         # Page is valid if all bound forms are valid
         if all(not form.is_bound or form.is_valid() for form in forms.values()):
             return self.form_valid(main_form)
         return self.form_invalid(main_form)
+
+    @classmethod
+    def clean_foreign_diploma_translation_fields(
+        cls,
+        foreign_diploma_form,
+        got_diploma,
+        enrolment_certificate,
+        enrolment_certificate_translation,
+        high_school_diploma,
+        high_school_diploma_translation,
+    ):
+        if got_diploma == GotDiploma.YES.name:
+            # High school diploma is required
+            if not high_school_diploma_translation:
+                foreign_diploma_form.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
+
+        elif got_diploma == GotDiploma.THIS_YEAR.name:
+
+            if foreign_diploma_form.fields['country'].is_ue_country:
+                # Either high school diploma or enrolment certificate is required
+                if high_school_diploma and not high_school_diploma_translation:
+                    foreign_diploma_form.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
+                if enrolment_certificate and not enrolment_certificate_translation:
+                    foreign_diploma_form.add_error("enrolment_certificate_translation", FIELD_REQUIRED_MESSAGE)
+                if (
+                    not high_school_diploma
+                    and not enrolment_certificate
+                    and not high_school_diploma_translation
+                    and not enrolment_certificate_translation
+                ):
+                    # Empty errors because the related fields already have errors
+                    foreign_diploma_form.add_error('high_school_diploma_translation', '')
+                    foreign_diploma_form.add_error("enrolment_certificate_translation", '')
+
+            elif not high_school_diploma_translation:
+                # High school diploma is required
+                foreign_diploma_form.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -322,5 +368,8 @@ class DoctorateAdmissionEducationFormView(
                     foreign_diploma_data["high_school_transcript_translation"] = []
                     foreign_diploma_data["high_school_diploma_translation"] = []
                     foreign_diploma_data["enrolment_certificate_translation"] = []
+
+            if foreign_diploma_data["academic_graduation_year"] != get_current_year():
+                foreign_diploma_data["enrolment_certificate_translation"] = []
 
         return data

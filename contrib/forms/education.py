@@ -98,7 +98,10 @@ class DoctorateAdmissionEducationForm(forms.Form):
 
     def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["academic_graduation_year"].widget.choices = get_past_academic_years_choices(person)
+        self.fields["academic_graduation_year"].widget.choices = get_past_academic_years_choices(
+            person,
+            exclude_current=True,
+        )
 
         belgian_diploma = self.initial.get("belgian_diploma")
         foreign_diploma = self.initial.get("foreign_diploma")
@@ -175,11 +178,12 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
     institute = forms.CharField(
         label=_("Institute"),
         required=False,
-        help_text=_("You can perform a search based on the location or postal code."),
+        help_text=_("You can also perform a search based on the location or postal code."),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:high-school",
             attrs={
                 'data-minimum-input-length': 3,
+                'data-html': True,
             },
         ),
     )
@@ -220,10 +224,17 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         ):
             self.add_error("educational_type", _("Educational type is required with this community of education"))
 
-        if not cleaned_data.get("institute") and not cleaned_data.get("other_institute"):
+        other_institute = cleaned_data.get('other_institute')
+        if other_institute:
+            if not cleaned_data['other_institute_name']:
+                self.add_error('other_institute_name', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data['other_institute_address']:
+                self.add_error('other_institute_address', FIELD_REQUIRED_MESSAGE)
+
+        elif not cleaned_data.get("institute"):
             institute_error_msg = _("Please set one of institute or other institute fields")
             self.add_error("institute", institute_error_msg)
-            self.add_error("other_institute", institute_error_msg)
+            self.add_error("other_institute", '')
 
         return cleaned_data
 
@@ -398,7 +409,7 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         help_text=_(
             "If you do not yet have a final equivalence decision issued by the "
             "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you must "
-            "provide a double-sided copy of this document as soon as possible. You are therefore asked to "
+            "provide a double-sided copy of this document as soon as possible. You are asked to "
             "provide proof of the application in the meantime: receipt of the application and proof of payment, "
             "acknowledgement of receipt of the application, etc."
         ),

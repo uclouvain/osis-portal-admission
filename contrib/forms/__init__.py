@@ -95,9 +95,11 @@ def get_high_school_initial_choices(uuid, person):
     return EMPTY_CHOICE + ((high_school.uuid, format_high_school_title(high_school=high_school)),)
 
 
-def get_past_academic_years_choices(person):
+def get_past_academic_years_choices(person, exclude_current=False):
     """Return a list of choices of past academic years."""
     current_year = get_current_year()
+    if exclude_current:
+        current_year -= 1
     lower_year = current_year - 100
     return EMPTY_CHOICE + tuple(
         (academic_year.year, f"{academic_year.year}-{academic_year.year + 1}")

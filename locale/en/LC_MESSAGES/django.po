@@ -77,6 +77,9 @@ msgstr ""
 msgid "A transcript or your last year at high school"
 msgstr ""
 
+msgid "A translation is required for each uploaded document."
+msgstr ""
+
 msgid "A1"
 msgstr ""
 
@@ -951,9 +954,9 @@ msgid ""
 "If you do not yet have a final equivalence decision issued by the <a "
 "href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> "
 "of Belgium, you must provide a double-sided copy of this document as soon as "
-"possible. You are therefore asked to provide proof of the application in the "
-"meantime: receipt of the application and proof of payment, acknowledgement "
-"of receipt of the application, etc."
+"possible. You are asked to provide proof of the application in the meantime: "
+"receipt of the application and proof of payment, acknowledgement of receipt "
+"of the application, etc."
 msgstr ""
 
 msgid "If you don't find your institute in the list, please specify"
@@ -2061,7 +2064,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-msgid "You can perform a search based on the location or postal code."
+msgid "You can also perform a search based on the location or postal code."
 msgstr ""
 
 msgid "You cannot fill in a language more than once, please correct the form."
