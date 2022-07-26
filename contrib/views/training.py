@@ -30,6 +30,7 @@ from copy import copy
 from django.http import Http404
 from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
+from django.utils.translation import get_language
 from django.views.generic import FormView
 
 from admission.contrib.enums.training import CategorieActivite, StatutActivite
@@ -55,7 +56,9 @@ class DoctorateAdmissionTrainingView(LoadDoctorateViewMixin, WebServiceFormMixin
         context_data = super().get_context_data(**kwargs)
         context_data['activities'] = self.activities
         context_data['statuses'] = StatutActivite.choices()
-        context_data['categories'] = CategorieActivite.choices()
+        config = AdmissionDoctorateTrainingService.get_config(person=self.person, uuid=str(self.kwargs['pk']))
+        original_constants = dict(CategorieActivite.choices()).keys()
+        context_data['categories'] = list(zip(original_constants, config.category_labels[get_language()]))
         return context_data
 
     @cached_property
