@@ -26,6 +26,7 @@
 from django.urls import include, path
 from django.views.generic import RedirectView
 
+import admission.contrib.views.form_tabs.supervision
 from .contrib import views
 
 app_name = "admission"
@@ -130,6 +131,11 @@ doctorate_paths = [
     path("project", views.DoctorateAdmissionProjectDetailView.as_view(), name="project"),
     path("cotutelle", views.DoctorateAdmissionCotutelleDetailView.as_view(), name="cotutelle"),
     path("supervision", views.DoctorateAdmissionSupervisionDetailView.as_view(), name="supervision"),
+    path(
+        "set-reference-promoter/<matricule>",
+        views.DoctorateAdmissionSetReferencePromoterView.as_view(),
+        name="set-reference-promoter",
+    ),
     path("request_signatures", views.DoctorateAdmissionRequestSignaturesView.as_view(), name="request-signatures"),
     path('remove-member/<type>/<matricule>', views.DoctorateAdmissionRemoveActorView.as_view(), name='remove-actor'),
     path('approve-by-pdf', views.DoctorateAdmissionApprovalByPdfView.as_view(), name='approve-by-pdf'),

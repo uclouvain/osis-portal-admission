@@ -1500,6 +1500,9 @@ msgstr ""
 msgid "Recommendation letters"
 msgstr ""
 
+msgid "Reference promoter"
+msgstr ""
+
 msgid "Reference:"
 msgstr ""
 
@@ -1633,6 +1636,9 @@ msgid "Separate"
 msgstr ""
 
 msgid "Services"
+msgstr ""
+
+msgid "Set as reference promoter"
 msgstr ""
 
 msgid "Sex"

@@ -1638,6 +1638,9 @@ msgstr "Rang dans le diplôme"
 msgid "Recommendation letters"
 msgstr "Lettres de recommandation"
 
+msgid "Reference promoter"
+msgstr "Promoteur de référence"
+
 msgid "Reference:"
 msgstr "Référence :"
 
@@ -1772,6 +1775,9 @@ msgstr "Séparé·e"
 
 msgid "Services"
 msgstr "Services"
+
+msgid "Set as reference promoter"
+msgstr "Désigner comme promoteur de référence"
 
 msgid "Sex"
 msgstr "Sexe"
