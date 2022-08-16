@@ -272,6 +272,14 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def set_reference_promoter(cls, person, uuid, **kwargs):
+        return AdmissionPropositionAPIClient().set_reference_promoter(
+            uuid=uuid,
+            designer_promoteur_reference_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def approve_proposition(cls, person, uuid, **kwargs):
         return AdmissionPropositionAPIClient().approve_proposition(
             uuid=uuid,

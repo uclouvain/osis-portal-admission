@@ -28,6 +28,6 @@ $(function () {
     const dependingId = '#' + $(this).attr('id').replace('_1', '_0');
     const dependency = {};
     dependency[dependingId] = { values: ['other'] };
-    $(this).parent().dependsOn(dependency, { valueOnDisable: '' });
+    $(this).parents('.select-or-other-container').dependsOn(dependency, { valueOnDisable: '' });
   })
 });

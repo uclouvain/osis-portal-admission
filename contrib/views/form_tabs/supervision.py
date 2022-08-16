@@ -29,6 +29,7 @@ from django.http import Http404
 from django.shortcuts import redirect, resolve_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
+from django.views.generic.edit import BaseFormView
 
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.forms.supervision import DoctorateAdmissionSupervisionForm
@@ -117,3 +118,26 @@ class DoctorateAdmissionRemoveActorView(
 
     def get_success_url(self):
         return resolve_url('admission:doctorate:supervision', pk=self.admission_uuid)
+
+
+class DoctorateAdmissionSetReferencePromoterView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    BaseFormView,
+):  # pylint: disable=too-many-ancestors
+    form_class = forms.Form
+
+    def prepare_data(self, data):
+        return {
+            'uuid_proposition': self.admission_uuid,
+            'matricule': self.kwargs['matricule'],
+        }
+
+    def call_webservice(self, data):
+        AdmissionSupervisionService.set_reference_promoter(person=self.person, uuid=self.admission_uuid, **data)
+
+    def get_success_url(self):
+        return resolve_url('admission:doctorate:supervision', pk=self.admission_uuid)
+
+    def form_invalid(self, form):
+        return redirect('admission:doctorate:supervision', pk=self.admission_uuid)

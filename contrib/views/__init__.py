@@ -43,7 +43,10 @@ from .detail_tabs.extension_request import DoctorateAdmissionExtensionRequestDet
 from .detail_tabs.languages import DoctorateAdmissionLanguagesDetailView
 from .detail_tabs.person import DoctorateAdmissionPersonDetailView
 from .detail_tabs.project import DoctorateAdmissionProjectDetailView
-from .detail_tabs.supervision import DoctorateAdmissionApprovalByPdfView, DoctorateAdmissionSupervisionDetailView
+from .detail_tabs.supervision import (
+    DoctorateAdmissionApprovalByPdfView,
+    DoctorateAdmissionSupervisionDetailView,
+)
 from .form_tabs.confirm import DoctorateAdmissionConfirmFormView
 from .form_tabs.confirmation_paper import DoctorateAdmissionConfirmationPaperFormView
 from .form_tabs.coordonnees import DoctorateAdmissionCoordonneesFormView
@@ -54,7 +57,11 @@ from .form_tabs.extension_request import DoctorateAdmissionExtensionRequestFormV
 from .form_tabs.languages import DoctorateAdmissionLanguagesFormView
 from .form_tabs.person import DoctorateAdmissionPersonFormView
 from .form_tabs.project import DoctorateAdmissionProjectFormView
-from .form_tabs.supervision import DoctorateAdmissionRemoveActorView, DoctorateAdmissionSupervisionFormView
+from .form_tabs.supervision import (
+    DoctorateAdmissionRemoveActorView,
+    DoctorateAdmissionSetReferencePromoterView,
+    DoctorateAdmissionSupervisionFormView,
+)
 from .list import *
 from .signatures import (
     DoctorateAdmissionRequestSignaturesView,
