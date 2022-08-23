@@ -30,7 +30,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import get_language
 from django.views.generic import FormView
 
-from admission.contrib.forms.languages import DoctorateAdmissionLanguagesKnowledgeFormSet
+from admission.contrib.forms.languages import DoctorateAdmissionLanguagesKnowledgeFormSet, MANDATORY_LANGUAGES
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
@@ -61,6 +61,7 @@ class DoctorateAdmissionLanguagesFormView(
         context = Context({'language_form': context_data["form"].empty_form})
 
         context_data["empty_form"] = template.render(context)
+        context_data["MANDATORY_LANGUAGES"] = MANDATORY_LANGUAGES
         context_data["languages"] = {
             lang.code: lang.name if get_language() == settings.LANGUAGE_CODE else lang.name_en
             for lang in LanguageService.get_languages(person=self.request.user.person)

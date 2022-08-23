@@ -57,8 +57,18 @@
   {% for language_form in form %}
     <div class="form-container">
       {% firstof languages|get_item:language_form.lang_code _("Add a language") as title %}
-      {% panel title %}
-        {% bootstrap_form language_form %}
+      {# Flag mandatory language with additional css class #}
+      {% firstof "" "" as additional_class %}
+      {% if language_form.lang_code in MANDATORY_LANGUAGES %}
+        {% firstof "" "required_panel" as additional_class %}
+      {% endif %}
+
+      {% panel title additional_class=additional_class %}
+        {% bootstrap_field language_form.language %}
+        {% bootstrap_field language_form.listening_comprehension %}
+        {% bootstrap_field language_form.speaking_ability %}
+        {% bootstrap_field language_form.writing_ability %}
+        {% bootstrap_field_with_tooltip language_form.certificate %}
       {% endpanel %}
     </div>
   {% endfor %}

@@ -106,7 +106,7 @@ textarea {
   display: initial;
 }
 
-.required_field .control-label:after, .required_text:after {
+.required_field .control-label:after, .required_text:after, .required_panel .panel-title:after {
   content: " *";
   color: red;
 }

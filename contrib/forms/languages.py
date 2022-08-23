@@ -95,6 +95,10 @@ class DoctorateAdmissionLanguageForm(forms.Form):
     )
     certificate = FileUploadField(
         label=_("Certificate of language knowledge"),
+        help_text=_(
+            "If applicable, upload an attestation of language proficiency in the format required by the "
+            "specific provisions of your doctoral field commission"
+        ),
         required=False,
         max_files=1,
         mimetypes=['application/pdf'],
@@ -106,8 +110,7 @@ class DoctorateAdmissionLanguageForm(forms.Form):
         self.lang_code = self.data.get(self.add_prefix("language"), self.initial.get("language"))
         self.fields["language"].widget.choices = get_language_initial_choices(self.lang_code, person)
         if self.initial.get("language") in MANDATORY_LANGUAGES:
-            self.fields["language"].disabled = True
-            self.fields["language"].help_text = _("Mandatory language")
+            self.fields["language"].widget = forms.HiddenInput()
 
     class Media:
         js = ("jquery.formset.js",)
