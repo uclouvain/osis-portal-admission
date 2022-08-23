@@ -397,9 +397,6 @@ msgstr ""
 msgid "Certificate, with dates, justifying the specified period."
 msgstr ""
 
-msgid "Change my submission"
-msgstr ""
-
 msgid "Chemistry"
 msgstr ""
 
@@ -655,9 +652,6 @@ msgstr ""
 msgid "Edit activity of type <em>%(category)s</em>"
 msgstr ""
 
-msgid "Education community"
-msgstr ""
-
 msgid "Education"
 msgstr ""
 
@@ -711,6 +705,9 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
+msgid "Expected graduation date"
+msgstr ""
+
 msgid ""
 "Extract from the Doctoral Regulations (Article 2.1):<br /> « Pre-admission "
 "is an optional stage of the doctoral programme. It aims to allow the "
@@ -724,9 +721,6 @@ msgid ""
 "defined, are not authorised to take a pre-admission phase for a doctorate. » "
 "<br /> Please also consult the special provisions of the field for all pre-"
 "admission conditions."
-msgstr ""
-
-msgid "Expected graduation date"
 msgstr ""
 
 msgid "FNRS"
@@ -888,6 +882,11 @@ msgstr ""
 msgid ""
 "If applicable, please upload here the opinion of your support committee on "
 "the extension request."
+msgstr ""
+
+msgid ""
+"If applicable, upload an attestation of language proficiency in the format "
+"required by the specific provisions of your doctoral field commission"
 msgstr ""
 
 msgid ""
@@ -1075,9 +1074,6 @@ msgid "Male"
 msgstr ""
 
 msgid "Manage doctorates"
-msgstr ""
-
-msgid "Mandatory language"
 msgstr ""
 
 msgid "Mandatory languages are missing."

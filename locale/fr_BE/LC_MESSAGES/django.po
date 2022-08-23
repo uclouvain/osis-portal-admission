@@ -434,9 +434,6 @@ msgstr ""
 msgid "Certificate, with dates, justifying the specified period."
 msgstr "Attestation, avec mention des dates, justifiant la période concernée."
 
-msgid "Change my submission"
-msgstr "Modifier ma soumission"
-
 msgid "Chemistry"
 msgstr "Chimie"
 
@@ -698,9 +695,6 @@ msgstr "Modifier %(title)s"
 msgid "Edit activity of type <em>%(category)s</em>"
 msgstr "Modifier l'activité de type <em>%(category)s</em>"
 
-msgid "Education community"
-msgstr "Communauté d'enseignement"
-
 msgid "Education"
 msgstr "Formation"
 
@@ -758,6 +752,9 @@ msgstr "Site web de l'événement"
 msgid "Exit"
 msgstr "Quitter"
 
+msgid "Expected graduation date"
+msgstr "Date (prévue) de délivrance du diplôme"
+
 msgid ""
 "Extract from the Doctoral Regulations (Article 2.1):<br /> « Pre-admission "
 "is an optional stage of the doctoral programme. It aims to allow the "
@@ -785,9 +782,6 @@ msgstr ""
 "doctorat. ». <br /> Veuillez également consulter les dispositions "
 "particulières du domaine afin de connaître toutes les conditions de pré-"
 "admission."
-
-msgid "Expected graduation date"
-msgstr "Date (prévue) de délivrance du diplôme"
 
 msgid "FNRS"
 msgstr "FNRS"
@@ -968,6 +962,14 @@ msgid ""
 msgstr ""
 "Le cas échéant, veuillez téléverser ici l’avis de votre comité "
 "d’accompagnement sur la demande de prolongation."
+
+msgid ""
+"If applicable, upload an attestation of language proficiency in the format "
+"required by the specific provisions of your doctoral field commission"
+msgstr ""
+"Le cas échéant, téléversez une attestation de connaissance de langue au "
+"format exigé par les dispositions particulières de votre commission "
+"doctorale de domaine"
 
 msgid ""
 "If known, indicate here the name of the laboratory, clinical service or "
@@ -1197,9 +1199,6 @@ msgstr "Masculin"
 
 msgid "Manage doctorates"
 msgstr "Gestion des doctorats"
-
-msgid "Mandatory language"
-msgstr "Langue obligatoire"
 
 msgid "Mandatory languages are missing."
 msgstr "Des langues obligatoires sont manquantes."
@@ -2013,14 +2012,6 @@ msgid "This value cannot be greater than the entered credits number"
 msgstr "Cette valeur ne peut être supérieure au nombre de crédits inscrits"
 
 #, python-format
-msgid "This value must be equal to or greater than %(MINIMUM_CREDITS_NUMBER)s"
-msgstr ""
-"Cette valeur doit être supérieure ou égale à %(MINIMUM_CREDITS_NUMBER)s"
-
-#, python-format
-msgid "This value must be greater than %(MINIMUM_CREDITS_NUMBER)s"
-msgstr "Cette valeur doit être supérieure à %(MINIMUM_CREDITS_NUMBER)s"
-
 msgid "This value must be equal to or greater than %(MINIMUM_CREDIT_NUMBER)s"
 msgstr "Cette valeur doit être supérieure ou égale à %(MINIMUM_CREDIT_NUMBER)s"
 
