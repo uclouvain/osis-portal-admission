@@ -80,10 +80,10 @@ class DoctorateAdmissionProjectFormView(
                 raise PermissionDenied(self.admission.links['update_proposition']['error'])
             return {
                 **self.admission.to_dict(),
-                'sector': self.admission.code_secteur_formation,
+                'sector': self.admission.doctorat.code_secteur_formation,
                 'doctorate': "{sigle}-{annee}".format(
-                    sigle=self.admission.sigle_doctorat,
-                    annee=self.admission.annee_doctorat,
+                    sigle=self.admission.doctorat.sigle,
+                    annee=self.admission.doctorat.annee,
                 ),
             }
         return super().get_initial()

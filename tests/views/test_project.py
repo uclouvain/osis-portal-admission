@@ -396,10 +396,11 @@ class ProjectViewTestCase(TestCase):
     def test_update(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBAR'
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.annee_doctorat = '2021'
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.code_secteur_formation = 'SSH'
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+        proposition = self.mock_proposition_api.return_value.retrieve_proposition.return_value
+        proposition.doctorat.sigle = 'FOOBAR'
+        proposition.doctorat.annee = '2021'
+        proposition.doctorat.code_secteur_formation = 'SSH'
+        proposition.to_dict.return_value = {
             'code_secteur_formation': "SSH",
             'type_contrat_travail': "Something",
             "commission_proximite": ChoixProximityCommissionCDE.ECONOMY.name,
@@ -408,30 +409,26 @@ class ProjectViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBARBAZ'
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
-            'code_secteur_formation': "SSH",
-            'sigle_doctorat': 'FOOBARBAZ',
-            'annee_doctorat': '2021',
+        proposition.doctorat.sigle = 'FOOBARBAZ'
+        proposition.to_dict.return_value = {
+            "doctorat": {
+                'sigle': 'FOOBARBAZ',
+                'annee': '2021',
+                'code_secteur_formation': "SSH",
+            },
             'bourse_recherche': "Something other",
             "commission_proximite": ChoixProximityCommissionCDSS.ECLI.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = SCIENCE_DOCTORATE
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
-            'code_secteur_formation': "SSH",
-            'sigle_doctorat': 'FOOBARBAZ',
-            'annee_doctorat': '2021',
-            'bourse_recherche': "Something other",
-            "commission_proximite": ChoixSousDomaineSciences.CHEMISTRY.name,
-        }
+        proposition.doctorat.sigle = SCIENCE_DOCTORATE
+        proposition.to_dict.return_value["commission_proximite"] = ChoixSousDomaineSciences.CHEMISTRY.name
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check that the thesis institute field is well initialized with existing value
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+        proposition.to_dict.return_value = {
             'code_secteur_formation': "SST",
             'type_contrat_travail': "Something",
             'institut_these': self.mock_entities[0].uuid,
