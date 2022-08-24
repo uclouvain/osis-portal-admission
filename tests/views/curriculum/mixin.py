@@ -28,6 +28,9 @@ import uuid
 from unittest.mock import ANY, patch
 
 from django.test import TestCase, override_settings
+
+from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.model.proposition_search_doctorat import PropositionSearchDoctorat
 from osis_reference_sdk.model.paginated_academic_years import PaginatedAcademicYears
 
 from osis_admission_sdk.model.educational_experience_educationalexperienceyear_set import (
@@ -178,9 +181,13 @@ class MixinTestCase(TestCase):
             type_admission=AdmissionType.ADMISSION.name,
             reference='22-300001',
             links=PropositionDTOLinks(),
-            sigle_doctorat='CS1',
-            annee_doctorat=cls.academic_year_2020.year,
-            intitule_doctorat='Doctorate name',
+            doctorat=PropositionSearchDoctorat._from_openapi_data(
+                sigle='CS1',
+                annee=cls.academic_year_2020.year,
+                intitule='Doctorate name',
+                sigle_entite_gestion="CDSS",
+                campus="Mons",
+            ),
             matricule_candidat=cls.person.global_id,
             code_secteur_formation='CS',
             documents_projet=[],
