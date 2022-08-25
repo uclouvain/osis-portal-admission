@@ -106,7 +106,7 @@ class ActivityFormMixin(forms.Form):
     committee = forms.ChoiceField(
         choices=ChoixComiteSelection.choices(),
     )
-    dial_reference = forms.CharField(label=_("Référence DIAL.Pr"), max_length=100)
+    dial_reference = forms.CharField(label=_("Reference DIAL.Pr"), max_length=100)
     acceptation_proof = FileUploadField(label=_("Participation certification"), max_files=1)
     summary = FileUploadField(label=pgettext_lazy("paper summary", "Summary"), max_files=1)
     subtype = forms.CharField(label=_("Activity subtype"), max_length=100)
@@ -236,7 +236,7 @@ class CommunicationForm(ActivityFormMixin, forms.Form):
     subtype = SelectOrOtherField(
         label=_("Type of communication"),
         choices=[
-            _("Oral exposé"),
+            _("Oral expose"),
             _("Poster"),
         ],
     )

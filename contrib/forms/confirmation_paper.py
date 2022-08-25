@@ -40,8 +40,10 @@ class PromoterConfirmationPaperForm(forms.Form):
         label=_('Opinion on the renewal of the research mandate'),
         required=False,
         max_files=1,
-        help_text=_("To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH grant. "
-                    "The canvas for this opinion is provided by your research fund."),
+        help_text=_(
+            "To be uploaded if you have a F.R.S.-FNRS (including Televie), FRIA or FRESH grant. "
+            "The canvas for this opinion is provided by your research fund."
+        ),
     )
 
 
@@ -58,6 +60,4 @@ class ConfirmationPaperForm(PromoterConfirmationPaperForm):
     )
 
     class Media:
-        js = (
-            'jquery.mask.min.js',
-        )
+        js = ('jquery.mask.min.js',)

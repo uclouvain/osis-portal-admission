@@ -139,7 +139,7 @@ class PropositionBusinessException(Enum):
     ProximityCommissionInconsistantException = "PROPOSITION-5"
     ContratTravailInconsistantException = "PROPOSITION-6"
     InstitutionInconsistanteException = "PROPOSITION-7"
-    MembreGroupeDeSupervisionNonTrouveException = "PROPOSITION-8"
+    DomaineTheseInconsistantException = "PROPOSITION-8"
     PromoteurNonTrouveException = "PROPOSITION-9"
     MembreCANonTrouveException = "PROPOSITION-10"
     SignataireNonTrouveException = "PROPOSITION-11"

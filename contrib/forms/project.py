@@ -112,6 +112,18 @@ class DoctorateAdmissionProjectForm(forms.Form):
         choices=EMPTY_CHOICE + BourseRecherche.choices(),
         required=False,
     )
+    bourse_date_debut = forms.DateField(
+        label=_("Scholarship start date"),
+        required=False,
+    )
+    bourse_date_fin = forms.DateField(
+        label=_("Scholarship end date"),
+        required=False,
+    )
+    bourse_preuve = FileUploadField(
+        label=_("Scholarship proof"),
+        required=False,
+    )
     duree_prevue = forms.IntegerField(
         label=_("Estimated time to complete the doctorate (in months)"),
         min_value=0,
@@ -186,6 +198,10 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     institution = forms.CharField(
         label=_("Institution"),
+        required=False,
+    )
+    domaine_these = forms.CharField(
+        label=_("Thesis domain"),
         required=False,
     )
     non_soutenue = forms.BooleanField(
