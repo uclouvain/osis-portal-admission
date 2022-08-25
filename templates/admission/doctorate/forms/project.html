@@ -63,7 +63,7 @@
       </div>
     {% else %}
       {% field_data _("Sector") sector_label %}
-      {% field_data _("Doctorate") admission.intitule_doctorat %}
+      {% field_data _("Doctorate") admission.doctorat.intitule %}
       {% if admission.commission_proximite %}
         {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
       {% endif %}
