@@ -37,13 +37,13 @@
         <p class="well">
           {% blocktrans trimmed %}
             Extract from the Doctoral Regulations (Article 2.1):<br />
-            « Pre-admission is an optional stage of the doctoral programme. It aims to allow the candidate to complete
+            "Pre-admission is an optional stage of the doctoral programme. It aims to allow the candidate to complete
             the administrative and social formalities that would require a prior registration for the doctorate. [...]
             Pre-admission is valid for a maximum period of 12 months. Recourse to a pre-admission phase must be
             justified, the objectives to be achieved planned and the duration of the pre-admission period fixed in
             accordance with them. Unless exceptionally authorised by the CSD, FRIA or FNRS scholarship holders and, in
             general, doctoral candidates engaged in a research project that has already been defined, are not
-            authorised to take a pre-admission phase for a doctorate. »
+            authorised to take a pre-admission phase for a doctorate."
             <br /> Please also consult the special provisions of the field for all pre-admission conditions.
           {% endblocktrans %}
         </p>
@@ -98,8 +98,15 @@
         {% bootstrap_field form.eft form_group_class="form-group required_field" placeholder="" %}
       </div>
     </div>
-    <div class="row" id="scholarship">
-      {% bootstrap_field form.bourse_recherche form_group_class="form-group col-md-4 required_field" %}
+    <div id="scholarship">
+      <div class="row">
+        {% bootstrap_field form.bourse_recherche form_group_class="form-group col-md-4 required_field" %}
+      </div>
+      <div class="row">
+        {% bootstrap_field form.bourse_date_debut form_group_class="form-group col-md-4 required_field" %}
+        {% bootstrap_field form.bourse_date_fin form_group_class="form-group col-md-4 required_field" %}
+      </div>
+      {% bootstrap_field form.bourse_preuve form_group_class="form-group required_field" %}
     </div>
     <div id="financing-details" class="row">
       <div class="col-md-6">
@@ -123,6 +130,9 @@
       <div class="col-md-6">
         {% bootstrap_field_with_tooltip form.lieu_these %}
       </div>
+      <div class="col-md-6">
+        {% bootstrap_field form.domaine_these placeholder="" %}
+      </div>
     </div>
     <p>
       {% blocktrans trimmed %}
@@ -142,7 +152,10 @@
     <div id="previous_experience">
       <div class="row">
         <div class="col-md-6">
-          {% bootstrap_field form.institution placeholder="" %}
+          {% bootstrap_field form.institution placeholder="" form_group_class="form-group required_field" %}
+        </div>
+        <div class="col-md-6">
+          {% bootstrap_field form.domaine_these placeholder="" form_group_class="form-group required_field" %}
         </div>
       </div>
       {% bootstrap_field form.non_soutenue %}

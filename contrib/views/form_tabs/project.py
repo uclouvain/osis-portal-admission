@@ -58,6 +58,7 @@ class DoctorateAdmissionProjectFormView(
         PropositionBusinessException.ContratTravailInconsistantException: 'type_contrat_travail',
         PropositionBusinessException.DoctoratNonTrouveException: 'doctorate',
         PropositionBusinessException.InstitutionInconsistanteException: 'institution',
+        PropositionBusinessException.DomaineTheseInconsistantException: 'domaine_these',
     }
 
     @property
@@ -109,6 +110,7 @@ class DoctorateAdmissionProjectFormView(
             ChoixDoctoratDejaRealise.PARTIAL.name,
         ]:
             data['institution'] = ''
+            data['domaine_these'] = ''
             data['non_soutenue'] = None
             data['date_soutenance'] = None
             data['raison_non_soutenue'] = ''

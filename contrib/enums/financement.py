@@ -40,10 +40,10 @@ class ChoixTypeContratTravail(ChoiceEnum):
 
 
 class BourseRecherche(ChoiceEnum):
-    ARC = _("ARC - Action de Recherche Concertée")
-    ARES = _("ARES - Coopération au développement")
+    ARC = _("ARC - Action de Recherche Concertee")
+    ARES = _("ARES - Cooperation au developpement")
     CSC = _("CSC - China Scholarship Council")
-    FSR = _("FSR - Fonds Spéciaux de Recherche")
+    FSR = _("FSR - Fonds Speciaux de Recherche")
     ERC = _("ERC - European Research Council")
     FNRS = _("FNRS")
     FONDATION_ST_LUC = _("Fondation St Luc")

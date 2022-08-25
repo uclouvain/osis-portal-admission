@@ -49,6 +49,9 @@
                 {% field_data fte_label admission.eft|default_if_none:'' %}
             {% elif admission.type_financement == "SEARCH_SCHOLARSHIP" %}
                 {% field_data _("Scholarship") admission.bourse_recherche|enum_display:'BourseRecherche' %}
+                {% field_data _("Scholarship start date") admission.bourse_date_debut %}
+                {% field_data _("Scholarship end date") admission.bourse_date_fin %}
+                {% field_data _("Scholarship proof") admission.bourse_preuve %}
             {% endif %}
             {% field_data _("Estimated time to complete the doctorate (in months)") admission.duree_prevue|default_if_none:'' %}
             {% field_data allocated_time_label admission.temps_consacre|default_if_none:'' %}
@@ -73,6 +76,7 @@
       {% field_data _("Have you ever started or completed a PhD?") admission.doctorat_deja_realise|enum_display:'ChoixDoctoratDejaRealise' %}
         {% if admission.doctorat_deja_realise != "NO" %}
             {% field_data _("Institution") admission.institution %}
+            {% field_data _("Thesis domain") admission.domaine_these %}
             {% if admission.date_soutenance %}
                 {% field_data _("Defense date") admission.date_soutenance %}
             {% elif admission.raison_non_soutenue %}
