@@ -399,7 +399,7 @@ class ProjectViewTestCase(TestCase):
         proposition = self.mock_proposition_api.return_value.retrieve_proposition.return_value
         proposition.doctorat.sigle = 'FOOBAR'
         proposition.doctorat.annee = '2021'
-        proposition.doctorat.code_secteur_formation = 'SSH'
+        proposition.code_secteur_formation = 'SSH'
         proposition.to_dict.return_value = {
             'code_secteur_formation': "SSH",
             'type_contrat_travail': "Something",
