@@ -39,7 +39,7 @@
       {% csrf_token %}
 
       {% bootstrap_field form.proces_verbal_ca %}
-      {% bootstrap_field form.avis_renouvellement_mandat_recherche show_help=False %}
+      {% bootstrap_field_with_tooltip form.avis_renouvellement_mandat_recherche %}
 
     </div>
   </div>

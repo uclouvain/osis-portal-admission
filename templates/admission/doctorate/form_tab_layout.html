@@ -146,15 +146,5 @@
 
 {% block script %}
   {{ block.super }}
-  <script type="application/javascript">
-      $(function () {
-          // Tooltips
-          $('[data-toggle="popover"]').popover();
-
-          $('body').on('mousedown', '.popover', function(e) {
-            e.preventDefault();
-            return false;
-          });
-      });
-  </script>
+  <script src="{% static 'admission/popover.js' %}"></script>
 {% endblock %}

@@ -221,6 +221,16 @@ for tab in BUSINESS_EXCEPTIONS_BY_TAB:
         TAB_OF_BUSINESS_EXCEPTION[exception.value] = tab
 
 
+class ConfirmationPaperBusinessException(Enum):
+    EpreuveConfirmationNonTrouveeException = "EPREUVE-CONFIRMATION-1"
+    EpreuveConfirmationNonCompleteeException = "EPREUVE-CONFIRMATION-2"
+    EpreuveConfirmationDateIncorrecteException = "EPREUVE-CONFIRMATION-3"
+    DemandeProlongationNonCompleteeException = "EPREUVE-CONFIRMATION-4"
+    AvisProlongationNonCompleteException = "EPREUVE-CONFIRMATION-5"
+    DemandeProlongationNonDefinieException = "EPREUVE-CONFIRMATION-6"
+    EpreuveConfirmationNonCompleteePourEvaluationException = "EPREUVE-CONFIRMATION-7"
+
+
 class AdmissionCotutelleService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
