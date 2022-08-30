@@ -376,6 +376,9 @@ msgstr "Course"
 msgid "CSC - China Scholarship Council"
 msgstr ""
 
+msgid "CSS class"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
@@ -640,6 +643,9 @@ msgstr ""
 msgid "Doctorate admissions"
 msgstr ""
 
+msgid "Document"
+msgstr ""
+
 msgid "Download as PDF"
 msgstr ""
 
@@ -796,6 +802,9 @@ msgstr ""
 
 msgctxt "female gender"
 msgid "Female"
+msgstr ""
+
+msgid "File MIME types"
 msgstr ""
 
 msgid "Financing"
@@ -1113,6 +1122,9 @@ msgstr ""
 msgid "Listening comprehension"
 msgstr ""
 
+msgid "Long"
+msgstr ""
+
 msgid "MANAGEMENT"
 msgstr "Management"
 
@@ -1139,7 +1151,13 @@ msgstr ""
 msgid "Mathematics"
 msgstr ""
 
+msgid "Maximum number of documents"
+msgstr ""
+
 msgid "Member not found"
+msgstr ""
+
+msgid "Message"
 msgstr ""
 
 msgctxt "admission"
@@ -1421,6 +1439,9 @@ msgid "Please set either the linguistic regime or other field."
 msgstr ""
 
 msgid "Please set one of institute or other institute fields"
+msgstr ""
+
+msgid "Please specify a value for the following field: {}"
 msgstr ""
 
 msgid ""
@@ -1723,6 +1744,9 @@ msgstr ""
 msgid "Sex"
 msgstr ""
 
+msgid "Short"
+msgstr ""
+
 msgid "Show details"
 msgstr ""
 
@@ -1743,6 +1767,9 @@ msgid "Speaker"
 msgstr ""
 
 msgid "Speaking ability"
+msgstr ""
+
+msgid "Specificities"
 msgstr ""
 
 msgid "Specify the employer and your function"
@@ -1810,6 +1837,12 @@ msgid "Supervision"
 msgstr ""
 
 msgid "Teaching of general education"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "Text size"
 msgstr ""
 
 msgid ""
@@ -1885,6 +1918,10 @@ msgstr ""
 msgid ""
 "The summary of the proposal in PDF format is being generated, please come "
 "back later to get it."
+msgstr ""
+
+#, python-format
+msgid "The type of the admission form item is unknown (%(type)s)."
 msgstr ""
 
 msgid "There is no request for a new deadline."

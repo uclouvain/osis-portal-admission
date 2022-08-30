@@ -42,7 +42,11 @@ from admission.contrib.forms.project import (
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
+from admission.services.proposition import (
+    AdmissionPropositionService,
+    PropositionBusinessException,
+    AdmissionConfigurationService,
+)
 
 
 class DoctorateAdmissionProjectFormView(
@@ -73,6 +77,13 @@ class DoctorateAdmissionProjectFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
+        kwargs['form_item_configurations'] = [
+            configuration.to_dict()
+            for configuration in AdmissionConfigurationService.get_specific_questions_configurations(
+                person=self.person,
+                uuid=self.admission_uuid,
+            )
+        ]
         return kwargs
 
     def get_initial(self):

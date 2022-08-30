@@ -28,6 +28,7 @@ from importlib import import_module
 from typing import List
 
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 from admission.services.mixins import ServiceMeta
 from admission.utils.utils import to_snake_case
@@ -173,6 +174,8 @@ class PropositionBusinessException(Enum):
     InstitutTheseObligatoireException = "PROPOSITION-39"
     NomEtPrenomNonSpecifiesException = "PROPOSITION-40"
     SpecifierNOMASiDejaInscritException = "PROPOSITION-41"
+    PromoteurDeReferenceManquantException = "PROPOSITION-42"
+    QuestionsSpecifiquesObligatoiresNonCompleteesException = "PROPOSITION-43"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -200,6 +203,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     },
     'project': {
         PropositionBusinessException.DetailProjetNonCompleteException,
+        PropositionBusinessException.QuestionsSpecifiquesObligatoiresNonCompleteesException,
     },
     'cotutelle': {
         PropositionBusinessException.CotutelleNonCompleteException,
@@ -229,6 +233,17 @@ class ConfirmationPaperBusinessException(Enum):
     AvisProlongationNonCompleteException = "EPREUVE-CONFIRMATION-5"
     DemandeProlongationNonDefinieException = "EPREUVE-CONFIRMATION-6"
     EpreuveConfirmationNonCompleteePourEvaluationException = "EPREUVE-CONFIRMATION-7"
+
+
+class AdmissionConfigurationService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_specific_questions_configurations(cls, person, uuid) -> List[SpecificQuestion]:
+        return AdmissionPropositionAPIClient().list_specific_questions(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
 
 
 class AdmissionCotutelleService(metaclass=ServiceMeta):

@@ -267,3 +267,15 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.plain-text-widget {
+  padding: 0.5em;
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  white-space: pre-line;
+  border: none;
+}
+
+.multi-widget > .form-group {
+  margin-top: 1em;
+}

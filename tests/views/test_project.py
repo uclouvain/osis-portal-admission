@@ -29,6 +29,9 @@ from unittest.mock import Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk.model.type_item_formulaire import TypeItemFormulaire
+
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 from rest_framework import status
@@ -50,6 +53,8 @@ from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleAp
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class ProjectViewTestCase(TestCase):
+    default_translated_value = {'en': '', 'fr-be': ''}
+
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
@@ -82,7 +87,41 @@ class ProjectViewTestCase(TestCase):
             projet_formation_complementaire=[],
             lettres_recommandation=[],
             links={'update_proposition': {'url': 'ok'}},
+            reponses_questions_specifiques={
+                '2': 'My response',
+                '3': [],
+            },
         )
+        self.mock_proposition_api.return_value.list_specific_questions.return_value = [
+            SpecificQuestion._from_openapi_data(
+                uuid='fe254203-17c7-47d6-95e4-3c5c532da551',
+                type=TypeItemFormulaire(value='MESSAGE'),
+                required=False,
+                title=self.default_translated_value,
+                text={'en': 'The very short message.', 'fr-be': 'Le très court message.'},
+                help_text=self.default_translated_value,
+                config={},
+            ),
+            SpecificQuestion._from_openapi_data(
+                uuid='fe254203-17c7-47d6-95e4-3c5c532da552',
+                type=TypeItemFormulaire(value='TEXTE'),
+                required=False,
+                title={'en': 'Text field', 'fr-be': 'Champ texte'},
+                text={'en': 'Write here', 'fr-be': 'Ecrivez ici'},
+                help_text={'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                config={},
+            ),
+            SpecificQuestion._from_openapi_data(
+                uuid='fe254203-17c7-47d6-95e4-3c5c532da553',
+                type=TypeItemFormulaire(value='DOCUMENT'),
+                required=False,
+                title={'en': 'Document field', 'fr-be': 'Champ document'},
+                text=self.default_translated_value,
+                help_text={'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                config={},
+            ),
+        ]
+
         self.addCleanup(propositions_api_patcher.stop)
 
         # Mock admission sdk api
@@ -268,6 +307,8 @@ class ProjectViewTestCase(TestCase):
             'non_soutenue': False,
             'date_soutenance': datetime.date(2022, 5, 1),
             'raison_non_soutenue': 'Reason',
+            'reponses_questions_specifiques_1': 'My response',
+            'reponses_questions_specifiques_2': [],
         }
 
         default_kwargs = {
@@ -301,7 +342,12 @@ class ProjectViewTestCase(TestCase):
             'non_soutenue': False,
             'date_soutenance': datetime.date(2022, 5, 1),
             'raison_non_soutenue': 'Reason',
+            'reponses_questions_specifiques': {
+                'fe254203-17c7-47d6-95e4-3c5c532da552': 'My response',
+                'fe254203-17c7-47d6-95e4-3c5c532da553': [],
+            },
         }
+        self.maxDiff = None
         response = self.client.post(url, default_data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -465,6 +511,10 @@ class ProjectViewTestCase(TestCase):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
             'code_secteur_formation': "SST",
+            'reponses_questions_specifiques': {
+                '2': 'My response',
+                '3': [],
+            },
         }
 
         data = {
@@ -532,6 +582,10 @@ class ProjectViewTestCase(TestCase):
             commission_proximite="ECONOMY",
             institut_these=self.mock_entities[0].uuid,
             links={},
+            reponses_questions_specifiques={
+                '2': 'My response',
+                '3': [],
+            },
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -545,6 +599,10 @@ class ProjectViewTestCase(TestCase):
             commission_proximite="ECLI",
             institut_these="",
             links={},
+            reponses_questions_specifiques={
+                '2': 'My response',
+                '3': [],
+            },
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -555,6 +613,10 @@ class ProjectViewTestCase(TestCase):
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             statut=ChoixStatutProposition.IN_PROGRESS.name,
             links={},
+            reponses_questions_specifiques={
+                '2': 'My response',
+                '3': [],
+            },
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

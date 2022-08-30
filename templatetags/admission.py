@@ -25,20 +25,22 @@
 # ##############################################################################
 import functools
 import re
+import uuid
 from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
 
-from bootstrap3.templatetags.bootstrap3 import bootstrap_field
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.safestring import SafeString
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, get_language
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums import *
 from admission.contrib.enums.training import CategorieActivite, StatutActivite
-from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
+from admission.contrib.enums.fields import TypeItemFormulaire, TYPES_ITEMS_LECTURE_SEULE
+from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB, AdmissionConfigurationService
+from admission.utils.utils import get_uuid_value
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
@@ -259,6 +261,34 @@ def field_data(name, data=None, css_class=None, hide_empty=False, translate_data
         'css_class': css_class,
         'hide_empty': hide_empty,
         'html_tag': html_tag,
+    }
+
+
+@register.inclusion_tag('admission/multiple_field_data.html', takes_context=True)
+def multiple_field_data(context, data, title=''):
+    fields = AdmissionConfigurationService.get_specific_questions_configurations(
+        person=context['request'].user.person,
+        uuid=str(context['view'].kwargs.get('pk', '')),
+    )
+
+    current_language = get_language()
+
+    if not data:
+        data = {}
+
+    for field in fields:
+        if field.type.value in TYPES_ITEMS_LECTURE_SEULE:
+            field.value = field.text.get(current_language)
+        elif field.type.value == TypeItemFormulaire.DOCUMENT.name:
+            field.value = [get_uuid_value(token) for token in data.get(str(field.uuid), [])]
+        else:
+            field.value = data.get(str(field.uuid))
+
+        field.translated_title = field.title.get(current_language)
+
+    return {
+        'fields': fields,
+        'title': title,
     }
 
 

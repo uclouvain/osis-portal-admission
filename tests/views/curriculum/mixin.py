@@ -203,6 +203,7 @@ class MixinTestCase(TestCase):
             fiche_archive_signatures_envoyees=[],
             statut=ChoixStatutProposition.IN_PROGRESS.name,
             erreurs=[],
+            reponses_questions_specifiques={},
         )
 
         cls.curriculum_file = CurriculumFile(curriculum=[])

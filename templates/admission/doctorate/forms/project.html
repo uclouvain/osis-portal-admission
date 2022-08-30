@@ -169,6 +169,12 @@
       </div>
     </div>
   {% endpanel %}
+
+  {% if form.reponses_questions_specifiques %}
+    {% panel _('Specificities') %}
+      {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
+    {% endpanel %}
+  {% endif %}
 {% endblock %}
 
 {% block script %}

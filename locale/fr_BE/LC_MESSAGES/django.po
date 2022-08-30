@@ -402,6 +402,9 @@ msgstr "Cours, formation et écoles"
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
 
+msgid "CSS class"
+msgstr "Classe CSS"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -678,6 +681,9 @@ msgstr "Doctorat"
 msgid "Doctorate admissions"
 msgstr "Admissions en doctorat"
 
+msgid "Document"
+msgstr "Document"
+
 msgid "Download as PDF"
 msgstr "Télécharger en tant que PDF"
 
@@ -840,6 +846,9 @@ msgstr "Féminin"
 msgctxt "female gender"
 msgid "Female"
 msgstr "Féminin"
+
+msgid "File MIME types"
+msgstr "Types de fichiers MIME"
 
 msgid "Financing"
 msgstr "Financement"
@@ -1219,6 +1228,9 @@ msgstr "Liste des expériences"
 msgid "Listening comprehension"
 msgstr "Compréhension à l'audition"
 
+msgid "Long"
+msgstr "Long"
+
 msgid "MANAGEMENT"
 msgstr "Gestion"
 
@@ -1245,8 +1257,14 @@ msgstr "Marié·e"
 msgid "Mathematics"
 msgstr "Mathématiques"
 
+msgid "Maximum number of documents"
+msgstr "Nombre maximum de documents"
+
 msgid "Member not found"
 msgstr "Membre non trouvé"
+
+msgid "Message"
+msgstr "Message"
 
 msgctxt "admission"
 msgid "Mobile phone"
@@ -1540,6 +1558,9 @@ msgstr "Veuillez définir le régime linguistique ou précisez un autre régime.
 
 msgid "Please set one of institute or other institute fields"
 msgstr "Veuillez définir l'établissement ou précisez un autre établissement"
+
+msgid "Please specify a value for the following field: {}"
+msgstr "Merci de spécifier une valeur pour le champ suivant : {}"
 
 msgid ""
 "Please specify either your high school diploma or your enrolment certificate"
@@ -1845,6 +1866,9 @@ msgstr "Désigner comme promoteur de référence"
 msgid "Sex"
 msgstr "Sexe"
 
+msgid "Short"
+msgstr "Court"
+
 msgid "Show details"
 msgstr "Voir le détail"
 
@@ -1866,6 +1890,9 @@ msgstr "Orateur ou oratrice"
 
 msgid "Speaking ability"
 msgstr "Parler"
+
+msgid "Specificities"
+msgstr "Spécificités"
 
 msgid "Specify the employer and your function"
 msgstr "Indiquer l'employeur et votre fonction"
@@ -1933,6 +1960,12 @@ msgstr "Supervision"
 
 msgid "Teaching of general education"
 msgstr "Enseignement de formation générale"
+
+msgid "Text"
+msgstr "Texte"
+
+msgid "Text size"
+msgstr "Taille du texte"
 
 msgid ""
 "The \"doctoral training\" must be updated before the confirmation paper and "
@@ -2040,6 +2073,10 @@ msgid ""
 msgstr ""
 "Le résumé de la proposition au format PDF est en cours de génération, "
 "veuillez revenir plus tard pour y accéder."
+
+#, python-format
+msgid "The type of the admission form item is unknown (%(type)s)."
+msgstr "Le type de l'élément du formulaire est inconnu (%(type)s)."
 
 msgid "There is no request for a new deadline."
 msgstr "Il n'y a pas de demande de nouvelle échéance."

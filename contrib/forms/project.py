@@ -46,6 +46,7 @@ from admission.contrib.forms import (
     SelectOrOtherField,
     get_thesis_location_initial_choices,
 )
+from admission.contrib.forms.fields import ConfigurableFormMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
 
@@ -56,7 +57,9 @@ COMMISSION_CDSS = 'CDSS'
 COMMISSIONS_CDE_CLSM = ['CDE', 'CLSM']
 
 
-class DoctorateAdmissionProjectForm(forms.Form):
+class DoctorateAdmissionProjectForm(ConfigurableFormMixin):
+    configurable_form_field_name = 'reponses_questions_specifiques'
+
     type_admission = forms.ChoiceField(
         label=_("Admission type"),
         choices=AdmissionType.choices(),

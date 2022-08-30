@@ -23,12 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import uuid
 
 from django.test import TestCase
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 
-from admission.utils import format_entity_address, format_entity_title, force_title
+from admission.utils import format_entity_address, format_entity_title, force_title, get_uuid_value
 
 
 class UtilsTestCase(TestCase):
@@ -109,3 +110,11 @@ class UtilsTestCase(TestCase):
     def test_force_title_string_several_words_separated_by_commas(self):
         result = force_title('Pierre,pAUL,JACQUES')
         self.assertEqual(result, 'Pierre,paul,Jacques')
+
+    def test_get_uuid_returns_uuid_if_value_if_uuid(self):
+        uuid_value = uuid.uuid4()
+        self.assertEqual(get_uuid_value(str(uuid_value)), uuid_value)
+
+    def test_get_uuid_returns_input_value_if_not_uuid(self):
+        other_value = 'abcdef'
+        self.assertEqual(get_uuid_value(other_value), other_value)

@@ -1,3 +1,6 @@
+import uuid
+from typing import Union
+
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.address import Address
 from osis_reference_sdk.model.high_school import HighSchool
@@ -42,3 +45,10 @@ def force_title(string: str):
 
 def to_snake_case(value):
     return ''.join(['_' + i.lower() if i.isupper() else i for i in value]).lstrip('_')
+
+
+def get_uuid_value(value: str) -> Union[uuid.UUID, str]:
+    try:
+        return uuid.UUID(hex=value)
+    except ValueError:
+        return value
