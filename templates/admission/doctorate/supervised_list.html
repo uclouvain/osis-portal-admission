@@ -40,7 +40,8 @@
         <h3 style="margin-top: 0">
           {{ admission.prenom_candidat }} {{ admission.nom_candidat }}
           ({{ admission.reference }})
-          <div><small>{{ admission.doctorat.intitule }}
+          {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+          <div><small>{{ doctorate_title }}
             - {{ admission.intitule_secteur_formation }}</small></div>
         </h3>
         <div>
