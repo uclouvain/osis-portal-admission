@@ -79,7 +79,7 @@
 
 {% block script %}
   {{ block.super }}
-  {{ form.media }}
+  {{ form.empty_form.media }}
   <script type="text/javascript">
   $(function () {
     $('.form-container').formset({
