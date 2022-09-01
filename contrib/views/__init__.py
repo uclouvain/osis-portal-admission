@@ -108,4 +108,5 @@ __all__ = [
     "DoctorateAutocomplete",
     "DoctorateAdmissionTrainingView",
     "DoctorateTrainingActivityAddView",
+    "DoctorateTrainingActivityDeleteView",
 ]

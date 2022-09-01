@@ -264,6 +264,10 @@ msgid "Are you sure you want to cancel this request?"
 msgstr "Êtes-vous sûr de vouloir supprimer cette demande ?"
 
 #, python-format
+msgid "Are you sure you want to delete \"%(object)s\"?"
+msgstr "Êtes-vous sûr de vouloir supprimer \"%(object)s\" ?"
+
+#, python-format
 msgid ""
 "Are you sure you want to remove %(first_name)s %(last_name)s as %(role)s?"
 msgstr ""
@@ -1443,6 +1447,19 @@ msgid "Place (optional)"
 msgstr "Lieu-dit (optionnel)"
 
 msgid ""
+"Please check the details of the activity (and sub-activities) to fill in all "
+"mandatory fields"
+msgstr ""
+"Veuillez vérifier le détail de l’activité (et des sous-activités) pour "
+"renseigner tous les champs obligatoires"
+
+msgid ""
+"Please check the details of the activity to fill in all mandatory fields"
+msgstr ""
+"Veuillez vérifier le détail de l’activité pour renseigner tous les champs "
+"obligatoires"
+
+msgid ""
 "Please complete the \"Application for a cotutelle\" form (available here) "
 "and upload it here."
 msgstr ""
@@ -1834,6 +1851,9 @@ msgstr "Rue"
 msgid "Study system"
 msgstr "Système d'études"
 
+msgid "Submit"
+msgstr "Soumettre"
+
 msgid "Submit and notify the DDC"
 msgstr "Soumettre et avertir la CDD"
 
@@ -1998,6 +2018,9 @@ msgstr "Lieu de la thèse"
 
 msgid "Thesis redacting language"
 msgstr "Langue de rédaction de la thèse"
+
+msgid "This activity and potential sub-activities will be deleted"
+msgstr "Cette activité et ses potentielles sous-activités seront supprimées"
 
 msgid "This comment will be visible to all users who have access to this page."
 msgstr ""

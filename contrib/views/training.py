@@ -27,6 +27,7 @@ import re
 from abc import ABC
 from copy import copy
 
+from django.forms import Form
 from django.http import Http404
 from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
@@ -43,6 +44,7 @@ __all__ = [
     "DoctorateAdmissionTrainingView",
     "DoctorateTrainingActivityAddView",
     "DoctorateTrainingActivityEditView",
+    "DoctorateTrainingActivityDeleteView",
 ]
 
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
@@ -219,3 +221,29 @@ class DoctorateTrainingActivityEditView(DoctorateTrainingActivityFormMixin):
             **data,
         )
         self.activity_uuid = response['uuid']
+
+
+class DoctorateTrainingActivityDeleteView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
+    template_name = "admission/doctorate/forms/training/activity_confirm_delete.html"
+    slug_field = 'uuid'
+    pk_url_kwarg = None
+    slug_url_kwarg = 'activity_id'
+    form_class = Form
+
+    def call_webservice(self, data):
+        AdmissionDoctorateTrainingService.delete_activity(
+            person=self.person,
+            doctorate_uuid=str(self.kwargs['pk']),
+            activity_uuid=str(self.kwargs['activity_id']),
+        )
+
+    @cached_property
+    def activity(self):
+        return AdmissionDoctorateTrainingService.get_activity(
+            person=self.person,
+            doctorate_uuid=str(self.kwargs['pk']),
+            activity_uuid=str(self.kwargs['activity_id']),
+        ).to_dict()
+
+    def get_success_url(self):
+        return resolve_url("admission:doctorate:training", pk=self.kwargs['pk'])

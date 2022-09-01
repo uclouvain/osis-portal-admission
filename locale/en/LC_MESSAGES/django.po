@@ -245,6 +245,10 @@ msgid "Are you sure you want to cancel this request?"
 msgstr ""
 
 #, python-format
+msgid "Are you sure you want to delete \"%(object)s\"?"
+msgstr ""
+
+#, python-format
 msgid ""
 "Are you sure you want to remove %(first_name)s %(last_name)s as %(role)s?"
 msgstr ""
@@ -1333,6 +1337,15 @@ msgid "Place (optional)"
 msgstr ""
 
 msgid ""
+"Please check the details of the activity (and sub-activities) to fill in all "
+"mandatory fields"
+msgstr ""
+
+msgid ""
+"Please check the details of the activity to fill in all mandatory fields"
+msgstr ""
+
+msgid ""
 "Please complete the \"Application for a cotutelle\" form (available here) "
 "and upload it here."
 msgstr ""
@@ -1715,6 +1728,9 @@ msgstr ""
 msgid "Study system"
 msgstr ""
 
+msgid "Submit"
+msgstr ""
+
 msgid "Submit and notify the DDC"
 msgstr ""
 
@@ -1846,6 +1862,9 @@ msgid "Thesis location"
 msgstr ""
 
 msgid "Thesis redacting language"
+msgstr ""
+
+msgid "This activity and potential sub-activities will be deleted"
 msgstr ""
 
 msgid "This comment will be visible to all users who have access to this page."

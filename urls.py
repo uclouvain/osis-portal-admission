@@ -118,7 +118,7 @@ training_paths = [
     path("add/<str:category>", views.DoctorateTrainingActivityAddView.as_view(), name="add"),
     path('edit/<uuid:activity_id>', views.DoctorateTrainingActivityEditView.as_view(), name='edit'),
     path("submit/<uuid:activity_id>", views.DoctorateAdmissionTrainingView.as_view(), name="submit"),
-    path("delete/<uuid:activity_id>", views.DoctorateAdmissionTrainingView.as_view(), name="delete"),
+    path("delete/<uuid:activity_id>", views.DoctorateTrainingActivityDeleteView.as_view(), name="delete"),
 ]
 
 doctorate_paths = [

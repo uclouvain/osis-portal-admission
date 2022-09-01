@@ -435,3 +435,11 @@ class AdmissionDoctorateTrainingService(metaclass=ServiceMeta):
                     api_business_exceptions |= {ActivityApiBusinessException(**exception) for exception in exceptions}
                 raise MultipleApiBusinessException(exceptions=api_business_exceptions)
             raise api_exception
+
+    @classmethod
+    def delete_activity(cls, person, doctorate_uuid, activity_uuid):
+        return AdmissionPropositionAPIClient().destroy_doctoral_training(
+            uuid=doctorate_uuid,
+            activity_id=activity_uuid,
+            **build_mandatory_auth_headers(person),
+        )
