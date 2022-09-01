@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/details/tab_layout.html" %}
+{% extends "admission/doctorate/detail_tab_layout.html" %}
 {% load i18n static admission bootstrap3 %}
 
 {% comment "License" %}
@@ -27,6 +27,11 @@
 
 
 {% block tab_content %}
+  <h3>
+    {% display view.activity.type " - " view.activity.title as object %}
+    {% blocktrans trimmed %}Are you sure you want to delete "{{ object }}"?{% endblocktrans %}
+  </h3>
+  <p>{% trans "This activity and potential sub-activities will be deleted" %}</p>
   <form action="" method="post">
     {% csrf_token %}
     <div class="text-right">
