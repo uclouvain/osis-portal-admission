@@ -36,6 +36,7 @@ from django.views.generic import FormView
 
 from admission.contrib.enums.training import CategorieActivite, StatutActivite
 from admission.contrib.forms.training import *
+from admission.contrib.forms.training import AssentForm
 from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionDoctorateTrainingService
@@ -45,6 +46,7 @@ __all__ = [
     "DoctorateTrainingActivityAddView",
     "DoctorateTrainingActivityEditView",
     "DoctorateTrainingActivityDeleteView",
+    "DoctorateTrainingActivityAssentView",
 ]
 
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
@@ -236,6 +238,39 @@ class DoctorateTrainingActivityDeleteView(LoadDoctorateViewMixin, WebServiceForm
             doctorate_uuid=str(self.kwargs['pk']),
             activity_uuid=str(self.kwargs['activity_id']),
         )
+
+    @cached_property
+    def activity(self):
+        return AdmissionDoctorateTrainingService.get_activity(
+            person=self.person,
+            doctorate_uuid=str(self.kwargs['pk']),
+            activity_uuid=str(self.kwargs['activity_id']),
+        ).to_dict()
+
+    def get_success_url(self):
+        return resolve_url("admission:doctorate:training", pk=self.kwargs['pk'])
+
+
+class DoctorateTrainingActivityAssentView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
+    template_name = "admission/doctorate/forms/training/assent.html"
+    slug_field = 'uuid'
+    pk_url_kwarg = None
+    slug_url_kwarg = 'activity_id'
+    form_class = AssentForm
+
+    def call_webservice(self, data):
+        AdmissionDoctorateTrainingService.assent_activity(
+            person=self.person,
+            doctorate_uuid=str(self.kwargs['pk']),
+            activity_uuid=str(self.kwargs['activity_id']),
+            **data,
+        )
+
+    def get_initial(self):
+        return {
+            'approbation': self.activity['reference_promoter_assent'],
+            'commentaire': self.activity['reference_promoter_comment'],
+        }
 
     @cached_property
     def activity(self):

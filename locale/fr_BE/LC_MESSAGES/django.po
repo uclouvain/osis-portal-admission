@@ -286,6 +286,9 @@ msgstr "Artistique de qualification"
 msgid "Artistic transition"
 msgstr "Artistique de transition"
 
+msgid "Assent"
+msgstr "Approbation"
+
 msgid "Associative"
 msgstr "Associatif"
 
@@ -455,6 +458,9 @@ msgstr "Commentaire"
 
 msgid "Comment for the candidate"
 msgstr "Commentaire à destination du candidat"
+
+msgid "Comment from reference promoter"
+msgstr "Commentaire du promoteur de référence"
 
 msgid "Comment to the candidate:"
 msgstr "Commentaire à destination du candidat :"
@@ -877,6 +883,9 @@ msgstr "Allemand"
 
 msgid "German-speaking Community"
 msgstr "Communauté germanophone"
+
+msgid "Give assent/dissent"
+msgstr "Donner son avis"
 
 msgid "Graduate degree"
 msgstr "Diplôme d'études supérieures"

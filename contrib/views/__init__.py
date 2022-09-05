@@ -109,4 +109,5 @@ __all__ = [
     "DoctorateAdmissionTrainingView",
     "DoctorateTrainingActivityAddView",
     "DoctorateTrainingActivityDeleteView",
+    "DoctorateTrainingActivityAssentView",
 ]

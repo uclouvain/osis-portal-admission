@@ -443,3 +443,12 @@ class AdmissionDoctorateTrainingService(metaclass=ServiceMeta):
             activity_id=activity_uuid,
             **build_mandatory_auth_headers(person),
         )
+
+    @classmethod
+    def assent_activity(cls, person, doctorate_uuid, activity_uuid, **kwargs):
+        return AdmissionPropositionAPIClient().assent_doctoral_training(
+            uuid=doctorate_uuid,
+            activity_id=activity_uuid,
+            **build_mandatory_auth_headers(person),
+            doctoral_training_assent=kwargs,
+        )
