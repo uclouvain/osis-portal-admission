@@ -265,6 +265,9 @@ msgstr ""
 msgid "Artistic transition"
 msgstr ""
 
+msgid "Assent"
+msgstr ""
+
 msgid "Associative"
 msgstr ""
 
@@ -422,6 +425,9 @@ msgid "Comment"
 msgstr ""
 
 msgid "Comment for the candidate"
+msgstr ""
+
+msgid "Comment from reference promoter"
 msgstr ""
 
 msgid "Comment to the candidate:"
@@ -829,6 +835,9 @@ msgid "German"
 msgstr ""
 
 msgid "German-speaking Community"
+msgstr ""
+
+msgid "Give assent/dissent"
 msgstr ""
 
 msgid "Graduate degree"

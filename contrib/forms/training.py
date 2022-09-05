@@ -522,3 +522,8 @@ class BatchActivityForm(forms.Form):
     def __init__(self, uuids=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['activity_ids'].choices = zip(uuids, uuids)
+
+
+class AssentForm(forms.Form):
+    approbation = forms.BooleanField(required=False)
+    commentaire = forms.CharField(widget=forms.Textarea)
