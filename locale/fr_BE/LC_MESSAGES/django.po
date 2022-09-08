@@ -45,6 +45,46 @@ msgid "%(label)s:"
 msgstr "%(label)s :"
 
 #, python-format
+msgid ""
+"%(person_concerned)s has a long-term residence permit (B, C, D, F, F+ or M "
+"cards) in Belgium"
+msgstr ""
+"%(person_concerned)s est titulaire d’un titre de séjour de longue durée "
+"(Cartes B, C, D, F, F+ ou M) en Belgique"
+
+#, python-format
+msgid ""
+"%(person_concerned)s has a residence permit for more than 3 months and "
+"receives professional or replacement income"
+msgstr ""
+"%(person_concerned)s a une autorisation de séjour de plus de 3 mois et "
+"bénéficie de revenus professionnels ou de remplacement"
+
+#, python-format
+msgid ""
+"%(person_concerned)s has the nationality of a country of a Member State of "
+"the European Union"
+msgstr ""
+"%(person_concerned)s a la nationalité d’un pays d’un état membre de l’Union "
+"européenne"
+
+#, python-format
+msgid ""
+"%(person_concerned)s is a refugee applicant, refugee, stateless person, or "
+"has temporary/subsidiary protection"
+msgstr ""
+"%(person_concerned)s est candidat réfugié, réfugié, apatride, ou bénéficie "
+"de la protection temporaire/subsidiaire"
+
+#, python-format
+msgid ""
+"%(person_concerned)s is supported by the CPAS, or by a CPAS rest home or "
+"designated by the CPAS"
+msgstr ""
+"%(person_concerned)s est pris en charge par le CPAS, ou par un home du CPAS, "
+"ou désigné par le CPAS"
+
+#, python-format
 msgid "%(state)s on %(date)s"
 msgstr "%(state)s le %(date)s"
 
@@ -127,6 +167,9 @@ msgstr "ARC - Action de Recherche Concertée"
 msgid "ARES - Cooperation au developpement"
 msgstr "ARES - Coopération au développement"
 
+msgid "Absence of debt"
+msgstr "Absence de dettes"
+
 msgid "Academic graduation year"
 msgstr "Année d'obtention du diplôme universitaire"
 
@@ -144,6 +187,12 @@ msgstr "Acceptée"
 
 msgid "Access my doctoral students' requests"
 msgstr "Accéder aux dossiers de mes doctorants"
+
+msgid "Account number"
+msgstr "Numéro de compte"
+
+msgid "Accounting"
+msgstr "Comptabilité"
 
 msgid "Acquired credits"
 msgstr "Crédits acquis"
@@ -226,6 +275,9 @@ msgstr "Admission"
 msgid "Admission type"
 msgstr "Type de l'admission"
 
+msgid "Affiliations"
+msgstr "Affiliations"
+
 msgctxt "filters"
 msgid "All"
 msgstr "Tout"
@@ -296,6 +348,13 @@ msgstr "Êtes-vous sûr de vouloir supprimer cette expérience ?"
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr "Êtes-vous sûr de vouloir requérir les signatures pour cette demande ?"
 
+msgid ""
+"Are you the child of a member of the staff of the UCLouvain or the Martin V "
+"entity?"
+msgstr ""
+"Êtes-vous l'enfant d'un membre du personnel de l'UCLouvain ou de l'entité "
+"Martin V ?"
+
 msgid "Artistic qualification"
 msgstr "Artistique de qualification"
 
@@ -304,6 +363,12 @@ msgstr "Artistique de transition"
 
 msgid "Assent"
 msgstr "Approbation"
+
+msgid "Assimilation"
+msgstr "Assimilation"
+
+msgid "Assimilation situation that applies to you"
+msgstr "Situation d’assimilation qui vous correspond"
 
 msgid "Associative"
 msgstr "Associatif"
@@ -340,11 +405,17 @@ msgstr ""
 "exploitées tout au long de vos études universitaires. Si tout vous paraît "
 "correct, vous pouvez alors confirmer votre demande d'inscription ci-dessous."
 
+msgid "BIC/SWIFT code identifying the bank from which the account was opened"
+msgstr "Code BIC/SWIFT identifiant la banque dont provient le compte"
+
 msgid "BIOLOGY"
 msgstr "Biologie"
 
 msgid "Back to requests"
 msgstr "Retour aux demandes"
+
+msgid "Bank account"
+msgstr "Compte bancaire"
 
 msgid "Begin date"
 msgstr "Date de début"
@@ -437,6 +508,9 @@ msgstr "Certificat d'inscription ou de fréquentation scolaire"
 msgid "Certificate of language knowledge"
 msgstr "Certificat de connaissance des langues"
 
+msgid "Certificate of legal cohabitation"
+msgstr "Attestation de cohabitation légale"
+
 msgid "Certificate of participation in the presentation"
 msgstr "Attestation de participation à l'exposé"
 
@@ -447,11 +521,38 @@ msgstr ""
 "Attestation de réussite de l'examen d'admission aux études de premier cycle "
 "de l'enseignement supérieur"
 
+msgid ""
+"Certificate stating the absence of debts towards the institution attended "
+"during the academic year"
+msgstr ""
+"Attestation stipulant l'absence de dettes vis-à-vis de l'établissement "
+"fréquenté durant l'année académique"
+
+#, python-format
+msgid ""
+"Certificate stating the absence of debts towards the institution attended "
+"during the academic year %(academic_year)s: %(names)s."
+msgid_plural ""
+"Certificates stating the absence of debts towards the institutions attended "
+"during the academic year %(academic_year)s: %(names)s."
+msgstr[0] ""
+"Attestation stipulant l'absence de dettes vis-à-vis de l'établissement "
+"fréquenté durant l'année académique %(academic_year)s : %(names)s."
+msgstr[1] ""
+"Attestations stipulant l'absence de dettes vis-à-vis des établissements "
+"fréquentés durant l'année académique %(academic_year)s : %(names)s."
+
 msgid "Certificate, with dates, justifying the specified period."
 msgstr "Attestation, avec mention des dates, justifiant la période concernée."
 
 msgid "Chemistry"
 msgstr "Chimie"
+
+msgid "Choose among the following proposals"
+msgstr "Choisissez parmi les propositions suivantes"
+
+msgid "Chosen assimilation"
+msgstr "Assimilation choisie"
 
 msgid "City"
 msgstr "Ville"
@@ -518,6 +619,140 @@ msgstr "Langue de contact"
 
 msgid "Context"
 msgstr "Contexte"
+
+msgid ""
+"Copy of 6 salary slips issued in the 12 months preceding the application"
+msgstr ""
+"Copie de 6 fiches de rémunération éditées dans les 12 mois précédant la "
+"demande d’inscription"
+
+msgid "Copy of both sides of the A or B Card"
+msgstr "Copie recto-verso de la Carte A ou B"
+
+msgid ""
+"Copy of both sides of the A or B card (with \"refugee\" written on the back "
+"of the card)"
+msgstr ""
+"Copie recto-verso de la Carte A ou B (avec mention de « réfugié » sur le "
+"verso de la carte)"
+
+msgid ""
+"Copy of both sides of the CIRE - unlimited stay (B card) or copy of the "
+"foreigner's card - unlimited stay (C card)"
+msgstr ""
+"Copie recto-verso de la CIRE - séjour illimité (Carte B) ou copie de la "
+"carte d'étranger - séjour illimité (Carte C)"
+
+msgid "Copy of both sides of the EC long-term resident card (D card)"
+msgstr "Copie recto-verso de la carte de résident longue durée-CE (Carte D)"
+
+#, python-format
+msgid "Copy of both sides of the identity card of %(person_concerned)s"
+msgstr "Copie recto-verso de la carte d’identité de %(person_concerned)s"
+
+msgid ""
+"Copy of both sides of the identity document proving the long-term stay in a "
+"member state of the European Union"
+msgstr ""
+"Copie recto-verso du titre d’identité prouvant le séjour longue durée dans "
+"un pays membre de l’Union européenne"
+
+#, python-format
+msgid ""
+"Copy of both sides of the long-term residence permit in Belgium of "
+"%(person_concerned)s"
+msgstr ""
+"Copie recto-verso du titre de séjour de longue durée en Belgique de "
+"%(person_concerned)s"
+
+msgid ""
+"Copy of both sides of the permanent residence card of a family member of a "
+"European Union citizen (F+ card)"
+msgstr ""
+"Copie recto-verso de la carte de séjour permanent de membre de la famille "
+"d’un citoyen de l'Union européenne (Carte F+)"
+
+msgid ""
+"Copy of both sides of the residence card of a family member of a European "
+"Union citizen (F card)"
+msgstr ""
+"Copie recto-verso de la carte de séjour de membre de la famille d’un citoyen "
+"de l'Union européenne (Carte F)"
+
+msgid "Copy of both sides of the residence permit in Belgium"
+msgstr "Copie recto-verso du titre de séjour en Belgique"
+
+msgid "Copy of both sides of the residence permit valid for more than 3 months"
+msgstr ""
+"Copie recto-verso du titre de séjour d’une validité supérieure à 3 mois"
+
+#, python-format
+msgid ""
+"Copy of both sides of your residence permit valid for more than 3 months of "
+"%(person_concerned)s"
+msgstr ""
+"Copie recto-verso du titre de séjour d’une validité supérieure à 3 mois de "
+"%(person_concerned)s"
+
+#, python-format
+msgid ""
+"Copy of the 6 salary slips issued in the 12 months preceding the application "
+"for registration or proof of receipt of unemployment benefit, pension or an "
+"indemnity from the mutual insurance company of %(person_concerned)s"
+msgstr ""
+"Copie des 6 fiches de rémunération éditées dans les 12 mois de "
+"%(person_concerned)s précédant la demande d’inscription ou la preuve de la "
+"perception d’allocations de chômage, de pension ou une indemnité de la "
+"mutuelle"
+
+msgid ""
+"Copy of the Annex 25 or 26 completed by the Office of the Commissioner "
+"General for Refugees and Stateless Persons"
+msgstr ""
+"Copie de l’Annexe 25 ou 26 complétée par le Commissariat général aux "
+"réfugiés et aux apatrides"
+
+#, python-format
+msgid ""
+"Copy of the Annex 25 or 26 or the A/B card mentioning the refugee status or "
+"copy of the decision of the Foreigners' Office confirming the temporary/"
+"subsidiary protection of %(person_concerned)s"
+msgstr ""
+"Copie de l’annexe 25 ou 26 ou de la carte A/B mentionnant le statut de "
+"réfugié ou copie de la décision de l’Office des étrangers attestant de la "
+"protection temporaire/subsidiaire de %(person_concerned)s"
+
+msgid ""
+"Copy of the certificate of scholarship holder issued by the General "
+"Administration for Development Cooperation"
+msgstr ""
+"Copie de l’attestation de boursier délivrée par l'administration générale de "
+"la Coopération au Développement"
+
+msgid ""
+"Copy of the decision of the Foreigners' Office confirming the granting of "
+"subsidiary protection"
+msgstr ""
+"Copie de la décision de l’Office des étrangers attestant de l’octroi de la "
+"protection subsidiaire"
+
+msgid ""
+"Copy of the decision of the Foreigners' Office confirming the granting of "
+"temporary protection"
+msgstr ""
+"Copie de la décision de l’Office des étrangers attestant de l’octroi de la "
+"protection temporaire"
+
+msgid "Copy of the decision to grant the scholarship from the CFWB"
+msgstr ""
+"Copie de la décision de l’octroi de la bourse du service d’allocations "
+"d’études de la CFWB"
+
+msgid "Copy of the registration certificate \"orange card\""
+msgstr "Copie de l’attestation d’immatriculation « carte orange »"
+
+msgid "Copy of the tutorship act authenticated by the Belgian authorities"
+msgstr "Copie de l’acte de tutelle légalisé par des autorités belges"
 
 msgid "Cotutelle"
 msgstr "Cotutelle"
@@ -665,6 +900,23 @@ msgid ""
 msgstr ""
 "Demandez-vous, sur base de cette formation, de réaliser une poursuite de "
 "cycle pour le bachelier auquel vous vous inscrivez ?"
+
+msgid ""
+"Do you wish to join the <a href='https://uclouvain.be/fr/etudier/sport/le-"
+"sport-uclouvain.html' target='_blank'>sports activities</a>? If so, the cost "
+"of this membership will be added to your registration fee."
+msgstr ""
+"Désirez-vous l'affiliation aux <a href='https://uclouvain.be/fr/etudier/"
+"sport/le-sport-uclouvain.html' target='_blank'>activités sportives</a> ? "
+"Dans l'affirmative, le coût de cette affiliation sera ajouté à vos droits "
+"d'inscription."
+
+msgid ""
+"Do you wish to join the sports activities? If so, the cost of this "
+"membership will be added to your registration fee."
+msgstr ""
+"Désirez-vous l'affiliation aux activités sportives ? Dans l'affirmative, le "
+"coût de cette affiliation sera ajouté à vos droits d'inscription."
 
 msgid "Doctoral program proposition"
 msgstr "Projet de formation doctorale"
@@ -860,6 +1112,9 @@ msgstr "Prénom"
 msgid "First name in use"
 msgstr "Prénom d'usage"
 
+msgid "First name of the account holder"
+msgstr "Prénom du titulaire du compte"
+
 msgid "Flemish-speaking Community"
 msgstr "Communauté flamande"
 
@@ -939,6 +1194,21 @@ msgstr ""
 "Ce diplôme a-t-il fait l'objet d'une décision d'équivalence par les services "
 "de la Communauté française de Belgique ?"
 
+msgid ""
+"Have you applied for a <a href=https://allocations-etudes.cfwb.be/etudes-"
+"superieures/ target='_blank'>study allowance</a> from the French Community "
+"of Belgium?"
+msgstr ""
+"Avez-vous fait une <a href='https://allocations-etudes.cfwb.be/etudes-"
+"superieures/' target='_blank'>demande d'allocation d'études</a> auprès de la "
+"Communauté française de Belgique ?"
+
+msgid ""
+"Have you applied for a study allowance from the French Community of Belgium?"
+msgstr ""
+"Avez-vous fait une demande d'allocation d'études auprès de la Communauté "
+"française de Belgique ?"
+
 msgid "Have you ever started or completed a PhD?"
 msgstr ""
 "Avez-vous été inscrit antérieurement pour réaliser une thèse de doctorat ?"
@@ -967,6 +1237,42 @@ msgstr ""
 "entre la fin de l’école primaire et le début de l’enseignement supérieur."
 
 msgid ""
+"Household composition or marriage certificate authenticated by the Belgian "
+"authorities"
+msgstr ""
+"Composition de ménage ou acte de mariage légalisé par les autorités belges"
+
+msgid "Household composition, or a copy of your birth certificate"
+msgstr "Composition de ménage, ou copie de votre acte de naissance"
+
+msgid ""
+"I am a long-term resident in the European Union outside Belgium "
+"(assimilation 7)"
+msgstr ""
+"Je suis résident de longue durée en Union Européenne hors Belgique "
+"(assimilation 7)"
+
+msgid "I am a refugee"
+msgstr "Je suis réfugié"
+
+msgid ""
+"I am a refugee, stateless person, or have been granted a subsidiary or "
+"temporary protection (assimilation 2)"
+msgstr ""
+"Je suis réfugié, apatride, ou je bénéficie d’une protection subsidiaire/"
+"temporaire (assimilation 2)"
+
+msgid "I am an asylum seeker"
+msgstr "Je suis demandeur d’asile"
+
+msgid ""
+"I am supported by the CPAS, or by a CPAS rest home or designated by the CPAS "
+"(assimilation 4)"
+msgstr ""
+"Je suis pris en charge par le CPAS, ou par un home du CPAS ou désigné par le "
+"CPAS (assimilation 4)"
+
+msgid ""
 "I authorize the UCLouvain to transmit to the secondary school in which I "
 "obtained my CESS, the information on the success."
 msgstr ""
@@ -975,11 +1281,83 @@ msgstr ""
 "1er bloc annuel de bachelier et toute  obtention d'un grade académique avec "
 "la mention éventuelle."
 
+msgid "I benefit from a Development Cooperation grant"
+msgstr "Je bénéficie d’une bourse de la Coopération au développement"
+
+msgid ""
+"I benefit from a grant covered by the paragraph 2 of article 105 of the "
+"decree of 7 November 2013 (assimilation 6)"
+msgstr ""
+"Je bénéficie d’une bourse visée à l’article 105 § 2 du décret du 7 novembre "
+"2013 (CFWB ou Coopération au développement) (assimilation 6)"
+
+msgid ""
+"I benefit from a grant given by the study allowance service of the French "
+"Community"
+msgstr ""
+"Je bénéficie d’une bourse octroyée par le service d'allocations d'études de "
+"la Communauté française"
+
+msgid "I benefit from subsidiary protection"
+msgstr "Je bénéficie de la protection subsidiaire"
+
+msgid "I benefit from temporary protection"
+msgstr "Je bénéficie de la protection temporaire"
+
+msgid "I have a foreigner's card"
+msgstr "Je suis titulaire d’une carte d’étranger"
+
+msgid "I have a long-term resident card"
+msgstr "Je suis titulaire d’une carte de résident·e de longue durée"
+
+msgid ""
+"I have a permanent residence card as a family member of a European Union "
+"citizen"
+msgstr ""
+"Je suis titulaire d’une carte de séjour permanent de membre de la famille "
+"d’un citoyen de l'Union européenne"
+
+msgid "I have a residence card as a family member of an EU citizen."
+msgstr ""
+"Je suis titulaire d’une carte de séjour de membre de la famille d’un citoyen "
+"de l'Union européenne"
+
+msgid ""
+"I have a residence permit for more than 3 months, and I also have "
+"professional or replacement income (assimilation 3)"
+msgstr ""
+"J’ai une autorisation de séjour de plus de 3 mois, et je bénéficie également "
+"de revenus professionnels ou de remplacement (assimilation 3)"
+
+msgid ""
+"I have a residence permit for more than 3 months, and I have a professional "
+"income"
+msgstr ""
+"J’ai une autorisation de séjour de plus de 3 mois, et je bénéficie de "
+"revenus professionnels"
+
+msgid ""
+"I have a residence permit for more than 3 months, and I receive a "
+"replacement income"
+msgstr ""
+"J’ai une autorisation de séjour de plus de 3 mois, et je bénéficie de "
+"revenus de remplacement"
+
+msgid ""
+"I have a settlement permit or I am a long-term resident in Belgium "
+"(assimilation 1)"
+msgstr ""
+"J’ai une autorisation d’établissement, ou je suis résident de longue durée "
+"en Belgique (assimilation 1)"
+
 #, python-format
 msgid "I will have a high school diploma this year %s"
 msgstr ""
 "Je vais obtenir mon diplôme d'études secondaires lors de l'année académique "
 "%s"
+
+msgid "IBAN account number"
+msgstr "Numéro de compte IBAN"
 
 msgid "INVITED"
 msgstr "Invité"
@@ -1204,6 +1582,9 @@ msgstr "Connaissance des langues"
 msgid "Last name"
 msgstr "Nom"
 
+msgid "Last name of the account holder"
+msgstr "Nom du titulaire du compte"
+
 msgid "Last registration year"
 msgstr "Dernière année d'inscription"
 
@@ -1273,6 +1654,31 @@ msgstr "Plus de 75%"
 
 msgid "My enrolment request"
 msgstr "Ma demande d'inscription"
+
+msgid "My father"
+msgstr "Mon père"
+
+msgid ""
+"My father, mother, legal tutor, spouse or legal cohabitant has the "
+"nationality of a country of a Member State of the European Union, or "
+"fulfills the conditions referred to by one of the assimilations from 1 to 4 "
+"(assimilation 5)"
+msgstr ""
+"Mon père, ma mère, mon tuteur légal, conjoint ou cohabitant légal a la "
+"nationalité d’un pays d’un état membre de l’Union européenne, ou remplit les "
+"conditions visées par l’une des assimilations de 1 à 4 (assimilation 5)"
+
+msgid "My legal cohabitant"
+msgstr "Mon cohabitant légal"
+
+msgid "My legal tutor"
+msgstr "Mon tuteur légal"
+
+msgid "My mother"
+msgstr "Ma mère"
+
+msgid "My partner"
+msgstr "Mon conjoint"
 
 msgid "N/A"
 msgstr "Sans objet"
@@ -1351,6 +1757,9 @@ msgstr "Activité non-académique"
 
 msgid "Non-academic background"
 msgstr "Parcours non académique"
+
+msgid "None of these proposals are relevant to me"
+msgstr "Aucune de ces propositions ne me correspond"
 
 msgid "Not specified"
 msgstr "Non renseigné(e)"
@@ -1529,6 +1938,11 @@ msgstr "Évaluez votre capacité orale"
 msgid "Please rate your writing ability"
 msgstr "Évaluez votre capacité d'écriture"
 
+msgid "Please select the first assimilation situation that applies to you"
+msgstr ""
+"Veuillez sélectionner la première situation d’assimilation qui vous "
+"correspond"
+
 msgid "Please set either the linguistic regime or other field."
 msgstr "Veuillez définir le régime linguistique ou précisez un autre régime."
 
@@ -1617,6 +2031,13 @@ msgstr "Certification de participation ou de succès"
 msgid "Proof of publication"
 msgstr "Preuve de publication"
 
+msgid ""
+"Proof of receipt of unemployment benefit, pension or compensation from the "
+"mutual insurance company"
+msgstr ""
+"Preuve de la perception d’allocations de chômage, de pension ou d’une "
+"indemnité de la mutuelle"
+
 msgid "Proof of the final equivalence decision"
 msgstr "Preuve de la demande d'équivalence"
 
@@ -1680,8 +2101,19 @@ msgstr "Séjour de perfectionnement de recherche"
 msgid "Rank in diploma"
 msgstr "Rang dans le diplôme"
 
+msgid "Recent certificate of support from the CPAS"
+msgstr "Attestation récente de prise en charge par le CPAS"
+
+#, python-format
+msgid "Recent certificate of support from the CPAS of %(person_concerned)s"
+msgstr ""
+"Attestation récente de la prise en charge par le CPAS de %(person_concerned)s"
+
 msgid "Recommendation letters"
 msgstr "Lettres de recommandation"
+
+msgid "Reduced registration fees"
+msgstr "Réduction des droits d’inscription"
 
 msgid "Reference DIAL.Pr"
 msgstr "Référence DIAL.Pr"
@@ -1871,6 +2303,9 @@ msgstr "Parler"
 msgid "Specify the employer and your function"
 msgstr "Indiquer l'employeur et votre fonction"
 
+msgid "Staff child certificate"
+msgstr "Attestation enfant du personnel"
+
 msgid "Start"
 msgstr "Début"
 
@@ -1943,6 +2378,17 @@ msgstr ""
 "confirmation et mise à disposition du comité d'accompagnement le jour de "
 "l'épreuve."
 
+msgid ""
+"The BIC/SWIFT code consists of 8 or 11 characters, corresponding to:"
+"<ul><li>the institution or bank code (four letters)</li><li>the country code "
+"(two letters)</li><li>the location code (two letters or digits)</li><li>the "
+"branch code (optional, three letters or digits)</li></ul>"
+msgstr ""
+"Le code BIC/SWIFT est constitué de 8 ou 11 caractères, qui correspondent au :"
+"<ul><li>code de la banque (quatre lettres)</li><li>code du pays (deux "
+"lettres)</li><li>code emplacement (deux lettres ou chiffres)</li><li>code "
+"branche (optionnel, trois lettres ou chiffres)</li></ul>"
+
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr "Le numéro de registre national belge doit être composé de 11 chiffres."
 
@@ -1963,6 +2409,17 @@ msgstr ""
 "parvenir <strong>impérativement dans les 15 jours calendrier</strong>. A "
 "défaut, votre demande sera clôturée."
 
+msgid ""
+"The IBAN consists of up to 34 alphanumeric characters, corresponding to:"
+"<ul><li>the country code (two letters)</li><li>the check digits (two "
+"digits)</li><li>the Basic Bank Account Number (BBAN) (up to 30 alphanumeric "
+"characters)</li></ul>"
+msgstr ""
+"L'IBAN contient jusqu'à 34 caractères alphanumériques, qui correspondent :"
+"<ul><li>au code du pays (deux lettres)</li><li>à la clé de vérification "
+"(deux chiffres)</li><li>au Basic Bank Account Number (BBAN) (jusqu'à 30 "
+"caractères alphanumériques)</li></ul>"
+
 msgid "The NOMA must contain 8 digits."
 msgstr "Le NOMA doit contenir exactement 8 chiffres."
 
@@ -1982,6 +2439,20 @@ msgid ""
 msgstr ""
 "L'attestation de réussite de l'épreuve de confirmation au format PDF est en "
 "cours de génération, veuillez revenir plus tard pour y accéder."
+
+msgid ""
+"The child of a member of staff may, under some conditions, benefit from a "
+"reduction of the registration fee for any registration for a bachelor's or "
+"master's degree. This parent should contact the Human Resources "
+"Administration of his or her employer to check whether he or she meets these "
+"conditions and, if so, request the certificate confirming this."
+msgstr ""
+"Pour toute inscription au grade de bachelier ou au grade de master, l'enfant "
+"d'un membre du personnel peut, sous certaines conditions, bénéficier d'une "
+"réduction des droits d'inscription. Ce parent prend contact avec "
+"l'Administration des ressources humaines de son employeur pour vérifier s'il "
+"remplit ces conditions, et dans l'affirmative, demande l'attestation qui le "
+"confirme."
 
 msgid ""
 "The format of the documents to be uploaded below as well as the deadlines "
@@ -2021,6 +2492,9 @@ msgstr ""
 "demande d'inscription ne peut être validée que lorsque tous les onglets ont "
 "été complétés avec succès. Les icônes indiquent la progression de votre "
 "demande qui peut être interrompue et reprise à tout moment."
+
+msgid "The person concerned"
+msgstr "La personne concerncée"
 
 msgid ""
 "The purpose of the confirmation test is to establish, on the basis of the "
@@ -2097,6 +2571,9 @@ msgstr "Cette valeur doit être supérieure ou égale à %(MINIMUM_CREDIT_NUMBER
 #, python-format
 msgid "This value must be greater than %(MINIMUM_CREDIT_NUMBER)s"
 msgstr "Cette valeur doit être supérieure à %(MINIMUM_CREDIT_NUMBER)s"
+
+msgid "Tick the relationship"
+msgstr "Cocher le lien de parenté"
 
 msgid "Timetable"
 msgstr "Grille horaire"
@@ -2240,6 +2717,38 @@ msgstr "Contrat de travail"
 msgid "Work contract type"
 msgstr "Type de contrat de travail"
 
+msgid ""
+"Would you like to be a <a href='https://uclouvain.be/fr/decouvrir/carte-"
+"solidaire.html' target='_blank'>solidarity student</a>, a program proposed "
+"by Louvain Coopération, the NGO of UCLouvain? This affiliation will give you "
+"access to a fund for your solidarity projects. If so, the cost of this "
+"affiliation, which is 12 EUR, will be added to your registration fees."
+msgstr ""
+"Désirez-vous être <a href='https://uclouvain.be/fr/decouvrir/carte-solidaire."
+"html' target='_blank'>étudiant·e solidaire</a>, un programme proposé par "
+"Louvain Coopération, l'ONG de l'UCLouvain ? Cette affiliation vous donnera "
+"notamment accès à un fonds pour vos projets solidaires. Dans l'affirmative, "
+"le coût de cette affiliation qui est de 12 EUR sera ajouté à vos droits "
+"d'inscription."
+
+msgid ""
+"Would you like to be a solidarity student, a program proposed by Louvain "
+"Coopération, the NGO of UCLouvain? This affiliation will give you access to "
+"a fund for your solidarity projects. If so, the cost of this affiliation, "
+"which is 12 EUR, will be added to your registration fees."
+msgstr ""
+"Désirez-vous être étudiant·e solidaire , un programme proposé par Louvain "
+"Coopération, l'ONG de l'UCLouvain ? Cette affiliation vous donnera notamment "
+"accès à un fonds pour vos projets solidaires. Dans l'affirmative, le coût de "
+"cette affiliation qui est de 12 EUR sera ajouté à vos droits d'inscription."
+
+msgid ""
+"Would you like to enter an account number so that we can process a refund if "
+"necessary?"
+msgstr ""
+"Voulez-vous renseigner un numéro de compte pour que nous puissions procéder "
+"à un éventuel remboursement ?"
+
 msgid "Writing ability"
 msgstr "Écrire"
 
@@ -2254,6 +2763,36 @@ msgstr "Année sans inscription à la formation."
 
 msgid "Yes"
 msgstr "Oui"
+
+msgid "Yes, an account number in IBAN format"
+msgstr "Oui, un numéro de compte au format IBAN"
+
+msgid "Yes, an account number in another format"
+msgstr "Oui, un numéro de compte dans un autre format"
+
+msgid "Yes, in Louvain-la-Neuve and/or Woluwe-Saint-Lambert (50 EUR)"
+msgstr "Oui, sur Louvain-la-Neuve et/ou sur Woluwé-Saint-Lambert (50 EUR)"
+
+msgid "Yes, in Mons and other UCLouvain sites (50 EUR)"
+msgstr "Oui, sur Mons et les autres sites de l’UCLouvain (50 EUR)"
+
+msgid "Yes, in Saint-Gilles and other UCLouvain sites (50 EUR)"
+msgstr "Oui, sur Saint-Gilles et les autres sites de l’UCLouvain (50 EUR)"
+
+msgid "Yes, in Tournai and other UCLouvain sites (50 EUR)"
+msgstr "Oui, sur Tournai et les autres sites de l’UCLouvain (50 EUR)"
+
+msgid "Yes, only in Mons (10 EUR)"
+msgstr "Oui, sur Mons uniquement (10 EUR)"
+
+msgid "Yes, only in Saint-Gilles (10 EUR)"
+msgstr "Oui, sur Saint-Gilles uniquement (10 EUR)"
+
+msgid "Yes, only in Tournai (10 EUR)"
+msgstr "Oui, sur Tournai uniquement (10 EUR)"
+
+msgid "Yes,No,"
+msgstr "Oui,Non,"
 
 msgid "You can specify the location or the postal code in your search."
 msgstr ""
@@ -2282,6 +2821,17 @@ msgid "You seem to have unsaved modifications, they will be lost."
 msgstr ""
 "Vous semblez avoir des modifications non enregistrées, celles-ci seront "
 "perdues."
+
+msgid "You specified that no assimilation proposals applies to you."
+msgstr ""
+"Vous avez spécifié qu'aucune situation d'assimilation ne s'appliquait à vous."
+
+msgid ""
+"You will receive a monthly newsletter with all the benefits and activities "
+"related to this program."
+msgstr ""
+"Vous recevrez une newsletter mensuelle comprenant tous les avantages et "
+"activités liés à ce programme."
 
 msgid ""
 "You wish, on the basis of this training, to realize a cycle continuation for "
@@ -2351,8 +2901,26 @@ msgstr "les heures sont requises"
 msgid "label is required"
 msgstr "un label est requis"
 
+msgid "the person concerned"
+msgstr "la personne concernée"
+
 msgid "to"
 msgstr "à"
+
+msgid "your father"
+msgstr "votre père"
+
+msgid "your legal cohabitant"
+msgstr "votre cohabitant légal"
+
+msgid "your legal tutor"
+msgstr "votre tuteur légal"
+
+msgid "your mother"
+msgstr "votre mère"
+
+msgid "your partner"
+msgstr "votre conjoint"
 
 msgid "yyyy"
 msgstr "aaaa"

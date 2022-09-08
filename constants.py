@@ -37,6 +37,8 @@ READ_ACTIONS_BY_TAB = {
     # Project
     'project': 'retrieve_proposition',
     'supervision': 'retrieve_supervision',
+    # Accounting
+    'accounting': 'retrieve_accounting',
     # Confirmation
     'confirm': 'submit_proposition',
     # Confirmation paper
@@ -63,6 +65,8 @@ UPDATE_ACTIONS_BY_TAB = {
     # Project
     'project': 'update_proposition',
     'supervision': 'request_signatures',
+    # Accounting
+    'accounting': 'update_accounting',
     # Confirmation
     'confirm': 'submit_proposition',
     # Confirmation paper

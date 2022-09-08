@@ -115,7 +115,7 @@ TAB_TREES = {
         ],
         # TODO specifics
         Tab('completion', _('Completion'), 'check-circle'): [
-            # TODO accounting
+            Tab('accounting', _('Accounting')),
             Tab('confirm', _('Confirmation')),
         ],
         Tab('confirmation-paper', _('Confirmation'), 'list-check'): [

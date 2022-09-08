@@ -71,6 +71,7 @@ class DoctorateAdmissionConfirmFormView(
                     'project',
                     'cotutelle',
                     'supervision',
+                    'accounting',
                 ]
             }
 
