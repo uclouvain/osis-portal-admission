@@ -24,20 +24,18 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% url "admission:doctorate:training:edit" pk=view.kwargs.pk activity_id=activity.uuid as edit_url %}
-{% url "admission:doctorate:training:delete" pk=view.kwargs.pk activity_id=activity.uuid as delete_url %}
-
 {% if activity.website %}
-  {% firstof '<a href="'|safe|add:activity.website|add:'">'|safe|add:activity.website|add:'</a>'|safe "" as website %}
+  {% firstof '<a href="'|safe|add:activity.website|add:'" target="_blank">'|safe|add:activity.website|add:'</a>'|safe "" as website %}
 {% endif %}
 
-{% display '(' activity.city "," activity.country "," activity.start_date|date:"d/m/Y" ")" as location_period %}
+{% display activity.city "," activity.country as location %}
+{% display activity.start_date|date:"d/m/Y" as period %}
 
 <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
   <h3 class="panel-title">
     {% include "admission/doctorate/details/training/_panel_title.html" with remove_batch_action=True %}
 
-    {% display activity.title '-' location_period %}
+    {% display activity.title ' ' location_period %}
     <div class="clearfix"></div>
   </h3>
 </div>
@@ -49,9 +47,8 @@
 >
   <div class="panel-body">
     <p>
-      {% display activity.title " " location_period "-" activity.is_online|format_is_online "-" website %}
-      <br />
-      {% display activity.organizing_institution "," activity.authors %}
+      {% display activity.authors "<br/>"|safe activity.title "<br/>"|safe location "<br/>"|safe period "<br/>"|safe %}
+      {% display activity.is_online|format_is_online "-" website "<br/>"|safe activity.organizing_institution %}
     </p>
     {% if activity.participating_proof %}
       <div class="form-group">

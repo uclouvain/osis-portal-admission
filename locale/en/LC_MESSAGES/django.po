@@ -430,6 +430,9 @@ msgstr ""
 msgid "Comment for the candidate"
 msgstr ""
 
+msgid "Comment from CDD manager"
+msgstr ""
+
 msgid "Comment from reference promoter"
 msgstr ""
 
@@ -472,6 +475,9 @@ msgstr ""
 msgid "Contact language"
 msgstr ""
 
+msgid "Context"
+msgstr ""
+
 msgid "Continuing education"
 msgstr ""
 
@@ -509,6 +515,9 @@ msgid "Course owner"
 msgstr ""
 
 msgid "Course owner if applicable"
+msgstr ""
+
+msgid "Course with evaluation"
 msgstr ""
 
 msgid "Courses and training"
@@ -574,6 +583,9 @@ msgid "Description"
 msgstr ""
 
 msgid "Description of the activity"
+msgstr ""
+
+msgid "Description of your communication"
 msgstr ""
 
 msgid ""
@@ -650,6 +662,9 @@ msgstr ""
 msgid "ECTS for participating"
 msgstr ""
 
+msgid "ECTS for the participation"
+msgstr ""
+
 msgid "ENROLLED"
 msgstr "Enrolled"
 
@@ -663,11 +678,19 @@ msgid "Edit"
 msgstr ""
 
 #, python-format
-msgid "Edit %(title)s"
+msgid "Edit activity of type <em>%(category)s</em>"
 msgstr ""
 
-#, python-format
-msgid "Edit activity of type <em>%(category)s</em>"
+msgid "Edit the communication of this conference"
+msgstr ""
+
+msgid "Edit the communication of this residency"
+msgstr ""
+
+msgid "Edit the communication of this seminar"
+msgstr ""
+
+msgid "Edit the publication of this conference"
 msgstr ""
 
 msgid "Education"
@@ -712,9 +735,6 @@ msgid "Evaluation type"
 msgstr ""
 
 msgid "Event description"
-msgstr ""
-
-msgid "Event participation"
 msgstr ""
 
 msgid "Event website"
@@ -1252,9 +1272,6 @@ msgstr ""
 msgid "Opinion on the renewal of the research mandate"
 msgstr ""
 
-msgid "Oral communication"
-msgstr ""
-
 msgid "Oral expose"
 msgstr "Oral exposé"
 
@@ -1314,6 +1331,9 @@ msgstr ""
 
 msgid "PUBLIC_DEFENSE"
 msgstr "Public defense"
+
+msgid "Participating proof"
+msgstr ""
 
 msgid "Participation"
 msgstr ""
@@ -1480,6 +1500,9 @@ msgstr ""
 msgid "Proof of participation or success"
 msgstr ""
 
+msgid "Proof of publication"
+msgstr ""
+
 msgid "Proof of the final equivalence decision"
 msgstr ""
 
@@ -1588,6 +1611,9 @@ msgid "Research project"
 msgstr ""
 
 msgid "Research report"
+msgstr ""
+
+msgid "Research seminar"
 msgstr ""
 
 msgid "Residential address"
@@ -2102,6 +2128,9 @@ msgstr ""
 msgid ""
 "Your enrolment cannot be confirmed. All the following conditions must be met "
 "to do it."
+msgstr ""
+
+msgid "Your participation to the event"
 msgstr ""
 
 msgid "Your previous NOMA (registration id)"

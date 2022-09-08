@@ -172,6 +172,13 @@ class DoctorateTrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormM
         kwargs['person'] = self.person
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        config = AdmissionDoctorateTrainingService.get_config(person=self.person, uuid=str(self.kwargs['pk']))
+        original_constants = dict(CategorieActivite.choices()).keys()
+        context_data['categories'] = dict(zip(original_constants, config.category_labels[get_language()]))
+        return context_data
+
 
 class DoctorateTrainingActivityAddView(DoctorateTrainingActivityFormMixin):
     def call_webservice(self, data):

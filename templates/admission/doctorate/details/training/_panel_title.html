@@ -49,9 +49,9 @@
 
 <div style="width: auto" class="pull-right">
 
-  {% if doctorate|can_make_action:'add_training' %}
-    {# Student only #}
-    <div class="input-group input-group-sm{% if activity.uuid in form.activities_in_error %} has-error{% endif %}">
+  <div class="input-group input-group-sm{% if activity.uuid in form.activities_in_error %} has-error{% endif %}">
+    {% if doctorate|can_make_action:'add_training' %}
+      {# Student only #}
       {% if activity.category|safe == "SEMINAR" and activity.status|safe != "NON_SOUMISE" and add_communication_url %}
         {# Do not display the dropdown #}
       {% elif activity.status|safe == "NON_SOUMISE" or add_communication_url or add_publication_url %}
@@ -142,34 +142,48 @@
           </label>
         {% endif %}
       {% endif %}
-    </div>
 
-  {% elif activity.status|safe == "SOUMISE" %}
-    {# Reference promoter #}
-    {% url "admission:doctorate:training:assent" pk=view.kwargs.pk activity_id=activity.uuid as assent_url %}
+    {% elif activity.status|safe == "SOUMISE" %}
+      {# Reference promoter #}
+      {% url "admission:doctorate:training:assent" pk=view.kwargs.pk activity_id=activity.uuid as assent_url %}
 
-    <a href="{{ assent_url }}" class="btn btn-default btn-sm">
-      {% trans "Give assent/dissent" %}
-    </a>
-  {% endif %}
+      <a href="{{ assent_url }}" class="btn btn-default btn-sm">
+        {% trans "Give assent/dissent" %}
+      </a>
+    {% endif %}
 
-  {% if activity.reference_promoter_assent is not None %}
-    <span
-      type="button"
-      data-content="{{ activity.reference_promoter_comment }}"
-      data-toggle="popover"
-      data-placement="auto left"
-      title="{% trans "Comment from reference promoter" %}"
-      data-container="body"
-      {% if activity.reference_promoter_assent %}
-      class="btn btn-sm btn-success"
-        >
-        <span class="glyphicon glyphicon-ok-circle"></span>
-      {% else %}
-        class="btn btn-sm btn-danger"
-        >
-        <span class="glyphicon glyphicon-remove-circle"></span>
-      {% endif %}
+
+    {% if activity.reference_promoter_assent is not None %}
+      <span
+        type="button"
+        data-content="{{ activity.reference_promoter_comment }}"
+        data-toggle="popover"
+        data-placement="auto left"
+        title="{% trans "Comment from reference promoter" %}"
+        data-container="body"
+        {% if activity.reference_promoter_assent %}
+        class="btn btn-sm btn-success"
+          >
+          <span class="glyphicon glyphicon-ok-circle"></span>
+        {% else %}
+          class="btn btn-sm btn-danger"
+          >
+          <span class="glyphicon glyphicon-remove-circle"></span>
+        {% endif %}
       </span>
-  {% endif %}
+    {% endif %}
+    {% if activity.cdd_comment %}
+      <span
+        type="button"
+        data-content="{{ activity.cdd_comment }}"
+        data-toggle="popover"
+        data-placement="auto left"
+        title="{% trans "Comment from CDD manager" %}"
+        data-container="body"
+        class="btn btn-sm btn-danger"
+      >
+        <span class="glyphicon glyphicon-info-sign"></span>
+      </span>
+    {% endif %}
+  </div>
 </div>

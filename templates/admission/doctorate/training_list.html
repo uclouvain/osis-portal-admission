@@ -33,7 +33,6 @@
 
   {% training_categories activities %}
 
-
   <h4 class="clearfix">
     {% trans "Activities" %}
     {% if doctorate|can_make_action:'add_training' %}
@@ -59,15 +58,14 @@
       </div>
     {% endif %}
   </h4>
+
   {% if activities %}
     <div class="filter-type form-group">
       <strong>{% trans "Type" %}</strong>
       <div class="btn-group btn-group-sm" role="radiogroup">
-        <button
-          type="button"
-          class="btn btn-default active"
-          data-type="all"
-        >{% trans "All" context "filters" %}</button>
+        <button type="button" class="btn btn-default active" data-type="all">
+          {% trans "All" context "filters" %}
+        </button>
         {% for category_name, category_label in categories %}
           <button type="button" class="btn btn-default" data-type="{{ category_name }}">{{ category_label }}</button>
         {% endfor %}
@@ -76,11 +74,9 @@
     <div class="filter-status form-group">
       <strong>{% trans "Status" %}</strong>
       <div class="btn-group btn-group-sm" role="radiogroup">
-        <button
-          type="button"
-          class="btn btn-default active"
-          data-status="all"
-        >{% trans "All" context "filters" %}</button>
+        <button type="button" class="btn btn-default active" data-status="all">
+          {% trans "All" context "filters" %}
+        </button>
         {% for status_name, status_label in statuses %}
           <button
             type="button"
@@ -94,7 +90,7 @@
 
   {% if doctorate|can_make_action:'submit_doctorateadmission_doctoral_training' %}
     {# Special error handling #}
-    {% if form.errors %}
+    {% if form.non_field_errors %}
       <div class="alert alert-danger alert-dismissable alert-link">
         {{ form.non_field_errors.0 }}
       </div>
@@ -174,26 +170,27 @@
     let current_filter_type = ALL_VALUES;
     $('.filter-type button').on('click', function () {
       current_filter_type = $(this).data('type');
-      $('.filter-type button').removeClass('active')
+      $('.filter-type button').removeClass('active');
       $(this).addClass('active');
       apply_filters();
     });
     let current_filter_status = ALL_VALUES;
     $('.filter-status button').on('click', function () {
       current_filter_status = $(this).data('status');
-      $('.filter-status button').removeClass('active')
+      $('.filter-status button').removeClass('active');
       $(this).addClass('active');
       apply_filters();
     });
 
     function apply_filters() {
+      const reStatus = new RegExp(`\\b${current_filter_status}\\b`);
       $('#activities .panel').each(function () {
-        $(this).show()
+        $(this).show();
         if ((current_filter_type !== ALL_VALUES && $(this).data('type') !== current_filter_type)
-          || (current_filter_status !== ALL_VALUES && $(this).data('status') !== current_filter_status)) {
-          $(this).hide()
+          || (current_filter_status !== ALL_VALUES && !$(this).data('status').match(reStatus))) {
+          $(this).hide();
         }
-      })
+      });
     }
   });
   </script>

@@ -474,6 +474,14 @@ def training_categories(activities):
 
 
 @register.filter
+def status_list(admission):
+    statuses = {str(admission['status'])}
+    for child in admission['children']:
+        statuses.add(str(child['status']))
+    return ','.join(statuses)
+
+
+@register.filter
 def get_academic_year(year: int):
     """Return the academic year related to a specific year."""
-    return f'{year}-{year+1}'
+    return f'{year}-{year + 1}'

@@ -24,8 +24,7 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% url "admission:doctorate:training:edit" pk=view.kwargs.pk activity_id=activity.uuid as edit_url %}
-{% url "admission:doctorate:training:delete" pk=view.kwargs.pk activity_id=activity.uuid as delete_url %}{% display activity.ects|default:""|floatformat " ECTS" as ects %}
+{% display activity.ects|default:""|floatformat:"-2" " ECTS" as ects %}
 
 <div
   class="panel-{{ activity|status_as_class }}"
@@ -36,7 +35,7 @@
     <h3 class="panel-title">
       {% include "admission/doctorate/details/training/_panel_title.html" %}
 
-      {% display activity.type ':' activity.title "-" ects %}
+      {% display activity.type "-" ects %}
       <div class="clearfix"></div>
     </h3>
   </div>
@@ -47,11 +46,18 @@
     aria-labelledby="h-{{ activity.uuid }}"
   >
     <div class="panel-body">
-      <p>
+      <div>
         <strong class="d-block">{% trans "Description" %}</strong>
-        {% display activity.title %}
-        {% display activity.authors " " "(" activity.role ")" ", " activity.journal %}
-      </p>
+        {% display activity.role "," activity.authors '<br/>'|safe %}
+        {% display activity.title '<br/>'|safe activity.start_date|date:'d/m/Y' '<br/>'|safe %}
+        {% display activity.journal %}
+        {% if activity.publication_status %}
+          <p>
+            <strong>{% trans "Publication status" %} :</strong>
+            {{ activity.publication_status|enum_display:'ChoixStatutPublication' }}
+          </p>
+        {% endif %}
+      </div>
       {% if activity.committee %}
         <p>
           <strong class="d-block">{% trans "Selection committee" %}</strong>
@@ -74,7 +80,7 @@
         {% if activity.ects %}
           <p class="col-md-4">
             <strong class="d-block">{% trans "ECTS" %}</strong>
-            {{ activity.ects|floatformat }}
+            {{ activity.ects|floatformat:"-2" }}
           </p>
         {% endif %}
         {% if activity.dial_reference %}
@@ -84,10 +90,10 @@
           </p>
         {% endif %}
       </div>
-      {% if activity.participating_proof %}
+      {% if activity.acceptation_proof %}
         <div class="form-group">
           <strong class="d-block">{% trans "Proof of acceptation or publication" %}</strong>
-          {% document_visualizer activity.participating_proof %}
+          {% document_visualizer activity.acceptation_proof %}
         </div>
       {% endif %}
       {% if activity.comment %}
