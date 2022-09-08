@@ -31,6 +31,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.person import CivilState
 from admission.contrib.forms.person import YES, NO
 from admission.tests.utils import MockCountry
@@ -113,6 +114,8 @@ class PersonViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.context['form'].initial['unknown_birth_date'], True)
+        self.assertEqual(response.context['form'].initial['has_national_number'], False)
+        self.assertEqual(response.context['form'].initial['identification_type'], '')
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.mock_proposition_api.assert_not_called()
 
@@ -126,8 +129,10 @@ class PersonViewTestCase(TestCase):
                 'civil_state': CivilState.MARRIED.name,
                 'birth_country': 'BE',
                 'birth_place': 'Louvain-la-Neuve',
+                'birth_date': datetime.date(1990, 1, 1),
             },
         )
+
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification.assert_called()
 
@@ -174,12 +179,8 @@ class PersonViewTestCase(TestCase):
         self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_id', _("This field is required."))
-        self.assertFormError(response, 'form', 'passport_expiration_date', _("This field is required."))
-        self.assertFormError(response, 'form', 'national_number', _("This field is required."))
         self.assertFormError(response, 'form', 'first_name', _("This field is required if the last name is missing."))
         self.assertFormError(response, 'form', 'last_name', _("This field is required if the first name is missing."))
-        self.assertFormError(response, 'form', 'id_card', _("This field is required."))
-        self.assertFormError(response, 'form', 'passport', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_id', _("The NOMA must contain 8 digits."))
 
     def test_post_update(self):
@@ -196,6 +197,7 @@ class PersonViewTestCase(TestCase):
             birth_country="BE",
             country_of_citizenship="FR",
             last_registration_year=2021,
+            resides_in_belgium=False,
         )
 
         data = {
@@ -205,15 +207,19 @@ class PersonViewTestCase(TestCase):
             'birth_date': datetime.date(2022, 5, 1),
             'civil_state': CivilState.MARRIED.name,
             'birth_country': 'BE',
-            'birth_place': 'Louvain-la-Neuve',
+            'birth_place': 'LOUvain-la-Neuve',
             'birth_year': 1990,
             'sex': 'M',
             'gender': 'X',
             'last_registration_year': self.current_year - 2,
             'last_registration_id': '12345678',
+            'has_national_number': False,
+            'identification_type': 'PASSPORT_NUMBER',
             'passport_number': '0123456789',
             'passport_0': 'test',
-            'passport_expiration_date': datetime.date(2025, 1, 1),
+            'national_number': '01234567890',
+            'id_card_0': 'test',
+            'id_card_number': '0123456789',
         }
 
         person_kwargs = {
@@ -234,49 +240,145 @@ class PersonViewTestCase(TestCase):
             'national_number': '',
             'id_card_number': '',
             'passport_number': '0123456789',
-            'passport_expiration_date': datetime.date(2025, 1, 1),
             'id_photo': [],
             'last_registration_year': self.current_year - 2,
             'last_registration_id': '12345678',
             'birth_date': datetime.date(2022, 5, 1),
         }
 
-        response = self.client.post(url, {
-            **data,
-            'unknown_birth_date': True,
-            'already_registered': NO,
-        })
+        response = self.client.post(
+            url,
+            {
+                **data,
+                'unknown_birth_date': True,
+                'already_registered': NO,
+                'has_national_number': True,
+                'identification_type': 'PASSPORT_NUMBER',
+                'passport_number': '0123456789',
+                'passport_0': 'test',
+                'national_number': '01234567890',
+                'id_card_0': 'test',
+                'id_card_number': '0123456789',
+            },
+        )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
             person_identification={
                 **person_kwargs,
-                'unknown_birth_date': True,
-                'already_registered': False,
+                'id_card': ['test'],
+                'national_number': '01234567890',
                 # Clean some fields depending on other fields values
                 'birth_date': None,
                 'last_registration_year': None,
                 'last_registration_id': '',
+                'passport': [],
+                'passport_number': '',
+                'id_card_number': '',
             },
             **self.default_kwargs,
         )
 
-        response = self.client.post(url, {
-            **data,
-            'unknown_birth_date': False,
-            'already_registered': YES,
-        })
+        response = self.client.post(
+            url,
+            {
+                **data,
+                'unknown_birth_date': False,
+                'already_registered': YES,
+                'identification_type': 'ID_CARD_NUMBER',
+                'passport_number': '0123456789',
+                'passport_0': 'test',
+                'national_number': '01234567890',
+                'id_card_0': 'test',
+                'id_card_number': '0123456789',
+            },
+        )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
             person_identification={
                 **person_kwargs,
-                'unknown_birth_date': False,
-                'already_registered': True,
+                'id_card': ['test'],
+                'id_card_number': '0123456789',
                 # Clean some fields depending on other fields values
                 'birth_year': None,
+                'passport': [],
+                'passport_number': '',
+                'national_number': '',
+            },
+            **self.default_kwargs,
+        )
+
+        response = self.client.post(
+            url,
+            {
+                **data,
+                'unknown_birth_date': True,
+                'already_registered': NO,
+                'has_national_number': False,
+                'identification_type': 'PASSPORT_NUMBER',
+                'passport_number': '0123456789',
+                'passport_0': 'test',
+                'national_number': '01234567890',
+                'id_card_0': 'test',
+                'id_card_number': '0123456789',
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
+            uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+            person_identification={
+                **person_kwargs,
+                'passport': ['test'],
+                'passport_number': '0123456789',
+                # Clean some fields depending on other fields values
+                'birth_date': None,
+                'last_registration_year': None,
+                'last_registration_id': '',
+                'id_card': [],
+                'id_card_number': '',
+                'national_number': '',
+            },
+            **self.default_kwargs,
+        )
+
+        mocking_dict.to_dict.return_value['resides_in_belgium'] = True
+
+        response = self.client.post(
+            url,
+            {
+                **data,
+                'country_of_citizenship': BE_ISO_CODE,
+                'unknown_birth_date': True,
+                'already_registered': NO,
+                'has_national_number': False,
+                'identification_type': 'PASSPORT_NUMBER',
+                'passport_number': '0123456789',
+                'passport_0': 'test',
+                'national_number': '01234567890',
+                'id_card_0': 'test',
+                'id_card_number': '0123456789',
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
+            uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+            person_identification={
+                **person_kwargs,
+                'country_of_citizenship': BE_ISO_CODE,
+                'id_card': ['test'],
+                'national_number': '01234567890',
+                # Clean some fields depending on other fields values
+                'birth_date': None,
+                'last_registration_year': None,
+                'last_registration_id': '',
+                'passport': [],
+                'passport_number': '',
+                'id_card_number': '',
             },
             **self.default_kwargs,
         )

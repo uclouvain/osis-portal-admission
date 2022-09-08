@@ -23,8 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.utils.functional import cached_property
 from django.views.generic import FormView
 
+from admission.constants import BE_ISO_CODE
+from admission.contrib.enums.person import IdentificationType
 from admission.contrib.forms.person import DoctorateAdmissionPersonForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
@@ -39,15 +42,31 @@ class DoctorateAdmissionPersonFormView(
     template_name = 'admission/doctorate/forms/person.html'
     form_class = DoctorateAdmissionPersonForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resides_in_belgium'] = self.resides_in_belgium
+        context['BE_ISO_CODE'] = BE_ISO_CODE
+        return context
+
+    @cached_property
+    def person_info(self):
+        return AdmissionPersonService.retrieve_person(self.person, uuid=self.admission_uuid).to_dict()
+
+    @property
+    def resides_in_belgium(self):
+        return self.person_info.get('resides_in_belgium')
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
         return kwargs
 
     def get_initial(self):
-        return AdmissionPersonService.retrieve_person(self.person, uuid=self.admission_uuid).to_dict()
+        return self.person_info
 
     def prepare_data(self, data):
+        is_belgian = data.get('country_of_citizenship') == BE_ISO_CODE
+
         if not data['already_registered']:
             data['last_registration_year'] = None
             data['last_registration_id'] = ''
@@ -60,6 +79,31 @@ class DoctorateAdmissionPersonFormView(
             data['birth_date'] = None
         else:
             data['birth_year'] = None
+
+        if (self.resides_in_belgium and is_belgian) or data.get('has_national_number'):
+            data['id_card_number'] = ''
+            data['passport_number'] = ''
+            data['passport'] = []
+
+        elif data.get('identification_type') == IdentificationType.ID_CARD_NUMBER.name:
+            data['national_number'] = ''
+            data['passport_number'] = ''
+            data['passport'] = []
+
+        elif data.get('identification_type') == IdentificationType.PASSPORT_NUMBER.name:
+            data['national_number'] = ''
+            data['id_card_number'] = ''
+            data['id_card'] = []
+
+        else:
+            data['national_number'] = ''
+            data['id_card_number'] = ''
+            data['passport_number'] = ''
+            data['passport'] = []
+            data['id_card'] = []
+
+        for field in ['already_registered', 'unknown_birth_date', 'identification_type', 'has_national_number']:
+            data.pop(field, None)
 
         return data
 

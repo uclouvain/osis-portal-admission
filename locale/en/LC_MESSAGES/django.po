@@ -866,6 +866,9 @@ msgstr ""
 msgid "Have you ever started or completed a PhD?"
 msgstr ""
 
+msgid "Have you got a Belgian national registry number (SSIN)?"
+msgstr ""
+
 msgid "Have you previously been registered at UCLouvain?"
 msgstr ""
 
@@ -1243,12 +1246,6 @@ msgstr ""
 msgid "Online or in person"
 msgstr ""
 
-msgid ""
-"Only to provide if you are in possession of a Belgian document of identity. "
-"If you are of Belgian nationality and you live in Belgium this field is "
-"mandatory."
-msgstr ""
-
 msgid "Opinion on the renewal of the research mandate"
 msgstr ""
 
@@ -1324,9 +1321,6 @@ msgstr ""
 msgid "Passport"
 msgstr ""
 
-msgid "Passport expiration date"
-msgstr ""
-
 msgid "Passport number"
 msgstr ""
 
@@ -1383,6 +1377,9 @@ msgstr ""
 msgid "Please mention the academic graduation year"
 msgstr ""
 
+msgid "Please provide one of these two identification information:"
+msgstr ""
+
 msgid "Please rate your listening comprehension"
 msgstr ""
 
@@ -1390,11 +1387,6 @@ msgid "Please rate your speaking ability"
 msgstr ""
 
 msgid "Please rate your writing ability"
-msgstr ""
-
-msgid ""
-"Please refer to your identity document in order to complete the form. If you "
-"have a Belgian national register number, please indicate it as a priority."
 msgstr ""
 
 msgid "Please set either the linguistic regime or other field."

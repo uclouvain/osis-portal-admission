@@ -53,17 +53,10 @@
     {% endpanel %}
 
     {% panel _("Proof of identity") %}
-        <div class="row">
-            {% field_data _("Belgian national registry number (SSIN)") person.national_number "col-md-6" %}
-            {% field_data _("Identity card number") person.id_card_number "col-md-6" %}
-        </div>
-        {% if person.passport_number %}
-            <div class="row">
-                {% field_data _("Passport number") person.passport_number "col-md-6" %}
-                {% field_data _("Passport expiration date") person.passport_expiration_date "col-md-6" %}
-            </div>
-        {% endif %}
+        {% field_data _("Belgian national registry number (SSIN)") person.national_number hide_empty=True %}
+        {% field_data _("Identity card number") person.id_card_number hide_empty=True %}
         {% field_data _("Identity card (both sides)") person.id_card hide_empty=True %}
+        {% field_data _("Passport number") person.passport_number hide_empty=True %}
         {% field_data _("Passport") person.passport hide_empty=True %}
     {% endpanel %}
 

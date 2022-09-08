@@ -46,3 +46,8 @@ class CivilState(ChoiceEnum):
     MARRIED = pgettext_lazy("admission", "Married")
     SEPARATE = pgettext_lazy("admission", "Separate")
     WIDOWED = pgettext_lazy("admission", "Widowed")
+
+
+class IdentificationType(ChoiceEnum):
+    ID_CARD_NUMBER = _('Identity card number')
+    PASSPORT_NUMBER = _('Passport number')
