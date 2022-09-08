@@ -31,6 +31,8 @@ from django.test import TestCase, override_settings
 from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 
+from admission.tests.factories import PropositionDTOComptabiliteFactory
+
 from osis_admission_sdk.model.proposition_search_doctorat import PropositionSearchDoctorat
 from osis_reference_sdk.model.paginated_academic_years import PaginatedAcademicYears
 
@@ -207,6 +209,7 @@ class MixinTestCase(TestCase):
             fiche_archive_signatures_envoyees=[],
             statut=ChoixStatutProposition.IN_PROGRESS.name,
             erreurs=[],
+            comptabilite=PropositionDTOComptabiliteFactory(),
         )
 
         cls.curriculum_file = CurriculumFile(curriculum=[])

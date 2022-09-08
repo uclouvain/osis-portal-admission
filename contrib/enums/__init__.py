@@ -5,6 +5,7 @@ ChoixStatutProposition
 ChoixStatutDoctorat
     > Admitted: The phd student is allowed to register.
 """
+from .accounting import *
 from .actor import *
 from .admission_type import *
 from .curriculum import *

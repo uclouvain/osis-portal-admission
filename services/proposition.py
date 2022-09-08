@@ -27,7 +27,8 @@ from enum import Enum
 from importlib import import_module
 from typing import List
 
-from django.http import HttpResponseBadRequest, HttpResponseForbidden
+from django.http import HttpResponseBadRequest
+from osis_admission_sdk.model.accounting_conditions import AccountingConditions
 
 from admission.services.mixins import ServiceMeta
 from admission.utils.utils import to_snake_case
@@ -36,7 +37,6 @@ from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import (
     ApiBusinessException,
     MultipleApiBusinessException,
-    api_exception_handler,
     build_mandatory_auth_headers,
 )
 from osis_admission_sdk import ApiClient, ApiException
@@ -130,6 +130,22 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def retrieve_accounting_conditions(cls, person: Person, uuid: str) -> AccountingConditions:
+        return AdmissionPropositionAPIClient().retrieve_accounting(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_accounting(cls, person: Person, uuid: str, data: dict):
+        data['uuid_proposition'] = uuid
+        return AdmissionPropositionAPIClient().update_accounting(
+            uuid=uuid,
+            completer_comptabilite_proposition_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
@@ -173,6 +189,13 @@ class PropositionBusinessException(Enum):
     InstitutTheseObligatoireException = "PROPOSITION-39"
     NomEtPrenomNonSpecifiesException = "PROPOSITION-40"
     SpecifierNOMASiDejaInscritException = "PROPOSITION-41"
+    PromoteurDeReferenceManquantException = "PROPOSITION-42"
+    AbsenceDeDetteNonCompleteeException = "PROPOSITION-43"
+    ReductionDesDroitsInscriptionNonCompleteeException = "PROPOSITION-44"
+    AssimilationNonCompleteeException = "PROPOSITION-45"
+    AffiliationsNonCompleteesException = "PROPOSITION-46"
+    CarteBancaireRemboursementIbanNonCompleteException = "PROPOSITION-47"
+    CarteBancaireRemboursementAutreFormatNonCompleteException = "PROPOSITION-48"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -213,6 +236,15 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'confirmation-paper': set(),
     'extension-request': set(),
     'training': set(),
+    'accounting': {
+        PropositionBusinessException.PromoteurDeReferenceManquantException,
+        PropositionBusinessException.AbsenceDeDetteNonCompleteeException,
+        PropositionBusinessException.ReductionDesDroitsInscriptionNonCompleteeException,
+        PropositionBusinessException.AssimilationNonCompleteeException,
+        PropositionBusinessException.AffiliationsNonCompleteesException,
+        PropositionBusinessException.CarteBancaireRemboursementIbanNonCompleteException,
+        PropositionBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteException,
+    },
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}

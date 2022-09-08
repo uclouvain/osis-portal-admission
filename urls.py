@@ -26,7 +26,6 @@
 from django.urls import include, path
 from django.views.generic import RedirectView
 
-import admission.contrib.views.form_tabs.supervision
 from .contrib import views
 
 app_name = "admission"
@@ -113,6 +112,7 @@ update_paths = [
     path("supervision", views.DoctorateAdmissionSupervisionFormView.as_view(), name="supervision"),
     path("confirmation", views.DoctorateAdmissionConfirmationPaperFormView.as_view(), name="confirmation-paper"),
     path("extension-request", views.DoctorateAdmissionExtensionRequestFormView.as_view(), name="extension-request"),
+    path("accounting", views.DoctorateAdmissionAccountingFormView.as_view(), name="accounting"),
 ]
 
 training_paths = [
@@ -144,6 +144,7 @@ doctorate_paths = [
     path("update/", include((update_paths, "update"))),
     path("cancel", views.DoctorateAdmissionCancelView.as_view(), name="cancel"),
     path("confirm", views.DoctorateAdmissionConfirmFormView.as_view(), name="confirm"),
+    path("accounting", views.DoctorateAdmissionAccountingDetailView.as_view(), name="accounting"),
     path("confirmation", views.DoctorateAdmissionConfirmationPaperDetailView.as_view(), name="confirmation-paper"),
     path(
         "confirmation-paper-canvas",

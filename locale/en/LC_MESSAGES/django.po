@@ -39,6 +39,36 @@ msgid "%(label)s:"
 msgstr ""
 
 #, python-format
+msgid ""
+"%(person_concerned)s has a long-term residence permit (B, C, D, F, F+ or M "
+"cards) in Belgium"
+msgstr ""
+
+#, python-format
+msgid ""
+"%(person_concerned)s has a residence permit for more than 3 months and "
+"receives professional or replacement income"
+msgstr ""
+
+#, python-format
+msgid ""
+"%(person_concerned)s has the nationality of a country of a Member State of "
+"the European Union"
+msgstr ""
+
+#, python-format
+msgid ""
+"%(person_concerned)s is a refugee applicant, refugee, stateless person, or "
+"has temporary/subsidiary protection"
+msgstr ""
+
+#, python-format
+msgid ""
+"%(person_concerned)s is supported by the CPAS, or by a CPAS rest home or "
+"designated by the CPAS"
+msgstr ""
+
+#, python-format
 msgid "%(state)s on %(date)s"
 msgstr ""
 
@@ -109,6 +139,9 @@ msgstr "ARC - Action de Recherche Concertée"
 msgid "ARES - Cooperation au developpement"
 msgstr "ARES - Coopération au développement"
 
+msgid "Absence of debt"
+msgstr ""
+
 msgid "Academic graduation year"
 msgstr ""
 
@@ -125,6 +158,12 @@ msgid "Accepted"
 msgstr ""
 
 msgid "Access my doctoral students' requests"
+msgstr ""
+
+msgid "Account number"
+msgstr ""
+
+msgid "Accounting"
 msgstr ""
 
 msgid "Acquired credits"
@@ -208,6 +247,9 @@ msgstr ""
 msgid "Admission type"
 msgstr ""
 
+msgid "Affiliations"
+msgstr ""
+
 msgctxt "filters"
 msgid "All"
 msgstr ""
@@ -270,6 +312,11 @@ msgstr ""
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr ""
 
+msgid ""
+"Are you the child of a member of the staff of the UCLouvain or the Martin V "
+"entity?"
+msgstr ""
+
 msgid "Artistic qualification"
 msgstr ""
 
@@ -277,6 +324,12 @@ msgid "Artistic transition"
 msgstr ""
 
 msgid "Assent"
+msgstr ""
+
+msgid "Assimilation"
+msgstr ""
+
+msgid "Assimilation situation that applies to you"
 msgstr ""
 
 msgid "Associative"
@@ -309,10 +362,16 @@ msgid ""
 "of your enrolment request here below."
 msgstr ""
 
+msgid "BIC/SWIFT code identifying the bank from which the account was opened"
+msgstr ""
+
 msgid "BIOLOGY"
 msgstr "Biology"
 
 msgid "Back to requests"
+msgstr ""
+
+msgid "Bank account"
 msgstr ""
 
 msgid "Begin date"
@@ -404,6 +463,9 @@ msgstr ""
 msgid "Certificate of language knowledge"
 msgstr ""
 
+msgid "Certificate of legal cohabitation"
+msgstr ""
+
 msgid "Certificate of participation in the presentation"
 msgstr ""
 
@@ -412,10 +474,31 @@ msgid ""
 "cycle of higher education"
 msgstr ""
 
+msgid ""
+"Certificate stating the absence of debts towards the institution attended "
+"during the academic year"
+msgstr ""
+
+#, python-format
+msgid ""
+"Certificate stating the absence of debts towards the institution attended "
+"during the academic year %(academic_year)s: %(names)s."
+msgid_plural ""
+"Certificates stating the absence of debts towards the institutions attended "
+"during the academic year %(academic_year)s: %(names)s."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Certificate, with dates, justifying the specified period."
 msgstr ""
 
 msgid "Chemistry"
+msgstr ""
+
+msgid "Choose among the following proposals"
+msgstr ""
+
+msgid "Chosen assimilation"
 msgstr ""
 
 msgid "City"
@@ -482,6 +565,106 @@ msgid "Contact language"
 msgstr ""
 
 msgid "Context"
+msgstr ""
+
+msgid ""
+"Copy of 6 salary slips issued in the 12 months preceding the application"
+msgstr ""
+
+msgid "Copy of both sides of the A or B Card"
+msgstr ""
+
+msgid ""
+"Copy of both sides of the A or B card (with \"refugee\" written on the back "
+"of the card)"
+msgstr ""
+
+msgid ""
+"Copy of both sides of the CIRE - unlimited stay (B card) or copy of the "
+"foreigner's card - unlimited stay (C card)"
+msgstr ""
+
+msgid "Copy of both sides of the EC long-term resident card (D card)"
+msgstr ""
+
+#, python-format
+msgid "Copy of both sides of the identity card of %(person_concerned)s"
+msgstr ""
+
+msgid ""
+"Copy of both sides of the identity document proving the long-term stay in a "
+"member state of the European Union"
+msgstr ""
+
+#, python-format
+msgid ""
+"Copy of both sides of the long-term residence permit in Belgium of "
+"%(person_concerned)s"
+msgstr ""
+
+msgid ""
+"Copy of both sides of the permanent residence card of a family member of a "
+"European Union citizen (F+ card)"
+msgstr ""
+
+msgid ""
+"Copy of both sides of the residence card of a family member of a European "
+"Union citizen (F card)"
+msgstr ""
+
+msgid "Copy of both sides of the residence permit in Belgium"
+msgstr ""
+
+msgid "Copy of both sides of the residence permit valid for more than 3 months"
+msgstr ""
+
+#, python-format
+msgid ""
+"Copy of both sides of your residence permit valid for more than 3 months of "
+"%(person_concerned)s"
+msgstr ""
+
+#, python-format
+msgid ""
+"Copy of the 6 salary slips issued in the 12 months preceding the application "
+"for registration or proof of receipt of unemployment benefit, pension or an "
+"indemnity from the mutual insurance company of %(person_concerned)s"
+msgstr ""
+
+msgid ""
+"Copy of the Annex 25 or 26 completed by the Office of the Commissioner "
+"General for Refugees and Stateless Persons"
+msgstr ""
+
+#, python-format
+msgid ""
+"Copy of the Annex 25 or 26 or the A/B card mentioning the refugee status or "
+"copy of the decision of the Foreigners' Office confirming the temporary/"
+"subsidiary protection of %(person_concerned)s"
+msgstr ""
+
+msgid ""
+"Copy of the certificate of scholarship holder issued by the General "
+"Administration for Development Cooperation"
+msgstr ""
+
+msgid ""
+"Copy of the decision of the Foreigners' Office confirming the granting of "
+"subsidiary protection"
+msgstr ""
+
+msgid ""
+"Copy of the decision of the Foreigners' Office confirming the granting of "
+"temporary protection"
+msgstr ""
+
+msgid "Copy of the decision to grant the scholarship from the CFWB"
+msgstr ""
+
+msgid "Copy of the registration certificate \"orange card\""
+msgstr ""
+
+msgid "Copy of the tutorship act authenticated by the Belgian authorities"
 msgstr ""
 
 msgid "Cotutelle"
@@ -623,6 +806,17 @@ msgstr ""
 msgid ""
 "Do you want, on the basis of this training, to realize a cycle continuation "
 "for the bachelor you are registering for?"
+msgstr ""
+
+msgid ""
+"Do you wish to join the <a href='https://uclouvain.be/fr/etudier/sport/le-"
+"sport-uclouvain.html' target='_blank'>sports activities</a>? If so, the cost "
+"of this membership will be added to your registration fee."
+msgstr ""
+
+msgid ""
+"Do you wish to join the sports activities? If so, the cost of this "
+"membership will be added to your registration fee."
 msgstr ""
 
 msgid "Doctoral program proposition"
@@ -814,6 +1008,9 @@ msgstr ""
 msgid "First name in use"
 msgstr ""
 
+msgid "First name of the account holder"
+msgstr ""
+
 msgid "Flemish-speaking Community"
 msgstr ""
 
@@ -887,6 +1084,19 @@ msgid ""
 "French-speaking community of Belgium?"
 msgstr ""
 
+msgid ""
+"Have you applied for a <a href=https://allocations-etudes.cfwb.be/etudes-"
+"superieures/ target='_blank'>study allowance</a> from the French Community "
+"of Belgium?"
+msgstr ""
+"Avez-vous fait une <a href='https://allocations-etudes.cfwb.be/etudes-"
+"superieures/' target='_blank'>demande d'allocation d'études</a> auprès de la "
+"Communauté française de Belgique ?"
+
+msgid ""
+"Have you applied for a study allowance from the French Community of Belgium?"
+msgstr ""
+
 msgid "Have you ever started or completed a PhD?"
 msgstr ""
 
@@ -910,12 +1120,97 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Household composition or marriage certificate authenticated by the Belgian "
+"authorities"
+msgstr ""
+
+msgid "Household composition, or a copy of your birth certificate"
+msgstr ""
+
+msgid ""
+"I am a long-term resident in the European Union outside Belgium "
+"(assimilation 7)"
+msgstr ""
+
+msgid "I am a refugee"
+msgstr ""
+
+msgid ""
+"I am a refugee, stateless person, or have been granted a subsidiary or "
+"temporary protection (assimilation 2)"
+msgstr ""
+
+msgid "I am an asylum seeker"
+msgstr ""
+
+msgid ""
+"I am supported by the CPAS, or by a CPAS rest home or designated by the CPAS "
+"(assimilation 4)"
+msgstr ""
+
+msgid ""
 "I authorize the UCLouvain to transmit to the secondary school in which I "
 "obtained my CESS, the information on the success."
 msgstr ""
 
+msgid "I benefit from a Development Cooperation grant"
+msgstr ""
+
+msgid ""
+"I benefit from a grant covered by the paragraph 2 of article 105 of the "
+"decree of 7 November 2013 (assimilation 6)"
+msgstr ""
+
+msgid ""
+"I benefit from a grant given by the study allowance service of the French "
+"Community"
+msgstr ""
+
+msgid "I benefit from subsidiary protection"
+msgstr ""
+
+msgid "I benefit from temporary protection"
+msgstr ""
+
+msgid "I have a foreigner's card"
+msgstr ""
+
+msgid "I have a long-term resident card"
+msgstr ""
+
+msgid ""
+"I have a permanent residence card as a family member of a European Union "
+"citizen"
+msgstr ""
+
+msgid "I have a residence card as a family member of an EU citizen."
+msgstr ""
+
+msgid ""
+"I have a residence permit for more than 3 months, and I also have "
+"professional or replacement income (assimilation 3)"
+msgstr ""
+
+msgid ""
+"I have a residence permit for more than 3 months, and I have a professional "
+"income"
+msgstr ""
+
+msgid ""
+"I have a residence permit for more than 3 months, and I receive a "
+"replacement income"
+msgstr ""
+
+msgid ""
+"I have a settlement permit or I am a long-term resident in Belgium "
+"(assimilation 1)"
+msgstr ""
+
 #, python-format
 msgid "I will have a high school diploma this year %s"
+msgstr ""
+
+msgid "IBAN account number"
 msgstr ""
 
 msgid "INVITED"
@@ -1095,6 +1390,9 @@ msgstr ""
 msgid "Last name"
 msgstr ""
 
+msgid "Last name of the account holder"
+msgstr ""
+
 msgid "Last registration year"
 msgstr ""
 
@@ -1163,6 +1461,28 @@ msgid "More than 75%"
 msgstr ""
 
 msgid "My enrolment request"
+msgstr ""
+
+msgid "My father"
+msgstr ""
+
+msgid ""
+"My father, mother, legal tutor, spouse or legal cohabitant has the "
+"nationality of a country of a Member State of the European Union, or "
+"fulfills the conditions referred to by one of the assimilations from 1 to 4 "
+"(assimilation 5)"
+msgstr ""
+
+msgid "My legal cohabitant"
+msgstr ""
+
+msgid "My legal tutor"
+msgstr ""
+
+msgid "My mother"
+msgstr ""
+
+msgid "My partner"
 msgstr ""
 
 msgid "N/A"
@@ -1241,6 +1561,9 @@ msgid "Non-academic activity"
 msgstr ""
 
 msgid "Non-academic background"
+msgstr ""
+
+msgid "None of these proposals are relevant to me"
 msgstr ""
 
 msgid "Not specified"
@@ -1413,6 +1736,9 @@ msgstr ""
 msgid "Please rate your writing ability"
 msgstr ""
 
+msgid "Please select the first assimilation situation that applies to you"
+msgstr ""
+
 msgid "Please set either the linguistic regime or other field."
 msgstr ""
 
@@ -1499,6 +1825,11 @@ msgstr ""
 msgid "Proof of publication"
 msgstr ""
 
+msgid ""
+"Proof of receipt of unemployment benefit, pension or compensation from the "
+"mutual insurance company"
+msgstr ""
+
 msgid "Proof of the final equivalence decision"
 msgstr ""
 
@@ -1560,7 +1891,17 @@ msgstr ""
 msgid "Rank in diploma"
 msgstr ""
 
+msgid "Recent certificate of support from the CPAS"
+msgstr ""
+
+#, python-format
+msgid "Recent certificate of support from the CPAS of %(person_concerned)s"
+msgstr ""
+
 msgid "Recommendation letters"
+msgstr ""
+
+msgid "Reduced registration fees"
 msgstr ""
 
 msgid "Reference DIAL.Pr"
@@ -1751,6 +2092,9 @@ msgstr ""
 msgid "Specify the employer and your function"
 msgstr ""
 
+msgid "Staff child certificate"
+msgstr ""
+
 msgid "Start"
 msgstr ""
 
@@ -1820,6 +2164,13 @@ msgid ""
 "made available to the accompanying committee on the day of the test."
 msgstr ""
 
+msgid ""
+"The BIC/SWIFT code consists of 8 or 11 characters, corresponding to:"
+"<ul><li>the institution or bank code (four letters)</li><li>the country code "
+"(two letters)</li><li>the location code (two letters or digits)</li><li>the "
+"branch code (optional, three letters or digits)</li></ul>"
+msgstr ""
+
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr ""
 
@@ -1836,6 +2187,13 @@ msgid ""
 "be closed."
 msgstr ""
 
+msgid ""
+"The IBAN consists of up to 34 alphanumeric characters, corresponding to:"
+"<ul><li>the country code (two letters)</li><li>the check digits (two "
+"digits)</li><li>the Basic Bank Account Number (BBAN) (up to 30 alphanumeric "
+"characters)</li></ul>"
+msgstr ""
+
 msgid "The NOMA must contain 8 digits."
 msgstr ""
 
@@ -1849,6 +2207,14 @@ msgstr ""
 msgid ""
 "The certificate of achievement of the confirmation paper in PDF format is "
 "being generated, please come back later to get it."
+msgstr ""
+
+msgid ""
+"The child of a member of staff may, under some conditions, benefit from a "
+"reduction of the registration fee for any registration for a bachelor's or "
+"master's degree. This parent should contact the Human Resources "
+"Administration of his or her employer to check whether he or she meets these "
+"conditions and, if so, request the certificate confirming this."
 msgstr ""
 
 msgid ""
@@ -1874,6 +2240,9 @@ msgid ""
 "enrolment request can only be validated as soon as all sheets have been duly "
 "completed. The icons will remind you of the state of progress of your "
 "enrolment request which you can interrupt and resume at any moment."
+msgstr ""
+
+msgid "The person concerned"
 msgstr ""
 
 msgid ""
@@ -1941,6 +2310,9 @@ msgstr ""
 
 #, python-format
 msgid "This value must be greater than %(MINIMUM_CREDIT_NUMBER)s"
+msgstr ""
+
+msgid "Tick the relationship"
 msgstr ""
 
 msgid "Timetable"
@@ -2078,6 +2450,26 @@ msgstr ""
 msgid "Work contract type"
 msgstr ""
 
+msgid ""
+"Would you like to be a <a href='https://uclouvain.be/fr/decouvrir/carte-"
+"solidaire.html' target='_blank'>solidarity student</a>, a program proposed "
+"by Louvain Coopération, the NGO of UCLouvain? This affiliation will give you "
+"access to a fund for your solidarity projects. If so, the cost of this "
+"affiliation, which is 12 EUR, will be added to your registration fees."
+msgstr ""
+
+msgid ""
+"Would you like to be a solidarity student, a program proposed by Louvain "
+"Coopération, the NGO of UCLouvain? This affiliation will give you access to "
+"a fund for your solidarity projects. If so, the cost of this affiliation, "
+"which is 12 EUR, will be added to your registration fees."
+msgstr ""
+
+msgid ""
+"Would you like to enter an account number so that we can process a refund if "
+"necessary?"
+msgstr ""
+
 msgid "Writing ability"
 msgstr ""
 
@@ -2091,6 +2483,36 @@ msgid "Year without registration for the training."
 msgstr ""
 
 msgid "Yes"
+msgstr ""
+
+msgid "Yes, an account number in IBAN format"
+msgstr ""
+
+msgid "Yes, an account number in another format"
+msgstr ""
+
+msgid "Yes, in Louvain-la-Neuve and/or Woluwe-Saint-Lambert (50 EUR)"
+msgstr "Yes, in Louvain-la-Neuve and/or Woluwé-Saint-Lambert (50 EUR)"
+
+msgid "Yes, in Mons and other UCLouvain sites (50 EUR)"
+msgstr ""
+
+msgid "Yes, in Saint-Gilles and other UCLouvain sites (50 EUR)"
+msgstr ""
+
+msgid "Yes, in Tournai and other UCLouvain sites (50 EUR)"
+msgstr ""
+
+msgid "Yes, only in Mons (10 EUR)"
+msgstr ""
+
+msgid "Yes, only in Saint-Gilles (10 EUR)"
+msgstr ""
+
+msgid "Yes, only in Tournai (10 EUR)"
+msgstr ""
+
+msgid "Yes,No,"
 msgstr ""
 
 msgid "You can specify the location or the postal code in your search."
@@ -2110,6 +2532,14 @@ msgid ""
 msgstr ""
 
 msgid "You seem to have unsaved modifications, they will be lost."
+msgstr ""
+
+msgid "You specified that no assimilation proposals applies to you."
+msgstr ""
+
+msgid ""
+"You will receive a monthly newsletter with all the benefits and activities "
+"related to this program."
 msgstr ""
 
 msgid ""
@@ -2174,7 +2604,25 @@ msgstr ""
 msgid "label is required"
 msgstr ""
 
+msgid "the person concerned"
+msgstr ""
+
 msgid "to"
+msgstr ""
+
+msgid "your father"
+msgstr ""
+
+msgid "your legal cohabitant"
+msgstr ""
+
+msgid "your legal tutor"
+msgstr ""
+
+msgid "your mother"
+msgstr ""
+
+msgid "your partner"
 msgstr ""
 
 msgid "yyyy"

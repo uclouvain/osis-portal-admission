@@ -27,6 +27,7 @@
 from .autocomplete import *
 from .cancel import DoctorateAdmissionCancelView
 from .detail_tabs import redirect_detail
+from .detail_tabs.accounting import DoctorateAdmissionAccountingDetailView
 from .detail_tabs.confirmation_paper import (
     DoctorateAdmissionConfirmationPaperCanvasExportView,
     DoctorateAdmissionConfirmationPaperDetailView,
@@ -47,6 +48,7 @@ from .detail_tabs.supervision import (
     DoctorateAdmissionApprovalByPdfView,
     DoctorateAdmissionSupervisionDetailView,
 )
+from .form_tabs.accounting import DoctorateAdmissionAccountingFormView
 from .form_tabs.confirm import DoctorateAdmissionConfirmFormView
 from .form_tabs.confirmation_paper import DoctorateAdmissionConfirmationPaperFormView
 from .form_tabs.coordonnees import DoctorateAdmissionCoordonneesFormView
