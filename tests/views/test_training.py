@@ -31,6 +31,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
+from admission.contrib.enums.training import StatutActivite
 from admission.services.proposition import ActivityApiBusinessException
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
@@ -50,7 +51,7 @@ class TrainingTestCase(TestCase):
         self.mock_api = api_patcher.start()
 
         self.mock_api.return_value.retrieve_doctorate_dto.return_value = Mock(
-            links={'update_confirmation': {'url': 'ok'}},
+            links={'add_training': {'url': 'ok'}},
             reference='21-300001',
             intitule_formation='Informatique',
             statut=ChoixStatutDoctorat.ADMITTED.name,
@@ -164,6 +165,7 @@ class TrainingTestCase(TestCase):
                             parent="uuid-parent",
                             type="",
                             participating_proof=[],
+                            status=StatutActivite.NON_SOUMISE.name,
                         )
                     )
                 )
@@ -181,7 +183,7 @@ class TrainingTestCase(TestCase):
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, _("Edit"))
+        self.assertContains(response, _("Edit the communication of this conference"))
 
         data = {
             'ects': 0,

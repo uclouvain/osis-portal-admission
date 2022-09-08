@@ -31,6 +31,7 @@ from django.utils.translation import get_language, gettext_lazy as _, pgettext_l
 
 from admission.contrib.enums.training import ChoixComiteSelection, ChoixStatutPublication, ChoixTypeEpreuve
 from admission.contrib.forms import (
+    BooleanRadioSelect,
     CustomDateInput,
     SelectOrOtherField,
     get_academic_years_choices,
@@ -144,6 +145,7 @@ class ActivityFormMixin(forms.Form):
 class ConferenceForm(ActivityFormMixin, forms.Form):
     template_name = "admission/doctorate/forms/training/conference.html"
     type = ConfigurableActivityTypeField('conference_types', label=_("Type of activity"))
+    is_online = IsOnlineField()
 
     class Meta:
         fields = [
@@ -164,7 +166,7 @@ class ConferenceForm(ActivityFormMixin, forms.Form):
         labels = {
             'title': _("Name of the manifestation"),
             'website': _("Event website"),
-            'ects': _("ECTS for participating"),
+            'ects': _("ECTS for the participation"),
         }
         help_texts = {
             'title': _("Name in the language of the manifestation"),
@@ -176,10 +178,16 @@ class ConferenceCommunicationForm(ActivityFormMixin, forms.Form):
     type = SelectOrOtherField(
         label=_("Type of communication"),
         choices=[
+            _("Oral expose"),
             _("Poster"),
-            _("Oral communication"),
         ],
     )
+
+    def clean(self):
+        data = super().clean()
+        if data.get('committee') != ChoixComiteSelection.YES.name and data.get('acceptation_proof'):
+            data['acceptation_proof'] = []
+        return data
 
     class Meta:
         fields = [
@@ -211,6 +219,8 @@ class ConferencePublicationForm(ActivityFormMixin, forms.Form):
             'type',
             'ects',
             'title',
+            'start_date',
+            'publication_status',
             'authors',
             'role',
             'keywords',
@@ -218,15 +228,17 @@ class ConferencePublicationForm(ActivityFormMixin, forms.Form):
             'committee',
             'journal',
             'dial_reference',
-            'participating_proof',
+            'acceptation_proof',
             'comment',
         ]
         labels = {
             'type': _("Type of publication"),
             'title': _("Title of the publication"),
+            'start_date': _("Date of the publication"),
             'committee': _("Selection committee"),
             'summary': pgettext_lazy("paper summary", "Summary"),
-            'participating_proof': _("Proof of acceptation or publication"),
+            'acceptation_proof': _("Proof of acceptation or publication"),
+            'publication_status': _("Publication status"),
         }
 
 
@@ -240,7 +252,18 @@ class CommunicationForm(ActivityFormMixin, forms.Form):
             _("Poster"),
         ],
     )
-    subtitle = forms.CharField(label=_("Title of the communication"), max_length=200)
+    subtitle = forms.CharField(
+        label=_("Title of the communication"),
+        max_length=200,
+        required=False,
+    )
+    is_online = IsOnlineField()
+
+    def clean(self):
+        data = super().clean()
+        if data.get('committee') != ChoixComiteSelection.YES.name and data.get('acceptation_proof'):
+            data['acceptation_proof'] = []
+        return data
 
     class Meta:
         fields = [
@@ -275,7 +298,7 @@ class CommunicationForm(ActivityFormMixin, forms.Form):
 
 class PublicationForm(ActivityFormMixin, forms.Form):
     template_name = "admission/doctorate/forms/training/publication.html"
-    type = ConfigurableActivityTypeField('publication_types', label=_("Type of activity"))
+    type = ConfigurableActivityTypeField('publication_types', label=_("Type of publication"))
 
     class Meta:
         fields = [
@@ -290,14 +313,14 @@ class PublicationForm(ActivityFormMixin, forms.Form):
             'publication_status',
             'dial_reference',
             'ects',
-            'participating_proof',
+            'acceptation_proof',
             'comment',
         ]
         labels = {
             'title': _("Title of the publication"),
             'start_date': _("Date of the publication"),
             'publication_status': _("Publication status"),
-            'participating_proof': _("Proof"),
+            'acceptation_proof': _("Proof of publication"),
         }
 
 
@@ -325,9 +348,14 @@ class ResidencyForm(ActivityFormMixin, forms.Form):
 
 class ResidencyCommunicationForm(ActivityFormMixin, forms.Form):
     template_name = "admission/doctorate/forms/training/residency_communication.html"
-    type = ConfigurableActivityTypeField("residency_communication_types", label=_("Type of activity"))
-    subtype = ConfigurableActivityTypeField('residency_communication_subtypes', label=_("Type of communication"))
-    subtitle = forms.CharField(label=_("Title of the communication"), max_length=200)
+    type = SelectOrOtherField(choices=[_("Research seminar")], label=_("Type of activity"))
+    subtype = SelectOrOtherField(
+        choices=[_("Oral expose")],
+        label=_("Type of communication"),
+        required=False,
+    )
+    subtitle = forms.CharField(label=_("Title of the communication"), max_length=200, required=False)
+    is_online = IsOnlineField()
 
     class Meta:
         fields = [
@@ -399,6 +427,7 @@ class SeminarForm(ActivityFormMixin, forms.Form):
 
 class SeminarCommunicationForm(ActivityFormMixin, forms.Form):
     template_name = "admission/doctorate/forms/training/seminar_communication.html"
+    is_online = IsOnlineField()
 
     class Meta:
         fields = [
@@ -431,6 +460,7 @@ class ValorisationForm(ActivityFormMixin, forms.Form):
             'summary',
             'participating_proof',
             'ects',
+            'comment',
         ]
         labels = {
             'title': _("Title"),
@@ -452,7 +482,12 @@ class CourseForm(ActivityFormMixin, forms.Form):
     academic_year = forms.ChoiceField(
         label=_("Academic year"),
         widget=autocomplete.ListSelect2(),
+    )
+    is_online = forms.BooleanField(
+        label=_("Course with evaluation"),  # Yes, its another meaning, but we spare a db field
+        initial=False,
         required=False,
+        widget=BooleanRadioSelect(choices=((False, _("No")), (True, _("Yes")))),
     )
 
     def __init__(self, *args, **kwargs):
@@ -493,6 +528,7 @@ class CourseForm(ActivityFormMixin, forms.Form):
             'academic_year',
             'hour_volume',
             'authors',
+            'is_online',
             'ects',
             'participating_proof',
             'comment',

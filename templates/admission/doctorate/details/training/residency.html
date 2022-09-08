@@ -24,47 +24,41 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% url "admission:doctorate:training:edit" pk=view.kwargs.pk activity_id=activity.uuid as edit_url %}
-{% url "admission:doctorate:training:delete" pk=view.kwargs.pk activity_id=activity.uuid as delete_url %}
-
 {% if activity.start_date and activity.end_date %}
   {% blocktrans with start=activity.start_date|date:"d/m/Y" end=activity.end_date|date:"d/m/Y" asvar period trimmed %}
     from {{ start }} to {{ end }}
   {% endblocktrans %}
 {% endif %}
-{% if activity.website %}
-  {% firstof '<a href="'|safe|add:activity.website|add:'">'|safe|add:activity.website|add:'</a>'|safe "" as website %}
-{% endif %}
 
 
 {#  We cannot use {% panel %} as the title contains HTML #}
 <div
-  class="panel panel-{{ activity|status_as_class }}"
-  data-status="{{ activity.status }}"
-  data-type="{{ activity.category }}"
+    class="panel panel-{{ activity|status_as_class }}"
+    data-status="{{ activity|status_list }}"
+    data-type="{{ activity.category }}"
 >
   <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
     <h3 class="panel-title">
       {% include "admission/doctorate/details/training/_panel_title.html" %}
 
       {% display activity.type %}
-      {% display activity.ects|default:""|floatformat " ECTS" as ects %}
+      {% display activity.ects|default:""|floatformat:"-2" " ECTS" as ects %}
       {% display '(' activity.city "," activity.country "," period ")" "-" ects %}
       <div class="clearfix"></div>
     </h3>
   </div>
   <div
-    id="a-{{ activity.uuid }}"
-    class="panel-collapse collapse"
-    role="tabpanel"
-    aria-labelledby="h-{{ activity.uuid }}"
+      id="a-{{ activity.uuid }}"
+      class="panel-collapse collapse"
+      role="tabpanel"
+      aria-labelledby="h-{{ activity.uuid }}"
   >
     <div class="panel-body">
       <strong class="d-block">{% trans "Description" %}</strong>
       {{ activity.subtitle|linebreaks }}
       <p>
-        {% display period "-" activity.is_online|format_is_online "-" website %}
-        <br />
+        {% display period %}
+        <br/>
         {% display activity.organizing_institution "," activity.city "," activity.country %}
       </p>
       <div class="row">
@@ -76,14 +70,14 @@
         {% endif %}
         {% if activity.ects %}
           <p class="col-md-4">
-            <strong class="d-block">{% trans "ECTS for participating" %}</strong>
-            {{ activity.ects|floatformat }}
+            <strong class="d-block">{% trans "ECTS" %}</strong>
+            {{ activity.ects|floatformat:"-2" }}
           </p>
         {% endif %}
       </div>
       {% if activity.participating_proof %}
         <div class="form-group">
-          <strong class="d-block">{% trans "Participation certification" %}</strong>
+          <strong class="d-block">{% trans "Participating proof" %}</strong>
           {% document_visualizer activity.participating_proof %}
         </div>
       {% endif %}

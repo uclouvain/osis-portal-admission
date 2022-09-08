@@ -1,4 +1,4 @@
-{% load i18n bootstrap3 %}
+{% load i18n bootstrap3 admission %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -28,7 +28,7 @@
   {% if not view.kwargs.activity_id %}
     {% trans "Add a paper" %}
   {% else %}
-    {% blocktrans with category=view.activity.get_category_display trimmed %}
+    {% blocktrans with category=categories|get_item:view.activity.category trimmed %}
       Edit activity of type <em>{{ category }}</em>
     {% endblocktrans %}
   {% endif %}

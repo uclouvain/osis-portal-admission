@@ -1,4 +1,4 @@
-{% load i18n bootstrap3 %}
+{% load i18n bootstrap3 admission %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -28,7 +28,7 @@
   {% if not view.kwargs.activity_id %}
     {% trans "Add a course" %}
   {% else %}
-    {% blocktrans with category=view.activity.get_category_display trimmed %}
+    {% blocktrans with category=categories|get_item:view.activity.category trimmed %}
       Edit activity of type <em>{{ category }}</em>
     {% endblocktrans %}
   {% endif %}
@@ -59,5 +59,17 @@
   {% bootstrap_field form.hour_volume form_group_class="form-group col-md-4 required_field" %}
   {% bootstrap_field form.ects form_group_class="form-group col-md-4 required_field" %}
 </div>
+{% bootstrap_field form.is_online form_group_class="form-group required_field" %}
 {% bootstrap_field form.participating_proof form_group_class="form-group required_field" %}
 {% bootstrap_field form.comment %}
+
+<script>
+  $(function () {
+    $('.academic-year').dependsOn({
+      '#id_organizing_institution_0': { values: ['UCLouvain'] },
+    });
+    $('.dates').dependsOn({
+      '#id_organizing_institution_0': { values: ['other'] },
+    });
+  });
+</script>

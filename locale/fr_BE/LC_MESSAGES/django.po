@@ -462,6 +462,9 @@ msgstr "Commentaire"
 msgid "Comment for the candidate"
 msgstr "Commentaire à destination du candidat"
 
+msgid "Comment from CDD manager"
+msgstr "Commentaire du gestionnaire CDD"
+
 msgid "Comment from reference promoter"
 msgstr "Commentaire du promoteur de référence"
 
@@ -504,6 +507,9 @@ msgstr "Coordonnées"
 msgid "Contact language"
 msgstr "Langue de contact"
 
+msgid "Context"
+msgstr "Contexte"
+
 msgid "Continuing education"
 msgstr "Promotion sociale"
 
@@ -542,6 +548,9 @@ msgstr "Titulaire du cours"
 
 msgid "Course owner if applicable"
 msgstr "Titulaire du cours (le cas échéant)"
+
+msgid "Course with evaluation"
+msgstr "Cours avec évaluation"
 
 msgid "Courses and training"
 msgstr "Cours et formation"
@@ -611,6 +620,9 @@ msgstr "Description"
 
 msgid "Description of the activity"
 msgstr "Description de l'activité"
+
+msgid "Description of your communication"
+msgstr "Description de votre communication"
 
 msgid ""
 "Detail here the reasons which justify the recourse to a provisory admission."
@@ -688,6 +700,9 @@ msgstr "Crédits ECTS"
 msgid "ECTS for participating"
 msgstr "ECTS pour la participation"
 
+msgid "ECTS for the participation"
+msgstr "ECTS pour la participation"
+
 msgid "ENROLLED"
 msgstr "Inscrit"
 
@@ -701,12 +716,20 @@ msgid "Edit"
 msgstr "Modifier"
 
 #, python-format
-msgid "Edit %(title)s"
-msgstr "Modifier %(title)s"
-
-#, python-format
 msgid "Edit activity of type <em>%(category)s</em>"
 msgstr "Modifier l'activité de type <em>%(category)s</em>"
+
+msgid "Edit the communication of this conference"
+msgstr "Modifier la communication de cette conférence"
+
+msgid "Edit the communication of this residency"
+msgstr "Modifier la communication de ce séjour"
+
+msgid "Edit the communication of this seminar"
+msgstr "Modifier la communication de ce séminaire"
+
+msgid "Edit the publication of this conference"
+msgstr "Modifier la publication de cette conférence"
 
 msgid "Education"
 msgstr "Formation"
@@ -755,9 +778,6 @@ msgstr "Système d'évaluation"
 
 msgid "Event description"
 msgstr "Description de l'événement"
-
-msgid "Event participation"
-msgstr "Participation à l'événement"
 
 msgid "Event website"
 msgstr "Site web de l'événement"
@@ -1361,9 +1381,6 @@ msgstr ""
 msgid "Opinion on the renewal of the research mandate"
 msgstr "Avis sur le renouvellement du mandat de recherche"
 
-msgid "Oral communication"
-msgstr "Communication orale"
-
 msgid "Oral expose"
 msgstr "Exposé oral"
 
@@ -1423,6 +1440,9 @@ msgstr "Publication"
 
 msgid "PUBLIC_DEFENSE"
 msgstr "Soutenance publique"
+
+msgid "Participating proof"
+msgstr "Preuve de participation"
 
 msgid "Participation"
 msgstr "Participation"
@@ -1600,6 +1620,9 @@ msgstr "Attestation de participation pour l'ensemble de l'activité"
 msgid "Proof of participation or success"
 msgstr "Certification de participation ou de succès"
 
+msgid "Proof of publication"
+msgstr "Preuve de publication"
+
 msgid "Proof of the final equivalence decision"
 msgstr "Preuve de la demande d'équivalence"
 
@@ -1711,6 +1734,9 @@ msgstr "Projet de recherche doctoral"
 
 msgid "Research report"
 msgstr "Rapport de recherche"
+
+msgid "Research seminar"
+msgstr "Séminaire de recherche"
 
 msgid "Residential address"
 msgstr "Domicile légal"
@@ -2281,6 +2307,9 @@ msgid ""
 msgstr ""
 "Votre inscription ne peut être confirmée. Toutes les conditions suivantes "
 "doivent être réunies pour cela."
+
+msgid "Your participation to the event"
+msgstr "Votre participation à l'événement"
 
 msgid "Your previous NOMA (registration id)"
 msgstr "Votre ancien NOMA (numéro de matricule)"

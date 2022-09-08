@@ -77,9 +77,7 @@ def get_diploma_initial_choices(uuid, person):
     if not uuid:
         return EMPTY_CHOICE
     diploma = DiplomaService.get_diploma(person=person, uuid=uuid)
-    return EMPTY_CHOICE + (
-        (diploma.uuid, diploma.title),
-    )
+    return EMPTY_CHOICE + ((diploma.uuid, diploma.title),)
 
 
 def get_thesis_location_initial_choices(value):
@@ -122,6 +120,7 @@ class CustomDateInput(forms.DateInput):
             attrs = {
                 'placeholder': _("dd/mm/yyyy"),
                 'data-mask' '': '00/00/0000',
+                'autocomplete': 'off',
             }
         super().__init__(attrs, format)
 
@@ -222,3 +221,13 @@ class SelectOrOtherField(forms.MultiValueField):
         if self.help_text:
             return {'help_text': self.help_text}
         return super().widget_attrs(widget)
+
+
+class BooleanRadioSelect(forms.RadioSelect):
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        # Override to explicitly set initial selected option to 'False' value
+        if value is None:
+            context['widget']['optgroups'][0][1][0]['selected'] = True
+            context['widget']['optgroups'][0][1][0]['attrs']['checked'] = True
+        return context
