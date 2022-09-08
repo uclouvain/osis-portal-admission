@@ -31,13 +31,15 @@ from django.conf import settings
 from django.core import validators
 from django.utils.translation import gettext_lazy as _
 
-from admission.contrib.enums.person import CivilState, GenderEnum, SexEnum
+from admission.constants import FIELD_REQUIRED_MESSAGE, BE_ISO_CODE
+from admission.contrib.enums.person import CivilState, GenderEnum, SexEnum, IdentificationType
 from admission.contrib.forms import (
     CustomDateInput,
     EMPTY_CHOICE,
     get_country_initial_choices,
     get_example_text,
     get_past_academic_years_choices,
+    RadioBooleanField,
 )
 from osis_document.contrib.forms import FileUploadField
 
@@ -48,6 +50,7 @@ NO = '0'
 
 
 class DoctorateAdmissionPersonForm(forms.Form):
+    # Identification
     first_name = forms.CharField(
         required=False,
         label=_("First name"),
@@ -96,7 +99,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("Gender"),
         choices=EMPTY_CHOICE + GenderEnum.choices(),
     )
-
+    unknown_birth_date = forms.BooleanField(required=False, label=_("Unknown birth date"))
     birth_date = forms.DateField(
         required=False,
         label=_("Birth date"),
@@ -138,6 +141,8 @@ class DoctorateAdmissionPersonForm(forms.Form):
         required=False,
         choices=settings.LANGUAGES,
     )
+
+    # Proof of identity
     id_card = FileUploadField(
         required=False,
         label=_("Identity card (both sides)"),
@@ -146,13 +151,19 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     passport = FileUploadField(required=False, label=_("Passport"), max_files=2)
 
+    has_national_number = RadioBooleanField(
+        label=_("Have you got a Belgian national registry number (SSIN)?"),
+        required=False,
+    )
+    identification_type = forms.ChoiceField(
+        label=_("Please provide one of these two identification information:"),
+        required=False,
+        choices=IdentificationType.choices(),
+        widget=forms.RadioSelect,
+    )
     national_number = forms.CharField(
         required=False,
         label=_("Belgian national registry number (SSIN)"),
-        help_text=_(
-            "Only to provide if you are in possession of a Belgian document of identity. If "
-            "you are of Belgian nationality and you live in Belgium this field is mandatory."
-        ),
         validators=[
             validators.RegexValidator(
                 r'^(\d{2}[.-]?\d{2}[.-]?\d{2}[.-]?\d{3}[.-]?\d{2})$',
@@ -168,19 +179,13 @@ class DoctorateAdmissionPersonForm(forms.Form):
     )
     id_card_number = forms.CharField(required=False, label=_("Identity card number"))
     passport_number = forms.CharField(required=False, label=_("Passport number"))
-    passport_expiration_date = forms.DateField(
-        required=False,
-        label=_("Passport expiration date"),
-        widget=CustomDateInput(),
-    )
     id_photo = FileUploadField(required=False, label=_("Identity picture"), max_files=1)
 
+    # Already registered
     last_registration_year = forms.ChoiceField(
         required=False,
         label=_("What was your last year of UCLouvain enrollment?"),
     )
-
-    unknown_birth_date = forms.BooleanField(required=False, label=_("Unknown birth date"))
     already_registered = forms.BooleanField(
         required=False,
         widget=forms.RadioSelect(
@@ -213,6 +218,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.fields['last_registration_year'].choices = get_past_academic_years_choices(person)
         self.initial['already_registered'] = YES if self.initial.get('last_registration_year') else NO
 
@@ -228,37 +234,37 @@ class DoctorateAdmissionPersonForm(forms.Form):
             person,
         )
 
+        self.initial['has_national_number'] = bool(self.initial.get('national_number'))
+
+        if self.initial.get('id_card_number'):
+            self.initial['identification_type'] = IdentificationType.ID_CARD_NUMBER.name
+        elif self.initial.get('passport_number'):
+            self.initial['identification_type'] = IdentificationType.PASSPORT_NUMBER.name
+        else:
+            self.initial['identification_type'] = ''
+
     def clean(self):
         data = super().clean()
 
         # Check the fields which are required if others are specified
-        if data.get('unknown_birth_date') and not data.get('birth_year'):
-            self.add_error('birth_year', _("This field is required."))
+        if data.get('unknown_birth_date'):
+            if not data.get('birth_year'):
+                self.add_error('birth_year', FIELD_REQUIRED_MESSAGE)
+        elif not data.get('birth_date'):
+            self.add_error('birth_date', FIELD_REQUIRED_MESSAGE)
 
         if data.get('already_registered'):
             if not data.get('last_registration_year'):
-                self.add_error('last_registration_year', _("This field is required."))
+                self.add_error('last_registration_year', FIELD_REQUIRED_MESSAGE)
             if not data.get('last_registration_id'):
-                self.add_error('last_registration_id', _("This field is required."))
-
-        if data.get('country_of_citizenship') == 'BE' and not data.get('national_number'):
-            self.add_error('national_number', _("This field is required."))
+                self.add_error('last_registration_id', FIELD_REQUIRED_MESSAGE)
 
         if not data.get('first_name') and not data.get('last_name'):
             self.add_error('first_name', _('This field is required if the last name is missing.'))
             self.add_error('last_name', _('This field is required if the first name is missing.'))
 
-        if not data.get('id_card') and (data.get('id_card_number') or data.get('national_number')):
-            self.add_error('id_card', _("This field is required."))
-
-        if data.get('passport_number'):
-            if not data.get('passport_expiration_date'):
-                self.add_error('passport_expiration_date', _("This field is required."))
-            if not data.get('passport'):
-                self.add_error('passport', _("This field is required."))
-
         # Lowercase the specified names
-        for field in ['first_name', 'last_name', 'middle_name', 'first_name_in_use']:
+        for field in ['first_name', 'last_name', 'middle_name', 'first_name_in_use', 'birth_place']:
             if data.get(field):
                 data[field] = force_title(data[field])
 

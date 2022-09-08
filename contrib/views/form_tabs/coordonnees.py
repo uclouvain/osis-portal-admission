@@ -62,7 +62,7 @@ class DoctorateAdmissionCoordonneesFormView(
     @staticmethod
     def prepare_be_city(form_cleaned_data):
         """Check if a belgian postal code / city has been passed and update the form."""
-        if form_cleaned_data['be_postal_code']:
+        if form_cleaned_data['country'] == BE_ISO_CODE:
             form_cleaned_data['postal_code'] = form_cleaned_data['be_postal_code']
             form_cleaned_data['city'] = form_cleaned_data['be_city']
         form_cleaned_data.pop('be_postal_code')

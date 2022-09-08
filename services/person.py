@@ -28,6 +28,7 @@ from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import person_api
+from osis_admission_sdk.model.person_identification import PersonIdentification
 
 
 class AdmissionPersonAPIClient:
@@ -40,7 +41,7 @@ class AdmissionPersonService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
     @classmethod
-    def retrieve_person(cls, person, uuid=None):
+    def retrieve_person(cls, person, uuid=None) -> PersonIdentification:
         if uuid:
             return AdmissionPersonAPIClient().retrieve_person_identification_admission(
                 uuid=str(uuid),
