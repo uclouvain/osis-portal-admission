@@ -114,10 +114,12 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     bourse_date_debut = forms.DateField(
         label=_("Scholarship start date"),
+        widget=CustomDateInput(),
         required=False,
     )
     bourse_date_fin = forms.DateField(
         label=_("Scholarship end date"),
+        widget=CustomDateInput(),
         required=False,
     )
     bourse_preuve = FileUploadField(
