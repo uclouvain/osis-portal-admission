@@ -483,6 +483,9 @@ msgstr "Communauté d'enseignement"
 msgid "Complementary training project"
 msgstr "Projet de formation complémentaire"
 
+msgid "Completion"
+msgstr "Finalisation"
+
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -668,6 +671,10 @@ msgstr "Projet de formation doctorale"
 
 msgid "Doctoral project"
 msgstr "Projet de recherche"
+
+msgctxt "tab name"
+msgid "Doctoral project"
+msgstr "Projet doctoral"
 
 msgid "Doctoral training"
 msgstr "Formation doctorale"
@@ -1731,6 +1738,10 @@ msgstr "Institut de recherche"
 
 msgid "Research project"
 msgstr "Projet de recherche doctoral"
+
+msgctxt "tab name"
+msgid "Research project"
+msgstr "Projet de recherche"
 
 msgid "Research report"
 msgstr "Rapport de recherche"

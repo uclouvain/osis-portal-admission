@@ -451,6 +451,9 @@ msgstr ""
 msgid "Complementary training project"
 msgstr ""
 
+msgid "Completion"
+msgstr ""
+
 msgid "Confirm"
 msgstr ""
 
@@ -628,6 +631,10 @@ msgstr ""
 msgid "Doctoral program proposition"
 msgstr ""
 
+msgid "Doctoral project"
+msgstr ""
+
+msgctxt "tab name"
 msgid "Doctoral project"
 msgstr ""
 
@@ -1607,6 +1614,10 @@ msgstr ""
 msgid "Research institute"
 msgstr ""
 
+msgid "Research project"
+msgstr ""
+
+msgctxt "tab name"
 msgid "Research project"
 msgstr ""
 
