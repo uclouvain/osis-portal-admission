@@ -53,7 +53,11 @@ class DoctorateAdmissionLanguagesFormView(
             {% load bootstrap3 i18n static admission %}
             <div class="form-container">
               {% panel _("Add a language") %}
-                {% bootstrap_form language_form %}
+                {% bootstrap_field language_form.language %}
+                {% bootstrap_field language_form.listening_comprehension %}
+                {% bootstrap_field language_form.speaking_ability %}
+                {% bootstrap_field language_form.writing_ability %}
+                {% bootstrap_field_with_tooltip language_form.certificate %}
               {% endpanel %}
             </div>
         """

@@ -24,7 +24,13 @@
  *
  */
 $(function () {
-  $('[data-toggle="popover"]').popover();
+  $('body').popover({
+    selector: '.popover-buttons',
+    html: 'true',
+    placement: 'auto top',
+    toggle: 'popover',
+    trigger: 'focus',
+  });
   $('body').on('mousedown', '.popover', function(e) {
     e.preventDefault();
     return false;
