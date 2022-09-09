@@ -29,14 +29,12 @@ from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
 
-from bootstrap3.templatetags.bootstrap3 import bootstrap_field
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.safestring import SafeString
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
-from admission.contrib.enums import *
 from admission.contrib.enums.training import CategorieActivite, StatutActivite
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
@@ -105,22 +103,36 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('doctorate', _('Doctorate'), 'graduation-cap'): [
-            Tab('project', _('Doctoral project')),
-            Tab('cotutelle', _('Cotutelle')),
-            Tab('supervision', _('Supervision')),
-            Tab('confirmation-paper', _('Confirmation paper')),
-            Tab('extension-request', _('New deadline')),
-            Tab('training', _('Training')),
-        ],
         Tab('experience', _('Previous experience'), 'list-alt'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
             Tab('languages', _('Languages knowledge')),
         ],
-        Tab('confirmation', _('Confirmation'), 'check-circle'): [
+        Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'graduation-cap'): [
+            Tab('project', pgettext('tab name', 'Research project')),
+            Tab('cotutelle', _('Cotutelle')),
+            Tab('supervision', _('Supervision')),
+        ],
+        # TODO specifics
+        Tab('completion', _('Completion'), 'check-circle'): [
+            # TODO accounting
             Tab('confirm', _('Confirmation')),
         ],
+        Tab('confirmation-paper', _('Confirmation'), 'list-check'): [
+            Tab('confirmation-paper', _('Confirmation paper')),
+            Tab('extension-request', _('New deadline')),
+        ],
+        Tab('training', _('Training'), 'book-open-reader'): [
+            Tab('training', _('Doctoral training')),
+            # TODO complementary training + course enrollment
+        ],
+        # Tab('defense', _('Defense'), 'person-chalkboard'): [
+        #     Tab('jury', _('Jury')),
+        #     Tab('jury-supervision', _('Jury supervision')),
+        #     Tab('private-defense', _('Private defense')),
+        #     Tab('public-defense', _('Public defense')),
+        # ],
+        # TODO documents
     }
 }
 

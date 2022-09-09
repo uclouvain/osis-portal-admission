@@ -34,6 +34,8 @@ register = template.Library()
 @register.filter
 def enum_display(value, enum_name):
     if hasattr(value, "__str__"):
+        # Import all needed enums
+        __import__('admission.contrib.enums')
         for enum in ChoiceEnum.__subclasses__():
             if enum.__name__ == enum_name:
                 return enum.get_value(str(value))
