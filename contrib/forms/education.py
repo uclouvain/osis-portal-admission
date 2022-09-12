@@ -178,7 +178,7 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
     institute = forms.CharField(
         label=_("Institute"),
         required=False,
-        help_text=_("You can also perform a search based on the location or postal code."),
+        help_text=_("You can specify the location or the postal code in your search."),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:high-school",
             attrs={
@@ -384,24 +384,28 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     final_equivalence_decision_not_ue = FileUploadField(
         label=_(
             "A double-sided copy of the final equivalence decision issued by the Ministry "
-            "of the French Community of Belgium"
+            "of the French Community of Belgium (possibly with the DAES or the admission test for the "
+            "first cycle of higher education in case of restrictive equivalence)"
         ),
         help_text=_(
             "For any high-school diploma from a country outside the European Union, the admission request "
             "<strong>must contain the equivalence</strong> of your diploma delivered by the "
             "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium."
         ),
-        max_files=1,
+        max_files=2,
         required=False,
     )
     final_equivalence_decision_ue = FileUploadField(
-        label=_("A double-sided copy of the final equivalence decision"),
+        label=_(
+            "A double-sided copy of the final equivalence decision (possibly with the DAES or the admission test "
+            "for the first cycle of higher education in case of restrictive equivalence)"
+        ),
         help_text=_(
             "If you have a final equivalence decision issued by the "
             "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you must "
             "provide a double-sided copy of this document."
         ),
-        max_files=1,
+        max_files=2,
         required=False,
     )
     equivalence_decision_proof = FileUploadField(
@@ -412,19 +416,6 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
             "provide a double-sided copy of this document as soon as possible. You are asked to "
             "provide proof of the application in the meantime: receipt of the application and proof of payment, "
             "acknowledgement of receipt of the application, etc."
-        ),
-        max_files=1,
-        required=False,
-    )
-    restrictive_equivalence_daes = FileUploadField(
-        label=_("Diploma of Aptitude for Access to Higher Education (DAES)"),
-        max_files=1,
-        required=False,
-    )
-    restrictive_equivalence_admission_test = FileUploadField(
-        label=_(
-            "Certificate of successful completion of the admission test for the first "
-            "cycle of higher education in case of restrictive equivalence"
         ),
         max_files=1,
         required=False,

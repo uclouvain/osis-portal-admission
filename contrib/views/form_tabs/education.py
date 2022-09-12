@@ -338,10 +338,7 @@ class DoctorateAdmissionEducationFormView(
             # Clean and define equivalence fields
             foreign_diploma_data["final_equivalence_decision"] = []
 
-            if not is_bachelor:
-                foreign_diploma_data["restrictive_equivalence_daes"] = []
-                foreign_diploma_data["restrictive_equivalence_admission_test"] = []
-            else:
+            if is_bachelor:
                 if not is_ue_country:
                     foreign_diploma_data["final_equivalence_decision"] = foreign_diploma_data[
                         "final_equivalence_decision_not_ue"

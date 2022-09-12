@@ -194,9 +194,6 @@
 
       {% field_data _("A transcript or your last year at high school") foreign_diploma.high_school_transcript hide_empty=True %}
       {% field_data _("A certified translation of your official transcript of marks for your final year of secondary education") foreign_diploma.high_school_transcript_translation hide_empty=True %}
-
-      {% field_data _("Diploma of Aptitude for Access to Higher Education (DAES)") foreign_diploma.restrictive_equivalence_daes hide_empty=True %}
-      {% field_data _("Certificate of successful completion of the admission test for the first cycle of higher education in case of restrictive equivalence") foreign_diploma.restrictive_equivalence_admission_test hide_empty=True %}
     {% endpanel %}
 
   {% elif high_school_diploma_alternative %}
