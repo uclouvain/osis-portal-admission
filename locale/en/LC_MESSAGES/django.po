@@ -61,8 +61,16 @@ msgid "A double-sided copy of the final equivalence decision"
 msgstr ""
 
 msgid ""
+"A double-sided copy of the final equivalence decision (possibly with the "
+"DAES or the admission test for the first cycle of higher education in case "
+"of restrictive equivalence)"
+msgstr ""
+
+msgid ""
 "A double-sided copy of the final equivalence decision issued by the Ministry "
-"of the French Community of Belgium"
+"of the French Community of Belgium (possibly with the DAES or the admission "
+"test for the first cycle of higher education in case of restrictive "
+"equivalence)"
 msgstr ""
 
 msgid "A field of the schedule must at least be set."
@@ -404,11 +412,6 @@ msgid ""
 "cycle of higher education"
 msgstr ""
 
-msgid ""
-"Certificate of successful completion of the admission test for the first "
-"cycle of higher education in case of restrictive equivalence"
-msgstr ""
-
 msgid "Certificate, with dates, justifying the specified period."
 msgstr ""
 
@@ -602,9 +605,6 @@ msgid "Did you obtain a diploma at the end of this training?"
 msgstr ""
 
 msgid "Diploma equivalence"
-msgstr ""
-
-msgid "Diploma of Aptitude for Access to Higher Education (DAES)"
 msgstr ""
 
 msgid "Dissertation score"
@@ -2093,7 +2093,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-msgid "You can also perform a search based on the location or postal code."
+msgid "You can specify the location or the postal code in your search."
 msgstr ""
 
 msgid "You cannot fill in a language more than once, please correct the form."

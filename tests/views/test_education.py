@@ -71,8 +71,6 @@ class EducationTestCase(TestCase):
             "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
             "foreign_diploma-final_equivalence_decision_ue_0": "test_ue",
             "foreign_diploma-final_equivalence_decision_not_ue_0": "test_not_ue",
-            "foreign_diploma-restrictive_equivalence_daes_0": "test",
-            "foreign_diploma-restrictive_equivalence_admission_test_0": "test",
         }
 
     def setUp(self):
@@ -460,8 +458,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent.get("equivalence"), Equivalence.NO.name)
         self.assertEqual(sent.get("final_equivalence_decision"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
-        self.assertEqual(sent.get("restrictive_equivalence_admission_test"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_daes"), ["test"])
 
     def test_form_foreign_pending_equivalence_for_ue_country(self):
         response = self.client.post(
@@ -492,8 +488,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent.get("equivalence"), Equivalence.PENDING.name)
         self.assertEqual(sent.get("final_equivalence_decision"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_admission_test"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_daes"), ["test"])
 
     def test_form_foreign_existing_equivalence_for_ue_country(self):
         response = self.client.post(
@@ -524,8 +518,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent.get("equivalence"), Equivalence.YES.name)
         self.assertEqual(sent.get("final_equivalence_decision"), ["test_ue"])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
-        self.assertEqual(sent.get("restrictive_equivalence_admission_test"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_daes"), ["test"])
 
     def test_form_foreign_existing_equivalence_for_not_ue_country(self):
         response = self.client.post(
@@ -556,8 +548,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent.get("equivalence"), '')
         self.assertEqual(sent.get("final_equivalence_decision"), ["test_not_ue"])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
-        self.assertEqual(sent.get("restrictive_equivalence_admission_test"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_daes"), ["test"])
 
     def test_form_foreign(self):
         # Complete international baccalaureate
@@ -599,8 +589,6 @@ class EducationTestCase(TestCase):
                     "enrolment_certificate": [],
                     "enrolment_certificate_translation": [],
                     "equivalence_decision_proof": [],
-                    "restrictive_equivalence_admission_test": [],
-                    "restrictive_equivalence_daes": [],
                     "final_equivalence_decision": [],
                 },
             },
@@ -653,8 +641,6 @@ class EducationTestCase(TestCase):
                     "enrolment_certificate": [],
                     "enrolment_certificate_translation": [],
                     "equivalence_decision_proof": ["test"],
-                    "restrictive_equivalence_admission_test": [],
-                    "restrictive_equivalence_daes": [],
                     "final_equivalence_decision": [],
                 },
             },
@@ -750,8 +736,6 @@ class EducationTestCase(TestCase):
                     "high_school_transcript_translation": [],
                     "high_school_diploma_translation": [],
                     "equivalence": "NO",
-                    "restrictive_equivalence_admission_test": [],
-                    "restrictive_equivalence_daes": [],
                     "final_equivalence_decision": [],
                 },
             },
