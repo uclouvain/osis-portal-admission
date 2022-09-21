@@ -387,6 +387,10 @@
           {# Display / hide the fields depending on the values of other fields #}
 
           {# Institute fields #}
+          $('#id_base_form-institute').dependsOn({
+              '#id_base_form-other_institute': { checked: false },
+          }, { hide: false, });
+
           $('#other-institute').dependsOn({
               '#id_base_form-other_institute': { checked: true },
           });

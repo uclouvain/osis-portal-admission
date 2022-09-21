@@ -39,6 +39,7 @@ from admission.services.reference import (
     LanguageService,
     DiplomaService,
     HighSchoolService,
+    SuperiorNonUniversityService,
 )
 from admission.utils import format_entity_address, format_entity_title, format_high_school_title
 
@@ -55,6 +56,7 @@ __all__ = [
     "InstituteLocationAutocomplete",
     "HighSchoolAutocomplete",
     "DiplomaAutocomplete",
+    "SuperiorNonUniversityAutocomplete",
 ]
 
 
@@ -239,6 +241,26 @@ class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             dict(
                 id=result.uuid,
                 text=result.title,
+            )
+            for result in results
+        ]
+
+    def autocomplete_results(self, results):
+        return results
+
+
+class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return SuperiorNonUniversityService.get_superior_non_universities(
+            person=self.request.user.person,
+            search=self.q,
+        )
+
+    def results(self, results):
+        return [
+            dict(
+                id=result.uuid,
+                text=result.name,
             )
             for result in results
         ]

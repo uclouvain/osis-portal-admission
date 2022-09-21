@@ -41,7 +41,7 @@ from osis_admission_sdk.model.educational_experience import EducationalExperienc
 
 from admission.constants import BE_ISO_CODE
 from admission.services.person import AdmissionPersonService
-from admission.services.reference import CountriesService, LanguageService, DiplomaService
+from admission.services.reference import CountriesService, LanguageService, DiplomaService, SuperiorNonUniversityService
 
 
 class DoctorateAdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
@@ -200,3 +200,11 @@ def initialize_field_texts(person, curriculum_experiences):
                 person=person,
             )
             experience.education_name = program.title
+
+        # Initialize the institute
+        if getattr(experience, 'institute', None):
+            institute = SuperiorNonUniversityService.get_superior_non_university(
+                uuid=experience.institute,
+                person=person,
+            )
+            experience.institute_name = institute.name

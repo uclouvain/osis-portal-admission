@@ -37,6 +37,7 @@ from admission.services.reference import (
     AcademicYearService,
     DiplomaService,
     HighSchoolService,
+    SuperiorNonUniversityService,
 )
 from admission.utils import format_entity_title, format_high_school_title
 from base.tests.factories.academic_year import get_current_year
@@ -78,6 +79,14 @@ def get_diploma_initial_choices(uuid, person):
         return EMPTY_CHOICE
     diploma = DiplomaService.get_diploma(person=person, uuid=uuid)
     return EMPTY_CHOICE + ((diploma.uuid, diploma.title),)
+
+
+def get_superior_non_university_initial_choices(uuid, person):
+    """Return the superior non university choices when data is either set from initial or webservice."""
+    if not uuid:
+        return EMPTY_CHOICE
+    superior_non_university = SuperiorNonUniversityService.get_superior_non_university(person=person, uuid=uuid)
+    return EMPTY_CHOICE + ((superior_non_university.uuid, superior_non_university.name),)
 
 
 def get_thesis_location_initial_choices(value):
