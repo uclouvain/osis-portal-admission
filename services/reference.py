@@ -33,6 +33,7 @@ from osis_reference_sdk.api import (
     languages_api,
     diplomas_api,
     high_schools_api,
+    superior_non_universities_api,
 )
 
 from admission.services.mixins import ServiceMeta
@@ -174,6 +175,32 @@ class DiplomaService(metaclass=ServiceMeta):
     @classmethod
     def get_diploma(cls, person, uuid, **kwargs):
         return DiplomaAPIClient().diploma_read(
+            uuid=uuid,
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class SuperiorNonUniversityAPIClient:
+    def __new__(cls):
+        api_config = reference_sdk.build_configuration()
+        return superior_non_universities_api.SuperiorNonUniversitiesApi(ApiClient(configuration=api_config))
+
+
+class SuperiorNonUniversityService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_superior_non_universities(cls, person, **kwargs):
+        return SuperiorNonUniversityAPIClient().superior_non_universities_list(
+            limit=100,
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        ).results
+
+    @classmethod
+    def get_superior_non_university(cls, person, uuid, **kwargs):
+        return SuperiorNonUniversityAPIClient().superior_non_university_read(
             uuid=uuid,
             **kwargs,
             **build_mandatory_auth_headers(person),

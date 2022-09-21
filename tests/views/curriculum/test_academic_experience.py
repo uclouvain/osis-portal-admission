@@ -67,6 +67,7 @@ class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
         self.assertEqual(experience.country_name, 'Belgique')
         self.assertEqual(experience.linguistic_regime_name, 'Français')
         self.assertEqual(experience.education_name, 'Computer science')
+        self.assertEqual(experience.institute_name, 'Institute of Technology')
         self.assertTrue(experience.evaluation_system_with_credits)
 
         experience_years = response.context.get('experience_years')
@@ -160,7 +161,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'base_form-other_institute': True,
             'base_form-institute_name': 'UCL',
             'base_form-institute_address': 'Louvain-La-Neuve',
-            'base_form-institute': 'Institute',
+            'base_form-institute': cls.institute.uuid,
             'base_form-program': cls.first_diploma.uuid,
             'base_form-other_program': True,
             'base_form-education_name': 'Other computer science',
@@ -236,7 +237,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': self.be_country.iso_code,
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
-                'institute': None,
+                'institute': self.institute.uuid,
                 'institute_name': 'UCL',
                 'institute_address': "Place de l'Université",
                 'program': self.first_diploma.uuid,
@@ -285,7 +286,10 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             base_form.fields['program'].widget.choices,
             EMPTY_CHOICE + ((self.first_diploma.uuid, self.first_diploma.title),),
         )
-
+        self.assertEqual(
+            base_form.fields['institute'].widget.choices,
+            EMPTY_CHOICE + ((self.institute.uuid, self.institute.name),),
+        )
         # Check formset
         year_formset = response.context.get('year_formset')
         forms = year_formset.forms
@@ -704,6 +708,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'base_form-other_program': False,
+                'base_form-other_institute': False,
             },
         )
 
@@ -721,9 +726,9 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'start': '2018',
                 'end': '2020',
                 'country': 'BE',
-                'institute_name': 'UCL',
-                'institute_address': 'Louvain-La-Neuve',
-                'institute': None,
+                'institute_name': '',
+                'institute_address': '',
+                'institute': self.institute.uuid,
                 'program': self.first_diploma.uuid,
                 'education_name': '',
                 'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,

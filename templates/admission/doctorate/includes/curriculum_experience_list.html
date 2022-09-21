@@ -90,8 +90,8 @@
                 {% endif %}
               {% endwith %}
             </td>
-            <td><span>{{ educational_experience.program_name|default:educational_experience.education_name }}</span></td>
-            <td><span>{{ educational_experience.institute|default:educational_experience.institute_name }}</span></td>
+            <td><span>{{ educational_experience.education_name }}</span></td>
+            <td><span>{{ educational_experience.institute_name }}</span></td>
             <td>
               <div class="btn-group" role="group">
                 {% if with_editing_options %}

@@ -42,6 +42,7 @@ autocomplete_paths = [
     path("institute-location/", views.InstituteLocationAutocomplete.as_view(), name="institute-location"),
     path("high-school/", views.HighSchoolAutocomplete.as_view(), name="high-school"),
     path("diploma/", views.DiplomaAutocomplete.as_view(), name="diploma"),
+    path("superior-non-university/", views.SuperiorNonUniversityAutocomplete.as_view(), name="superior-non-university"),
 ]
 
 curriculum_read_paths = [

@@ -28,8 +28,9 @@ import uuid
 from unittest.mock import ANY, patch
 
 from django.test import TestCase, override_settings
+from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
+from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.proposition_search_doctorat import PropositionSearchDoctorat
 from osis_reference_sdk.model.paginated_academic_years import PaginatedAcademicYears
 
@@ -98,6 +99,9 @@ class MixinTestCase(TestCase):
         cls.first_diploma = Diploma(uuid=str(uuid.uuid4()), title="Computer science")
         cls.second_diploma = Diploma(uuid=str(uuid.uuid4()), title="Biology")
 
+        # Institute
+        cls.institute = SuperiorNonUniversity(uuid=str(uuid.uuid4()), name="Institute of Technology")
+
         # Academic years
         cls.academic_year_2018 = AcademicYear(year=2018)
         cls.academic_year_2019 = AcademicYear(year=2019)
@@ -105,7 +109,7 @@ class MixinTestCase(TestCase):
 
         cls.educational_experience = EducationalExperience._from_openapi_data(
             country=cls.be_country.iso_code,
-            institute=None,
+            institute=cls.institute.uuid,
             institute_name='UCL',
             institute_address='Place de l\'Université',
             program=cls.first_diploma.uuid,
@@ -288,12 +292,32 @@ class MixinTestCase(TestCase):
                 None,
             )
 
-        self.mock_diplomas_api.return_value.languages_list.return_value = PaginatedDiploma(
+        self.mock_diplomas_api.return_value.diplomas_list.return_value = PaginatedDiploma(
             results=[self.first_diploma, self.second_diploma]
         )
 
         self.mock_diplomas_api.return_value.diploma_read.side_effect = get_diploma
         self.addCleanup(diplomas_api_patcher.stop)
+
+    def mock_superior_non_university_api(self):
+        superior_non_universities_api_patcher = patch(
+            "osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi",
+        )
+        self.mock_superior_non_universities_api = superior_non_universities_api_patcher.start()
+
+        def get_institute(**kwargs):
+            institute_uuid = kwargs.get('uuid')
+            return next(
+                (institute for institute in [self.institute] if institute.uuid == institute_uuid),
+                None,
+            )
+
+        self.mock_superior_non_universities_api.return_value.superior_non_universities_list.return_value = (
+            PaginatedSuperiorNonUniversity(results=[self.institute])
+        )
+
+        self.mock_superior_non_universities_api.return_value.superior_non_university_read.side_effect = get_institute
+        self.addCleanup(superior_non_universities_api_patcher.stop)
 
     def mock_person_api(self):
         api_person_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
@@ -330,3 +354,4 @@ class MixinTestCase(TestCase):
         self.mock_academic_years_api()
         self.mock_documents_api()
         self.mock_diplomas_api()
+        self.mock_superior_non_university_api()

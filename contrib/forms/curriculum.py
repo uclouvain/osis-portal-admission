@@ -48,6 +48,7 @@ from admission.contrib.forms import (
     get_diploma_initial_choices,
     get_example_text,
     RadioBooleanField,
+    get_superior_non_university_initial_choices,
 )
 from osis_document.contrib.forms import FileUploadField
 
@@ -199,8 +200,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         empty_value=None,
         label=_('Institute'),
         required=False,
-        # TODO Enable the field and add autocomplete
-        disabled=True,
+        widget=autocomplete.ListSelect2(url='admission:autocomplete:superior-non-university'),
     )
     program = forms.CharField(
         empty_value=None,
@@ -334,6 +334,11 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
 
         self.fields['program'].widget.choices = get_diploma_initial_choices(
             self.data.get(self.add_prefix('program'), self.initial.get('program')),
+            person,
+        )
+
+        self.fields['institute'].widget.choices = get_superior_non_university_initial_choices(
+            self.data.get(self.add_prefix('institute'), self.initial.get('institute')),
             person,
         )
 
