@@ -195,7 +195,7 @@
 
 {% block extra_content %}
   <table id="empty_form" class="hidden">
-    {% include 'admission/doctorate/includes/curriculum_experience_year_form.html' with year_form=year_formset.empty_form next_year='__prefix_1__' %}
+    {{ empty_form }}
   </table>
 {% endblock %}
 
@@ -335,6 +335,28 @@
               }
           }
 
+          function formatEmptyFormContent(emptyFormContent, year) {
+              return emptyFormContent.replace(/{{FORM_SET_PREFIX}}|{{FOLLOWING_FORM_SET_PREFIX}}|{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}/g, function(matched) {
+                  switch (matched) {
+                      {# Dynamic part of the form identifier corresponding to the first year of the academic year #}
+                      case '{{FORM_SET_PREFIX}}':
+                          return year;
+                      {# Used to display the second year of the academic year #}
+                      case '{{FOLLOWING_FORM_SET_PREFIX}}':
+                          return year + 1;
+                      {# We need to prevent the uploader component of osis-document from being initialized when #}
+                      {# the page is loaded so that the events remain attached when the form is copied. The class #}
+                      {# identifying the component is replaced in the default form and will be reset in the #}
+                      {# duplicated form allowing osis-document to detect the file fields in this new form #}
+                      {# and set up the appropriate VueJS components.#}
+                      case '{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}':
+                          return '{{OSIS_DOCUMENT_UPLOADER_CLASS}}';
+                      default:
+                          return '';
+                  }
+              })
+          }
+
           {# Dynamically update the formset depending on the base form values #}
           $([startSelect[0], endSelect[0]]).change(function() {
               const startYear = parseInt(startSelect.val());
@@ -364,9 +386,7 @@
                           form.removeClass('hidden');
                           insertAfterElement = form;
                       } else {
-                          insertAfterElement = $(emptyFormContent.replace(/__prefix__|__prefix_1__/g, matched => (
-                              matched === '__prefix__' ? year : year + 1
-                          ))).insertAfter(insertAfterElement);
+                          insertAfterElement = $(formatEmptyFormContent(emptyFormContent, year)).insertAfter(insertAfterElement);
                       }
                   }
 
