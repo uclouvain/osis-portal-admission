@@ -49,6 +49,7 @@ from admission.contrib.forms import (
     get_example_text,
     RadioBooleanField,
     get_superior_non_university_initial_choices,
+    FORM_SET_PREFIX,
 )
 from osis_document.contrib.forms import FileUploadField
 
@@ -470,7 +471,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
         super().__init__(**kwargs)
 
     academic_year = forms.IntegerField(
-        initial='__prefix__',
+        initial=FORM_SET_PREFIX,
         label=_('Academic year'),
         widget=forms.HiddenInput(),
     )

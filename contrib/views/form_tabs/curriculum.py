@@ -29,6 +29,7 @@ from abc import ABCMeta
 
 from django import forms
 from django.http import HttpResponseRedirect
+from django.template import loader
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
 
@@ -44,12 +45,19 @@ from admission.contrib.enums.curriculum import (
     SuccessfulResults,
     EvaluationSystem,
 )
+from admission.contrib.forms import (
+    OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
+    OSIS_DOCUMENT_UPLOADER_CLASS,
+    FOLLOWING_FORM_SET_PREFIX,
+    FORM_SET_PREFIX,
+)
 from admission.contrib.forms.curriculum import (
     DoctorateAdmissionCurriculumFileForm,
     DoctorateAdmissionCurriculumProfessionalExperienceForm,
     DoctorateAdmissionCurriculumEducationalExperienceForm,
     DoctorateAdmissionCurriculumEducationalExperienceYearFormSet,
     MINIMUM_CREDIT_NUMBER,
+    DoctorateAdmissionCurriculumEducationalExperienceYearForm,
 )
 from admission.contrib.views import DoctorateAdmissionCurriculumDetailView
 from admission.contrib.views.detail_tabs.curriculum import (
@@ -208,11 +216,27 @@ class DoctorateAdmissionCurriculumEducationalExperienceFormView(
             },
         )
 
+        # We need to prevent the uploader component of osis-document from being initialized when the page is loaded
+        # so that the events remain attached when the form is copied. The class identifying the component is replaced
+        # in the default form and will be reset in the duplicated form, allowing osis-document to detect the file
+        # fields in this new form, and set up the appropriate VueJS components.
+        context_data["empty_form"] = loader.render_to_string(
+            template_name='admission/doctorate/includes/curriculum_experience_year_form.html',
+            context={
+                'year_form': year_formset.empty_form,
+                'next_year': FOLLOWING_FORM_SET_PREFIX,
+            },
+        ).replace(OSIS_DOCUMENT_UPLOADER_CLASS, OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX)
+
         context_data['base_form'] = base_form
         context_data['year_formset'] = year_formset
         context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
         context_data['BE_ISO_CODE'] = BE_ISO_CODE
         context_data['FIRST_YEAR_WITH_ECTS_BE'] = FIRST_YEAR_WITH_ECTS_BE
+        context_data['FORM_SET_PREFIX'] = FORM_SET_PREFIX
+        context_data['FOLLOWING_FORM_SET_PREFIX'] = FOLLOWING_FORM_SET_PREFIX
+        context_data['OSIS_DOCUMENT_UPLOADER_CLASS'] = OSIS_DOCUMENT_UPLOADER_CLASS
+        context_data['OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX'] = OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX
 
         return context_data
 

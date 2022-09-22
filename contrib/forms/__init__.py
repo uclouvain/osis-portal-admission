@@ -43,6 +43,10 @@ from admission.utils import format_entity_title, format_high_school_title
 from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
+FORM_SET_PREFIX = '__prefix__'
+FOLLOWING_FORM_SET_PREFIX = '__prefix_1__'
+OSIS_DOCUMENT_UPLOADER_CLASS = 'document-uploader'
+OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX = '__{}__'.format(OSIS_DOCUMENT_UPLOADER_CLASS)
 
 
 def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):
