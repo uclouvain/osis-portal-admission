@@ -43,6 +43,9 @@ autocomplete_paths = [
     path("diploma/", views.DiplomaAutocomplete.as_view(), name="diploma"),
     path("learning-unit-years/", views.LearningUnitYearsAutocomplete.as_view(), name="learning-unit-years"),
     path("superior-non-university/", views.SuperiorNonUniversityAutocomplete.as_view(), name="superior-non-university"),
+    path("general-education/", views.GeneralEducationAutocomplete.as_view(), name="general-education"),
+    path("continuing-education/", views.ContinuingEducationAutocomplete.as_view(), name="continuing-education"),
+    path("scholarship/", views.ScholarshipAutocomplete.as_view(), name="scholarship"),
 ]
 
 curriculum_read_paths = [
@@ -98,7 +101,8 @@ creation_paths = [
     path("curriculum/", include((curriculum_update_paths, "curriculum"))),
     path("education", views.DoctorateAdmissionEducationFormView.as_view(), name="education"),
     path("languages", views.DoctorateAdmissionLanguagesFormView.as_view(), name="languages"),
-    path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
+    # path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
+    path("training-choice", views.AdmissionTrainingChoiceFormView.as_view(), name="training-choice"),
 ]
 
 update_paths = [
@@ -114,6 +118,7 @@ update_paths = [
     path("confirmation", views.DoctorateAdmissionConfirmationPaperFormView.as_view(), name="confirmation-paper"),
     path("extension-request", views.DoctorateAdmissionExtensionRequestFormView.as_view(), name="extension-request"),
     path("accounting", views.DoctorateAdmissionAccountingFormView.as_view(), name="accounting"),
+    path("training-choice", views.AdmissionTrainingChoiceFormView.as_view(), name="training-choice"),
 ]
 
 training_paths = [
@@ -159,6 +164,9 @@ doctorate_paths = [
     path("complementary-training/", include((training_paths, "complementary-training"))),
     path("course-enrollment", views.CourseEnrollmentListView.as_view(), name="course-enrollment"),
     path("course-enrollment/", include((training_paths, "course-enrollment"))),
+    path("training", views.DoctorateAdmissionTrainingView.as_view(), name="training"),
+    path("training/", include((training_paths, "training"))),
+    path("training-choice", views.AdmissionTrainingChoiceFormView.as_view(), name="training-choice"),
 ]
 
 urlpatterns = [
@@ -170,7 +178,7 @@ urlpatterns = [
     # Creation
     path(
         "doctorate/create/",
-        RedirectView.as_view(pattern_name="admission:doctorate-create:project"),
+        RedirectView.as_view(pattern_name="admission:doctorate-create:training-choice"),
         name="doctorate-create",
     ),
     path("doctorate/create/", include((creation_paths, "doctorate-create"))),

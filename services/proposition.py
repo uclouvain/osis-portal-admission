@@ -57,9 +57,23 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         return APIClient().retrieve_dashboard(**build_mandatory_auth_headers(person)).to_dict().get('links', {})
 
     @classmethod
-    def create_proposition(cls, person: Person, **kwargs):
+    def create_doctorate_proposition(cls, person: Person, data):
         return APIClient().create_proposition(
-            initier_proposition_command=kwargs,
+            initier_proposition_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def create_general_education_choice(cls, person: Person, data):
+        return APIClient().create_general_training_choice(
+            initier_proposition_generale_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def create_continuing_education_choice(cls, person: Person, data):
+        return APIClient().create_continuing_training_choice(
+            initier_proposition_continue_command=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -212,6 +226,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'project': {
         PropositionBusinessException.DetailProjetNonCompleteException,
     },
+    'training-choice': {},
     'cotutelle': {
         PropositionBusinessException.CotutelleNonCompleteException,
     },
