@@ -29,9 +29,9 @@ from django.utils.translation import gettext_lazy as _
 from base.models.utils.utils import ChoiceEnum
 
 
-class StudySystem(ChoiceEnum):
-    CONTINUING_EDUCATION = _("Continuing education")
-    FULL_TIME_EDUCATION = _("Full-time education")
+class TeachingTypeEnum(ChoiceEnum):
+    SOCIAL_PROMOTION = _("Social promotion")
+    FULL_EXERCICES = _("Full exercises")
 
 
 class Result(ChoiceEnum):

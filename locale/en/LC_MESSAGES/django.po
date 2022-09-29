@@ -484,9 +484,6 @@ msgstr ""
 msgid "Context"
 msgstr ""
 
-msgid "Continuing education"
-msgstr ""
-
 msgid "Cotutelle"
 msgstr ""
 
@@ -842,7 +839,7 @@ msgstr ""
 msgid "French-speaking Community"
 msgstr ""
 
-msgid "Full-time education"
+msgid "Full exercises"
 msgstr ""
 
 #, no-python-format
@@ -1734,6 +1731,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Single"
+msgstr ""
+
+msgid "Social promotion"
 msgstr ""
 
 msgid "Social sciences"

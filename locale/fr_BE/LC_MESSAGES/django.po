@@ -76,8 +76,9 @@ msgid ""
 "DAES or the admission test for the first cycle of higher education in case "
 "of restrictive equivalence)"
 msgstr ""
-"Copie recto-verso de la décision d'équivalence définitive (accompagnée éventuellement "
-"du DAES ou de l'examen aux études de premier cycle, en cas d'équivalence restrictive)"
+"Copie recto-verso de la décision d'équivalence définitive (accompagnée "
+"éventuellement du DAES ou de l'examen aux études de premier cycle, en cas "
+"d'équivalence restrictive)"
 
 msgid ""
 "A double-sided copy of the final equivalence decision issued by the Ministry "
@@ -87,7 +88,8 @@ msgid ""
 msgstr ""
 "Copie recto-verso de la décision d'équivalence définitive délivrée par le "
 "Ministère de la Communauté française de Belgique (accompagnée éventuellement "
-"du DAES ou de l'examen aux études de premier cycle, en cas d'équivalence restrictive)"
+"du DAES ou de l'examen aux études de premier cycle, en cas d'équivalence "
+"restrictive)"
 
 msgid "A field of the schedule must at least be set."
 msgstr "Au moins un champ de la grille horaire doit être complété."
@@ -517,9 +519,6 @@ msgstr "Langue de contact"
 msgid "Context"
 msgstr "Contexte"
 
-msgid "Continuing education"
-msgstr "Promotion sociale"
-
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
@@ -890,7 +889,7 @@ msgstr "Français"
 msgid "French-speaking Community"
 msgstr "Communauté française"
 
-msgid "Full-time education"
+msgid "Full exercises"
 msgstr "Plein exercice"
 
 #, no-python-format
@@ -1853,6 +1852,9 @@ msgstr "Demandes de signature envoyées"
 msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
+
+msgid "Social promotion"
+msgstr "Promotion sociale"
 
 msgid "Social sciences"
 msgstr "Sciences sociales"

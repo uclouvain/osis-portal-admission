@@ -53,7 +53,7 @@ from osis_admission_sdk.model.evaluation_system import EvaluationSystem
 from osis_admission_sdk.model.grade import Grade
 from osis_admission_sdk.model.proposition_dto_links import PropositionDTOLinks
 from osis_admission_sdk.model.result import Result
-from osis_admission_sdk.model.study_system import StudySystem
+from osis_admission_sdk.model.teaching_type_enum import TeachingTypeEnum
 
 from osis_admission_sdk.model.transcript_type import TranscriptType
 from osis_reference_sdk.model.country import Country
@@ -114,7 +114,7 @@ class MixinTestCase(TestCase):
             institute_address='Place de l\'Université',
             program=cls.first_diploma.uuid,
             education_name='Other computer science',
-            study_system=StudySystem(value='FULL_TIME_EDUCATION'),
+            study_system=TeachingTypeEnum(value='FULL_EXERCICES'),
             evaluation_type=EvaluationSystem(value='ECTS_CREDITS'),
             linguistic_regime=cls.language_without_translation.code,
             transcript_type=TranscriptType(value='ONE_FOR_ALL_YEARS'),
