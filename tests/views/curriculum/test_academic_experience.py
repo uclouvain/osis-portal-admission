@@ -33,10 +33,10 @@ from rest_framework.status import HTTP_200_OK
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.curriculum import (
     TranscriptType,
-    StudySystem,
     EvaluationSystem,
     Grade,
     Result,
+    TeachingTypeEnum,
 )
 from admission.contrib.forms import EMPTY_CHOICE
 from admission.tests.views.curriculum.mixin import MixinTestCase
@@ -242,7 +242,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'institute_address': "Place de l'Université",
                 'program': self.first_diploma.uuid,
                 'education_name': 'Other computer science',
-                'study_system': StudySystem.FULL_TIME_EDUCATION.name,
+                'study_system': TeachingTypeEnum.FULL_EXERCICES.name,
                 'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
                 'linguistic_regime': self.language_without_translation.code,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,
