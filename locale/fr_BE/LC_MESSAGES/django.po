@@ -286,6 +286,12 @@ msgstr "Type de l'admission"
 msgid "Affiliations"
 msgstr "Affiliations"
 
+msgid "Aggregation and CAPAES"
+msgstr "Agrégation et CAPAES"
+
+msgid "All"
+msgstr "Tous"
+
 msgctxt "filters"
 msgid "All"
 msgstr "Tout"
@@ -338,6 +344,12 @@ msgstr "Approuver de la part de %(first_name)s %(last_name)s"
 msgctxt "admission decision"
 msgid "Approved"
 msgstr "Approuvée"
+
+msgid "Are you a double degree student?"
+msgstr "Êtes-vous en double diplomation ?"
+
+msgid "Are you an erasmus mundus student?"
+msgstr "Êtes-vous Erasmus Mundus ?"
 
 msgid "Are you sure you want to cancel this request?"
 msgstr "Êtes-vous sûr de vouloir supprimer cette demande ?"
@@ -425,6 +437,9 @@ msgstr "Code BIC/SWIFT identifiant la banque dont provient le compte"
 msgid "BIOLOGY"
 msgstr "Biologie"
 
+msgid "Bachelor"
+msgstr "Bachelier"
+
 msgid "Back to requests"
 msgstr "Retour aux demandes"
 
@@ -502,6 +517,9 @@ msgstr "Cours, formation et écoles"
 
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
+
+msgid "Campus"
+msgstr "Campus"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -771,6 +789,9 @@ msgstr "Copie de l’attestation d’immatriculation « carte orange »"
 msgid "Copy of the tutorship act authenticated by the Belgian authorities"
 msgstr "Copie de l’acte de tutelle légalisé par des autorités belges"
 
+msgid "Continuing education"
+msgstr "Formation continue"
+
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
@@ -923,6 +944,9 @@ msgstr "Divorcé·e"
 msgid "Do you have a high school diploma?"
 msgstr "Avez-vous obtenu un diplôme de fin d'études secondaires ?"
 
+msgid "Do you have an international scholarship?"
+msgstr "Bénéficiez-vous d'une bourse internationale ?"
+
 msgid ""
 "Do you want, on the basis of this training, to realize a cycle continuation "
 "for the bachelor you are registering for?"
@@ -965,6 +989,9 @@ msgstr "Doctorat"
 
 msgid "Doctorate admissions"
 msgstr "Admissions en doctorat"
+
+msgid "Double or triple diplomation"
+msgstr ""
 
 msgid "Download as PDF"
 msgstr "Télécharger en tant que PDF"
@@ -1028,6 +1055,9 @@ msgstr "Intitulé de la formation"
 msgid "Education type"
 msgstr "Type d'enseignement"
 
+msgid "Education you are applying for"
+msgstr "Formation à laquelle vous vous inscrivez"
+
 msgid "Educational community"
 msgstr "Communauté d'enseignement"
 
@@ -1057,6 +1087,9 @@ msgstr "S'inscrire à un cours"
 
 msgid "Enrolled"
 msgstr "Inscrit"
+
+msgid "Erasmus Mundus"
+msgstr "Erasmus Mundus"
 
 msgid "Estimated time to complete the doctorate (in months)"
 msgstr "Durée prévue pour la réalisation du doctorat (en mois)"
@@ -1592,6 +1625,12 @@ msgstr "Commentaire interne :"
 msgid "International Baccalaureate"
 msgstr "Baccalauréat international (IBO)"
 
+msgid "International for doctorate"
+msgstr "Internationale pour les doctorats"
+
+msgid "International for general education"
+msgstr "Internationale pour la formation générale"
+
 msgid "Internship"
 msgstr "Stage"
 
@@ -1681,6 +1720,9 @@ msgstr "Des langues obligatoires sont manquantes."
 msgctxt "admission"
 msgid "Married"
 msgstr "Marié·e"
+
+msgid "Master"
+msgstr "Master"
 
 msgid "Mathematics"
 msgstr "Mathématiques"
@@ -2376,6 +2418,9 @@ msgstr "Statut :"
 msgid "Street"
 msgstr "Rue"
 
+msgid "Student profile"
+msgstr "Profil de l'étudiant"
+
 msgid "Study system"
 msgstr "Système d'études"
 
@@ -2663,6 +2708,12 @@ msgid "Training certificate, with dates, justifying the specified period."
 msgstr ""
 "Attestation de stage, avec mention des dates, justifiant la période "
 "concernée."
+
+msgid "Training choice"
+msgstr "Choix de formation"
+
+msgid "Training type"
+msgstr "Type de formation"
 
 msgid "Transcript"
 msgstr "Relevé de notes"

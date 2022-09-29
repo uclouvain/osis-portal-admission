@@ -27,7 +27,7 @@
 
 {% if admission %}
   {% if educational_tab %}
-    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from %}
+    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from_doctorateadmission %}
       {% if not on_update %}
         {% url 'admission:doctorate:update:curriculum:educational_update' view.kwargs.pk view.kwargs.experience_id as experience_update_url %}
       {% endif %}
@@ -39,7 +39,7 @@
       {% url 'admission:doctorate:curriculum:educational_read' view.kwargs.pk view.kwargs.experience_id as experience_read_url %}
     {% endif %}
   {% else %}
-    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from %}
+    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from_doctorateadmission %}
       {% if not on_update %}
         {% url 'admission:doctorate:update:curriculum:professional_update' view.kwargs.pk view.kwargs.experience_id as experience_update_url %}
       {% endif %}
@@ -51,7 +51,7 @@
       {% url 'admission:doctorate:curriculum:professional_read' view.kwargs.pk view.kwargs.experience_id as experience_read_url %}
     {% endif %}
   {% endif %}
-{% elif not experience.valuated_from %}
+{% elif not experience.valuated_from_doctorateadmission %}
   {% if educational_tab %}
     {% if not on_update %}
       {% url 'admission:doctorate-create:curriculum:educational_update' view.kwargs.experience_id as experience_update_url %}
@@ -124,7 +124,7 @@
         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
       </a>
     {% endif %}
-    {% if experience.valuated_from %}
+    {% if experience.valuated_from_doctorateadmission %}
       <span
           class="glyphicon glyphicon-check"
           title="{% trans "This experience has been valuated so cannot be updated." %}"

@@ -256,6 +256,12 @@ msgstr ""
 msgid "Affiliations"
 msgstr ""
 
+msgid "Aggregation and CAPAES"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
 msgctxt "filters"
 msgid "All"
 msgstr ""
@@ -301,6 +307,12 @@ msgstr ""
 
 msgctxt "admission decision"
 msgid "Approved"
+msgstr ""
+
+msgid "Are you a double degree student?"
+msgstr ""
+
+msgid "Are you an erasmus mundus student?"
 msgstr ""
 
 msgid "Are you sure you want to cancel this request?"
@@ -380,6 +392,9 @@ msgstr ""
 msgid "BIOLOGY"
 msgstr "Biology"
 
+msgid "Bachelor"
+msgstr ""
+
 msgid "Back to requests"
 msgstr ""
 
@@ -456,6 +471,9 @@ msgid "COURSE"
 msgstr "Course"
 
 msgid "CSC - China Scholarship Council"
+msgstr ""
+
+msgid "Campus"
 msgstr ""
 
 msgid "Cancel"
@@ -830,6 +848,9 @@ msgstr ""
 msgid "Do you have a high school diploma?"
 msgstr ""
 
+msgid "Do you have an international scholarship?"
+msgstr ""
+
 msgid ""
 "Do you want, on the basis of this training, to realize a cycle continuation "
 "for the bachelor you are registering for?"
@@ -863,6 +884,9 @@ msgid "Doctorate"
 msgstr ""
 
 msgid "Doctorate admissions"
+msgstr ""
+
+msgid "Double or triple diplomation"
 msgstr ""
 
 msgid "Download as PDF"
@@ -927,6 +951,9 @@ msgstr ""
 msgid "Education type"
 msgstr ""
 
+msgid "Education you are applying for"
+msgstr ""
+
 msgid "Educational community"
 msgstr ""
 
@@ -951,6 +978,9 @@ msgid "Enroll in a course"
 msgstr ""
 
 msgid "Enrolled"
+msgstr ""
+
+msgid "Erasmus Mundus"
 msgstr ""
 
 msgid "Estimated time to complete the doctorate (in months)"
@@ -1399,6 +1429,12 @@ msgstr ""
 msgid "International Baccalaureate"
 msgstr ""
 
+msgid "International for doctorate"
+msgstr ""
+
+msgid "International for general education"
+msgstr ""
+
 msgid "Internship"
 msgstr ""
 
@@ -1484,6 +1520,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Married"
+msgstr ""
+
+msgid "Master"
 msgstr ""
 
 msgid "Mathematics"
@@ -2161,6 +2200,9 @@ msgstr ""
 msgid "Street"
 msgstr ""
 
+msgid "Student profile"
+msgstr ""
+
 msgid "Study system"
 msgstr ""
 
@@ -2395,6 +2437,12 @@ msgid "Training"
 msgstr ""
 
 msgid "Training certificate, with dates, justifying the specified period."
+msgstr ""
+
+msgid "Training choice"
+msgstr ""
+
+msgid "Training type"
 msgstr ""
 
 msgid "Transcript"
