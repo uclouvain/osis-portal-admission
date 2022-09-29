@@ -64,6 +64,7 @@ from .form_tabs.supervision import (
     DoctorateAdmissionSetReferencePromoterView,
     DoctorateAdmissionSupervisionFormView,
 )
+from .form_tabs.training_choice import AdmissionTrainingChoiceFormView
 from .list import *
 from .signatures import (
     DoctorateAdmissionRequestSignaturesView,
