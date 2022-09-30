@@ -30,7 +30,7 @@ from django.views.generic import FormView
 from admission.contrib.forms.extension_request import ExtensionRequestForm
 from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionDoctorateService
+from admission.services.doctorate import AdmissionDoctorateService
 from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
 
 

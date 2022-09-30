@@ -28,7 +28,8 @@ from django.utils.functional import cached_property
 from django.views.generic.base import ContextMixin
 
 from admission.contrib.enums.projet import ChoixStatutProposition
-from admission.services.proposition import AdmissionPropositionService, AdmissionDoctorateService
+from admission.services.proposition import AdmissionPropositionService
+from admission.services.doctorate import AdmissionDoctorateService
 
 
 class LoadViewMixin(LoginRequiredMixin, ContextMixin):
@@ -53,6 +54,7 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
 
 class LoadDossierViewMixin(LoadViewMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -68,6 +70,7 @@ class LoadDossierViewMixin(LoadViewMixin):
 
 class LoadDoctorateViewMixin(LoadViewMixin):
     """Mixin that can be used to load data for tabs used after the enrolment."""
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 

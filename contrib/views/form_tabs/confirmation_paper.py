@@ -30,7 +30,7 @@ from django.views.generic import FormView
 from admission.contrib.forms.confirmation_paper import ConfirmationPaperForm, PromoterConfirmationPaperForm
 from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionDoctorateService, ConfirmationPaperBusinessException
+from admission.services.doctorate import AdmissionDoctorateService, ConfirmationPaperBusinessException
 from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
 
 

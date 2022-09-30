@@ -91,6 +91,14 @@ msgstr "%(state)s le %(date)s"
 msgid "(e.g.: 1234)"
 msgstr "(ex: 1234)"
 
+#, python-format
+msgid ""
+"<a href=\"%(enrollment_url)s\">Go to course enrollment</a> or <a href="
+"\"%(add_url)s\">add a course</a>"
+msgstr ""
+"<a href=\"%(enrollment_url)s\">Aller à l'inscription aux cours</a> ou <a "
+"href=\"%(add_url)s\">ajouter un cours</a>"
+
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
@@ -317,6 +325,9 @@ msgstr ""
 "(Article 16 et 17 - Section 2 du Chapitre 1 du Titre III du Règlement "
 "général des études et des examens de l'UCLouvain)."
 
+msgid "Approval"
+msgstr "Approbation"
+
 msgid "Approve by PDF"
 msgstr "Approuver via PDF"
 
@@ -471,6 +482,9 @@ msgstr "Chimie"
 msgid "COMMUNICATION"
 msgstr "Communication orale (hors conférences)"
 
+msgid "COMPLEMENTARY_TRAINING"
+msgstr "Formation complémentaire"
+
 msgid "CONFERENCE"
 msgstr "Conférences, colloques"
 
@@ -586,6 +600,9 @@ msgstr "Attestation de communication"
 
 msgid "Community of education"
 msgstr "Communauté d'enseignement"
+
+msgid "Complementary training"
+msgstr "Formation complémentaire"
 
 msgid "Complementary training project"
 msgstr "Projet de formation complémentaire"
@@ -784,6 +801,9 @@ msgstr "Choix de la formation"
 msgid "Course code (if needed)"
 msgstr "Code du cours (le cas échéant)"
 
+msgid "Course enrollment"
+msgstr "Inscription à un cours"
+
 msgid "Course owner"
 msgstr "Titulaire du cours"
 
@@ -792,6 +812,9 @@ msgstr "Titulaire du cours (le cas échéant)"
 
 msgid "Course with evaluation"
 msgstr "Cours avec évaluation"
+
+msgid "Courses"
+msgstr "Cours"
 
 msgid "Courses and training"
 msgstr "Cours et formation"
@@ -814,6 +837,9 @@ msgstr "Curriculum vitae détaillé, daté et signé"
 
 msgid "DDC opinion"
 msgstr "Avis de la CDD"
+
+msgid "DOCTORAL_TRAINING"
+msgstr "Formation doctorale"
 
 msgid "Date of confirmation"
 msgstr "Date de l'épreuve de confirmation"
@@ -1023,6 +1049,9 @@ msgstr "Date de fin"
 msgid "English"
 msgstr "Anglais"
 
+msgid "Enroll in a course"
+msgstr "S'inscrire à un cours"
+
 msgid "Enrolled"
 msgstr "Inscrit"
 
@@ -1080,6 +1109,9 @@ msgstr "FNRS"
 
 msgid "FRC - Fonds de recherche clinique"
 msgstr "FRC - Fonds de recherche clinique"
+
+msgid "FREE_COURSE"
+msgstr "Cours libre"
 
 msgid "FRESH"
 msgstr "FRESH"
@@ -1590,6 +1622,9 @@ msgstr "Dernière année d'inscription"
 
 msgid "Latin"
 msgstr "Latin"
+
+msgid "Learning unit"
+msgstr "Unité d'enseignement"
 
 msgid "Leave the page?"
 msgstr "Quitter la page ?"
@@ -2247,6 +2282,9 @@ msgstr "Rechercher une personne par son nom"
 msgid "Search a tutor by name"
 msgstr "Rechercher un tuteur par son nom"
 
+msgid "Search for an EU code (outside the EU of the form)"
+msgstr "Rechercher un code UE (hors UE du formulaire)"
+
 msgid "Secondary studies"
 msgstr "Études secondaires"
 
@@ -2534,6 +2572,9 @@ msgstr "Langue de rédaction de la thèse"
 msgid "This activity and potential sub-activities will be deleted"
 msgstr "Cette activité et ses potentielles sous-activités seront supprimées"
 
+msgid "This candidate has not created any course yet."
+msgstr "Ce candidat n'a pas encore créé de cours."
+
 msgid "This comment will be visible to all users who have access to this page."
 msgstr ""
 "Ce commentaire sera visible par tous les utilisateurs ayant accès à cette "
@@ -2638,6 +2679,9 @@ msgstr "Type de publication"
 
 msgid "UCLOUVAIN_ASSISTANT"
 msgstr "Assistant UCLouvain"
+
+msgid "UCL_COURSE"
+msgstr "Cours UCL"
 
 msgid "Undecided"
 msgstr "Non décidé"

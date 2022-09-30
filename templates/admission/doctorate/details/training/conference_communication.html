@@ -41,7 +41,9 @@
   </div>
   <div
     id="a-{{ activity.uuid }}"
+    {% if not remove_action %}
     class="panel-collapse collapse"
+    {% endif %}
     role="tabpanel"
     aria-labelledby="h-{{ activity.uuid }}"
   >

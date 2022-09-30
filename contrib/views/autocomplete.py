@@ -56,6 +56,7 @@ __all__ = [
     "InstituteLocationAutocomplete",
     "HighSchoolAutocomplete",
     "DiplomaAutocomplete",
+    "LearningUnitYearsAutocomplete",
     "SuperiorNonUniversityAutocomplete",
 ]
 
@@ -241,6 +242,27 @@ class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             dict(
                 id=result.uuid,
                 text=result.title,
+            )
+            for result in results
+        ]
+
+    def autocomplete_results(self, results):
+        return results
+
+
+class LearningUnitYearsAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return AdmissionAutocompleteService.autocomplete_learning_unit_years(
+            person=self.request.user.person,
+            year=self.forwarded['academic_year'],
+            acronym_search=self.q,
+        )
+
+    def results(self, results):
+        return [
+            dict(
+                id=result['acronym'],
+                text=f"{result['acronym']} - {result['title']}",
             )
             for result in results
         ]

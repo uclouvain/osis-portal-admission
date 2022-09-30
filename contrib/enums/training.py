@@ -45,6 +45,7 @@ class CategorieActivite(ChoiceEnum):
     VAE = _("VAE")
     COURSE = _("COURSE")
     PAPER = _("PAPER")
+    UCL_COURSE = _("UCL_COURSE")
 
 
 class ChoixComiteSelection(ChoiceEnum):
@@ -65,3 +66,9 @@ class ChoixTypeEpreuve(ChoiceEnum):
     CONFIRMATION_PAPER = _("CONFIRMATION_PAPER")
     PRIVATE_DEFENSE = _("PRIVATE_DEFENSE")
     PUBLIC_DEFENSE = _("PUBLIC_DEFENSE")
+
+
+class ContexteFormation(ChoiceEnum):
+    DOCTORAL_TRAINING = _("DOCTORAL_TRAINING")
+    COMPLEMENTARY_TRAINING = _("COMPLEMENTARY_TRAINING")
+    FREE_COURSE = _("FREE_COURSE")

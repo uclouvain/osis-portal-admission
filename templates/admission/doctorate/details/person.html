@@ -41,11 +41,13 @@
             {% elif person.birth_year %}
                 {% field_data _("Birth year") person.birth_year "col-md-4" %}
             {% endif %}
+            {% get_country_name person.birth_country as birth_country %}
             {% field_data _("Birth country") birth_country "col-md-4" %}
             {% field_data _("Birth place") person.birth_place "col-md-4" %}
         </div>
         <div class="row">
           {% field_data _("Civil status") person.civil_state|enum_display:'CivilState' "col-md-4" %}
+          {% get_country_name person.country_of_citizenship as country_of_citizenship %}
           {% field_data _("Country of citizenship") country_of_citizenship "col-md-4" %}
         </div>
         {% field_data _("Identity picture") person.id_photo hide_empty=True %}

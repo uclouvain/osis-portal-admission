@@ -32,13 +32,14 @@
 {% if activity.website %}
   {% firstof '<a href="'|safe|add:activity.website|add:'" target="_blank">'|safe|add:activity.website|add:'</a>'|safe "" as website %}
 {% endif %}
+{% get_country_name activity.country as country %}
 
 
 {#  We cannot use {% panel %} as the title contains HTML #}
 <div
-    class="panel panel-{{ activity|status_as_class }}"
-    data-status="{{ activity|status_list }}"
-    data-type="{{ activity.category }}"
+  class="panel panel-{{ activity|status_as_class }}"
+  data-status="{{ activity|status_list }}"
+  data-type="{{ activity.category }}"
 >
   <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
     <h3 class="panel-title">
@@ -46,23 +47,25 @@
 
       {% display activity.type ':' activity.title as title_details %}
       {% display activity.ects|default:""|floatformat:"-2" " ECTS" as ects %}
-      {% display '(' activity.city "," activity.country "," period ")" as location_period %}
-      {% display title_details " " location_period  "-" ects %}
+      {% display '(' activity.city "," country "," period ")" as location_period %}
+      {% display title_details " " location_period "-" ects %}
       <div class="clearfix"></div>
     </h3>
   </div>
   <div
-      id="a-{{ activity.uuid }}"
-      class="panel-collapse collapse"
-      role="tabpanel"
-      aria-labelledby="h-{{ activity.uuid }}"
+    id="a-{{ activity.uuid }}"
+    {% if not remove_action %}
+    class="panel-collapse collapse"
+    {% endif %}
+    role="tabpanel"
+    aria-labelledby="h-{{ activity.uuid }}"
   >
     <div class="panel-body">
       <p>
         <strong class="d-block">{% trans "Event description" %}</strong>
         {% display activity.title "-" period "-" activity.is_online|format_is_online "-" website %}
-        <br/>
-        {% display activity.organizing_institution "," activity.city "," activity.country %}
+        <br />
+        {% display activity.organizing_institution "," activity.city "," country %}
       </p>
       <div class="row">
         {% if activity.participating_days %}

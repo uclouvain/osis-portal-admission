@@ -30,13 +30,16 @@ from dataclasses import dataclass
 from inspect import getfullargspec
 
 from django import template
+from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.safestring import SafeString
-from django.utils.translation import gettext_lazy as _, pgettext
+from django.utils.translation import get_language, gettext_lazy as _, pgettext
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums.training import CategorieActivite, StatutActivite
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
+from admission.services.reference import CountriesService
+from admission.utils.utils import to_snake_case
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
@@ -123,8 +126,9 @@ TAB_TREES = {
             Tab('extension-request', _('New deadline')),
         ],
         Tab('training', _('Training'), 'book-open-reader'): [
-            Tab('training', _('Doctoral training')),
-            # TODO complementary training + course enrollment
+            Tab('doctoral-training', _('Doctoral training')),
+            Tab('complementary-training', _('Complementary training')),
+            Tab('course-enrollment', _('Course enrollment')),
         ],
         # Tab('defense', _('Defense'), 'person-chalkboard'): [
         #     Tab('jury', _('Jury')),
@@ -497,3 +501,18 @@ def status_list(admission):
 def get_academic_year(year: int):
     """Return the academic year related to a specific year."""
     return f'{year}-{year + 1}'
+
+
+@register.filter
+def snake_case(value):
+    return to_snake_case(str(value))
+
+
+@register.simple_tag(takes_context=True)
+def get_country_name(context, iso_code: str):
+    """Return the country name."""
+    if not iso_code:
+        return ''
+    translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
+    result = CountriesService.get_country(iso_code=iso_code, person=context['request'].user.person)
+    return getattr(result, translated_field, '')

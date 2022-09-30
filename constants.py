@@ -43,9 +43,11 @@ READ_ACTIONS_BY_TAB = {
     'confirm': 'submit_proposition',
     # Confirmation paper
     'confirmation-paper': 'retrieve_confirmation',
-    'extension-request': 'retrieve_confirmation',
+    'extension-request': 'update_confirmation_extension',
     # Others
-    'training': 'retrieve_training',
+    'doctoral-training': 'retrieve_doctoral_training',
+    'complementary-training': 'retrieve_complementary_training',
+    'course-enrollment': 'retrieve_course_enrollment',
     'jury': '',
     'private-defense': '',
     'public-defense': '',
@@ -73,7 +75,6 @@ UPDATE_ACTIONS_BY_TAB = {
     'confirmation-paper': 'update_confirmation',
     'extension-request': 'update_confirmation_extension',
     # Others
-    'training': '',
     'jury': '',
     'private-defense': '',
     'public-defense': '',

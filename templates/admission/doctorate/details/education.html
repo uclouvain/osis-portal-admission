@@ -169,7 +169,8 @@
 
       {% field_data _("What diploma did you get (or will you get)?") foreign_diploma.foreign_diploma_type|enum_display:'ForeignDiplomaTypes' %}
 
-      {% field_data _("Organizing country") foreign_diploma.country %}
+      {% get_country_name foreign_diploma.country as foreign_diploma_country %}
+      {% field_data _("Organizing country") foreign_diploma_country %}
 
       {% if foreign_diploma.linguistic_regime %}
         {% field_data _("Linguistic regime") foreign_diploma.linguistic_regime %}

@@ -45,7 +45,7 @@
         <div class="text-right">
           <div class="text-right form-group">
             <a
-              href="{% url "admission:doctorate:training" pk=view.kwargs.pk %}#{{ view.kwargs.activity_id }}"
+              href="{% url "admission:doctorate:doctoral-training" pk=view.kwargs.pk %}#{{ view.kwargs.activity_id }}"
               class="text-danger"
             >
               {% trans "Cancel" %}
@@ -53,10 +53,18 @@
             <button type="submit" class="btn btn-primary">
               {% trans "Save" %}
             </button>
-
           </div>
         </div>
       </form>
+
+      {% firstof 0 activity.object_type|snake_case|add:'.html' as template_name %}
+      {% if activity.parent %}
+        <div class="panel panel-default">
+      {% endif %}
+      {% include "admission/doctorate/details/training/"|add:template_name with remove_action=True %}
+      {% if activity.parent %}
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

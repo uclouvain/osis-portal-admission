@@ -29,9 +29,9 @@
 {% endif %}
 
 <div
-    class="panel panel-{{ activity|status_as_class }}"
-    data-status="{{ activity.status }}"
-    data-type="{{ activity.category }}"
+  class="panel panel-{{ activity|status_as_class }}"
+  data-status="{{ activity.status }}"
+  data-type="{{ activity.category }}"
 >
   <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
     <h3 class="panel-title">
@@ -44,10 +44,12 @@
     </h3>
   </div>
   <div
-      id="a-{{ activity.uuid }}"
-      class="panel-collapse collapse"
-      role="tabpanel"
-      aria-labelledby="h-{{ activity.uuid }}"
+    id="a-{{ activity.uuid }}"
+    {% if not remove_action %}
+    class="panel-collapse collapse"
+    {% endif %}
+    role="tabpanel"
+    aria-labelledby="h-{{ activity.uuid }}"
   >
     <div class="panel-body">
       <p>

@@ -26,7 +26,7 @@
 from django.views.generic import TemplateView
 
 from admission.contrib.views.mixins import LoadDoctorateViewMixin
-from admission.services.proposition import AdmissionDoctorateService
+from admission.services.doctorate import AdmissionDoctorateService
 
 
 class DoctorateAdmissionExtensionRequestDetailView(
