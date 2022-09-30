@@ -41,7 +41,7 @@ from osis_admission_sdk.model.educational_experience import EducationalExperienc
 
 from admission.constants import BE_ISO_CODE
 from admission.services.person import AdmissionPersonService
-from admission.services.reference import CountriesService, LanguageService, DiplomaService, SuperiorNonUniversityService
+from admission.services.reference import LanguageService, DiplomaService, SuperiorNonUniversityService
 
 
 class DoctorateAdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
@@ -174,14 +174,6 @@ def initialize_field_texts(person, curriculum_experiences):
     is_supported_language = get_language() == settings.LANGUAGE_CODE
 
     for experience in curriculum_experiences:
-
-        # Initialize the country
-        if getattr(experience, 'country', None):
-            country = CountriesService.get_country(
-                iso_code=experience.country,
-                person=person,
-            )
-            experience.country_name = country.name if is_supported_language else country.name_en
 
         # Initialize the linguistic regime
         if getattr(experience, 'linguistic_regime', None):

@@ -48,11 +48,13 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-right">
           {% for category_name, category_label in categories %}
-            <li>
-              <a href="{% url "admission:doctorate:training:add" pk=view.kwargs.pk category=category_name|lower %}">
-                {{ category_label }}
-              </a>
-            </li>
+            {% if category_name != 'UCL_COURSE' %}
+              <li>
+                <a href="{% url "admission:doctorate:doctoral-training:add" pk=view.kwargs.pk category=category_name|lower %}">
+                  {{ category_label }}
+                </a>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
       </div>
@@ -88,7 +90,7 @@
     </div>
   {% endif %}
 
-  {% if doctorate|can_make_action:'submit_doctorateadmission_doctoral_training' %}
+  {% if doctorate|can_make_action:'submit_training' %}
     {# Special error handling #}
     {% if form.non_field_errors %}
       <div class="alert alert-danger alert-dismissable alert-link">
@@ -109,7 +111,7 @@
   {% trans "No activity created yet" %}
 {% endfor %}
 
-{% if doctorate|can_make_action:'submit_doctorateadmission_doctoral_training' %}
+{% if doctorate|can_make_action:'submit_training' %}
   <button class="btn btn-default" type="submit" value="_submit">{% trans "Submit these activities" %}</button>
   </form>
 {% endif %}

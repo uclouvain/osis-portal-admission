@@ -28,7 +28,8 @@
   {% firstof '<a href="'|safe|add:activity.website|add:'" target="_blank">'|safe|add:activity.website|add:'</a>'|safe "" as website %}
 {% endif %}
 
-{% display activity.city "," activity.country as location %}
+{% get_country_name activity.country as country %}
+{% display activity.city "," country as location %}
 {% display activity.start_date|date:"d/m/Y" as period %}
 
 <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
@@ -41,7 +42,9 @@
 </div>
 <div
   id="a-{{ activity.uuid }}"
+  {% if not remove_action %}
   class="panel-collapse collapse"
+  {% endif %}
   role="tabpanel"
   aria-labelledby="h-{{ activity.uuid }}"
 >

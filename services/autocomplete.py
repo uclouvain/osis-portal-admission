@@ -23,8 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import osis_learning_unit_sdk
+from osis_learning_unit_sdk.api import learning_units_api
+
 from admission.services.mixins import ServiceMeta
-from frontoffice.settings.osis_sdk import admission as admission_sdk
+from frontoffice.settings.osis_sdk import admission as admission_sdk, learning_unit as learning_unit_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import autocomplete_api
@@ -58,5 +61,16 @@ class AdmissionAutocompleteService(metaclass=ServiceMeta):
     def autocomplete_persons(cls, person, **kwargs):
         return AdmissionAutocompleteAPIClient().list_persons(
             **kwargs,
+            **build_mandatory_auth_headers(person),
+        )['results']
+
+    @classmethod
+    def autocomplete_learning_unit_years(cls, year, acronym_search, person):
+        configuration = learning_unit_sdk.build_configuration()
+        with osis_learning_unit_sdk.ApiClient(configuration) as api_client:
+            api_instance = learning_units_api.LearningUnitsApi(api_client)
+        return api_instance.learningunits_list(
+            year=int(year),
+            acronym_like=acronym_search,
             **build_mandatory_auth_headers(person),
         )['results']

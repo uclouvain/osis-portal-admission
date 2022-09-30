@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
@@ -30,11 +31,12 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums import CategorieActivite, ContexteFormation
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.enums.training import StatutActivite
-from admission.services.proposition import ActivityApiBusinessException
+from admission.contrib.forms.training import INSTITUTION_UCL
 from base.tests.factories.person import PersonFactory
-from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
+from osis_admission_sdk import ApiException
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -45,7 +47,7 @@ class TrainingTestCase(TestCase):
 
     def setUp(self):
         self.client.force_login(self.phd_student.user)
-        self.url = resolve_url("admission:doctorate:training", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.url = resolve_url("admission:doctorate:doctoral-training", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_api = api_patcher.start()
@@ -62,19 +64,19 @@ class TrainingTestCase(TestCase):
             nom_doctorantig='Doe',
             uuid='uuid1',
         )
-        self.mock_api.return_value.list_doctoral_trainings.return_value = []
+        self.mock_api.return_value.list_doctoral_training.return_value = []
         self.mock_api.return_value.create_doctoral_training.return_value = dict(
             uuid='uuid-created',
         )
-        self.mock_api.return_value.update_doctoral_training.return_value = dict(
+        self.mock_api.return_value.update_training.return_value = dict(
             uuid='uuid-edited',
         )
 
-        self.mock_api.return_value.retrieve_doctoral_training.return_value = Mock(
-            category="CONFERENCE",
+        self.mock_api.return_value.retrieve_training.return_value = Mock(
+            category=CategorieActivite.CONFERENCE.name,
         )
-        self.mock_api.return_value.retrieve_doctoral_training.return_value.to_dict.return_value = dict(
-            category="CONFERENCE",
+        self.mock_api.return_value.retrieve_training.return_value.to_dict.return_value = dict(
+            category=CategorieActivite.CONFERENCE.name,
             type="",
             participating_proof=[],
             parent=None,
@@ -82,14 +84,26 @@ class TrainingTestCase(TestCase):
 
         self.addCleanup(api_patcher.stop)
 
-    def test_activity_list(self):
+    def test_doctoral_training_list(self):
         response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "Informatique")
+
+    def test_complementary_training_list(self):
+        url = resolve_url("admission:doctorate:complementary-training", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "Informatique")
+
+    def test_course_enrollment_list(self):
+        url = resolve_url("admission:doctorate:course-enrollment", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Informatique")
 
     def test_create_wrong_category(self):
         url = resolve_url(
-            "admission:doctorate:training:add",
+            "admission:doctorate:doctoral-training:add",
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
             category="UNKNOWN",
         )
@@ -98,9 +112,9 @@ class TrainingTestCase(TestCase):
 
     def test_create(self):
         url = resolve_url(
-            "admission:doctorate:training:add",
+            "admission:doctorate:doctoral-training:add",
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-            category="CONFERENCE",
+            category=CategorieActivite.CONFERENCE.name,
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -123,16 +137,16 @@ class TrainingTestCase(TestCase):
 
     def test_create_with_parent(self):
         url = resolve_url(
-            "admission:doctorate:training:add",
+            "admission:doctorate:doctoral-training:add",
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-            category="COMMUNICATION",
+            category=CategorieActivite.COMMUNICATION.name,
         )
         response = self.client.get(f"{url}?parent=uuid-parent")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update(self):
         url = resolve_url(
-            "admission:doctorate:training:edit",
+            "admission:doctorate:doctoral-training:edit",
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
             activity_id="64d2e9e3-2537-4a12-a396-48763c5cdc60",
         )
@@ -170,14 +184,14 @@ class TrainingTestCase(TestCase):
                     )
                 )
             return Mock(
-                category="CONFERENCE",
+                category=CategorieActivite.CONFERENCE.name,
                 title="parent",
             )
 
-        self.mock_api.return_value.retrieve_doctoral_training.side_effect = side_effect
+        self.mock_api.return_value.retrieve_training.side_effect = side_effect
 
         url = resolve_url(
-            "admission:doctorate:training:edit",
+            "admission:doctorate:doctoral-training:edit",
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
             activity_id="64d2e9e3-2537-4a12-a396-48763c5cdc60",
         )
@@ -202,11 +216,11 @@ class TrainingTestCase(TestCase):
     def test_submit(self):
         activity_mock = Mock(uuid='test', ects=10)
         activity_mock.get = dict(uuid='test', ects=10).get
-        self.mock_api.return_value.list_doctoral_trainings.return_value = [activity_mock]
+        self.mock_api.return_value.list_doctoral_training.return_value = [activity_mock]
         data = {
             'activity_ids': ['test'],
         }
-        self.mock_api.return_value.submit_doctoral_training.return_value = data
+        self.mock_api.return_value.submit_training.return_value = data
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, self.url)
@@ -214,13 +228,128 @@ class TrainingTestCase(TestCase):
     def test_submit_with_errors(self):
         activity_mock = Mock(uuid='test', ects=10)
         activity_mock.get = dict(uuid='test', ects=10).get
-        self.mock_api.return_value.list_doctoral_trainings.return_value = [activity_mock]
+        self.mock_api.return_value.list_doctoral_training.return_value = [activity_mock]
         data = {
             'activity_ids': ['test'],
         }
-        self.mock_api.return_value.submit_doctoral_training.side_effect = MultipleApiBusinessException(
-            {ActivityApiBusinessException(status_code='FORMATION-1', detail="Pas bon", activite_id='test')}
+        # Exception related to an activity
+        self.mock_api.return_value.submit_training.side_effect = ApiException(
+            http_resp=Mock(
+                status=status.HTTP_400_BAD_REQUEST,
+                data='{"errors":[{"activite_id": "test", "detail": "Pas bon", "status_code": 0}]}',
+            ),
         )
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, "form", None, "Pas bon")
+
+        # Any other exception
+        self.mock_api.return_value.submit_training.side_effect = ApiException(
+            http_resp=Mock(
+                status=status.HTTP_502_BAD_GATEWAY,
+            ),
+        )
+        with self.assertRaises(ApiException):
+            self.client.post(self.url, data)
+
+    @patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
+    def test_create_course_dates(self, acad_api):
+        acad_api.return_value.get_academic_years.return_value = Mock(
+            results=[
+                Mock(
+                    start_date=datetime.date(2021, 9, 2),
+                    end_date=datetime.date(2022, 9, 1),
+                    year=2021,
+                )
+            ]
+        )
+
+        url = resolve_url(
+            "admission:doctorate:doctoral-training:add",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            category=CategorieActivite.COURSE.name,
+        )
+        data = {
+            'type': 'A Course',
+            'organizing_institution': INSTITUTION_UCL,
+            'academic_year': '2021',
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        call_data = self.mock_api.return_value.create_doctoral_training.call_args[1]['doctoral_training_activity']
+        self.assertNotIn('academic_year', call_data)
+        self.assertEqual(call_data['start_date'].year, 2021)
+        self.assertEqual(call_data['end_date'].year, 2022)
+
+    @patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
+    @patch('osis_learning_unit_sdk.api.learning_units_api.LearningUnitsApi')
+    def test_update_course_enrollment(self, learning_unit_api, acad_api):
+        learning_unit_api.return_value.learningunitstitle_read.return_value = {'title': "dumb text"}
+        acad_api.return_value.get_academic_years.return_value = Mock(
+            results=[
+                Mock(
+                    start_date=datetime.date(2021, 9, 2),
+                    end_date=datetime.date(2022, 9, 1),
+                    year=2021,
+                )
+            ]
+        )
+        url = resolve_url(
+            "admission:doctorate:course-enrollment:edit",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            activity_id="64d2e9e3-2537-4a12-a396-48763c5cdc60",
+        )
+        self.mock_api.return_value.retrieve_training.return_value = Mock(
+            category=CategorieActivite.UCL_COURSE.name,
+        )
+        self.mock_api.return_value.retrieve_training.return_value.to_dict.return_value = dict(
+            category=CategorieActivite.UCL_COURSE.name,
+            learning_unit_year='2021-2022 - ESA2004',
+        )
+        response = self.client.post(
+            url,
+            data={
+                'context': ContexteFormation.FREE_COURSE.name,
+                'academic_year': '2021',
+                'learning_unit_year': 'ESA2004',
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+    def test_assent(self):
+        url = resolve_url(
+            "admission:doctorate:course-enrollment:assent",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            activity_id="64d2e9e3-2537-4a12-a396-48763c5cdc60",
+        )
+        self.mock_api.return_value.retrieve_training.return_value = Mock(
+            category=CategorieActivite.UCL_COURSE.name,
+        )
+        self.mock_api.return_value.retrieve_training.return_value.to_dict.return_value = dict(
+            category=CategorieActivite.UCL_COURSE.name,
+            reference_promoter_assent=None,
+            reference_promoter_comment="",
+        )
+        data = {
+            'approbation': True,
+            'commentaire': "Ok",
+        }
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+    def test_delete(self):
+        url = resolve_url(
+            "admission:doctorate:course-enrollment:delete",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            activity_id="64d2e9e3-2537-4a12-a396-48763c5cdc60",
+        )
+        self.mock_api.return_value.retrieve_training.return_value = Mock(
+            category=CategorieActivite.UCL_COURSE.name,
+        )
+        self.mock_api.return_value.retrieve_training.return_value.to_dict.return_value = dict(
+            category=CategorieActivite.UCL_COURSE.name,
+            reference_promoter_assent=None,
+            reference_promoter_comment="",
+        )
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)

@@ -29,7 +29,8 @@
 {% endif %}
 
 {% display activity.ects|default:""|floatformat:"-2" " ECTS" as ects %}
-{% display '(' activity.city "," activity.country "," activity.start_date|date:"d/m/Y" ")" as location_period %}
+{% get_country_name activity.country as country %}
+{% display '(' activity.city "," country "," activity.start_date|date:"d/m/Y" ")" as location_period %}
 
 <div
   class="panel-{{ activity|status_as_class }}"
@@ -46,7 +47,9 @@
   </div>
   <div
     id="a-{{ activity.uuid }}"
+    {% if not remove_action %}
     class="panel-collapse collapse"
+    {% endif %}
     role="tabpanel"
     aria-labelledby="h-{{ activity.uuid }}"
   >
@@ -55,7 +58,7 @@
         <strong class="d-block">{% trans "Description" %}</strong>
         {% display activity.title "-" activity.subtitle "-" activity.is_online|format_is_online "-" website %}
         <br />
-        {% display activity.organizing_institution "," activity.city "," activity.country %}
+        {% display activity.organizing_institution "," activity.city "," country %}
       </p>
       {% if activity.summary %}
         <div class="form-group">

@@ -75,6 +75,12 @@ msgstr ""
 msgid "(e.g.: 1234)"
 msgstr ""
 
+#, python-format
+msgid ""
+"<a href=\"%(enrollment_url)s\">Go to course enrollment</a> or <a href="
+"\"%(add_url)s\">add a course</a>"
+msgstr ""
+
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
@@ -283,6 +289,9 @@ msgstr ""
 "(Article 16 et 17 - Section 2 du Chapitre 1 du Titre III du Règlement "
 "général des études et des examens de l'UCLouvain)."
 
+msgid "Approval"
+msgstr ""
+
 msgid "Approve by PDF"
 msgstr ""
 
@@ -428,6 +437,9 @@ msgstr "Chemistry"
 msgid "COMMUNICATION"
 msgstr ""
 
+msgid "COMPLEMENTARY_TRAINING"
+msgstr "Complementary training"
+
 msgid "CONFERENCE"
 msgstr ""
 
@@ -532,6 +544,9 @@ msgid "Communication attestation"
 msgstr ""
 
 msgid "Community of education"
+msgstr ""
+
+msgid "Complementary training"
 msgstr ""
 
 msgid "Complementary training project"
@@ -697,6 +712,9 @@ msgstr ""
 msgid "Course code (if needed)"
 msgstr ""
 
+msgid "Course enrollment"
+msgstr ""
+
 msgid "Course owner"
 msgstr ""
 
@@ -704,6 +722,9 @@ msgid "Course owner if applicable"
 msgstr ""
 
 msgid "Course with evaluation"
+msgstr ""
+
+msgid "Courses"
 msgstr ""
 
 msgid "Courses and training"
@@ -727,6 +748,9 @@ msgstr ""
 
 msgid "DDC opinion"
 msgstr ""
+
+msgid "DOCTORAL_TRAINING"
+msgstr "Doctoral training"
 
 msgid "Date of confirmation"
 msgstr ""
@@ -920,6 +944,9 @@ msgstr ""
 msgid "English"
 msgstr ""
 
+msgid "Enroll in a course"
+msgstr ""
+
 msgid "Enrolled"
 msgstr ""
 
@@ -976,6 +1003,9 @@ msgstr ""
 
 msgid "FRC - Fonds de recherche clinique"
 msgstr ""
+
+msgid "FREE_COURSE"
+msgstr "Free course"
 
 msgid "FRESH"
 msgstr ""
@@ -1397,6 +1427,9 @@ msgid "Last registration year"
 msgstr ""
 
 msgid "Latin"
+msgstr ""
+
+msgid "Learning unit"
 msgstr ""
 
 msgid "Leave the page?"
@@ -2036,6 +2069,9 @@ msgstr ""
 msgid "Search a tutor by name"
 msgstr ""
 
+msgid "Search for an EU code (outside the EU of the form)"
+msgstr ""
+
 msgid "Secondary studies"
 msgstr ""
 
@@ -2277,6 +2313,9 @@ msgstr ""
 msgid "This activity and potential sub-activities will be deleted"
 msgstr ""
 
+msgid "This candidate has not created any course yet."
+msgstr ""
+
 msgid "This comment will be visible to all users who have access to this page."
 msgstr ""
 
@@ -2375,6 +2414,9 @@ msgstr ""
 
 msgid "UCLOUVAIN_ASSISTANT"
 msgstr "Uclouvain assistant"
+
+msgid "UCL_COURSE"
+msgstr "UCL Course"
 
 msgid "Undecided"
 msgstr ""

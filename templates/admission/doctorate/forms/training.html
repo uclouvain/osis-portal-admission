@@ -34,7 +34,7 @@
     <div class="col-md-10 quitting-context-excluded">
       {% include form.template_name %}
       <div class="text-right form-group">
-        <a href="{% url "admission:doctorate:training" pk=view.kwargs.pk %}" class="text-danger">
+        <a href="{% url "admission:doctorate:doctoral-training" pk=view.kwargs.pk %}" class="text-danger">
           {% trans "Cancel" %}
         </a>
         <button type="submit" class="btn btn-primary">
@@ -52,12 +52,19 @@
 
   <script>
   $(function () {
-    $('.academic-year').dependsOn({
+    {# Scripts cannot be inside form inlcudes as dependsOn is include in form.media #}
+    $('.academic-year').length && $('.academic-year').dependsOn({
       '#id_organizing_institution_0': { values: ['UCLouvain'] },
     });
-    $('.dates').dependsOn({
+    $('.dates').length && $('.dates').dependsOn({
       '#id_organizing_institution_0': { values: ['other'] },
     });
+    $('#id_academic_year').change(function () {
+      $('#id_learning_unit_year').val(null).trigger('change');
+    });
+    $('.acceptation-proof').length && $('.acceptation-proof').dependsOn({
+      '#id_committee': { values: ['YES'] },
+    }, { valueOnDisable: '' });
   });
   </script>
 {% endblock %}

@@ -24,13 +24,14 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% url "admission:doctorate:training:edit" pk=view.kwargs.pk activity_id=activity.uuid as edit_url %}
-{% url "admission:doctorate:training:delete" pk=view.kwargs.pk activity_id=activity.uuid as delete_url %}
+{% display request.resolver_match.namespace|add:':'|add:request.resolver_match.url_name as namespace %}
+{% url namespace|add:":edit" pk=view.kwargs.pk activity_id=activity.uuid as edit_url %}
+{% url namespace|add:":delete" pk=view.kwargs.pk activity_id=activity.uuid as delete_url %}
 {% if activity.category|safe == 'CONFERENCE' or activity.category|safe == 'SEMINAR' or activity.category|safe == 'RESIDENCY' %}
-  {% url "admission:doctorate:training:add" pk=view.kwargs.pk category="communication" as add_communication_url %}
+  {% url namespace|add:":add" pk=view.kwargs.pk category="communication" as add_communication_url %}
 {% endif %}
 {% if activity.category|safe == 'CONFERENCE' %}
-  {% url "admission:doctorate:training:add" pk=view.kwargs.pk category="publication" as add_publication_url %}
+  {% url namespace|add:":add" pk=view.kwargs.pk category="publication" as add_publication_url %}
 {% endif %}
 
 <a
@@ -143,13 +144,16 @@
         {% endif %}
       {% endif %}
 
-    {% elif activity.status|safe == "SOUMISE" %}
+    {% elif activity.status|safe == "SOUMISE" and not remove_action and doctorate|can_make_action:'assent_training' %}
       {# Reference promoter #}
-      {% url "admission:doctorate:training:assent" pk=view.kwargs.pk activity_id=activity.uuid as assent_url %}
-
-      <a href="{{ assent_url }}" class="btn btn-default btn-sm">
-        {% trans "Give assent/dissent" %}
-      </a>
+      {% if activity.object_type|safe == "SeminarCommunication" %}
+        {# No assent on seminar communication #}
+      {% else %}
+        {% url namespace|add:":assent" pk=view.kwargs.pk activity_id=activity.uuid as assent_url %}
+        <a href="{{ assent_url }}" class="btn btn-default btn-sm">
+          {% trans "Give assent/dissent" %}
+        </a>
+      {% endif %}
     {% endif %}
 
 

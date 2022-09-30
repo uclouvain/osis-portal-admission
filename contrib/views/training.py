@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import re
 from abc import ABC
 from copy import copy
+from typing import Tuple, Union
 
 from django.forms import Form
 from django.http import Http404
@@ -34,25 +34,25 @@ from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.views.generic import FormView
 
-from admission.contrib.enums.training import CategorieActivite, StatutActivite
+from admission.contrib.enums.training import CategorieActivite, ContexteFormation, StatutActivite
 from admission.contrib.forms.training import *
-from admission.contrib.forms.training import AssentForm
 from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionDoctorateTrainingService
-
-__all__ = [
-    "DoctorateAdmissionTrainingView",
-    "DoctorateTrainingActivityAddView",
-    "DoctorateTrainingActivityEditView",
-    "DoctorateTrainingActivityDeleteView",
-    "DoctorateTrainingActivityAssentView",
-]
-
+from admission.services.training import AdmissionDoctorateTrainingService
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
+__all__ = [
+    "DoctoralTrainingListView",
+    "ComplementaryTrainingListView",
+    "CourseEnrollmentListView",
+    "TrainingActivityAddView",
+    "TrainingActivityEditView",
+    "TrainingActivityDeleteView",
+    "TrainingActivityAssentView",
+]
 
-class DoctorateAdmissionTrainingView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
+
+class DoctoralTrainingListView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/training_list.html'
     form_class = BatchActivityForm
 
@@ -67,7 +67,10 @@ class DoctorateAdmissionTrainingView(LoadDoctorateViewMixin, WebServiceFormMixin
 
     @cached_property
     def activities(self):
-        return AdmissionDoctorateTrainingService.get_activity_list(person=self.person, uuid=str(self.kwargs['pk']))
+        return AdmissionDoctorateTrainingService.list_doctoral_training(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+        )
 
     def get_success_url(self):
         return self.request.get_full_path()
@@ -94,65 +97,96 @@ class DoctorateAdmissionTrainingView(LoadDoctorateViewMixin, WebServiceFormMixin
                 form.add_error(None, exception.detail)
                 form.activities_in_error.append(exception.activite_id)
             return self.form_invalid(form)
-        return super().form_valid(form)
+        return super(WebServiceFormMixin, self).form_valid(form)
 
 
-class DoctorateTrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormMixin, FormView, ABC):
+class TrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormMixin, FormView, ABC):
     template_name = "admission/doctorate/forms/training.html"
-    permission_required = "admission.change_activity"
     form_class_mapping = {
-        CategorieActivite.CONFERENCE: ConferenceForm,
-        (CategorieActivite.CONFERENCE, CategorieActivite.COMMUNICATION): ConferenceCommunicationForm,
-        (CategorieActivite.CONFERENCE, CategorieActivite.PUBLICATION): ConferencePublicationForm,
-        CategorieActivite.RESIDENCY: ResidencyForm,
-        (CategorieActivite.RESIDENCY, CategorieActivite.COMMUNICATION): ResidencyCommunicationForm,
-        CategorieActivite.COMMUNICATION: CommunicationForm,
-        CategorieActivite.PUBLICATION: PublicationForm,
-        CategorieActivite.SERVICE: ServiceForm,
-        CategorieActivite.SEMINAR: SeminarForm,
-        (CategorieActivite.SEMINAR, CategorieActivite.COMMUNICATION): SeminarCommunicationForm,
-        CategorieActivite.VAE: ValorisationForm,
-        CategorieActivite.COURSE: CourseForm,
-        CategorieActivite.PAPER: PaperForm,
+        "doctoral-training": {
+            CategorieActivite.CONFERENCE: ConferenceForm,
+            (CategorieActivite.CONFERENCE, CategorieActivite.COMMUNICATION): ConferenceCommunicationForm,
+            (CategorieActivite.CONFERENCE, CategorieActivite.PUBLICATION): ConferencePublicationForm,
+            CategorieActivite.RESIDENCY: ResidencyForm,
+            (CategorieActivite.RESIDENCY, CategorieActivite.COMMUNICATION): ResidencyCommunicationForm,
+            CategorieActivite.COMMUNICATION: CommunicationForm,
+            CategorieActivite.PUBLICATION: PublicationForm,
+            CategorieActivite.SERVICE: ServiceForm,
+            CategorieActivite.SEMINAR: SeminarForm,
+            (CategorieActivite.SEMINAR, CategorieActivite.COMMUNICATION): SeminarCommunicationForm,
+            CategorieActivite.VAE: ValorisationForm,
+            CategorieActivite.COURSE: CourseForm,
+            CategorieActivite.PAPER: PaperForm,
+        },
+        "complementary-training": {
+            CategorieActivite.COURSE: ComplementaryCourseForm,
+        },
+        "course-enrollment": {
+            CategorieActivite.UCL_COURSE: UclCourseForm,
+        },
     }
     activity_uuid = None
 
+    @property
+    def namespace(self) -> str:
+        """Return current url namespace, i.e.: doctoral-training, complementary-training or course-enrollment"""
+        return self.request.resolver_match.namespaces[2]
+
+    @property
+    def category(self) -> str:
+        """Return category being worked on"""
+        return str(getattr(self, 'activity', self.kwargs).get('category')).upper()
+
     def get_form_class(self):
         try:
-            form_class = self.form_class_mapping[self.get_category()]
+            return self.form_class_mapping[self.namespace][self.category_mapping_key]
         except KeyError as e:
             raise Http404(f"No form mapped: {e}")
-        return form_class
 
-    def get_category(self):
-        category = CategorieActivite[self.kwargs['category'].upper()]
-        if self.request.GET.get('parent'):
-            parent = AdmissionDoctorateTrainingService.get_activity(
+    @cached_property
+    def category_mapping_key(self) -> Union[Tuple[CategorieActivite, CategorieActivite], CategorieActivite]:
+        """Return the form_class mapping key (with parent if needed)"""
+        category = CategorieActivite[self.category]
+        parent_id = getattr(self, 'activity', self.request.GET).get('parent')
+        if parent_id:
+            parent = AdmissionDoctorateTrainingService.retrieve_activity(
                 person=self.request.user.person,
                 doctorate_uuid=str(self.kwargs['pk']),
-                activity_uuid=self.request.GET.get('parent'),
+                activity_uuid=parent_id,
             )
             return CategorieActivite[str(parent.category)], category
         return category
 
+    @cached_property
+    def config(self):
+        return AdmissionDoctorateTrainingService.get_config(person=self.person, uuid=str(self.kwargs['pk']))
+
     def get_success_url(self):
-        base_url = resolve_url("admission:doctorate:training", pk=self.kwargs['pk'])
+        base_url = resolve_url(':'.join(self.request.resolver_match.namespaces), pk=self.kwargs['pk'])
         return f"{base_url}#{self.activity_uuid}"
 
     def prepare_data(self, data):
         data = super().prepare_data(data)
-        # Suggest object type
-        pattern = re.compile("form", re.IGNORECASE)
-        data['object_type'] = pattern.sub("", self.get_form_class().__name__)
+        data['object_type'] = self.get_form_class().object_type
 
         # Get category from edited object or view kwargs
         from osis_admission_sdk.model.categorie_activite import CategorieActivite
+        from osis_admission_sdk.model.contexte_formation import ContexteFormation as ContexteFormationModel
 
-        category = getattr(self, 'activity', self.kwargs).get('category')
-        data['category'] = CategorieActivite(category.upper())
+        data['category'] = CategorieActivite(self.category)
+
+        if 'context' not in data:
+            # When on a non-UCLCourseForm, context is not passed, give it current context
+            data['context'] = ContexteFormationModel(
+                ContexteFormation.COMPLEMENTARY_TRAINING.name
+                if self.namespace == "complementary-training"
+                else ContexteFormation.DOCTORAL_TRAINING.name
+            )
+        else:
+            # When on an UCLCourseForm, context is passed, convert context
+            data['context'] = ContexteFormationModel(data['context'])
 
         # Data cleanup and coercion
-        data.pop('academic_year', None)
         if 'parent' not in data:
             data['parent'] = self.request.GET.get('parent')
         for decimal_field in ['ects', 'participating_days']:
@@ -165,22 +199,18 @@ class DoctorateTrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormM
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['config_types'] = AdmissionDoctorateTrainingService.get_config(
-            person=self.person,
-            uuid=str(self.kwargs['pk']),
-        )
+        kwargs['config_types'] = self.config
         kwargs['person'] = self.person
         return kwargs
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        config = AdmissionDoctorateTrainingService.get_config(person=self.person, uuid=str(self.kwargs['pk']))
         original_constants = dict(CategorieActivite.choices()).keys()
-        context_data['categories'] = dict(zip(original_constants, config.category_labels[get_language()]))
+        context_data['categories'] = dict(zip(original_constants, self.config.category_labels[get_language()]))
         return context_data
 
 
-class DoctorateTrainingActivityAddView(DoctorateTrainingActivityFormMixin):
+class TrainingActivityAddView(TrainingActivityFormMixin):
     def call_webservice(self, data):
         response = AdmissionDoctorateTrainingService.create_activity(
             person=self.person,
@@ -190,28 +220,18 @@ class DoctorateTrainingActivityAddView(DoctorateTrainingActivityFormMixin):
         self.activity_uuid = response['uuid']
 
 
-class DoctorateTrainingActivityEditView(DoctorateTrainingActivityFormMixin):
+class TrainingActivityEditView(TrainingActivityFormMixin):
     slug_field = 'uuid'
     pk_url_kwarg = None
     slug_url_kwarg = 'activity_id'
-
-    def get_category(self):
-        category = CategorieActivite[self.activity['category']]
-        if self.activity.get('parent'):
-            parent = AdmissionDoctorateTrainingService.get_activity(
-                person=self.person,
-                doctorate_uuid=str(self.kwargs['pk']),
-                activity_uuid=self.activity['parent'],
-            )
-            return CategorieActivite[str(parent.category)], category
-        return category
 
     def get_initial(self):
         return self.activity
 
     @cached_property
     def activity(self):
-        return AdmissionDoctorateTrainingService.get_activity(
+        # breakpoint()
+        return AdmissionDoctorateTrainingService.retrieve_activity(
             person=self.person,
             doctorate_uuid=str(self.kwargs['pk']),
             activity_uuid=str(self.kwargs['activity_id']),
@@ -232,7 +252,7 @@ class DoctorateTrainingActivityEditView(DoctorateTrainingActivityFormMixin):
         self.activity_uuid = response['uuid']
 
 
-class DoctorateTrainingActivityDeleteView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
+class TrainingActivityDeleteView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
     template_name = "admission/doctorate/forms/training/activity_confirm_delete.html"
     slug_field = 'uuid'
     pk_url_kwarg = None
@@ -248,17 +268,17 @@ class DoctorateTrainingActivityDeleteView(LoadDoctorateViewMixin, WebServiceForm
 
     @cached_property
     def activity(self):
-        return AdmissionDoctorateTrainingService.get_activity(
+        return AdmissionDoctorateTrainingService.retrieve_activity(
             person=self.person,
             doctorate_uuid=str(self.kwargs['pk']),
             activity_uuid=str(self.kwargs['activity_id']),
         ).to_dict()
 
     def get_success_url(self):
-        return resolve_url("admission:doctorate:training", pk=self.kwargs['pk'])
+        return resolve_url(':'.join(self.request.resolver_match.namespaces), pk=self.kwargs['pk'])
 
 
-class DoctorateTrainingActivityAssentView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
+class TrainingActivityAssentView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
     template_name = "admission/doctorate/forms/training/assent.html"
     slug_field = 'uuid'
     pk_url_kwarg = None
@@ -274,18 +294,45 @@ class DoctorateTrainingActivityAssentView(LoadDoctorateViewMixin, WebServiceForm
         )
 
     def get_initial(self):
+        assent = self.activity['reference_promoter_assent']
         return {
-            'approbation': self.activity['reference_promoter_assent'],
+            'approbation': True if assent is None else assent,
             'commentaire': self.activity['reference_promoter_comment'],
         }
 
+    def get_context_data(self, **kwargs):
+        kwargs['activity'] = self.activity
+        return super().get_context_data(**kwargs)
+
     @cached_property
     def activity(self):
-        return AdmissionDoctorateTrainingService.get_activity(
+        return AdmissionDoctorateTrainingService.retrieve_activity(
             person=self.person,
             doctorate_uuid=str(self.kwargs['pk']),
             activity_uuid=str(self.kwargs['activity_id']),
         ).to_dict()
 
     def get_success_url(self):
-        return resolve_url("admission:doctorate:training", pk=self.kwargs['pk'])
+        return resolve_url(':'.join(self.request.resolver_match.namespaces), pk=self.kwargs['pk'])
+
+
+class ComplementaryTrainingListView(DoctoralTrainingListView):
+    template_name = "admission/doctorate/complementary_training_list.html"
+
+    @cached_property
+    def activities(self):
+        return AdmissionDoctorateTrainingService.list_complementary_training(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+        )
+
+
+class CourseEnrollmentListView(DoctoralTrainingListView):
+    template_name = "admission/doctorate/course_enrollment.html"
+
+    @cached_property
+    def activities(self):
+        return AdmissionDoctorateTrainingService.list_course_enrollment(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+        )

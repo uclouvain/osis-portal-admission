@@ -67,6 +67,14 @@ from admission.contrib.views.detail_tabs.curriculum import (
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 
+__all__ = [
+    "DoctorateAdmissionCurriculumEducationalExperienceDeleteView",
+    "DoctorateAdmissionCurriculumEducationalExperienceFormView",
+    "DoctorateAdmissionCurriculumFormView",
+    "DoctorateAdmissionCurriculumProfessionalExperienceDeleteView",
+    "DoctorateAdmissionCurriculumProfessionalExperienceFormView",
+]
+
 
 class DoctorateAdmissionCurriculumFormMixin(
     DoctorateAdmissionCurriculumMixin,

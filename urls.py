@@ -41,6 +41,7 @@ autocomplete_paths = [
     path("institute-location/", views.InstituteLocationAutocomplete.as_view(), name="institute-location"),
     path("high-school/", views.HighSchoolAutocomplete.as_view(), name="high-school"),
     path("diploma/", views.DiplomaAutocomplete.as_view(), name="diploma"),
+    path("learning-unit-years/", views.LearningUnitYearsAutocomplete.as_view(), name="learning-unit-years"),
     path("superior-non-university/", views.SuperiorNonUniversityAutocomplete.as_view(), name="superior-non-university"),
 ]
 
@@ -116,11 +117,11 @@ update_paths = [
 ]
 
 training_paths = [
-    path("add/<str:category>", views.DoctorateTrainingActivityAddView.as_view(), name="add"),
-    path('edit/<uuid:activity_id>', views.DoctorateTrainingActivityEditView.as_view(), name='edit'),
-    path("submit/<uuid:activity_id>", views.DoctorateAdmissionTrainingView.as_view(), name="submit"),
-    path("assent/<uuid:activity_id>", views.DoctorateTrainingActivityAssentView.as_view(), name="assent"),
-    path("delete/<uuid:activity_id>", views.DoctorateTrainingActivityDeleteView.as_view(), name="delete"),
+    path("add/<str:category>", views.TrainingActivityAddView.as_view(), name="add"),
+    path('edit/<uuid:activity_id>', views.TrainingActivityEditView.as_view(), name='edit'),
+    path("submit/<uuid:activity_id>", views.DoctoralTrainingListView.as_view(), name="submit"),
+    path("assent/<uuid:activity_id>", views.TrainingActivityAssentView.as_view(), name="assent"),
+    path("delete/<uuid:activity_id>", views.TrainingActivityDeleteView.as_view(), name="delete"),
 ]
 
 doctorate_paths = [
@@ -152,8 +153,12 @@ doctorate_paths = [
         name="confirmation-paper-canvas",
     ),
     path("extension-request", views.DoctorateAdmissionExtensionRequestDetailView.as_view(), name="extension-request"),
-    path("training", views.DoctorateAdmissionTrainingView.as_view(), name="training"),
-    path("training/", include((training_paths, "training"))),
+    path("doctoral-training", views.DoctoralTrainingListView.as_view(), name="doctoral-training"),
+    path("doctoral-training/", include((training_paths, "doctoral-training"))),
+    path("complementary-training", views.ComplementaryTrainingListView.as_view(), name="complementary-training"),
+    path("complementary-training/", include((training_paths, "complementary-training"))),
+    path("course-enrollment", views.CourseEnrollmentListView.as_view(), name="course-enrollment"),
+    path("course-enrollment/", include((training_paths, "course-enrollment"))),
 ]
 
 urlpatterns = [

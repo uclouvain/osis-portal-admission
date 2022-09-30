@@ -29,14 +29,23 @@ from dal import autocomplete
 from django import forms
 from django.utils.translation import get_language, gettext_lazy as _, pgettext_lazy
 
-from admission.contrib.enums.training import ChoixComiteSelection, ChoixStatutPublication, ChoixTypeEpreuve
+from admission.contrib.enums.training import (
+    ChoixComiteSelection,
+    ChoixStatutPublication,
+    ChoixTypeEpreuve,
+    ContexteFormation,
+)
 from admission.contrib.forms import (
     BooleanRadioSelect,
     CustomDateInput,
+    EMPTY_CHOICE,
     SelectOrOtherField,
     get_academic_years_choices,
+    get_country_initial_choices,
 )
+from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.reference import AcademicYearService
+from learning_unit.services.learning_unit import LearningUnitService
 from osis_document.contrib import FileUploadField
 
 __all__ = [
@@ -54,6 +63,9 @@ __all__ = [
     "SeminarForm",
     "ServiceForm",
     "ValorisationForm",
+    "ComplementaryCourseForm",
+    "UclCourseForm",
+    "AssentForm",
 ]
 
 INSTITUTION_UCL = "UCLouvain"
@@ -124,6 +136,7 @@ class ActivityFormMixin(forms.Form):
         decimal_places=2,
     )
     comment = forms.CharField(label=_("Comment"), widget=forms.Textarea())
+    context = forms.ChoiceField(label=_("Context"), choices=ContexteFormation.choices())
 
     def __init__(self, config_types=None, person=None, *args, **kwargs) -> None:
         self.person = person
@@ -136,13 +149,23 @@ class ActivityFormMixin(forms.Form):
         # Make all fields not required and apply label overrides
         labels = getattr(self.Meta, 'labels', {})
         for field_name in self.fields:
-            # if not isinstance(self.fields[field_name], ConfigurableActivityTypeField):
-            if field_name != 'type':
+            if field_name != 'type' and not (
+                isinstance(self.fields[field_name], SelectOrOtherField) and field_name == 'organizing_institution'
+            ):
                 self.fields[field_name].required = False
             self.fields[field_name].label = labels.get(field_name, self.fields[field_name].label)
+        if 'country' in self.fields:
+            self.fields['country'].widget.choices = get_country_initial_choices(
+                self.data.get(self.add_prefix("country"), self.initial.get("country")),
+                person,
+            )
+
+    class Media:
+        js = ('js/dependsOn.min.js',)
 
 
 class ConferenceForm(ActivityFormMixin, forms.Form):
+    object_type = "Conference"
     template_name = "admission/doctorate/forms/training/conference.html"
     type = ConfigurableActivityTypeField('conference_types', label=_("Type of activity"))
     is_online = IsOnlineField()
@@ -174,6 +197,7 @@ class ConferenceForm(ActivityFormMixin, forms.Form):
 
 
 class ConferenceCommunicationForm(ActivityFormMixin, forms.Form):
+    object_type = "ConferenceCommunication"
     template_name = "admission/doctorate/forms/training/conference_communication.html"
     type = SelectOrOtherField(
         label=_("Type of communication"),
@@ -211,6 +235,7 @@ class ConferenceCommunicationForm(ActivityFormMixin, forms.Form):
 
 
 class ConferencePublicationForm(ActivityFormMixin, forms.Form):
+    object_type = "ConferencePublication"
     template_name = "admission/doctorate/forms/training/conference_publication.html"
     type = ConfigurableActivityTypeField('conference_publication_types', label=_("Type of publication"))
 
@@ -243,6 +268,7 @@ class ConferencePublicationForm(ActivityFormMixin, forms.Form):
 
 
 class CommunicationForm(ActivityFormMixin, forms.Form):
+    object_type = "Communication"
     template_name = "admission/doctorate/forms/training/communication.html"
     type = ConfigurableActivityTypeField('communication_types', label=_("Type of activity"))
     subtype = SelectOrOtherField(
@@ -297,6 +323,7 @@ class CommunicationForm(ActivityFormMixin, forms.Form):
 
 
 class PublicationForm(ActivityFormMixin, forms.Form):
+    object_type = "Publication"
     template_name = "admission/doctorate/forms/training/publication.html"
     type = ConfigurableActivityTypeField('publication_types', label=_("Type of publication"))
 
@@ -325,6 +352,7 @@ class PublicationForm(ActivityFormMixin, forms.Form):
 
 
 class ResidencyForm(ActivityFormMixin, forms.Form):
+    object_type = "Residency"
     template_name = "admission/doctorate/forms/training/residency.html"
     type = ConfigurableActivityTypeField('residency_types', label=_("Type of activity"))
 
@@ -347,6 +375,7 @@ class ResidencyForm(ActivityFormMixin, forms.Form):
 
 
 class ResidencyCommunicationForm(ActivityFormMixin, forms.Form):
+    object_type = "ResidencyCommunication"
     template_name = "admission/doctorate/forms/training/residency_communication.html"
     type = SelectOrOtherField(choices=[_("Research seminar")], label=_("Type of activity"))
     subtype = SelectOrOtherField(
@@ -382,6 +411,7 @@ class ResidencyCommunicationForm(ActivityFormMixin, forms.Form):
 
 
 class ServiceForm(ActivityFormMixin, forms.Form):
+    object_type = "Service"
     template_name = "admission/doctorate/forms/training/service.html"
     type = ConfigurableActivityTypeField("service_types", label=_("Type of activity"))
 
@@ -406,6 +436,7 @@ class ServiceForm(ActivityFormMixin, forms.Form):
 
 
 class SeminarForm(ActivityFormMixin, forms.Form):
+    object_type = "Seminar"
     template_name = "admission/doctorate/forms/training/seminar.html"
     type = ConfigurableActivityTypeField("seminar_types", label=_("Type of activity"))
 
@@ -426,6 +457,7 @@ class SeminarForm(ActivityFormMixin, forms.Form):
 
 
 class SeminarCommunicationForm(ActivityFormMixin, forms.Form):
+    object_type = "SeminarCommunication"
     template_name = "admission/doctorate/forms/training/seminar_communication.html"
     is_online = IsOnlineField()
 
@@ -451,6 +483,7 @@ class SeminarCommunicationForm(ActivityFormMixin, forms.Form):
 
 
 class ValorisationForm(ActivityFormMixin, forms.Form):
+    object_type = "Valorisation"
     template_name = "admission/doctorate/forms/training/valorisation.html"
 
     class Meta:
@@ -471,6 +504,7 @@ class ValorisationForm(ActivityFormMixin, forms.Form):
 
 
 class CourseForm(ActivityFormMixin, forms.Form):
+    object_type = "Course"
     template_name = "admission/doctorate/forms/training/course.html"
     type = ConfigurableActivityTypeField("course_types", label=_("Type of activity"))
     subtitle = forms.CharField(
@@ -478,7 +512,7 @@ class CourseForm(ActivityFormMixin, forms.Form):
         max_length=200,
         required=False,
     )
-    organizing_institution = SelectOrOtherField(choices=[INSTITUTION_UCL], label=_("Institution"))
+    organizing_institution = SelectOrOtherField(choices=[INSTITUTION_UCL], label=_("Institution"), required=True)
     academic_year = forms.ChoiceField(
         label=_("Academic year"),
         widget=autocomplete.ListSelect2(),
@@ -513,8 +547,9 @@ class CourseForm(ActivityFormMixin, forms.Form):
         cleaned_data = super().clean()
         # Convert from academic year to dates if UCLouvain
         if cleaned_data.get('organizing_institution') == INSTITUTION_UCL and cleaned_data.get('academic_year'):
-            year = self.get_academic_year_dates(cleaned_data['academic_year'])
+            year = self.get_academic_year_dates(int(cleaned_data['academic_year']))
             cleaned_data['start_date'], cleaned_data['end_date'] = year or (None, None)
+        cleaned_data.pop('academic_year', None)
         return cleaned_data
 
     class Meta:
@@ -540,7 +575,15 @@ class CourseForm(ActivityFormMixin, forms.Form):
         }
 
 
+class ComplementaryCourseForm(CourseForm):
+    """Course form for complementary training"""
+
+    object_type = "Course"
+    type = ConfigurableActivityTypeField("complementary_course_types", label=_("Type of activity"))
+
+
 class PaperForm(ActivityFormMixin, forms.Form):
+    object_type = "Paper"
     template_name = "admission/doctorate/forms/training/paper.html"
     type = forms.ChoiceField(label=_("Type of paper"), choices=ChoixTypeEpreuve.choices())
 
@@ -549,6 +592,52 @@ class PaperForm(ActivityFormMixin, forms.Form):
             'type',
             'ects',
             'comment',
+        ]
+
+
+class UclCourseForm(ActivityFormMixin, forms.Form):
+    object_type = "UclCourse"
+    template_name = "admission/doctorate/forms/training/ucl_course.html"
+    academic_year = forms.TypedChoiceField(
+        coerce=int,
+        empty_value=None,
+        label=_("Academic year"),
+        widget=autocomplete.ListSelect2(),
+    )
+    learning_unit_year = forms.CharField(
+        label=_("Learning unit"),
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:learning-unit-years',
+            attrs={
+                'data-html': True,
+                'data-minimum-input-length': 2,
+                'data-placeholder': _('Search for an EU code (outside the EU of the form)'),
+            },
+            forward=["academic_year"],
+        ),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['academic_year'].choices = get_academic_years_choices(self.person)
+        self.fields['learning_unit_year'].required = True
+        if self.initial.get('learning_unit_year'):
+            academic_year_formatted, acronym = self.initial['learning_unit_year'].split(' - ')
+            academic_year = academic_year_formatted.split('-')[0]
+            self.initial['academic_year'] = int(academic_year)
+            self.initial['learning_unit_year'] = acronym
+            title = LearningUnitService.get_learning_unit_title(
+                year=int(academic_year),
+                acronym=acronym,
+                person=self.person,
+            )
+            self.fields['learning_unit_year'].widget.choices = [(acronym, f"{acronym} - {title}")]
+
+    class Meta:
+        fields = [
+            'context',
+            'academic_year',
+            'learning_unit_year',
         ]
 
 
@@ -561,5 +650,5 @@ class BatchActivityForm(forms.Form):
 
 
 class AssentForm(forms.Form):
-    approbation = forms.BooleanField(required=False)
-    commentaire = forms.CharField(widget=forms.Textarea)
+    approbation = forms.BooleanField(label=_("Approval"), required=False)
+    commentaire = forms.CharField(label=_("Comment"), widget=forms.Textarea)

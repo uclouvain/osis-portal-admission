@@ -29,7 +29,7 @@ from django.views.generic import TemplateView
 
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import AdmissionPersonService
-from admission.services.reference import CountriesService, LanguageService, HighSchoolService
+from admission.services.reference import HighSchoolService, LanguageService
 
 
 class DoctorateAdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
@@ -68,12 +68,6 @@ class DoctorateAdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
 
         elif foreign_diploma:
             context_data["foreign_diploma"] = high_school_diploma["foreign_diploma"]
-            if context_data["foreign_diploma"].get("country"):
-                country = CountriesService.get_country(
-                    iso_code=context_data["foreign_diploma"]["country"],
-                    person=self.request.user.person,
-                )
-                context_data["foreign_diploma"]['country'] = getattr(country, translated_field)
             if context_data["foreign_diploma"].get("linguistic_regime"):
                 linguistic_regime = LanguageService.get_language(
                     code=context_data["foreign_diploma"]["linguistic_regime"],

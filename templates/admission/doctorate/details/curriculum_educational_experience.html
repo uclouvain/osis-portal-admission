@@ -42,7 +42,8 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        {% field_data _("Country") experience.country_name %}
+        {% get_country_name experience.country as experience_country %}
+        {% field_data _("Country") experience_country %}
       </div>
     </div>
   {% endpanel %}
