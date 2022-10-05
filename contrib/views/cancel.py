@@ -44,4 +44,4 @@ class DoctorateAdmissionCancelView(
         AdmissionPropositionService.cancel_proposition(person=self.person, uuid=self.admission_uuid)
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate-list')
+        return resolve_url('admission:list')
