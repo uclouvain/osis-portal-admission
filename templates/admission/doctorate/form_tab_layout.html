@@ -33,7 +33,7 @@
   {% if admission and admission.matricule_candidat != user.person.global_id %}
     {% url 'admission:supervised-list' as list_url %}
   {% else %}
-    {% url 'admission:doctorate-list' as list_url %}
+    {% url 'admission:list' as list_url %}
   {% endif %}
   <ol class="breadcrumb">
     <li>
@@ -56,7 +56,7 @@
   {% if admission and admission.matricule_candidat != user.person.global_id %}
     {% url 'admission:supervised-list' as list_url %}
   {% else %}
-    {% url 'admission:doctorate-list' as list_url %}
+    {% url 'admission:list' as list_url %}
   {% endif %}
   <div class="page-header h3 clearfix">
     <span class="d-inline-block">

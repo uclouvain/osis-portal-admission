@@ -44,7 +44,7 @@ class DoctorateAdmissionLanguagesFormView(
     FormView,
 ):  # pylint: disable=too-many-ancestors
     template_name = "admission/doctorate/forms/languages.html"
-    success_url = reverse_lazy("admission:doctorate-list")
+    success_url = reverse_lazy("admission:list")
     form_class = DoctorateAdmissionLanguagesKnowledgeFormSet
 
     def get_context_data(self, **kwargs):
