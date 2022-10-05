@@ -60,7 +60,7 @@ class DoctorateAdmissionEducationFormView(
     FormView,
 ):  # pylint: disable=too-many-ancestors
     template_name = "admission/doctorate/forms/education.html"
-    success_url = reverse_lazy("admission:doctorate-list")
+    success_url = reverse_lazy("admission:list")
     form_class = DoctorateAdmissionEducationForm
     forms = None
 

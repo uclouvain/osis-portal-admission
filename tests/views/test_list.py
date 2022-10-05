@@ -40,7 +40,7 @@ class ListTestCase(TestCase):
             'propositions': [],
             'links': {'create_proposition': {'url': 'access granted'}},
         }
-        url = reverse('admission:doctorate-list')
+        url = reverse('admission:list')
         response = self.client.get(url)
         create_url = resolve_url('admission:doctorate-create')
         self.assertContains(response, create_url)
@@ -59,7 +59,7 @@ class ListTestCase(TestCase):
             ],
             'links': {},
         }
-        url = reverse('admission:doctorate-list')
+        url = reverse('admission:list')
         response = self.client.get(url)
         detail_url = resolve_url('admission:doctorate:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
         self.assertContains(response, detail_url)

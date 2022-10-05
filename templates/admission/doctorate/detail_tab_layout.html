@@ -37,7 +37,7 @@
       {% if admission and admission.matricule_candidat != user.person.global_id %}
         <a href="{% url 'admission:supervised-list' %}">{% trans "Doctorate admissions" %}</a>
       {% else %}
-        <a href="{% url 'admission:doctorate-list' %}">{% trans "Doctorate admissions" %}</a>
+        <a href="{% url 'admission:list' %}">{% trans "Doctorate admissions" %}</a>
       {% endif %}
     </li>
     {% if admission %}
@@ -69,7 +69,7 @@
         {% if admission and admission.matricule_candidat != user.person.global_id %}
           href="{% url 'admission:supervised-list' %}"
         {% else %}
-          href="{% url 'admission:doctorate-list' %}"
+          href="{% url 'admission:list' %}"
         {% endif %}
           class="pull-right h5 text-primary"
       >

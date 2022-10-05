@@ -164,14 +164,13 @@ doctorate_paths = [
     path("complementary-training/", include((training_paths, "complementary-training"))),
     path("course-enrollment", views.CourseEnrollmentListView.as_view(), name="course-enrollment"),
     path("course-enrollment/", include((training_paths, "course-enrollment"))),
-    path("training", views.DoctorateAdmissionTrainingView.as_view(), name="training"),
     path("training/", include((training_paths, "training"))),
     path("training-choice", views.AdmissionTrainingChoiceFormView.as_view(), name="training-choice"),
 ]
 
 urlpatterns = [
     # Lists
-    path("doctorate/", views.DoctorateAdmissionListView.as_view(), name="doctorate-list"),
+    path("", views.AdmissionListView.as_view(), name="list"),
     path("supervised/", views.DoctorateAdmissionMemberListView.as_view(), name="supervised-list"),
     # Autocompletes
     path("autocomplete/", include((autocomplete_paths, "autocomplete"))),

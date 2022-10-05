@@ -138,7 +138,41 @@ TAB_TREES = {
         #     Tab('public-defense', _('Public defense')),
         # ],
         # TODO documents
-    }
+    },
+    'general_education': {
+        Tab('personal', _('Personal data'), 'user'): [
+            Tab('person', _('Identification')),
+            Tab('coordonnees', _('Contact details')),
+        ],
+        Tab('experience', _('Previous experience'), 'list-alt'): [
+            Tab('education', _('Secondary studies')),
+            Tab('curriculum', _('Curriculum')),
+            Tab('languages', _('Languages knowledge')),
+        ],
+        Tab('general-education', pgettext('tab name', 'General education'), 'graduation-cap'): [
+            Tab('training-choice', _('Training choice')),
+        ],
+        Tab('completion', _('Completion'), 'check-circle'): [
+            Tab('confirm', _('Confirmation')),
+        ],
+    },
+    'continuing_education': {
+        Tab('personal', _('Personal data'), 'user'): [
+            Tab('person', _('Identification')),
+            Tab('coordonnees', _('Contact details')),
+        ],
+        Tab('experience', _('Previous experience'), 'list-alt'): [
+            Tab('education', _('Secondary studies')),
+            Tab('curriculum', _('Curriculum')),
+            Tab('languages', _('Languages knowledge')),
+        ],
+        Tab('continuing-education', pgettext('tab name', 'Continuing education'), 'graduation-cap'): [
+            Tab('training-choice', _('Training choice')),
+        ],
+        Tab('completion', _('Completion'), 'check-circle'): [
+            Tab('confirm', _('Confirmation')),
+        ],
+    },
 }
 
 
