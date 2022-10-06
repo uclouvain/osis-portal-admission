@@ -23,39 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import gettext_lazy as _
+from django.views.generic import TemplateView
 
-from base.models.utils.utils import ChoiceEnum
-
-
-class ChoixLangueRedactionThese(ChoiceEnum):
-    FRENCH = _('French')
-    ENGLISH = _('English')
-    OTHER = _('Other')
-    UNDECIDED = _('Undecided')
+from admission.contrib.views.mixins import (
+    LoadDossierViewMixin,
+    LoadGeneralEducationDossierViewMixin,
+    LoadContinuingEducationDossierViewMixin,
+)
 
 
-class ChoixStatutProposition(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
-    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
-    ENROLLED = _('ENROLLED')
+class GeneralEducationTrainingChoiceDetailView(LoadGeneralEducationDossierViewMixin, TemplateView):
+    template_name = 'admission/admission/general_education/details/training_choice.html'
 
 
-class ChoixStatutPropositionFormationGenerale(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
-    # During the enrolment step
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
-    # After the enrolment step
-    ENROLLED = _('ENROLLED')
+class ContinuingEducationTrainingChoiceDetailView(LoadContinuingEducationDossierViewMixin, TemplateView):
+    template_name = 'admission/admission/continuing_education/details/training_choice.html'
 
 
-class ChoixStatutPropositionFormationContinue(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
-    # During the enrolment step
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
-    # After the enrolment step
-    ENROLLED = _('ENROLLED')
+class DoctorateTrainingChoiceDetailView(LoadDossierViewMixin, TemplateView):
+    template_name = 'admission/doctorate/details/training_choice.html'

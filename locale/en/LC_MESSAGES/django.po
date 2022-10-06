@@ -253,6 +253,9 @@ msgstr ""
 msgid "Admission type"
 msgstr ""
 
+msgid "Admissions"
+msgstr ""
+
 msgid "Affiliations"
 msgstr ""
 
@@ -600,6 +603,9 @@ msgstr ""
 msgid "Context"
 msgstr ""
 
+msgid "Continuing education"
+msgstr ""
+
 msgid ""
 "Copy of 6 salary slips issued in the 12 months preceding the application"
 msgstr ""
@@ -751,6 +757,9 @@ msgstr ""
 msgid "Create and manage my enrolment request for UCLouvain"
 msgstr ""
 
+msgid "Create new admission"
+msgstr ""
+
 msgid "Create new doctorate admission"
 msgstr ""
 
@@ -883,7 +892,7 @@ msgstr ""
 msgid "Doctorate"
 msgstr ""
 
-msgid "Doctorate admissions"
+msgid "Double degree scholarship"
 msgstr ""
 
 msgid "Double or triple diplomation"
@@ -981,6 +990,9 @@ msgid "Enrolled"
 msgstr ""
 
 msgid "Erasmus Mundus"
+msgstr ""
+
+msgid "Erasmus mundus scholarship"
 msgstr ""
 
 msgid "Estimated time to complete the doctorate (in months)"
@@ -1113,6 +1125,9 @@ msgid "Gantt graph"
 msgstr "4-year gantt graph"
 
 msgid "Gender"
+msgstr ""
+
+msgid "General education"
 msgstr ""
 
 msgid "General information"
@@ -1435,6 +1450,9 @@ msgstr ""
 msgid "International for general education"
 msgstr ""
 
+msgid "International scholarship"
+msgstr ""
+
 msgid "Internship"
 msgstr ""
 
@@ -1629,7 +1647,7 @@ msgstr ""
 msgid "No one invited"
 msgstr ""
 
-msgid "No reference yet - Go to Project tab"
+msgid "No reference yet - Go to 'Training choice' tab"
 msgstr ""
 
 msgid "No result"

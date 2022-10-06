@@ -25,7 +25,7 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% panel additional_class="admission-item" cy_matricule=user.person.global_id cy_type="type" cy_state=admission.statut %}
+{% panel additional_class="admission-item" cy_state=admission.statut %}
   <h3 style="margin-top: 0">
   {% if admission.doctorat %}
     {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
@@ -52,7 +52,7 @@
     {% if admission|can_make_action:'destroy_proposition' %}
       <a
         class="btn btn-danger"
-        href="{% url 'admission:doctorate:cancel' admission.uuid %}"
+        href="{% url base_namespace|add:':cancel' admission.uuid %}"
       >
         {% trans "Delete" %}
       </a>
@@ -73,7 +73,7 @@
       <ul class="dropdown-menu">
         {% for parent, subtabs in tab_tree.items %}
           {% for subtab in subtabs %}
-            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab=subtab no_status=True %}
+            {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab=subtab no_status=True base_namespace=base_namespace %}
           {% endfor %}
         {% endfor %}
       </ul>

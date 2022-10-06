@@ -37,7 +37,7 @@
   {% endif %}
   <ol class="breadcrumb">
     <li>
-      <a href="{{ list_url }}">{% trans "Doctorate admissions" %}</a>
+      <a href="{{ list_url }}">{% trans "Admissions" %}</a>
     </li>
     {% if admission %}
       <li class="active">
@@ -45,7 +45,7 @@
         {{ doctorate_title }} ({{ admission.reference }})
       </li>
     {% else %}
-      <li class="active">{% trans "Create new doctorate admission" %}</li>
+      <li class="active">{% trans "Create new admission" %}</li>
     {% endif %}
   </ol>
 {% endblock %}
@@ -63,7 +63,7 @@
       {% if admission %}
         {{ doctorate_title }} ({{ admission.reference }})
       {% else %}
-        {% trans "Create new doctorate admission" %}
+        {% trans "Create new admission" %}
       {% endif %}
     </span>
     <a href="{{ list_url }}" class="pull-right h5 text-primary">
@@ -76,7 +76,7 @@
         <div>
             {% trans "Reference:" %}
             {% if not admission %}
-                {% trans "No reference yet - Go to Project tab" %}
+                {% trans "No reference yet - Go to 'Training choice' tab" %}
             {% else %}
                 {{ doctorate_title }} ({{ admission.reference }})
             {% endif %}
