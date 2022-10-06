@@ -37,8 +37,13 @@ from osis_reference_sdk.model.high_school import HighSchool
 from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
 
+from admission.contrib.enums.scholarship import TypeBourse
+from admission.contrib.enums.training_choice import TypeFormation
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
+from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
+from osis_admission_sdk.model.scholarship import Scholarship
 
 
 class AutocompleteTestCase(TestCase):
@@ -48,8 +53,8 @@ class AutocompleteTestCase(TestCase):
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
         api.return_value.list_doctorat_dtos.return_value = [
-            Mock(sigle='FOOBAR', intitule='Foobar', annee=2021, sigle_entite_gestion="CDE"),
-            Mock(sigle='BARBAZ', intitule='Barbaz', annee=2021, sigle_entite_gestion="AZERT"),
+            Mock(sigle='FOOBAR', intitule='Foobar', annee=2021, sigle_entite_gestion="CDE", campus="Louvain-La-Neuve"),
+            Mock(sigle='BARBAZ', intitule='Barbaz', annee=2021, sigle_entite_gestion="AZERT", campus="Mons"),
         ]
         url = reverse('admission:autocomplete:doctorate')
         response = self.client.get(url, {'forward': json.dumps({'sector': 'SSH'}), 'q': 'foo'})
@@ -58,11 +63,11 @@ class AutocompleteTestCase(TestCase):
                 'id': 'FOOBAR-2021',
                 'sigle': 'FOOBAR',
                 'sigle_entite_gestion': 'CDE',
-                'text': 'FOOBAR - Foobar',
+                'text': 'Foobar (Louvain-La-Neuve) - FOOBAR',
             }
         ]
         self.assertEqual(response.json(), {'results': results})
-        self.assertEqual(api.return_value.list_doctorat_dtos.call_args[0], ('SSH',))
+        self.assertEqual(api.return_value.list_doctorat_dtos.call_args.kwargs['sigle'], 'SSH')
 
     @patch('osis_reference_sdk.api.countries_api.CountriesApi')
     def test_autocomplete_country(self, api):
@@ -395,3 +400,79 @@ class AutocompleteTestCase(TestCase):
             {'id': "ESA2006", 'text': "ESA2006 - dumb text 2"},
         ]
         self.assertEqual(response.json(), {'results': expected})
+
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_scholarship(self, api):
+        first_scholarship_uuid = str(uuid.uuid4())
+        second_scholarship_uuid = str(uuid.uuid4())
+
+        mock_scholarships = [
+            Scholarship._from_openapi_data(
+                uuid=first_scholarship_uuid,
+                short_name="EM-1",
+                long_name="Erasmus Mundus 1",
+                type=TypeBourse.ERASMUS_MUNDUS.name,
+            ),
+            Scholarship._from_openapi_data(
+                uuid=second_scholarship_uuid,
+                short_name="EM-2",
+                long_name="",
+                type=TypeBourse.ERASMUS_MUNDUS.name,
+            ),
+        ]
+
+        api.return_value.list_scholarships.return_value = {
+            'results': mock_scholarships,
+        }
+        url = reverse('admission:autocomplete:scholarship')
+
+        response = self.client.get(
+            url, {'q': 'Erasmus', 'forward': json.dumps({'type': TypeBourse.ERASMUS_MUNDUS.name})}
+        )
+        expected = [
+            {'id': first_scholarship_uuid, 'text': "Erasmus Mundus 1"},
+            {'id': second_scholarship_uuid, 'text': "EM-2"},
+        ]
+        self.assertEqual(response.json(), {'results': expected})
+
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_general_education_training(self, api):
+        api.return_value.list_formation_generale_dtos.return_value = [
+            FormationGeneraleDTO(sigle='FOOBAR', intitule='Foobar', annee=2021, campus="Louvain-La-Neuve"),
+            FormationGeneraleDTO(sigle='BARBAZ', intitule='Barbaz', annee=2021, campus="Mons"),
+        ]
+        url = reverse('admission:autocomplete:general-education')
+        response = self.client.get(
+            url, {'forward': json.dumps({'training_type': TypeFormation.MASTER.name}), 'q': 'ar'}
+        )
+        results = [
+            {
+                'id': 'FOOBAR-2021',
+                'text': 'Foobar (Louvain-La-Neuve) - FOOBAR',
+            },
+            {
+                'id': 'BARBAZ-2021',
+                'text': 'Barbaz (Mons) - BARBAZ',
+            },
+        ]
+        self.assertEqual(response.json(), {'results': results})
+
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_continuing_education_training(self, api):
+        api.return_value.list_formation_generale_dtos.return_value = [
+            FormationContinueDTO(sigle='FOOBAR', intitule='Foobar', annee=2021, campus="Louvain-La-Neuve"),
+            FormationContinueDTO(sigle='BARBAZ', intitule='Barbaz', annee=2021, campus="Mons"),
+        ]
+        url = reverse('admission:autocomplete:general-education')
+        response = self.client.get(url, {'forward': json.dumps({'campus': ' '}), 'q': 'ar'})
+        results = [
+            {
+                'id': 'FOOBAR-2021',
+                'text': 'Foobar (Louvain-La-Neuve) - FOOBAR',
+            },
+            {
+                'id': 'BARBAZ-2021',
+                'text': 'Barbaz (Mons) - BARBAZ',
+            },
+        ]
+        self.assertEqual(response.json(), {'results': results})

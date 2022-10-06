@@ -26,7 +26,6 @@
 from typing import Optional
 
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
@@ -34,17 +33,26 @@ from django.views.generic import FormView
 from admission.contrib.enums.training_choice import TYPES_FORMATION_GENERALE, TypeFormation
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.contrib.forms.training_choice import TrainingChoiceForm
-from admission.contrib.views.mixins import LoadDossierViewMixin
+from admission.contrib.views.mixins import (
+    LoadDossierViewMixin,
+    LoadGeneralEducationDossierViewMixin,
+    LoadContinuingEducationDossierViewMixin,
+)
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
-from admission.utils import split_training_id
+from admission.utils import split_training_id, get_training_id
+
+NAMESPACE_KEY_BY_ADMISSION_TYPE = {
+    TypeFormation.BACHELIER.name: 'general-education',
+    TypeFormation.MASTER.name: 'general-education',
+    TypeFormation.DOCTORAT.name: 'doctorate',
+    TypeFormation.AGREGATION_CAPES.name: 'general-education',
+    TypeFormation.FORMATION_CONTINUE.name: 'continuing-education',
+    TypeFormation.CERTIFICAT.name: 'general-education',
+}
 
 
-class AdmissionTrainingChoiceFormView(
-    LoadDossierViewMixin,
-    WebServiceFormMixin,
-    FormView,
-):  # pylint: disable=too-many-ancestors
+class AdmissionTrainingChoiceFormMixinView(WebServiceFormMixin, FormView):
     template_name = 'admission/admission/forms/training_choice.html'
     form_class = TrainingChoiceForm
 
@@ -55,90 +63,173 @@ class AdmissionTrainingChoiceFormView(
         'SCIENCE_DOCTORATE': SCIENCE_DOCTORATE,
     }
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['person'] = self.person
+        return kwargs
+
+
+class AdmissionCreateTrainingChoiceFormView(AdmissionTrainingChoiceFormMixinView):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.uuid: Optional[str] = None
         self.training_type: Optional[TypeFormation] = None
 
-    @property
-    def is_update_form(self):
-        return self.admission_uuid != ''
-
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['person'] = self.person
-        kwargs['on_update'] = self.is_update_form
+        kwargs['on_update'] = False
         return kwargs
 
-    def get_initial(self):
-        if self.is_update_form:
-            if 'url' not in self.admission.links['update_proposition']:
-                raise PermissionDenied(self.admission.links['update_proposition']['error'])
-        return super().get_initial()
+    def prepare_data_for_doctorate(self, data):
+        [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
+        proximity_commission = (
+            data.get('proximity_commission_cde')
+            or data.get('proximity_commission_cdss')
+            or data.get('science_sub_domain')
+            or ''
+        )
+
+        return {
+            'type_admission': data.get('admission_type'),
+            'sigle_formation': training_acronym,
+            'annee_formation': int(training_year),
+            'matricule_candidat': self.person.global_id,
+            'justification': data.get('justification'),
+            'commission_proximite': proximity_commission,
+            'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
+        }
+
+    def prepare_data_for_general_education(self, data):
+        [training_acronym, training_year] = split_training_id(data.get('general_education_training'))
+        return {
+            'sigle_formation': training_acronym,
+            'annee_formation': int(training_year),
+            'matricule_candidat': self.person.global_id,
+            'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
+            'bourse_double_diplome': data.get('double_degree_scholarship'),
+            'bourse_internationale': data.get('international_scholarship'),
+        }
+
+    def prepare_data_for_continuing_education(self, data):
+        [training_acronym, training_year] = split_training_id(data.get('continuing_education_training'))
+        return {
+            'sigle_formation': training_acronym,
+            'annee_formation': int(training_year),
+            'matricule_candidat': self.person.global_id,
+        }
 
     def prepare_data(self, data):
         self.training_type = data.get('training_type')
         if self.training_type == TypeFormation.DOCTORAT.name:
-            [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
-            proximity_commission = (
-                data.get('proximity_commission_cde')
-                or data.get('proximity_commission_cdss')
-                or data.get('science_sub_domain')
-                or ''
-            )
-
-            return {
-                'type_admission': data.get('admission_type'),
-                'sigle_formation': training_acronym,
-                'annee_formation': int(training_year),
-                'matricule_candidat': self.person.global_id,
-                'justification': data.get('justification'),
-                'commission_proximite': proximity_commission,
-                'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
-            }
+            return self.prepare_data_for_doctorate(data)
         elif self.training_type == TypeFormation.FORMATION_CONTINUE.name:
-            [training_acronym, training_year] = split_training_id(data.get('continuing_education_training'))
-            return {
-                'sigle_formation': training_acronym,
-                'annee_formation': int(training_year),
-                'matricule_candidat': self.person.global_id,
-            }
+            return self.prepare_data_for_continuing_education(data)
         elif self.training_type in TYPES_FORMATION_GENERALE:
-            [training_acronym, training_year] = split_training_id(data.get('general_education_training'))
-            return {
-                'sigle_formation': training_acronym,
-                'annee_formation': int(training_year),
-                'matricule_candidat': self.person.global_id,
-                'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
-                'bourse_double_diplome': data.get('double_degree_scholarship'),
-                'bourse_internationale': data.get('international_scholarship'),
-            }
+            return self.prepare_data_for_general_education(data)
 
     def call_webservice(self, data):
         response = {}
         if self.training_type == TypeFormation.DOCTORAT.name:
-            if self.is_update_form:
-                pass
-            else:
-                response = AdmissionPropositionService.create_doctorate_proposition(person=self.person, data=data)
+            response = AdmissionPropositionService.create_doctorate_proposition(person=self.person, data=data)
         elif self.training_type == TypeFormation.FORMATION_CONTINUE.name:
-            if self.is_update_form:
-                pass
-            else:
-                response = AdmissionPropositionService.create_continuing_education_choice(person=self.person, data=data)
+            response = AdmissionPropositionService.create_continuing_education_choice(person=self.person, data=data)
         elif self.training_type in TYPES_FORMATION_GENERALE:
-            if self.is_update_form:
-                pass
-            else:
-                response = AdmissionPropositionService.create_general_education_choice(person=self.person, data=data)
+            response = AdmissionPropositionService.create_general_education_choice(person=self.person, data=data)
         self.uuid = response.get('uuid')
 
     def get_success_url(self):
-        if self.is_update_form:
-            return super().get_success_url()
-
-        # On creation, display a message and redirect on the right form and with the uuid of the created proposition
         messages.info(self.request, _("Your data has been saved"))
+        return resolve_url(
+            'admission:{}:training-choice'.format(NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type)),
+            pk=self.uuid,
+        )
 
-        # TODO redirect to the right url
-        return resolve_url('admission:doctorate:update:project', pk=self.uuid)
+
+class DoctorateAdmissionUpdateTrainingChoiceFormView(
+    LoadDossierViewMixin,
+    AdmissionTrainingChoiceFormMixinView,
+):
+    def get_initial(self):
+        return {
+            'admission_type': self.admission.type_admission,
+            'justification': self.admission.justification,
+            'sector': self.admission.code_secteur_formation,
+            'doctorate_training': get_training_id(self.admission.doctorat),
+            'erasmus_mundus_scholarship': self.admission.bourse_erasmus_mundus
+            and self.admission.bourse_erasmus_mundus.uuid,
+            'proximity_commission': self.admission.commission_proximite,
+        }
+
+    def prepare_data(self, data):
+        return {
+            'type_admission': data.get('admission_type'),
+            'uuid_proposition': self.admission_uuid,
+            'justification': data.get('justification'),
+            'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
+        }
+
+    def call_webservice(self, data):
+        AdmissionPropositionService.update_doctorate_education_choice(
+            person=self.person,
+            uuid=self.admission_uuid,
+            data=data,
+        )
+
+
+class GeneralAdmissionUpdateTrainingChoiceFormView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionTrainingChoiceFormMixinView,
+):
+    def get_initial(self):
+        return {
+            'general_education_training': get_training_id(self.admission.formation),
+            'double_degree_scholarship': self.admission.bourse_double_diplome
+            and self.admission.bourse_double_diplome.uuid,
+            'international_scholarship': self.admission.bourse_internationale
+            and self.admission.bourse_internationale.uuid,
+            'erasmus_mundus_scholarship': self.admission.bourse_erasmus_mundus
+            and self.admission.bourse_erasmus_mundus.uuid,
+        }
+
+    def prepare_data(self, data):
+        [training_acronym, training_year] = split_training_id(data.get('general_education_training'))
+        return {
+            'sigle_formation': training_acronym,
+            'annee_formation': int(training_year),
+            'uuid_proposition': self.admission_uuid,
+            'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
+            'bourse_double_diplome': data.get('double_degree_scholarship'),
+            'bourse_internationale': data.get('international_scholarship'),
+        }
+
+    def call_webservice(self, data):
+        AdmissionPropositionService.update_general_education_choice(
+            person=self.person,
+            uuid=self.admission_uuid,
+            data=data,
+        )
+
+
+class ContinuingAdmissionUpdateTrainingChoiceFormView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionTrainingChoiceFormMixinView,
+):
+    def get_initial(self):
+        return {
+            'continuing_education_training': get_training_id(self.admission.formation),
+        }
+
+    def prepare_data(self, data):
+        [training_acronym, training_year] = split_training_id(data.get('continuing_education_training'))
+        return {
+            'sigle_formation': training_acronym,
+            'annee_formation': int(training_year),
+            'uuid_proposition': self.admission_uuid,
+        }
+
+    def call_webservice(self, data):
+        AdmissionPropositionService.update_continuing_education_choice(
+            person=self.person,
+            uuid=self.admission_uuid,
+            data=data,
+        )

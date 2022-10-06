@@ -32,7 +32,9 @@ from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
 from osis_admission_sdk.model.accounting_conditions import AccountingConditions
+from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
+from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
 from osis_admission_sdk.model.proposition_dto import PropositionDTO
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
@@ -78,6 +80,30 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def update_general_education_choice(cls, person: Person, uuid, data):
+        return APIClient().update_general_training_choice(
+            uuid=uuid,
+            modifier_choix_formation_generale_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_continuing_education_choice(cls, person: Person, uuid, data):
+        return APIClient().update_continuing_training_choice(
+            uuid=uuid,
+            modifier_choix_formation_continue_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_doctorate_education_choice(cls, person: Person, uuid, data):
+        return APIClient().update_doctorate_training_choice(
+            uuid=uuid,
+            modifier_choix_formation_doctorale_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def update_proposition(cls, person: Person, **kwargs):
         return APIClient().update_proposition(
             uuid=kwargs['uuid'],
@@ -88,6 +114,20 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     @classmethod
     def get_proposition(cls, person: Person, uuid) -> PropositionDTO:
         return APIClient().retrieve_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_general_education_proposition(cls, person: Person, uuid) -> GeneralEducationPropositionDTO:
+        return APIClient().retrieve_general_education_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_continuing_education_proposition(cls, person: Person, uuid) -> ContinuingEducationPropositionDTO:
+        return APIClient().retrieve_continuing_education_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )

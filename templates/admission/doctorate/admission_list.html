@@ -32,9 +32,9 @@
       <div class="col-md-12">
         <h2>
           {% trans "Admissions" %}
-          {% if 'url' in global_links.create_proposition %}
+          {% if can_create_proposition %}
             <a
-              href="{% url 'admission:doctorate-create' %}"
+              href="{% url 'admission:create' %}"
               class="btn btn-primary pull-right"
             >
               <span class="glyphicon glyphicon-plus"></span>
@@ -49,21 +49,21 @@
   {% if doctorate_propositions %}
     <h3>{% trans "Doctorate" %}</h3>
     {% for admission in doctorate_propositions %}
-      {% include "admission/admission/includes/admission_list_item.html" with type='doctorat' admission=admission user=user tab_tree=doctorate_tab_tree %}
+      {% include "admission/admission/includes/admission_list_item.html" with base_namespace='admission:doctorate' admission=admission tab_tree=doctorate_tab_tree %}
     {% endfor %}
   {% endif %}
 
   {% if general_education_propositions %}
     <h3>{% trans "General education" %}</h3>
     {% for admission in general_education_propositions %}
-      {% include "admission/admission/includes/admission_list_item.html" with type='general_education' admission=admission user=user tab_tree=general_education_tab_tree %}
+      {% include "admission/admission/includes/admission_list_item.html" with base_namespace='admission:general-education' admission=admission tab_tree=general_education_tab_tree %}
     {% endfor %}
   {% endif %}
 
   {% if continuing_education_propositions %}
     <h3>{% trans "Continuing education" %}</h3>
     {% for admission in continuing_education_propositions %}
-      {% include "admission/admission/includes/admission_list_item.html" with type='continuing_education' admission=admission user=user tab_tree=continuing_education_tab_tree %}
+      {% include "admission/admission/includes/admission_list_item.html" with base_namespace='admission:continuing-education' admission=admission tab_tree=continuing_education_tab_tree %}
     {% endfor %}
   {% endif %}
 

@@ -41,7 +41,7 @@
         {% if admission %}
           {% url 'admission:doctorate:update:curriculum' view.kwargs.pk as experience_delete_url%}
         {% else %}
-          {% url 'admission:doctorate-create:curriculum' as experience_delete_url %}
+          {% url 'admission:create:curriculum' as experience_delete_url %}
         {% endif %}
         <a href="{{ experience_delete_url }}">
           {% trans "Cancel" %}
