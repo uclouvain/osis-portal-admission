@@ -98,7 +98,7 @@ class DoctorateAdmissionCurriculumMixin(LoadDossierViewMixin):
         return (
             resolve_url('admission:doctorate:update:curriculum', pk=self.admission_uuid)
             if self.admission_uuid
-            else resolve_url('admission:doctorate-create:curriculum')
+            else resolve_url('admission:create:curriculum')
         )
 
 

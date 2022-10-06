@@ -62,4 +62,12 @@ def to_snake_case(value):
 
 
 def split_training_id(training_id):
-    return re.match(r"^(.*)-(\d{4})$", training_id).groups()
+    result = re.match(r"^(.*)-(\d{4})$", training_id)
+    return result.groups() if result else tuple()
+
+
+def get_training_id(training):
+    return "{sigle}-{annee}".format(
+        sigle=training['sigle'],
+        annee=training['annee'],
+    )

@@ -6,6 +6,7 @@ from .utils import (
     format_training,
     format_scholarship,
     split_training_id,
+    get_training_id,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     'format_scholarship',
     'format_training',
     'split_training_id',
+    'get_training_id',
 ]

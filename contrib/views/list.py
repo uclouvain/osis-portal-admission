@@ -45,9 +45,14 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
         context["continuing_education_propositions"] = result['continuing_education_propositions']
         context["general_education_propositions"] = result['general_education_propositions']
         context["global_links"] = result['links']
+        context["can_create_proposition"] = (
+            'url' in result['links']['create_doctorate_proposition']
+            or 'url' in result['links']['create_general_proposition']
+            or 'url' in result['links']['create_continuing_proposition']
+        )
         context["doctorate_tab_tree"] = TAB_TREES['doctorate']
-        context["continuing_education_tab_tree"] = TAB_TREES['continuing_education']
-        context["general_education_tab_tree"] = TAB_TREES['general_education']
+        context["continuing_education_tab_tree"] = TAB_TREES['continuing-education']
+        context["general_education_tab_tree"] = TAB_TREES['general-education']
         return context
 
 

@@ -61,7 +61,7 @@ class DoctorateAdmissionConfirmFormView(
         if proposition_completion_errors:
 
             proposition_completion_errors_by_tab = {
-                tab: {'name': get_subtab_label(tab), 'errors': []}
+                tab: {'name': get_subtab_label(tab, 'doctorate'), 'errors': []}
                 for tab in [
                     'person',
                     'coordonnees',
