@@ -35,7 +35,7 @@ READ_ACTIONS_BY_TAB = {
     'education': 'retrieve_secondary_studies',
     'languages': 'retrieve_languages',
     # Project
-    'training-choice': 'retrieve_proposition',
+    'training-choice': 'retrieve_training_choice',
     'project': 'retrieve_proposition',
     'supervision': 'retrieve_supervision',
     # Accounting
@@ -66,8 +66,8 @@ UPDATE_ACTIONS_BY_TAB = {
     'education': 'update_secondary_studies',
     'languages': 'update_languages',
     # Project
+    'training-choice': 'update_training_choice',
     'project': 'update_proposition',
-    'training-choice': 'update_proposition',
     'supervision': 'request_signatures',
     # Accounting
     'accounting': 'update_accounting',

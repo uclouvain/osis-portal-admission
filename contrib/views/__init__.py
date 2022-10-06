@@ -64,7 +64,12 @@ from .form_tabs.supervision import (
     DoctorateAdmissionSetReferencePromoterView,
     DoctorateAdmissionSupervisionFormView,
 )
-from .form_tabs.training_choice import AdmissionTrainingChoiceFormView
+from .form_tabs.training_choice import (
+    AdmissionCreateTrainingChoiceFormView,
+    ContinuingAdmissionUpdateTrainingChoiceFormView,
+    DoctorateAdmissionUpdateTrainingChoiceFormView,
+    GeneralAdmissionUpdateTrainingChoiceFormView,
+)
 from .list import *
 from .signatures import (
     DoctorateAdmissionRequestSignaturesView,
@@ -72,3 +77,8 @@ from .signatures import (
     DoctorateAdmissionRequestSignaturesView,
 )
 from .training import *
+from .detail_tabs.training_choice import (
+    GeneralEducationTrainingChoiceDetailView,
+    ContinuingEducationTrainingChoiceDetailView,
+    DoctorateTrainingChoiceDetailView,
+)

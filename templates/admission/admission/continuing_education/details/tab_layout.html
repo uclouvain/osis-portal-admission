@@ -30,18 +30,12 @@
 {% endblock %}
 
 {% block breadcrumb_area %}
-  {% if doctorate.matricule_doctorant != user.person.global_id %}
-    {% url 'admission:supervised-list' as list_url %}
-  {% else %}
-    {% url 'admission:list' as list_url %}
-  {% endif %}
-
   <ol class="breadcrumb">
     <li>
-      <a href="{{ list_url }}">{% trans "Admissions" %}</a>
+      <a href="{% url 'admission:list' %}">{% trans "Admissions" %}</a>
     </li>
     <li class="active">
-      {{ doctorate.intitule_formation }} ({{ doctorate.reference }})
+      {% display admission.formation.intitule " " "(" admission.formation.campus ")" %}
     </li>
   </ol>
 {% endblock %}
@@ -52,18 +46,13 @@
 {% endblock %}
 
 {% block content %}
-  {% if doctorate.matricule_doctorant != user.person.global_id %}
-    {% url 'admission:supervised-list' as list_url %}
-  {% else %}
-    {% url 'admission:list' as list_url %}
-  {% endif %}
-
+  {% display admission.formation.intitule " " "(" admission.formation.campus ")" as admission_title %}
   <div class="page-header h3 clearfix">
-        <span class="d-inline-block">
-          {{ doctorate.intitule_formation }} ({{ doctorate.reference }})
-        </span>
+    <span class="d-inline-block">
+      {{ admission_title }}
+    </span>
     <a
-        href="{{ list_url }}"
+        href="{% url 'admission:list' %}"
         class="pull-right h5 text-primary"
     >
       <span class="fa fa-stream"></span>
@@ -73,10 +62,10 @@
 
   <div class="well">
     <div>
-      {% trans "Reference:" %} {{ doctorate.intitule_formation }} ({{ doctorate.reference }})
+      {% trans "Reference:" %} {{ admission_title }}
     </div>
     <div>
-      {% trans "Status:" %} {{ doctorate.statut|enum_display:'ChoixStatutDoctorat' }}
+      {% trans "Status:" %} {{ admission.statut|enum_display:'ChoixStatutPropositionFormationContinue' }}
     </div>
   </div>
 
@@ -84,23 +73,21 @@
     {% include "template_messages.html" %}
   </div>
 
-  {% url 'admission:doctorate:update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
+  {% url 'admission:continuing-education:update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
   {% get_current_tab as current_tab %}
-  {% if change_url and change_url != request.path and doctorate|can_update_tab:current_tab %}
-      <div class="text-right visible-xs visible-sm">
-          <a href="{{ change_url }}" class="btn btn-primary">
-              <span
-                  class="glyphicon glyphicon-floppy-save" aria-hidden="true"
-              ></span>
-              {% trans 'Edit' %}
-          </a>
-      </div>
+  {% if change_url and change_url != request.path and admission|can_update_tab:current_tab %}
+    <div class="text-right visible-xs visible-sm">
+      <a href="{{ change_url }}" class="btn btn-primary">
+        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+        {% trans 'Edit' %}
+      </a>
+    </div>
   {% endif %}
 
-  {% doctorate_tabs admission=doctorate no_status=True %}
+  {% doctorate_tabs admission=admission no_status=True %}
   <div class="row">
     <div class="col-md-2 visible-md visible-lg">
-      {% doctorate_subtabs admission=doctorate no_status=True %}
+      {% doctorate_subtabs admission=admission no_status=True %}
     </div>
     <div class="col-md-10 quitting-context-excluded">
       {% block tab_content %}{% endblock %}

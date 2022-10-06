@@ -27,10 +27,10 @@
 
 {% if not admission %}
   {# We've not submitted an admission yet, display creation siblings #}
-  {% url 'admission:doctorate-create:'|add:tab.name as tab_url %}
+  {% url 'admission:create:'|add:tab.name as tab_url %}
 {% elif admission|can_read_tab:tab %}
   {# By default, display detail siblings #}
-  {% url 'admission:doctorate:'|add:tab.name admission_uuid as tab_url %}
+  {% url base_namespace|add:':'|add:tab.name pk=admission_uuid as tab_url %}
 {% endif %}
 <li
   role="presentation"
@@ -46,7 +46,8 @@
     {{ label }}
     {% if not no_status and admission and tab.name != 'confirm' %}
       {% firstof parent.name tab.name as error_tab_name %}
-      {% if admission|has_error_in_tab:error_tab_name %}
+      {% has_error_in_tab admission=admission tab=error_tab_name as has_error %}
+      {% if has_error %}
         <span class="fa fa-times-circle text-danger"></span>
       {% else %}
         <span class="fa fa-check-circle text-success"></span>

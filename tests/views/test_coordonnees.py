@@ -99,7 +99,7 @@ class CoordonneesTestCase(TestCase):
         self.addCleanup(academic_year_api_patcher.stop)
 
     def test_form_display(self):
-        url = resolve_url('admission:doctorate-create:coordonnees')
+        url = resolve_url('admission:create:coordonnees')
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -107,14 +107,14 @@ class CoordonneesTestCase(TestCase):
         self.mock_proposition_api.assert_not_called()
 
     def test_form_empty(self):
-        url = resolve_url('admission:doctorate-create:coordonnees')
+        url = resolve_url('admission:create:coordonnees')
 
         response = self.client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_coordonnees.assert_called()
 
     def test_form_should_be_all_filled(self):
-        url = resolve_url('admission:doctorate-create:coordonnees')
+        url = resolve_url('admission:create:coordonnees')
 
         response = self.client.post(url, {
             "residential-country": "FR",
@@ -123,7 +123,7 @@ class CoordonneesTestCase(TestCase):
         self.assertIn('city', response.context['residential'].errors)
 
     def test_form_belgian(self):
-        url = resolve_url('admission:doctorate-create:coordonnees')
+        url = resolve_url('admission:create:coordonnees')
 
         response = self.client.post(url, {
             "residential-country": "BE",
@@ -140,7 +140,7 @@ class CoordonneesTestCase(TestCase):
         self.assertIsNone(last_call_kwargs['coordonnees']['contact'])
 
     def test_form_foreign_with_contact_address(self):
-        url = resolve_url('admission:doctorate-create:coordonnees')
+        url = resolve_url('admission:create:coordonnees')
 
         response = self.client.post(url, {
             "residential-country": "FR",

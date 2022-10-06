@@ -28,7 +28,11 @@ from django.test import TestCase
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 
-from admission.utils import format_entity_address, format_entity_title, force_title
+from admission.contrib.enums.scholarship import TypeBourse
+from admission.utils import *
+from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
+from osis_admission_sdk.model.scholarship import Scholarship
 
 
 class UtilsTestCase(TestCase):
@@ -109,3 +113,47 @@ class UtilsTestCase(TestCase):
     def test_force_title_string_several_words_separated_by_commas(self):
         result = force_title('Pierre,pAUL,JACQUES')
         self.assertEqual(result, 'Pierre,paul,Jacques')
+
+    def test_format_training_for_continuing_education(self):
+        formation = FormationContinueDTO(
+            sigle='INFO-1',
+            campus='Louvain-La-Neuve',
+            intitule='Certificat en informatique',
+            annee=2020,
+        )
+        self.assertEqual(format_training(formation), 'Certificat en informatique (Louvain-La-Neuve) - INFO-1')
+
+    def test_format_training_for_general_education(self):
+        formation = FormationGeneraleDTO(
+            sigle='INFO-1',
+            campus='Louvain-La-Neuve',
+            intitule='Master en informatique',
+            annee=2020,
+        )
+        self.assertEqual(format_training(formation), 'Master en informatique (Louvain-La-Neuve) - INFO-1')
+
+    def test_format_scholarship_with_long_name_and_short_name(self):
+        scholarship = Scholarship(
+            short_name='ERASMUS-1',
+            long_name='-- ERASMUS-1 --',
+            type=TypeBourse.ERASMUS_MUNDUS.name,
+        )
+        self.assertEqual(format_scholarship(scholarship), '-- ERASMUS-1 --')
+
+    def test_format_scholarship_without_long_name(self):
+        scholarship = Scholarship(short_name='ERASMUS-1', long_name='', type=TypeBourse.ERASMUS_MUNDUS.name)
+        self.assertEqual(format_scholarship(scholarship), 'ERASMUS-1')
+
+    def test_split_training_id(self):
+        training_id = 'INFO1-2020'
+        self.assertEqual(split_training_id(training_id), ('INFO1', '2020',))
+
+        training_id = 'INF-1234-2020'
+        self.assertEqual(split_training_id(training_id), ('INF-1234', '2020',))
+
+        training_id = 'INFO1-0'
+        self.assertEqual(split_training_id(training_id), tuple())
+
+    def test_get_training_id(self):
+        training = {'sigle': 'INFO1', 'annee': 2020}
+        self.assertEqual(get_training_id(training), 'INFO1-2020')

@@ -57,7 +57,7 @@ class EducationTestCase(TestCase):
     def setUpTestData(cls):
         cls.person = PersonFactory()
         cls.detail_url = resolve_url("admission:doctorate:education", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        cls.form_url = resolve_url("admission:doctorate-create:education")
+        cls.form_url = resolve_url("admission:create:education")
         cls.foreign_data = {
             "got_diploma": GotDiploma.YES.name,
             "diploma_type": DiplomaTypes.FOREIGN.name,

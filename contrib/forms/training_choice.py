@@ -39,7 +39,11 @@ from admission.contrib.enums import (
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
-from admission.contrib.enums.training_choice import TypeFormation, TYPES_FORMATION_GENERALE
+from admission.contrib.enums.training_choice import (
+    TypeFormation,
+    TYPES_FORMATION_GENERALE,
+    ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE,
+)
 from admission.contrib.forms import get_campus_choices, EMPTY_CHOICE, RadioBooleanField, EMPTY_VALUE
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -202,16 +206,11 @@ class TrainingChoiceForm(forms.Form):
         ),
     )
 
-    def __init__(self, person, on_update=False, **kwargs):
+    def __init__(self, person, on_update=True, **kwargs):
         self.person = person
         self.on_update = on_update
 
         super().__init__(**kwargs)
-
-        training_type = self.data.get(
-            self.add_prefix('training_type'),
-            self.initial.get('training_type'),
-        )
 
         general_education_training = self.data.get(
             self.add_prefix('general_education_training'),
@@ -221,7 +220,6 @@ class TrainingChoiceForm(forms.Form):
             self.add_prefix('continuing_education_training'),
             self.initial.get('continuing_education_training'),
         )
-
         doctorate_training = self.data.get(
             self.add_prefix('doctorate_training'),
             self.initial.get('doctorate_training'),
@@ -249,64 +247,81 @@ class TrainingChoiceForm(forms.Form):
         self.continuing_education_training_obj: Optional[dict] = None
         self.doctorate_training_obj: Optional[dict] = None
 
-        if training_type:
-            if general_education_training and training_type in TYPES_FORMATION_GENERALE:
-                self.general_education_training_obj = get_training(
-                    person=self.person, training=general_education_training,
-                )
-                self.fields['general_education_training'].widget.choices = get_training_choices(
-                    training=self.general_education_training_obj,
-                )
-            elif continuing_education_training and training_type == TypeFormation.FORMATION_CONTINUE.name:
-                self.continuing_education_training_obj = get_training(
-                    person=self.person, training=continuing_education_training,
-                )
-                self.fields['continuing_education_training'].widget.choices = get_training_choices(
-                    training=self.continuing_education_training_obj,
-                )
-            elif doctorate_training and training_type == TypeFormation.DOCTORAT.name:
-                self.doctorate_training_obj = get_training(person=self.person, training=doctorate_training)
-                doctorate_choices = get_training_choices(training=self.doctorate_training_obj)
+        if general_education_training:
+            self.general_education_training_obj = get_training(
+                person=self.person,
+                training=general_education_training,
+            )
+            self.fields['general_education_training'].widget.choices = get_training_choices(
+                training=self.general_education_training_obj,
+            )
+            self.fields['training_type'].initial = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(
+                self.general_education_training_obj.get('education_group_type')
+            )
+        elif continuing_education_training:
+            self.continuing_education_training_obj = get_training(
+                person=self.person,
+                training=continuing_education_training,
+            )
+            self.fields['continuing_education_training'].widget.choices = get_training_choices(
+                training=self.continuing_education_training_obj,
+            )
+            self.fields['training_type'].initial = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(
+                self.continuing_education_training_obj.get('education_group_type')
+            )
+        elif doctorate_training:
+            self.doctorate_training_obj = get_training(person=self.person, training=doctorate_training)
+            doctorate_choices = get_training_choices(training=self.doctorate_training_obj)
 
-                # We need to provide additional data so we use the data attribute instead of the choice
-                self.fields['doctorate_training'].widget.attrs['data-data'] = json.dumps(
-                    [
-                        {
-                            'id': doctorate_choices[0][0],
-                            'sigle': self.doctorate_training_obj['acronym'],
-                            'sigle_entite_gestion': self.doctorate_training_obj['management_entity'],
-                            'text': doctorate_choices[0][1],
-                        }
-                    ]
-                )
+            # We need to provide additional data so we use the data attribute instead of the choice
+            self.fields['doctorate_training'].widget.attrs['data-data'] = json.dumps(
+                [
+                    {
+                        'id': doctorate_choices[0][0],
+                        'sigle': self.doctorate_training_obj['acronym'],
+                        'sigle_entite_gestion': self.doctorate_training_obj['management_entity'],
+                        'text': doctorate_choices[0][1],
+                    }
+                ]
+            )
 
-                # Initialize the right proximity commission field
-                if self.initial.get('proximity_commission'):
-                    if self.doctorate_training_obj['management_entity'] in COMMISSIONS_CDE_CLSM:
-                        self.initial['proximity_commission_cde'] = self.initial['proximity_commission']
-                    elif self.doctorate_training_obj['management_entity'] == COMMISSION_CDSS:
-                        self.initial['proximity_commission_cdss'] = self.initial['proximity_commission']
-                    elif self.doctorate_training_obj['acronym'] == SCIENCE_DOCTORATE:
-                        self.initial['science_sub_domain'] = self.initial['proximity_commission']
+            self.fields['training_type'].initial = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(
+                self.doctorate_training_obj.get('education_group_type')
+            )
+
+            # Initialize the right proximity commission field
+            if self.initial.get('proximity_commission'):
+                if self.doctorate_training_obj['management_entity'] in COMMISSIONS_CDE_CLSM:
+                    self.fields['proximity_commission_cde'].initial = self.initial['proximity_commission']
+                elif self.doctorate_training_obj['management_entity'] == COMMISSION_CDSS:
+                    self.fields['proximity_commission_cdss'].initial = self.initial['proximity_commission']
+                elif self.doctorate_training_obj['acronym'] == SCIENCE_DOCTORATE:
+                    self.fields['science_sub_domain'].initial = self.initial['proximity_commission']
+
+        for scholarship_name, scholarship_uuid in scholarships.items():
+            if scholarship_uuid:
+                self.fields['has_{}'.format(scholarship_name)].initial = True
+                scholarship_obj = AdmissionScholarshipService.get_scholarship(
+                    person=person,
+                    scholarship_uuid=scholarship_uuid,
+                )
+                self.fields[scholarship_name].widget.choices = (
+                    (
+                        scholarship_obj.uuid,
+                        format_scholarship(scholarship_obj),
+                    ),
+                )
+            else:
+                self.fields['has_{}'.format(scholarship_name)].initial = False
 
         self.fields['sector'].widget.choices = EMPTY_CHOICE + tuple(
             (sector.sigle, f"{sector.sigle} - {sector.intitule}")
             for sector in AdmissionAutocompleteService.get_sectors(person)
         )
 
-        for scholarship_name, scholarship_uuid in scholarships.items():
-            if scholarship_uuid:
-                scholarship_obj = AdmissionScholarshipService.get_scholarship(
-                    person=person,
-                    scholarship_uuid=scholarship_uuid,
-                )
-                self.fields[scholarship_name].widget.choices = (
-                    (scholarship_obj.uuid, format_scholarship(scholarship_obj),),
-                )
-
         # Specificities on update -> Some fields can not be updated
         if self.on_update:
-            disabled_fields_on_create = [
+            disabled_fields_on_update = [
                 # All trainings
                 'training_type',
                 # Doctorate
@@ -317,7 +332,10 @@ class TrainingChoiceForm(forms.Form):
                 'doctorate_training',
             ]
 
-            for field in disabled_fields_on_create:
+            if self.doctorate_training_obj:
+                disabled_fields_on_update += ['campus']
+
+            for field in disabled_fields_on_update:
                 self.fields[field].disabled = True
 
     def clean(self):
@@ -328,6 +346,7 @@ class TrainingChoiceForm(forms.Form):
         if not self.on_update and not training_type:
             self.add_error('training_type', FIELD_REQUIRED_MESSAGE)
 
+        # TODO check if it's necessary now
         if cleaned_data.get('campus') == EMPTY_VALUE:
             cleaned_data['campus'] = ''
 

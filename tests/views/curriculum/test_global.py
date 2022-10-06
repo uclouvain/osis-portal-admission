@@ -35,7 +35,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
         super().setUp()
         self.admission_read_url = resolve_url('admission:doctorate:curriculum', pk=self.proposition.uuid)
         self.admission_update_url = resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-        self.create_url = resolve_url('admission:doctorate-create:curriculum')
+        self.create_url = resolve_url('admission:create:curriculum')
 
     def test_on_create_curriculum_is_loaded(self):
         response = self.client.get(self.create_url)
@@ -109,7 +109,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:doctorate-create:curriculum'),
+            expected_url=resolve_url('admission:create:curriculum'),
         )
 
         # Check that the right API calls are done

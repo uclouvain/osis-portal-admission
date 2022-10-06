@@ -44,3 +44,53 @@ TYPES_FORMATION_GENERALE = {
     TypeFormation.AGREGATION_CAPES.name,
     TypeFormation.CERTIFICAT.name,
 }
+
+OSIS_ADMISSION_EDUCATION_TYPES_MAPPING = {
+    TypeFormation.BACHELIER.name: [
+        'BACHELOR',
+    ],
+    TypeFormation.MASTER.name: [
+        'MASTER_MA_120',
+        'MASTER_MD_120',
+        'MASTER_MS_120',
+        'MASTER_MS_180_240',
+        'MASTER_M1',
+        'MASTER_MC',
+    ],
+    TypeFormation.DOCTORAT.name: [
+        'PHD',
+    ],
+    TypeFormation.AGREGATION_CAPES.name: [
+        'AGGREGATION',
+        'CAPAES',
+    ],
+    TypeFormation.FORMATION_CONTINUE.name: [
+        'CERTIFICATE_OF_PARTICIPATION',
+        'CERTIFICATE_OF_SUCCESS',
+        'UNIVERSITY_FIRST_CYCLE_CERTIFICATE',
+        'UNIVERSITY_SECOND_CYCLE_CERTIFICATE',
+    ],
+    TypeFormation.CERTIFICAT.name: [
+        'CERTIFICATE',
+        'RESEARCH_CERTIFICATE',
+    ],
+}
+
+GENERAL_EDUCATION_TYPES = set(
+    OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.BACHELIER.name)
+    + OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.MASTER.name)
+    + OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.AGREGATION_CAPES.name)
+    + OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.CERTIFICAT.name)
+)
+
+CONTINUING_EDUCATION_TYPES = set(
+    OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.FORMATION_CONTINUE.name)
+)
+
+DOCTORATE_EDUCATION_TYPES = set(OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.DOCTORAT.name))
+
+ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE = {
+    osis_type: admission_type
+    for admission_type, osis_types in OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.items()
+    for osis_type in osis_types
+}

@@ -283,6 +283,9 @@ msgstr "Admission"
 msgid "Admission type"
 msgstr "Type de l'admission"
 
+msgid "Admissions"
+msgstr "Admissions"
+
 msgid "Affiliations"
 msgstr "Affiliations"
 
@@ -655,6 +658,9 @@ msgstr "Langue de contact"
 msgid "Context"
 msgstr "Contexte"
 
+msgid "Continuing education"
+msgstr "Formation continue"
+
 msgid ""
 "Copy of 6 salary slips issued in the 12 months preceding the application"
 msgstr ""
@@ -789,9 +795,6 @@ msgstr "Copie de l’attestation d’immatriculation « carte orange »"
 msgid "Copy of the tutorship act authenticated by the Belgian authorities"
 msgstr "Copie de l’acte de tutelle légalisé par des autorités belges"
 
-msgid "Continuing education"
-msgstr "Formation continue"
-
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
@@ -842,6 +845,9 @@ msgstr "Cours et formation"
 
 msgid "Create and manage my enrolment request for UCLouvain"
 msgstr "Créer et gérer ma demande d'inscription UCLouvain"
+
+msgid "Create new admission"
+msgstr "Créer une nouvelle admission"
 
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
@@ -987,11 +993,11 @@ msgstr "Formation doctorale"
 msgid "Doctorate"
 msgstr "Doctorat"
 
-msgid "Doctorate admissions"
-msgstr "Admissions en doctorat"
+msgid "Double degree scholarship"
+msgstr "Bourse double diplomation"
 
 msgid "Double or triple diplomation"
-msgstr ""
+msgstr "Double ou triple diplomation"
 
 msgid "Download as PDF"
 msgstr "Télécharger en tant que PDF"
@@ -1090,6 +1096,9 @@ msgstr "Inscrit"
 
 msgid "Erasmus Mundus"
 msgstr "Erasmus Mundus"
+
+msgid "Erasmus mundus scholarship"
+msgstr "Bourse Erasmus Mundus"
 
 msgid "Estimated time to complete the doctorate (in months)"
 msgstr "Durée prévue pour la réalisation du doctorat (en mois)"
@@ -1227,6 +1236,9 @@ msgstr "Graphe de Gantt"
 
 msgid "Gender"
 msgstr "Genre"
+
+msgid "General education"
+msgstr "Formation générale"
 
 msgid "General information"
 msgstr "Informations générales"
@@ -1631,6 +1643,9 @@ msgstr "Internationale pour les doctorats"
 msgid "International for general education"
 msgstr "Internationale pour la formation générale"
 
+msgid "International scholarship"
+msgstr "Bourse internationale"
+
 msgid "Internship"
 msgstr "Stage"
 
@@ -1831,8 +1846,8 @@ msgstr "Aucune connaissance des langues renseignée."
 msgid "No one invited"
 msgstr "Aucun invité"
 
-msgid "No reference yet - Go to Project tab"
-msgstr "Pas de reference pour le moment - Voir l'onglet projet"
+msgid "No reference yet - Go to 'Training choice' tab"
+msgstr "Pas de reference pour le moment - Voir l'onglet 'Choix de formation'"
 
 msgid "No result"
 msgstr "Pas de résultat"
