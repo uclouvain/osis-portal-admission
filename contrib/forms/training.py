@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from functools import partial
 
 from dal import autocomplete
@@ -619,19 +620,17 @@ class UclCourseForm(ActivityFormMixin, forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['academic_year'].choices = get_academic_years_choices(self.person)
+        self.fields['academic_year'].choices = [
+            choice
+            for choice in get_academic_years_choices(self.person)
+            if not choice[0] or choice[0] >= datetime.date.today().year
+        ]
         self.fields['learning_unit_year'].required = True
         if self.initial.get('learning_unit_year'):
-            academic_year_formatted, acronym = self.initial['learning_unit_year'].split(' - ')
-            academic_year = academic_year_formatted.split('-')[0]
-            self.initial['academic_year'] = int(academic_year)
-            self.initial['learning_unit_year'] = acronym
-            title = LearningUnitService.get_learning_unit_title(
-                year=int(academic_year),
-                acronym=acronym,
-                person=self.person,
-            )
-            self.fields['learning_unit_year'].widget.choices = [(acronym, f"{acronym} - {title}")]
+            acronym = self.initial['learning_unit_year']
+            self.fields['learning_unit_year'].widget.choices = [
+                (acronym, f"{acronym} - {self.initial['learning_unit_title']}")
+            ]
 
     class Meta:
         fields = [

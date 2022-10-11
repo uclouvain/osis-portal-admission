@@ -285,12 +285,13 @@ class TrainingTestCase(TestCase):
     @patch('osis_learning_unit_sdk.api.learning_units_api.LearningUnitsApi')
     def test_update_course_enrollment(self, learning_unit_api, acad_api):
         learning_unit_api.return_value.learningunitstitle_read.return_value = {'title': "dumb text"}
+        current_year = datetime.date.today().year
         acad_api.return_value.get_academic_years.return_value = Mock(
             results=[
                 Mock(
-                    start_date=datetime.date(2021, 9, 2),
-                    end_date=datetime.date(2022, 9, 1),
-                    year=2021,
+                    start_date=datetime.date(current_year, 9, 2),
+                    end_date=datetime.date(current_year + 1, 9, 1),
+                    year=current_year,
                 )
             ]
         )
@@ -304,13 +305,16 @@ class TrainingTestCase(TestCase):
         )
         self.mock_api.return_value.retrieve_training.return_value.to_dict.return_value = dict(
             category=CategorieActivite.UCL_COURSE.name,
-            learning_unit_year='2021-2022 - ESA2004',
+            learning_unit_year='ESA2004',
+            learning_unit_title='Something',
+            academic_year=current_year,
+            academic_year_title="2022-2023",
         )
         response = self.client.post(
             url,
             data={
                 'context': ContexteFormation.FREE_COURSE.name,
-                'academic_year': '2021',
+                'academic_year': current_year,
                 'learning_unit_year': 'ESA2004',
             },
         )
@@ -351,5 +355,7 @@ class TrainingTestCase(TestCase):
             reference_promoter_assent=None,
             reference_promoter_comment="",
         )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)

@@ -32,24 +32,23 @@
   <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
     <h3 class="panel-title">
       {% include "admission/doctorate/details/training/_panel_title.html" %}
-
-      {% display activity.learning_unit_year "-" activity.context %}
+      {% include "admission/doctorate/details/training/_activity_title.html" %}
       <div class="clearfix"></div>
     </h3>
   </div>
   <div
     id="a-{{ activity.uuid }}"
-    {% if not remove_action %}
     class="panel-collapse collapse"
-    {% endif %}
     role="tabpanel"
     aria-labelledby="h-{{ activity.uuid }}"
   >
     <div class="panel-body">
       <div class="form-group">
-        <strong class="d-block">{% trans "Description" %}</strong>
+        <strong class="d-block">{% trans "Context" %}</strong>
         {{ activity.context|enum_display:'ContexteFormation' }}
-        {{ activity.learning_unit_year }}
+        <strong class="d-block">{% trans "Learning unit" %}</strong>
+        {{ activity.learning_unit_title }} -
+        {{ activity.academic_year_title }}
       </div>
     </div>
   </div>

@@ -30,6 +30,7 @@ from typing import Tuple, Union
 from django.forms import Form
 from django.http import Http404
 from django.shortcuts import resolve_url
+from django.template import Context, Template
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.views.generic import FormView
@@ -273,6 +274,19 @@ class TrainingActivityDeleteView(LoadDoctorateViewMixin, WebServiceFormMixin, Fo
             doctorate_uuid=str(self.kwargs['pk']),
             activity_uuid=str(self.kwargs['activity_id']),
         ).to_dict()
+
+    def get_context_data(self, **kwargs):
+        kwargs['object'] = (
+            Template(
+                """{% load admission %}
+            {% firstof 0 activity.category|lower|add:'.html' as template_name %}
+            {% include "admission/doctorate/details/training/_activity_title.html" %}
+            """
+            )
+            .render(Context({'activity': self.activity, 'request': self.request}))
+            .strip()
+        )
+        return super().get_context_data(**kwargs)
 
     def get_success_url(self):
         return resolve_url(':'.join(self.request.resolver_match.namespaces), pk=self.kwargs['pk'])

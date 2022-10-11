@@ -391,8 +391,8 @@ def display(*args):
             ret.append(reduce_wrapping_parenthesis(*reduce_wrapping[:-1]))
         elif nextarg == ",":
             ret.append(reduce_list_separated(ret.pop(), next(iterargs, None)))
-        elif nextarg == "-":
-            ret.append(reduce_list_separated(ret.pop(), next(iterargs, None), separator=" - "))
+        elif nextarg in ["-", ':']:
+            ret.append(reduce_list_separated(ret.pop(), next(iterargs, None), separator=f" {nextarg} "))
         elif isinstance(nextarg, str) and len(nextarg) > 1 and re.match(r'\s', nextarg[0]):
             suffixed_val = ret.pop()
             ret.append(f"{suffixed_val}{nextarg}" if suffixed_val else "")
