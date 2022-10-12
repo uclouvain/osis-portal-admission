@@ -1325,6 +1325,11 @@ msgid ""
 "indicate this by turning off the switch for those years."
 msgstr ""
 
+msgid ""
+"If you submit the activity, you will no longer be able to modify the "
+"seminar, nor the different activities within it."
+msgstr ""
+
 msgid "Important information:"
 msgstr ""
 
