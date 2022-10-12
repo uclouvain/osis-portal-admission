@@ -76,7 +76,7 @@
                     class="disabled"
                     data-toggle="tooltip"
                     data-container="body"
-                    {% if activity.category == 'SEMINAR' %}
+                    {% if activity.category|safe == 'SEMINAR' %}
                     title="{{ not_complete_sub }}"
                     {% else %}
                     title="{{ not_complete }}"
@@ -131,7 +131,7 @@
               disabled="disabled"
               data-toggle="tooltip"
               data-container="body"
-                {% if activity.category == 'SEMINAR' %}
+                {% if activity.category|safe == 'SEMINAR' %}
               title="{{ not_complete_sub }}"
                 {% else %}
               title="{{ not_complete }}"

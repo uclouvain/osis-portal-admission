@@ -1498,6 +1498,13 @@ msgstr ""
 "Si vous n'avez pas suivi votre formation pendant une ou plusieurs années, "
 "merci de l'indiquer en éteignant l'interrupteur correspondant à ces années."
 
+msgid ""
+"If you submit the activity, you will no longer be able to modify the "
+"seminar, nor the different activities within it."
+msgstr ""
+"Si vous soumettez l'activité, vous ne pourrez plus modifier le séminaire, ni "
+"les différentes activités en faisant partie."
+
 msgid "Important information:"
 msgstr "Informations importantes :"
 

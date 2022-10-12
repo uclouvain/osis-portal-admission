@@ -112,7 +112,25 @@
 {% endfor %}
 
 {% if doctorate|can_make_action:'submit_training' %}
-  <button class="btn btn-default" type="submit" value="_submit">{% trans "Submit these activities" %}</button>
+    <div id="confirm-submit-modal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body alert-danger" style="border-top-left-radius: inherit; border-top-right-radius: inherit;">
+            {% trans "If you submit the activity, you will no longer be able to modify the seminar, nor the different activities within it." %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+            <button id="confirm-button" class="btn btn-primary" type="submit" name="_submit">
+              {% trans "Confirm" %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-default" type="submit" value="_submit" id="submit—activities">
+      {% trans "Submit these activities" %}
+    </button>
   </form>
 {% endif %}
 
@@ -158,6 +176,23 @@
   <script>
   $(function () {
     $('[data-toggle="popover"]').popover();
+
+    // User must confirm submission of seminars
+    let confirmed = false;
+    $('form#activities').on('submit', function (e) {
+      const hasSeminar = !!(new FormData(e.target)).getAll("activity_ids").filter(
+        uuid => $(`#h-${uuid}`).parent().data('type') === "SEMINAR"
+      ).length;
+      if (hasSeminar && !confirmed) {
+        $('#confirm-button').on('click', function () {
+          confirmed = true;
+          e.target.submit()
+        });
+        $('#confirm-submit-modal').modal('show');
+        e.preventDefault();
+        return false;
+      }
+    });
 
     // Open the right panel depending on location hash
     if (document.location.hash) {
