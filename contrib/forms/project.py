@@ -170,7 +170,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     projet_formation_complementaire = FileUploadField(
-        label=_("Complementary training project"),
+        label=_("Complementary training proposition"),
         required=False,
         help_text=_(
             "Depending on your previous experience and your research project, a complementary training "

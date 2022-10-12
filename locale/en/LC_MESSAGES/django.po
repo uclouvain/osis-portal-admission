@@ -549,7 +549,7 @@ msgstr ""
 msgid "Complementary training"
 msgstr ""
 
-msgid "Complementary training project"
+msgid "Complementary training proposition"
 msgstr ""
 
 msgid "Completion"

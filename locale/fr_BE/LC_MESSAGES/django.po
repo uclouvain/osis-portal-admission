@@ -604,8 +604,8 @@ msgstr "Communauté d'enseignement"
 msgid "Complementary training"
 msgstr "Formation complémentaire"
 
-msgid "Complementary training project"
-msgstr "Projet de formation complémentaire"
+msgid "Complementary training proposition"
+msgstr "Proposition de formation complémentaire"
 
 msgid "Completion"
 msgstr "Finalisation"
