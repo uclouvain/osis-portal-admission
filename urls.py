@@ -174,6 +174,7 @@ update_general_education_paths = [
 
 general_education_paths = [
     path("training-choice", views.GeneralEducationTrainingChoiceDetailView.as_view(), name="training-choice"),
+    path("cancel", views.GeneralEducationAdmissionCancelView.as_view(), name="cancel"),
     path("update/", include((update_general_education_paths, "update"))),
 ]
 
@@ -183,6 +184,7 @@ update_continuing_education_paths = [
 
 continuing_education_paths = [
     path("training-choice", views.ContinuingEducationTrainingChoiceDetailView.as_view(), name="training-choice"),
+    path("cancel", views.ContinuingEducationAdmissionCancelView.as_view(), name="cancel"),
     path("update/", include((update_continuing_education_paths, "update"))),
 ]
 
