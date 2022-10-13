@@ -25,7 +25,11 @@
 # ##############################################################################
 
 from .autocomplete import *
-from .cancel import DoctorateAdmissionCancelView
+from .cancel import (
+    DoctorateAdmissionCancelView,
+    GeneralEducationAdmissionCancelView,
+    ContinuingEducationAdmissionCancelView,
+)
 from .detail_tabs import redirect_detail
 from .detail_tabs.accounting import DoctorateAdmissionAccountingDetailView
 from .detail_tabs.confirmation_paper import (

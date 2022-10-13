@@ -133,6 +133,20 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def cancel_general_education_proposition(cls, person: Person, uuid):
+        return APIClient().destroy_general_education_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def cancel_continuing_education_proposition(cls, person: Person, uuid):
+        return APIClient().destroy_continuing_education_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def get_propositions(cls, person: Person):
         return APIClient().list_propositions(
             **build_mandatory_auth_headers(person),
