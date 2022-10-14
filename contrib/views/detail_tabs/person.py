@@ -27,19 +27,49 @@
 from django.conf import settings
 from django.views.generic import TemplateView
 
-from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.person import AdmissionPersonService
+from admission.contrib.views.mixins import (
+    LoadDossierViewMixin,
+    LoadGeneralEducationDossierViewMixin,
+    LoadContinuingEducationDossierViewMixin,
+)
+from admission.services.person import (
+    AdmissionPersonService,
+    ContinuingEducationAdmissionPersonService,
+    GeneralEducationAdmissionPersonService,
+)
 
 
-class DoctorateAdmissionPersonDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
+class AdmissionPersonDetailView(TemplateView):
     template_name = 'admission/doctorate/details/person.html'
+    service = AdmissionPersonService
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        person = AdmissionPersonService.retrieve_person(
+        person = self.service.retrieve_person(
             self.request.user.person,
             uuid=self.admission_uuid,
         ).to_dict()
         context_data['person'] = person
         context_data['contact_language'] = dict(settings.LANGUAGES).get(person.get('language'))
         return context_data
+
+
+class DoctorateAdmissionPersonDetailView(
+    LoadDossierViewMixin,
+    AdmissionPersonDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class ContinuingEducationAdmissionPersonDetailView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionPersonDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService
+
+
+class GeneralEducationAdmissionPersonDetailView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionPersonDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService

@@ -44,9 +44,17 @@ from admission.contrib.forms.education import (
     DoctorateAdmissionEducationForm,
     DoctorateAdmissionEducationScheduleForm,
 )
-from admission.contrib.views.mixins import LoadDossierViewMixin
+from admission.contrib.views.mixins import (
+    LoadDossierViewMixin,
+    LoadGeneralEducationDossierViewMixin,
+    LoadContinuingEducationDossierViewMixin,
+)
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.person import AdmissionPersonService
+from admission.services.person import (
+    AdmissionPersonService,
+    GeneralEducationAdmissionPersonService,
+    ContinuingEducationAdmissionPersonService,
+)
 from base.tests.factories.academic_year import get_current_year
 
 EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
@@ -54,8 +62,7 @@ EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
 ]
 
 
-class DoctorateAdmissionEducationFormView(
-    LoadDossierViewMixin,
+class AdmissionEducationFormView(
     WebServiceFormMixin,
     FormView,
 ):  # pylint: disable=too-many-ancestors
@@ -63,6 +70,7 @@ class DoctorateAdmissionEducationFormView(
     success_url = reverse_lazy("admission:list")
     form_class = DoctorateAdmissionEducationForm
     forms = None
+    service = AdmissionPersonService
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -77,7 +85,7 @@ class DoctorateAdmissionEducationFormView(
 
     @cached_property
     def high_school_diploma(self):
-        return AdmissionPersonService.retrieve_high_school_diploma(
+        return self.service.retrieve_high_school_diploma(
             person=self.person,
             uuid=self.admission_uuid,
         ).to_dict()
@@ -264,7 +272,7 @@ class DoctorateAdmissionEducationFormView(
         return self.forms
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_high_school_diploma(
+        self.service.update_high_school_diploma(
             self.person,
             data,
             uuid=self.admission_uuid,
@@ -370,3 +378,24 @@ class DoctorateAdmissionEducationFormView(
                 foreign_diploma_data["enrolment_certificate_translation"] = []
 
         return data
+
+
+class DoctorateAdmissionEducationFormView(
+    LoadDossierViewMixin,
+    AdmissionEducationFormView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionEducationFormView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionEducationFormView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionEducationFormView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionEducationFormView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService

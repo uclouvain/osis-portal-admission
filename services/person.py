@@ -40,6 +40,7 @@ class AdmissionPersonAPIClient:
 class AdmissionPersonService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
+    # Person
     @classmethod
     def retrieve_person(cls, person, uuid=None) -> PersonIdentification:
         if uuid:
@@ -52,7 +53,7 @@ class AdmissionPersonService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def update_person(cls, person, uuid=None, **data):
+    def update_person(cls, person, data, uuid=None):
         if uuid:
             return AdmissionPersonAPIClient().update_person_identification_admission(
                 uuid=str(uuid),
@@ -64,6 +65,7 @@ class AdmissionPersonService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    # Coordinates
     @classmethod
     def retrieve_person_coordonnees(cls, person, uuid=None):
         if uuid:
@@ -76,7 +78,7 @@ class AdmissionPersonService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def update_person_coordonnees(cls, person, uuid=None, **data):
+    def update_person_coordonnees(cls, person, data, uuid=None):
         if uuid:
             return AdmissionPersonAPIClient().update_coordonnees_admission(
                 uuid=str(uuid),
@@ -88,6 +90,7 @@ class AdmissionPersonService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    # Education
     @classmethod
     def retrieve_high_school_diploma(cls, person, uuid=None):
         if uuid:
@@ -110,6 +113,7 @@ class AdmissionPersonService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    # Languages
     @classmethod
     def retrieve_languages_knowledge(cls, person, uuid=None):
         if uuid:
@@ -251,6 +255,274 @@ class AdmissionPersonService(metaclass=ServiceMeta):
                 **build_mandatory_auth_headers(person),
             )
         return AdmissionPersonAPIClient().update_curriculum_file(
+            curriculum_file=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class GeneralEducationAdmissionPersonService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    # Person
+    @classmethod
+    def retrieve_person(cls, person, uuid) -> PersonIdentification:
+        return AdmissionPersonAPIClient().retrieve_person_identification_general_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_person(cls, person, uuid, data):
+        return AdmissionPersonAPIClient().update_person_identification_general_education_admission(
+            uuid=uuid,
+            person_identification=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    # Coordinates
+    @classmethod
+    def retrieve_person_coordonnees(cls, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_coordonnees_general_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_person_coordonnees(cls, person, uuid, data):
+        return AdmissionPersonAPIClient().update_coordonnees_general_education_admission(
+            uuid=uuid,
+            coordonnees=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    # Education
+    @classmethod
+    def retrieve_high_school_diploma(cls, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_high_school_diploma_general_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_high_school_diploma(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_high_school_diploma_general_education_admission(
+            uuid=uuid,
+            high_school_diploma=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    # Curriculum
+    @classmethod
+    def get_curriculum(cls, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_curriculum_general_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_professional_experience(cls, experience_id, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_professional_experience_general_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_professional_experience(cls, experience_id, person, data, uuid):
+        return AdmissionPersonAPIClient().update_professional_experience_general_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            professional_experience=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def create_professional_experience(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().create_professional_experience_general_education_admission(
+            uuid=uuid,
+            professional_experience=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def delete_professional_experience(cls, experience_id, person, uuid):
+        return AdmissionPersonAPIClient().destroy_professional_experience_general_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_educational_experience(cls, experience_id, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_educational_experience_general_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_educational_experience(cls, experience_id, person, data, uuid):
+        return AdmissionPersonAPIClient().update_educational_experience_general_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            educational_experience=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def create_educational_experience(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().create_educational_experience_general_education_admission(
+            uuid=uuid,
+            educational_experience=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def delete_educational_experience(cls, experience_id, person, uuid):
+        return AdmissionPersonAPIClient().destroy_educational_experience_general_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_curriculum_file(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_curriculum_file_general_education_admission(
+            uuid=str(uuid),
+            curriculum_file=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class ContinuingEducationAdmissionPersonService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    # Person
+    @classmethod
+    def retrieve_person(cls, person, uuid) -> PersonIdentification:
+        return AdmissionPersonAPIClient().retrieve_person_identification_continuing_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_person(cls, person, uuid, data):
+        return AdmissionPersonAPIClient().update_person_identification_continuing_education_admission(
+            uuid=uuid,
+            person_identification=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    # Coordinates
+    @classmethod
+    def retrieve_person_coordonnees(cls, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_coordonnees_continuing_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_person_coordonnees(cls, person, uuid, data):
+        return AdmissionPersonAPIClient().update_coordonnees_continuing_education_admission(
+            uuid=uuid,
+            coordonnees=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    # Education
+    @classmethod
+    def retrieve_high_school_diploma(cls, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_high_school_diploma_continuing_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_high_school_diploma(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_high_school_diploma_continuing_education_admission(
+            uuid=uuid,
+            high_school_diploma=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    # Curriculum
+    @classmethod
+    def get_curriculum(cls, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_curriculum_continuing_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_professional_experience(cls, experience_id, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_professional_experience_continuing_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_professional_experience(cls, experience_id, person, data, uuid):
+        return AdmissionPersonAPIClient().update_professional_experience_continuing_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            professional_experience=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def create_professional_experience(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().create_professional_experience_continuing_education_admission(
+            uuid=uuid,
+            professional_experience=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def delete_professional_experience(cls, experience_id, person, uuid):
+        return AdmissionPersonAPIClient().destroy_professional_experience_continuing_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_educational_experience(cls, experience_id, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_educational_experience_continuing_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_educational_experience(cls, experience_id, person, data, uuid):
+        return AdmissionPersonAPIClient().update_educational_experience_continuing_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            educational_experience=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def create_educational_experience(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().create_educational_experience_continuing_education_admission(
+            uuid=uuid,
+            educational_experience=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def delete_educational_experience(cls, experience_id, person, uuid):
+        return AdmissionPersonAPIClient().destroy_educational_experience_continuing_education_admission(
+            uuid=uuid,
+            experience_id=experience_id,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_curriculum_file(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_curriculum_file_continuing_education_admission(
+            uuid=str(uuid),
             curriculum_file=data,
             **build_mandatory_auth_headers(person),
         )
