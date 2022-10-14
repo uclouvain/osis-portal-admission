@@ -36,17 +36,35 @@ from .detail_tabs.confirmation_paper import (
     DoctorateAdmissionConfirmationPaperCanvasExportView,
     DoctorateAdmissionConfirmationPaperDetailView,
 )
-from .detail_tabs.coordonnees import DoctorateAdmissionCoordonneesDetailView
+from .detail_tabs.coordonnees import (
+    DoctorateAdmissionCoordonneesDetailView,
+    GeneralEducationAdmissionCoordonneesDetailView,
+    ContinuingEducationAdmissionCoordonneesDetailView,
+)
 from .detail_tabs.cotutelle import DoctorateAdmissionCotutelleDetailView
 from .detail_tabs.curriculum import (
     DoctorateAdmissionCurriculumDetailView,
     DoctorateAdmissionCurriculumProfessionalExperienceDetailView,
     DoctorateAdmissionCurriculumEducationalExperienceDetailView,
+    GeneralEducationAdmissionCurriculumDetailView,
+    GeneralEducationAdmissionCurriculumEducationalExperienceDetailView,
+    GeneralEducationAdmissionCurriculumProfessionalExperienceDetailView,
+    ContinuingEducationAdmissionCurriculumDetailView,
+    ContinuingEducationAdmissionCurriculumEducationalExperienceDetailView,
+    ContinuingEducationAdmissionCurriculumProfessionalExperienceDetailView,
 )
-from .detail_tabs.education import DoctorateAdmissionEducationDetailView
+from .detail_tabs.education import (
+    DoctorateAdmissionEducationDetailView,
+    GeneralEducationAdmissionEducationDetailView,
+    ContinuingEducationAdmissionEducationDetailView,
+)
 from .detail_tabs.extension_request import DoctorateAdmissionExtensionRequestDetailView
 from .detail_tabs.languages import DoctorateAdmissionLanguagesDetailView
-from .detail_tabs.person import DoctorateAdmissionPersonDetailView
+from .detail_tabs.person import (
+    DoctorateAdmissionPersonDetailView,
+    GeneralEducationAdmissionPersonDetailView,
+    ContinuingEducationAdmissionPersonDetailView,
+)
 from .detail_tabs.project import DoctorateAdmissionProjectDetailView
 from .detail_tabs.supervision import (
     DoctorateAdmissionApprovalByPdfView,
@@ -55,13 +73,25 @@ from .detail_tabs.supervision import (
 from .form_tabs.accounting import DoctorateAdmissionAccountingFormView
 from .form_tabs.confirm import DoctorateAdmissionConfirmFormView
 from .form_tabs.confirmation_paper import DoctorateAdmissionConfirmationPaperFormView
-from .form_tabs.coordonnees import DoctorateAdmissionCoordonneesFormView
+from .form_tabs.coordonnees import (
+    DoctorateAdmissionCoordonneesFormView,
+    GeneralEducationAdmissionCoordonneesFormView,
+    ContinuingEducationAdmissionCoordonneesFormView,
+)
 from .form_tabs.cotutelle import DoctorateAdmissionCotutelleFormView
 from .form_tabs.curriculum import *
-from .form_tabs.education import DoctorateAdmissionEducationFormView
+from .form_tabs.education import (
+    DoctorateAdmissionEducationFormView,
+    GeneralEducationAdmissionEducationFormView,
+    ContinuingEducationAdmissionEducationFormView,
+)
 from .form_tabs.extension_request import DoctorateAdmissionExtensionRequestFormView
 from .form_tabs.languages import DoctorateAdmissionLanguagesFormView
-from .form_tabs.person import DoctorateAdmissionPersonFormView
+from .form_tabs.person import (
+    DoctorateAdmissionPersonFormView,
+    GeneralEducationAdmissionPersonFormView,
+    ContinuingEducationAdmissionPersonFormView,
+)
 from .form_tabs.project import DoctorateAdmissionProjectFormView
 from .form_tabs.supervision import (
     DoctorateAdmissionRemoveActorView,
