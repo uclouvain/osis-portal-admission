@@ -57,15 +57,22 @@ from admission.contrib.forms.curriculum import (
     DoctorateAdmissionCurriculumEducationalExperienceForm,
     DoctorateAdmissionCurriculumEducationalExperienceYearFormSet,
     MINIMUM_CREDIT_NUMBER,
-    DoctorateAdmissionCurriculumEducationalExperienceYearForm,
 )
-from admission.contrib.views import DoctorateAdmissionCurriculumDetailView
 from admission.contrib.views.detail_tabs.curriculum import (
-    DoctorateAdmissionCurriculumMixin,
-    get_educational_experience_year_set_with_lost_years,
+    AdmissionCurriculumMixin,
+    get_educational_experience_year_set_with_lost_years, AdmissionCurriculumDetailView,
+)
+from admission.contrib.views.mixins import (
+    LoadDossierViewMixin,
+    LoadGeneralEducationDossierViewMixin,
+    LoadContinuingEducationDossierViewMixin,
 )
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.person import AdmissionPersonService
+from admission.services.person import (
+    AdmissionPersonService,
+    GeneralEducationAdmissionPersonService,
+    ContinuingEducationAdmissionPersonService,
+)
 
 __all__ = [
     "DoctorateAdmissionCurriculumEducationalExperienceDeleteView",
@@ -73,11 +80,21 @@ __all__ = [
     "DoctorateAdmissionCurriculumFormView",
     "DoctorateAdmissionCurriculumProfessionalExperienceDeleteView",
     "DoctorateAdmissionCurriculumProfessionalExperienceFormView",
+    "GeneralEducationAdmissionCurriculumEducationalExperienceDeleteView",
+    "GeneralEducationAdmissionCurriculumEducationalExperienceFormView",
+    "GeneralEducationAdmissionCurriculumFormView",
+    "GeneralEducationAdmissionCurriculumProfessionalExperienceDeleteView",
+    "GeneralEducationAdmissionCurriculumProfessionalExperienceFormView",
+    "ContinuingEducationAdmissionCurriculumEducationalExperienceDeleteView",
+    "ContinuingEducationAdmissionCurriculumEducationalExperienceFormView",
+    "ContinuingEducationAdmissionCurriculumFormView",
+    "ContinuingEducationAdmissionCurriculumProfessionalExperienceDeleteView",
+    "ContinuingEducationAdmissionCurriculumProfessionalExperienceFormView",
 ]
 
 
-class DoctorateAdmissionCurriculumFormMixin(
-    DoctorateAdmissionCurriculumMixin,
+class AdmissionCurriculumFormMixin(
+    AdmissionCurriculumMixin,
     WebServiceFormMixin,
     FormView,
     metaclass=ABCMeta,
@@ -85,9 +102,9 @@ class DoctorateAdmissionCurriculumFormMixin(
     pass
 
 
-class DoctorateAdmissionCurriculumFormView(
-    DoctorateAdmissionCurriculumDetailView,
-    DoctorateAdmissionCurriculumFormMixin,
+class AdmissionCurriculumFormView(
+    AdmissionCurriculumDetailView,
+    AdmissionCurriculumFormMixin,
 ):  # pylint: disable=too-many-ancestors
     form_class = DoctorateAdmissionCurriculumFileForm
     template_name = 'admission/doctorate/forms/curriculum.html'
@@ -96,15 +113,36 @@ class DoctorateAdmissionCurriculumFormView(
         return self.curriculum.file
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_curriculum_file(
+        self.service.update_curriculum_file(
             person=self.person,
             data=data,
             uuid=self.admission_uuid,
         )
 
 
-class DoctorateAdmissionCurriculumProfessionalExperienceFormView(
-    DoctorateAdmissionCurriculumFormMixin,
+class DoctorateAdmissionCurriculumFormView(
+    LoadDossierViewMixin,
+    AdmissionCurriculumFormView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionCurriculumFormView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionCurriculumFormView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionCurriculumFormView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionCurriculumFormView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService
+
+
+class AdmissionCurriculumProfessionalExperienceFormView(
+    AdmissionCurriculumFormMixin,
 ):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/curriculum_professional_experience.html'
     form_class = DoctorateAdmissionCurriculumProfessionalExperienceForm
@@ -122,14 +160,14 @@ class DoctorateAdmissionCurriculumProfessionalExperienceFormView(
 
     def call_webservice(self, data):
         if self.experience_id:
-            AdmissionPersonService.update_professional_experience(
+            self.service.update_professional_experience(
                 experience_id=self.experience_id,
                 person=self.person,
                 uuid=self.admission_uuid,
                 data=data,
             )
         else:
-            AdmissionPersonService.create_professional_experience(
+            self.service.create_professional_experience(
                 person=self.person,
                 uuid=self.admission_uuid,
                 data=data,
@@ -149,23 +187,64 @@ class DoctorateAdmissionCurriculumProfessionalExperienceFormView(
             return experience
 
 
-class DoctorateAdmissionCurriculumProfessionalExperienceDeleteView(
-    DoctorateAdmissionCurriculumFormMixin,
-    FormView,
+class DoctorateAdmissionCurriculumProfessionalExperienceFormView(
+    LoadDossierViewMixin,
+    AdmissionCurriculumProfessionalExperienceFormView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionCurriculumProfessionalExperienceFormView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionCurriculumProfessionalExperienceFormView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionCurriculumProfessionalExperienceFormView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionCurriculumProfessionalExperienceFormView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService
+
+
+class AdmissionCurriculumProfessionalExperienceDeleteView(
+    AdmissionCurriculumFormMixin,
 ):  # pylint: disable=too-many-ancestors
     form_class = forms.Form
     template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
 
     def call_webservice(self, _):
-        AdmissionPersonService.delete_professional_experience(
+        self.service.delete_professional_experience(
             experience_id=self.experience_id,
             person=self.person,
             uuid=self.admission_uuid,
         )
 
 
-class DoctorateAdmissionCurriculumEducationalExperienceDeleteView(
-    DoctorateAdmissionCurriculumFormMixin,
+class DoctorateAdmissionCurriculumProfessionalExperienceDeleteView(
+    LoadDossierViewMixin,
+    AdmissionCurriculumProfessionalExperienceDeleteView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionCurriculumProfessionalExperienceDeleteView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionCurriculumProfessionalExperienceDeleteView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionCurriculumProfessionalExperienceDeleteView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionCurriculumProfessionalExperienceDeleteView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService
+
+
+class AdmissionCurriculumEducationalExperienceDeleteView(
+    AdmissionCurriculumFormMixin,
     FormView,
 ):  # pylint: disable=too-many-ancestors
     extra_context = {
@@ -175,15 +254,36 @@ class DoctorateAdmissionCurriculumEducationalExperienceDeleteView(
     template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
 
     def call_webservice(self, _):
-        AdmissionPersonService.delete_educational_experience(
+        self.service.delete_educational_experience(
             experience_id=self.experience_id,
             person=self.person,
             uuid=self.admission_uuid,
         )
 
 
-class DoctorateAdmissionCurriculumEducationalExperienceFormView(
-    DoctorateAdmissionCurriculumMixin,
+class DoctorateAdmissionCurriculumEducationalExperienceDeleteView(
+    LoadDossierViewMixin,
+    AdmissionCurriculumEducationalExperienceDeleteView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionCurriculumEducationalExperienceDeleteView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionCurriculumEducationalExperienceDeleteView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionCurriculumEducationalExperienceDeleteView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionCurriculumEducationalExperienceDeleteView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService
+
+
+class AdmissionCurriculumEducationalExperienceFormView(
+    AdmissionCurriculumMixin,
     TemplateView,
 ):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/curriculum_educational_experience.html'
@@ -388,17 +488,38 @@ class DoctorateAdmissionCurriculumEducationalExperienceFormView(
 
         # Make the API request
         if self.experience_id:
-            AdmissionPersonService.update_educational_experience(
+            self.service.update_educational_experience(
                 experience_id=self.experience_id,
                 person=self.request.user.person,
                 uuid=self.admission_uuid,
                 data=data,
             )
         else:
-            AdmissionPersonService.create_educational_experience(
+            self.service.create_educational_experience(
                 person=self.request.user.person,
                 uuid=self.admission_uuid,
                 data=data,
             )
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+class DoctorateAdmissionCurriculumEducationalExperienceFormView(
+    LoadDossierViewMixin,
+    AdmissionCurriculumEducationalExperienceFormView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionCurriculumEducationalExperienceFormView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionCurriculumEducationalExperienceFormView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionCurriculumEducationalExperienceFormView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionCurriculumEducationalExperienceFormView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService

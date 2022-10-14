@@ -27,18 +27,27 @@ from django.conf import settings
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
-from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.person import AdmissionPersonService
+from admission.contrib.views.mixins import (
+    LoadDossierViewMixin,
+    LoadGeneralEducationDossierViewMixin,
+    LoadContinuingEducationDossierViewMixin,
+)
+from admission.services.person import (
+    AdmissionPersonService,
+    GeneralEducationAdmissionPersonService,
+    ContinuingEducationAdmissionPersonService,
+)
 from admission.services.reference import HighSchoolService, LanguageService
 
 
-class DoctorateAdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
+class AdmissionEducationDetailView(TemplateView):
     template_name = 'admission/doctorate/details/education.html'
+    service = AdmissionPersonService
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         # Person
-        high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
+        high_school_diploma = self.service.retrieve_high_school_diploma(
             person=self.request.user.person,
             uuid=self.admission_uuid,
         ).to_dict()
@@ -77,3 +86,24 @@ class DoctorateAdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
         elif high_school_diploma_alternative:
             context_data["high_school_diploma_alternative"] = high_school_diploma_alternative
         return context_data
+
+
+class DoctorateAdmissionEducationDetailView(
+    LoadDossierViewMixin,
+    AdmissionEducationDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionEducationDetailView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionEducationDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionEducationDetailView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionEducationDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService

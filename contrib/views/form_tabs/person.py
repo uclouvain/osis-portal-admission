@@ -29,18 +29,23 @@ from django.views.generic import FormView
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.person import IdentificationType
 from admission.contrib.forms.person import DoctorateAdmissionPersonForm
-from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.mixins import WebServiceFormMixin
-from admission.services.person import AdmissionPersonService
-
-
-class DoctorateAdmissionPersonFormView(
+from admission.contrib.views.mixins import (
     LoadDossierViewMixin,
-    WebServiceFormMixin,
-    FormView,
-):  # pylint: disable=too-many-ancestors
+    LoadContinuingEducationDossierViewMixin,
+    LoadGeneralEducationDossierViewMixin,
+)
+from admission.services.mixins import WebServiceFormMixin
+from admission.services.person import (
+    AdmissionPersonService,
+    ContinuingEducationAdmissionPersonService,
+    GeneralEducationAdmissionPersonService,
+)
+
+
+class AdmissionPersonFormView(WebServiceFormMixin, FormView):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/person.html'
     form_class = DoctorateAdmissionPersonForm
+    service = AdmissionPersonService
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,7 +55,7 @@ class DoctorateAdmissionPersonFormView(
 
     @cached_property
     def person_info(self):
-        return AdmissionPersonService.retrieve_person(self.person, uuid=self.admission_uuid).to_dict()
+        return self.service.retrieve_person(self.person, uuid=self.admission_uuid).to_dict()
 
     @property
     def resides_in_belgium(self):
@@ -108,4 +113,25 @@ class DoctorateAdmissionPersonFormView(
         return data
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_person(person=self.person, uuid=self.admission_uuid, **data)
+        self.service.update_person(person=self.person, data=data, uuid=self.admission_uuid)
+
+
+class DoctorateAdmissionPersonFormView(
+    LoadDossierViewMixin,
+    AdmissionPersonFormView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionPersonFormView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionPersonFormView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionPersonFormView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionPersonFormView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService
