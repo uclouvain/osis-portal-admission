@@ -25,16 +25,25 @@
 # ##############################################################################
 from django.views.generic import TemplateView
 
-from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.person import AdmissionPersonService
+from admission.contrib.views.mixins import (
+    LoadDossierViewMixin,
+    LoadGeneralEducationDossierViewMixin,
+    LoadContinuingEducationDossierViewMixin,
+)
+from admission.services.person import (
+    AdmissionPersonService,
+    GeneralEducationAdmissionPersonService,
+    ContinuingEducationAdmissionPersonService,
+)
 
 
-class DoctorateAdmissionCoordonneesDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
+class AdmissionCoordonneesDetailView(TemplateView):
     template_name = 'admission/doctorate/details/coordonnees.html'
+    service = AdmissionPersonService
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        coordonnees = AdmissionPersonService.retrieve_person_coordonnees(
+        coordonnees = self.service.retrieve_person_coordonnees(
             person=self.request.user.person,
             uuid=self.admission_uuid,
         ).to_dict()
@@ -43,3 +52,24 @@ class DoctorateAdmissionCoordonneesDetailView(LoadDossierViewMixin, TemplateView
         if coordonnees['contact']:
             context_data["show_contact"] = any(v for k, v in coordonnees['contact'].items())
         return context_data
+
+
+class DoctorateAdmissionCoordonneesDetailView(
+    LoadDossierViewMixin,
+    AdmissionCoordonneesDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = AdmissionPersonService
+
+
+class GeneralEducationAdmissionCoordonneesDetailView(
+    LoadGeneralEducationDossierViewMixin,
+    AdmissionCoordonneesDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = GeneralEducationAdmissionPersonService
+
+
+class ContinuingEducationAdmissionCoordonneesDetailView(
+    LoadContinuingEducationDossierViewMixin,
+    AdmissionCoordonneesDetailView,
+):  # pylint: disable=too-many-ancestors
+    service = ContinuingEducationAdmissionPersonService
