@@ -167,11 +167,27 @@ TAB_TREES = {
         # TODO documents
     },
     'general-education': {
+        Tab('personal', _('Personal data'), 'user'): [
+            Tab('person', _('Identification')),
+            Tab('coordonnees', _('Contact details')),
+        ],
+        Tab('experience', _('Previous experience'), 'list-alt'): [
+            Tab('education', _('Secondary studies')),
+            Tab('curriculum', _('Curriculum')),
+        ],
         Tab('general-education', _('General education'), 'graduation-cap'): [
             Tab('training-choice', _('Training choice')),
         ],
     },
     'continuing-education': {
+        Tab('personal', _('Personal data'), 'user'): [
+            Tab('person', _('Identification')),
+            Tab('coordonnees', _('Contact details')),
+        ],
+        Tab('experience', _('Previous experience'), 'list-alt'): [
+            Tab('education', _('Secondary studies')),
+            Tab('curriculum', _('Curriculum')),
+        ],
         Tab('continuing-education', _('Continuing education'), 'graduation-cap'): [
             Tab('training-choice', _('Training choice')),
         ],

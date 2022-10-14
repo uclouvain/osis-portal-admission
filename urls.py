@@ -94,6 +94,98 @@ doctorate_curriculum_update_paths = [
     ),
 ]
 
+general_education_curriculum_read_paths = [
+    path(
+        "educational/<uuid:experience_id>/",
+        views.GeneralEducationAdmissionCurriculumEducationalExperienceDetailView.as_view(),
+        name="educational_read",
+    ),
+    path(
+        "professional/<uuid:experience_id>/",
+        views.GeneralEducationAdmissionCurriculumProfessionalExperienceDetailView.as_view(),
+        name="professional_read",
+    ),
+]
+
+general_education_curriculum_update_paths = [
+    path(
+        "educational/<uuid:experience_id>/update",
+        views.GeneralEducationAdmissionCurriculumEducationalExperienceFormView.as_view(),
+        name="educational_update",
+    ),
+    path(
+        "educational/<uuid:experience_id>/delete",
+        views.GeneralEducationAdmissionCurriculumEducationalExperienceDeleteView.as_view(),
+        name="educational_delete",
+    ),
+    path(
+        "educational/create",
+        views.GeneralEducationAdmissionCurriculumEducationalExperienceFormView.as_view(),
+        name="educational_create",
+    ),
+    path(
+        "professional/<uuid:experience_id>/update",
+        views.GeneralEducationAdmissionCurriculumProfessionalExperienceFormView.as_view(),
+        name="professional_update",
+    ),
+    path(
+        "professional/<uuid:experience_id>/delete",
+        views.GeneralEducationAdmissionCurriculumProfessionalExperienceDeleteView.as_view(),
+        name="professional_delete",
+    ),
+    path(
+        "professional/create",
+        views.GeneralEducationAdmissionCurriculumProfessionalExperienceFormView.as_view(),
+        name="professional_create",
+    ),
+]
+
+continuing_education_curriculum_read_paths = [
+    path(
+        "educational/<uuid:experience_id>/",
+        views.ContinuingEducationAdmissionCurriculumEducationalExperienceDetailView.as_view(),
+        name="educational_read",
+    ),
+    path(
+        "professional/<uuid:experience_id>/",
+        views.ContinuingEducationAdmissionCurriculumProfessionalExperienceDetailView.as_view(),
+        name="professional_read",
+    ),
+]
+
+continuing_education_curriculum_update_paths = [
+    path(
+        "educational/<uuid:experience_id>/update",
+        views.ContinuingEducationAdmissionCurriculumEducationalExperienceFormView.as_view(),
+        name="educational_update",
+    ),
+    path(
+        "educational/<uuid:experience_id>/delete",
+        views.ContinuingEducationAdmissionCurriculumEducationalExperienceDeleteView.as_view(),
+        name="educational_delete",
+    ),
+    path(
+        "educational/create",
+        views.ContinuingEducationAdmissionCurriculumEducationalExperienceFormView.as_view(),
+        name="educational_create",
+    ),
+    path(
+        "professional/<uuid:experience_id>/update",
+        views.ContinuingEducationAdmissionCurriculumProfessionalExperienceFormView.as_view(),
+        name="professional_update",
+    ),
+    path(
+        "professional/<uuid:experience_id>/delete",
+        views.ContinuingEducationAdmissionCurriculumProfessionalExperienceDeleteView.as_view(),
+        name="professional_delete",
+    ),
+    path(
+        "professional/create",
+        views.ContinuingEducationAdmissionCurriculumProfessionalExperienceFormView.as_view(),
+        name="professional_create",
+    ),
+]
+
 creation_paths = [
     path("person", views.DoctorateAdmissionPersonFormView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
@@ -169,20 +261,40 @@ doctorate_paths = [
 ]
 
 update_general_education_paths = [
+    path("person", views.GeneralEducationAdmissionPersonFormView.as_view(), name="person"),
+    path("coordonnees", views.GeneralEducationAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
+    path("curriculum", views.GeneralEducationAdmissionCurriculumFormView.as_view(), name="curriculum"),
+    path("curriculum/", include((general_education_curriculum_update_paths, "curriculum"))),
+    path("education", views.GeneralEducationAdmissionEducationFormView.as_view(), name="education"),
     path("training-choice", views.GeneralAdmissionUpdateTrainingChoiceFormView.as_view(), name="training-choice"),
 ]
 
 general_education_paths = [
+    path("person", views.GeneralEducationAdmissionPersonDetailView.as_view(), name="person"),
+    path("coordonnees", views.GeneralEducationAdmissionCoordonneesDetailView.as_view(), name="coordonnees"),
+    path("curriculum", views.GeneralEducationAdmissionCurriculumDetailView.as_view(), name="curriculum"),
+    path("curriculum/", include((general_education_curriculum_read_paths, "curriculum"))),
+    path("education", views.GeneralEducationAdmissionEducationDetailView.as_view(), name="education"),
     path("training-choice", views.GeneralEducationTrainingChoiceDetailView.as_view(), name="training-choice"),
     path("cancel", views.GeneralEducationAdmissionCancelView.as_view(), name="cancel"),
     path("update/", include((update_general_education_paths, "update"))),
 ]
 
 update_continuing_education_paths = [
+    path("person", views.ContinuingEducationAdmissionPersonFormView.as_view(), name="person"),
+    path("coordonnees", views.ContinuingEducationAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
+    path("curriculum", views.ContinuingEducationAdmissionCurriculumFormView.as_view(), name="curriculum"),
+    path("curriculum/", include((continuing_education_curriculum_update_paths, "curriculum"))),
+    path("education", views.ContinuingEducationAdmissionEducationFormView.as_view(), name="education"),
     path("training-choice", views.ContinuingAdmissionUpdateTrainingChoiceFormView.as_view(), name="training-choice"),
 ]
 
 continuing_education_paths = [
+    path("person", views.ContinuingEducationAdmissionPersonDetailView.as_view(), name="person"),
+    path("coordonnees", views.ContinuingEducationAdmissionCoordonneesDetailView.as_view(), name="coordonnees"),
+    path("curriculum", views.ContinuingEducationAdmissionCurriculumDetailView.as_view(), name="curriculum"),
+    path("curriculum/", include((continuing_education_curriculum_read_paths, "curriculum"))),
+    path("education", views.ContinuingEducationAdmissionEducationDetailView.as_view(), name="education"),
     path("training-choice", views.ContinuingEducationTrainingChoiceDetailView.as_view(), name="training-choice"),
     path("cancel", views.ContinuingEducationAdmissionCancelView.as_view(), name="cancel"),
     path("update/", include((update_continuing_education_paths, "update"))),

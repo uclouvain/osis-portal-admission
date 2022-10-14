@@ -52,7 +52,7 @@ NAMESPACE_KEY_BY_ADMISSION_TYPE = {
 }
 
 
-class AdmissionTrainingChoiceFormMixinView(WebServiceFormMixin, FormView):
+class AdmissionTrainingChoiceFormMixinView(WebServiceFormMixin, FormView):  # pylint: disable=too-many-ancestors
     template_name = 'admission/admission/forms/training_choice.html'
     form_class = TrainingChoiceForm
 
@@ -69,7 +69,7 @@ class AdmissionTrainingChoiceFormMixinView(WebServiceFormMixin, FormView):
         return kwargs
 
 
-class AdmissionCreateTrainingChoiceFormView(AdmissionTrainingChoiceFormMixinView):
+class AdmissionCreateTrainingChoiceFormView(AdmissionTrainingChoiceFormMixinView):  # pylint: disable=too-many-ancestors
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.uuid: Optional[str] = None
@@ -148,7 +148,7 @@ class AdmissionCreateTrainingChoiceFormView(AdmissionTrainingChoiceFormMixinView
 class DoctorateAdmissionUpdateTrainingChoiceFormView(
     LoadDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
-):
+):  # pylint: disable=too-many-ancestors
     def get_initial(self):
         return {
             'admission_type': self.admission.type_admission,
@@ -179,7 +179,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormView(
 class GeneralAdmissionUpdateTrainingChoiceFormView(
     LoadGeneralEducationDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
-):
+):  # pylint: disable=too-many-ancestors
     def get_initial(self):
         return {
             'general_education_training': get_training_id(self.admission.formation),
@@ -213,7 +213,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormView(
 class ContinuingAdmissionUpdateTrainingChoiceFormView(
     LoadContinuingEducationDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
-):
+):  # pylint: disable=too-many-ancestors
     def get_initial(self):
         return {
             'continuing_education_training': get_training_id(self.admission.formation),

@@ -40,8 +40,12 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         context = super().get_context_data(**kwargs)
         context['detail_base_template'] = self.detail_base_template
         context['form_base_template'] = self.form_base_template
-        context['base_namespace'] = ':'.join(self.request.resolver_match.namespaces[:2])
+        context['base_namespace'] = self.base_namespace
         return context
+
+    @cached_property
+    def base_namespace(self):
+        return ':'.join(self.request.resolver_match.namespaces[:2])
 
     @cached_property
     def admission_uuid(self):

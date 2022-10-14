@@ -32,13 +32,22 @@ from admission.contrib.views.mixins import (
 )
 
 
-class GeneralEducationTrainingChoiceDetailView(LoadGeneralEducationDossierViewMixin, TemplateView):
+class GeneralEducationTrainingChoiceDetailView(
+    LoadGeneralEducationDossierViewMixin,
+    TemplateView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/admission/general_education/details/training_choice.html'
 
 
-class ContinuingEducationTrainingChoiceDetailView(LoadContinuingEducationDossierViewMixin, TemplateView):
+class ContinuingEducationTrainingChoiceDetailView(
+    LoadContinuingEducationDossierViewMixin,
+    TemplateView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/admission/continuing_education/details/training_choice.html'
 
 
-class DoctorateTrainingChoiceDetailView(LoadDossierViewMixin, TemplateView):
+class DoctorateTrainingChoiceDetailView(
+    LoadDossierViewMixin,
+    TemplateView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/training_choice.html'
