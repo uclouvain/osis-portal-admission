@@ -33,16 +33,9 @@ from django import template
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import resolve_url
-from django.template.defaulttags import url
 from django.utils.safestring import SafeString
 from django.utils.translation import get_language, gettext_lazy as _, pgettext
-from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
 
-from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-
-from osis_admission_sdk.model.proposition_search_continuing_education_propositions import (
-    PropositionSearchContinuingEducationPropositions,
-)
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
@@ -50,10 +43,6 @@ from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from admission.services.reference import CountriesService
 from admission.utils.utils import to_snake_case
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
-from osis_admission_sdk.model.proposition_search_doctorate_propositions import PropositionSearchDoctoratePropositions
-from osis_admission_sdk.model.proposition_search_general_education_propositions import (
-    PropositionSearchGeneralEducationPropositions,
-)
 
 register = template.Library()
 
@@ -145,7 +134,7 @@ TAB_TREES = {
             Tab('supervision', _('Supervision')),
         ],
         # TODO specifics
-        Tab('completion', _('Completion'), 'check-circle'): [
+        Tab('completion', _('Completion'), 'flag'): [
             Tab('accounting', _('Accounting')),
             Tab('confirm', _('Confirmation')),
         ],
@@ -343,7 +332,6 @@ def field_data(
     if inline is True:
         name = _("%(label)s:") % {'label': name}
         css_class = (css_class + ' inline-field-data') if css_class else 'inline-field-data'
-
     return {
         'name': name,
         'data': data,

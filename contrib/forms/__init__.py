@@ -28,7 +28,7 @@ from functools import partial
 
 from django import forms
 from django.conf import settings
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _, gettext
 
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.campus import AdmissionCampusService
@@ -253,3 +253,11 @@ class BooleanRadioSelect(forms.RadioSelect):
             context['widget']['optgroups'][0][1][0]['selected'] = True
             context['widget']['optgroups'][0][1][0]['attrs']['checked'] = True
         return context
+
+
+# Add django-localflavours translations
+gettext("%(character)s is not a valid character for IBAN.")
+gettext("%(country_code)s IBANs must contain %(number)s characters.")
+gettext("%(country_code)s is not a valid country code for IBAN.")
+gettext("%(country_code)s IBANs are not allowed in this field.")
+gettext("Not a valid IBAN.")
