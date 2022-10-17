@@ -294,7 +294,6 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'extension-request': set(),
     'training': set(),
     'accounting': {
-        PropositionBusinessException.PromoteurDeReferenceManquantException,
         PropositionBusinessException.AbsenceDeDetteNonCompleteeException,
         PropositionBusinessException.ReductionDesDroitsInscriptionNonCompleteeException,
         PropositionBusinessException.AssimilationNonCompleteeException,
