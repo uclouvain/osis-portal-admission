@@ -41,6 +41,22 @@ msgid "%(added)s ECTS added with %(validated)s validated by the CDD."
 msgstr "%(added)s ECTS ajoutés dont %(validated)s validés par la CDD."
 
 #, python-format
+msgid "%(character)s is not a valid character for IBAN."
+msgstr "%(character)s n'est pas un caractère valide pour l'IBAN."
+
+#, python-format
+msgid "%(country_code)s IBANs are not allowed in this field."
+msgstr "Les IBAN %(country_code)s ne sont pas autorisés dans ce champ."
+
+#, python-format
+msgid "%(country_code)s IBANs must contain %(number)s characters."
+msgstr "Les IBANs de %(country_code)s doivent contenir %(number)s caractères."
+
+#, python-format
+msgid "%(country_code)s is not a valid country code for IBAN."
+msgstr "%(country_code)s n'est pas un code pays valide pour l'IBAN."
+
+#, python-format
 msgid "%(label)s:"
 msgstr "%(label)s :"
 
@@ -684,6 +700,15 @@ msgstr ""
 "Copie recto-verso de la CIRE - séjour illimité (Carte B) ou copie de la "
 "carte d'étranger - séjour illimité (Carte C)"
 
+msgid ""
+"Copy of both sides of the Certificate of Registration in the Register of "
+"Foreigners CIRE - unlimited stay (B card) or copy of the foreigner's card - "
+"unlimited stay (C card)"
+msgstr ""
+"Copie recto-verso du Certificat d'Inscription au Registre des Etrangers CIRE "
+"- séjour illimité (Carte B) ou copie de la carte d'étranger - séjour "
+"illimité (Carte C)"
+
 msgid "Copy of both sides of the EC long-term resident card (D card)"
 msgstr "Copie recto-verso de la carte de résident longue durée-CE (Carte D)"
 
@@ -701,10 +726,10 @@ msgstr ""
 #, python-format
 msgid ""
 "Copy of both sides of the long-term residence permit in Belgium of "
-"%(person_concerned)s"
+"%(person_concerned)s (B, C, D, F, F+ or M cards)"
 msgstr ""
 "Copie recto-verso du titre de séjour de longue durée en Belgique de "
-"%(person_concerned)s"
+"%(person_concerned)s (cartes B, C, D, F, F+ ou M)"
 
 msgid ""
 "Copy of both sides of the permanent residence card of a family member of a "
@@ -1870,6 +1895,9 @@ msgstr "Parcours non académique"
 msgid "None of these proposals are relevant to me"
 msgstr "Aucune de ces propositions ne me correspond"
 
+msgid "Not a valid IBAN."
+msgstr "IBAN invalide."
+
 msgid "Not specified"
 msgstr "Non renseigné(e)"
 
@@ -2675,6 +2703,9 @@ msgstr "Il s'agit d'un diplôme"
 
 msgid "This language is set more than once."
 msgstr "Cette langue est définie plusieurs fois."
+
+msgid "This number has been checked"
+msgstr "Ce numéro a été vérifié"
 
 msgid "This value cannot be greater than the entered credits number"
 msgstr "Cette valeur ne peut être supérieure au nombre de crédits inscrits"

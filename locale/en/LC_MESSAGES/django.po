@@ -35,6 +35,22 @@ msgid "%(added)s ECTS added with %(validated)s validated by the CDD."
 msgstr ""
 
 #, python-format
+msgid "%(character)s is not a valid character for IBAN."
+msgstr ""
+
+#, python-format
+msgid "%(country_code)s IBANs are not allowed in this field."
+msgstr ""
+
+#, python-format
+msgid "%(country_code)s IBANs must contain %(number)s characters."
+msgstr ""
+
+#, python-format
+msgid "%(country_code)s is not a valid country code for IBAN."
+msgstr ""
+
+#, python-format
 msgid "%(label)s:"
 msgstr ""
 
@@ -623,6 +639,12 @@ msgid ""
 "foreigner's card - unlimited stay (C card)"
 msgstr ""
 
+msgid ""
+"Copy of both sides of the Certificate of Registration in the Register of "
+"Foreigners CIRE - unlimited stay (B card) or copy of the foreigner's card - "
+"unlimited stay (C card)"
+msgstr ""
+
 msgid "Copy of both sides of the EC long-term resident card (D card)"
 msgstr ""
 
@@ -638,7 +660,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Copy of both sides of the long-term residence permit in Belgium of "
-"%(person_concerned)s"
+"%(person_concerned)s (B, C, D, F, F+ or M cards)"
 msgstr ""
 
 msgid ""
@@ -1671,6 +1693,9 @@ msgstr ""
 msgid "None of these proposals are relevant to me"
 msgstr ""
 
+msgid "Not a valid IBAN."
+msgstr ""
+
 msgid "Not specified"
 msgstr ""
 
@@ -2410,6 +2435,9 @@ msgid "This is a diploma from"
 msgstr ""
 
 msgid "This language is set more than once."
+msgstr ""
+
+msgid "This number has been checked"
 msgstr ""
 
 msgid "This value cannot be greater than the entered credits number"
