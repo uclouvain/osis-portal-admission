@@ -39,8 +39,10 @@ from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
 
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TypeFormation
+from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
+from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.scholarship import Scholarship
@@ -53,8 +55,20 @@ class AutocompleteTestCase(TestCase):
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
         api.return_value.list_doctorat_dtos.return_value = [
-            Mock(sigle='FOOBAR', intitule='Foobar', annee=2021, sigle_entite_gestion="CDE", campus="Louvain-La-Neuve"),
-            Mock(sigle='BARBAZ', intitule='Barbaz', annee=2021, sigle_entite_gestion="AZERT", campus="Mons"),
+            DoctoratDTO(
+                sigle='FOOBAR',
+                intitule='Foobar',
+                annee=2021,
+                sigle_entite_gestion="CDE",
+                campus="Louvain-La-Neuve",
+            ),
+            DoctoratDTO(
+                sigle='BARBAZ',
+                intitule='Barbaz',
+                annee=2021,
+                sigle_entite_gestion="AZERT",
+                campus="Mons",
+            ),
         ]
         url = reverse('admission:autocomplete:doctorate')
         response = self.client.get(url, {'forward': json.dumps({'sector': 'SSH'}), 'q': 'foo'})
@@ -438,8 +452,18 @@ class AutocompleteTestCase(TestCase):
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_general_education_training(self, api):
         api.return_value.list_formation_generale_dtos.return_value = [
-            FormationGeneraleDTO(sigle='FOOBAR', intitule='Foobar', annee=2021, campus="Louvain-La-Neuve"),
-            FormationGeneraleDTO(sigle='BARBAZ', intitule='Barbaz', annee=2021, campus="Mons"),
+            FormationGeneraleDTO(
+                sigle='FOOBAR',
+                intitule='Foobar',
+                annee=2021,
+                campus="Louvain-La-Neuve",
+            ),
+            FormationGeneraleDTO(
+                sigle='BARBAZ',
+                intitule='Barbaz',
+                annee=2021,
+                campus="Mons",
+            ),
         ]
         url = reverse('admission:autocomplete:general-education')
         response = self.client.get(
@@ -460,11 +484,21 @@ class AutocompleteTestCase(TestCase):
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_continuing_education_training(self, api):
         api.return_value.list_formation_generale_dtos.return_value = [
-            FormationContinueDTO(sigle='FOOBAR', intitule='Foobar', annee=2021, campus="Louvain-La-Neuve"),
-            FormationContinueDTO(sigle='BARBAZ', intitule='Barbaz', annee=2021, campus="Mons"),
+            FormationContinueDTO(
+                sigle='FOOBAR',
+                intitule='Foobar',
+                annee=2021,
+                campus="Louvain-La-Neuve",
+            ),
+            FormationContinueDTO(
+                sigle='BARBAZ',
+                intitule='Barbaz',
+                annee=2021,
+                campus="Mons",
+            ),
         ]
         url = reverse('admission:autocomplete:general-education')
-        response = self.client.get(url, {'forward': json.dumps({'campus': ' '}), 'q': 'ar'})
+        response = self.client.get(url, {'forward': json.dumps({'campus': EMPTY_VALUE}), 'q': 'ar'})
         results = [
             {
                 'id': 'FOOBAR-2021',

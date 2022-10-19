@@ -1,6 +1,7 @@
 import re
 from typing import Union
 
+from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.scholarship import Scholarship
 
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
@@ -36,8 +37,12 @@ def format_high_school_title(high_school: HighSchool):
     )
 
 
-def format_training(training: Union[FormationContinueDTO, FormationGeneraleDTO]):
+def format_training(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
     return '{intitule} ({campus}) - {sigle}'.format_map(training)
+
+
+def format_training_with_year(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
+    return '{annee} - {intitule} ({campus}) - {sigle}'.format_map(training)
 
 
 def format_scholarship(scholarship: Scholarship):
