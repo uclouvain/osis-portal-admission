@@ -90,7 +90,7 @@
     </div>
   {% endif %}
 
-  {% if doctorate|can_make_action:'submit_training' %}
+  {% if activities and doctorate|can_make_action:'submit_training' %}
     {# Special error handling #}
     {% if form.non_field_errors %}
       <div class="alert alert-danger alert-dismissable alert-link">
@@ -102,16 +102,18 @@
     {% csrf_token %}
   {% endif %}
 
-{% for activity in activities %}
-  {% firstof 0 activity.category|lower|add:'.html' as template_name %}
-  {% if not activity.parent %}
-    {% include "admission/doctorate/details/training/"|add:template_name %}
-  {% endif %}
-  {% empty %}
-  {% trans "No activity created yet" %}
-{% endfor %}
+  <div id="activity-list">
+  {% for activity in activities %}
+    {% firstof 0 activity.category|lower|add:'.html' as template_name %}
+    {% if not activity.parent %}
+      {% include "admission/doctorate/details/training/"|add:template_name %}
+    {% endif %}
+    {% empty %}
+    {% trans "No activity created yet" %}
+  {% endfor %}
+  </div>
 
-{% if doctorate|can_make_action:'submit_training' %}
+{% if activities and doctorate|can_make_action:'submit_training' %}
     <div id="confirm-submit-modal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -221,7 +223,7 @@
 
     function apply_filters() {
       const reStatus = new RegExp(`\\b${current_filter_status}\\b`);
-      $('#activities .panel').each(function () {
+      $('#activity-list .panel').each(function () {
         $(this).show();
         if ((current_filter_type !== ALL_VALUES && $(this).data('type') !== current_filter_type)
           || (current_filter_status !== ALL_VALUES && !$(this).data('status').match(reStatus))) {

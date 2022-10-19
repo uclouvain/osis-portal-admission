@@ -316,6 +316,16 @@ class TrainingActivityAssentView(LoadDoctorateViewMixin, WebServiceFormMixin, Fo
 
     def get_context_data(self, **kwargs):
         kwargs['activity'] = self.activity
+        kwargs['object'] = (
+            Template(
+                """{% load admission %}
+            {% firstof 0 activity.category|lower|add:'.html' as template_name %}
+            {% include "admission/doctorate/details/training/_activity_title.html" %}
+            """
+            )
+            .render(Context({'activity': self.activity, 'request': self.request}))
+            .strip()
+        )
         return super().get_context_data(**kwargs)
 
     @cached_property

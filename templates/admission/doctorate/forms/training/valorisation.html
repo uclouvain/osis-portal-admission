@@ -36,11 +36,11 @@
 
 <p>{% lorem %}</p>
 
-{% bootstrap_field form.title form_group_class="form-group required_field" %}
-{% bootstrap_field form.subtitle form_group_class="form-group required_field" %}
+{% bootstrap_field form.title form_group_class="form-group required_field" placeholder="" %}
+{% bootstrap_field form.subtitle form_group_class="form-group required_field" placeholder="" %}
 {% bootstrap_field form.summary form_group_class="form-group required_field" %}
 {% bootstrap_field form.participating_proof %}
 <div class="row">
-  {% bootstrap_field form.ects form_group_class="form-group col-md-4 required_field" %}
+  {% bootstrap_field form.ects form_group_class="form-group col-md-4 required_field" placeholder="" %}
 </div>
-{% bootstrap_field form.comment %}
+{% bootstrap_field form.comment placeholder="" %}

@@ -41,13 +41,13 @@
 </div>
 <div class="row">
   {% bootstrap_field form.country form_group_class="form-group col-md-4 required_field" %}
-  {% bootstrap_field form.city form_group_class="form-group col-md-4 required_field" %}
+  {% bootstrap_field form.city form_group_class="form-group col-md-4 required_field" placeholder="" %}
 </div>
-{% bootstrap_field form.organizing_institution form_group_class="form-group required_field" %}
+{% bootstrap_field form.organizing_institution form_group_class="form-group required_field" placeholder="" %}
 {% bootstrap_field form.website placeholder="https://" %}
-{% bootstrap_field form.title form_group_class="form-group required_field" %}
-{% bootstrap_field form.authors form_group_class="form-group required_field" %}
+{% bootstrap_field form.title form_group_class="form-group required_field" placeholder="" %}
+{% bootstrap_field form.authors form_group_class="form-group required_field" placeholder="" %}
 
 <h3>{% trans "Participation" %}</h3>
 {% bootstrap_field form.participating_proof %}
-{% bootstrap_field form.comment %}
+{% bootstrap_field form.comment placeholder="" %}

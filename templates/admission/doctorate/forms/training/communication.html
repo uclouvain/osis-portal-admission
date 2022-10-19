@@ -43,7 +43,7 @@
 <div class="row">
   {% bootstrap_field form.subtype form_group_class="form-group col-md-4 required_field" %}
 </div>
-{% bootstrap_field form.title form_group_class="form-group required_field" %}
+{% bootstrap_field form.title form_group_class="form-group required_field" placeholder="" %}
 <div class="row">
   {% bootstrap_field form.start_date form_group_class="form-group col-md-4 required_field" %}
   {% bootstrap_field form.is_online form_group_class="form-group col-md-4 required_field" %}
@@ -51,19 +51,19 @@
 </div>
 <div class="row">
   {% bootstrap_field form.country form_group_class="form-group col-md-4 required_field" %}
-  {% bootstrap_field form.city form_group_class="form-group col-md-4 required_field" %}
+  {% bootstrap_field form.city form_group_class="form-group col-md-4 required_field" placeholder="" %}
 </div>
-{% bootstrap_field form.organizing_institution form_group_class="form-group required_field" %}
+{% bootstrap_field form.organizing_institution form_group_class="form-group required_field" placeholder="" %}
 {% bootstrap_field form.website placeholder="https://" %}
 
 <h3>{% trans "Description of your communication" %}</h3>
 
-{% bootstrap_field form.subtitle form_group_class="form-group required_field" %}
+{% bootstrap_field form.subtitle form_group_class="form-group required_field" placeholder="" %}
 {% bootstrap_field form.summary %}
 {% bootstrap_field form.acceptation_proof form_group_class="form-group required_field acceptation-proof" %}
 <div class="row">
-  {% bootstrap_field form.dial_reference form_group_class="form-group col-md-4" %}
-  {% bootstrap_field form.ects form_group_class="form-group col-md-4 required_field" %}
+  {% bootstrap_field form.dial_reference form_group_class="form-group col-md-4" placeholder="" %}
+  {% bootstrap_field form.ects form_group_class="form-group col-md-4 required_field" placeholder="" %}
 </div>
 {% bootstrap_field form.participating_proof  form_group_class="form-group required_field"  %}
-{% bootstrap_field form.comment %}
+{% bootstrap_field form.comment placeholder="" %}
