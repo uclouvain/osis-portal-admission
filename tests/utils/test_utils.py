@@ -30,6 +30,7 @@ from osis_organisation_sdk.model.entite import Entite
 
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.utils import *
+from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.scholarship import Scholarship
@@ -117,20 +118,30 @@ class UtilsTestCase(TestCase):
     def test_format_training_for_continuing_education(self):
         formation = FormationContinueDTO(
             sigle='INFO-1',
-            campus='Louvain-La-Neuve',
+            campus='Mons',
             intitule='Certificat en informatique',
             annee=2020,
         )
-        self.assertEqual(format_training(formation), 'Certificat en informatique (Louvain-La-Neuve) - INFO-1')
+        self.assertEqual(format_training(formation), 'Certificat en informatique (Mons) - INFO-1')
 
     def test_format_training_for_general_education(self):
         formation = FormationGeneraleDTO(
             sigle='INFO-1',
-            campus='Louvain-La-Neuve',
+            campus='Mons',
             intitule='Master en informatique',
             annee=2020,
         )
-        self.assertEqual(format_training(formation), 'Master en informatique (Louvain-La-Neuve) - INFO-1')
+        self.assertEqual(format_training(formation), 'Master en informatique (Mons) - INFO-1')
+
+    def test_format_training_with_year_for_doctorate(self):
+        formation = DoctoratDTO(
+            sigle='FOOBAR',
+            intitule='Foobar',
+            annee=2021,
+            sigle_entite_gestion="CDE",
+            campus="Mons",
+        )
+        self.assertEqual(format_training_with_year(formation), '2021 - Foobar (Mons) - FOOBAR')
 
     def test_format_scholarship_with_long_name_and_short_name(self):
         scholarship = Scholarship(
@@ -146,10 +157,22 @@ class UtilsTestCase(TestCase):
 
     def test_split_training_id(self):
         training_id = 'INFO1-2020'
-        self.assertEqual(split_training_id(training_id), ('INFO1', '2020',))
+        self.assertEqual(
+            split_training_id(training_id),
+            (
+                'INFO1',
+                '2020',
+            ),
+        )
 
         training_id = 'INF-1234-2020'
-        self.assertEqual(split_training_id(training_id), ('INF-1234', '2020',))
+        self.assertEqual(
+            split_training_id(training_id),
+            (
+                'INF-1234',
+                '2020',
+            ),
+        )
 
         training_id = 'INFO1-0'
         self.assertEqual(split_training_id(training_id), tuple())

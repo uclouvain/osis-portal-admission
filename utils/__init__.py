@@ -7,6 +7,7 @@ from .utils import (
     format_scholarship,
     split_training_id,
     get_training_id,
+    format_training_with_year,
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     'format_training',
     'split_training_id',
     'get_training_id',
+    'format_training_with_year',
 ]
