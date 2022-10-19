@@ -51,7 +51,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'academic_year': year,
                     'title': 'Formation 1',
                     'title_en': 'Training 1',
-                    'enrollment_campus': {
+                    'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
                     'education_group_type': 'MASTER_MA_120',
@@ -64,7 +64,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'academic_year': year,
                     'title': 'Formation 2',
                     'title_en': 'Training 2',
-                    'enrollment_campus': {
+                    'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
                     'education_group_type': 'CERTIFICATE_OF_PARTICIPATION',
@@ -77,7 +77,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'academic_year': year,
                     'title': 'Formation 3',
                     'title_en': 'Training 3',
-                    'enrollment_campus': {
+                    'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
                     'education_group_type': 'PHD',
@@ -90,7 +90,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'academic_year': year,
                     'title': 'Formation 4',
                     'title_en': 'Training 4',
-                    'enrollment_campus': {
+                    'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
                     'education_group_type': 'PHD',
@@ -103,7 +103,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'academic_year': year,
                     'title': 'Formation 5',
                     'title_en': 'Training 5',
-                    'enrollment_campus': {
+                    'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
                     'education_group_type': 'PHD',
@@ -136,9 +136,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
 
     @classmethod
     def get_campuses(cls, **kwargs):
-        return {
-            'results': cls.campuses,
-        }
+        return cls.campuses
 
     @classmethod
     def get_scholarships(cls, **kwargs):
@@ -303,13 +301,33 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         ]
 
         cls.general_trainings = [
-            FormationContinueDTO(sigle='FOOBAR', intitule='Foobar', annee=2021, campus="Louvain-La-Neuve"),
-            FormationContinueDTO(sigle='BARBAZ', intitule='Barbaz', annee=2021, campus="Mons"),
+            FormationContinueDTO(
+                sigle='FOOBAR',
+                intitule='Foobar',
+                annee=2021,
+                campus="Louvain-La-Neuve",
+            ),
+            FormationContinueDTO(
+                sigle='BARBAZ',
+                intitule='Barbaz',
+                annee=2021,
+                campus="Mons",
+            ),
         ]
 
         cls.continuing_trainings = [
-            FormationGeneraleDTO(sigle='FOOBAR', intitule='Foobar', annee=2021, campus="Louvain-La-Neuve"),
-            FormationGeneraleDTO(sigle='BARBAZ', intitule='Barbaz', annee=2021, campus="Mons"),
+            FormationGeneraleDTO(
+                sigle='FOOBAR',
+                intitule='Foobar',
+                annee=2021,
+                campus="Louvain-La-Neuve",
+            ),
+            FormationGeneraleDTO(
+                sigle='BARBAZ',
+                intitule='Barbaz',
+                annee=2021,
+                campus="Mons",
+            ),
         ]
 
         cls.campuses = [
@@ -336,14 +354,13 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_proposition_api.return_value.update_doctorate_training_choice.side_effect = self.init_training_choice
         self.addCleanup(propositions_api_patcher.stop)
 
-        # Mock admission sdk api
+        # Mock autocomplete sdk api
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")
         self.mock_autocomplete_api = autocomplete_api_patcher.start()
         self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = self.sectors
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = self.doctorate_trainings
         self.mock_autocomplete_api.return_value.list_formation_generale_dtos.return_value = self.continuing_trainings
         self.mock_autocomplete_api.return_value.list_formation_generale_dtos.return_value = self.general_trainings
-        self.mock_autocomplete_api.return_value.list_campus.side_effect = self.get_campuses
         self.mock_autocomplete_api.return_value.list_scholarships.return_value = {
             'results': self.mock_scholarships,
         }
@@ -361,5 +378,11 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_education_group_api = education_group_api_patcher.start()
         self.addCleanup(education_group_api_patcher.stop)
         self.mock_education_group_api.return_value.trainings_read.side_effect = self.get_training
+
+        # Mock campus sdk api
+        campus_api_patcher = patch("osis_admission_sdk.api.campus_api.CampusApi")
+        self.mock_campus_api = campus_api_patcher.start()
+        self.mock_campus_api.return_value.list_campus.side_effect = self.get_campuses
+        self.addCleanup(scholarships_api_patcher.stop)
 
         self.client.force_login(self.person.user)

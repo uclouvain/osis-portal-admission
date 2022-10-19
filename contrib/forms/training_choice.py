@@ -66,7 +66,7 @@ def get_training_choices(training):
             ),
             '{name} ({campus}) - {acronym}'.format(
                 name=training['title'] if get_language() == settings.LANGUAGE_CODE else training['title_en'],
-                campus=training['enrollment_campus'].get('name'),
+                campus=training['main_teaching_campus'].get('name'),
                 acronym=training['acronym'],
             ),
         )
