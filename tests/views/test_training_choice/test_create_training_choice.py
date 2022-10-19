@@ -49,7 +49,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertEqual(
             form.fields['campus'].choices,
             [
-                (' ', _('All')),
+                (EMPTY_VALUE, _('All')),
                 (self.louvain_campus_uuid, 'Louvain-La-Neuve'),
                 (self.mons_campus_uuid, 'Mons'),
             ],

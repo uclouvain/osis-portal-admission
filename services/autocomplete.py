@@ -80,13 +80,6 @@ class AdmissionAutocompleteService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def get_campus(cls, person, search=''):
-        return AdmissionAutocompleteAPIClient().list_campus(
-            search=search,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
     def autocomplete_tutors(cls, person, **kwargs):
         return AdmissionAutocompleteAPIClient().list_tutors(
             **kwargs,
