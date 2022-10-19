@@ -40,8 +40,14 @@ class AdmissionCampusService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
     @classmethod
-    def get_scholarship(cls, person, campus_uuid):
+    def get_campus(cls, person, campus_uuid):
         return AdmissionCampusAPIClient().retrieve_campus(
             uuid=campus_uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def list_campus(cls, person):
+        return AdmissionCampusAPIClient().list_campus(
             **build_mandatory_auth_headers(person),
         )
