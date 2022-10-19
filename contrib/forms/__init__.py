@@ -31,6 +31,7 @@ from django.conf import settings
 from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.services.autocomplete import AdmissionAutocompleteService
+from admission.services.campus import AdmissionCampusService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import (
     CountriesService,
@@ -44,7 +45,7 @@ from admission.utils import format_entity_title, format_high_school_title
 from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
-EMPTY_VALUE = ' '
+EMPTY_VALUE = '__all__'
 FORM_SET_PREFIX = '__prefix__'
 FOLLOWING_FORM_SET_PREFIX = '__prefix_1__'
 OSIS_DOCUMENT_UPLOADER_CLASS = 'document-uploader'
@@ -110,7 +111,7 @@ def get_high_school_initial_choices(uuid, person):
 
 def get_campus_choices(person):
     """Return the unique initial choice for the campus."""
-    ucl_campus = AdmissionAutocompleteService.get_campus(person=person).get('results')
+    ucl_campus = AdmissionCampusService.list_campus(person=person)
     return [(EMPTY_VALUE, _('All'))] + [(campus['uuid'], campus['name']) for campus in ucl_campus]
 
 

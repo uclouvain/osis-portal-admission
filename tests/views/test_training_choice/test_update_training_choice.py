@@ -67,7 +67,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         self.assertEqual(
             form.fields['campus'].choices,
             [
-                (' ', _('All')),
+                (EMPTY_VALUE, _('All')),
                 (self.louvain_campus_uuid, 'Louvain-La-Neuve'),
                 (self.mons_campus_uuid, 'Mons'),
             ],
@@ -193,7 +193,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         self.assertEqual(
             form.fields['campus'].choices,
             [
-                (' ', _('All')),
+                (EMPTY_VALUE, _('All')),
                 (self.louvain_campus_uuid, 'Louvain-La-Neuve'),
                 (self.mons_campus_uuid, 'Mons'),
             ],
@@ -278,7 +278,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         self.assertEqual(
             form.fields['campus'].choices,
             [
-                (' ', _('All')),
+                (EMPTY_VALUE, _('All')),
                 (self.louvain_campus_uuid, 'Louvain-La-Neuve'),
                 (self.mons_campus_uuid, 'Mons'),
             ],
@@ -365,7 +365,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
 
         self.mock_proposition_api.return_value.update_doctorate_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_choix_formation_doctorale_command={
+            modifier_type_admission_doctorale_command={
                 'uuid_proposition': self.proposition_uuid,
                 'bourse_erasmus_mundus': self.first_erasmus_mundus_scholarship.uuid,
                 'type_admission': AdmissionType.PRE_ADMISSION.name,

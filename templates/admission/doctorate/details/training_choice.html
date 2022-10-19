@@ -1,6 +1,6 @@
 {% extends detail_base_template %}
 
-{% load bootstrap3 i18n admission static enums %}
+{% load i18n admission waffle_tags %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -30,7 +30,9 @@
   {% panel _('Education you are applying for') %}
     {% field_data _('Education name') admission.doctorat.intitule %}
     {% field_data _('Campus') admission.doctorat.campus %}
-    {% field_data _('Academic year') admission.doctorat.annee|get_academic_year %}
+    {% switch 'debug' %}
+      {% field_data _('Academic year') admission.doctorat.annee|get_academic_year %}
+    {% endswitch %}
   {% endpanel %}
 
   {% if admission.bourse_erasmus_mundus %}
