@@ -40,19 +40,19 @@
 <div class="row">
   {% bootstrap_field form.type form_group_class="form-group col-md-4" %}
 </div>
-{% bootstrap_field form.subtitle form_group_class="form-group required_field" %}
+{% bootstrap_field form.subtitle form_group_class="form-group required_field" placeholder="" %}
 <div class="row">
   {% bootstrap_field form.start_date form_group_class="form-group col-md-4 required_field" %}
   {% bootstrap_field form.end_date form_group_class="form-group col-md-4 required_field" %}
 </div>
 <div class="row">
   {% bootstrap_field form.country form_group_class="form-group col-md-4 required_field" %}
-  {% bootstrap_field form.city form_group_class="form-group col-md-4 required_field" %}
+  {% bootstrap_field form.city form_group_class="form-group col-md-4 required_field" placeholder="" %}
 </div>
 
 <h3>{% trans "Your participation to the event" %}</h3>
 <div class="row">
-  {% bootstrap_field form.ects form_group_class="form-group col-md-4 required_field" %}
+  {% bootstrap_field form.ects form_group_class="form-group col-md-4 required_field" placeholder="" %}
 </div>
 {% bootstrap_field form.participating_proof %}
-{% bootstrap_field form.comment %}
+{% bootstrap_field form.comment placeholder="" %}

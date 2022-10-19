@@ -37,6 +37,7 @@ from admission.contrib.enums.training import StatutActivite
 from admission.contrib.forms.training import INSTITUTION_UCL
 from base.tests.factories.person import PersonFactory
 from osis_admission_sdk import ApiException
+from osis_admission_sdk.model.seminar_communication import SeminarCommunication
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -85,9 +86,89 @@ class TrainingTestCase(TestCase):
         self.addCleanup(api_patcher.stop)
 
     def test_doctoral_training_list(self):
+        # This is mostly for testing {% training_categories %}
+        self.mock_api.return_value.list_doctoral_training.return_value = [
+            Mock(
+                spec=SeminarCommunication,
+                category="COMMUNICATION",
+                status=StatutActivite.NON_SOUMISE.name,
+                uuid="ac5cdc60-2537-4a12-a396-64d2e9e34876",
+            ),
+            Mock(
+                category="COMMUNICATION",
+                status=StatutActivite.NON_SOUMISE.name,
+                uuid="4c5cdc60-2537-4a12-a396-64d2e9e34876",
+                ects=0,
+            ),
+            Mock(
+                category="COMMUNICATION",
+                status=StatutActivite.SOUMISE.name,
+                uuid="5c5cdc60-2537-4a12-a396-64d2e9e34876",
+                object_type="Communication",
+                ects=5,
+            ),
+            Mock(
+                category="CONFERENCE",
+                status=StatutActivite.ACCEPTEE.name,
+                uuid="6c5cdc60-2537-4a12-a396-64d2e9e34876",
+                ects=5,
+            ),
+            Mock(
+                category="PUBLICATION",
+                status=StatutActivite.SOUMISE.name,
+                uuid="7c5cdc60-2537-4a12-a396-64d2e9e34876",
+                object_type="Publication",
+                ects=5,
+            ),
+            Mock(
+                category="VAE",
+                status=StatutActivite.SOUMISE.name,
+                uuid="8c5cdc60-2537-4a12-a396-64d2e9e34876",
+                object_type="Valorisation",
+                ects=2,
+            ),
+            Mock(
+                category="UCL_COURSE",
+                status=StatutActivite.SOUMISE.name,
+                uuid="9c5cdc60-2537-4a12-a396-64d2e9e34876",
+                object_type="UclCourse",
+                ects=5,
+            ),
+            Mock(
+                category="PAPER",
+                status=StatutActivite.SOUMISE.name,
+                uuid="bc5cdc60-2537-4a12-a396-64d2e9e34876",
+                object_type="Paper",
+                type="CONFIRMATION_PAPER",
+                ects=5,
+            ),
+            Mock(
+                category="SERVICE",
+                status=StatutActivite.SOUMISE.name,
+                uuid="cc5cdc60-2537-4a12-a396-64d2e9e34876",
+                object_type="Paper",
+                type="CONFIRMATION_PAPER",
+                ects=5,
+            ),
+            Mock(
+                category="PAPER",
+                status=StatutActivite.SOUMISE.name,
+                uuid="dc5cdc60-2537-4a12-a396-64d2e9e34876",
+                object_type="Paper",
+                ects=5,
+            ),
+            Mock(
+                category="RESIDENCY",
+                status=StatutActivite.SOUMISE.name,
+                uuid="dc5cdc60-2537-4a12-a396-64d2e9e34876",
+                object_type="Residency",
+                ects=8,
+            ),
+        ]
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Informatique")
+        self.assertContains(response, "45")
 
     def test_complementary_training_list(self):
         url = resolve_url("admission:doctorate:complementary-training", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -326,14 +407,18 @@ class TrainingTestCase(TestCase):
             pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
             activity_id="64d2e9e3-2537-4a12-a396-48763c5cdc60",
         )
-        self.mock_api.return_value.retrieve_training.return_value = Mock(
-            category=CategorieActivite.UCL_COURSE.name,
-        )
-        self.mock_api.return_value.retrieve_training.return_value.to_dict.return_value = dict(
-            category=CategorieActivite.UCL_COURSE.name,
+        activity_data = dict(
+            object_type="Communication",
+            title="Foo bar",
+            category=CategorieActivite.COMMUNICATION.name,
             reference_promoter_assent=None,
             reference_promoter_comment="",
+            status=[StatutActivite.SOUMISE.name],
         )
+        self.mock_api.return_value.retrieve_training.return_value = Mock(**activity_data)
+        self.mock_api.return_value.retrieve_training.return_value.to_dict.return_value = activity_data
+        response = self.client.get(url)
+        self.assertContains(response, "Foo bar")
         data = {
             'approbation': True,
             'commentaire': "Ok",

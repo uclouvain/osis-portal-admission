@@ -36,7 +36,7 @@ from django.utils.safestring import SafeString
 from django.utils.translation import get_language, gettext_lazy as _, pgettext
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
-from admission.contrib.enums.training import CategorieActivite, StatutActivite
+from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from admission.services.reference import CountriesService
 from admission.utils.utils import to_snake_case
@@ -476,13 +476,42 @@ def training_categories(activities):
         _("Thesis defences"): [0, 0],
     }
     for activity in activities:
-        added, validated = report_ects(activity, categories, added, validated)
-        parent_category = str(activity.category)
-        for child in activity.get('children', []):
-            added, validated = report_ects(child, categories, added, validated, parent_category)
-    if not any(cat_added + cat_validated for cat_added, cat_validated in categories.values()):
+        if not hasattr(activity, 'ects'):
+            continue
+        # Increment global counts
+        status = str(activity.status)
+        if status != StatutActivite.REFUSEE.name:
+            added += activity.ects
+        if status == StatutActivite.ACCEPTEE.name:
+            validated += activity.ects
+        if status not in [StatutActivite.SOUMISE.name, StatutActivite.ACCEPTEE.name]:
+            continue
+
+        # Increment category counts
+        index = int(status == StatutActivite.ACCEPTEE.name)
+        category = str(activity.category)
+        if category == CategorieActivite.CONFERENCE.name or category == CategorieActivite.SEMINAR.name:
+            categories[_("Participation")][index] += activity.ects
+        elif activity.object_type == "Communication" or activity.object_type == "ConferenceCommunication":
+            categories[_("Scientific communication")][index] += activity.ects
+        elif activity.object_type == "Publication" or activity.object_type == "ConferencePublication":
+            categories[_("Publication")][index] += activity.ects
+        elif category == CategorieActivite.SERVICE.name:
+            categories[_("Services")][index] += activity.ects
+        elif "Residency" in activity.object_type:
+            categories[_("Scientific residencies")][index] += activity.ects
+        elif category == CategorieActivite.VAE.name:
+            categories[_("VAE")][index] += activity.ects
+        elif activity.category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
+            categories[_("Courses and training")][index] += activity.ects
+        elif category == CategorieActivite.PAPER.name and activity.type == ChoixTypeEpreuve.CONFIRMATION_PAPER.name:
+            categories[_("Confirmation paper")][index] += activity.ects
+        elif category == CategorieActivite.PAPER.name:
+            categories[_("Thesis defences")][index] += activity.ects
+    if not added:
         return {}
     return {
+        'display_table': any(cat_added + cat_validated for cat_added, cat_validated in categories.values()),
         'categories': categories,
         'added': added,
         'validated': validated,

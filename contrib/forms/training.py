@@ -130,7 +130,7 @@ class ActivityFormMixin(forms.Form):
     keywords = forms.CharField(label=_("Keywords"), max_length=100)
     journal = forms.CharField(label=_("Journal"), max_length=100)
     publication_status = forms.ChoiceField(choices=ChoixStatutPublication.choices())
-    hour_volume = forms.CharField(max_length=100)
+    hour_volume = forms.CharField(max_length=100, label=_("Total hourly volume"))
     ects = forms.DecimalField(
         label=_("ECTS credits"),
         max_digits=4,
@@ -430,7 +430,6 @@ class ServiceForm(ActivityFormMixin, forms.Form):
         ]
         labels = {
             'title': _("Name of the activity"),
-            'subtitle': _("Description of the activity"),
             'participating_proof': _("Proof (if needed)"),
             'organizing_institution': _("Institution"),
         }
@@ -650,4 +649,4 @@ class BatchActivityForm(forms.Form):
 
 class AssentForm(forms.Form):
     approbation = forms.BooleanField(label=_("Approval"), required=False)
-    commentaire = forms.CharField(label=_("Comment"), widget=forms.Textarea)
+    commentaire = forms.CharField(label=_("Comment"), widget=forms.Textarea, required=False)

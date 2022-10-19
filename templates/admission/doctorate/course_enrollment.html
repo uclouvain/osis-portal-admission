@@ -47,10 +47,13 @@
           {% trans "All" context "filters" %}
         </button>
         {% for status_name, status_label in statuses %}
-          <button type="button"
-                  class="btn btn-default btn-{{ status_name|status_as_class }}"
-                  data-status="{{ status_name }}"
-          >{{ status_label }}</button>
+          <button
+            type="button"
+            class="btn btn-default btn-{{ status_name|status_as_class }}"
+            data-status="{{ status_name }}"
+          >
+            {{ status_label }}
+          </button>
         {% endfor %}
       </div>
     </div>
@@ -62,22 +65,29 @@
       </div>
     {% endif %}
 
-    <form id="activities" action="{% url 'admission:doctorate:course-enrollment' pk=view.kwargs.pk %}"
-          method="post">
+    <form id="activities" action="" method="post">
       {% csrf_token %}
-      {% for activity in activities %}
-        {% firstof 0 activity.category|lower|add:'.html' as template_name %}
-        {% if not activity.parent %}
-          {% include "admission/doctorate/details/training/"|add:template_name %}
-        {% endif %}
-      {% endfor %}
-      <button class="btn btn-default" type="submit" name="_submit">{% trans "Submit these activities" %}</button>
+
+      <div id="activity-list">
+        {% for activity in activities %}
+          {% firstof 0 activity.category|lower|add:'.html' as template_name %}
+          {% if not activity.parent %}
+            {% include "admission/doctorate/details/training/"|add:template_name %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if doctorate|can_make_action:'submit_training' %}
+        <button class="btn btn-default" type="submit" name="_submit">{% trans "Submit these activities" %}</button>
+      {% endif %}
     </form>
   {% else %}
-    {% trans "This candidate has not created any course yet." %}
-    <a href="{{ add_url }}">
-      {% trans "Enroll in a course" %}
-    </a>
+    {% trans "No course created yet." %}
+    {% if doctorate|can_make_action:'add_training' %}
+      <a href="{{ add_url }}">
+        {% trans "Enroll in a course" %}
+      </a>
+    {% endif %}
   {% endif %}
 {% endblock %}
 
@@ -120,37 +130,36 @@
 {% block script %}
   <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
   <script>
-    $(function () {
-      $('[data-toggle="popover"]').popover();
+  $(function () {
+    $('[data-toggle="popover"]').popover();
 
-      // Open the right panel depending on location hash
-      if (document.location.hash) {
-        const uuid = document.location.hash.slice(1);
-        $('#a-' + uuid).one('shown.bs.collapse', function () {
-          document.getElementById('h-' + uuid).scrollIntoView({ block: 'center', behavior: 'smooth' });
-        }).collapse('show');
-      }
+    // Open the right panel depending on location hash
+    if (document.location.hash) {
+      const uuid = document.location.hash.slice(1);
+      $('#a-' + uuid).one('shown.bs.collapse', function () {
+        document.getElementById('h-' + uuid).scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }).collapse('show');
+    }
 
-      // Filters
-      const ALL_VALUES = 'all';
-      let current_filter_status = ALL_VALUES;
-      $('.filter-status button').on('click', function () {
-        current_filter_status = $(this).data('status');
-        $('.filter-status button').removeClass('active');
-        $(this).addClass('active');
-        apply_filters();
-      });
-
-      function apply_filters () {
-        const reStatus = new RegExp(`\\b${current_filter_status}\\b`);
-        $('#activities .panel').each(function () {
-          $(this).show();
-          if ((current_filter_type !== ALL_VALUES && $(this).data('type') !== current_filter_type)
-            || (current_filter_status !== ALL_VALUES && !$(this).data('status').match(reStatus))) {
-            $(this).hide();
-          }
-        });
-      }
+    // Filters
+    const ALL_VALUES = 'all';
+    let current_filter_status = ALL_VALUES;
+    $('.filter-status button').on('click', function () {
+      current_filter_status = $(this).data('status');
+      $('.filter-status button').removeClass('active');
+      $(this).addClass('active');
+      apply_filters();
     });
+
+    function apply_filters() {
+      const reStatus = new RegExp(`\\b${current_filter_status}\\b`);
+      $('#activity-list .panel').each(function () {
+        $(this).show();
+        if ((current_filter_status !== ALL_VALUES && !$(this).data('status').match(reStatus))) {
+          $(this).hide();
+        }
+      });
+    }
+  });
   </script>
 {% endblock %}

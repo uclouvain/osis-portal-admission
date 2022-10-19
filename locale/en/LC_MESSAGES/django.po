@@ -335,6 +335,9 @@ msgstr ""
 msgid "Assent"
 msgstr ""
 
+msgid "Assent from reference promoter"
+msgstr ""
+
 msgid "Assimilation"
 msgstr ""
 
@@ -529,9 +532,6 @@ msgid "Comment for the candidate"
 msgstr ""
 
 msgid "Comment from CDD manager"
-msgstr ""
-
-msgid "Comment from reference promoter"
 msgstr ""
 
 msgid "Comment to the candidate:"
@@ -809,6 +809,9 @@ msgid "Did you obtain a diploma at the end of this training?"
 msgstr ""
 
 msgid "Diploma equivalence"
+msgstr ""
+
+msgid "Dissent from reference promoter"
 msgstr ""
 
 msgid "Dissertation score"
@@ -1089,6 +1092,10 @@ msgid "German"
 msgstr ""
 
 msgid "German-speaking Community"
+msgstr ""
+
+#, python-format
+msgid "Give assent on \"%(object)s\"?"
 msgstr ""
 
 msgid "Give assent/dissent"
@@ -1563,6 +1570,9 @@ msgid "No activity created yet"
 msgstr ""
 
 msgid "No cotutelle"
+msgstr ""
+
+msgid "No course created yet."
 msgstr ""
 
 msgid "No credit system"
@@ -2318,9 +2328,6 @@ msgstr ""
 msgid "This activity and potential sub-activities will be deleted"
 msgstr ""
 
-msgid "This candidate has not created any course yet."
-msgstr ""
-
 msgid "This comment will be visible to all users who have access to this page."
 msgstr ""
 
@@ -2380,6 +2387,9 @@ msgid ""
 msgstr ""
 "To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH "
 "grant. The canvas for this opinion is provided by your research fund."
+
+msgid "Total hourly volume"
+msgstr ""
 
 msgid "Training"
 msgstr ""
