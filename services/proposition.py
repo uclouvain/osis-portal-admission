@@ -99,7 +99,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_doctorate_education_choice(cls, person: Person, uuid, data):
         return APIClient().update_doctorate_training_choice(
             uuid=uuid,
-            modifier_choix_formation_doctorale_command=data,
+            modifier_type_admission_doctorale_command=data,
             **build_mandatory_auth_headers(person),
         )
 

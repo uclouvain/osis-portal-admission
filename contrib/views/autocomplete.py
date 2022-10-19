@@ -29,6 +29,7 @@ from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import get_language
+from waffle import switch_is_active
 
 from admission.contrib.forms import EMPTY_VALUE
 from osis_admission_sdk.model.scholarship import Scholarship
@@ -51,6 +52,7 @@ from admission.utils import (
     format_high_school_title,
     format_scholarship,
     format_training,
+    format_training_with_year,
 )
 
 from base.models.enums.entity_type import INSTITUTE
@@ -84,16 +86,13 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         )
 
     def results(self, results):
+        format_method = format_training_with_year if switch_is_active('debug') else format_training
         return [
             dict(
                 id="{result.sigle}-{result.annee}".format(result=result),
                 sigle=result.sigle,
                 sigle_entite_gestion=result.sigle_entite_gestion,
-                text="{intitule} ({campus}) - {sigle}".format(
-                    sigle=result.sigle,
-                    campus=result.campus,
-                    intitule=result.intitule,
-                ),
+                text=format_method(result),
             )
             for result in results
         ]
@@ -118,10 +117,11 @@ class GeneralEducationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListV
         )
 
     def results(self, results):
+        format_method = format_training_with_year if switch_is_active('debug') else format_training
         return [
             dict(
                 id="{result.sigle}-{result.annee}".format(result=result),
-                text=format_training(result),
+                text=format_method(result),
             )
             for result in results
         ]
