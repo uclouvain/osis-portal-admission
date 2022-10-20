@@ -202,6 +202,7 @@ class TrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormMixin, For
         kwargs = super().get_form_kwargs()
         kwargs['config_types'] = self.config
         kwargs['person'] = self.person
+        kwargs['admission'] = self.admission
         return kwargs
 
     def get_context_data(self, **kwargs):
