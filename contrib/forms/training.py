@@ -30,6 +30,7 @@ from dal import autocomplete
 from django import forms
 from django.utils.translation import get_language, gettext_lazy as _, pgettext_lazy
 
+from admission.contrib.enums import AdmissionType
 from admission.contrib.enums.training import (
     ChoixComiteSelection,
     ChoixStatutPublication,
@@ -47,6 +48,7 @@ from admission.contrib.forms import (
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.reference import AcademicYearService
 from learning_unit.services.learning_unit import LearningUnitService
+from osis_admission_sdk.model.proposition_dto import PropositionDTO
 from osis_document.contrib import FileUploadField
 
 __all__ = [
@@ -139,7 +141,8 @@ class ActivityFormMixin(forms.Form):
     comment = forms.CharField(label=_("Comment"), widget=forms.Textarea())
     context = forms.ChoiceField(label=_("Context"), choices=ContexteFormation.choices())
 
-    def __init__(self, config_types=None, person=None, *args, **kwargs) -> None:
+    def __init__(self, admission: PropositionDTO = None, config_types=None, person=None, *args, **kwargs) -> None:
+        self.admission = admission
         self.person = person
         self.config_types = config_types or {}
         super().__init__(*args, **kwargs)
@@ -625,6 +628,16 @@ class UclCourseForm(ActivityFormMixin, forms.Form):
             if not choice[0] or choice[0] >= datetime.date.today().year
         ]
         self.fields['learning_unit_year'].required = True
+
+        # Filter out disabled contexts
+        choices = dict(self.fields['context'].widget.choices)
+        if self.admission.type_admission == AdmissionType.PRE_ADMISSION.name:
+            del choices[ContexteFormation.DOCTORAL_TRAINING.name]
+        if not self.config_types.get('is_complementary_training_enabled'):
+            del choices[ContexteFormation.COMPLEMENTARY_TRAINING.name]
+        self.fields['context'].widget.choices = list(choices.items())
+
+        # Initialize values
         if self.initial.get('learning_unit_year'):
             acronym = self.initial['learning_unit_year']
             self.fields['learning_unit_year'].widget.choices = [
