@@ -35,7 +35,7 @@ from osis_admission_sdk.model.accounting_conditions import AccountingConditions
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
-from osis_admission_sdk.model.proposition_dto import PropositionDTO
+from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
 __all__ = [
@@ -112,7 +112,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def get_proposition(cls, person: Person, uuid) -> PropositionDTO:
+    def get_proposition(cls, person: Person, uuid) -> DoctoratePropositionDTO:
         return APIClient().retrieve_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),

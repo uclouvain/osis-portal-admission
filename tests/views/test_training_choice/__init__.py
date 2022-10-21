@@ -364,7 +364,6 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_autocomplete_api.return_value.list_scholarships.return_value = {
             'results': self.mock_scholarships,
         }
-
         self.addCleanup(autocomplete_api_patcher.stop)
 
         # Mock scholarship sdk api
@@ -376,13 +375,13 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         # Mock education group sdk api
         education_group_api_patcher = patch("osis_education_group_sdk.api.trainings_api.TrainingsApi")
         self.mock_education_group_api = education_group_api_patcher.start()
-        self.addCleanup(education_group_api_patcher.stop)
         self.mock_education_group_api.return_value.trainings_read.side_effect = self.get_training
+        self.addCleanup(education_group_api_patcher.stop)
 
         # Mock campus sdk api
         campus_api_patcher = patch("osis_admission_sdk.api.campus_api.CampusApi")
         self.mock_campus_api = campus_api_patcher.start()
         self.mock_campus_api.return_value.list_campus.side_effect = self.get_campuses
-        self.addCleanup(scholarships_api_patcher.stop)
+        self.addCleanup(campus_api_patcher.stop)
 
         self.client.force_login(self.person.user)
