@@ -28,6 +28,7 @@ import uuid
 from unittest.mock import ANY, patch
 
 from django.test import TestCase, override_settings
+from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
 from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 
@@ -53,7 +54,7 @@ from osis_admission_sdk.model.activity_type import ActivityType
 from osis_admission_sdk.model.curriculum_file import CurriculumFile
 from osis_admission_sdk.model.evaluation_system import EvaluationSystem
 from osis_admission_sdk.model.grade import Grade
-from osis_admission_sdk.model.proposition_dto_links import PropositionDTOLinks
+from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
 from osis_admission_sdk.model.result import Result
 from osis_admission_sdk.model.teaching_type_enum import TeachingTypeEnum
 
@@ -74,7 +75,6 @@ from osis_reference_sdk.model.diploma import Diploma
 from base.tests.factories.person import PersonFactory
 
 from osis_admission_sdk.model.educational_experience import EducationalExperience
-from osis_admission_sdk.model.proposition_dto import PropositionDTO
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -182,11 +182,11 @@ class MixinTestCase(TestCase):
         )
 
         # Proposition
-        cls.proposition = PropositionDTO._from_openapi_data(
+        cls.proposition = DoctoratePropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
             type_admission=AdmissionType.ADMISSION.name,
             reference='22-300001',
-            links=PropositionDTOLinks(),
+            links=DoctoratePropositionDTOLinks(),
             doctorat=PropositionSearchDoctorat._from_openapi_data(
                 sigle='CS1',
                 annee=cls.academic_year_2020.year,

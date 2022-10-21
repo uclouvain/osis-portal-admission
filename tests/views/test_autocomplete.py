@@ -25,7 +25,7 @@
 # ##############################################################################
 import json
 import uuid
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, ANY
 
 from django.test import TestCase
 from django.urls import reverse
@@ -46,6 +46,15 @@ from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.scholarship import Scholarship
+
+
+DEFAULT_API_PARAMS = {
+    'accept_language': ANY,
+    'x_user_first_name': ANY,
+    'x_user_last_name': ANY,
+    'x_user_email': ANY,
+    'x_user_global_id': ANY,
+}
 
 
 class AutocompleteTestCase(TestCase):
@@ -81,7 +90,11 @@ class AutocompleteTestCase(TestCase):
             }
         ]
         self.assertEqual(response.json(), {'results': results})
-        self.assertEqual(api.return_value.list_doctorat_dtos.call_args.kwargs['sigle'], 'SSH')
+        api.return_value.list_doctorat_dtos.assert_called_with(
+            sigle='SSH',
+            campus='',
+            **DEFAULT_API_PARAMS,
+        )
 
     @patch('osis_reference_sdk.api.countries_api.CountriesApi')
     def test_autocomplete_country(self, api):
