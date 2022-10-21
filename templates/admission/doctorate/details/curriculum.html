@@ -7,6 +7,8 @@
 
   {% field_data _('Curriculum') curriculum_file.curriculum hide_empty=True %}
 
+  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
+
 {% endblock %}
 
 {% block style %}

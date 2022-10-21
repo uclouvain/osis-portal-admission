@@ -34,4 +34,6 @@
       {% field_data _('Academic year') admission.formation.annee|get_academic_year %}
     {% endswitch %}
   {% endpanel %}
+
+  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
 {% endblock %}

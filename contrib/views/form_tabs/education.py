@@ -38,6 +38,7 @@ from admission.contrib.enums.secondary_studies import (
     Equivalence,
     HAS_DIPLOMA_CHOICES,
 )
+from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms.education import (
     DoctorateAdmissionEducationBelgianDiplomaForm,
     DoctorateAdmissionEducationForeignDiplomaForm,
@@ -49,7 +50,7 @@ from admission.contrib.views.mixins import (
     LoadGeneralEducationDossierViewMixin,
     LoadContinuingEducationDossierViewMixin,
 )
-from admission.services.mixins import WebServiceFormMixin
+from admission.services.mixins import WebServiceFormMixin, FormMixinWithSpecificQuestions
 from admission.services.person import (
     AdmissionPersonService,
     GeneralEducationAdmissionPersonService,
@@ -63,6 +64,7 @@ EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
 
 
 class AdmissionEducationFormView(
+    FormMixinWithSpecificQuestions,
     WebServiceFormMixin,
     FormView,
 ):  # pylint: disable=too-many-ancestors
@@ -71,6 +73,7 @@ class AdmissionEducationFormView(
     form_class = DoctorateAdmissionEducationForm
     forms = None
     service = AdmissionPersonService
+    tab_of_specific_questions = Onglets.ETUDES_SECONDAIRES.name
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -91,7 +94,10 @@ class AdmissionEducationFormView(
         ).to_dict()
 
     def get_initial(self):
-        return self.high_school_diploma
+        return {
+            **self.high_school_diploma,
+            'specific_question_answers': self.admission.reponses_questions_specifiques if self.admission_uuid else {},
+        }
 
     @staticmethod
     def check_bound_and_set_required_attr(form):
@@ -232,6 +238,7 @@ class AdmissionEducationFormView(
             person = kwargs.pop("person")
             kwargs.pop("prefix")
             initial = kwargs.pop("initial")
+            kwargs.pop('form_item_configurations')
 
             got_diploma = data and data.get("got_diploma") in HAS_DIPLOMA_CHOICES
             got_belgian_diploma = got_diploma and data.get("diploma_type") == DiplomaTypes.BELGIAN.name

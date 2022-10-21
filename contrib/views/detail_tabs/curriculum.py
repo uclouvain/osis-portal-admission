@@ -29,6 +29,7 @@ from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import get_language, gettext_lazy as _
 
+from admission.contrib.enums.specific_question import Onglets
 from osis_admission_sdk.model.professional_experience import ProfessionalExperience
 
 # Do not remove the following import as it is used by enum_display templatetag
@@ -55,6 +56,7 @@ from admission.services.reference import LanguageService, DiplomaService, Superi
 class AdmissionCurriculumDetailView(TemplateView):
     template_name = 'admission/doctorate/details/curriculum.html'
     service = AdmissionPersonService
+    tab_of_specific_questions = Onglets.CURRICULUM.name
 
     @cached_property
     def curriculum(self):

@@ -45,6 +45,7 @@ from admission.contrib.enums.curriculum import (
     SuccessfulResults,
     EvaluationSystem,
 )
+from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms import (
     OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
     OSIS_DOCUMENT_UPLOADER_CLASS,
@@ -60,14 +61,15 @@ from admission.contrib.forms.curriculum import (
 )
 from admission.contrib.views.detail_tabs.curriculum import (
     AdmissionCurriculumMixin,
-    get_educational_experience_year_set_with_lost_years, AdmissionCurriculumDetailView,
+    get_educational_experience_year_set_with_lost_years,
+    AdmissionCurriculumDetailView,
 )
 from admission.contrib.views.mixins import (
     LoadDossierViewMixin,
     LoadGeneralEducationDossierViewMixin,
     LoadContinuingEducationDossierViewMixin,
 )
-from admission.services.mixins import WebServiceFormMixin
+from admission.services.mixins import WebServiceFormMixin, FormMixinWithSpecificQuestions
 from admission.services.person import (
     AdmissionPersonService,
     GeneralEducationAdmissionPersonService,
@@ -103,17 +105,22 @@ class AdmissionCurriculumFormMixin(
 
 
 class AdmissionCurriculumFormView(
+    FormMixinWithSpecificQuestions,
     AdmissionCurriculumDetailView,
     AdmissionCurriculumFormMixin,
 ):  # pylint: disable=too-many-ancestors
     form_class = DoctorateAdmissionCurriculumFileForm
     template_name = 'admission/doctorate/forms/curriculum.html'
+    tab_of_specific_questions = Onglets.CURRICULUM.name
 
     def get_initial(self):
-        return self.curriculum.file
+        return {
+            'specific_question_answers': self.admission.reponses_questions_specifiques if self.admission_uuid else {},
+            'curriculum': self.curriculum.file.get('curriculum'),
+        }
 
     def call_webservice(self, data):
-        self.service.update_curriculum_file(
+        self.service.update_curriculum(
             person=self.person,
             data=data,
             uuid=self.admission_uuid,

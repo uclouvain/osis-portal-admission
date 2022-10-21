@@ -8,6 +8,8 @@ from .utils import (
     split_training_id,
     get_training_id,
     format_training_with_year,
+    get_uuid_value,
+    to_snake_case,
 )
 
 __all__ = [
@@ -20,4 +22,6 @@ __all__ = [
     'split_training_id',
     'get_training_id',
     'format_training_with_year',
+    'get_uuid_value',
+    'to_snake_case',
 ]

@@ -232,7 +232,6 @@ class TrainingActivityEditView(TrainingActivityFormMixin):
 
     @cached_property
     def activity(self):
-        # breakpoint()
         return AdmissionDoctorateTrainingService.retrieve_activity(
             person=self.person,
             doctorate_uuid=str(self.kwargs['pk']),

@@ -233,7 +233,8 @@ class EducationTestCase(TestCase):
                     # Clean education type
                     "educational_type": "",
                     "educational_other": "",
-                }
+                },
+                "specific_question_answers": {},
             },
         )
 
@@ -305,7 +306,8 @@ class EducationTestCase(TestCase):
                         "physic": 5,
                         "social_sciences": 5,
                     },
-                }
+                },
+                "specific_question_answers": {},
             },
         )
 
@@ -591,6 +593,7 @@ class EducationTestCase(TestCase):
                     "equivalence_decision_proof": [],
                     "final_equivalence_decision": [],
                 },
+                "specific_question_answers": {},
             },
         )
 
@@ -643,6 +646,7 @@ class EducationTestCase(TestCase):
                     "equivalence_decision_proof": ["test"],
                     "final_equivalence_decision": [],
                 },
+                "specific_question_answers": {},
             },
         )
 
@@ -738,6 +742,7 @@ class EducationTestCase(TestCase):
                     "equivalence": "NO",
                     "final_equivalence_decision": [],
                 },
+                "specific_question_answers": {},
             },
         )
         response = self.client.post(

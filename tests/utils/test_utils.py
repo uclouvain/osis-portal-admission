@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import uuid
 
 from django.test import TestCase
 from osis_organisation_sdk.model.address import Address
@@ -180,3 +181,11 @@ class UtilsTestCase(TestCase):
     def test_get_training_id(self):
         training = {'sigle': 'INFO1', 'annee': 2020}
         self.assertEqual(get_training_id(training), 'INFO1-2020')
+
+    def test_get_uuid_returns_uuid_if_value_if_uuid(self):
+        uuid_value = uuid.uuid4()
+        self.assertEqual(get_uuid_value(str(uuid_value)), uuid_value)
+
+    def test_get_uuid_returns_input_value_if_not_uuid(self):
+        other_value = 'abcdef'
+        self.assertEqual(get_uuid_value(other_value), other_value)

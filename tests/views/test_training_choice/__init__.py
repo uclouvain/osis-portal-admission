@@ -221,6 +221,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 nom_long=cls.first_erasmus_mundus_scholarship.long_name,
                 type=cls.first_erasmus_mundus_scholarship.type,
             ),
+            reponses_questions_specifiques={},
         )
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -236,6 +237,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
             links={},
             erreurs={},
+            reponses_questions_specifiques={},
         )
 
         cls.doctorate_proposition = Mock(
@@ -261,6 +263,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 nom_long=cls.first_erasmus_mundus_scholarship.long_name,
                 type=cls.first_erasmus_mundus_scholarship.type,
             ),
+            reponses_questions_specifiques={},
         )
 
         cls.sectors = [

@@ -44,7 +44,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the right API calls are done
-        self.mock_person_api.return_value.retrieve_curriculum.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details.assert_called()
 
         # Check the context data
         self.assertEqual(len(response.context.get('professional_experiences')), 1)
@@ -64,7 +64,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
 
         # Check that the right API calls are done
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
-        self.mock_person_api.return_value.retrieve_curriculum_admission.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details_admission.assert_called()
 
         # Check the context data
         self.assertEqual(len(response.context.get('professional_experiences')), 1)
@@ -84,7 +84,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
 
         # Check that the right API calls are done
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
-        self.mock_person_api.return_value.retrieve_curriculum_admission.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details_admission.assert_called()
 
         # Check the context data
         self.assertEqual(len(response.context.get('professional_experiences')), 1)
@@ -113,9 +113,10 @@ class GlobalCurriculumTestCase(MixinTestCase):
         )
 
         # Check that the right API calls are done
-        self.mock_person_api.return_value.update_curriculum_file.assert_called_once_with(
-            curriculum_file={
+        self.mock_person_api.return_value.update_curriculum.assert_called_once_with(
+            curriculum={
                 'curriculum': ['f1.pdf'],
+                'specific_question_answers': {},
             },
             **self.api_default_params,
         )
@@ -135,10 +136,11 @@ class GlobalCurriculumTestCase(MixinTestCase):
         )
 
         # Check that the right API calls are done
-        self.mock_person_api.return_value.update_curriculum_file_admission.assert_called_once_with(
+        self.mock_person_api.return_value.update_curriculum_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
-            curriculum_file={
+            curriculum={
                 'curriculum': ['f1.pdf'],
+                'specific_question_answers': {},
             },
             **self.api_default_params,
         )
@@ -155,7 +157,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls are not done
-        self.mock_person_api.return_value.update_curriculum_file_admission.assert_not_called()
+        self.mock_person_api.return_value.update_curriculum_admission.assert_not_called()
 
         # Check the context data
         self.assertFormError(response=response, form='form', field='curriculum', errors=FIELD_REQUIRED_MESSAGE)

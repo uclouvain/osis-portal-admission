@@ -23,35 +23,36 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.views.generic import TemplateView
+from django.utils.translation import gettext_lazy as _
 
-from admission.contrib.enums.specific_question import Onglets
-from admission.contrib.views.mixins import (
-    LoadDossierViewMixin,
-    LoadGeneralEducationDossierViewMixin,
-    LoadContinuingEducationDossierViewMixin,
-)
+from base.models.utils.utils import ChoiceEnum
 
 
-class GeneralEducationTrainingChoiceDetailView(
-    LoadGeneralEducationDossierViewMixin,
-    TemplateView,
-):  # pylint: disable=too-many-ancestors
-    template_name = 'admission/admission/general_education/details/training_choice.html'
-    tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+class Onglets(ChoiceEnum):
+    ETUDES_SECONDAIRES = _('Secondary studies')
+    CURRICULUM = _('Curriculum')
+    CHOIX_FORMATION = _('Training choice')
+    INFORMATIONS_ADDITIONNELLES = _('Additional information')
 
 
-class ContinuingEducationTrainingChoiceDetailView(
-    LoadContinuingEducationDossierViewMixin,
-    TemplateView,
-):  # pylint: disable=too-many-ancestors
-    template_name = 'admission/admission/continuing_education/details/training_choice.html'
-    tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+class TypeItemFormulaire(ChoiceEnum):
+    MESSAGE = _('Message')
+    TEXTE = _('Text')
+    DOCUMENT = _('Document')
 
 
-class DoctorateTrainingChoiceDetailView(
-    LoadDossierViewMixin,
-    TemplateView,
-):  # pylint: disable=too-many-ancestors
-    template_name = 'admission/doctorate/details/training_choice.html'
-    tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+TYPES_ITEMS_LECTURE_SEULE = {
+    TypeItemFormulaire.MESSAGE.name,
+}
+
+
+class TypeChampTexteFormulaire(ChoiceEnum):
+    COURT = _('Short')
+    LONG = _('Long')
+
+
+class CleConfigurationItemFormulaire(ChoiceEnum):
+    TAILLE_TEXTE = _('Text size')
+    CLASSE_CSS = _('CSS class')
+    TYPES_MIME_FICHIER = _('File MIME types')
+    NOMBRE_MAX_DOCUMENTS = _('Maximum number of documents')

@@ -24,6 +24,9 @@
 #
 # ##############################################################################
 from enum import Enum
+from typing import List
+
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
@@ -202,6 +205,30 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def retrieve_doctorate_specific_questions(cls, person: Person, uuid: str, tab_name: str) -> List[SpecificQuestion]:
+        return APIClient().list_doctorate_specific_questions(
+            uuid=uuid,
+            tab=tab_name,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_general_specific_questions(cls, person: Person, uuid: str, tab_name: str) -> List[SpecificQuestion]:
+        return APIClient().list_general_specific_questions(
+            uuid=uuid,
+            tab=tab_name,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_continuing_specific_questions(cls, person: Person, uuid: str, tab_name: str) -> List[SpecificQuestion]:
+        return APIClient().list_continuing_specific_questions(
+            uuid=uuid,
+            tab=tab_name,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
@@ -254,6 +281,13 @@ class PropositionBusinessException(Enum):
     CarteBancaireRemboursementAutreFormatNonCompleteException = "PROPOSITION-48"
 
 
+class GlobalPropositionBusinessException(Enum):
+    BourseNonTrouveeException = "ADMISSION-1"
+    QuestionsSpecifiquesChoixFormationNonCompleteesException = "ADMISSION-3"
+    QuestionsSpecifiquesCurriculumNonCompleteesException = "ADMISSION-4"
+    QuestionsSpecifiquesEtudesSecondairesNonCompleteesException = "ADMISSION-5"
+
+
 BUSINESS_EXCEPTIONS_BY_TAB = {
     'person': {
         PropositionBusinessException.IdentificationNonCompleteeException,
@@ -269,10 +303,13 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,
         PropositionBusinessException.AdresseCorrespondanceNonCompleteeException,
     },
-    'education': set(),
+    'education': {
+        GlobalPropositionBusinessException.QuestionsSpecifiquesEtudesSecondairesNonCompleteesException,
+    },
     'curriculum': {
         PropositionBusinessException.FichierCurriculumNonRenseigneException,
         PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
+        GlobalPropositionBusinessException.QuestionsSpecifiquesCurriculumNonCompleteesException,
     },
     'languages': {
         PropositionBusinessException.LanguesConnuesNonSpecifieesException,
@@ -280,7 +317,9 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'project': {
         PropositionBusinessException.DetailProjetNonCompleteException,
     },
-    'training-choice': {},
+    'training-choice': {
+        GlobalPropositionBusinessException.QuestionsSpecifiquesChoixFormationNonCompleteesException,
+    },
     'cotutelle': {
         PropositionBusinessException.CotutelleNonCompleteException,
     },

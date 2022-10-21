@@ -53,10 +53,11 @@ from admission.contrib.forms import (
 )
 from osis_document.contrib.forms import FileUploadField
 
+from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 
 
-class DoctorateAdmissionCurriculumFileForm(forms.Form):
+class DoctorateAdmissionCurriculumFileForm(ConfigurableFormMixin):
     curriculum = FileUploadField(
         label=_('Curriculum vitae detailed, dated and signed'),
         required=True,
