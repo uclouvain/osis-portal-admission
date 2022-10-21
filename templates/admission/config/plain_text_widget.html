@@ -1,7 +1,3 @@
-{% extends detail_base_template %}
-
-{% load i18n admission waffle_tags %}
-
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
   * designed to manage the core business of higher education institutions,
@@ -25,25 +21,4 @@
   * at the root of the source code of this program.  If not,
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-{% block tab_content %}
-  {% panel _('Education you are applying for') %}
-    {% field_data _('Education name') admission.doctorat.intitule %}
-    {% field_data _('Campus') admission.doctorat.campus %}
-    {% switch 'debug' %}
-      {% field_data _('Academic year') admission.doctorat.annee|get_academic_year %}
-    {% endswitch %}
-  {% endpanel %}
-
-  {% if admission.bourse_erasmus_mundus %}
-    {% panel _('Student profile') %}
-      {% if admission.bourse_erasmus_mundus %}
-        {% with admission.bourse_erasmus_mundus.nom_court as short_name %}
-          {% field_data _('Erasmus mundus scholarship') admission.bourse_erasmus_mundus.nom_long|default:short_name %}
-        {% endwith %}
-      {% endif %}
-    {% endpanel %}
-  {% endif %}
-
-  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
-{% endblock %}
+<p class="plain-text-widget {{ widget.css_class }}">{{ widget.content }}</p>

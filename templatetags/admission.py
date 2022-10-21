@@ -38,10 +38,11 @@ from django.utils.translation import get_language, gettext_lazy as _, pgettext
 
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from admission.services.reference import CountriesService
-from admission.utils.utils import to_snake_case
+from admission.utils import to_snake_case, get_uuid_value
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
@@ -611,3 +612,26 @@ def get_country_name(context, iso_code: str):
     translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
     result = CountriesService.get_country(iso_code=iso_code, person=context['request'].user.person)
     return getattr(result, translated_field, '')
+
+
+@register.inclusion_tag('admission/config/multiple_field_data.html')
+def multiple_field_data(configurations, data, title=''):
+    current_language = get_language()
+
+    if not data:
+        data = {}
+
+    for field in configurations:
+        if field.type in TYPES_ITEMS_LECTURE_SEULE:
+            field['value'] = field.text.get(current_language, '')
+        elif field.type == TypeItemFormulaire.DOCUMENT.name:
+            field['value'] = [get_uuid_value(token) for token in data.get(field.uuid, [])]
+        else:
+            field['value'] = data.get(field.uuid)
+
+        field['translated_title'] = field.title.get(current_language)
+
+    return {
+        'fields': configurations,
+        'title': title,
+    }

@@ -1,4 +1,5 @@
 import re
+import uuid
 from typing import Union
 
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
@@ -76,3 +77,10 @@ def get_training_id(training):
         sigle=training['sigle'],
         annee=training['annee'],
     )
+
+
+def get_uuid_value(value: str) -> Union[uuid.UUID, str]:
+    try:
+        return uuid.UUID(hex=value)
+    except ValueError:
+        return value

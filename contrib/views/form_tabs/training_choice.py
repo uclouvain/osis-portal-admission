@@ -30,6 +30,7 @@ from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
+from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TYPES_FORMATION_GENERALE, TypeFormation
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.contrib.forms.training_choice import TrainingChoiceForm
@@ -38,7 +39,7 @@ from admission.contrib.views.mixins import (
     LoadGeneralEducationDossierViewMixin,
     LoadContinuingEducationDossierViewMixin,
 )
-from admission.services.mixins import WebServiceFormMixin
+from admission.services.mixins import WebServiceFormMixin, FormMixinWithSpecificQuestions
 from admission.services.proposition import AdmissionPropositionService
 from admission.utils import split_training_id, get_training_id
 
@@ -52,7 +53,11 @@ NAMESPACE_KEY_BY_ADMISSION_TYPE = {
 }
 
 
-class AdmissionTrainingChoiceFormMixinView(WebServiceFormMixin, FormView):  # pylint: disable=too-many-ancestors
+class AdmissionTrainingChoiceFormMixinView(
+    FormMixinWithSpecificQuestions,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/admission/forms/training_choice.html'
     form_class = TrainingChoiceForm
 
@@ -149,6 +154,9 @@ class DoctorateAdmissionUpdateTrainingChoiceFormView(
     LoadDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
 ):  # pylint: disable=too-many-ancestors
+
+    tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+
     def get_initial(self):
         return {
             'admission_type': self.admission.type_admission,
@@ -158,6 +166,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormView(
             'erasmus_mundus_scholarship': self.admission.bourse_erasmus_mundus
             and self.admission.bourse_erasmus_mundus.uuid,
             'proximity_commission': self.admission.commission_proximite,
+            'specific_question_answers': self.admission.reponses_questions_specifiques,
         }
 
     def prepare_data(self, data):
@@ -166,6 +175,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormView(
             'uuid_proposition': self.admission_uuid,
             'justification': data.get('justification'),
             'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
+            'reponses_questions_specifiques': data.get('specific_question_answers'),
         }
 
     def call_webservice(self, data):
@@ -180,6 +190,9 @@ class GeneralAdmissionUpdateTrainingChoiceFormView(
     LoadGeneralEducationDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
 ):  # pylint: disable=too-many-ancestors
+
+    tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+
     def get_initial(self):
         return {
             'general_education_training': get_training_id(self.admission.formation),
@@ -189,6 +202,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormView(
             and self.admission.bourse_internationale.uuid,
             'erasmus_mundus_scholarship': self.admission.bourse_erasmus_mundus
             and self.admission.bourse_erasmus_mundus.uuid,
+            'specific_question_answers': self.admission.reponses_questions_specifiques,
         }
 
     def prepare_data(self, data):
@@ -200,6 +214,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormView(
             'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
             'bourse_double_diplome': data.get('double_degree_scholarship'),
             'bourse_internationale': data.get('international_scholarship'),
+            'reponses_questions_specifiques': data.get('specific_question_answers'),
         }
 
     def call_webservice(self, data):
@@ -214,9 +229,13 @@ class ContinuingAdmissionUpdateTrainingChoiceFormView(
     LoadContinuingEducationDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
 ):  # pylint: disable=too-many-ancestors
+
+    tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+
     def get_initial(self):
         return {
             'continuing_education_training': get_training_id(self.admission.formation),
+            'specific_question_answers': self.admission.reponses_questions_specifiques,
         }
 
     def prepare_data(self, data):
@@ -225,6 +244,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormView(
             'sigle_formation': training_acronym,
             'annee_formation': int(training_year),
             'uuid_proposition': self.admission_uuid,
+            'reponses_questions_specifiques': data.get('specific_question_answers'),
         }
 
     def call_webservice(self, data):

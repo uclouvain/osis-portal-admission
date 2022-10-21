@@ -84,6 +84,16 @@ class WebServiceFormMixin:
         return self.request.user.person
 
 
+class FormMixinWithSpecificQuestions:
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_item_configurations'] = [
+            configuration.to_dict()
+            for configuration in getattr(self, 'specific_questions', [])
+        ] if self.kwargs.get('pk') else []
+        return kwargs
+
+
 class ServiceMeta(type):
     """
     A metaclass that decorates all class methods with exception handler.

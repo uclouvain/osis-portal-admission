@@ -44,12 +44,13 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     EMPTY_CHOICE,
 )
+from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 from base.tests.factories.academic_year import get_current_year
 from osis_document.contrib import FileUploadField
 
 
-class DoctorateAdmissionEducationForm(forms.Form):
+class DoctorateAdmissionEducationForm(ConfigurableFormMixin):
     got_diploma = forms.ChoiceField(
         label=_("Do you have a high school diploma?"),
         choices=GotDiploma.choices(),

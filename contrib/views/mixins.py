@@ -67,6 +67,14 @@ class DoctorateLoadViewMixin(LoadViewMixin):
             uuid=self.admission_uuid,
         )
 
+    @cached_property
+    def specific_questions(self):
+        return AdmissionPropositionService.retrieve_doctorate_specific_questions(
+            person=self.request.user.person,
+            uuid=self.admission_uuid,
+            tab_name=self.tab_of_specific_questions,
+        )
+
 
 class LoadDossierViewMixin(DoctorateLoadViewMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
@@ -78,6 +86,10 @@ class LoadDossierViewMixin(DoctorateLoadViewMixin):
 
         if self.admission_uuid:
             context['admission'] = self.admission
+
+            if hasattr(self, 'tab_of_specific_questions'):
+                context['specific_questions'] = self.specific_questions
+
             if self.admission.statut == ChoixStatutProposition.ENROLLED.name:
                 context['doctorate'] = self.doctorate
                 # We display the information related to the doctorate instead of the admission
@@ -112,11 +124,22 @@ class LoadGeneralEducationDossierViewMixin(LoadViewMixin):
             uuid=self.admission_uuid,
         )
 
+    @cached_property
+    def specific_questions(self):
+        return AdmissionPropositionService.retrieve_general_specific_questions(
+            person=self.request.user.person,
+            uuid=self.admission_uuid,
+            tab_name=self.tab_of_specific_questions,
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         if self.admission_uuid:
             context['admission'] = self.admission
+
+            if hasattr(self, 'tab_of_specific_questions'):
+                context['specific_questions'] = self.specific_questions
 
         return context
 
@@ -133,10 +156,21 @@ class LoadContinuingEducationDossierViewMixin(LoadViewMixin):
             uuid=self.admission_uuid,
         )
 
+    @cached_property
+    def specific_questions(self):
+        return AdmissionPropositionService.retrieve_continuing_specific_questions(
+            person=self.request.user.person,
+            uuid=self.admission_uuid,
+            tab_name=self.tab_of_specific_questions,
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         if self.admission_uuid:
             context['admission'] = self.admission
+
+            if hasattr(self, 'tab_of_specific_questions'):
+                context['specific_questions'] = self.specific_questions
 
         return context

@@ -46,6 +46,7 @@ from admission.contrib.enums.training_choice import (
 )
 from admission.contrib.forms import get_campus_choices, EMPTY_CHOICE, RadioBooleanField, EMPTY_VALUE
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
+from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.education_group import TrainingsService
 from admission.services.scholarship import AdmissionScholarshipService
@@ -73,7 +74,7 @@ def get_training_choices(training):
     ]
 
 
-class TrainingChoiceForm(forms.Form):
+class TrainingChoiceForm(ConfigurableFormMixin):
     training_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + TypeFormation.choices(),
         label=_('Training type'),
@@ -206,11 +207,11 @@ class TrainingChoiceForm(forms.Form):
         ),
     )
 
-    def __init__(self, person, on_update=True, **kwargs):
+    def __init__(self, person, on_update=True, *args, **kwargs):
         self.person = person
         self.on_update = on_update
 
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
         general_education_training = self.data.get(
             self.add_prefix('general_education_training'),
@@ -346,7 +347,6 @@ class TrainingChoiceForm(forms.Form):
         if not self.on_update and not training_type:
             self.add_error('training_type', FIELD_REQUIRED_MESSAGE)
 
-        # TODO check if it's necessary now
         if cleaned_data.get('campus') == EMPTY_VALUE:
             cleaned_data['campus'] = ''
 

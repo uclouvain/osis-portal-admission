@@ -271,3 +271,8 @@ input:checked + .osis-slider:before {
 .pull-right > .input-group {
   width: 0; /* Chrome fix of input-group inside panel title (doctoral training) */
 }
+
+.plain-text-widget {
+  width: 100%;
+  white-space: pre-line;
+}

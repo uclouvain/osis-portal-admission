@@ -142,11 +142,11 @@ class AdmissionPersonService(metaclass=ServiceMeta):
     @classmethod
     def get_curriculum(cls, person, uuid=None):
         if uuid:
-            return AdmissionPersonAPIClient().retrieve_curriculum_admission(
+            return AdmissionPersonAPIClient().retrieve_curriculum_details_admission(
                 uuid=uuid,
                 **build_mandatory_auth_headers(person),
             )
-        return AdmissionPersonAPIClient().retrieve_curriculum(
+        return AdmissionPersonAPIClient().retrieve_curriculum_details(
             **build_mandatory_auth_headers(person),
         )
 
@@ -247,15 +247,15 @@ class AdmissionPersonService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def update_curriculum_file(cls, person, data, uuid=None):
+    def update_curriculum(cls, person, data, uuid=None):
         if uuid:
-            return AdmissionPersonAPIClient().update_curriculum_file_admission(
+            return AdmissionPersonAPIClient().update_curriculum_admission(
                 uuid=str(uuid),
-                curriculum_file=data,
+                curriculum=data,
                 **build_mandatory_auth_headers(person),
             )
-        return AdmissionPersonAPIClient().update_curriculum_file(
-            curriculum_file=data,
+        return AdmissionPersonAPIClient().update_curriculum(
+            curriculum=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -314,7 +314,7 @@ class GeneralEducationAdmissionPersonService(metaclass=ServiceMeta):
     # Curriculum
     @classmethod
     def get_curriculum(cls, person, uuid):
-        return AdmissionPersonAPIClient().retrieve_curriculum_general_education_admission(
+        return AdmissionPersonAPIClient().retrieve_curriculum_details_general_education_admission(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
@@ -386,10 +386,10 @@ class GeneralEducationAdmissionPersonService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def update_curriculum_file(cls, person, data, uuid):
-        return AdmissionPersonAPIClient().update_curriculum_file_general_education_admission(
+    def update_curriculum(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_curriculum_general_education_admission(
             uuid=str(uuid),
-            curriculum_file=data,
+            curriculum=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -448,7 +448,7 @@ class ContinuingEducationAdmissionPersonService(metaclass=ServiceMeta):
     # Curriculum
     @classmethod
     def get_curriculum(cls, person, uuid):
-        return AdmissionPersonAPIClient().retrieve_curriculum_continuing_education_admission(
+        return AdmissionPersonAPIClient().retrieve_curriculum_details_continuing_education_admission(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
@@ -520,9 +520,9 @@ class ContinuingEducationAdmissionPersonService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def update_curriculum_file(cls, person, data, uuid):
-        return AdmissionPersonAPIClient().update_curriculum_file_continuing_education_admission(
+    def update_curriculum(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_curriculum_continuing_education_admission(
             uuid=str(uuid),
-            curriculum_file=data,
+            curriculum=data,
             **build_mandatory_auth_headers(person),
         )

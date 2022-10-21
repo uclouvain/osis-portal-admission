@@ -5,28 +5,31 @@
   <!-- List of experiences -->
   {% include 'admission/doctorate/includes/curriculum_experience_list.html' with minimal_year=minimal_year professional_experiences=professional_experiences educational_experiences=educational_experiences proposition_id=view.kwargs.pk with_editing_options=True %}
 
-  {% panel _('Submit my curriculum vitae') %}
-    <form method="post">
-      {% csrf_token %}
+  <form method="post">
+    {% csrf_token %}
 
-      {% bootstrap_form_errors form %}
+    {% bootstrap_form_errors form %}
 
+    {% panel _('Submit my curriculum vitae') %}
       <div class="required_field">
         {% bootstrap_field form.curriculum %}
       </div>
+    {% endpanel %}
 
-      <button
-          type="submit"
-          class="btn btn-primary pull-right"
-      >
-        {% translate "Upload" %}
-      </button>
-    </form>
-  {% endpanel %}
+    {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+
+    <button
+        type="submit"
+        class="btn btn-primary pull-right"
+    >
+      {% translate "Save" %}
+    </button>
+  </form>
 {% endblock %}
 
 {% block script %}
   {{ block.super }}
+
   <script type="application/javascript">
       $(function () {
           document.dispatchEvent(new Event('refreshFormInitial'));

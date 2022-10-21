@@ -27,6 +27,7 @@ from django.conf import settings
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
+from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.views.mixins import (
     LoadDossierViewMixin,
     LoadGeneralEducationDossierViewMixin,
@@ -43,6 +44,7 @@ from admission.services.reference import HighSchoolService, LanguageService
 class AdmissionEducationDetailView(TemplateView):
     template_name = 'admission/doctorate/details/education.html'
     service = AdmissionPersonService
+    tab_of_specific_questions = Onglets.ETUDES_SECONDAIRES.name
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

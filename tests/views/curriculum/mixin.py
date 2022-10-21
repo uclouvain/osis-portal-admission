@@ -41,7 +41,9 @@ from osis_admission_sdk.model.educational_experience_educationalexperienceyear_s
     EducationalExperienceEducationalexperienceyearSet,
 )
 
-from osis_admission_sdk.model.curriculum_educationalexperienceyear_set import CurriculumEducationalexperienceyearSet
+from osis_admission_sdk.model.curriculum_details_educationalexperienceyear_set import (
+    CurriculumDetailsEducationalexperienceyearSet,
+)
 from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 
 from osis_admission_sdk.model.curriculum import Curriculum
@@ -51,7 +53,8 @@ from admission.contrib.enums.projet import ChoixStatutProposition
 from osis_admission_sdk.model.activity_sector import ActivitySector
 
 from osis_admission_sdk.model.activity_type import ActivityType
-from osis_admission_sdk.model.curriculum_file import CurriculumFile
+from osis_admission_sdk.model.curriculum_details_file import CurriculumDetailsFile
+
 from osis_admission_sdk.model.evaluation_system import EvaluationSystem
 from osis_admission_sdk.model.grade import Grade
 from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
@@ -62,9 +65,11 @@ from osis_admission_sdk.model.transcript_type import TranscriptType
 from osis_reference_sdk.model.country import Country
 from osis_reference_sdk.model.language import Language
 
-from osis_admission_sdk.model.curriculum_professional_experiences import CurriculumProfessionalExperiences
+from osis_admission_sdk.model.curriculum_details_professional_experiences import (
+    CurriculumDetailsProfessionalExperiences,
+)
 
-from osis_admission_sdk.model.curriculum_educational_experiences import CurriculumEducationalExperiences
+from osis_admission_sdk.model.curriculum_details_educational_experiences import CurriculumDetailsEducationalExperiences
 from osis_reference_sdk.model.academic_year import AcademicYear
 from osis_reference_sdk.model.paginated_country import PaginatedCountry
 from osis_reference_sdk.model.paginated_language import PaginatedLanguage
@@ -150,14 +155,14 @@ class MixinTestCase(TestCase):
             ],
         )
 
-        cls.lite_educational_experience = CurriculumEducationalExperiences._from_openapi_data(
+        cls.lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
             uuid=cls.educational_experience.uuid,
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
             educationalexperienceyear_set=[
-                CurriculumEducationalexperienceyearSet(academic_year=cls.academic_year_2020.year),
-                CurriculumEducationalexperienceyearSet(academic_year=cls.academic_year_2018.year),
+                CurriculumDetailsEducationalexperienceyearSet(academic_year=cls.academic_year_2020.year),
+                CurriculumDetailsEducationalexperienceyearSet(academic_year=cls.academic_year_2018.year),
             ],
         )
 
@@ -173,7 +178,7 @@ class MixinTestCase(TestCase):
             certificate=[],
         )
 
-        cls.lite_professional_experience = CurriculumProfessionalExperiences._from_openapi_data(
+        cls.lite_professional_experience = CurriculumDetailsProfessionalExperiences._from_openapi_data(
             uuid=cls.professional_experience.uuid,
             institute_name=cls.professional_experience.institute_name,
             type=cls.professional_experience.type,
@@ -210,9 +215,10 @@ class MixinTestCase(TestCase):
             statut=ChoixStatutProposition.IN_PROGRESS.name,
             erreurs=[],
             comptabilite=PropositionDTOComptabiliteFactory(),
+            reponses_questions_specifiques={},
         )
 
-        cls.curriculum_file = CurriculumFile(curriculum=[])
+        cls.curriculum_file = CurriculumDetailsFile(curriculum=[])
 
         cls.api_default_params = {
             'accept_language': ANY,
@@ -332,8 +338,8 @@ class MixinTestCase(TestCase):
             file=self.curriculum_file,
             minimal_year=self.academic_year_2020.year,
         )
-        self.mock_person_api.return_value.retrieve_curriculum_admission.return_value = curriculum_data
-        self.mock_person_api.return_value.retrieve_curriculum.return_value = curriculum_data
+        self.mock_person_api.return_value.retrieve_curriculum_details_admission.return_value = curriculum_data
+        self.mock_person_api.return_value.retrieve_curriculum_details.return_value = curriculum_data
 
         self.mock_person_api.return_value.retrieve_educational_experience_admission.return_value = (
             self.educational_experience
