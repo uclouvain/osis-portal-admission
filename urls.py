@@ -40,13 +40,62 @@ autocomplete_paths = [
     path("institute/", views.InstituteAutocomplete.as_view(), name="institute"),
     path("institute-location/", views.InstituteLocationAutocomplete.as_view(), name="institute-location"),
     path("high-school/", views.HighSchoolAutocomplete.as_view(), name="high-school"),
+    path("diploma/", views.DiplomaAutocomplete.as_view(), name="diploma"),
+    path("learning-unit-years/", views.LearningUnitYearsAutocomplete.as_view(), name="learning-unit-years"),
+    path("superior-non-university/", views.SuperiorNonUniversityAutocomplete.as_view(), name="superior-non-university"),
+]
+
+curriculum_read_paths = [
+    path(
+        "educational/<uuid:experience_id>/",
+        views.DoctorateAdmissionCurriculumEducationalExperienceDetailView.as_view(),
+        name="educational_read",
+    ),
+    path(
+        "professional/<uuid:experience_id>/",
+        views.DoctorateAdmissionCurriculumProfessionalExperienceDetailView.as_view(),
+        name="professional_read",
+    ),
+]
+
+curriculum_update_paths = [
+    path(
+        "educational/<uuid:experience_id>/update",
+        views.DoctorateAdmissionCurriculumEducationalExperienceFormView.as_view(),
+        name="educational_update",
+    ),
+    path(
+        "educational/<uuid:experience_id>/delete",
+        views.DoctorateAdmissionCurriculumEducationalExperienceDeleteView.as_view(),
+        name="educational_delete",
+    ),
+    path(
+        "educational/create",
+        views.DoctorateAdmissionCurriculumEducationalExperienceFormView.as_view(),
+        name="educational_create",
+    ),
+    path(
+        "professional/<uuid:experience_id>/update",
+        views.DoctorateAdmissionCurriculumProfessionalExperienceFormView.as_view(),
+        name="professional_update",
+    ),
+    path(
+        "professional/<uuid:experience_id>/delete",
+        views.DoctorateAdmissionCurriculumProfessionalExperienceDeleteView.as_view(),
+        name="professional_delete",
+    ),
+    path(
+        "professional/create",
+        views.DoctorateAdmissionCurriculumProfessionalExperienceFormView.as_view(),
+        name="professional_create",
+    ),
 ]
 
 creation_paths = [
     path("person", views.DoctorateAdmissionPersonFormView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
     path("curriculum", views.DoctorateAdmissionCurriculumFormView.as_view(), name="curriculum"),
-    path('curriculum/<uuid:experience_id>/', views.DoctorateAdmissionCurriculumFormView.as_view(), name='curriculum'),
+    path("curriculum/", include((curriculum_update_paths, "curriculum"))),
     path("education", views.DoctorateAdmissionEducationFormView.as_view(), name="education"),
     path("languages", views.DoctorateAdmissionLanguagesFormView.as_view(), name="languages"),
     path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
@@ -56,7 +105,7 @@ update_paths = [
     path("person", views.DoctorateAdmissionPersonFormView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesFormView.as_view(), name="coordonnees"),
     path("curriculum", views.DoctorateAdmissionCurriculumFormView.as_view(), name="curriculum"),
-    path('curriculum/<uuid:experience_id>/', views.DoctorateAdmissionCurriculumFormView.as_view(), name='curriculum'),
+    path("curriculum/", include((curriculum_update_paths, "curriculum"))),
     path("education", views.DoctorateAdmissionEducationFormView.as_view(), name="education"),
     path("languages", views.DoctorateAdmissionLanguagesFormView.as_view(), name="languages"),
     path("project", views.DoctorateAdmissionProjectFormView.as_view(), name="project"),
@@ -64,23 +113,39 @@ update_paths = [
     path("supervision", views.DoctorateAdmissionSupervisionFormView.as_view(), name="supervision"),
     path("confirmation", views.DoctorateAdmissionConfirmationPaperFormView.as_view(), name="confirmation-paper"),
     path("extension-request", views.DoctorateAdmissionExtensionRequestFormView.as_view(), name="extension-request"),
+    path("accounting", views.DoctorateAdmissionAccountingFormView.as_view(), name="accounting"),
+]
+
+training_paths = [
+    path("add/<str:category>", views.TrainingActivityAddView.as_view(), name="add"),
+    path('edit/<uuid:activity_id>', views.TrainingActivityEditView.as_view(), name='edit'),
+    path("submit/<uuid:activity_id>", views.DoctoralTrainingListView.as_view(), name="submit"),
+    path("assent/<uuid:activity_id>", views.TrainingActivityAssentView.as_view(), name="assent"),
+    path("delete/<uuid:activity_id>", views.TrainingActivityDeleteView.as_view(), name="delete"),
 ]
 
 doctorate_paths = [
     path("person", views.DoctorateAdmissionPersonDetailView.as_view(), name="person"),
     path("coordonnees", views.DoctorateAdmissionCoordonneesDetailView.as_view(), name="coordonnees"),
     path("curriculum", views.DoctorateAdmissionCurriculumDetailView.as_view(), name="curriculum"),
+    path("curriculum/", include((curriculum_read_paths, "curriculum"))),
     path("education", views.DoctorateAdmissionEducationDetailView.as_view(), name="education"),
     path("languages", views.DoctorateAdmissionLanguagesDetailView.as_view(), name="languages"),
     path("project", views.DoctorateAdmissionProjectDetailView.as_view(), name="project"),
     path("cotutelle", views.DoctorateAdmissionCotutelleDetailView.as_view(), name="cotutelle"),
     path("supervision", views.DoctorateAdmissionSupervisionDetailView.as_view(), name="supervision"),
+    path(
+        "set-reference-promoter/<matricule>",
+        views.DoctorateAdmissionSetReferencePromoterView.as_view(),
+        name="set-reference-promoter",
+    ),
     path("request_signatures", views.DoctorateAdmissionRequestSignaturesView.as_view(), name="request-signatures"),
     path('remove-member/<type>/<matricule>', views.DoctorateAdmissionRemoveActorView.as_view(), name='remove-actor'),
     path('approve-by-pdf', views.DoctorateAdmissionApprovalByPdfView.as_view(), name='approve-by-pdf'),
     path("update/", include((update_paths, "update"))),
     path("cancel", views.DoctorateAdmissionCancelView.as_view(), name="cancel"),
     path("confirm", views.DoctorateAdmissionConfirmFormView.as_view(), name="confirm"),
+    path("accounting", views.DoctorateAdmissionAccountingDetailView.as_view(), name="accounting"),
     path("confirmation", views.DoctorateAdmissionConfirmationPaperDetailView.as_view(), name="confirmation-paper"),
     path(
         "confirmation-paper-canvas",
@@ -88,6 +153,12 @@ doctorate_paths = [
         name="confirmation-paper-canvas",
     ),
     path("extension-request", views.DoctorateAdmissionExtensionRequestDetailView.as_view(), name="extension-request"),
+    path("doctoral-training", views.DoctoralTrainingListView.as_view(), name="doctoral-training"),
+    path("doctoral-training/", include((training_paths, "doctoral-training"))),
+    path("complementary-training", views.ComplementaryTrainingListView.as_view(), name="complementary-training"),
+    path("complementary-training/", include((training_paths, "complementary-training"))),
+    path("course-enrollment", views.CourseEnrollmentListView.as_view(), name="course-enrollment"),
+    path("course-enrollment/", include((training_paths, "course-enrollment"))),
 ]
 
 urlpatterns = [

@@ -23,28 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import Form
 from django.shortcuts import resolve_url
 from django.views.generic import FormView
 
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
 
 
-class DoctorateAdmissionCancelView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionCancelView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = "admission/doctorate/cancel.html"
     form_class = Form
 
     def call_webservice(self, data):
-        AdmissionPropositionService.cancel_proposition(person=self.person, uuid=str(self.kwargs.get('pk')))
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.person, uuid=str(self.kwargs['pk'])
-        )
-        return context_data
+        AdmissionPropositionService.cancel_proposition(person=self.person, uuid=self.admission_uuid)
 
     def get_success_url(self):
         return resolve_url('admission:doctorate-list')

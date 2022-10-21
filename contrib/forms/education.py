@@ -27,6 +27,7 @@ from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
@@ -46,8 +47,6 @@ from admission.contrib.forms import (
 from admission.services.reference import CountriesService
 from base.tests.factories.academic_year import get_current_year
 from osis_document.contrib import FileUploadField
-
-FIELD_REQUIRED_MESSAGE = _("This field is required.")
 
 
 class DoctorateAdmissionEducationForm(forms.Form):
@@ -95,11 +94,14 @@ class DoctorateAdmissionEducationForm(forms.Form):
     )
 
     class Media:
-        js = ("dependsOn.min.js",)
+        js = ("js/dependsOn.min.js",)
 
     def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["academic_graduation_year"].widget.choices = get_past_academic_years_choices(person)
+        self.fields["academic_graduation_year"].widget.choices = get_past_academic_years_choices(
+            person,
+            exclude_current=True,
+        )
 
         belgian_diploma = self.initial.get("belgian_diploma")
         foreign_diploma = self.initial.get("foreign_diploma")
@@ -176,8 +178,14 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
     institute = forms.CharField(
         label=_("Institute"),
         required=False,
-        help_text=_("You can perform a search based on the location or postal code."),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:high-school"),
+        help_text=_("You can specify the location or the postal code in your search."),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:high-school",
+            attrs={
+                'data-minimum-input-length': 3,
+                'data-html': True,
+            },
+        ),
     )
     other_institute = forms.BooleanField(
         label=_("If you don't find your institute in the list, please specify"),
@@ -216,10 +224,17 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         ):
             self.add_error("educational_type", _("Educational type is required with this community of education"))
 
-        if not cleaned_data.get("institute") and not cleaned_data.get("other_institute"):
+        other_institute = cleaned_data.get('other_institute')
+        if other_institute:
+            if not cleaned_data['other_institute_name']:
+                self.add_error('other_institute_name', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data['other_institute_address']:
+                self.add_error('other_institute_address', FIELD_REQUIRED_MESSAGE)
+
+        elif not cleaned_data.get("institute"):
             institute_error_msg = _("Please set one of institute or other institute fields")
             self.add_error("institute", institute_error_msg)
-            self.add_error("other_institute", institute_error_msg)
+            self.add_error("other_institute", '')
 
         return cleaned_data
 
@@ -369,24 +384,28 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     final_equivalence_decision_not_ue = FileUploadField(
         label=_(
             "A double-sided copy of the final equivalence decision issued by the Ministry "
-            "of the French Community of Belgium"
+            "of the French Community of Belgium (possibly with the DAES or the admission test for the "
+            "first cycle of higher education in case of restrictive equivalence)"
         ),
         help_text=_(
             "For any high-school diploma from a country outside the European Union, the admission request "
             "<strong>must contain the equivalence</strong> of your diploma delivered by the "
             "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium."
         ),
-        max_files=1,
+        max_files=2,
         required=False,
     )
     final_equivalence_decision_ue = FileUploadField(
-        label=_("A double-sided copy of the final equivalence decision"),
+        label=_(
+            "A double-sided copy of the final equivalence decision (possibly with the DAES or the admission test "
+            "for the first cycle of higher education in case of restrictive equivalence)"
+        ),
         help_text=_(
             "If you have a final equivalence decision issued by the "
             "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you must "
             "provide a double-sided copy of this document."
         ),
-        max_files=1,
+        max_files=2,
         required=False,
     )
     equivalence_decision_proof = FileUploadField(
@@ -394,22 +413,9 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         help_text=_(
             "If you do not yet have a final equivalence decision issued by the "
             "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you must "
-            "provide a double-sided copy of this document as soon as possible. You are therefore asked to "
+            "provide a double-sided copy of this document as soon as possible. You are asked to "
             "provide proof of the application in the meantime: receipt of the application and proof of payment, "
             "acknowledgement of receipt of the application, etc."
-        ),
-        max_files=1,
-        required=False,
-    )
-    restrictive_equivalence_daes = FileUploadField(
-        label=_("Diploma of Aptitude for Access to Higher Education (DAES)"),
-        max_files=1,
-        required=False,
-    )
-    restrictive_equivalence_admission_test = FileUploadField(
-        label=_(
-            "Certificate of successful completion of the admission test for the first "
-            "cycle of higher education in case of restrictive equivalence"
         ),
         max_files=1,
         required=False,

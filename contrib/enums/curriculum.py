@@ -29,14 +29,9 @@ from django.utils.translation import gettext_lazy as _
 from base.models.utils.utils import ChoiceEnum
 
 
-class ExperienceType(ChoiceEnum):
-    HIGHER_EDUCATION = _("Higher education")
-    OTHER_ACTIVITY = _("Other activity")
-
-
-class StudySystem(ChoiceEnum):
-    CONTINUING_EDUCATION = _("Continuing education")
-    FULL_TIME_EDUCATION = _("Full-time education")
+class TeachingTypeEnum(ChoiceEnum):
+    SOCIAL_PROMOTION = _("Social promotion")
+    FULL_EXERCICES = _("Full exercises")
 
 
 class Result(ChoiceEnum):
@@ -52,20 +47,17 @@ class Grade(ChoiceEnum):
     DISTINCTION = _('Distinction')
     SATISFACTION = _('Satisfaction')
     SUCCESS_WITHOUT_DISTINCTION = _('Success without distinction')
-    NO_GRADE = _('No grade')
 
 
-class CreditType(ChoiceEnum):
-    EUROPEAN_UNION_CREDITS = _('European Union credits')
-    NON_EUROPEAN_UNION_CREDITS = _('Non European Union credits')
-    SEMESTERS = _('Semesters')
+class EvaluationSystem(ChoiceEnum):
+    ECTS_CREDITS = _('ECTS credits')
+    NON_EUROPEAN_CREDITS = _('Non-European credits')
+    NO_CREDIT_SYSTEM = _('No credit system')
 
 
-class ForeignStudyCycleType(ChoiceEnum):
-    BACHELOR = _('Bachelor')
-    DOCTORATE = _('Doctorate')
-    MASTER = _('Master')
-    OTHER_HIGHER_EDUCATION = _('Other higher education')
+class TranscriptType(ChoiceEnum):
+    ONE_A_YEAR = _('A transcript for each year')
+    ONE_FOR_ALL_YEARS = _('A transcript for all years')
 
 
 class ActivityType(ChoiceEnum):
@@ -73,5 +65,22 @@ class ActivityType(ChoiceEnum):
     INTERNSHIP = _('Internship')
     VOLUNTEERING = _('Volunteering')
     UNEMPLOYMENT = _('Unemployment')
-    ILLNESS = _('Illness')
+    LANGUAGE_TRAVEL = _('Language travel')
     OTHER = _('Other')
+
+
+class ActivitySector(ChoiceEnum):
+    PRIVATE = _('Private')
+    PUBLIC = _('Public')
+    ASSOCIATIVE = _('Associative')
+
+
+EvaluationSystemsWithCredits = {
+    EvaluationSystem.ECTS_CREDITS.name,
+    EvaluationSystem.NON_EUROPEAN_CREDITS.name,
+}
+
+SuccessfulResults = {
+    Result.SUCCESS.name,
+    Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+}

@@ -28,7 +28,7 @@ from django.utils.translation import gettext_lazy as _
 
 from osis_document.contrib import FileUploadField
 
-FIELD_REQUIRED_MESSAGE = _("This field is required.")
+from admission.constants import FIELD_REQUIRED_MESSAGE
 
 
 class DoctorateAdmissionCotutelleForm(forms.Form):
@@ -63,6 +63,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         label=_("Cotutelle opening request"),
         required=False,
         max_files=1,
+        help_text=_("Please complete the \"Application for a cotutelle\" form (available here) and upload it here."),
     )
     convention = FileUploadField(
         label=_("Cotutelle convention"),
@@ -75,7 +76,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
     )
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = ('js/dependsOn.min.js',)
 
     def clean(self):
         cleaned_data = super().clean()

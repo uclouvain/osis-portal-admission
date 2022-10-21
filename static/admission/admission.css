@@ -24,6 +24,45 @@
  *
  */
 
+blockquote {
+  padding: 5px 10px;
+  font-size: 1em;
+  font-style: italic;
+  white-space: pre-line;
+}
+
+.table caption {
+  font-weight: bold;
+  color: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.border-top {
+  border-top: 1px solid #eee;
+  padding-top: 1em;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1em;
+}
+
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
+
 .inline-field-data dl {
   display: flex;
   flex-wrap: wrap;
@@ -40,7 +79,12 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  align-items: center;
+	align-items: center;
+  gap: 1em;
+}
+
+.flex-1 {
+  flex: 1;
 }
 
 .min_field {
@@ -62,9 +106,32 @@
   display: initial;
 }
 
-.required_field .control-label:after, .required_text:after {
+.required_field .control-label:after, .required_text:after, .required_panel .panel-title:after {
   content: " *";
   color: red;
+}
+
+#template-messages-container > .panel-body {
+  padding: 0;
+  margin: 1em 0;
+}
+
+#template-messages-container > .panel-body > #pnl_error_messages {
+  margin: 0;
+}
+
+/* To override the bootstrap fieldset style */
+fieldset.custom-fieldset {
+  border: 1px solid #ddd;
+  padding: inherit;
+}
+
+fieldset.custom-fieldset > legend {
+  font-size: 1em;
+  width: fit-content;
+  border: none;
+  font-weight: bold;
+  margin-bottom: 0.5em;
 }
 
 .nav-pills.nav-grey > li.active > a,
@@ -128,4 +195,79 @@
 select.select2-hidden-accessible + span {
   width: 100% !important;
   min-width: auto;
+}
+
+.d-block {
+  display: block;
+}
+
+/*
+  TOGGLE SWITCH
+*/
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.osis-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.osis-slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .osis-slider {
+  background-color: rgb(51, 122, 183);
+}
+
+input:focus + .osis-slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .osis-slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.osis-slider.round {
+  border-radius: 17px;
+}
+
+.osis-slider.round:before {
+  border-radius: 50%;
+}
+
+.pull-right > .input-group {
+  width: 0; /* Chrome fix of input-group inside panel title (doctoral training) */
 }

@@ -23,232 +23,309 @@
 #     see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete, forward
-from django import forms
-from django.utils.translation import gettext_lazy as _
+from datetime import datetime
 
-from admission.constants import BE_ISO_CODE
+from dal import autocomplete
+from django import forms
+from django.forms import BaseFormSet
+from django.utils.dates import MONTHS
+from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
+
+from admission.constants import (
+    BE_ISO_CODE,
+    FIELD_REQUIRED_MESSAGE,
+    LINGUISTIC_REGIMES_WITHOUT_TRANSLATION,
+    MINIMUM_YEAR,
+)
+
 from admission.contrib.enums.curriculum import *
-from admission.contrib.enums.secondary_studies import BelgianCommunitiesOfEducation
 from admission.contrib.forms import (
     EMPTY_CHOICE,
     get_country_initial_choices,
     get_past_academic_years_choices,
     CustomDateInput,
     get_language_initial_choices,
+    get_diploma_initial_choices,
+    get_example_text,
+    RadioBooleanField,
+    get_superior_non_university_initial_choices,
+    FORM_SET_PREFIX,
 )
 from osis_document.contrib.forms import FileUploadField
+
+from admission.services.reference import CountriesService
 
 
 class DoctorateAdmissionCurriculumFileForm(forms.Form):
     curriculum = FileUploadField(
-        help_text=_('This document must be detailed, dated and signed.'),
-        label=_('Curriculum'),
+        label=_('Curriculum vitae detailed, dated and signed'),
         required=True,
     )
 
 
-class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
-    # Common
-    academic_year = forms.ChoiceField(
-        label=_('Academic year'),
+def year_choices():
+    return [EMPTY_CHOICE[0]] + [(year, year) for year in range(datetime.today().year, MINIMUM_YEAR, -1)]
+
+
+def month_choices():
+    return [EMPTY_CHOICE[0]] + [(index, month) for index, month in MONTHS.items()]
+
+
+class DoctorateAdmissionCurriculumProfessionalExperienceForm(forms.Form):
+    start_date_month = forms.ChoiceField(
+        choices=month_choices,
+        label=_('Month'),
+        widget=autocomplete.Select2(),
+    )
+    end_date_month = forms.ChoiceField(
+        choices=month_choices,
+        label=_('Month'),
+        widget=autocomplete.Select2(),
+    )
+    start_date_year = forms.ChoiceField(
+        choices=year_choices,
+        label=_('Year'),
+        widget=autocomplete.Select2(),
+    )
+    end_date_year = forms.ChoiceField(
+        choices=year_choices,
+        label=_('Year'),
+        widget=autocomplete.Select2(),
     )
     type = forms.ChoiceField(
+        choices=EMPTY_CHOICE + ActivityType.choices(),
         label=_('Type'),
-        choices=ExperienceType.choices(),
-        widget=forms.RadioSelect,
     )
-    country = forms.CharField(
-        label=_('Country'),
-        widget=autocomplete.ListSelect2(url='admission:autocomplete:country'),
-    )
-    # Common university higher education
-    institute = forms.CharField(
-        label=_('Institute'),
+    role = forms.CharField(
+        label=__('curriculum', 'Role'),
         required=False,
-        empty_value=None,
-        # TODO Enable the field and add autocomplete
-        disabled=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('e.g.: Librarian'),
+            },
+        ),
     )
-    institute_not_found = forms.BooleanField(
-        label=_('I don\'t find my institute in the list.'),
+    sector = forms.ChoiceField(
+        choices=EMPTY_CHOICE + ActivitySector.choices(),
+        label=_('Sector'),
         required=False,
     )
     institute_name = forms.CharField(
         label=_('Institute name'),
         required=False,
     )
-    institute_postal_code = forms.CharField(
-        label=_('Institute postal code'),
+    certificate = FileUploadField(
+        label=_('Certificate'),
+        required=False,
+    )
+    activity = forms.CharField(
+        label=_('Activity'),
+        required=False,
+    )
+
+    class Media:
+        js = ('js/dependsOn.min.js',)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if (
+            cleaned_data.get('start_date_month')
+            and cleaned_data.get('end_date_month')
+            and cleaned_data.get('start_date_year')
+            and cleaned_data.get('start_date_month')
+        ):
+            start_date_month = int(cleaned_data.get('start_date_month'))
+            end_date_month = int(cleaned_data.get('end_date_month'))
+            start_date_year = int(cleaned_data.get('start_date_year'))
+            end_date_year = int(cleaned_data.get('end_date_year'))
+
+            if start_date_year > end_date_year or (
+                start_date_year == end_date_year and start_date_month > end_date_month
+            ):
+                self.add_error(None, _("The start date must be equals or lower than the end date."))
+
+        activity_type = cleaned_data.get('type')
+
+        if activity_type == ActivityType.WORK.name:
+            if not cleaned_data.get('role'):
+                self.add_error('role', FIELD_REQUIRED_MESSAGE)
+        else:
+            cleaned_data['role'] = ''
+
+        if activity_type in [ActivityType.WORK.name, ActivityType.INTERNSHIP.name, ActivityType.VOLUNTEERING.name]:
+            if not cleaned_data.get('sector'):
+                self.add_error('sector', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get('institute_name'):
+                self.add_error('institute_name', FIELD_REQUIRED_MESSAGE)
+        else:
+            cleaned_data['sector'] = ''
+            cleaned_data['institute_name'] = ''
+
+        if activity_type == ActivityType.OTHER.name:
+            cleaned_data['certificate'] = []
+            if not cleaned_data['activity']:
+                self.add_error('activity', FIELD_REQUIRED_MESSAGE)
+        else:
+            cleaned_data['activity'] = ''
+
+        return cleaned_data
+
+
+class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
+    start = forms.ChoiceField(
+        label=_('Start'),
+        widget=autocomplete.Select2(),
+    )
+    end = forms.ChoiceField(
+        label=_('End'),
+        widget=autocomplete.Select2(),
+    )
+    country = forms.CharField(
+        label=_('Country'),
+        widget=autocomplete.ListSelect2(url='admission:autocomplete:country'),
+    )
+    other_institute = forms.BooleanField(
+        label=_('Other institute'),
+        required=False,
+    )
+    institute_name = forms.CharField(
+        label=_('Institute name'),
+        required=False,
+    )
+    institute_address = forms.CharField(
+        label=_('Institute address'),
+        required=False,
+    )
+    institute = forms.CharField(
+        empty_value=None,
+        label=_('Institute'),
+        required=False,
+        widget=autocomplete.ListSelect2(url='admission:autocomplete:superior-non-university'),
+    )
+    program = forms.CharField(
+        empty_value=None,
+        label=_('Program'),
+        required=False,
+        widget=autocomplete.ListSelect2(url='admission:autocomplete:diploma'),
+    )
+    other_program = forms.BooleanField(
+        label=_('Other program'),
         required=False,
     )
     education_name = forms.CharField(
-        label=_('Name of the diploma or of the education'),
+        label=_('Education name'),
         required=False,
     )
-    result = forms.ChoiceField(
-        label=_('Result'),
-        required=False,
-        choices=EMPTY_CHOICE + Result.choices(),
+    evaluation_type = forms.ChoiceField(
+        choices=EMPTY_CHOICE + EvaluationSystem.choices(),
+        label=_('Evaluation type'),
     )
-    graduation_year = forms.BooleanField(
-        label=_('Is it your graduation year?'),
+    linguistic_regime = forms.CharField(
+        empty_value=None,
+        label=_('Linguistic regime'),
         required=False,
+        widget=autocomplete.ListSelect2(url='admission:autocomplete:language'),
+    )
+    transcript_type = forms.ChoiceField(
+        choices=EMPTY_CHOICE + TranscriptType.choices(),
+        label=_('Transcript type'),
+    )
+    obtained_diploma = RadioBooleanField(
+        label=_('Did you obtain a diploma at the end of this training?'),
     )
     obtained_grade = forms.ChoiceField(
-        label=_('Obtained grade'),
         choices=EMPTY_CHOICE + Grade.choices(),
-        required=False,
-    )
-    rank_in_diploma = forms.CharField(
-        label=_('Rank in diploma'),
-        required=False,
-    )
-    issue_diploma_date = forms.DateField(
-        label=_('Issue diploma date'),
-        required=False,
-        widget=CustomDateInput(),
-    )
-    credit_type = forms.ChoiceField(
-        choices=EMPTY_CHOICE + CreditType.choices(),
-        label=_('Credit type'),
-        required=False,
-    )
-    entered_credits_number = forms.IntegerField(
-        label=_('Entered credit number'),
-        min_value=0,
-        required=False,
-    )
-    acquired_credits_number = forms.IntegerField(
-        label=_('Acquired credit number'),
-        min_value=0,
-        required=False,
-    )
-    transcript = FileUploadField(
-        label=_('Transcript'),
+        label=_('Obtained grade'),
         required=False,
     )
     graduate_degree = FileUploadField(
         label=_('Graduate degree'),
         required=False,
     )
-    access_certificate_after_60_master = FileUploadField(
-        label=_('Access certificate after a 60 master'),
+    graduate_degree_translation = FileUploadField(
+        label=_('Graduate degree translation'),
         required=False,
     )
-    dissertation_title = forms.CharField(
-        label=_('Title of the dissertation'),
+    transcript = FileUploadField(
+        label=_('Transcript'),
         required=False,
-    )
-    dissertation_score = forms.DecimalField(
-        decimal_places=2,
-        label=_('Dissertation score'),
-        max_digits=4,
-        required=False,
-    )
-    dissertation_summary = FileUploadField(
-        label=_('Dissertation summary'),
-        required=False,
-    )
-    # Belgian higher education
-    belgian_education_community = forms.ChoiceField(
-        choices=BelgianCommunitiesOfEducation.choices(),
-        label=_('Education community'),
-        required=False,
-        widget=forms.RadioSelect,
-    )
-    institute_city_be = forms.CharField(
-        label=_('Institute city'),
-        required=False,
-        widget=autocomplete.ListSelect2(
-            url='admission:autocomplete:city',
-            forward=(forward.Field('institute_postal_code', 'postal_code'),),
-        ),
-    )
-    program = forms.CharField(
-        label=_('Program'),
-        required=False,
-        empty_value=None,
-        # TODO Enable the field and add autocomplete
-        disabled=True,
-    )
-    program_not_found = forms.BooleanField(
-        label=_('I don\'t find my program in the list.'),
-        required=False,
-    )
-    other_program = forms.CharField(
-        label=_('Other program'),
-        required=False,
-    )
-    study_system = forms.ChoiceField(
-        choices=EMPTY_CHOICE + StudySystem.choices(),
-        label=_('Study system'),
-        required=False,
-    )
-    # Foreign higher education
-    institute_city = forms.CharField(
-        label=_('Institute city'),
-        required=False,
-    )
-    study_cycle_type = forms.ChoiceField(
-        choices=EMPTY_CHOICE + ForeignStudyCycleType.choices(),
-        label=_('Study cycle type'),
-        required=False,
-    )
-    linguistic_regime = forms.CharField(
-        label=_('Linguistic regime'),
-        widget=autocomplete.ListSelect2(url='admission:autocomplete:language'),
-        required=False,
-        empty_value=None,
     )
     transcript_translation = FileUploadField(
         label=_('Transcript translation'),
         required=False,
     )
-    graduate_degree_translation = FileUploadField(
-        label=_('Graduate degree translation'),
+    rank_in_diploma = forms.CharField(
+        label=_('Rank in diploma'),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('e.g.: 5th out of 30'),
+            },
+        ),
+    )
+    expected_graduation_date = forms.DateField(
+        help_text=_('Date on which you expect to graduate.'),
+        label=_('Expected graduation date'),
+        required=False,
+        widget=CustomDateInput(),
+    )
+    dissertation_title = forms.CharField(
+        label=_('Title of the dissertation'),
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'rows': 3,
+            },
+        ),
+    )
+    dissertation_score = forms.CharField(
+        label=_('Dissertation score'),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': get_example_text('15/20'),
+            },
+        ),
+    )
+    dissertation_summary = FileUploadField(
+        label=_('Dissertation summary'),
         required=False,
     )
-    # Other occupation
-    activity_type = forms.ChoiceField(
-        choices=ActivityType.choices(),
-        label=_('Activity type'),
-        required=False,
-        widget=forms.RadioSelect,
-    )
-    other_activity_type = forms.CharField(
-        label=_('Other activity type'),
+    bachelor_cycle_continuation = RadioBooleanField(
+        label=_(
+            'Do you want, on the basis of this training, to realize a cycle '
+            'continuation for the bachelor you are registering for?'
+        ),
         required=False,
     )
-    activity_certificate = FileUploadField(
-        label=_('Activity certificate'),
-        required=False,
-    )
-    activity_position = forms.CharField(
-        label=_('Activity position'),
-        required=False,
-    )
-    activity_institute_name = forms.CharField(
-        label=_('Institute name'),
-        required=False,
-    )
-    activity_institute_city = forms.CharField(
-        label=_('Institute city'),
+    diploma_equivalence = FileUploadField(
+        label=_('Diploma equivalence'),
         required=False,
     )
 
     class Media:
-        js = ('dependsOn.min.js',)
+        js = (
+            'js/dependsOn.min.js',
+            'jquery.mask.min.js',
+        )
 
     def __init__(self, person, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Initialize the choices of some fields
-        self.fields['academic_year'].choices = get_past_academic_years_choices(person)
+        # Initialize the field with dynamic choices
+        academic_years_choices = get_past_academic_years_choices(person)
+        self.fields['start'].choices = academic_years_choices
+        self.fields['end'].choices = academic_years_choices
 
+        iso_code = self.data.get(self.add_prefix("country"), self.initial.get("country"))
+        country = CountriesService.get_country(iso_code=iso_code, person=person) if iso_code else None
+
+        self.fields['country'].is_ue_country = bool(country and country.european_union)
         self.fields['country'].widget.choices = get_country_initial_choices(
-            self.data.get(self.add_prefix('country'), self.initial.get('country')),
-            person,
+            iso_code=iso_code,
+            person=person,
+            loaded_country=country,
         )
 
         self.fields['linguistic_regime'].widget.choices = get_language_initial_choices(
@@ -256,130 +333,195 @@ class DoctorateAdmissionCurriculumExperienceForm(forms.Form):
             person,
         )
 
+        self.fields['program'].widget.choices = get_diploma_initial_choices(
+            self.data.get(self.add_prefix('program'), self.initial.get('program')),
+            person,
+        )
+
+        self.fields['institute'].widget.choices = get_superior_non_university_initial_choices(
+            self.data.get(self.add_prefix('institute'), self.initial.get('institute')),
+            person,
+        )
+
         # Initialize the fields which are not automatically mapping
         if self.initial:
-
-            curriculum_year = self.initial.get('curriculum_year')
-            if curriculum_year:
-                self.initial['academic_year'] = curriculum_year.get('academic_year')
-
-            initial_education_name = self.initial.get('education_name')
-            if initial_education_name:
-                self.initial['other_program'] = initial_education_name
-                self.initial['program_not_found'] = True
-
-            if self.initial.get('institute_name'):
-                self.initial['institute_not_found'] = True
-
-            initial_institute_city = self.initial.get('institute_city')
-            if initial_institute_city:
-                if self.initial.get('country') == BE_ISO_CODE:
-                    self.fields['institute_city_be'].widget.choices = (
-                        (initial_institute_city, initial_institute_city),
-                    )
-
-                self.initial['institute_city_be'] = initial_institute_city
-                self.initial['activity_institute_city'] = initial_institute_city
-
-            self.initial['activity_institute_name'] = self.initial.get('institute_name')
+            self.initial['other_program'] = bool(self.initial.get('education_name'))
+            self.initial['other_institute'] = bool(self.initial.get('institute_name'))
 
     def clean(self):
         cleaned_data = super().clean()
 
-        # List the fields that are mandatory depending on the values of other fields
-        mandatory_fields = []
+        country = cleaned_data.get('country')
+        be_country = country == BE_ISO_CODE
 
-        if cleaned_data.get('type') == ExperienceType.HIGHER_EDUCATION.name:
-            # Higher education
-            is_belgian_education = cleaned_data.get('country') == BE_ISO_CODE
+        obtained_diploma = cleaned_data.get('obtained_diploma')
 
-            mandatory_fields += [
-                'acquired_credits_number',
-                'credit_type',
-                'dissertation_title',
-                'dissertation_summary',
-                'entered_credits_number',
-                'result',
-            ]
+        global_transcript = cleaned_data.get('transcript_type') == TranscriptType.ONE_FOR_ALL_YEARS.name
 
-            if cleaned_data.get('dissertation_score') is None:
-                self.add_error('dissertation_score', _('This field is required.'))
+        # Date fields
+        start = cleaned_data.get('start')
+        end = cleaned_data.get('end')
+        if start and end and int(start) > int(end):
+            self.add_error(None, _("The start date must be equals or lower than the end date."))
 
-            # Either a known or an unknown institute
-            if cleaned_data.get('institute_not_found'):
-                mandatory_fields += [
-                    'institute_city_be' if is_belgian_education else 'institute_city',
-                    'institute_name',
-                    'institute_postal_code',
-                ]
-            elif not cleaned_data.get('study_cycle_type') == ForeignStudyCycleType.OTHER_HIGHER_EDUCATION.name:
-                mandatory_fields.append('institute')
+        # Institute fields
+        self.clean_data_institute(cleaned_data)
 
-            # Result
-            if cleaned_data.get('result') in {
-                Result.SUCCESS.name,
-                Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
-            } and cleaned_data.get('graduation_year'):
-                mandatory_fields.append('obtained_grade')
+        # Transcript field
+        if global_transcript:
+            if not cleaned_data.get('transcript'):
+                self.add_error('transcript', FIELD_REQUIRED_MESSAGE)
+        else:
+            cleaned_data['transcript'] = []
+            cleaned_data['transcript_translation'] = []
 
-            if is_belgian_education:
-                # Belgian studies
-                mandatory_fields += [
-                    'belgian_education_community',
-                    'study_system',
-                ]
+        self.clean_data_diploma(cleaned_data, obtained_diploma)
 
-                cleaned_data['institute_city'] = cleaned_data['institute_city_be']
-
-                belgian_education_community = cleaned_data.get('belgian_education_community')
-                if belgian_education_community:
-                    if belgian_education_community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name:
-                        # French-speaking community -> program (either known or unknown)
-                        if cleaned_data.get('program_not_found'):
-                            mandatory_fields.append('other_program')
-                            cleaned_data['education_name'] = cleaned_data['other_program']
-                        else:
-                            mandatory_fields.append('program')
-                    else:
-                        # Other speaking communities -> education
-                        mandatory_fields.append('education_name')
-
-            else:
-                # Foreign studies
-                mandatory_fields += [
-                    'study_cycle_type',
-                    'linguistic_regime',
-                    'education_name',
-                ]
-
-        elif cleaned_data.get('type') == ExperienceType.OTHER_ACTIVITY.name:
-            # Other occupations
-            mandatory_fields += [
-                'activity_type',
-                'activity_certificate',
-            ]
-
-            activity_type = cleaned_data.get('activity_type')
-
-            # Custom activity type
-            if activity_type == ActivityType.OTHER.name:
-                mandatory_fields.append('other_activity_type')
-
-            # Specify the location if necessary
-            if activity_type in {
-                ActivityType.WORK.name,
-                ActivityType.INTERNSHIP.name,
-                ActivityType.VOLUNTEERING.name,
-                ActivityType.OTHER.name,
-            }:
-                mandatory_fields.append('activity_institute_city')
-
-            cleaned_data['institute_city'] = cleaned_data['activity_institute_city']
-            cleaned_data['institute_name'] = cleaned_data['activity_institute_name']
-
-        # Check fields and eventually add errors
-        for field in mandatory_fields:
-            if not cleaned_data.get(field):
-                self.add_error(field, _('This field is required.'))
+        if be_country:
+            self.clean_data_be(cleaned_data)
+        elif country:
+            self.clean_data_foreign(cleaned_data, global_transcript, obtained_diploma)
 
         return cleaned_data
+
+    def clean_data_diploma(self, cleaned_data, obtained_diploma):
+        if obtained_diploma:
+            for field in [
+                'obtained_grade',
+                'expected_graduation_date',
+                'dissertation_title',
+                'dissertation_score',
+                'dissertation_summary',
+                'graduate_degree',
+            ]:
+                if not cleaned_data.get(field):
+                    self.add_error(field, FIELD_REQUIRED_MESSAGE)
+        else:
+            cleaned_data['expected_graduation_date'] = None
+            cleaned_data['dissertation_title'] = ''
+            cleaned_data['dissertation_score'] = ''
+            cleaned_data['dissertation_summary'] = []
+            cleaned_data['graduate_degree'] = []
+            cleaned_data['graduate_degree_translation'] = []
+            cleaned_data['rank_in_diploma'] = ''
+
+    def clean_data_institute(self, cleaned_data):
+        institute = cleaned_data.get('institute')
+        other_institute = cleaned_data.get('other_institute')
+        if other_institute:
+            if not cleaned_data.get('institute_name'):
+                self.add_error('institute_name', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get('institute_address'):
+                self.add_error('institute_address', FIELD_REQUIRED_MESSAGE)
+
+            cleaned_data['institute'] = None
+
+        else:
+            if not institute:
+                self.add_error('institute', FIELD_REQUIRED_MESSAGE)
+
+            cleaned_data['institute_address'] = ''
+            cleaned_data['institute_name'] = ''
+
+    def clean_data_foreign(self, cleaned_data, global_transcript, obtained_diploma):
+        # Program field
+        if not cleaned_data.get('education_name'):
+            self.add_error('education_name', FIELD_REQUIRED_MESSAGE)
+        # Equivalence field
+        if not cleaned_data.get('diploma_equivalence'):
+            self.add_error('diploma_equivalence', FIELD_REQUIRED_MESSAGE)
+        # Linguistic fields
+        linguistic_regime = cleaned_data.get('linguistic_regime')
+        if not linguistic_regime:
+            self.add_error('linguistic_regime', FIELD_REQUIRED_MESSAGE)
+        if not linguistic_regime or linguistic_regime in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION:
+            cleaned_data['graduate_degree_translation'] = []
+            cleaned_data['transcript_translation'] = []
+        else:
+            if obtained_diploma and not cleaned_data.get('graduate_degree_translation'):
+                self.add_error('graduate_degree_translation', FIELD_REQUIRED_MESSAGE)
+            if global_transcript and not cleaned_data.get('transcript_translation'):
+                self.add_error('transcript_translation', FIELD_REQUIRED_MESSAGE)
+        # Clean belgian fields
+        cleaned_data['program'] = None
+
+    def clean_data_be(self, cleaned_data):
+        # Program fields
+        if cleaned_data.get('other_program'):
+            if not cleaned_data.get('education_name'):
+                self.add_error('education_name', FIELD_REQUIRED_MESSAGE)
+            cleaned_data['program'] = None
+        else:
+            if not cleaned_data.get('program'):
+                self.add_error('program', FIELD_REQUIRED_MESSAGE)
+            cleaned_data['education_name'] = ''
+        # Clean foreign fields
+        cleaned_data['linguistic_regime'] = None
+        cleaned_data['graduate_degree_translation'] = []
+        cleaned_data['transcript_translation'] = []
+        cleaned_data['diploma_equivalence'] = []
+
+
+MINIMUM_CREDIT_NUMBER = 0
+
+
+class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
+
+    def __init__(self, prefix_index_start=0, **kwargs):
+        super().__init__(**kwargs)
+
+    academic_year = forms.IntegerField(
+        initial=FORM_SET_PREFIX,
+        label=_('Academic year'),
+        widget=forms.HiddenInput(),
+    )
+    is_enrolled = forms.BooleanField(
+        initial=True,
+        label=_('Enrolled'),
+        required=False,
+    )
+    result = forms.ChoiceField(
+        choices=EMPTY_CHOICE + Result.choices(),
+        label=_('Result'),
+        required=False,
+    )
+    registered_credit_number = forms.FloatField(
+        label=_('Registered credits'),
+        required=False,
+    )
+    acquired_credit_number = forms.FloatField(
+        label=_('Acquired credits'),
+        required=False,
+    )
+    transcript = FileUploadField(
+        label=_('Transcript'),
+        max_files=1,
+        required=False,
+    )
+    transcript_translation = FileUploadField(
+        label=_('Transcript translation'),
+        max_files=1,
+        required=False,
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get('is_enrolled') and not cleaned_data.get('result'):
+            self.add_error('result', FIELD_REQUIRED_MESSAGE)
+
+        return cleaned_data
+
+
+class BaseFormSetWithCustomFormIndex(BaseFormSet):
+    def add_prefix(self, index):
+        return super().add_prefix(
+            self.form_kwargs.get('prefix_index_start') - index if isinstance(index, int) else index
+        )
+
+
+DoctorateAdmissionCurriculumEducationalExperienceYearFormSet = forms.formset_factory(
+    form=DoctorateAdmissionCurriculumEducationalExperienceYearForm,
+    formset=BaseFormSetWithCustomFormIndex,
+    extra=0,
+)

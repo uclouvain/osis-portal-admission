@@ -23,27 +23,24 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from admission.contrib.enums.doctorat import ChoixStatutDoctorat
-from admission.services.proposition import AdmissionDoctorateService
+from admission.contrib.views.mixins import LoadDoctorateViewMixin
+from admission.services.doctorate import AdmissionDoctorateService
 
 
-class DoctorateAdmissionExtensionRequestDetailView(LoginRequiredMixin, TemplateView):
+class DoctorateAdmissionExtensionRequestDetailView(
+    LoadDoctorateViewMixin,
+    TemplateView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/extension_request.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        context_data['doctorate'] = AdmissionDoctorateService.get_doctorate(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
-
         context_data['confirmation_paper'] = AdmissionDoctorateService.get_last_confirmation_paper(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         )
 
         return context_data

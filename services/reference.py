@@ -26,7 +26,15 @@
 from functools import lru_cache
 
 from osis_reference_sdk import ApiClient, ApiException
-from osis_reference_sdk.api import academic_years_api, cities_api, countries_api, languages_api, high_schools_api
+from osis_reference_sdk.api import (
+    academic_years_api,
+    cities_api,
+    countries_api,
+    languages_api,
+    diplomas_api,
+    high_schools_api,
+    superior_non_universities_api,
+)
 
 from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import reference as reference_sdk
@@ -57,6 +65,7 @@ class CountriesService(metaclass=ServiceMeta):
             *args,
             **kwargs,
             **build_mandatory_auth_headers(person),
+            limit=1,
         ).results[0]
 
 
@@ -113,11 +122,13 @@ class LanguageService(metaclass=ServiceMeta):
         ).results
 
     @classmethod
-    @lru_cache()
     def get_language(cls, code, person=None):
-        # Search is only on name and name_en so we need to iter on whole list to search on code
-        languages = cls.get_languages(person)
-        return next((lang for lang in languages if lang.code == code), None)  # pragma: no branch
+        languages = LanguagesAPIClient().languages_list(
+            limit=1,
+            code=code,
+            **build_mandatory_auth_headers(person),
+        ).results
+        return languages[0] if languages else None
 
 
 class HighSchoolAPIClient:
@@ -140,5 +151,57 @@ class HighSchoolService(metaclass=ServiceMeta):
     def get_high_school(cls, person, uuid):
         return HighSchoolAPIClient().high_school_read(
             uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class DiplomaAPIClient:
+    def __new__(cls):
+        api_config = reference_sdk.build_configuration()
+        return diplomas_api.DiplomasApi(ApiClient(configuration=api_config))
+
+
+class DiplomaService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_diplomas(cls, person, **kwargs):
+        return DiplomaAPIClient().diplomas_list(
+            limit=100,
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        ).results
+
+    @classmethod
+    def get_diploma(cls, person, uuid, **kwargs):
+        return DiplomaAPIClient().diploma_read(
+            uuid=uuid,
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class SuperiorNonUniversityAPIClient:
+    def __new__(cls):
+        api_config = reference_sdk.build_configuration()
+        return superior_non_universities_api.SuperiorNonUniversitiesApi(ApiClient(configuration=api_config))
+
+
+class SuperiorNonUniversityService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_superior_non_universities(cls, person, **kwargs):
+        return SuperiorNonUniversityAPIClient().superior_non_universities_list(
+            limit=100,
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        ).results
+
+    @classmethod
+    def get_superior_non_university(cls, person, uuid, **kwargs):
+        return SuperiorNonUniversityAPIClient().superior_non_university_read(
+            uuid=uuid,
+            **kwargs,
             **build_mandatory_auth_headers(person),
         )

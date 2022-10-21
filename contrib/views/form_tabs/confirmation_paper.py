@@ -23,33 +23,32 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic import FormView
 
-from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.forms.confirmation_paper import ConfirmationPaperForm, PromoterConfirmationPaperForm
+from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionDoctorateService
+from admission.services.doctorate import AdmissionDoctorateService, ConfirmationPaperBusinessException
 from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
-from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
 
 
-class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
-    @cached_property
-    def doctorate(self) -> DoctorateDTO:
-        return AdmissionDoctorateService.get_doctorate(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
+class DoctorateAdmissionConfirmationPaperFormView(
+    LoadDoctorateViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
+
+    error_mapping = {
+        ConfirmationPaperBusinessException.EpreuveConfirmationDateIncorrecteException: 'date',
+    }
 
     @cached_property
     def confirmation_paper(self) -> ConfirmationPaperDTO:
         return AdmissionDoctorateService.get_last_confirmation_paper(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         )
 
     @cached_property
@@ -71,7 +70,6 @@ class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebService
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        context_data['doctorate'] = self.doctorate
         context_data['confirmation_paper'] = self.confirmation_paper
 
         if self.is_doctorate_student:
@@ -95,12 +93,12 @@ class DoctorateAdmissionConfirmationPaperFormView(LoginRequiredMixin, WebService
         if self.is_doctorate_student:
             AdmissionDoctorateService.submit_confirmation_paper(
                 person=self.person,
-                uuid=str(self.kwargs.get('pk')),
+                uuid=self.admission_uuid,
                 **data,
             )
         else:
             AdmissionDoctorateService.complete_confirmation_paper_by_promoter(
                 person=self.person,
-                uuid=str(self.kwargs.get('pk')),
+                uuid=self.admission_uuid,
                 **data,
             )

@@ -23,36 +23,41 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.template import Context, Template
 from django.urls import reverse_lazy
+from django.utils.translation import get_language
 from django.views.generic import FormView
 
-from admission.contrib.forms.languages import DoctorateAdmissionLanguagesKnowledgeFormSet
+from admission.contrib.forms.languages import DoctorateAdmissionLanguagesKnowledgeFormSet, MANDATORY_LANGUAGES
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
-from admission.services.proposition import AdmissionPropositionService
+from admission.services.reference import LanguageService
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
-class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionLanguagesFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = "admission/doctorate/forms/languages.html"
     success_url = reverse_lazy("admission:doctorate-list")
     form_class = DoctorateAdmissionLanguagesKnowledgeFormSet
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        if "pk" in self.kwargs:
-            context_data["admission"] = AdmissionPropositionService.get_proposition(
-                person=self.person,
-                uuid=str(self.kwargs["pk"]),
-            )
         template_empty_form = """
             {% load bootstrap3 i18n static admission %}
             <div class="form-container">
               {% panel _("Add a language") %}
-                {% bootstrap_form language_form %}
+                {% bootstrap_field language_form.language %}
+                {% bootstrap_field language_form.listening_comprehension %}
+                {% bootstrap_field language_form.speaking_ability %}
+                {% bootstrap_field language_form.writing_ability %}
+                {% bootstrap_field_with_tooltip language_form.certificate %}
               {% endpanel %}
             </div>
         """
@@ -60,6 +65,11 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
         context = Context({'language_form': context_data["form"].empty_form})
 
         context_data["empty_form"] = template.render(context)
+        context_data["MANDATORY_LANGUAGES"] = MANDATORY_LANGUAGES
+        context_data["languages"] = {
+            lang.code: lang.name if get_language() == settings.LANGUAGE_CODE else lang.name_en
+            for lang in LanguageService.get_languages(person=self.request.user.person)
+        }
         return context_data
 
     def get_initial(self):
@@ -67,7 +77,7 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
             language_knowledge.to_dict()
             for language_knowledge in AdmissionPersonService.retrieve_languages_knowledge(
                 self.person,
-                uuid=self.kwargs.get('pk'),
+                uuid=self.admission_uuid,
             )
         ]
 
@@ -77,7 +87,7 @@ class DoctorateAdmissionLanguagesFormView(LoginRequiredMixin, WebServiceFormMixi
         return kwargs
 
     def call_webservice(self, data):
-        AdmissionPersonService.update_languages_knowledge(self.person, data, uuid=self.kwargs.get('pk'))
+        AdmissionPersonService.update_languages_knowledge(self.person, data, uuid=self.admission_uuid)
 
     def form_valid(self, formset):
         data = [form.cleaned_data for form in formset.forms if form not in formset.deleted_forms]

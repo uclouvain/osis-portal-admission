@@ -23,6 +23,8 @@
 # ############################################################################
 
 # Association between a read-only tab name (path name) and an action link key
+from django.utils.translation import gettext_lazy as _
+
 READ_ACTIONS_BY_TAB = {
     # Personal data
     'coordonnees': 'retrieve_coordinates',
@@ -35,13 +37,17 @@ READ_ACTIONS_BY_TAB = {
     # Project
     'project': 'retrieve_proposition',
     'supervision': 'retrieve_supervision',
+    # Accounting
+    'accounting': 'retrieve_accounting',
     # Confirmation
     'confirm': 'submit_proposition',
     # Confirmation paper
     'confirmation-paper': 'retrieve_confirmation',
-    'extension-request': 'retrieve_confirmation',
+    'extension-request': 'update_confirmation_extension',
     # Others
-    'training': '',
+    'doctoral-training': 'retrieve_doctoral_training',
+    'complementary-training': 'retrieve_complementary_training',
+    'course-enrollment': 'retrieve_course_enrollment',
     'jury': '',
     'private-defense': '',
     'public-defense': '',
@@ -61,13 +67,14 @@ UPDATE_ACTIONS_BY_TAB = {
     # Project
     'project': 'update_proposition',
     'supervision': 'request_signatures',
+    # Accounting
+    'accounting': 'update_accounting',
     # Confirmation
     'confirm': 'submit_proposition',
     # Confirmation paper
     'confirmation-paper': 'update_confirmation',
-    'extension-request': 'update_confirmation',
+    'extension-request': 'update_confirmation_extension',
     # Others
-    'training': '',
     'jury': '',
     'private-defense': '',
     'public-defense': '',
@@ -77,3 +84,11 @@ UPDATE_ACTIONS_BY_TAB = {
 UCL_CODE = 'UCL'
 
 BE_ISO_CODE = 'BE'
+
+FIELD_REQUIRED_MESSAGE = _("This field is required.")
+
+FIRST_YEAR_WITH_ECTS_BE = 2004
+
+LINGUISTIC_REGIMES_WITHOUT_TRANSLATION = ['FR', 'NL', 'DE', 'EN', 'IT', 'ES', 'PT']
+
+MINIMUM_YEAR = 1900

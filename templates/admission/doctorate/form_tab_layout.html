@@ -1,4 +1,5 @@
-{% extends "layout.html" %}{% load bootstrap3 i18n static admission %}
+{% extends "layout.html" %}
+{% load bootstrap3 i18n static admission enums %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -26,12 +27,6 @@
 
 {% block style %}
   <link href="{% static "admission/admission.css" %}" rel="stylesheet"/>
-  <style>
-    .form-group.required_field .control-label:after, .required_text:after {
-      content: " *";
-      color: red;
-    }
-  </style>
 {% endblock %}
 
 {% block breadcrumb_area %}
@@ -46,7 +41,8 @@
     </li>
     {% if admission %}
       <li class="active">
-        {{ admission.intitule_doctorat }} ({{ admission.reference }})
+        {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+        {{ doctorate_title }} ({{ admission.reference }})
       </li>
     {% else %}
       <li class="active">{% trans "Create new doctorate admission" %}</li>
@@ -55,6 +51,7 @@
 {% endblock %}
 
 {% block content %}
+  {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
   {% include "admission/modal/prevent_quitting_modal.html" %}
   {% if admission and admission.matricule_candidat != user.person.global_id %}
     {% url 'admission:supervised-list' as list_url %}
@@ -64,7 +61,7 @@
   <div class="page-header h3 clearfix">
     <span class="d-inline-block">
       {% if admission %}
-        {{ admission.intitule_doctorat }}
+        {{ doctorate_title }} ({{ admission.reference }})
       {% else %}
         {% trans "Create new doctorate admission" %}
       {% endif %}
@@ -81,7 +78,7 @@
             {% if not admission %}
                 {% trans "No reference yet - Go to Project tab" %}
             {% else %}
-                {{ admission.intitule_doctorat }} ({{ admission.reference }})
+                {{ doctorate_title }} ({{ admission.reference }})
             {% endif %}
         </div>
         <div>
@@ -104,7 +101,9 @@
         {% endblocktrans %}
     </em></p>
 
-    {% include "template_messages.html" %}
+    <div id="template-messages-container">
+     {% include "template_messages.html" %}
+    </div>
 
     {% url "admission:doctorate:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
@@ -141,19 +140,12 @@
             {% endblock form_content %}
         </form>
     {% endblock %}
+    {% block extra_content %}
+    {% endblock %}
 {% endblock %}
 
 {% block script %}
   {{ block.super }}
-  <script type="application/javascript">
-      $(function () {
-          // Tooltips
-          $('[data-toggle="popover"]').popover();
-
-          $('body').on('mousedown', '.popover', function(e) {
-            e.preventDefault();
-            return false;
-          });
-      });
-  </script>
+  <script src="{% static 'admission/admission.js' %}"></script>
+  <script src="{% static 'admission/popover.js' %}"></script>
 {% endblock %}

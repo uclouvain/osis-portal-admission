@@ -1,4 +1,5 @@
-{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission %}
+{% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
+{% load i18n static admission enums %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -29,7 +30,8 @@
         <div class="row">
             {% field_data _("Admission type") admission.type_admission|enum_display:'AdmissionType' "col-md-4" %}
             {% field_data _("Sector") sector_label "col-md-4" %}
-            {% field_data _("Doctorate") admission.intitule_doctorat "col-md-4" %}
+            {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+            {% field_data _("Doctorate") doctorate_title "col-md-4" %}
         </div>
         {% if admission.commission_proximite %}
             {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
@@ -47,9 +49,12 @@
                 {% field_data fte_label admission.eft|default_if_none:'' %}
             {% elif admission.type_financement == "SEARCH_SCHOLARSHIP" %}
                 {% field_data _("Scholarship") admission.bourse_recherche|enum_display:'BourseRecherche' %}
+                {% field_data _("Scholarship start date") admission.bourse_date_debut %}
+                {% field_data _("Scholarship end date") admission.bourse_date_fin %}
+                {% field_data _("Scholarship proof") admission.bourse_preuve %}
             {% endif %}
             {% field_data _("Estimated time to complete the doctorate (in months)") admission.duree_prevue|default_if_none:'' %}
-            {% field_data _("Allocated time for the thesis (in EFT)") admission.temps_consacre|default_if_none:'' %}
+            {% field_data allocated_time_label admission.temps_consacre|default_if_none:'' %}
         {% endif %}
     {% endpanel %}
 
@@ -59,10 +64,11 @@
         {% field_data _("Thesis redacting language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
         {% field_data _("Research institute") admission.institut_these|default_if_none:'' %}
         {% field_data _("Thesis location") admission.lieu_these %}
-      {% field_data _("Research project") admission.documents_projet %}
-        {% field_data _("Gantt graph") admission.graphe_gantt %}
+
+        {% field_data _("Research project") admission.documents_projet %}
         {% field_data _("Doctoral program proposition") admission.proposition_programme_doctoral %}
-        {% field_data _("Complementary training project") admission.projet_formation_complementaire %}
+        {% field_data _("Complementary training proposition") admission.projet_formation_complementaire %}
+        {% field_data _("Gantt graph") admission.graphe_gantt %}
         {% field_data _("Recommendation letters") admission.lettres_recommandation %}
     {% endpanel %}
 
@@ -70,6 +76,7 @@
       {% field_data _("Have you ever started or completed a PhD?") admission.doctorat_deja_realise|enum_display:'ChoixDoctoratDejaRealise' %}
         {% if admission.doctorat_deja_realise != "NO" %}
             {% field_data _("Institution") admission.institution %}
+            {% field_data _("Thesis domain") admission.domaine_these %}
             {% if admission.date_soutenance %}
                 {% field_data _("Defense date") admission.date_soutenance %}
             {% elif admission.raison_non_soutenue %}

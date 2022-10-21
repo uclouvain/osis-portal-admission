@@ -24,17 +24,22 @@
 #
 # ##############################################################################
 import functools
+import re
 from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
 
 from django import template
+from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import gettext_lazy as _
+from django.utils.safestring import SafeString
+from django.utils.translation import get_language, gettext_lazy as _, pgettext
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
-from base.models.utils.utils import ChoiceEnum
+from admission.services.reference import CountriesService
+from admission.utils.utils import to_snake_case
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
@@ -106,17 +111,32 @@ TAB_TREES = {
             Tab('curriculum', _('Curriculum')),
             Tab('languages', _('Languages knowledge')),
         ],
-        Tab('doctorate', _('Doctorate'), 'graduation-cap'): [
-            Tab('project', _('Doctoral project')),
+        Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'graduation-cap'): [
+            Tab('project', pgettext('tab name', 'Research project')),
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Supervision')),
-            Tab('confirmation-paper', _('Confirmation paper')),
-            Tab('extension-request', _('New deadline')),
-            Tab('training', _('Training')),
         ],
-        Tab('confirmation', _('Confirmation'), 'check-circle'): [
+        # TODO specifics
+        Tab('completion', _('Completion'), 'check-circle'): [
+            Tab('accounting', _('Accounting')),
             Tab('confirm', _('Confirmation')),
         ],
+        Tab('confirmation-paper', _('Confirmation'), 'list-check'): [
+            Tab('confirmation-paper', _('Confirmation paper')),
+            Tab('extension-request', _('New deadline')),
+        ],
+        Tab('training', _('Training'), 'book-open-reader'): [
+            Tab('doctoral-training', _('Doctoral training')),
+            Tab('complementary-training', _('Complementary training')),
+            Tab('course-enrollment', _('Course enrollment')),
+        ],
+        # Tab('defense', _('Defense'), 'person-chalkboard'): [
+        #     Tab('jury', _('Jury')),
+        #     Tab('jury-supervision', _('Jury supervision')),
+        #     Tab('private-defense', _('Private defense')),
+        #     Tab('public-defense', _('Public defense')),
+        # ],
+        # TODO documents
     }
 }
 
@@ -167,14 +187,22 @@ def get_valid_tab_tree(tab_tree, admission):
     return tab_tree
 
 
-@register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
-def doctorate_tabs(context, admission=None, with_submit=False):
+def get_current_tab_name(context):
     match = context['request'].resolver_match
-    is_form_view = match.namespaces[1:2] == ('doctorate', 'update')
+    namespace_size = len(match.namespaces)
+    if namespace_size > 3:
+        # Sub tabs - update mode (e.g: admission:doctorate:update:curriculum:experience_detail)
+        return match.namespaces[3]
+    if namespace_size == 3 and match.namespaces[2] != 'update':
+        # Sub tabs - read mode (e.g: admission:doctorate:curriculum:experience_detail)
+        return match.namespaces[2]
+    # Main tabs (e.g: admission:doctorate:curriculum or admission:doctorate:update:curriculum)
+    return match.url_name
 
-    current_tab_name = match.url_name
-    if len(match.namespaces) > 2:
-        current_tab_name = match.namespaces[2]
+
+@register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
+def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
+    current_tab_name = get_current_tab_name(context)
 
     # Create a new tab tree based on the default one but depending on the permissions links
     tab_tree = TAB_TREES['doctorate']
@@ -183,9 +211,9 @@ def doctorate_tabs(context, admission=None, with_submit=False):
     return {
         'active_parent': _get_active_parent(tab_tree, current_tab_name),
         'admission': admission,
-        'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'with_submit': with_submit,
+        'no_status': no_status,
         **context.flatten(),
     }
 
@@ -193,26 +221,20 @@ def doctorate_tabs(context, admission=None, with_submit=False):
 def get_subtab_label(tab_name):
     return next(
         subtab for subtabs in TAB_TREES['doctorate'].values() for subtab in subtabs if subtab.name == tab_name
-    ).label
+    ).label  # pragma : no branch
 
 
 @register.simple_tag(takes_context=True)
 def current_subtabs(context):
-    match = context['request'].resolver_match
-    current_tab_name = match.url_name
-    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
-        current_tab_name = match.namespaces[2]
+    current_tab_name = get_current_tab_name(context)
     current_tab_tree = TAB_TREES['doctorate']
     return current_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), [])
 
 
 @register.simple_tag(takes_context=True)
 def get_current_tab(context):
-    match = context['request'].resolver_match
+    current_tab_name = get_current_tab_name(context)
     current_tab_tree = TAB_TREES['doctorate']
-    current_tab_name = match.url_name
-    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
-        current_tab_name = match.namespaces[2]
     return next(
         (tab for subtabs in current_tab_tree.values() for tab in subtabs if tab.name == current_tab_name),
         None,
@@ -220,27 +242,22 @@ def get_current_tab(context):
 
 
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
-def doctorate_subtabs(context, admission=None):
-    match = context['request'].resolver_match
-    is_form_view = match.namespaces[1:] == ['doctorate', 'update']
-
-    current_tab_name = match.url_name
-    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
-        current_tab_name = match.namespaces[2]
-
+def doctorate_subtabs(context, admission=None, no_status=False):
+    current_tab_name = get_current_tab_name(context)
     current_tab_tree = TAB_TREES['doctorate']
     valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(current_tab_tree, admission))
     return {
         'subtabs': valid_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), []),
         'admission': admission,
-        'detail_view': not is_form_view,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
+        'no_status': no_status,
+        'active_tab': current_tab_name,
         **context.flatten(),
     }
 
 
 @register.inclusion_tag('admission/field_data.html')
-def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False, inline=False):
+def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False, inline=False, html_tag=''):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
@@ -257,6 +274,7 @@ def field_data(name, data=None, css_class=None, hide_empty=False, translate_data
         'data': data,
         'css_class': css_class,
         'hide_empty': hide_empty,
+        'html_tag': html_tag,
     }
 
 
@@ -283,15 +301,6 @@ def get_dashboard_links(context):
     with suppress(UnauthorizedException, NotFoundException, ForbiddenException):
         return AdmissionPropositionService.get_dashboard_links(context['request'].user.person)
     return {}
-
-
-@register.filter
-def enum_display(value, enum_name):
-    if value and isinstance(value, str):
-        for enum in ChoiceEnum.__subclasses__():
-            if enum.__name__ == enum_name:
-                return enum.get_value(value)
-    return value
 
 
 @register.filter
@@ -325,12 +334,6 @@ def add_str(arg1, arg2):
 
 
 @register.filter
-def can_update_something(admission):
-    """Return true if any update tab can be opened for this admission, otherwise return False"""
-    return any(_can_access_tab(admission, tab_name, UPDATE_ACTIONS_BY_TAB) for tab_name in UPDATE_ACTIONS_BY_TAB)
-
-
-@register.filter
 def has_error_in_tab(admission, tab):
     """Return true if the tab (or subtab) has errors"""
     if not admission or not hasattr(admission, 'erreurs'):
@@ -358,3 +361,187 @@ def bootstrap_field_with_tooltip(field, classes='', show_help=False):
         'classes': classes,
         'show_help': show_help,
     }
+
+
+@register.filter
+def status_as_class(activity):
+    status = activity
+    if hasattr(activity, 'status'):
+        status = activity.status
+    elif isinstance(activity, dict):
+        status = activity['status']
+    return {
+        StatutActivite.SOUMISE.name: "warning",
+        StatutActivite.ACCEPTEE.name: "success",
+        StatutActivite.REFUSEE.name: "danger",
+    }.get(str(status), 'info')
+
+
+@register.simple_tag
+def display(*args):
+    """Display args if their value is not empty, can be wrapped by parenthesis, or separated by comma or dash"""
+    ret = []
+    iterargs = iter(args)
+    nextarg = next(iterargs)
+    while nextarg != StopIteration:
+        if nextarg == "(":
+            reduce_wrapping = [next(iterargs, None)]
+            while reduce_wrapping[-1] != ")":
+                reduce_wrapping.append(next(iterargs, None))
+            ret.append(reduce_wrapping_parenthesis(*reduce_wrapping[:-1]))
+        elif nextarg == ",":
+            ret.append(reduce_list_separated(ret.pop(), next(iterargs, None)))
+        elif nextarg in ["-", ':']:
+            ret.append(reduce_list_separated(ret.pop(), next(iterargs, None), separator=f" {nextarg} "))
+        elif isinstance(nextarg, str) and len(nextarg) > 1 and re.match(r'\s', nextarg[0]):
+            suffixed_val = ret.pop()
+            ret.append(f"{suffixed_val}{nextarg}" if suffixed_val else "")
+        else:
+            ret.append(SafeString(nextarg) if nextarg else '')
+        nextarg = next(iterargs, StopIteration)
+    return SafeString("".join(ret))
+
+
+@register.simple_tag
+def reduce_wrapping_parenthesis(*args):
+    """Display args given their value, wrapped by parenthesis"""
+    ret = display(*args)
+    if ret:
+        return SafeString(f"({ret})")
+    return ret
+
+
+@register.simple_tag
+def reduce_list_separated(arg1, arg2, separator=", "):
+    """Display args given their value, joined by separator"""
+    if arg1 and arg2:
+        return separator.join([SafeString(arg1), SafeString(arg2)])
+    elif arg1:
+        return SafeString(arg1)
+    elif arg2:
+        return SafeString(arg2)
+    return ""
+
+
+def report_ects(activity, categories, added, validated, parent_category=None):
+    if not hasattr(activity, 'ects'):
+        return added, validated
+    status = str(activity.status)
+    if status != StatutActivite.REFUSEE.name:
+        added += activity.ects
+    if status not in [StatutActivite.SOUMISE.name, StatutActivite.ACCEPTEE.name]:
+        return added, validated
+    category = str(activity.category)
+    index = int(status == StatutActivite.ACCEPTEE.name)
+    if status == StatutActivite.ACCEPTEE.name:
+        validated += activity.ects
+    elif category == CategorieActivite.CONFERENCE.name or category == CategorieActivite.SEMINAR.name:
+        categories[_("Participation")][index] += activity.ects
+    elif category == CategorieActivite.COMMUNICATION.name and (
+        activity.get('parent') is None or parent_category == CategorieActivite.CONFERENCE.name
+    ):
+        categories[_("Scientific communication")][index] += activity.ects
+    elif category == CategorieActivite.PUBLICATION.name and (
+        activity.get('parent') is None or parent_category == CategorieActivite.CONFERENCE.name
+    ):
+        categories[_("Publication")][index] += activity.ects
+    elif category == CategorieActivite.COURSE.name:
+        categories[_("Courses and training")][index] += activity.ects
+    elif category == CategorieActivite.SERVICE.name:
+        categories[_("Services")][index] += activity.ects
+    elif (
+        category == CategorieActivite.RESIDENCY.name
+        or activity.get('parent')
+        and parent_category == CategorieActivite.RESIDENCY.name
+    ):
+        categories[_("Scientific residencies")][index] += activity.ects
+    elif category == CategorieActivite.VAE.name:
+        categories[_("VAE")][index] += activity.ects
+    return added, validated
+
+
+@register.inclusion_tag('admission/doctorate/includes/training_categories.html')
+def training_categories(activities):
+    added, validated = 0, 0
+
+    categories = {
+        _("Participation"): [0, 0],
+        _("Scientific communication"): [0, 0],
+        _("Publication"): [0, 0],
+        _("Courses and training"): [0, 0],
+        _("Services"): [0, 0],
+        _("VAE"): [0, 0],
+        _("Scientific residencies"): [0, 0],
+        _("Confirmation paper"): [0, 0],
+        _("Thesis defences"): [0, 0],
+    }
+    for activity in activities:
+        if not hasattr(activity, 'ects'):
+            continue
+        # Increment global counts
+        status = str(activity.status)
+        if status != StatutActivite.REFUSEE.name:
+            added += activity.ects
+        if status == StatutActivite.ACCEPTEE.name:
+            validated += activity.ects
+        if status not in [StatutActivite.SOUMISE.name, StatutActivite.ACCEPTEE.name]:
+            continue
+
+        # Increment category counts
+        index = int(status == StatutActivite.ACCEPTEE.name)
+        category = str(activity.category)
+        if category == CategorieActivite.CONFERENCE.name or category == CategorieActivite.SEMINAR.name:
+            categories[_("Participation")][index] += activity.ects
+        elif activity.object_type == "Communication" or activity.object_type == "ConferenceCommunication":
+            categories[_("Scientific communication")][index] += activity.ects
+        elif activity.object_type == "Publication" or activity.object_type == "ConferencePublication":
+            categories[_("Publication")][index] += activity.ects
+        elif category == CategorieActivite.SERVICE.name:
+            categories[_("Services")][index] += activity.ects
+        elif "Residency" in activity.object_type:
+            categories[_("Scientific residencies")][index] += activity.ects
+        elif category == CategorieActivite.VAE.name:
+            categories[_("VAE")][index] += activity.ects
+        elif activity.category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
+            categories[_("Courses and training")][index] += activity.ects
+        elif category == CategorieActivite.PAPER.name and activity.type == ChoixTypeEpreuve.CONFIRMATION_PAPER.name:
+            categories[_("Confirmation paper")][index] += activity.ects
+        elif category == CategorieActivite.PAPER.name:
+            categories[_("Thesis defences")][index] += activity.ects
+    if not added:
+        return {}
+    return {
+        'display_table': any(cat_added + cat_validated for cat_added, cat_validated in categories.values()),
+        'categories': categories,
+        'added': added,
+        'validated': validated,
+    }
+
+
+@register.filter
+def status_list(admission):
+    statuses = {str(admission['status'])}
+    for child in admission['children']:
+        statuses.add(str(child['status']))
+    return ','.join(statuses)
+
+
+@register.filter
+def get_academic_year(year: int):
+    """Return the academic year related to a specific year."""
+    return f'{year}-{year + 1}'
+
+
+@register.filter
+def snake_case(value):
+    return to_snake_case(str(value))
+
+
+@register.simple_tag(takes_context=True)
+def get_country_name(context, iso_code: str):
+    """Return the country name."""
+    if not iso_code:
+        return ''
+    translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
+    result = CountriesService.get_country(iso_code=iso_code, person=context['request'].user.person)
+    return getattr(result, translated_field, '')

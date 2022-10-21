@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 from enum import Enum
-from typing import List
 
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
@@ -32,16 +31,19 @@ from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
-from osis_admission_sdk.model.confirmation_paper_canvas import ConfirmationPaperCanvas
-from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
+from osis_admission_sdk.model.accounting_conditions import AccountingConditions
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
-from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
-from osis_admission_sdk.model.doctorate_identity_dto import DoctorateIdentityDTO
 from osis_admission_sdk.model.proposition_dto import PropositionDTO
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
+__all__ = [
+    "AdmissionPropositionService",
+    "AdmissionCotutelleService",
+    "AdmissionSupervisionService",
+]
 
-class AdmissionPropositionAPIClient:
+
+class APIClient:
     def __new__(cls):
         api_config = admission_sdk.build_configuration()
         return propositions_api.PropositionsApi(ApiClient(configuration=api_config))
@@ -52,23 +54,18 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
 
     @classmethod
     def get_dashboard_links(cls, person: Person):
-        return (
-            AdmissionPropositionAPIClient()
-            .retrieve_dashboard(**build_mandatory_auth_headers(person))
-            .to_dict()
-            .get('links', {})
-        )
+        return APIClient().retrieve_dashboard(**build_mandatory_auth_headers(person)).to_dict().get('links', {})
 
     @classmethod
     def create_proposition(cls, person: Person, **kwargs):
-        return AdmissionPropositionAPIClient().create_proposition(
+        return APIClient().create_proposition(
             initier_proposition_command=kwargs,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def update_proposition(cls, person: Person, **kwargs):
-        return AdmissionPropositionAPIClient().update_proposition(
+        return APIClient().update_proposition(
             uuid=kwargs['uuid'],
             completer_proposition_command=kwargs,
             **build_mandatory_auth_headers(person),
@@ -76,48 +73,64 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
 
     @classmethod
     def get_proposition(cls, person: Person, uuid) -> PropositionDTO:
-        return AdmissionPropositionAPIClient().retrieve_proposition(
+        return APIClient().retrieve_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def get_propositions(cls, person: Person):
-        return AdmissionPropositionAPIClient().list_propositions(
+        return APIClient().list_propositions(
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def get_supervised_propositions(cls, person: Person):
-        return AdmissionPropositionAPIClient().list_supervised_propositions(
+        return APIClient().list_supervised_propositions(
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def cancel_proposition(cls, person: Person, uuid):
-        return AdmissionPropositionAPIClient().destroy_proposition(
+        return APIClient().destroy_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def request_signatures(cls, person: Person, uuid):
-        return AdmissionPropositionAPIClient().create_signatures(
+        return APIClient().create_signatures(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def verify_proposition(cls, person: Person, uuid):
-        return AdmissionPropositionAPIClient().verify_proposition(
+        return APIClient().verify_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def submit_proposition(cls, person: Person, uuid):
-        return AdmissionPropositionAPIClient().submit_proposition(
+        return APIClient().submit_proposition(
             uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_accounting_conditions(cls, person: Person, uuid: str) -> AccountingConditions:
+        return APIClient().retrieve_accounting(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_accounting(cls, person: Person, uuid: str, data: dict):
+        data['uuid_proposition'] = uuid
+        return APIClient().update_accounting(
+            uuid=uuid,
+            completer_comptabilite_proposition_command=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -130,7 +143,7 @@ class PropositionBusinessException(Enum):
     ProximityCommissionInconsistantException = "PROPOSITION-5"
     ContratTravailInconsistantException = "PROPOSITION-6"
     InstitutionInconsistanteException = "PROPOSITION-7"
-    MembreGroupeDeSupervisionNonTrouveException = "PROPOSITION-8"
+    DomaineTheseInconsistantException = "PROPOSITION-8"
     PromoteurNonTrouveException = "PROPOSITION-9"
     MembreCANonTrouveException = "PROPOSITION-10"
     SignataireNonTrouveException = "PROPOSITION-11"
@@ -164,6 +177,13 @@ class PropositionBusinessException(Enum):
     InstitutTheseObligatoireException = "PROPOSITION-39"
     NomEtPrenomNonSpecifiesException = "PROPOSITION-40"
     SpecifierNOMASiDejaInscritException = "PROPOSITION-41"
+    PromoteurDeReferenceManquantException = "PROPOSITION-42"
+    AbsenceDeDetteNonCompleteeException = "PROPOSITION-43"
+    ReductionDesDroitsInscriptionNonCompleteeException = "PROPOSITION-44"
+    AssimilationNonCompleteeException = "PROPOSITION-45"
+    AffiliationsNonCompleteesException = "PROPOSITION-46"
+    CarteBancaireRemboursementIbanNonCompleteException = "PROPOSITION-47"
+    CarteBancaireRemboursementAutreFormatNonCompleteException = "PROPOSITION-48"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -204,6 +224,15 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'confirmation-paper': set(),
     'extension-request': set(),
     'training': set(),
+    'accounting': {
+        PropositionBusinessException.PromoteurDeReferenceManquantException,
+        PropositionBusinessException.AbsenceDeDetteNonCompleteeException,
+        PropositionBusinessException.ReductionDesDroitsInscriptionNonCompleteeException,
+        PropositionBusinessException.AssimilationNonCompleteeException,
+        PropositionBusinessException.AffiliationsNonCompleteesException,
+        PropositionBusinessException.CarteBancaireRemboursementIbanNonCompleteException,
+        PropositionBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteException,
+    },
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}
@@ -218,7 +247,7 @@ class AdmissionCotutelleService(metaclass=ServiceMeta):
     @classmethod
     def update_cotutelle(cls, person, **kwargs):
         uuid = str(kwargs.pop('uuid'))
-        return AdmissionPropositionAPIClient().update_cotutelle(
+        return APIClient().update_cotutelle(
             uuid=uuid,
             definir_cotutelle_command=kwargs,
             **build_mandatory_auth_headers(person),
@@ -226,7 +255,7 @@ class AdmissionCotutelleService(metaclass=ServiceMeta):
 
     @classmethod
     def get_cotutelle(cls, person, uuid) -> CotutelleDTO:
-        return AdmissionPropositionAPIClient().retrieve_cotutelle(
+        return APIClient().retrieve_cotutelle(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
@@ -237,18 +266,18 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
 
     @classmethod
     def get_supervision(cls, person, uuid) -> SupervisionDTO:
-        return AdmissionPropositionAPIClient().retrieve_supervision(uuid=uuid, **build_mandatory_auth_headers(person))
+        return APIClient().retrieve_supervision(uuid=uuid, **build_mandatory_auth_headers(person))
 
     @classmethod
     def get_signature_conditions(cls, person, uuid) -> SupervisionDTO:
-        return AdmissionPropositionAPIClient().retrieve_verify_project(
+        return APIClient().retrieve_verify_project(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
     def add_member(cls, person, uuid, **kwargs):
-        return AdmissionPropositionAPIClient().add_member(
+        return APIClient().add_member(
             uuid=uuid,
             supervision_actor=kwargs,
             **build_mandatory_auth_headers(person),
@@ -256,15 +285,23 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
 
     @classmethod
     def remove_member(cls, person, uuid, **kwargs):
-        return AdmissionPropositionAPIClient().remove_member(
+        return APIClient().remove_member(
             uuid=uuid,
             supervision_actor=kwargs,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
+    def set_reference_promoter(cls, person, uuid, **kwargs):
+        return APIClient().set_reference_promoter(
+            uuid=uuid,
+            designer_promoteur_reference_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def approve_proposition(cls, person, uuid, **kwargs):
-        return AdmissionPropositionAPIClient().approve_proposition(
+        return APIClient().approve_proposition(
             uuid=uuid,
             approuver_proposition_command=kwargs,
             **build_mandatory_auth_headers(person),
@@ -272,7 +309,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
 
     @classmethod
     def reject_proposition(cls, person, uuid, **kwargs):
-        return AdmissionPropositionAPIClient().reject_proposition(
+        return APIClient().reject_proposition(
             uuid=uuid,
             refuser_proposition_command=kwargs,
             **build_mandatory_auth_headers(person),
@@ -280,64 +317,8 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
 
     @classmethod
     def approve_by_pdf(cls, person, uuid, **kwargs):
-        return AdmissionPropositionAPIClient().approve_by_pdf(
+        return APIClient().approve_by_pdf(
             uuid=uuid,
             approuver_proposition_par_pdf_command=kwargs,
-            **build_mandatory_auth_headers(person),
-        )
-
-
-class AdmissionDoctorateService(metaclass=ServiceMeta):
-    api_exception_cls = ApiException
-
-    @classmethod
-    def get_doctorate(cls, person, uuid) -> DoctorateDTO:
-        return AdmissionPropositionAPIClient().retrieve_doctorate_dto(
-            uuid=uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def get_confirmation_papers(cls, person, uuid) -> List[ConfirmationPaperDTO]:
-        return AdmissionPropositionAPIClient().retrieve_confirmation_papers(
-            uuid=uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def get_last_confirmation_paper(cls, person, uuid) -> ConfirmationPaperDTO:
-        return AdmissionPropositionAPIClient().retrieve_last_confirmation_paper(
-            uuid=uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def get_last_confirmation_paper_canvas(cls, person, uuid) -> ConfirmationPaperCanvas:
-        return AdmissionPropositionAPIClient().retrieve_last_confirmation_paper_canvas(
-            uuid=uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def submit_confirmation_paper(cls, person, uuid, **kwargs) -> DoctorateIdentityDTO:
-        return AdmissionPropositionAPIClient().submit_confirmation_paper(
-            uuid=uuid,
-            submit_confirmation_paper_command=kwargs,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def complete_confirmation_paper_by_promoter(cls, person, uuid, **kwargs) -> DoctorateIdentityDTO:
-        return AdmissionPropositionAPIClient().complete_confirmation_paper_by_promoter(
-            uuid=uuid,
-            complete_confirmation_paper_by_promoter_command=kwargs,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def submit_confirmation_paper_extension_request(cls, person, uuid, **kwargs) -> DoctorateIdentityDTO:
-        return AdmissionPropositionAPIClient().submit_confirmation_paper_extension_request(
-            uuid=uuid,
-            submit_confirmation_paper_extension_request_command=kwargs,
             **build_mandatory_auth_headers(person),
         )

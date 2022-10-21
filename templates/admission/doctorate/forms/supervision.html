@@ -1,4 +1,5 @@
-{% extends "admission/doctorate/form_tab_layout.html" %}{% load bootstrap3 i18n static admission osis_document %}
+{% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
+{% load bootstrap3 i18n static admission osis_document %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -27,147 +28,105 @@
 
 {% block submit_button_affix %}{% endblock %}
 
-{% block content %}
-  {% if admission and admission.matricule_candidat != user.person.global_id %}
-    {% url 'admission:supervised-list' as list_url %}
-  {% else %}
-    {% url 'admission:doctorate-list' as list_url %}
-  {% endif %}
-    <div class="page-header h3">
-    <span class="d-inline-block">
-      {{ admission.intitule_doctorat }}
-    </span>
-      <a href="{{ list_url }}" class="pull-right h5 text-primary">
-        <span class="fa fa-stream"></span>
-        {% trans "Back to requests" %}
-      </a>
-    </div>
-
-    <div class="well">
-        <div>
-            {% trans "Reference:" %}
-            {{ admission.intitule_doctorat }} ({{ admission.reference }})
-        </div>
-        <div>
-            {% trans "Status:" %}
-            {{ admission.statut|enum_display:'ChoixStatutProposition' }}
-        </div>
-    </div>
-
-    {% include "template_messages.html" %}
-
-    <p><em>
-        {% lorem 1 %}
-    </em></p>
-
+{% block tab_content %}
     {% csrf_token %}
-    {% doctorate_tabs admission %}
-    <div class="row">
-        <div class="col-md-2 visible-md visible-lg">
-            {% doctorate_subtabs admission %}
-        </div>
-        <div class="col-md-10 quitting-context-excluded">
 
-            {% if admission.statut != "IN_PROGRESS" %}
-              {% panel _("Summary of the proposition") %}
-                  {% if admission.fiche_archive_signatures_envoyees %}
-                      {% get_file_url admission.fiche_archive_signatures_envoyees.0 as file_url %}
-                      <a href="{{ file_url }}" class="btn btn-default" target="_blank">
-                        <span class="fa fa-file-download"></span>
-                        {% trans "Download as PDF" %}
-                      </a>
-                  {% else %}
-                      <p>{% trans "The summary of the proposal in PDF format is being generated, please come back later to get it." %}</p>
-                  {% endif %}
-              {% endpanel %}
-            {% endif %}
+    {% if admission.statut != "IN_PROGRESS" %}
+      {% panel _("Summary of the proposition") %}
+          {% if admission.fiche_archive_signatures_envoyees %}
+              {% get_file_url admission.fiche_archive_signatures_envoyees.0 as file_url %}
+              <a href="{{ file_url }}" class="btn btn-default" target="_blank">
+                <span class="fa fa-file-download"></span>
+                {% trans "Download as PDF" %}
+              </a>
+          {% else %}
+              <p>{% trans "The summary of the proposal in PDF format is being generated, please come back later to get it." %}</p>
+          {% endif %}
+      {% endpanel %}
+    {% endif %}
 
-            {% if admission|can_make_action:'add_approval' and form and form.decision %}
-              {% include "admission/modal/prevent_quitting_modal.html" %}
-              {% panel _("Proposition approval") %}
-                {% bootstrap_form_errors form %}
-                <form class="osis-form approval-form" method="post" action="">
-                  {% csrf_token %}
-                  {% bootstrap_field form.decision %}
-                  {% bootstrap_field form.motif_refus %}
-                  {% if form.institut_these %}
-                    <div id="institut_these">
-                      {% bootstrap_field form.institut_these %}
-                    </div>
-                  {% endif %}
-                  <div class="row">
+    {% if admission|can_make_action:'add_approval' and form and form.decision %}
+      {% include "admission/modal/prevent_quitting_modal.html" %}
+      {% panel _("Proposition approval") %}
+        {% bootstrap_form_errors form %}
+        <form class="osis-form approval-form" method="post" action="">
+          {% csrf_token %}
+          {% bootstrap_field form.decision %}
+          {% bootstrap_field form.motif_refus %}
+          {% if form.institut_these %}
+            <div id="institut_these">
+              {% bootstrap_field form.institut_these %}
+            </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-md-6">
+              {% bootstrap_field form.commentaire_interne %}
+            </div>
+            <div class="col-md-6">
+              {% bootstrap_field form.commentaire_externe %}
+            </div>
+          </div>
+          {% bootstrap_button button_type="submit" content=_("Submit my decision") name="approval_submit" button_class="btn btn-primary" %}
+        </form>
+      {% endpanel %}
+    {% endif %}
+
+    {% panel _("Promoters") %}
+        {% for signature in supervision.signatures_promoteurs %}
+            {% include "admission/doctorate/includes/supervision_member_entry.html" with type='PROMOTER' member=signature.promoteur supervision=supervision %}
+            {% empty %}
+            {% trans "No one invited" %}
+        {% endfor %}
+    {% endpanel %}
+
+    {% panel _("CA members") %}
+        {% for signature in supervision.signatures_membres_ca %}
+            {% include "admission/doctorate/includes/supervision_member_entry.html" with type='CA_MEMBER' member=signature.membre_ca %}
+            {% empty %}
+            {% trans "No one invited" %}
+        {% endfor %}
+    {% endpanel %}
+
+    {% if admission|can_make_action:'add_member' and form and form.type %}
+        <form class="osis-form" method="post" action="">
+            {% csrf_token %}
+            {% bootstrap_form_errors form %}
+            {% panel _("Add a promoter or a CA member") %}
+                <div class="row">
                     <div class="col-md-6">
-                      {% bootstrap_field form.commentaire_interne %}
-                    </div>
-                    <div class="col-md-6">
-                      {% bootstrap_field form.commentaire_externe %}
-                    </div>
-                  </div>
-                  {% bootstrap_button button_type="submit" content=_("Submit my decision") name="approval_submit" button_class="btn btn-primary" %}
-                </form>
-              {% endpanel %}
-            {% endif %}
-
-            {% panel _("Promoters") %}
-                {% for signature in supervision.signatures_promoteurs %}
-                    {% include "admission/doctorate/includes/supervision_member_entry.html" with type='PROMOTER' member=signature.promoteur %}
-                    {% empty %}
-                    {% trans "No one invited" %}
-                {% endfor %}
-            {% endpanel %}
-
-            {% panel _("CA members") %}
-                {% for signature in supervision.signatures_membres_ca %}
-                    {% include "admission/doctorate/includes/supervision_member_entry.html" with type='CA_MEMBER' member=signature.membre_ca %}
-                    {% empty %}
-                    {% trans "No one invited" %}
-                {% endfor %}
-            {% endpanel %}
-
-            {% if admission|can_make_action:'add_member' and form and form.type %}
-                <form class="osis-form" method="post" action="">
-                    {% csrf_token %}
-                    {% bootstrap_form_errors form %}
-                    {% panel _("Add a promoter or a CA member") %}
-                        <div class="row">
-                            <div class="col-md-6">
-                                {% bootstrap_field form.type %}
-                                <div id="person">
-                                    {% bootstrap_field form.person %}
-                                </div>
-                                <div id="tutor">
-                                    {% bootstrap_field form.tutor %}
-                                </div>
-                            </div>
+                        {% bootstrap_field form.type %}
+                        <div id="person">
+                            {% bootstrap_field form.person %}
                         </div>
-                        <button
-                            type="submit" class="btn btn-primary"
-                            name="add_member_submit"
-                        >{% trans "Add" %}</button>
-                    {% endpanel %}
-                </form>
-            {% endif %}
-
-            {% if admission|can_make_action:'request_signatures' %}
-                <div class="text-center">
-                    <button
-                        type="button"
-                        class="btn btn-success btn-lg"
-                        data-toggle="modal"
-                        data-target="#request-signatures-modal"
-                    >
-                        {% trans "Request signatures" %}
-                    </button>
+                        <div id="tutor">
+                            {% bootstrap_field form.tutor %}
+                        </div>
+                    </div>
                 </div>
+                <button
+                    type="submit" class="btn btn-primary"
+                    name="add_member_submit"
+                >{% trans "Add" %}</button>
+            {% endpanel %}
+        </form>
+    {% endif %}
 
-
-                {% include "admission/doctorate/includes/request_signature_modal.html" %}
-            {% endif %}
-
+    {% if admission|can_make_action:'request_signatures' %}
+        <div class="text-center">
+            <button
+                type="button"
+                class="btn btn-success btn-lg"
+                data-toggle="modal"
+                data-target="#request-signatures-modal"
+            >
+                {% trans "Request signatures" %}
+            </button>
         </div>
-    </div>
 
-{% endblock content %}
+
+        {% include "admission/doctorate/includes/request_signature_modal.html" %}
+    {% endif %}
+{% endblock tab_content %}
 
 {% block script %}
     {{ form.media }}
@@ -205,10 +164,7 @@
         resize: vertical;
     }
     .signature-item blockquote {
-        font-size: 1em;
-        font-style: italic;
         margin: 10px 0 0;
-        white-space: pre-line;
     }
 
     .signature-item + .well dl,

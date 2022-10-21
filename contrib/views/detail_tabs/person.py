@@ -25,41 +25,21 @@
 # ##############################################################################
 
 from django.conf import settings
-from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import AdmissionPersonService
-from admission.services.proposition import AdmissionPropositionService
-from admission.services.reference import CountriesService
 
 
-class DoctorateAdmissionPersonDetailView(TemplateView):
+class DoctorateAdmissionPersonDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/person.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         person = AdmissionPersonService.retrieve_person(
             self.request.user.person,
-            uuid=self.kwargs.get('pk'),
+            uuid=self.admission_uuid,
         ).to_dict()
         context_data['person'] = person
-        context_data['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
         context_data['contact_language'] = dict(settings.LANGUAGES).get(person.get('language'))
-
-        translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
-        if person.get('birth_country'):
-            birth_country = CountriesService.get_country(
-                iso_code=person.get('birth_country'),
-                person=self.request.user.person,
-            )
-            context_data['birth_country'] = getattr(birth_country, translated_field)
-        if person.get('country_of_citizenship'):
-            country_of_citizenship = CountriesService.get_country(
-                iso_code=person.get('country_of_citizenship'),
-                person=self.request.user.person,
-            )
-            context_data['country_of_citizenship'] = getattr(country_of_citizenship, translated_field)
         return context_data

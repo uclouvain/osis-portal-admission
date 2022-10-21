@@ -23,44 +23,32 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.functional import cached_property
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
-from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.forms.extension_request import ExtensionRequestForm
+from admission.contrib.views.mixins import LoadDoctorateViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionDoctorateService
+from admission.services.doctorate import AdmissionDoctorateService
 from osis_admission_sdk.model.confirmation_paper_dto import ConfirmationPaperDTO
-from osis_admission_sdk.model.doctorate_dto import DoctorateDTO
 
 
-class DoctorateAdmissionExtensionRequestFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionExtensionRequestFormView(
+    LoadDoctorateViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/extension_request.html'
     form_class = ExtensionRequestForm
-
-    @cached_property
-    def doctorate(self) -> DoctorateDTO:
-        return AdmissionDoctorateService.get_doctorate(
-            person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
-        )
+    extra_context = {'submit_label': _('Submit my new deadline')}
 
     @cached_property
     def confirmation_paper(self) -> ConfirmationPaperDTO:
         return AdmissionDoctorateService.get_last_confirmation_paper(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         )
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-
-        context_data['doctorate'] = self.doctorate
-        context_data['submit_label'] = _('Submit my new deadline')
-
-        return context_data
 
     def get_initial(self):
         return (
@@ -76,6 +64,6 @@ class DoctorateAdmissionExtensionRequestFormView(LoginRequiredMixin, WebServiceF
     def call_webservice(self, data):
         AdmissionDoctorateService.submit_confirmation_paper_extension_request(
             person=self.person,
-            uuid=str(self.kwargs.get('pk')),
+            uuid=self.admission_uuid,
             **data,
         )

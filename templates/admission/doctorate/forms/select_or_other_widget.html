@@ -1,4 +1,4 @@
-{% extends 'admission/modal/modal.html' %}{% load bootstrap3 i18n %}
+{% load i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -23,21 +23,34 @@
   * at the root of the source code of this program.  If not,
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-{% block modal_id %}curriculum_upload{% endblock %}
-
-{% block modal_title %}{% trans 'Upload your CV' %}{% endblock %}
-
-{% block modal_body %}
-  <form class="osis-form" method="post" action="#upload" id="curriculum_upload_form">
-    {% csrf_token %}
-    {% bootstrap_field form.curriculum form_group_class="form-group required_field" %}
-  </form>
-{% endblock %}
-
-{% block modal_footer %}
-  <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
-  <button type="submit" class="btn btn-primary" name="curriculum_upload" form="curriculum_upload_form">
-    {% trans "Upload" %}
-  </button>
-{% endblock %}
+{% spaceless %}
+  {% with widget=widget.subwidgets.0 %}
+    {% include widget.template_name %}
+  {% endwith %}
+  {% with widget=widget.subwidgets.1 %}
+    </div>
+    <div id="parent-{{ widget.attrs.id }}" class="select-or-other-container form-group col-md-4">
+    {% if not widget.help_text %}
+      <label for="{{ widget.attrs.id }}">{% trans "If other, specify" %}</label>
+      {% include widget.template_name %}
+    {% else %}
+      <div
+        id="container_{{ widget.name }}"
+        class="field-with-tooltip form-group {{ classes }} {% if field.errors %}has-error{% elif field.form.is_bound %}has-success{% endif %}"
+      >
+        <div class="label-container">
+          <label class="control-label" for="{{ widget.attrs.id }}">
+            {% trans "If other, specify" %}
+          </label>
+          <a
+            tabindex="0"
+            class="fa fa-info-circle popover-buttons"
+            data-content="<p>{{ widget.help_text }}</p>"
+            role="button"
+          ></a>
+        </div>
+        {% include widget.template_name %}
+      </div>
+    {% endif %}
+  {% endwith %}
+{% endspaceless %}

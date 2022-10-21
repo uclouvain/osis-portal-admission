@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load bootstrap3 i18n static admission %}
+{% load bootstrap3 i18n static admission enums %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -80,26 +80,27 @@
     </div>
   </div>
 
-  {% include "template_messages.html" %}
+  <div id="template-messages-container">
+    {% include "template_messages.html" %}
+  </div>
 
   {% url 'admission:doctorate:update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
   {% get_current_tab as current_tab %}
-  {% if change_url and doctorate|can_update_tab:current_tab %}
-    <div class="text-right">
-      <a href="{{ change_url }}" class="btn btn-primary">
-        <span
-            class="glyphicon glyphicon-floppy-save" aria-hidden="true"
-        >
-        </span>
-        {% trans 'Update' %}
-      </a>
-    </div>
+  {% if change_url and change_url != request.path and doctorate|can_update_tab:current_tab %}
+      <div class="text-right visible-xs visible-sm">
+          <a href="{{ change_url }}" class="btn btn-primary">
+              <span
+                  class="glyphicon glyphicon-floppy-save" aria-hidden="true"
+              ></span>
+              {% trans 'Edit' %}
+          </a>
+      </div>
   {% endif %}
 
-  {% doctorate_tabs admission=doctorate %}
+  {% doctorate_tabs admission=doctorate no_status=True %}
   <div class="row">
     <div class="col-md-2 visible-md visible-lg">
-      {% doctorate_subtabs admission=doctorate %}
+      {% doctorate_subtabs admission=doctorate no_status=True %}
     </div>
     <div class="col-md-10 quitting-context-excluded">
       {% block tab_content %}{% endblock %}

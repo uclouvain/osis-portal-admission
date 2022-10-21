@@ -33,6 +33,7 @@ from osis_reference_sdk.model.high_school import HighSchool
 from rest_framework import status
 from rest_framework.status import HTTP_200_OK, HTTP_302_FOUND
 
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
@@ -70,8 +71,6 @@ class EducationTestCase(TestCase):
             "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
             "foreign_diploma-final_equivalence_decision_ue_0": "test_ue",
             "foreign_diploma-final_equivalence_decision_not_ue_0": "test_not_ue",
-            "foreign_diploma-restrictive_equivalence_daes_0": "test",
-            "foreign_diploma-restrictive_equivalence_admission_test_0": "test",
         }
 
     def setUp(self):
@@ -146,9 +145,30 @@ class EducationTestCase(TestCase):
 
         def get_high_schools(**kwargs):
             high_schools = [
-                HighSchool(uuid=self.first_high_school_uuid, name="HighSchool 1", city="Louvain-La-Neuve"),
-                HighSchool(uuid=self.second_high_school_uuid, name="HighSchool 2", city="Louvain-La-Neuve"),
-                HighSchool(uuid=self.third_high_school_uuid, name="HighSchool 3", city="Bruxelles"),
+                HighSchool(
+                    uuid=self.first_high_school_uuid,
+                    name="HighSchool 1",
+                    city="Louvain-La-Neuve",
+                    zipcode="1348",
+                    street="Place de l'Université",
+                    street_number="1",
+                ),
+                HighSchool(
+                    uuid=self.second_high_school_uuid,
+                    name="HighSchool 2",
+                    city="Louvain-La-Neuve",
+                    zipcode="1348",
+                    street="Place de l'Université",
+                    street_number="1",
+                ),
+                HighSchool(
+                    uuid=self.third_high_school_uuid,
+                    name="HighSchool 3",
+                    city="Bruxelles",
+                    zipcode="1000",
+                    street="Boulevard du Triomphe",
+                    street_number="1",
+                ),
             ]
             if kwargs.get("uuid"):
                 return next((school for school in high_schools if school.uuid == kwargs["uuid"]), None)
@@ -230,6 +250,7 @@ class EducationTestCase(TestCase):
                 "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
+                "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
                 "schedule-latin": 5,
                 "schedule-chemistry": 5,
                 "schedule-physic": 5,
@@ -262,7 +283,7 @@ class EducationTestCase(TestCase):
                     "educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
                     "institute": "",
                     "other_institute_name": "Special school",
-                    "other_institute_address": "",
+                    "other_institute_address": "Louvain-La-Neuve",
                     "result": DiplomaResults.GT_75_RESULT.name,
                     "schedule": {
                         "biology": 5,
@@ -300,6 +321,7 @@ class EducationTestCase(TestCase):
                 "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
+                "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
                 # Even if we send data for foreign diploma, it should be stripped from data sent to WS
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             },
@@ -309,18 +331,17 @@ class EducationTestCase(TestCase):
         self.assertFormError(response, "schedule_form", None, _("A field of the schedule must at least be set."))
         self.mock_person_api.return_value.update_high_school_diploma.assert_not_called()
 
-    def test_form_foreign_error_if_no_translations_when_needed(self):
+    def test_form_foreign_error_if_no_translations_when_needed_for_this_year_in_ue_country(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "got_diploma": GotDiploma.THIS_YEAR.name,
                 "diploma_type": DiplomaTypes.FOREIGN.name,
                 "high_school_diploma_0": "test",
                 "enrolment_certificate_0": "test",
-                "high_school_transcript": "test",
-                "academic_graduation_year": 2020,
+                "high_school_transcript_0": "test",
                 "foreign_diploma-linguistic_regime": "AR",
-                "foreign_diploma-country": "US",
+                "foreign_diploma-country": "BE",
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -328,6 +349,47 @@ class EducationTestCase(TestCase):
             "high_school_transcript_translation",
             "high_school_diploma_translation",
             "enrolment_certificate_translation",
+        ]:
+            self.assertFormError(response, "foreign_diploma_form", field, self.REQUIRED_TEXT)
+
+    def test_form_foreign_error_if_no_translations_when_needed_for_this_year_in_not_ue_country(self):
+        response = self.client.post(
+            self.form_url,
+            {
+                "got_diploma": GotDiploma.THIS_YEAR.name,
+                "diploma_type": DiplomaTypes.FOREIGN.name,
+                "high_school_diploma_0": "test",
+                "enrolment_certificate_0": "test",
+                "high_school_transcript_0": "test",
+                "foreign_diploma-linguistic_regime": "AR",
+                "foreign_diploma-country": "BE",
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for field in [
+            "high_school_transcript_translation",
+            "high_school_diploma_translation",
+        ]:
+            self.assertFormError(response, "foreign_diploma_form", field, self.REQUIRED_TEXT)
+
+    def test_form_foreign_error_if_no_translations_when_needed_for_past_year(self):
+        response = self.client.post(
+            self.form_url,
+            {
+                "got_diploma": GotDiploma.YES.name,
+                "diploma_type": DiplomaTypes.FOREIGN.name,
+                "high_school_diploma_0": "test",
+                "enrolment_certificate_0": "test",
+                "high_school_transcript_0": "test",
+                "foreign_diploma-linguistic_regime": "AR",
+                "foreign_diploma-country": "BE",
+                "academic_graduation_year": 2020,
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for field in [
+            "high_school_transcript_translation",
+            "high_school_diploma_translation",
         ]:
             self.assertFormError(response, "foreign_diploma_form", field, self.REQUIRED_TEXT)
 
@@ -396,8 +458,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent.get("equivalence"), Equivalence.NO.name)
         self.assertEqual(sent.get("final_equivalence_decision"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
-        self.assertEqual(sent.get("restrictive_equivalence_admission_test"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_daes"), ["test"])
 
     def test_form_foreign_pending_equivalence_for_ue_country(self):
         response = self.client.post(
@@ -428,8 +488,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent.get("equivalence"), Equivalence.PENDING.name)
         self.assertEqual(sent.get("final_equivalence_decision"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_admission_test"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_daes"), ["test"])
 
     def test_form_foreign_existing_equivalence_for_ue_country(self):
         response = self.client.post(
@@ -460,8 +518,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent.get("equivalence"), Equivalence.YES.name)
         self.assertEqual(sent.get("final_equivalence_decision"), ["test_ue"])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
-        self.assertEqual(sent.get("restrictive_equivalence_admission_test"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_daes"), ["test"])
 
     def test_form_foreign_existing_equivalence_for_not_ue_country(self):
         response = self.client.post(
@@ -492,8 +548,6 @@ class EducationTestCase(TestCase):
         self.assertEqual(sent.get("equivalence"), '')
         self.assertEqual(sent.get("final_equivalence_decision"), ["test_not_ue"])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
-        self.assertEqual(sent.get("restrictive_equivalence_admission_test"), ["test"])
-        self.assertEqual(sent.get("restrictive_equivalence_daes"), ["test"])
 
     def test_form_foreign(self):
         # Complete international baccalaureate
@@ -535,8 +589,6 @@ class EducationTestCase(TestCase):
                     "enrolment_certificate": [],
                     "enrolment_certificate_translation": [],
                     "equivalence_decision_proof": [],
-                    "restrictive_equivalence_admission_test": [],
-                    "restrictive_equivalence_daes": [],
                     "final_equivalence_decision": [],
                 },
             },
@@ -562,6 +614,7 @@ class EducationTestCase(TestCase):
                 # Even if we send data for belgian diploma, it should be stripped from data sent to WS
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
+                "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
                 # Even if we send data for schedule, it should be stripped from data sent to WS
                 "schedule-greek": 5,
             },
@@ -588,8 +641,6 @@ class EducationTestCase(TestCase):
                     "enrolment_certificate": [],
                     "enrolment_certificate_translation": [],
                     "equivalence_decision_proof": ["test"],
-                    "restrictive_equivalence_admission_test": [],
-                    "restrictive_equivalence_daes": [],
                     "final_equivalence_decision": [],
                 },
             },
@@ -659,6 +710,7 @@ class EducationTestCase(TestCase):
                 # Even if we send data for belgian diploma, it should be stripped from data sent to WS
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
+                "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
                 # Even if we send data for schedule, it should be stripped from data sent to WS
                 "schedule-greek": 5,
             },
@@ -684,8 +736,6 @@ class EducationTestCase(TestCase):
                     "high_school_transcript_translation": [],
                     "high_school_diploma_translation": [],
                     "equivalence": "NO",
-                    "restrictive_equivalence_admission_test": [],
-                    "restrictive_equivalence_daes": [],
                     "final_equivalence_decision": [],
                 },
             },
@@ -718,7 +768,6 @@ class EducationTestCase(TestCase):
                 "got_diploma": GotDiploma.THIS_YEAR.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
                 "belgian_diploma-other_institute": True,
-                "belgian_diploma-other_institute_name": "Special school",
                 "schedule-greek": 5,
             },
         )
@@ -729,6 +778,18 @@ class EducationTestCase(TestCase):
             "high_school_diploma",
             _("Please specify either your high school diploma or your enrolment certificate"),
         )
+        self.assertFormError(
+            response,
+            "belgian_diploma_form",
+            "other_institute_name",
+            FIELD_REQUIRED_MESSAGE,
+        )
+        self.assertFormError(
+            response,
+            "belgian_diploma_form",
+            "other_institute_address",
+            FIELD_REQUIRED_MESSAGE,
+        )
         response = self.client.post(
             self.form_url,
             {
@@ -737,6 +798,7 @@ class EducationTestCase(TestCase):
                 "enrolment_certificate_0": "test",
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
+                "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
                 "schedule-greek": 5,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
                 "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,

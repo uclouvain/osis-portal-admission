@@ -1,4 +1,5 @@
-{% extends "layout.html" %}{% load bootstrap3 i18n static admission %}
+{% extends "layout.html" %}
+{% load bootstrap3 i18n static admission enums %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -25,10 +26,12 @@
 {% endcomment %}
 
 {% block style %}
+  <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet"/>
   <link href="{% static "admission/admission.css" %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block breadcrumb_area %}
+  {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
   <ol class="breadcrumb">
     <li>
       {% if admission and admission.matricule_candidat != user.person.global_id %}
@@ -39,7 +42,7 @@
     </li>
     {% if admission %}
       <li class="active">
-        {{ admission.intitule_doctorat }} ({{ admission.reference }})
+        {{ doctorate_title }} ({{ admission.reference }})
       </li>
     {% else %}
       <li class="active">{% trans "Create new doctorate admission" %}</li>
@@ -53,10 +56,11 @@
 {% endblock %}
 
 {% block content %}
+   {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
     <div class="page-header h3">
         <span class="d-inline-block">
         {% if admission %}
-            {{ admission.intitule_doctorat }} ({{ admission.reference }})
+            {{ doctorate_title }} ({{ admission.reference }})
         {% else %}
             {% trans "Create new doctorate admission" %}
         {% endif %}
@@ -70,7 +74,7 @@
           class="pull-right h5 text-primary"
       >
         <span class="fa fa-stream"></span>
-        {% trans "Back to my requests" %}
+        {% trans "Back to requests" %}
       </a>
     </div>
 
@@ -80,7 +84,7 @@
             {% if not admission %}
                 {% trans "No reference yet - Go to Project tab" %}
             {% else %}
-                {{ admission.intitule_doctorat }} ({{ admission.reference }})
+                {{ doctorate_title }} ({{ admission.reference }})
             {% endif %}
         </div>
         <div>
@@ -104,17 +108,19 @@
         {% endblocktrans %}
     </em></p>
 
-    {% include "template_messages.html" %}
+    <div id="template-messages-container">
+     {% include "template_messages.html" %}
+    </div>
 
     {% url 'admission:doctorate:update:'|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
     {% get_current_tab as current_tab %}
-    {% if change_url and admission|can_update_tab:current_tab %}
-        <div class="text-right">
+    {% if change_url and change_url != request.path and admission|can_update_tab:current_tab %}
+        <div class="text-right visible-xs visible-sm">
             <a href="{{ change_url }}" class="btn btn-primary">
                 <span
                     class="glyphicon glyphicon-floppy-save" aria-hidden="true"
                 ></span>
-                {% trans 'Change my submission' %}
+                {% trans 'Edit' %}
             </a>
         </div>
     {% endif %}

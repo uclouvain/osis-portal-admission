@@ -30,7 +30,7 @@
             {% if coordonnees.residential.street %}
                 <div class="col-md-4">{% field_data _("Street") coordonnees.residential.street %}</div>
             {% endif %}
-            <div class="col-md-2">{% field_data _("Street number") coordonnees.residential.street_number %}</div>
+            <div class="col-md-2">{% field_data _("Number") coordonnees.residential.street_number %}</div>
             {% if coordonnees.residential.postal_box %}
                 <div class="col-md-2">{% field_data _("Box") coordonnees.residential.postal_box %}</div>
             {% endif %}
@@ -39,6 +39,7 @@
             {% endif %}
         </div>
         <div class="row">
+            {% get_country_name coordonnees.residential.country as residential_country %}
             <div class="col-md-4">{% field_data _("Country") residential_country %}</div>
             <div class="col-md-4">{% field_data _("Postal code") coordonnees.residential.postal_code %}</div>
             <div class="col-md-4">{% field_data _("City") coordonnees.residential.city %}</div>
@@ -51,7 +52,7 @@
                     <div class="col-md-4">{% field_data _("Street") coordonnees.contact.street %}</div>
                 {% endif %}
                 <div class="col-md-2">
-                  {% field_data _("Street number") coordonnees.contact.street_number %}
+                  {% field_data _("Number") coordonnees.contact.street_number %}
                 </div>
                 {% if coordonnees.contact.postal_box %}
                     <div class="col-md-2">{% field_data _("Box") coordonnees.contact.postal_box %}</div>
@@ -61,6 +62,7 @@
                 {% endif %}
             </div>
             <div class="row">
+                {% get_country_name coordonnees.contact.country as contact_country %}
                 <div class="col-md-4">{% field_data _("Country") contact_country %}</div>
                 <div class="col-md-4">{% field_data _("Postal code") coordonnees.contact.postal_code %}</div>
                 <div class="col-md-4">{% field_data _("City") coordonnees.contact.city %}</div>
@@ -71,7 +73,8 @@
         <div class="row">
             {% trans "Mobile phone" context "admission" as mobile_phone_label %}
             {% field_data mobile_phone_label coordonnees.phone_mobile "col-md-6" %}
-            {% field_data _("Email") coordonnees.email "col-md-6" %}
+            {% trans "Private email" context "admission" as email_label %}
+            {% field_data email_label coordonnees.email "col-md-6" %}
         </div>
     {% endpanel %}
 {% endblock %}

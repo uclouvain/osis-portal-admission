@@ -33,7 +33,14 @@ from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 from admission.constants import BE_ISO_CODE
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
-from admission.services.reference import CitiesService, CountriesService, LanguageService, HighSchoolService
+from admission.services.reference import (
+    CitiesService,
+    CountriesService,
+    LanguageService,
+    DiplomaService,
+    HighSchoolService,
+    SuperiorNonUniversityService,
+)
 from admission.utils import format_entity_address, format_entity_title, format_high_school_title
 
 from base.models.enums.entity_type import INSTITUTE
@@ -48,6 +55,9 @@ __all__ = [
     "InstituteAutocomplete",
     "InstituteLocationAutocomplete",
     "HighSchoolAutocomplete",
+    "DiplomaAutocomplete",
+    "LearningUnitYearsAutocomplete",
+    "SuperiorNonUniversityAutocomplete",
 ]
 
 
@@ -159,7 +169,7 @@ class HighSchoolAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
         # Return a list of high schools whose name / city / postal code city is specified by the user
         return HighSchoolService.get_high_schools(
-            limit=10,
+            limit=100,
             person=self.request.user.person,
             search=self.q,
         )
@@ -218,3 +228,64 @@ class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2List
             formatted_address = format_entity_address(address)
             formatted_results.append({'id': formatted_address, 'text': formatted_address})
         return formatted_results
+
+
+class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return DiplomaService.get_diplomas(
+            person=self.request.user.person,
+            search=self.q,
+        )
+
+    def results(self, results):
+        return [
+            dict(
+                id=result.uuid,
+                text=result.title,
+            )
+            for result in results
+        ]
+
+    def autocomplete_results(self, results):
+        return results
+
+
+class LearningUnitYearsAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return AdmissionAutocompleteService.autocomplete_learning_unit_years(
+            person=self.request.user.person,
+            year=self.forwarded['academic_year'],
+            acronym_search=self.q,
+        )
+
+    def results(self, results):
+        return [
+            dict(
+                id=result['acronym'],
+                text=f"{result['acronym']} - {result['title']}",
+            )
+            for result in results
+        ]
+
+    def autocomplete_results(self, results):
+        return results
+
+
+class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    def get_list(self):
+        return SuperiorNonUniversityService.get_superior_non_universities(
+            person=self.request.user.person,
+            search=self.q,
+        )
+
+    def results(self, results):
+        return [
+            dict(
+                id=result.uuid,
+                text=result.name,
+            )
+            for result in results
+        ]
+
+    def autocomplete_results(self, results):
+        return results

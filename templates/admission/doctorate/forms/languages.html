@@ -26,55 +26,75 @@
 {% endcomment %}
 
 {% block style %}
-
-    {{ block.super }}
+  {{ block.super }}
 
   <style>
     label {
       display: block;
     }
+
     .slider.slider-horizontal {
-      width: 95%!important;
+      width: 95% !important;
       margin: 0 15px;
     }
   </style>
 {% endblock %}
 
 {% block form %}
+  <p class="well">
+    {% blocktrans trimmed %}
+      Answer according to the European Framework of Reference for Languages (CEFR) classification.
+      Detailed explanations of this framework can be found at
+      <a href="https://www.coe.int/en/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale">
+        https://www.coe.int/en/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale
+      </a>
+    {% endblocktrans %}
+  </p>
 
   {% bootstrap_formset_errors form %}
   {{ form.management_form }}
 
-  {% panel _("Languages knowledge") %}
-      {% for language_form in form %}
-        <div class="form-container">
-          {% panel _("Add a language") %}
-            {% bootstrap_form language_form %}
-          {% endpanel %}
-        </div>
-      {% endfor %}
-  {% endpanel %}
+  {% for language_form in form %}
+    <div class="form-container">
+      {% firstof languages|get_item:language_form.lang_code _("Add a language") as title %}
+      {# Flag mandatory language with additional css class #}
+      {% firstof "" "" as additional_class %}
+      {% if language_form.lang_code in MANDATORY_LANGUAGES %}
+        {% firstof "" "required_panel" as additional_class %}
+      {% endif %}
+
+      {% panel title additional_class=additional_class %}
+        {% bootstrap_field language_form.language %}
+        {% bootstrap_field language_form.listening_comprehension %}
+        {% bootstrap_field language_form.speaking_ability %}
+        {% bootstrap_field language_form.writing_ability %}
+        {% bootstrap_field_with_tooltip language_form.certificate %}
+      {% endpanel %}
+    </div>
+  {% endfor %}
+
+  <p></p>
 
 {% endblock %}
 
 {% block script %}
   {{ block.super }}
-  {{ form.media }}
+  {{ form.empty_form.media }}
   <script type="text/javascript">
-    $(function() {
-      $('.form-container').formset({
-        formTemplate: '{{empty_form|escapejs}}',  // The jQuery selection cloned to generate new form instances
-        addText: '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'Add another' %}',       // Text for the add link
-        deleteText: '<span class="glyphicon glyphicon-minus" aria-hidden="true"></span> {% trans 'Remove' %}',         // Text for the delete link
-        deleteContainerClass: 'panel-body',       // Container CSS class for the delete link
-        addCssClass: 'btn btn-success btn-block', // CSS class applied to the add link
-        deleteCssClass: 'btn btn-danger btn-sm delete-language-btn',  // CSS class applied to the delete link
-        added: function(form){                    // Function called each time a new form is added
-          $("input[data-provide=slider]", form).slider();
-        },
-      });
-      // delete the two first delete buttons that will always be for mandatory languages
-      $('.btn.btn-danger.btn-sm.delete-language-btn').slice(0, 2).remove();
-    })
+  $(function () {
+    $('.form-container').formset({
+      formTemplate: '{{empty_form|escapejs}}',  // The jQuery selection cloned to generate new form instances
+      addText: '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'Add a language' %}',       // Text for the add link
+      deleteText: '<span class="glyphicon glyphicon-minus" aria-hidden="true"></span> {% trans 'Remove' %}',         // Text for the delete link
+      deleteContainerClass: 'panel-body',       // Container CSS class for the delete link
+      addCssClass: 'btn btn-success btn-block', // CSS class applied to the add link
+      deleteCssClass: 'btn btn-danger btn-sm delete-language-btn',  // CSS class applied to the delete link
+      added: function (form) {                    // Function called each time a new form is added
+        $('input[data-provide=slider]', form).slider();
+      },
+    });
+    // delete the two first delete buttons that will always be for mandatory languages
+    $('.btn.btn-danger.btn-sm.delete-language-btn').slice(0, 2).remove();
+  })
   </script>
 {% endblock %}

@@ -23,194 +23,382 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import enum
+import calendar
+import datetime
+from abc import ABCMeta
 
-from django.contrib import messages
+from django import forms
 from django.http import HttpResponseRedirect
-from django.shortcuts import resolve_url
-from django.utils.translation import gettext as _
+from django.template import loader
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import FormView, TemplateView
 
+from admission.constants import (
+    LINGUISTIC_REGIMES_WITHOUT_TRANSLATION,
+    BE_ISO_CODE,
+    FIRST_YEAR_WITH_ECTS_BE,
+    FIELD_REQUIRED_MESSAGE,
+)
+from admission.contrib.enums.curriculum import (
+    TranscriptType,
+    EvaluationSystemsWithCredits,
+    SuccessfulResults,
+    EvaluationSystem,
+)
+from admission.contrib.forms import (
+    OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
+    OSIS_DOCUMENT_UPLOADER_CLASS,
+    FOLLOWING_FORM_SET_PREFIX,
+    FORM_SET_PREFIX,
+)
 from admission.contrib.forms.curriculum import (
-    DoctorateAdmissionCurriculumExperienceForm,
     DoctorateAdmissionCurriculumFileForm,
+    DoctorateAdmissionCurriculumProfessionalExperienceForm,
+    DoctorateAdmissionCurriculumEducationalExperienceForm,
+    DoctorateAdmissionCurriculumEducationalExperienceYearFormSet,
+    MINIMUM_CREDIT_NUMBER,
+    DoctorateAdmissionCurriculumEducationalExperienceYearForm,
 )
 from admission.contrib.views import DoctorateAdmissionCurriculumDetailView
+from admission.contrib.views.detail_tabs.curriculum import (
+    DoctorateAdmissionCurriculumMixin,
+    get_educational_experience_year_set_with_lost_years,
+)
+from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
-from osis_admission_sdk import ApiException
+
+__all__ = [
+    "DoctorateAdmissionCurriculumEducationalExperienceDeleteView",
+    "DoctorateAdmissionCurriculumEducationalExperienceFormView",
+    "DoctorateAdmissionCurriculumFormView",
+    "DoctorateAdmissionCurriculumProfessionalExperienceDeleteView",
+    "DoctorateAdmissionCurriculumProfessionalExperienceFormView",
+]
 
 
-class CurriculumForm(enum.Enum):
-    EXPERIENCE_CREATION = 'experience_creation'
-    EXPERIENCE_UPDATE = 'experience_update'
-    EXPERIENCE_DELETION = 'confirm'
-    CURRICULUM_UPLOAD = 'curriculum_upload'
+class DoctorateAdmissionCurriculumFormMixin(
+    DoctorateAdmissionCurriculumMixin,
+    WebServiceFormMixin,
+    FormView,
+    metaclass=ABCMeta,
+):  # pylint: disable=too-many-ancestors
+    pass
 
 
-class DoctorateAdmissionCurriculumFormView(DoctorateAdmissionCurriculumDetailView):
+class DoctorateAdmissionCurriculumFormView(
+    DoctorateAdmissionCurriculumDetailView,
+    DoctorateAdmissionCurriculumFormMixin,
+):  # pylint: disable=too-many-ancestors
+    form_class = DoctorateAdmissionCurriculumFileForm
     template_name = 'admission/doctorate/forms/curriculum.html'
 
-    def get_context_data(self, submitted_form=None, **kwargs):
-        # The admission (if available), the experience list and the curriculum file are loaded from the parent
+    def get_initial(self):
+        return self.curriculum.file
+
+    def call_webservice(self, data):
+        AdmissionPersonService.update_curriculum_file(
+            person=self.person,
+            data=data,
+            uuid=self.admission_uuid,
+        )
+
+
+class DoctorateAdmissionCurriculumProfessionalExperienceFormView(
+    DoctorateAdmissionCurriculumFormMixin,
+):  # pylint: disable=too-many-ancestors
+    template_name = 'admission/doctorate/forms/curriculum_professional_experience.html'
+    form_class = DoctorateAdmissionCurriculumProfessionalExperienceForm
+
+    def prepare_data(self, data):
+        # The start date is the first day of the specified month
+        data['start_date'] = datetime.date(int(data.pop('start_date_year')), int(data.pop('start_date_month')), 1)
+        # The end date is the last day of the specified month
+        end_date_year = int(data.pop('end_date_year'))
+        end_date_month = int(data.pop('end_date_month'))
+        data['end_date'] = datetime.date(
+            end_date_year, end_date_month, calendar.monthrange(end_date_year, end_date_month)[1]
+        )
+        return data
+
+    def call_webservice(self, data):
+        if self.experience_id:
+            AdmissionPersonService.update_professional_experience(
+                experience_id=self.experience_id,
+                person=self.person,
+                uuid=self.admission_uuid,
+                data=data,
+            )
+        else:
+            AdmissionPersonService.create_professional_experience(
+                person=self.person,
+                uuid=self.admission_uuid,
+                data=data,
+            )
+
+    def get_initial(self):
+        if self.experience_id:
+            experience = self.professional_experience.to_dict()
+            start_date = experience.pop('start_date')
+            end_date = experience.pop('end_date')
+            if start_date:
+                experience['start_date_month'] = start_date.month
+                experience['start_date_year'] = start_date.year
+            if end_date:
+                experience['end_date_month'] = end_date.month
+                experience['end_date_year'] = end_date.year
+            return experience
+
+
+class DoctorateAdmissionCurriculumProfessionalExperienceDeleteView(
+    DoctorateAdmissionCurriculumFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
+    form_class = forms.Form
+    template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
+
+    def call_webservice(self, _):
+        AdmissionPersonService.delete_professional_experience(
+            experience_id=self.experience_id,
+            person=self.person,
+            uuid=self.admission_uuid,
+        )
+
+
+class DoctorateAdmissionCurriculumEducationalExperienceDeleteView(
+    DoctorateAdmissionCurriculumFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
+    extra_context = {
+        'educational_tab': True,
+    }
+    form_class = forms.Form
+    template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
+
+    def call_webservice(self, _):
+        AdmissionPersonService.delete_educational_experience(
+            experience_id=self.experience_id,
+            person=self.person,
+            uuid=self.admission_uuid,
+        )
+
+
+class DoctorateAdmissionCurriculumEducationalExperienceFormView(
+    DoctorateAdmissionCurriculumMixin,
+    TemplateView,
+):  # pylint: disable=too-many-ancestors
+    template_name = 'admission/doctorate/forms/curriculum_educational_experience.html'
+
+    def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        experience_id = str(self.kwargs.get('experience_id', ''))
 
-        # Add the necessary forms (initialize them and add the submitted one)
-        submitted_form_prefix = submitted_form.prefix if submitted_form else ''
+        educational_experience = None
+        all_educational_experience_years = None
 
-        # Form to upload a CV file
-        context_data['curriculum_upload'] = (
-            DoctorateAdmissionCurriculumFileForm(
-                prefix=CurriculumForm.CURRICULUM_UPLOAD.value,
-                initial=context_data['curriculum_file'],
+        if self.experience_id and self.request.method == 'GET':
+            educational_experience = self.educational_experience.to_dict()
+            all_years_config = get_educational_experience_year_set_with_lost_years(
+                educational_experience.pop('educationalexperienceyear_set')
             )
-            if submitted_form_prefix != CurriculumForm.CURRICULUM_UPLOAD.value
-            else submitted_form
+            all_educational_experience_years = all_years_config['educational_experience_year_set_with_lost_years']
+            educational_experience['start'] = all_years_config['start']
+            educational_experience['end'] = all_years_config['end']
+
+        base_form = DoctorateAdmissionCurriculumEducationalExperienceForm(
+            person=self.request.user.person,
+            data=self.request.POST or None,
+            initial=educational_experience,
+            prefix='base_form',
         )
 
-        context_data['forms'] = dict()
-
-        # Form to create a new experience
-        context_data['forms']['creation_form'] = (
-            DoctorateAdmissionCurriculumExperienceForm(
-                prefix=CurriculumForm.EXPERIENCE_CREATION.value,
-                person=self.request.user.person,
-            )
-            if submitted_form_prefix != CurriculumForm.EXPERIENCE_CREATION.value
-            else submitted_form
-        )
-
-        # Form to update an existing experience
-        if experience_id:
-            if submitted_form_prefix == CurriculumForm.EXPERIENCE_UPDATE.value:
-                context_data['forms']['update_form'] = submitted_form
-            else:
-                experience = next(
-                    (exp for exp in context_data.get('curriculum_experiences') if exp.uuid == experience_id), None
-                )
-                if experience:
-                    context_data['forms']['update_form'] = DoctorateAdmissionCurriculumExperienceForm(
-                        prefix=CurriculumForm.EXPERIENCE_UPDATE.value,
-                        initial=experience.to_dict(),
-                        person=self.request.user.person,
+        year_formset = DoctorateAdmissionCurriculumEducationalExperienceYearFormSet(
+            self.request.POST or None,
+            initial=all_educational_experience_years,
+            prefix='year_formset',
+            form_kwargs={
+                'prefix_index_start': int(
+                    base_form.data.get(
+                        base_form.add_prefix('end'),
+                        base_form.initial['end'] if all_educational_experience_years else 0,
                     )
-                    context_data['form_to_display'] = CurriculumForm.EXPERIENCE_UPDATE.value
+                ),
+            },
+        )
+
+        # We need to prevent the uploader component of osis-document from being initialized when the page is loaded
+        # so that the events remain attached when the form is copied. The class identifying the component is replaced
+        # in the default form and will be reset in the duplicated form, allowing osis-document to detect the file
+        # fields in this new form, and set up the appropriate VueJS components.
+        context_data["empty_form"] = loader.render_to_string(
+            template_name='admission/doctorate/includes/curriculum_experience_year_form.html',
+            context={
+                'year_form': year_formset.empty_form,
+                'next_year': FOLLOWING_FORM_SET_PREFIX,
+            },
+        ).replace(OSIS_DOCUMENT_UPLOADER_CLASS, OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX)
+
+        context_data['base_form'] = base_form
+        context_data['year_formset'] = year_formset
+        context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+        context_data['BE_ISO_CODE'] = BE_ISO_CODE
+        context_data['FIRST_YEAR_WITH_ECTS_BE'] = FIRST_YEAR_WITH_ECTS_BE
+        context_data['FORM_SET_PREFIX'] = FORM_SET_PREFIX
+        context_data['FOLLOWING_FORM_SET_PREFIX'] = FOLLOWING_FORM_SET_PREFIX
+        context_data['OSIS_DOCUMENT_UPLOADER_CLASS'] = OSIS_DOCUMENT_UPLOADER_CLASS
+        context_data['OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX'] = OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX
 
         return context_data
 
-    def post(self, request, *args, **kwargs):
-        proposition_uuid = str(self.kwargs.get('pk', ''))
-
-        if CurriculumForm.CURRICULUM_UPLOAD.value in self.request.POST:
-            # Upload the CV file
-            form = DoctorateAdmissionCurriculumFileForm(
-                prefix=CurriculumForm.CURRICULUM_UPLOAD.value,
-                data=self.request.POST,
-            )
-            if form.is_valid():
-                try:
-                    AdmissionPersonService.update_curriculum_file(
-                        person=self.request.user.person,
-                        data=form.cleaned_data,
-                        uuid=proposition_uuid,
-                    )
-                    return self.redirect_after_valid_form()
-
-                except ApiException:
-                    messages.error(self.request, _("An error has happened when uploading the file."))
-
-            return self.re_render_after_invalid_form(self.get_context_data(form), form.prefix)
-
-        elif CurriculumForm.EXPERIENCE_CREATION.value in self.request.POST:
-            # Create an experience
-            form = DoctorateAdmissionCurriculumExperienceForm(
-                prefix=CurriculumForm.EXPERIENCE_CREATION.value,
-                data=self.request.POST,
-                person=self.request.user.person,
-            )
-            if form.is_valid():
-                try:
-                    AdmissionPersonService.create_curriculum_experience(
-                        person=self.request.user.person,
-                        data=self.prepare_data(form.cleaned_data),
-                        uuid=proposition_uuid,
-                    )
-                    return self.redirect_after_valid_form()
-
-                except ApiException:
-                    messages.error(self.request, _("An error has happened when adding the experience."))
-
-            return self.re_render_after_invalid_form(self.get_context_data(form), form.prefix)
-
-        elif CurriculumForm.EXPERIENCE_UPDATE.value in self.request.POST:
-            # Update an experience
-            form = DoctorateAdmissionCurriculumExperienceForm(
-                prefix=CurriculumForm.EXPERIENCE_UPDATE.value,
-                data=self.request.POST,
-                person=self.request.user.person,
-            )
-            if form.is_valid():
-                experience_id = str(self.kwargs.get('experience_id', ''))
-                try:
-                    AdmissionPersonService.update_curriculum_experience(
-                        experience_id=experience_id,
-                        person=self.request.user.person,
-                        data=self.prepare_data(form.cleaned_data),
-                        uuid=proposition_uuid,
-                    )
-                    return self.redirect_after_valid_form()
-
-                except ApiException:
-                    messages.error(self.request, _("An error has happened when updating the experience."))
-
-            return self.re_render_after_invalid_form(self.get_context_data(form), form.prefix)
-
-        elif CurriculumForm.EXPERIENCE_DELETION.value in self.request.POST:
-            # Delete an experience
-            try:
-                AdmissionPersonService.delete_curriculum_experience(
-                    experience_id=self.request.POST.get('confirmed-id'),
-                    person=self.request.user.person,
-                    uuid=proposition_uuid,
-                )
-            except ApiException:
-                messages.error(self.request, _("An error has happened when deleting the experience."))
-                return self.re_render_after_invalid_form(self.get_context_data())
-
-        return self.redirect_after_valid_form()
-
-    @classmethod
-    def prepare_data(cls, data):
-        # Remove redundant data
-        redundant_fields = [
-            'other_program',
-            'program_not_found',
-            'institute_not_found',
-            'institute_city_be',
-            'activity_institute_city',
-            'activity_institute_name',
+    def prepare_data(self, base_form, year_formset):
+        data = base_form.cleaned_data
+        data['educationalexperienceyear_set'] = [
+            year_data for year_data in year_formset.cleaned_data if year_data.pop('is_enrolled')
         ]
-        for f in redundant_fields:
-            data.pop(f, None)
 
-        # Format some fields values
-        data['academic_year'] = int(data['academic_year'])
-        if data.get('dissertation_score'):
-            data['dissertation_score'] = str(data['dissertation_score'])
+        data.pop('other_institute')
+        data.pop('other_program')
 
         return data
 
-    def redirect_after_valid_form(self):
-        messages.info(self.request, _('The curriculum has correctly been updated.'))
-        return HttpResponseRedirect(self.get_success_url())
+    def check_forms(self, base_form, year_formset):
+        # Individual form check
+        base_form.is_valid()
+        year_formset.is_valid()
 
-    def re_render_after_invalid_form(self, context_data, form_to_display=None):
-        if form_to_display:
-            context_data['form_to_display'] = form_to_display
-        return self.render_to_response(context_data)
+        at_least_one_successful_year = False
+        last_enrolled_year = None
 
-    def get_success_url(self):
-        pk = self.kwargs.get('pk')
-        if pk:
-            return resolve_url('admission:doctorate:update:curriculum', pk=pk)
+        country = base_form.cleaned_data.get('country')
+        be_country = country == BE_ISO_CODE
+        linguistic_regime = base_form.cleaned_data.get('linguistic_regime')
+        credits_are_required = base_form.cleaned_data.get('evaluation_type') in EvaluationSystemsWithCredits
+        transcript_is_required = base_form.cleaned_data.get('transcript_type') == TranscriptType.ONE_A_YEAR.name
+        transcript_translation_is_required = (
+            transcript_is_required
+            and country
+            and not be_country
+            and linguistic_regime
+            and linguistic_regime not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+        )
+
+        # Cross-form check
+        for form in year_formset:
+            if form.cleaned_data.get('is_enrolled'):
+                if not last_enrolled_year:
+                    last_enrolled_year = form.cleaned_data.get('academic_year')
+
+                if form.cleaned_data.get('result') in SuccessfulResults:
+                    at_least_one_successful_year = True
+
+                self.clean_experience_year_form(
+                    be_country,
+                    credits_are_required,
+                    form,
+                    transcript_is_required,
+                    transcript_translation_is_required,
+                )
+
+        # The bachelor cycle continuation field is required if at least one year is successful
+        if at_least_one_successful_year:
+            if base_form.cleaned_data.get('bachelor_cycle_continuation') is None:
+                base_form.add_error('bachelor_cycle_continuation', FIELD_REQUIRED_MESSAGE)
         else:
-            return resolve_url('admission:doctorate-create:curriculum')
+            base_form.cleaned_data['bachelor_cycle_continuation'] = None
+
+        if not last_enrolled_year:
+            base_form.add_error(None, _('At least one academic year is required.'))
+        elif be_country:
+            # The evaluation system in Belgium depends on the years
+            base_form.cleaned_data['evaluation_type'] = EvaluationSystem[
+                'ECTS_CREDITS' if last_enrolled_year >= FIRST_YEAR_WITH_ECTS_BE else 'NO_CREDIT_SYSTEM'
+            ].name
+
+        return base_form.is_valid() and year_formset.is_valid()
+
+    def clean_experience_year_form(
+        self,
+        be_country,
+        credits_are_required,
+        form,
+        transcript_is_required,
+        transcript_translation_is_required,
+    ):
+        cleaned_data = form.cleaned_data
+
+        # Credit fields
+        if cleaned_data.get('academic_year') >= FIRST_YEAR_WITH_ECTS_BE if be_country else credits_are_required:
+
+            acquired_credit_number = cleaned_data.get('acquired_credit_number', None)
+            registered_credit_number = cleaned_data.get('registered_credit_number', None)
+
+            if acquired_credit_number is None or acquired_credit_number == '':
+                form.add_error('acquired_credit_number', FIELD_REQUIRED_MESSAGE)
+            else:
+                acquired_credit_number = int(acquired_credit_number)
+                if acquired_credit_number < MINIMUM_CREDIT_NUMBER:
+                    form.add_error(
+                        'acquired_credit_number',
+                        _('This value must be equal to or greater than %(MINIMUM_CREDIT_NUMBER)s'),
+                    )
+
+            if registered_credit_number is None or registered_credit_number == '':
+                form.add_error('registered_credit_number', FIELD_REQUIRED_MESSAGE)
+            else:
+                registered_credit_number = int(registered_credit_number)
+                if registered_credit_number <= MINIMUM_CREDIT_NUMBER:
+                    form.add_error(
+                        'registered_credit_number',
+                        _('This value must be greater than %(MINIMUM_CREDIT_NUMBER)s'),
+                    )
+
+            if isinstance(acquired_credit_number, int) and isinstance(registered_credit_number, int):
+                if acquired_credit_number > registered_credit_number:
+                    form.add_error(
+                        'acquired_credit_number',
+                        _('This value cannot be greater than the entered credits number'),
+                    )
+
+        else:
+            cleaned_data['acquired_credit_number'] = None
+            cleaned_data['registered_credit_number'] = None
+
+        # Transcript fields
+        if transcript_is_required:
+            if not cleaned_data.get('transcript'):
+                form.add_error('transcript', FIELD_REQUIRED_MESSAGE)
+        else:
+            cleaned_data['transcript'] = []
+        if transcript_translation_is_required:
+            if not cleaned_data.get('transcript_translation'):
+                form.add_error('transcript_translation', FIELD_REQUIRED_MESSAGE)
+        else:
+            cleaned_data['transcript_translation'] = []
+
+    def post(self, request, *args, **kwargs):
+        context_data = self.get_context_data(**kwargs)
+
+        base_form = context_data['base_form']
+        year_formset = context_data['year_formset']
+
+        # Check the forms
+        if not self.check_forms(base_form, year_formset):
+            return self.render_to_response(context_data)
+
+        # Prepare data
+        data = self.prepare_data(base_form, year_formset)
+
+        # Make the API request
+        if self.experience_id:
+            AdmissionPersonService.update_educational_experience(
+                experience_id=self.experience_id,
+                person=self.request.user.person,
+                uuid=self.admission_uuid,
+                data=data,
+            )
+        else:
+            AdmissionPersonService.create_educational_experience(
+                person=self.request.user.person,
+                uuid=self.admission_uuid,
+                data=data,
+            )
+
+        return HttpResponseRedirect(self.get_success_url())

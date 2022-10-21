@@ -23,17 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm, DoctorateAdmissionCoordonneesForm
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
-from admission.services.proposition import AdmissionPropositionService
 
 
-class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionCoordonneesFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/coordonnees.html'
     form_class = DoctorateAdmissionCoordonneesForm
     forms = None
@@ -42,10 +45,6 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
         context_data = super().get_context_data(**kwargs)
         context_data.update(self.get_forms())
         context_data["BE_ISO_CODE"] = BE_ISO_CODE
-        if 'pk' in self.kwargs:
-            context_data['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.person, uuid=str(self.kwargs['pk'])
-            )
         return context_data
 
     def post(self, request, *args, **kwargs):
@@ -57,13 +56,13 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
     def get_initial(self):
         return AdmissionPersonService.retrieve_person_coordonnees(
             self.person,
-            uuid=self.kwargs.get('pk'),
+            uuid=self.admission_uuid,
         ).to_dict()
 
     @staticmethod
     def prepare_be_city(form_cleaned_data):
         """Check if a belgian postal code / city has been passed and update the form."""
-        if form_cleaned_data['be_postal_code']:
+        if form_cleaned_data['country'] == BE_ISO_CODE:
             form_cleaned_data['postal_code'] = form_cleaned_data['be_postal_code']
             form_cleaned_data['city'] = form_cleaned_data['be_city']
         form_cleaned_data.pop('be_postal_code')
@@ -88,7 +87,7 @@ class DoctorateAdmissionCoordonneesFormView(LoginRequiredMixin, WebServiceFormMi
     def call_webservice(self, data):
         AdmissionPersonService.update_person_coordonnees(
             person=self.person,
-            uuid=self.kwargs.get('pk'),
+            uuid=self.admission_uuid,
             **data,
         )
 

@@ -25,36 +25,37 @@
 # ##############################################################################
 
 from django import forms
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect, resolve_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
+from django.views.generic.edit import BaseFormView
 
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.forms.supervision import DoctorateAdmissionSupervisionForm
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
+from admission.services.proposition import AdmissionSupervisionService
 from osis_admission_sdk import ApiException
 
 
-class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionSupervisionFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/supervision.html'
     form_class = DoctorateAdmissionSupervisionForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.person,
-            uuid=str(self.kwargs['pk']),
-        )
         context['supervision'] = AdmissionSupervisionService.get_supervision(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         )
         context['signature_conditions'] = AdmissionSupervisionService.get_signature_conditions(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         )
         return context
 
@@ -71,10 +72,14 @@ class DoctorateAdmissionSupervisionFormView(LoginRequiredMixin, WebServiceFormMi
         }
 
     def call_webservice(self, data):
-        return AdmissionSupervisionService.add_member(person=self.person, uuid=str(self.kwargs['pk']), **data)
+        return AdmissionSupervisionService.add_member(person=self.person, uuid=self.admission_uuid, **data)
 
 
-class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionRemoveActorView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     form_class = forms.Form
     template_name = 'admission/doctorate/forms/remove_actor.html'
     actor_type_mapping = {
@@ -85,13 +90,9 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context['admission'] = AdmissionPropositionService.get_proposition(
-                person=self.person,
-                uuid=str(self.kwargs['pk']),
-            )
             supervision = AdmissionSupervisionService.get_supervision(
                 person=self.person,
-                uuid=str(self.kwargs['pk']),
+                uuid=self.admission_uuid,
             ).to_dict()
             context['member'] = self.get_member(supervision)
         except (ApiException, AttributeError, KeyError):
@@ -113,7 +114,30 @@ class DoctorateAdmissionRemoveActorView(LoginRequiredMixin, WebServiceFormMixin,
         }
 
     def call_webservice(self, data):
-        AdmissionSupervisionService.remove_member(person=self.person, uuid=str(self.kwargs['pk']), **data)
+        AdmissionSupervisionService.remove_member(person=self.person, uuid=self.admission_uuid, **data)
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
+        return resolve_url('admission:doctorate:supervision', pk=self.admission_uuid)
+
+
+class DoctorateAdmissionSetReferencePromoterView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    BaseFormView,
+):  # pylint: disable=too-many-ancestors
+    form_class = forms.Form
+
+    def prepare_data(self, data):
+        return {
+            'uuid_proposition': self.admission_uuid,
+            'matricule': self.kwargs['matricule'],
+        }
+
+    def call_webservice(self, data):
+        AdmissionSupervisionService.set_reference_promoter(person=self.person, uuid=self.admission_uuid, **data)
+
+    def get_success_url(self):
+        return resolve_url('admission:doctorate:supervision', pk=self.admission_uuid)
+
+    def form_invalid(self, form):
+        return redirect('admission:doctorate:supervision', pk=self.admission_uuid)

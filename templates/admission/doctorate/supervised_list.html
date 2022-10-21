@@ -1,4 +1,4 @@
-{% extends "layout.html" %}{% load bootstrap3 i18n static admission %}
+{% extends "layout.html" %}{% load bootstrap3 i18n static admission enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -40,7 +40,8 @@
         <h3 style="margin-top: 0">
           {{ admission.prenom_candidat }} {{ admission.nom_candidat }}
           ({{ admission.reference }})
-          <div><small>{{ admission.intitule_doctorat }}
+          {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+          <div><small>{{ doctorate_title }}
             - {{ admission.intitule_secteur_formation }}</small></div>
         </h3>
         <div>
@@ -70,7 +71,7 @@
           <ul class="dropdown-menu">
             {% for parent, subtabs in tab_tree.items %}
               {% for subtab in subtabs %}
-                {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid detail_view=True tab=subtab no_status=True %}
+                {% include 'admission/doctorate_tab_entry.html' with admission_uuid=admission.uuid tab=subtab no_status=True %}
               {% endfor %}
             {% endfor %}
           </ul>

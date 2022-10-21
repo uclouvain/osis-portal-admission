@@ -23,19 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import List, Mapping, Optional, Union
 from functools import partial
 
 from django import forms
 from django.conf import settings
-from django.utils.translation import get_language
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.services.organisation import EntitiesService
-from admission.services.reference import CountriesService, LanguageService, AcademicYearService, HighSchoolService
+from admission.services.reference import (
+    CountriesService,
+    LanguageService,
+    AcademicYearService,
+    DiplomaService,
+    HighSchoolService,
+    SuperiorNonUniversityService,
+)
 from admission.utils import format_entity_title, format_high_school_title
 from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
+FORM_SET_PREFIX = '__prefix__'
+FOLLOWING_FORM_SET_PREFIX = '__prefix_1__'
+OSIS_DOCUMENT_UPLOADER_CLASS = 'document-uploader'
+OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX = '__{}__'.format(OSIS_DOCUMENT_UPLOADER_CLASS)
 
 
 def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):
@@ -63,9 +74,23 @@ def get_thesis_institute_initial_choices(uuid, person):
     if not uuid:
         return EMPTY_CHOICE
     institute = EntitiesService.get_ucl_entity(person=person, uuid=uuid)
-    return EMPTY_CHOICE + (
-        (institute.uuid, format_entity_title(entity=institute)),
-    )
+    return EMPTY_CHOICE + ((institute.uuid, format_entity_title(entity=institute)),)
+
+
+def get_diploma_initial_choices(uuid, person):
+    """Return the diploma choices when data is either set from initial or webservice."""
+    if not uuid:
+        return EMPTY_CHOICE
+    diploma = DiplomaService.get_diploma(person=person, uuid=uuid)
+    return EMPTY_CHOICE + ((diploma.uuid, diploma.title),)
+
+
+def get_superior_non_university_initial_choices(uuid, person):
+    """Return the superior non university choices when data is either set from initial or webservice."""
+    if not uuid:
+        return EMPTY_CHOICE
+    superior_non_university = SuperiorNonUniversityService.get_superior_non_university(person=person, uuid=uuid)
+    return EMPTY_CHOICE + ((superior_non_university.uuid, superior_non_university.name),)
 
 
 def get_thesis_location_initial_choices(value):
@@ -78,14 +103,14 @@ def get_high_school_initial_choices(uuid, person):
     if not uuid:
         return EMPTY_CHOICE
     high_school = HighSchoolService.get_high_school(person=person, uuid=uuid)
-    return EMPTY_CHOICE + (
-        (high_school.uuid, format_high_school_title(high_school=high_school)),
-    )
+    return EMPTY_CHOICE + ((high_school.uuid, format_high_school_title(high_school=high_school)),)
 
 
-def get_past_academic_years_choices(person):
+def get_past_academic_years_choices(person, exclude_current=False):
     """Return a list of choices of past academic years."""
     current_year = get_current_year()
+    if exclude_current:
+        current_year -= 1
     lower_year = current_year - 100
     return EMPTY_CHOICE + tuple(
         (academic_year.year, f"{academic_year.year}-{academic_year.year + 1}")
@@ -94,15 +119,128 @@ def get_past_academic_years_choices(person):
     )
 
 
-CustomDateInput = partial(
-    forms.DateInput,
-    attrs={
-        'placeholder': _("dd/mm/yyyy"),
-        'data-mask''': '00/00/0000',
-    },
-    format='%d/%m/%Y',
+def get_academic_years_choices(person):
+    """Return a list of choices of academic years."""
+    return EMPTY_CHOICE + tuple(
+        (academic_year.year, f"{academic_year.year}-{academic_year.year + 1}")
+        for academic_year in AcademicYearService.get_academic_years(person)
+    )
+
+
+class CustomDateInput(forms.DateInput):
+    def __init__(self, attrs=None, format='%d/%m/%Y'):
+        if attrs is None:
+            attrs = {
+                'placeholder': _("dd/mm/yyyy"),
+                'data-mask' '': '00/00/0000',
+                'autocomplete': 'off',
+            }
+        super().__init__(attrs, format)
+
+    class Media:
+        js = ('jquery.mask.min.js',)
+
+
+RadioBooleanField = partial(
+    forms.TypedChoiceField,
+    coerce=lambda value: value == 'True',
+    choices=((True, _('Yes')), (False, _('No'))),
+    widget=forms.RadioSelect,
+    empty_value=None,
 )
 
 
 def get_example_text(example: str):
     return _("e.g.: %(example)s") % {'example': example}
+
+
+class SelectOrOtherWidget(forms.MultiWidget):
+    """Form widget to handle a configurable (from CDDConfiguration) list of choices, or other"""
+
+    template_name = 'admission/doctorate/forms/select_or_other_widget.html'
+    media = forms.Media(
+        js=[
+            'js/dependsOn.min.js',
+            'admission/select_or_other.js',
+        ]
+    )
+
+    def __init__(self, *args, **kwargs):
+        widgets = {
+            '': forms.Select(),
+            'other': forms.TextInput(),
+        }
+        super().__init__(widgets, *args, **kwargs)
+
+    def decompress(self, value):
+        # No value, no value to both fields
+        if not value:
+            return [None, None]
+        # Pass value to radios if part of choices
+        if value in dict(self.widgets[0].choices):
+            return [value, '']
+        # else pass value to textinput
+        return ['other', value]
+
+    def get_context(self, name: str, value, attrs):
+        context = super().get_context(name, value, attrs)
+        subwidgets = context['widget']['subwidgets']
+        # Remove the title attribute on first widget and handle tooltip
+        subwidgets[0]['attrs'].pop('help_text', None)
+        subwidgets[1]['help_text'] = subwidgets[1]['attrs'].pop('help_text', None)
+        # Remove the required attribute on textinput
+        subwidgets[1]['attrs']['required'] = False
+        return context
+
+
+class SelectOrOtherField(forms.MultiValueField):
+    """Form field to handle a list of choices, or other"""
+
+    widget = SelectOrOtherWidget
+    select_class = forms.ChoiceField
+
+    def __init__(self, choices: Optional[Union[List[str], Mapping[str, str]]] = None, *args, **kwargs):
+        select_kwargs = {}
+        if choices is not None:
+            choices = zip(choices, choices) if not isinstance(choices[0], (list, tuple)) else choices
+            select_kwargs['choices'] = self.choices = list(choices) + [('other', _("Other"))]
+        fields = [self.select_class(required=False, **select_kwargs), forms.CharField(required=False)]
+        super().__init__(fields, require_all_fields=False, *args, **kwargs)
+
+    def get_bound_field(self, form, field_name):
+        if not self.widget.widgets[0].choices:
+            self.widget.widgets[0].choices = self.choices
+        return super().get_bound_field(form, field_name)
+
+    def validate(self, value):
+        # We do require all fields, but we want to check the final (compressed value)
+        super(forms.MultiValueField, self).validate(value)
+
+    def compress(self, data_list):
+        # On save, take the other value if "other" is chosen
+        if len(data_list) == 2:
+            radio, other = data_list
+            return radio if radio != "other" else other
+        return ''
+
+    def clean(self, value):
+        # Dispatch the correct values to each field before regular cleaning
+        radio, other = value
+        if hasattr(self, 'choices') and radio not in self.choices and other is None:
+            value = ['other', radio]
+        return super().clean(value)
+
+    def widget_attrs(self, widget):
+        if self.help_text:
+            return {'help_text': self.help_text}
+        return super().widget_attrs(widget)
+
+
+class BooleanRadioSelect(forms.RadioSelect):
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        # Override to explicitly set initial selected option to 'False' value
+        if value is None:
+            context['widget']['optgroups'][0][1][0]['selected'] = True
+            context['widget']['optgroups'][0][1][0]['attrs']['checked'] = True
+        return context

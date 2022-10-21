@@ -23,7 +23,6 @@
 #
 # ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
 from django.views.generic import FormView
@@ -32,6 +31,7 @@ from admission.contrib.forms.confirmation import (
     DoctorateAdmissionConfirmationForm,
     DoctorateAdmissionConfirmationWithBelgianDiplomaForm,
 )
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import (
@@ -41,24 +41,20 @@ from admission.services.proposition import (
 from admission.templatetags.admission import get_subtab_label
 
 
-class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin, FormView):
+class DoctorateAdmissionConfirmFormView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/confirm.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        proposition_uuid = str(self.kwargs.get('pk', ''))
-
-        # Retrieve the admission
-        context['admission'] = AdmissionPropositionService.get_proposition(
-            person=self.person,
-            uuid=proposition_uuid,
-        )
-
         # Retrieve the missing confirmation conditions
         proposition_completion_errors = AdmissionPropositionService.verify_proposition(
             person=self.person,
-            uuid=proposition_uuid,
+            uuid=self.admission_uuid,
         )
 
         # Group the missing conditions by tab if any
@@ -75,6 +71,7 @@ class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin,
                     'project',
                     'cotutelle',
                     'supervision',
+                    'accounting',
                 ]
             }
 
@@ -91,7 +88,7 @@ class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin,
         # Check that the person related to the admission has a belgian diploma
         high_school_diploma = AdmissionPersonService.retrieve_high_school_diploma(
             person=self.person,
-            uuid=str(self.kwargs.get('pk', '')),
+            uuid=self.admission_uuid,
         )
         return high_school_diploma.belgian_diploma is not None
 
@@ -103,10 +100,10 @@ class DoctorateAdmissionConfirmFormView(LoginRequiredMixin, WebServiceFormMixin,
 
     def get_success_url(self):
         messages.info(self.request, _("Your proposition has been confirmed."))
-        return resolve_url('admission:doctorate:project', pk=self.kwargs.get('pk'))
+        return resolve_url('admission:doctorate:project', pk=self.admission_uuid)
 
     def call_webservice(self, data):
         AdmissionPropositionService.submit_proposition(
             person=self.person,
-            uuid=str(self.kwargs.get('pk', '')),
+            uuid=self.admission_uuid,
         )

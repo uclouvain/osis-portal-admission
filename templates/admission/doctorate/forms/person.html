@@ -27,22 +27,21 @@
 
 {% block form %}
   {% bootstrap_form_errors form %}
-
   {% panel _("Identification") %}
     <div class="row">
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.last_name classes='required_field' %}
+        {% bootstrap_field_with_tooltip form.last_name classes='required_field formatted-field' %}
       </div>
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.first_name %}
+        {% bootstrap_field_with_tooltip form.first_name classes='formatted-field' %}
       </div>
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.middle_name %}
+        {% bootstrap_field_with_tooltip form.middle_name classes='formatted-field' %}
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.first_name_in_use %}
+        {% bootstrap_field_with_tooltip form.first_name_in_use classes='formatted-field' %}
       </div>
       <div class="col-md-4">
         {% bootstrap_field form.sex form_group_class="form-group required_field" %}
@@ -71,7 +70,7 @@
         {% bootstrap_field form.birth_country form_group_class="form-group required_field" %}
       </div>
       <div class="col-md-4">
-        {% bootstrap_field_with_tooltip form.birth_place classes="required_field" %}
+        {% bootstrap_field_with_tooltip form.birth_place classes="required_field formatted-field" %}
       </div>
       <div class="col-md-4">
         {% bootstrap_field form.country_of_citizenship form_group_class="form-group required_field" %}
@@ -88,32 +87,28 @@
   {% endpanel %}
 
   {% panel _("Proof of identity") %}
-    <p class="required_text">
-      {% blocktrans trimmed %}
-        Please refer to your identity document in order to complete the
-        form. If you have a Belgian national register number, please
-        indicate it as a priority.
-      {% endblocktrans %}
-    </p>
-    <div class="row">
-      <div class="col-md-6">
-        {% bootstrap_field form.national_number %}
-      </div>
-      <div class="col-md-6">
-        {% bootstrap_field form.id_card_number placeholder='' %}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        {% bootstrap_field form.passport_number placeholder='' %}
-      </div>
-      <div class="col-md-6">
-        {% bootstrap_field form.passport_expiration_date form_group_class="form-group passport" %}
-      </div>
+    <div id="has_national_number_container">
+      {% bootstrap_field form.has_national_number %}
     </div>
 
-    {% bootstrap_field form.id_card form_group_class="form-group id_card" %}
-    {% bootstrap_field form.passport form_group_class="form-group passport"  %}
+    <div id="national_number_container" class="required_field">
+      {% bootstrap_field form.national_number %}
+    </div>
+
+    <div id="identification_type_container">
+      {% bootstrap_field form.identification_type form_group_class="form-group foreign" %}
+    </div>
+
+    <div id="id_card_container">
+      {% bootstrap_field form.id_card_number form_group_class="form-group required_field foreign" placeholder="" %}
+      {% bootstrap_field form.id_card form_group_class="form-group required_field" %}
+    </div>
+
+    <div id="passport_container">
+      {% bootstrap_field form.passport_number form_group_class="form-group required_field foreign" placeholder="" %}
+      {% bootstrap_field form.passport form_group_class="form-group required_field foreign" %}
+    </div>
+
   {% endpanel %}
 
   {% panel _("Have you previously been registered at UCLouvain?") %}
@@ -131,7 +126,10 @@
   <script type="application/javascript">
       $(function () {
           const is_falsy = val => !val;
-          const is_truthy = val => !!val;
+          const resides_in_belgium = "{{ resides_in_belgium }}" === "True";
+          const be_iso_code = "{{ BE_ISO_CODE }}";
+          const has_national_number_true_input = $('#id_has_national_number_0');
+          const has_national_number_input = $('#has_national_number_container');
 
           const requiredField = {
               toggleClass: 'required_field',
@@ -139,6 +137,33 @@
               hide: false,
               duration: 0,
           };
+
+          $('#id_country_of_citizenship').on('change', function() {
+              if (resides_in_belgium && this.value === be_iso_code) {
+                  has_national_number_input.hide();
+                  has_national_number_true_input.prop('checked', true).change();
+              } else {
+                  has_national_number_input.show();
+              }
+          }).change();
+
+          $('#national_number_container').dependsOn({
+              'input[name=has_national_number]': { values: ['True'] },
+          });
+
+          $('.foreign').dependsOn({
+              'input[name=has_national_number]': { values: ['False'] },
+          });
+
+          $('#id_card_container').dependsOn({
+              'input[name=has_national_number]': { values: ['True'] },
+          }).or({
+              'input[name=identification_type]': { values: ['ID_CARD_NUMBER'] },
+          });
+
+          $('#passport_container').dependsOn({
+              'input[name=identification_type]': { values: ['PASSPORT_NUMBER'] },
+          });
 
           // Justification depends on pre-admission
           $('#birth_year').dependsOn({
@@ -160,16 +185,6 @@
 
           $('#container_first_name').dependsOn({
               '#id_last_name': { is_falsy },
-          }, requiredField);
-
-          $('.id_card').dependsOn({
-              '#id_national_number': { is_truthy },
-          }, requiredField).or({
-              '#id_id_card_number': { is_truthy },
-          });
-
-          $('.passport').dependsOn({
-              '#id_passport_number': { is_truthy },
           }, requiredField);
 
           $.applyDataMask();

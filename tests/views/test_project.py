@@ -153,50 +153,55 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'SSH')
 
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'FOOBAR-2021',
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'commission_proximite_cde', _("This field is required."))
 
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'FOOBARBAZ-2021',
             'non_soutenue': True,
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'commission_proximite_cdss', _("This field is required."))
         self.assertFormError(response, 'form', 'raison_non_soutenue', _("This field is required."))
 
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'SC3DP-2021',
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'sous_domaine', _("This field is required."))
 
         self.mock_proposition_api.return_value.create_proposition.return_value = {
             'uuid': "3c5cdc60-2537-4a12-a396-64d2e9e34876",
         }
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'SC3DP-2021',
             'sous_domaine': ChoixSousDomaineSciences.CHEMISTRY.name,
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'BARBAZ-2021',
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
@@ -205,19 +210,20 @@ class ProjectViewTestCase(TestCase):
             exceptions={
                 ApiBusinessException(
                     status_code=PropositionBusinessException.JustificationRequiseException.value,
-                    detail="Something wrong on a field"
+                    detail="Something wrong on a field",
                 ),
                 ApiBusinessException(
                     status_code=42,
-                    detail="Something went wrong globally"
+                    detail="Something went wrong globally",
                 ),
             }
         )
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.PRE_ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'BARBAZ-2021',
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "Something wrong on a field")
         self.assertContains(response, "Something went wrong globally")
@@ -230,7 +236,7 @@ class ProjectViewTestCase(TestCase):
         }
         expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
-        data = {
+        default_data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'sector': 'SSH',
             'doctorate': 'BARBAZ-2021',
@@ -240,15 +246,16 @@ class ProjectViewTestCase(TestCase):
             'sous_domaine': ChoixSousDomaineSciences.CHEMISTRY.name,
             'type_financement': ChoixTypeFinancement.SELF_FUNDING.name,
             'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
-            'type_contrat_travail_other': 'Another working contract type',
             'eft': 5,
             'bourse_recherche': BourseRecherche.ARC.name,
-            'bourse_recherche_other': 'Another scholarship',
+            'bourse_date_debut': '',
+            'bourse_date_fin': '',
             'duree_prevue': 10,
             'temps_consacre': 20,
             'titre_projet': 'Project title',
             'lieu_these': 'Place',
             'resume_projet': 'Resume',
+            'bourse_preuve_0': 'test',
             'documents_projet_0': 'test',
             'graphe_gantt_0': 'test',
             'proposition_programme_doctoral_0': 'test',
@@ -257,6 +264,7 @@ class ProjectViewTestCase(TestCase):
             'langue_redaction_these': ChoixLangueRedactionThese.ENGLISH.name,
             'doctorat_deja_realise': ChoixDoctoratDejaRealise.NO.name,
             'institution': 'Institution',
+            'domaine_these': 'Domain',
             'non_soutenue': False,
             'date_soutenance': datetime.date(2022, 5, 1),
             'raison_non_soutenue': 'Reason',
@@ -273,11 +281,14 @@ class ProjectViewTestCase(TestCase):
             'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
             'eft': 5,
             'bourse_recherche': BourseRecherche.ARC.name,
+            'bourse_date_debut': None,
+            'bourse_date_fin': None,
             'duree_prevue': 10,
             'temps_consacre': 20,
             'titre_projet': 'Project title',
             'lieu_these': 'Place',
             'resume_projet': 'Resume',
+            'bourse_preuve': ['test'],
             'documents_projet': ['test'],
             'graphe_gantt': ['test'],
             'proposition_programme_doctoral': ['test'],
@@ -286,16 +297,17 @@ class ProjectViewTestCase(TestCase):
             'langue_redaction_these': ChoixLangueRedactionThese.ENGLISH.name,
             'doctorat_deja_realise': ChoixDoctoratDejaRealise.NO.name,
             'institution': 'Institution',
+            'domaine_these': 'Domain',
             'non_soutenue': False,
             'date_soutenance': datetime.date(2022, 5, 1),
             'raison_non_soutenue': 'Reason',
         }
-        response = self.client.post(url, data)
+        response = self.client.post(url, default_data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
         sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
-        self.assertEqual(sent, {
+        data = {
             **default_kwargs,
             # Fields that are computed
             'commission_proximite': ChoixProximityCommissionCDE.ECONOMY.name,
@@ -305,24 +317,27 @@ class ProjectViewTestCase(TestCase):
             'eft': None,
             'bourse_recherche': '',
             'institution': '',
+            'domaine_these': '',
             'non_soutenue': None,
             'date_soutenance': None,
             'raison_non_soutenue': '',
-        })
+        }
+        self.assertEqual(sent, data)
 
-        response = self.client.post(url, {
-            **data,
+        data = {
+            **default_data,
             'type_admission': AdmissionType.PRE_ADMISSION.name,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
             'doctorat_deja_realise': ChoixDoctoratDejaRealise.YES.name,
             'non_soutenue': True,
             'commission_proximite_cde': '',
-        })
+        }
+        response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
         sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
-        self.assertEqual(sent, {
+        data = {
             **default_kwargs,
             'type_admission': AdmissionType.PRE_ADMISSION.name,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
@@ -333,31 +348,34 @@ class ProjectViewTestCase(TestCase):
             # Fields that are cleaned
             'bourse_recherche': '',
             'date_soutenance': None,
-        })
+        }
+        self.assertEqual(sent, data)
 
-        response = self.client.post(url, {
-            **data,
+        data = {
+            **default_data,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
-            'type_contrat_travail': ChoixTypeContratTravail.OTHER.name,
-        })
+            'type_contrat_travail': 'Another working contract type',
+        }
+        response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
         sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
         self.assertEqual(sent['type_contrat_travail'], 'Another working contract type')
 
-        response = self.client.post(url, {
-            **data,
+        data = {
+            **default_data,
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
             'doctorat_deja_realise': ChoixDoctoratDejaRealise.PARTIAL.name,
             'non_soutenue': False,
             'commission_proximite_cde': '',
             'commission_proximite_cdss': '',
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
         sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
-        self.assertEqual(sent, {
+        data = {
             **default_kwargs,
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
             'doctorat_deja_realise': ChoixDoctoratDejaRealise.PARTIAL.name,
@@ -369,13 +387,15 @@ class ProjectViewTestCase(TestCase):
             'type_contrat_travail': '',
             'eft': None,
             'raison_non_soutenue': '',
-        })
+        }
+        self.assertEqual(sent, data)
 
-        response = self.client.post(url, {
-            **data,
+        data = {
+            **default_data,
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
-            'bourse_recherche': BourseRecherche.OTHER.name,
-        })
+            'bourse_recherche': 'Another scholarship',
+        }
+        response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
@@ -385,10 +405,11 @@ class ProjectViewTestCase(TestCase):
     def test_update(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBAR'
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.annee_doctorat = '2021'
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.code_secteur_formation = 'SSH'
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+        proposition = self.mock_proposition_api.return_value.retrieve_proposition.return_value
+        proposition.doctorat.sigle = 'FOOBAR'
+        proposition.doctorat.annee = '2021'
+        proposition.code_secteur_formation = 'SSH'
+        proposition.to_dict.return_value = {
             'code_secteur_formation': "SSH",
             'type_contrat_travail': "Something",
             "commission_proximite": ChoixProximityCommissionCDE.ECONOMY.name,
@@ -397,30 +418,26 @@ class ProjectViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = 'FOOBARBAZ'
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
-            'code_secteur_formation': "SSH",
-            'sigle_doctorat': 'FOOBARBAZ',
-            'annee_doctorat': '2021',
+        proposition.doctorat.sigle = 'FOOBARBAZ'
+        proposition.to_dict.return_value = {
+            "doctorat": {
+                'sigle': 'FOOBARBAZ',
+                'annee': '2021',
+                'code_secteur_formation': "SSH",
+            },
             'bourse_recherche': "Something other",
             "commission_proximite": ChoixProximityCommissionCDSS.ECLI.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.sigle_doctorat = SCIENCE_DOCTORATE
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
-            'code_secteur_formation': "SSH",
-            'sigle_doctorat': 'FOOBARBAZ',
-            'annee_doctorat': '2021',
-            'bourse_recherche': "Something other",
-            "commission_proximite": ChoixSousDomaineSciences.CHEMISTRY.name,
-        }
+        proposition.doctorat.sigle = SCIENCE_DOCTORATE
+        proposition.to_dict.return_value["commission_proximite"] = ChoixSousDomaineSciences.CHEMISTRY.name
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check that the thesis institute field is well initialized with existing value
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+        proposition.to_dict.return_value = {
             'code_secteur_formation': "SST",
             'type_contrat_travail': "Something",
             'institut_these': self.mock_entities[0].uuid,
@@ -430,9 +447,10 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "A random postal address")
 
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_update_no_permission(self):
@@ -449,53 +467,44 @@ class ProjectViewTestCase(TestCase):
             'code_secteur_formation': "SST",
         }
 
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
-        })
+        }
+        response = self.client.post(url, data)
         self.assertFormError(response, 'form', 'type_contrat_travail', _("This field is required."))
         self.assertFormError(response, 'form', 'eft', _("This field is required."))
 
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
             'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
-        })
+        }
+        response = self.client.post(url, data)
         self.assertFormError(response, 'form', 'eft', _("This field is required."))
 
-        response = self.client.post(url, {
-            'type_admission': AdmissionType.ADMISSION.name,
-            'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
-            'type_contrat_travail': ChoixTypeContratTravail.OTHER.name,
-        })
-        self.assertFormError(response, 'form', 'type_contrat_travail_other', _("This field is required."))
-
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
             'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
             'eft': 80,
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
-        })
+        }
+        response = self.client.post(url, data)
         self.assertFormError(response, 'form', 'bourse_recherche', _("This field is required."))
 
-        response = self.client.post(url, {
-            'type_admission': AdmissionType.ADMISSION.name,
-            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
-            'bourse_recherche': BourseRecherche.OTHER.name,
-        })
-        self.assertFormError(response, 'form', 'bourse_recherche_other', _("This field is required."))
-
-        response = self.client.post(url, {
+        data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
             'bourse_recherche': BourseRecherche.ARES.name,
-        })
+        }
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_project_detail_should_redirect_if_not_signing(self):
@@ -506,6 +515,12 @@ class ProjectViewTestCase(TestCase):
         response = self.client.get(url)
         expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
+
+    def test_detail_redirect(self):
+        url = resolve_url('admission:doctorate', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        response = self.client.get(url)
+        project_url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.assertRedirects(response, project_url)
 
     def test_detail(self):
         url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

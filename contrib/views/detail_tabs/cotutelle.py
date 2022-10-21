@@ -23,32 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
+from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.enums.projet import ChoixStatutProposition
-from admission.services.proposition import AdmissionCotutelleService, AdmissionPropositionService
+from admission.contrib.views.mixins import LoadDossierViewMixin
+from admission.services.proposition import AdmissionCotutelleService
 
 
-class DoctorateAdmissionCotutelleDetailView(LoginRequiredMixin, TemplateView):
+class DoctorateAdmissionCotutelleDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/cotutelle.html'
-
-    def get_admission(self):
-        if not hasattr(self, 'admission'):
-            self.admission = AdmissionPropositionService.get_proposition(
-                person=self.request.user.person,
-                uuid=str(self.kwargs['pk']),
-            )
-        return self.admission
 
     def get(self, request, *args, **kwargs):
         # Always redirect to update form as long as signatures are not sent
-        admission = self.get_admission()
         if (
-            admission.statut == ChoixStatutProposition.IN_PROGRESS.name
+            self.admission.statut == ChoixStatutProposition.IN_PROGRESS.name
             # we have access if url is present
-            and 'url' in admission.links['update_cotutelle']
+            and 'url' in self.admission.links['update_cotutelle']
         ):
             return redirect('admission:doctorate:update:cotutelle', **self.kwargs)
 
@@ -56,9 +48,8 @@ class DoctorateAdmissionCotutelleDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['admission'] = self.get_admission()
         context_data['cotutelle'] = AdmissionCotutelleService.get_cotutelle(
             person=self.request.user.person,
-            uuid=str(self.kwargs['pk']),
+            uuid=self.admission_uuid,
         ).to_dict()
         return context_data

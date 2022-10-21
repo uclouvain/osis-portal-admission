@@ -76,15 +76,17 @@
       {% endwith %}
 
       <div class="row">
-        <div class="col-md-4">
-          {% bootstrap_field foreign_diploma_form.country form_group_class="form-group required_field" %}
+        <div class="col-md-6 required_field">
+          {% bootstrap_field foreign_diploma_form.country %}
+        </div>
+        <div class="col-md-6 required_field">
+          {% bootstrap_field foreign_diploma_form.linguistic_regime %}
         </div>
       </div>
 
       <div class="row">
-        {% bootstrap_field foreign_diploma_form.linguistic_regime form_group_class="form-group required_field col-md-5" %}
-        <div id="linguistic-regime-other">
-          {% bootstrap_field foreign_diploma_form.other_linguistic_regime placeholder="" form_group_class="form-group col-md-7" %}
+        <div id="linguistic-regime-other" class="col-md-6 col-md-offset-6">
+          {% bootstrap_field foreign_diploma_form.other_linguistic_regime placeholder="" %}
         </div>
       </div>
 
@@ -128,20 +130,24 @@
       {% bootstrap_field belgian_diploma_form.institute placeholder="" form_group_class="form-group required_field" %}
       {% bootstrap_field belgian_diploma_form.other_institute %}
 
-      <div id="other_institute" class="row">
-        {% bootstrap_field belgian_diploma_form.other_institute_name placeholder="" form_group_class="form-group required_field col-md-6" %}
-        {% bootstrap_field belgian_diploma_form.other_institute_address placeholder="" form_group_class="col-md-6 required_field form-group" %}
-      </div>
+      {% with bound_css_class=belgian_diploma_form.other_institute.value|yesno:"has-success," %}
+        <div id="other_institute" class="row">
+          <div class="col-md-6 required_field">
+            {% bootstrap_field belgian_diploma_form.other_institute_name placeholder="" bound_css_class=bound_css_class %}
+          </div>
+          <div class="col-md-6 required_field">
+            {% bootstrap_field belgian_diploma_form.other_institute_address placeholder="" bound_css_class=bound_css_class %}
+          </div>
+        </div>
+      {% endwith %}
 
       <div id="schedule">
         <p>
           <strong>{% trans "Timetable" %}</strong>
           <a
               class="fa fa-info-circle popover-buttons"
-              data-toggle="popover"
               role="button"
               tabindex="0"
-              data-trigger="focus"
               data-content="{% blocktrans trimmed %}
               Please complete the schedule information of your last year
               of high school. We invite you to indicate the number of
@@ -232,27 +238,31 @@
     {% endpanel %}
 
     {% panel _("Attachments") id="attachments" %}
-      <p class="enrolment-certificate">
+      <p class="enrolment-certificate required_text">
         {% translate 'High school diploma or, if not available, a certificate of enrolment or school attendance.' %}
+        <span class="translated-field">{% translate 'A translation is required for each uploaded document.' %}</span>
       </p>
-      <div class="row" >
-        {% bootstrap_field main_form.high_school_diploma form_group_class="form-group col-md-6 required_field high-school-diploma" %}
-        {% bootstrap_field main_form.enrolment_certificate form_group_class="form-group col-md-6 enrolment-certificate" %}
+      <div id="high-school-diploma" class="row">
+        <div class="col-md-6">
+          {% bootstrap_field main_form.high_school_diploma %}
+        </div>
+        <div class="col-md-6 translated-field">
+          {% bootstrap_field foreign_diploma_form.high_school_diploma_translation %}
+        </div>
+      </div>
+      <div class="enrolment-certificate row">
+        <div class="col-md-6">
+        {% bootstrap_field main_form.enrolment_certificate %}
+        </div>
+        <div class="col-md-6 translated-field">
+          {% bootstrap_field foreign_diploma_form.enrolment_certificate_translation %}
+        </div>
       </div>
       <div id="foreign-attachments">
-        <div class="row translated-fields">
-          {% bootstrap_field foreign_diploma_form.high_school_diploma_translation form_group_class="form-group col-md-6 required_field high-school-diploma" %}
-          {% bootstrap_field foreign_diploma_form.enrolment_certificate_translation form_group_class="form-group col-md-6 enrolment-certificate" %}
-        </div>
         <div class="row">
           <hr>
           {% bootstrap_field foreign_diploma_form.high_school_transcript form_group_class="form-group required_field col-md-6" %}
-          {% bootstrap_field foreign_diploma_form.high_school_transcript_translation form_group_class="form-group required_field translated-fields col-md-6" %}
-        </div>
-        <div class="row equivalence-fields">
-          <hr>
-          {% bootstrap_field foreign_diploma_form.restrictive_equivalence_daes form_group_class="form-group col-md-6" %}
-          {% bootstrap_field foreign_diploma_form.restrictive_equivalence_admission_test form_group_class="form-group col-md-6" %}
+          {% bootstrap_field foreign_diploma_form.high_school_transcript_translation form_group_class="form-group required_field translated-field col-md-6" %}
         </div>
       </div>
     {% endpanel %}
@@ -342,16 +352,10 @@
           });
 
           {# Foreign diploma #}
-          const linguistic_regime = context.find('select[name=foreign_diploma-linguistic_regime]');
-          const other_linguistic_regime = context.find('input[name=foreign_diploma-other_linguistic_regime]');
-
-          linguistic_regime.on('select2:select', function () {
-              linguistic_regime.val() && other_linguistic_regime.val(null);
-              linguistic_regime.trigger('change');
-          });
-
           $('#linguistic-regime-other').dependsOn({
               'select[name=foreign_diploma-linguistic_regime]': { values: ['', null] },
+          }, {
+              valueOnDisable: null,
           });
 
           {# Equivalence #}
@@ -380,17 +384,25 @@
           });
 
           {# Attachments #}
+          const highSchoolDiploma = $('#high-school-diploma');
           $('#attachments').dependsOn({
               'input[name=diploma_type]': { is_truthy },
           });
 
-          $('.high-school-diploma').dependsOn({
+          highSchoolDiploma.dependsOn({
               'input[name=got_diploma]': { values: ['THIS_YEAR', 'YES'] },
           });
 
           $('.enrolment-certificate').dependsOn({
               'input[name=got_diploma]': { values: ['THIS_YEAR'] },
               'input[name=diploma_type]': { values: ['BELGIAN'] },
+          }, {
+              onEnable: function() {
+                  highSchoolDiploma.removeClass('required_field');
+              },
+              onDisable: function() {
+                  highSchoolDiploma.addClass('required_field');
+              },
           }).or({
               'input[name=got_diploma]': { values: ['THIS_YEAR'] },
               'input[name=diploma_type]': { values: ['FOREIGN'] },
@@ -401,14 +413,34 @@
               'input[name=diploma_type]': { values: ['FOREIGN'] },
           });
 
-          $('.translated-fields').dependsOn({
+          $('.translated-field').dependsOn({
+              'input[name=diploma_type]': { values: ['FOREIGN'] },
               'select[name=foreign_diploma-linguistic_regime]': {
                   is_truthy,
                   not: {{ linguistic_regimes_without_translation|safe }},
+              },
+          }).or({
+              'input[name=diploma_type]': { values: ['FOREIGN'] },
+              '#id_foreign_diploma-other_linguistic_regime': {
+                  is_truthy,
               },
           });
 
           document.dispatchEvent(new Event('refreshFormInitial'));
       });
   </script>
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    .high-school-address {
+      font-size: 0.75em;
+      color: #888;
+      margin-left: 0.5em;
+    }
+    .select2-results__option--highlighted[aria-selected] .high-school-address {
+      color: #eee;
+    }
+  </style>
 {% endblock %}

@@ -38,8 +38,10 @@ from admission.templatetags.admission import (
     can_make_action,
     can_read_tab,
     can_update_tab,
+    display,
     get_valid_tab_tree,
     has_error_in_tab,
+    strip,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
@@ -76,7 +78,7 @@ class TemplateTagsTestCase(TestCase):
         class TestEnum(ChoiceEnum):
             FOO = "Bar"
 
-        template = Template("{% load admission %}{{ value|enum_display:'TestEnum' }}")
+        template = Template("{% load enums %}{{ value|enum_display:'TestEnum' }}")
         rendered = template.render(Context({'value': "TEST"}))
         self.assertEqual('TEST', rendered)
 
@@ -94,7 +96,7 @@ class TemplateTagsTestCase(TestCase):
         rendered = template.render(Context({'value': "FOO"}))
         self.assertEqual('Bar', rendered)
 
-        template = Template("{% load admission %}{{ value|enum_display:'InexistantEnum' }}")
+        template = Template("{% load enums %}{{ value|enum_display:'InexistantEnum' }}")
         rendered = template.render(Context({'value': "TEST"}))
         self.assertEqual('TEST', rendered)
 
@@ -283,3 +285,41 @@ class TemplateTagsTestCase(TestCase):
             request.user = PersonFactory().user
             rendered = template.render(Context({'request': request}))
         self.assertNotIn('coucou', rendered)
+
+
+class DisplayTagTestCase(TestCase):
+    def test_comma(self):
+        self.assertEqual(display('', ',', None), '')
+        self.assertEqual(display('', ',', 0), '')
+        self.assertEqual(display('', ',', ''), '')
+        self.assertEqual(display('Foo', ',', []), 'Foo')
+        self.assertEqual(display('', ',', "bar"), 'bar')
+        self.assertEqual(display('foo', '-', "", '-', ''), 'foo')
+        self.assertEqual(display('foo', '-', "bar", '-', ''), 'foo - bar')
+        self.assertEqual(display('foo', '-', None, '-', ''), 'foo')
+        self.assertEqual(display('foo', '-', None, '-', 'baz'), 'foo - baz')
+        self.assertEqual(display('foo', '-', "bar", '-', 'baz'), 'foo - bar - baz')
+
+    def test_parenthesis(self):
+        self.assertEqual(display('(', '', ")"), '')
+        self.assertEqual(display('(', None, ")"), '')
+        self.assertEqual(display('(', 0, ")"), '')
+        self.assertEqual(display('(', 'lol', ")"), '(lol)')
+
+    def test_suffix(self):
+        self.assertEqual(display('', ' grammes'), '')
+        self.assertEqual(display(5, ' grammes'), '5 grammes')
+        self.assertEqual(display(5, ' grammes'), '5 grammes')
+        self.assertEqual(display(0.0, ' g'), '')
+
+    def test_both(self):
+        self.assertEqual(display('(', '', ")", '-', 0), '')
+        self.assertEqual(display('(', '', ",", "", ")", '-', 0), '')
+        self.assertEqual(display('(', 'jean', ",", "", ")", '-', 0), '(jean)')
+        self.assertEqual(display('(', 'jean', ",", "michel", ")", '-', 0), '(jean, michel)')
+        self.assertEqual(display('(', 'jean', ",", "michel", ")", '-', 100), '(jean, michel) - 100')
+
+    def test_strip(self):
+        self.assertEqual(strip(' coucou '), 'coucou')
+        self.assertEqual(strip(0), 0)
+        self.assertEqual(strip(None), None)

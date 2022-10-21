@@ -1,4 +1,5 @@
-{% extends "admission/doctorate/detail_tab_layout.html" %}{% load i18n static admission index %}
+{% extends "admission/doctorate/detail_tab_layout.html" %}
+{% load i18n static admission index enums %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -40,11 +41,13 @@
             {% elif person.birth_year %}
                 {% field_data _("Birth year") person.birth_year "col-md-4" %}
             {% endif %}
+            {% get_country_name person.birth_country as birth_country %}
             {% field_data _("Birth country") birth_country "col-md-4" %}
             {% field_data _("Birth place") person.birth_place "col-md-4" %}
         </div>
         <div class="row">
           {% field_data _("Civil status") person.civil_state|enum_display:'CivilState' "col-md-4" %}
+          {% get_country_name person.country_of_citizenship as country_of_citizenship %}
           {% field_data _("Country of citizenship") country_of_citizenship "col-md-4" %}
         </div>
         {% field_data _("Identity picture") person.id_photo hide_empty=True %}
@@ -52,17 +55,10 @@
     {% endpanel %}
 
     {% panel _("Proof of identity") %}
-        <div class="row">
-            {% field_data _("Belgian national registry number (SSIN)") person.national_number "col-md-6" %}
-            {% field_data _("Identity card number") person.id_card_number "col-md-6" %}
-        </div>
-        {% if person.passport_number %}
-            <div class="row">
-                {% field_data _("Passport number") person.passport_number "col-md-6" %}
-                {% field_data _("Passport expiration date") person.passport_expiration_date "col-md-6" %}
-            </div>
-        {% endif %}
+        {% field_data _("Belgian national registry number (SSIN)") person.national_number hide_empty=True %}
+        {% field_data _("Identity card number") person.id_card_number hide_empty=True %}
         {% field_data _("Identity card (both sides)") person.id_card hide_empty=True %}
+        {% field_data _("Passport number") person.passport_number hide_empty=True %}
         {% field_data _("Passport") person.passport hide_empty=True %}
     {% endpanel %}
 

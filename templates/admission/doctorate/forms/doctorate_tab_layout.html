@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load bootstrap3 i18n static admission %}
+{% load bootstrap3 i18n static admission enums %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -26,7 +26,10 @@
 {% endcomment %}
 
 {% block script %}
+  {{ block.super }}
   <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
+  <script src="{% static 'admission/admission.js' %}"></script>
+  <script src="{% static 'admission/popover.js' %}"></script>
 {% endblock %}
 
 {% block style %}
@@ -78,16 +81,18 @@
         </div>
     </div>
 
-    {% include "template_messages.html" %}
+    <div id="template-messages-container">
+     {% include "template_messages.html" %}
+    </div>
 
     {% block tab_content %}
         <form class="osis-form" method="post" action="">
             {% csrf_token %}
             {% block form_content %}
-                {% doctorate_tabs doctorate with_submit=True %}
+                {% doctorate_tabs doctorate with_submit=True no_status=True %}
                 <div class="row">
                     <div class="col-md-2 visible-md visible-lg">
-                        {% doctorate_subtabs doctorate %}
+                        {% doctorate_subtabs doctorate no_status=True %}
                     </div>
                     <div class="col-md-10 quitting-context-excluded">
                         {% block form %}{% endblock %}

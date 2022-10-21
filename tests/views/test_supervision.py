@@ -357,3 +357,21 @@ class SupervisionTestCase(TestCase):
         url = resolve_url("admission:doctorate:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.post(url, {})
         self.assertRedirects(response, self.detail_url)
+
+    def test_should_set_reference_promoter(self):
+        url = resolve_url(
+            "admission:doctorate:set-reference-promoter",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            matricule="9876543210",
+        )
+        response = self.client.post(url, {})
+        self.assertRedirects(response, self.detail_url)
+        self.assertTrue(self.mock_api.return_value.set_reference_promoter.called)
+
+        self.mock_api.return_value.set_reference_promoter.side_effect = MultipleApiBusinessException(
+            exceptions={
+                ApiBusinessException(status_code=42, detail="Something went wrong"),
+            }
+        )
+        response = self.client.post(url, {})
+        self.assertRedirects(response, self.detail_url)
