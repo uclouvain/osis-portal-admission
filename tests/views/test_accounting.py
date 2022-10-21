@@ -56,8 +56,8 @@ from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.tests.factories import PropositionDTOComptabiliteFactory
 from base.tests.factories.person import PersonFactory
 
-from osis_admission_sdk.model.proposition_dto import PropositionDTO
-from osis_admission_sdk.model.proposition_dto_links import PropositionDTOLinks
+from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
+from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
 from reference.services.iban_validator import IBANValidatorException, IBANValidatorRequestException
 
 
@@ -78,11 +78,11 @@ class AccountingViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.proposition = PropositionDTO._from_openapi_data(
+        cls.proposition = DoctoratePropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
             type_admission=AdmissionType.ADMISSION.name,
             reference='22-300001',
-            links=PropositionDTOLinks(),
+            links=DoctoratePropositionDTOLinks(),
             doctorat=PropositionSearchDoctorat._from_openapi_data(
                 sigle='CS1',
                 annee=2020,
