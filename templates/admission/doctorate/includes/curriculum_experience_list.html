@@ -95,7 +95,7 @@
             <td>
               <div class="btn-group" role="group">
                 {% if with_editing_options %}
-                  {% if educational_experience.valuated_from_doctorateadmission %}
+                  {% if educational_experience.valuated_from_admission %}
                     <span
                         class="glyphicon glyphicon-check btn btn-default disabled"
                         title="{% trans "This experience has been valuated so cannot be updated." %}"
@@ -194,7 +194,7 @@
             <td>
               <div class="btn-group" role="group">
                 {% if with_editing_options %}
-                  {% if professional_experience.valuated_from_doctorateadmission %}
+                  {% if professional_experience.valuated_from_admission %}
                     <span
                         class="glyphicon glyphicon-check btn btn-default disabled"
                         title="{% trans "This experience has been valuated so cannot be updated." %}"
