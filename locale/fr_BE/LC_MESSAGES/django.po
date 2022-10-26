@@ -1850,6 +1850,9 @@ msgstr "Non"
 msgid "No activity created yet"
 msgstr "Aucune activité créée pour le moment"
 
+msgid "No activity selected."
+msgstr "Aucune activité n'a été sélectionnée."
+
 msgid "No cotutelle"
 msgstr "Pas de cotutelle"
 

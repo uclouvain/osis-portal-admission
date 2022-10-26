@@ -1648,6 +1648,9 @@ msgstr ""
 msgid "No activity created yet"
 msgstr ""
 
+msgid "No activity selected."
+msgstr ""
+
 msgid "No cotutelle"
 msgstr ""
 

@@ -660,11 +660,17 @@ class UclCourseForm(ActivityFormMixin, forms.Form):
 
 
 class BatchActivityForm(forms.Form):
-    activity_ids = forms.MultipleChoiceField()
+    activity_ids = forms.MultipleChoiceField(required=False)
 
     def __init__(self, uuids=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['activity_ids'].choices = zip(uuids, uuids)
+
+    def clean(self):
+        data = super().clean()
+        if not data.get('activity_ids'):
+            raise forms.ValidationError(_("No activity selected."))
+        return data
 
 
 class AssentForm(forms.Form):
