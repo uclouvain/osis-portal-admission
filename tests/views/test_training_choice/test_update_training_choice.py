@@ -158,7 +158,9 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
                 'bourse_double_diplome': self.double_degree_scholarship.uuid,
                 'bourse_internationale': self.international_scholarship.uuid,
                 'bourse_erasmus_mundus': self.first_erasmus_mundus_scholarship.uuid,
-                'reponses_questions_specifiques': {},
+                'reponses_questions_specifiques': {
+                    self.first_question_uuid: '',
+                },
             },
             **self.default_kwargs,
         )
@@ -240,7 +242,9 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                 'uuid_proposition': self.proposition_uuid,
                 'sigle_formation': 'TR2',
                 'annee_formation': 2020,
-                'reponses_questions_specifiques': {},
+                'reponses_questions_specifiques': {
+                    self.first_question_uuid: '',
+                },
             },
             **self.default_kwargs,
         )
@@ -372,7 +376,9 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
                 'bourse_erasmus_mundus': self.first_erasmus_mundus_scholarship.uuid,
                 'type_admission': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
-                'reponses_questions_specifiques': {},
+                'reponses_questions_specifiques': {
+                    self.first_question_uuid: '',
+                },
             },
             **self.default_kwargs,
         )
