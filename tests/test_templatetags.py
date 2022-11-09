@@ -337,7 +337,7 @@ class DisplayTagTestCase(TestCase):
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/', LANGUAGE_CODE='en')
-class MultipleFieldData(TestCase):
+class MultipleFieldDataTestCase(TestCase):
     default_translated_value = {'en': '', 'fr-be': ''}
 
     def setUp(self):

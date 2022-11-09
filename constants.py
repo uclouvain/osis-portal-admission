@@ -45,6 +45,8 @@ READ_ACTIONS_BY_TAB = {
     # Confirmation paper
     'confirmation-paper': 'retrieve_confirmation',
     'extension-request': 'update_confirmation_extension',
+    # Additional information
+    'specific-questions': 'retrieve_specific_question',
     # Others
     'doctoral-training': 'retrieve_doctoral_training',
     'complementary-training': 'retrieve_complementary_training',
@@ -76,6 +78,8 @@ UPDATE_ACTIONS_BY_TAB = {
     # Confirmation paper
     'confirmation-paper': 'update_confirmation',
     'extension-request': 'update_confirmation_extension',
+    # Additional information
+    'specific-questions': 'update_specific_question',
     # Others
     'jury': '',
     'private-defense': '',
