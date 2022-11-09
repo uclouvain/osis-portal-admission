@@ -229,6 +229,22 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def update_general_specific_question(cls, person: Person, uuid: str, data: dict):
+        return APIClient().update_general_specific_question(
+            uuid=uuid,
+            modifier_questions_specifiques_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_continuing_specific_question(cls, person: Person, uuid: str, data: dict):
+        return APIClient().update_continuing_specific_question(
+            uuid=uuid,
+            modifier_questions_specifiques_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
@@ -286,6 +302,7 @@ class GlobalPropositionBusinessException(Enum):
     QuestionsSpecifiquesChoixFormationNonCompleteesException = "ADMISSION-3"
     QuestionsSpecifiquesCurriculumNonCompleteesException = "ADMISSION-4"
     QuestionsSpecifiquesEtudesSecondairesNonCompleteesException = "ADMISSION-5"
+    QuestionsSpecifiquesInformationsComplementairesNonCompleteesException = "ADMISSION-6"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -339,6 +356,9 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.AffiliationsNonCompleteesException,
         PropositionBusinessException.CarteBancaireRemboursementIbanNonCompleteException,
         PropositionBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteException,
+    },
+    'specific_question': {
+        GlobalPropositionBusinessException.QuestionsSpecifiquesInformationsComplementairesNonCompleteesException,
     },
 }
 

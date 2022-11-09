@@ -267,6 +267,7 @@ update_general_education_paths = [
     path("curriculum/", include((general_education_curriculum_update_paths, "curriculum"))),
     path("education", views.GeneralEducationAdmissionEducationFormView.as_view(), name="education"),
     path("training-choice", views.GeneralAdmissionUpdateTrainingChoiceFormView.as_view(), name="training-choice"),
+    path("specific-questions", views.GeneralEducationSpecificQuestionFormView.as_view(), name="specific-questions"),
 ]
 
 general_education_paths = [
@@ -276,6 +277,7 @@ general_education_paths = [
     path("curriculum/", include((general_education_curriculum_read_paths, "curriculum"))),
     path("education", views.GeneralEducationAdmissionEducationDetailView.as_view(), name="education"),
     path("training-choice", views.GeneralEducationTrainingChoiceDetailView.as_view(), name="training-choice"),
+    path("specific-questions", views.GeneralEducationSpecificQuestionDetailView.as_view(), name="specific-questions"),
     path("cancel", views.GeneralEducationAdmissionCancelView.as_view(), name="cancel"),
     path("update/", include((update_general_education_paths, "update"))),
 ]
@@ -287,6 +289,7 @@ update_continuing_education_paths = [
     path("curriculum/", include((continuing_education_curriculum_update_paths, "curriculum"))),
     path("education", views.ContinuingEducationAdmissionEducationFormView.as_view(), name="education"),
     path("training-choice", views.ContinuingAdmissionUpdateTrainingChoiceFormView.as_view(), name="training-choice"),
+    path("specific-questions", views.ContinuingEducationSpecificQuestionFormView.as_view(), name="specific-questions"),
 ]
 
 continuing_education_paths = [
@@ -296,6 +299,9 @@ continuing_education_paths = [
     path("curriculum/", include((continuing_education_curriculum_read_paths, "curriculum"))),
     path("education", views.ContinuingEducationAdmissionEducationDetailView.as_view(), name="education"),
     path("training-choice", views.ContinuingEducationTrainingChoiceDetailView.as_view(), name="training-choice"),
+    path(
+        "specific-questions", views.ContinuingEducationSpecificQuestionDetailView.as_view(), name="specific-questions"
+    ),
     path("cancel", views.ContinuingEducationAdmissionCancelView.as_view(), name="cancel"),
     path("update/", include((update_continuing_education_paths, "update"))),
 ]

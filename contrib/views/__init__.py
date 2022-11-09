@@ -116,3 +116,11 @@ from .detail_tabs.training_choice import (
     ContinuingEducationTrainingChoiceDetailView,
     DoctorateTrainingChoiceDetailView,
 )
+from .detail_tabs.specific_question import (
+    GeneralEducationSpecificQuestionDetailView,
+    ContinuingEducationSpecificQuestionDetailView,
+)
+from .form_tabs.specific_question import (
+    GeneralEducationSpecificQuestionFormView,
+    ContinuingEducationSpecificQuestionFormView,
+)

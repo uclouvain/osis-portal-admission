@@ -2470,6 +2470,9 @@ msgstr "Orateur ou oratrice"
 msgid "Speaking ability"
 msgstr "Parler"
 
+msgid "Specific questions"
+msgstr "Questions spécifiques"
+
 msgid "Specify the employer and your function"
 msgstr "Indiquer l'employeur et votre fonction"
 
