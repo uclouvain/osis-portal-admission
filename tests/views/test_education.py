@@ -43,7 +43,7 @@ from admission.contrib.enums.secondary_studies import (
     ForeignDiplomaTypes,
     GotDiploma,
 )
-from admission.tests.utils import MockCountry, MockLanguage, MockHighSchool
+from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.academic_year import get_current_year
 from base.tests.factories.person import PersonFactory
 

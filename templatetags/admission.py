@@ -161,12 +161,15 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
+        Tab('general-education', _('General education'), 'graduation-cap'): [
+            Tab('training-choice', _('Training choice')),
+        ],
         Tab('experience', _('Previous experience'), 'list-alt'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
         ],
-        Tab('general-education', _('General education'), 'graduation-cap'): [
-            Tab('training-choice', _('Training choice')),
+        Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
+            Tab('specific-questions', _('Specific questions')),
         ],
     },
     'continuing-education': {
@@ -174,12 +177,15 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
+        Tab('continuing-education', _('Continuing education'), 'graduation-cap'): [
+            Tab('training-choice', _('Training choice')),
+        ],
         Tab('experience', _('Previous experience'), 'list-alt'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
         ],
-        Tab('continuing-education', _('Continuing education'), 'graduation-cap'): [
-            Tab('training-choice', _('Training choice')),
+        Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
+            Tab('specific-questions', _('Specific questions')),
         ],
     },
 }

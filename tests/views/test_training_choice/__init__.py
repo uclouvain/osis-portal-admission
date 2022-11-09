@@ -33,12 +33,14 @@ from admission.contrib.enums import (
     ChoixStatutPropositionFormationGenerale,
 )
 from admission.contrib.enums.scholarship import TypeBourse
+from admission.contrib.enums.specific_question import TypeItemFormulaire
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from base.tests.factories.person import PersonFactory
 from osis_admission_sdk.model.campus import Campus
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.scholarship import Scholarship
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 
 class AdmissionTrainingChoiceFormViewTestCase(TestCase):
@@ -145,6 +147,10 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         }
 
     @classmethod
+    def get_specific_questions(cls, **kwargs):
+        return cls.specific_questions
+
+    @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
         cls.default_kwargs = {
@@ -157,6 +163,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         cls.proposition_uuid = str(uuid.uuid4())
         cls.louvain_campus_uuid = str(uuid.uuid4())
         cls.mons_campus_uuid = str(uuid.uuid4())
+        cls.first_question_uuid = str(uuid.uuid4())
         cls.first_erasmus_mundus_scholarship = Scholarship._from_openapi_data(
             uuid=str(uuid.uuid4()),
             short_name="EM-1",
@@ -221,7 +228,9 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 nom_long=cls.first_erasmus_mundus_scholarship.long_name,
                 type=cls.first_erasmus_mundus_scholarship.type,
             ),
-            reponses_questions_specifiques={},
+            reponses_questions_specifiques={
+                cls.first_question_uuid: 'My answer',
+            },
         )
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -237,7 +246,9 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
             links={},
             erreurs={},
-            reponses_questions_specifiques={},
+            reponses_questions_specifiques={
+                cls.first_question_uuid: 'My answer',
+            },
         )
 
         cls.doctorate_proposition = Mock(
@@ -263,8 +274,31 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 nom_long=cls.first_erasmus_mundus_scholarship.long_name,
                 type=cls.first_erasmus_mundus_scholarship.type,
             ),
-            reponses_questions_specifiques={},
+            reponses_questions_specifiques={
+                cls.first_question_uuid: 'My answer',
+            },
         )
+
+        cls.specific_questions = [
+            SpecificQuestion._from_openapi_data(
+                uuid=str(uuid.uuid4()),
+                type=TypeItemFormulaire.MESSAGE.name,
+                title={},
+                text={'en': 'My message', 'fr-be': 'Mon message'},
+                help_text={},
+                configuration={},
+                required=True,
+            ),
+            SpecificQuestion._from_openapi_data(
+                uuid=cls.first_question_uuid,
+                type=TypeItemFormulaire.TEXTE.name,
+                title={'en': 'My first question', 'fr-be': 'Ma première question'},
+                text={'en': 'Informations about the question', 'fr-be': 'Informations au sujet de la question'},
+                help_text={'en': 'Write here', 'fr-be': 'Ecrivez-ici'},
+                configuration={},
+                required=True,
+            ),
+        ]
 
         cls.sectors = [
             Mock(sigle='SSH', intitule='Foobar'),
@@ -355,6 +389,13 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_proposition_api.return_value.update_general_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.update_continuing_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.update_doctorate_training_choice.side_effect = self.init_training_choice
+        self.mock_proposition_api.return_value.list_doctorate_specific_questions.side_effect = (
+            self.get_specific_questions
+        )
+        self.mock_proposition_api.return_value.list_general_specific_questions.side_effect = self.get_specific_questions
+        self.mock_proposition_api.return_value.list_continuing_specific_questions.side_effect = (
+            self.get_specific_questions
+        )
         self.addCleanup(propositions_api_patcher.stop)
 
         # Mock autocomplete sdk api
