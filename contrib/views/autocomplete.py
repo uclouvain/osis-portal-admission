@@ -248,6 +248,7 @@ class HighSchoolAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             limit=100,
             person=self.request.user.person,
             search=self.q,
+            active=True,
         )
 
     def autocomplete_results(self, results):
@@ -352,6 +353,7 @@ class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2
         return SuperiorNonUniversityService.get_superior_non_universities(
             person=self.request.user.person,
             search=self.q,
+            active=True,
         )
 
     def results(self, results):
