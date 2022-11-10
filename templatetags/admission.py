@@ -123,10 +123,16 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
+        Tab('training-choice-main', _('Training choice'), 'graduation-cap'): [
+            Tab('training-choice', _('Training choice')),
+        ],
         Tab('experience', _('Previous experience'), 'list-alt'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
             Tab('languages', _('Languages knowledge')),
+        ],
+        Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
+            Tab('accounting', _('Accounting')),
         ],
         Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'graduation-cap'): [
             Tab('training-choice', _('Training choice')),
@@ -134,9 +140,7 @@ TAB_TREES = {
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Supervision')),
         ],
-        # TODO specifics
         Tab('completion', _('Completion'), 'flag'): [
-            Tab('accounting', _('Accounting')),
             Tab('confirm', _('Confirmation')),
         ],
         Tab('confirmation-paper', _('Confirmation'), 'list-check'): [
@@ -161,7 +165,7 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('general-education', _('General education'), 'graduation-cap'): [
+        Tab('training-choice-main', _('Training choice'), 'graduation-cap'): [
             Tab('training-choice', _('Training choice')),
         ],
         Tab('experience', _('Previous experience'), 'list-alt'): [
@@ -177,7 +181,7 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('continuing-education', _('Continuing education'), 'graduation-cap'): [
+        Tab('training-choice-main', _('Training choice'), 'graduation-cap'): [
             Tab('training-choice', _('Training choice')),
         ],
         Tab('experience', _('Previous experience'), 'list-alt'): [
