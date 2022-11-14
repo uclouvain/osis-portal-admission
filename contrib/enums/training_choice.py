@@ -37,6 +37,10 @@ class TypeFormation(ChoiceEnum):
     FORMATION_CONTINUE = _('Continuing education')
     CERTIFICAT = _("Certificate")
 
+    @classmethod
+    def general_choices(cls):
+        return tuple((x.name, x.value) for x in cls if x.name in TYPES_FORMATION_GENERALE)
+
 
 TYPES_FORMATION_GENERALE = {
     TypeFormation.BACHELIER.name,
@@ -83,9 +87,7 @@ GENERAL_EDUCATION_TYPES = set(
     + OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.CERTIFICAT.name)
 )
 
-CONTINUING_EDUCATION_TYPES = set(
-    OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.FORMATION_CONTINUE.name)
-)
+CONTINUING_EDUCATION_TYPES = set(OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.FORMATION_CONTINUE.name))
 
 DOCTORATE_EDUCATION_TYPES = set(OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.DOCTORAT.name))
 

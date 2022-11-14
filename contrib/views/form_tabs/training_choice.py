@@ -33,7 +33,12 @@ from django.views.generic import FormView
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TYPES_FORMATION_GENERALE, TypeFormation
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
-from admission.contrib.forms.training_choice import TrainingChoiceForm
+from admission.contrib.forms.training_choice import (
+    CreateTrainingChoiceForm,
+    DoctorateUpdateTrainingChoiceForm,
+    GeneralUpdateTrainingChoiceForm,
+    ContinuingUpdateTrainingChoiceForm,
+)
 from admission.contrib.views.mixins import (
     LoadDossierViewMixin,
     LoadGeneralEducationDossierViewMixin,
@@ -59,7 +64,6 @@ class AdmissionTrainingChoiceFormMixinView(
     FormView,
 ):  # pylint: disable=too-many-ancestors
     template_name = 'admission/admission/forms/training_choice.html'
-    form_class = TrainingChoiceForm
 
     extra_context = {
         'GENERAL_EDUCATION_TYPES': list(TYPES_FORMATION_GENERALE),
@@ -75,15 +79,12 @@ class AdmissionTrainingChoiceFormMixinView(
 
 
 class AdmissionCreateTrainingChoiceFormView(AdmissionTrainingChoiceFormMixinView):  # pylint: disable=too-many-ancestors
+    form_class = CreateTrainingChoiceForm
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.uuid: Optional[str] = None
         self.training_type: Optional[TypeFormation] = None
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['on_update'] = False
-        return kwargs
 
     def prepare_data_for_doctorate(self, data):
         [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
@@ -154,7 +155,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormView(
     LoadDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
 ):  # pylint: disable=too-many-ancestors
-
+    form_class = DoctorateUpdateTrainingChoiceForm
     tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
 
     def get_initial(self):
@@ -190,7 +191,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormView(
     LoadGeneralEducationDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
 ):  # pylint: disable=too-many-ancestors
-
+    form_class = GeneralUpdateTrainingChoiceForm
     tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
 
     def get_initial(self):
@@ -229,7 +230,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormView(
     LoadContinuingEducationDossierViewMixin,
     AdmissionTrainingChoiceFormMixinView,
 ):  # pylint: disable=too-many-ancestors
-
+    form_class = ContinuingUpdateTrainingChoiceForm
     tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
 
     def get_initial(self):

@@ -48,7 +48,12 @@
                 {% field_data _("Work contract") admission.type_contrat_travail|enum_display:'ChoixTypeContratTravail' %}
                 {% field_data fte_label admission.eft|default_if_none:'' %}
             {% elif admission.type_financement == "SEARCH_SCHOLARSHIP" %}
-                {% field_data _("Scholarship") admission.bourse_recherche|enum_display:'BourseRecherche' %}
+                {% if admission.bourse_recherche %}
+                  {% display admission.bourse_recherche.nom_court '-' admission.bourse_recherche.nom_long as nom_bourse %}
+                {% else %}
+                  {% display admission.autre_bourse_recherche as nom_bourse %}
+                {% endif %}
+                {% field_data _("Scholarship") nom_bourse %}
                 {% field_data _("Scholarship start date") admission.bourse_date_debut %}
                 {% field_data _("Scholarship end date") admission.bourse_date_fin %}
                 {% field_data _("Scholarship proof") admission.bourse_preuve %}

@@ -26,6 +26,7 @@
 from copy import copy
 
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 
@@ -59,6 +60,9 @@ class WebServiceFormMixin:
                     form.add_error(self._error_mapping[exception.status_code], exception.detail)
                 else:
                     form.add_error(None, exception.detail)
+            return self.form_invalid(form)
+        except PermissionDenied as e:
+            form.add_error(None, str(e))
             return self.form_invalid(form)
         return super().form_valid(form)
 

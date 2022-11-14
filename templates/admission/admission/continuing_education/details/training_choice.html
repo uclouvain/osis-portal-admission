@@ -31,7 +31,7 @@
     {% field_data _('Education name') admission.formation.intitule %}
     {% field_data _('Campus') admission.formation.campus %}
     {% switch 'debug' %}
-      {% field_data _('Academic year') admission.formation.annee|get_academic_year %}
+      {% field_data _('Academic year') admission.formation.annee|get_academic_year css_class='debug-content' %}
     {% endswitch %}
   {% endpanel %}
 

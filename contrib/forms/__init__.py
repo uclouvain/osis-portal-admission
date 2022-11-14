@@ -41,7 +41,8 @@ from admission.services.reference import (
     HighSchoolService,
     SuperiorNonUniversityService,
 )
-from admission.utils import format_entity_title, format_high_school_title
+from admission.services.scholarship import AdmissionScholarshipService
+from admission.utils import format_entity_title, format_high_school_title, format_scholarship
 from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
@@ -113,6 +114,17 @@ def get_campus_choices(person):
     """Return the unique initial choice for the campus."""
     ucl_campus = AdmissionCampusService.list_campus(person=person)
     return [(EMPTY_VALUE, _('All'))] + [(campus['uuid'], campus['name']) for campus in ucl_campus]
+
+
+def get_scholarship_choices(uuid, person):
+    """Return the unique initial choice for the campus."""
+    if not uuid:
+        return EMPTY_CHOICE
+    scholarship = AdmissionScholarshipService.get_scholarship(
+        person=person,
+        scholarship_uuid=uuid,
+    )
+    return EMPTY_CHOICE + ((uuid, format_scholarship(scholarship)),)
 
 
 def get_past_academic_years_choices(person, exclude_current=False):

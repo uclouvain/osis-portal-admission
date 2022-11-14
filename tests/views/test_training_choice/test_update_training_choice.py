@@ -80,14 +80,27 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
             ]
         )
 
-        # Disabled fields
-        self.assertTrue(form.fields['training_type'].disabled)
-
     def test_form_submitting_missing_fields(self):
         response = self.client.post(
             self.url,
             data={
                 'campus': EMPTY_VALUE,
+            },
+        )
+
+        form = response.context['form']
+
+        self.assertFalse(form.is_valid())
+
+        self.assertTrue('training_type' in form.errors)
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['training_type'])
+
+    def test_form_submitting_missing_fields_with_master(self):
+        response = self.client.post(
+            self.url,
+            data={
+                'campus': EMPTY_VALUE,
+                'training_type': TypeFormation.MASTER.name,
             },
         )
 
@@ -107,11 +120,12 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         self.assertTrue('has_erasmus_mundus_scholarship' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['has_erasmus_mundus_scholarship'])
 
-    def test_form_submitting_missing_scholarshipfields(self):
+    def test_form_submitting_missing_scholarshipfields_with_master(self):
         response = self.client.post(
             self.url,
             data={
                 'campus': EMPTY_VALUE,
+                'training_type': TypeFormation.MASTER.name,
                 'has_double_degree_scholarship': True,
                 'has_international_scholarship': True,
                 'has_erasmus_mundus_scholarship': True,
@@ -139,6 +153,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
             self.url,
             data={
                 'campus': EMPTY_VALUE,
+                'training_type': TypeFormation.MASTER.name,
                 'general_education_training': 'TR1-2020',
                 'has_double_degree_scholarship': True,
                 'has_international_scholarship': True,

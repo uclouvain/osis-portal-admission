@@ -207,9 +207,8 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         ),
     )
 
-    def __init__(self, person, on_update=True, *args, **kwargs):
+    def __init__(self, person, *args, **kwargs):
         self.person = person
-        self.on_update = on_update
 
         super().__init__(*args, **kwargs)
 
@@ -320,46 +319,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             for sector in AdmissionAutocompleteService.get_sectors(person)
         )
 
-        # Specificities on update -> Some fields can not be updated
-        if self.on_update:
-            disabled_fields_on_update = [
-                # All trainings
-                'training_type',
-                # Doctorate
-                'proximity_commission_cde',
-                'proximity_commission_cdss',
-                'science_sub_domain',
-                'sector',
-                'doctorate_training',
-            ]
-
-            if self.doctorate_training_obj:
-                disabled_fields_on_update += ['campus']
-
-            for field in disabled_fields_on_update:
-                self.fields[field].disabled = True
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        training_type = cleaned_data.get('training_type')
-
-        if not self.on_update and not training_type:
-            self.add_error('training_type', FIELD_REQUIRED_MESSAGE)
-
-        if cleaned_data.get('campus') == EMPTY_VALUE:
-            cleaned_data['campus'] = ''
-
-        self.clean_doctorate(training_type, cleaned_data)
-
-        self.clean_continuing_education(training_type, cleaned_data)
-
-        self.clean_erasmus_scholarship(training_type, cleaned_data)
-
-        self.clean_general_education(training_type, cleaned_data)
-
-        self.clean_master_scholarships(training_type, cleaned_data)
-
     def clean_master_scholarships(self, training_type, cleaned_data):
         if training_type == TypeFormation.MASTER.name:
             if cleaned_data.get('has_double_degree_scholarship'):
@@ -386,7 +345,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             cleaned_data['international_scholarship'] = ''
 
     def clean_erasmus_scholarship(self, training_type, cleaned_data):
-        if training_type in TYPES_FORMATION_GENERALE or training_type == TypeFormation.DOCTORAT.name:
+        if training_type == TypeFormation.MASTER.name or training_type == TypeFormation.DOCTORAT.name:
             if cleaned_data.get('has_erasmus_mundus_scholarship'):
                 if not cleaned_data.get('erasmus_mundus_scholarship'):
                     self.add_error('erasmus_mundus_scholarship', FIELD_REQUIRED_MESSAGE)
@@ -443,3 +402,108 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     class Media:
         js = ('js/dependsOn.min.js',)
+
+
+class CreateTrainingChoiceForm(TrainingChoiceForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['training_type'].required = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        training_type = cleaned_data.get('training_type')
+
+        self.clean_doctorate(training_type, cleaned_data)
+        self.clean_continuing_education(training_type, cleaned_data)
+        self.clean_general_education(training_type, cleaned_data)
+        self.clean_master_scholarships(training_type, cleaned_data)
+        self.clean_erasmus_scholarship(training_type, cleaned_data)
+
+
+class GeneralUpdateTrainingChoiceForm(TrainingChoiceForm):
+    def clean(self):
+        cleaned_data = super().clean()
+
+        training_type = cleaned_data.get('training_type')
+
+        self.clean_general_education(training_type, cleaned_data)
+        self.clean_master_scholarships(training_type, cleaned_data)
+        self.clean_erasmus_scholarship(training_type, cleaned_data)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['training_type'].required = True
+        self.fields['training_type'].choices = TypeFormation.general_choices()
+        self.fields['training_type'].help_text = _(
+            'If you wish to change your choice of training for a Doctorate or Continuing Education '
+            'application, please delete the current application and create a new one.'
+        )
+
+        for field in [
+            'proximity_commission_cde',
+            'proximity_commission_cdss',
+            'science_sub_domain',
+            'sector',
+            'doctorate_training',
+        ]:
+            self.fields[field].disabled = True
+
+
+class ContinuingUpdateTrainingChoiceForm(TrainingChoiceForm):
+    def clean(self):
+        cleaned_data = super().clean()
+
+        training_type = TypeFormation.FORMATION_CONTINUE.name
+
+        self.clean_continuing_education(training_type, cleaned_data)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['training_type'].help_text = _(
+            'If you wish to change your choice of training for a Bachelor, Master, Aggregation, CAPAES, '
+            'Doctorate or Certificate application, please delete the current application '
+            'and create a new one.'
+        )
+
+        for field in [
+            'proximity_commission_cde',
+            'proximity_commission_cdss',
+            'science_sub_domain',
+            'sector',
+            'doctorate_training',
+            'training_type',
+        ]:
+            self.fields[field].disabled = True
+
+
+class DoctorateUpdateTrainingChoiceForm(TrainingChoiceForm):
+    def clean(self):
+        cleaned_data = super().clean()
+
+        training_type = TypeFormation.DOCTORAT.name
+
+        self.clean_doctorate(training_type, cleaned_data)
+        self.clean_erasmus_scholarship(training_type, cleaned_data)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['training_type'].help_text = _(
+            'If you wish to change your choice of training for a Bachelor, Master, Aggregation, CAPAES, '
+            'Continuing Education or Certificate application, please delete the current application '
+            'and create a new one.'
+        )
+
+        for field in [
+            'proximity_commission_cde',
+            'proximity_commission_cdss',
+            'science_sub_domain',
+            'sector',
+            'doctorate_training',
+            'campus',
+            'training_type',
+        ]:
+            self.fields[field].disabled = True

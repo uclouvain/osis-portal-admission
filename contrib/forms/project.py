@@ -23,14 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete
+from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
 from admission.contrib.enums.financement import (
-    BourseRecherche,
     ChoixTypeContratTravail,
     ChoixTypeFinancement,
 )
@@ -40,14 +39,18 @@ from admission.contrib.enums.proximity_commission import (
     ChoixProximityCommissionCDSS,
     ChoixSousDomaineSciences,
 )
+from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.forms import (
     CustomDateInput,
     EMPTY_CHOICE,
     SelectOrOtherField,
     get_thesis_location_initial_choices,
+    get_scholarship_choices,
 )
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
+
+from osis_admission_sdk.model.scholarship import Scholarship
 
 SCIENCE_DOCTORATE = 'SC3DP'
 
@@ -107,9 +110,16 @@ class DoctorateAdmissionProjectForm(forms.Form):
         max_value=100,
         required=False,
     )
-    bourse_recherche = SelectOrOtherField(
+    bourse_recherche = forms.CharField(
         label=_("Scholarship grant"),
-        choices=EMPTY_CHOICE + BourseRecherche.choices(),
+        required=False,
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:scholarship',
+            forward=[forward.Const(TypeBourse.BOURSE_INTERNATIONALE_DOCTORAT.name, 'scholarship_type')],
+        ),
+    )
+    autre_bourse_recherche = forms.CharField(
+        label=_("If other scholarship, specify"),
         required=False,
     )
     bourse_date_debut = forms.DateField(
@@ -254,6 +264,13 @@ class DoctorateAdmissionProjectForm(forms.Form):
         if self.data.get(self.add_prefix("raison_non_soutenue"), self.initial.get("raison_non_soutenue")):
             self.fields['non_soutenue'].initial = True
 
+        scholarship_uuid = self.data.get(self.add_prefix('bourse_recherche'), self.initial.get('bourse_recherche'))
+        if scholarship_uuid:
+            self.fields['bourse_recherche'].widget.choices = get_scholarship_choices(
+                uuid=scholarship_uuid,
+                person=self.person,
+            )
+
     def clean(self):
         data = super().clean()
 
@@ -265,10 +282,14 @@ class DoctorateAdmissionProjectForm(forms.Form):
             if not data.get('eft'):
                 self.add_error('eft', _("This field is required."))
 
-        elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name and not data.get(
-            'bourse_recherche'
-        ):
-            self.add_error('bourse_recherche', _("This field is required."))
+        elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
+            if data.get('bourse_recherche'):
+                data['autre_bourse_recherche'] = ''
+            elif data.get('autre_bourse_recherche'):
+                data['bourse_recherche'] = ''
+            else:
+                self.add_error('bourse_recherche', _('This field is required.'))
+                self.add_error('autre_bourse_recherche', '')
 
         if data.get('non_soutenue') and not data.get('raison_non_soutenue'):
             self.add_error('raison_non_soutenue', _("This field is required."))
