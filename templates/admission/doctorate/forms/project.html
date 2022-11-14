@@ -101,6 +101,9 @@
     <div id="scholarship">
       <div class="row">
         {% bootstrap_field form.bourse_recherche form_group_class="form-group col-md-4 required_field" %}
+        <div id="other-scholarship-container" class="col-md-4 required_field">
+          {% bootstrap_field form.autre_bourse_recherche placeholder="" %}
+        </div>
       </div>
       <div class="row">
         {% bootstrap_field form.bourse_date_debut form_group_class="form-group col-md-4 required_field" %}
@@ -173,6 +176,8 @@
   {{ form.media }}
   <script type="application/javascript">
   $(function () {
+    const isFalsy = val => !val;
+
     // Justification depends on pre-admission
     $('#justification').dependsOn({
       'input[name=type_admission]': { values: ['PRE_ADMISSION'] },
@@ -255,7 +260,6 @@
         }, { valueOnDisable: '' });
 
       });
-      {# }); #}
     {% endif %}
 
     $('#work').dependsOn({
@@ -263,6 +267,9 @@
     });
     $('#scholarship').dependsOn({
       '#id_type_financement': { values: ['SEARCH_SCHOLARSHIP'] },
+    });
+    $('#other-scholarship-container').dependsOn({
+        "#id_bourse_recherche": { isFalsy },
     });
     $('#financing-details').dependsOn({
       '#id_type_financement': { not: [''] },

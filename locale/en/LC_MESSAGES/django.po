@@ -1377,6 +1377,9 @@ msgstr ""
 msgid "If other optional domains, please specify"
 msgstr ""
 
+msgid "If other scholarship, specify"
+msgstr ""
+
 msgid "If other, specify"
 msgstr ""
 
@@ -1414,6 +1417,24 @@ msgstr ""
 msgid ""
 "If you submit the activity, you will no longer be able to modify the "
 "seminar, nor the different activities within it."
+msgstr ""
+
+msgid ""
+"If you wish to change your choice of training for a Bachelor, Master, "
+"Aggregation, CAPAES, Continuing Education or Certificate application, please "
+"delete the current application and create a new one."
+msgstr ""
+
+msgid ""
+"If you wish to change your choice of training for a Bachelor, Master, "
+"Aggregation, CAPAES, Doctorate or Certificate application, please delete the "
+"current application and create a new one."
+msgstr ""
+
+msgid ""
+"If you wish to change your choice of training for a Doctorate or Continuing "
+"Education application, please delete the current application and create a "
+"new one."
 msgstr ""
 
 msgid "Important information:"

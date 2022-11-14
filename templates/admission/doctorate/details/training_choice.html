@@ -31,7 +31,7 @@
     {% field_data _('Education name') admission.doctorat.intitule %}
     {% field_data _('Campus') admission.doctorat.campus %}
     {% switch 'debug' %}
-      {% field_data _('Academic year') admission.doctorat.annee|get_academic_year %}
+      {% field_data _('Academic year') admission.doctorat.annee|get_academic_year css_class='debug-content' %}
     {% endswitch %}
   {% endpanel %}
 

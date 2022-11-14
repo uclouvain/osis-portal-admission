@@ -129,7 +129,6 @@ TAB_TREES = {
             Tab('languages', _('Languages knowledge')),
         ],
         Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'graduation-cap'): [
-            Tab('training-choice', _('Training choice')),
             Tab('project', pgettext('tab name', 'Research project')),
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Supervision')),

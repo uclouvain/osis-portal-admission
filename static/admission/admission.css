@@ -61,6 +61,7 @@ textarea {
 .vertical-align {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .inline-field-data dl {
@@ -275,4 +276,8 @@ input:checked + .osis-slider:before {
 .plain-text-widget {
   width: 100%;
   white-space: pre-line;
+}
+
+.debug-content {
+  background-color: #ffb4ff78;
 }

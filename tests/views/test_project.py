@@ -24,7 +24,8 @@
 #
 # ##############################################################################
 import datetime
-from unittest.mock import Mock, patch
+import uuid
+from unittest.mock import Mock, patch, MagicMock
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
@@ -47,6 +48,7 @@ from admission.contrib.enums.proximity_commission import (
     ChoixProximityCommissionCDSS,
     ChoixSousDomaineSciences,
 )
+from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
@@ -55,9 +57,25 @@ from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleAp
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class ProjectViewTestCase(TestCase):
+
+    @classmethod
+    def get_scholarship(cls, uuid, **kwargs):
+        return next((scholarship for scholarship in cls.mock_scholarships if scholarship.uuid == uuid), None)
+
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
+
+        cls.doctorate_international_scholarship = MagicMock(
+            uuid=str(uuid.uuid4()),
+            short_name="ARC",
+            long_name="ARC",
+            type=TypeBourse.BOURSE_INTERNATIONALE_DOCTORAT.name,
+        )
+
+        cls.mock_scholarships = [
+            cls.doctorate_international_scholarship,
+        ]
 
     def setUp(self):
         self.mock_entities = [
@@ -87,6 +105,7 @@ class ProjectViewTestCase(TestCase):
             projet_formation_complementaire=[],
             lettres_recommandation=[],
             links={'update_proposition': {'url': 'ok'}},
+            bourse_recherche=Mock(uuid=self.doctorate_international_scholarship.uuid),
         )
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -149,6 +168,12 @@ class ProjectViewTestCase(TestCase):
         patcher = patch("osis_document.api.utils.get_remote_metadata", return_value={"name": "myfile"})
         patcher.start()
         self.addCleanup(patcher.stop)
+
+        # Mock scholarship sdk api
+        scholarships_api_patcher = patch("osis_admission_sdk.api.scholarship_api.ScholarshipApi")
+        self.mock_scholarship_api = scholarships_api_patcher.start()
+        self.mock_scholarship_api.return_value.retrieve_scholarship.side_effect = self.get_scholarship
+        self.addCleanup(scholarships_api_patcher.stop)
 
         self.client.force_login(self.person.user)
 
@@ -252,7 +277,8 @@ class ProjectViewTestCase(TestCase):
             'type_financement': ChoixTypeFinancement.SELF_FUNDING.name,
             'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
             'eft': 5,
-            'bourse_recherche': BourseRecherche.ARC.name,
+            'autre_bourse_recherche': 'ARC',
+            'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
             'bourse_date_debut': '',
             'bourse_date_fin': '',
             'duree_prevue': 10,
@@ -285,7 +311,8 @@ class ProjectViewTestCase(TestCase):
             'type_financement': ChoixTypeFinancement.SELF_FUNDING.name,
             'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
             'eft': 5,
-            'bourse_recherche': BourseRecherche.ARC.name,
+            'autre_bourse_recherche': BourseRecherche.ARC.name,
+            'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
             'bourse_date_debut': None,
             'bourse_date_fin': None,
             'duree_prevue': 10,
@@ -320,6 +347,7 @@ class ProjectViewTestCase(TestCase):
             'justification': '',
             'type_contrat_travail': '',
             'eft': None,
+            'autre_bourse_recherche': '',
             'bourse_recherche': '',
             'institution': '',
             'domaine_these': '',
@@ -336,6 +364,8 @@ class ProjectViewTestCase(TestCase):
             'doctorat_deja_realise': ChoixDoctoratDejaRealise.YES.name,
             'non_soutenue': True,
             'commission_proximite_cde': '',
+            'autre_bourse_recherche': '',
+            'bourse_recherche': '',
         }
         response = self.client.post(url, data)
 
@@ -351,6 +381,7 @@ class ProjectViewTestCase(TestCase):
             # Fields that are computed
             'commission_proximite': ChoixProximityCommissionCDSS.ECLI.name,
             # Fields that are cleaned
+            'autre_bourse_recherche': '',
             'bourse_recherche': '',
             'date_soutenance': None,
         }
@@ -360,6 +391,8 @@ class ProjectViewTestCase(TestCase):
             **default_data,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
             'type_contrat_travail': 'Another working contract type',
+            'autre_bourse_recherche': '',
+            'bourse_recherche': '',
         }
         response = self.client.post(url, data)
 
@@ -392,20 +425,20 @@ class ProjectViewTestCase(TestCase):
             'type_contrat_travail': '',
             'eft': None,
             'raison_non_soutenue': '',
+            'autre_bourse_recherche': '',
         }
         self.assertEqual(sent, data)
 
         data = {
             **default_data,
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
-            'bourse_recherche': 'Another scholarship',
+            'bourse_recherche': '',
         }
         response = self.client.post(url, data)
-
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, expected_url, fetch_redirect_response=False)
         sent = self.mock_proposition_api.return_value.create_proposition.call_args[1]["initier_proposition_command"]
-        self.assertEqual(sent['bourse_recherche'], 'Another scholarship')
+        self.assertEqual(sent['autre_bourse_recherche'], 'ARC')
 
     def test_update(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -419,6 +452,7 @@ class ProjectViewTestCase(TestCase):
             'type_contrat_travail': "Something",
             "commission_proximite": ChoixProximityCommissionCDE.ECONOMY.name,
             "raison_non_soutenue": "A very good reason",
+            'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -430,7 +464,7 @@ class ProjectViewTestCase(TestCase):
                 'annee': '2021',
                 'code_secteur_formation': "SSH",
             },
-            'bourse_recherche': "Something other",
+            'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
             "commission_proximite": ChoixProximityCommissionCDSS.ECLI.name,
         }
         response = self.client.get(url)
@@ -507,7 +541,7 @@ class ProjectViewTestCase(TestCase):
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
-            'bourse_recherche': BourseRecherche.ARES.name,
+            'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)

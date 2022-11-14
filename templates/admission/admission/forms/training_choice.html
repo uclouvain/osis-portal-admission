@@ -32,7 +32,11 @@
 
     <div class="row">
       <div class="col-md-6 required_field">
-        {% bootstrap_field form.training_type %}
+        {% if view.kwargs.pk %}
+          {% bootstrap_field_with_tooltip form.training_type %}
+        {% else %}
+          {% bootstrap_field form.training_type %}
+        {% endif %}
       </div>
       <div class="col-md-6 required_field">
         {% bootstrap_field form.campus %}
@@ -219,7 +223,7 @@
 
           $('#student-profile, #erasmus-scholarship').dependsOn({
               '#id_training_type': {
-                  values: GENERAL_EDUCATION_TYPES.concat('DOCTORAT'),
+                  values: ['MASTER', 'DOCTORAT'],
               },
           }, defaultOptions);
 

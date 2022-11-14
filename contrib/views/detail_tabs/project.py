@@ -44,7 +44,6 @@ class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):  
             and 'url' in self.admission.links['update_proposition']
         ):
             return redirect('admission:doctorate:update:project', **self.kwargs)
-
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

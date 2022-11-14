@@ -86,6 +86,7 @@ class DoctorateAdmissionProjectFormView(
                     sigle=self.admission.doctorat.sigle,
                     annee=self.admission.doctorat.annee,
                 ),
+                'bourse_recherche': self.admission.bourse_recherche and self.admission.bourse_recherche.uuid,
             }
         return super().get_initial()
 
@@ -100,6 +101,7 @@ class DoctorateAdmissionProjectFormView(
 
         if data['type_financement'] != ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
             data['bourse_recherche'] = ''
+            data['autre_bourse_recherche'] = ''
 
         if not data['type_financement']:
             data['duree_prevue'] = None
