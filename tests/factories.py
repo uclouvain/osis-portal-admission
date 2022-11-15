@@ -31,12 +31,12 @@ from admission.contrib.enums import (
     ChoixTypeCompteBancaire,
     LienParente,
 )
-from osis_admission_sdk.model.doctorate_proposition_dto_comptabilite import DoctoratePropositionDTOComptabilite
+from osis_admission_sdk.model.proposition_dto_comptabilite import PropositionDTOComptabilite
 
 
 class PropositionDTOComptabiliteFactory(factory.Factory):
     class Meta:
-        model = DoctoratePropositionDTOComptabilite
+        model = PropositionDTOComptabilite
         abstract = False
 
     demande_allocation_d_etudes_communaute_francaise_belgique = False

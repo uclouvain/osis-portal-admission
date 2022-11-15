@@ -150,9 +150,10 @@ class ChoixAffiliationSport(ChoiceEnum):
     NON = _('No')
 
     @classmethod
-    def choices(cls, education_site=''):
+    def limited_choices(cls, education_site=''):
         choices = CHOIX_AFFILIATION_SPORT_SELON_SITE.get(education_site, [])
-        return tuple((x.name, x.value) for x in choices + [cls.NON])
+        choices.append(cls.NON)
+        return tuple((x.name, x.value) for x in choices)
 
 
 class ChoixTypeCompteBancaire(ChoiceEnum):

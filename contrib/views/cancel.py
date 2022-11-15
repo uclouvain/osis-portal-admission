@@ -27,42 +27,21 @@ from django.forms import Form
 from django.shortcuts import resolve_url
 from django.views.generic import FormView
 
-from admission.contrib.views.mixins import (
-    LoadDossierViewMixin,
-    LoadContinuingEducationDossierViewMixin,
-    LoadGeneralEducationDossierViewMixin,
-)
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
 
 
-class AdmissionCancelView(WebServiceFormMixin, FormView):  # pylint: disable=too-many-ancestors
+class DoctorateAdmissionCancelView(
+    LoadDossierViewMixin,
+    WebServiceFormMixin,
+    FormView,
+):  # pylint: disable=too-many-ancestors
     template_name = "admission/doctorate/cancel.html"
     form_class = Form
 
-    def get_success_url(self):
-        return resolve_url('admission:list')
-
-
-class DoctorateAdmissionCancelView(LoadDossierViewMixin, AdmissionCancelView):  # pylint: disable=too-many-ancestors
     def call_webservice(self, data):
         AdmissionPropositionService.cancel_proposition(person=self.person, uuid=self.admission_uuid)
 
-
-class GeneralEducationAdmissionCancelView(
-    LoadGeneralEducationDossierViewMixin,
-    AdmissionCancelView,
-):  # pylint: disable=too-many-ancestors
-    def call_webservice(self, data):
-        AdmissionPropositionService.cancel_general_education_proposition(person=self.person, uuid=self.admission_uuid)
-
-
-class ContinuingEducationAdmissionCancelView(
-    LoadContinuingEducationDossierViewMixin,
-    AdmissionCancelView,
-):  # pylint: disable=too-many-ancestors
-    def call_webservice(self, data):
-        AdmissionPropositionService.cancel_continuing_education_proposition(
-            person=self.person,
-            uuid=self.admission_uuid,
-        )
+    def get_success_url(self):
+        return resolve_url('admission:doctorate-list')

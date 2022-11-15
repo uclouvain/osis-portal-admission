@@ -49,7 +49,7 @@ class DoctorateAdmissionAccountingFormView(
             uuid=self.admission_uuid,
         ).to_dict()
 
-        retrieved_accounting_conditions['education_site'] = self.admission.doctorat.campus
+        retrieved_accounting_conditions['education_site'] = self.admission.doctorat['campus']
 
         return retrieved_accounting_conditions
 

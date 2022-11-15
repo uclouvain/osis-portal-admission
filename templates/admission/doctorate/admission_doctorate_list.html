@@ -1,4 +1,5 @@
-{% extends "layout.html" %}{% load bootstrap3 i18n static admission enums %}
+{% extends "layout.html" %}
+{% load bootstrap3 i18n static admission enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -29,32 +30,50 @@
   <div class="page-header">
     <div class="row">
       <div class="col-md-12">
-        <h2>{% trans "Manage doctorates" %}</h2>
+        <h2>
+          {% trans "Doctorate admissions" %}
+          {% if 'url' in global_links.create_proposition %}
+            <a
+              href="{% url 'admission:doctorate-create' %}"
+              class="btn btn-primary pull-right"
+            >
+              <span class="glyphicon glyphicon-plus"></span>
+              {% trans "Create new doctorate admission" %}
+            </a>
+          {% endif %}
+        </h2>
       </div>
     </div>
   </div>
 
   {% for admission in admissions %}
-    {% if admission.statut != 'CANCELLED' %}
-      {% panel additional_class="admission-item" cy_matricule=admission.matricule_candidat cy_type="doctorat" cy_state=admission.statut %}
-        <h3 style="margin-top: 0">
-          {{ admission.prenom_candidat }} {{ admission.nom_candidat }}
-          ({{ admission.reference }})
-          {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
-          <div><small>{{ doctorate_title }}
-            - {{ admission.intitule_secteur_formation }}</small></div>
-        </h3>
-        <div>
-          <em>{% trans "Created at:" context "an admission" %} {{ admission.creee_le }}</em>
-        </div>
-        <div>
-          <em>
-            {% trans "Status:" %}
-            {{ admission.statut|enum_display:'ChoixStatutProposition' }}
-          </em>
-        </div>
+    {% panel additional_class="admission-item" cy_matricule=user.person.global_id cy_type="doctorat" cy_state=admission.statut %}
+      <h3 style="margin-top: 0">
+        {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+        {{ doctorate_title }} ({{ admission.reference }})
+        <div><small>{{ admission.intitule_secteur_formation }}</small></div>
+      </h3>
+      <div>
+        <em>{% trans "Created at:" context "an admission" %} {{ admission.creee_le }}</em>
+      </div>
+      <div>
+        <em>
+          {% trans "Status:" %}
+          {{ admission.statut|enum_display:'ChoixStatutProposition' }}
+        </em>
+      </div>
 
-        {% footer %}
+      {% footer %}
+
+      {% if admission.statut != 'CANCELLED' %}
+        {% if admission|can_make_action:'destroy_proposition' %}
+          <a
+            class="btn btn-danger"
+            href="{% url "admission:doctorate:cancel" admission.uuid %}"
+          >
+            {% trans "Delete" %}
+          </a>
+        {% endif %}
 
         <div class="dropdown pull-right">
           <button
@@ -76,7 +95,7 @@
             {% endfor %}
           </ul>
         </div>
-      {% endpanel %}
-    {% endif %}
+      {% endif %}
+    {% endpanel %}
   {% endfor %}
 {% endblock %}

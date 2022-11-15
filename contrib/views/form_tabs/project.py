@@ -139,7 +139,7 @@ class DoctorateAdmissionProjectFormView(
                 matricule_candidat=self.person.global_id,
             )
             data.pop('sector')
-            response = AdmissionPropositionService.create_doctorate_proposition(person=self.person, data=data)
+            response = AdmissionPropositionService.create_proposition(person=self.person, **data)
             self.uuid = response['uuid']
         else:
             data['uuid'] = self.admission_uuid

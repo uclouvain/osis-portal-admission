@@ -22,7 +22,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView
 
 from admission.contrib.enums.accounting import FORMATTED_RELATIONSHIPS, dynamic_person_concerned_lowercase
@@ -43,6 +42,6 @@ class DoctorateAdmissionAccountingDetailView(LoadDossierViewMixin, TemplateView)
 
         context_data.update(retrieved_accounting_conditions)
         context_data['formatted_relationships'] = FORMATTED_RELATIONSHIPS
-        context_data['dynamic_person_concerned_lowercase'] = mark_safe(dynamic_person_concerned_lowercase)
+        context_data['dynamic_person_concerned_lowercase'] = dynamic_person_concerned_lowercase
 
         return context_data

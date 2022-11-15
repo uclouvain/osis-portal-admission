@@ -66,9 +66,8 @@ class WebServiceFormMixin:
         raise NotImplementedError
 
     def get_detail_url(self):
-        base_namespace = getattr(self, 'base_namespace', ':'.join(self.request.resolver_match.namespaces[:2]))
         tab_name = self.request.resolver_match.url_name
-        return resolve_url('{}:{}'.format(base_namespace, tab_name), pk=self.kwargs.get('pk'))
+        return resolve_url('admission:doctorate:' + tab_name, pk=self.kwargs.get('pk'))
 
     def get_success_url(self):
         messages.info(self.request, _("Your data has been saved"))

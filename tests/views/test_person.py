@@ -99,7 +99,7 @@ class PersonViewTestCase(TestCase):
         self.addCleanup(academic_year_api_patcher.stop)
 
     def test_form(self):
-        url = resolve_url('admission:create:person')
+        url = resolve_url('admission:doctorate-create:person')
         self.client.force_login(self.person.user)
 
         self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(

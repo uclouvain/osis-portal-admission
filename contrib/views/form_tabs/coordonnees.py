@@ -27,27 +27,19 @@ from django.views.generic import FormView
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm, DoctorateAdmissionCoordonneesForm
-from admission.contrib.views.mixins import (
-    LoadDossierViewMixin,
-    LoadGeneralEducationDossierViewMixin,
-    LoadContinuingEducationDossierViewMixin,
-)
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.person import (
-    AdmissionPersonService,
-    GeneralEducationAdmissionPersonService,
-    ContinuingEducationAdmissionPersonService,
-)
+from admission.services.person import AdmissionPersonService
 
 
-class AdmissionCoordonneesFormView(
+class DoctorateAdmissionCoordonneesFormView(
+    LoadDossierViewMixin,
     WebServiceFormMixin,
     FormView,
 ):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/forms/coordonnees.html'
     form_class = DoctorateAdmissionCoordonneesForm
     forms = None
-    service = AdmissionPersonService
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -62,7 +54,7 @@ class AdmissionCoordonneesFormView(
         return self.form_invalid(forms['main_form'])
 
     def get_initial(self):
-        return self.service.retrieve_person_coordonnees(
+        return AdmissionPersonService.retrieve_person_coordonnees(
             self.person,
             uuid=self.admission_uuid,
         ).to_dict()
@@ -93,10 +85,10 @@ class AdmissionCoordonneesFormView(
         return data
 
     def call_webservice(self, data):
-        self.service.update_person_coordonnees(
+        AdmissionPersonService.update_person_coordonnees(
             person=self.person,
             uuid=self.admission_uuid,
-            data=data,
+            **data,
         )
 
     def get_forms(self):
@@ -120,24 +112,3 @@ class AdmissionCoordonneesFormView(
                 ),
             }
         return self.forms
-
-
-class DoctorateAdmissionCoordonneesFormView(
-    LoadDossierViewMixin,
-    AdmissionCoordonneesFormView,
-):  # pylint: disable=too-many-ancestors
-    service = AdmissionPersonService
-
-
-class GeneralEducationAdmissionCoordonneesFormView(
-    LoadGeneralEducationDossierViewMixin,
-    AdmissionCoordonneesFormView,
-):  # pylint: disable=too-many-ancestors
-    service = GeneralEducationAdmissionPersonService
-
-
-class ContinuingEducationAdmissionCoordonneesFormView(
-    LoadContinuingEducationDossierViewMixin,
-    AdmissionCoordonneesFormView,
-):  # pylint: disable=too-many-ancestors
-    service = ContinuingEducationAdmissionPersonService

@@ -126,7 +126,7 @@
           {% field_data carte_identite_parent_label admission.comptabilite.carte_identite_parent %}
         {% elif admission.comptabilite.sous_type_situation_assimilation_5 == 'TITULAIRE_TITRE_SEJOUR_LONGUE_DUREE' %}
           {% blocktranslate with person_concerned=dynamic_person_concerned_lowercase trimmed asvar titre_sejour_longue_duree_parent_label %}
-            Copy of both sides of the long-term residence permit in Belgium of {{ person_concerned }} (B, C, D, F, F+ or M cards)
+            Copy of both sides of the long-term residence permit in Belgium of {{ person_concerned }}
           {% endblocktranslate %}
           {% field_data titre_sejour_longue_duree_parent_label admission.comptabilite.titre_sejour_longue_duree_parent %}
         {% elif admission.comptabilite.sous_type_situation_assimilation_5 == 'CANDIDATE_REFUGIE_OU_REFUGIE_OU_APATRIDE_OU_PROTECTION_SUBSIDIAIRE_TEMPORAIRE' %}
@@ -182,14 +182,9 @@
   {% panel _('Bank account') %}
     {% field_data _('Would you like to enter an account number so that we can process a refund if necessary?') admission.comptabilite.type_numero_compte|enum_display:'ChoixTypeCompteBancaire' %}
     {% if admission.comptabilite.type_numero_compte == 'IBAN' %}
-      <dl>
-        <dt>
-          {% translate "IBAN account number" %}</dt>
-        <dd>
-          <span id="bank-account-iban-number">{{ admission.comptabilite.numero_compte_iban}}</span>
-          {% if admission.comptabilite.iban_valide %}<i title="{% translate 'This number has been checked' %}" class="fa-solid fa-check"></i>{% endif %}
-        </dd>
-      </dl>
+      <div id="bank-account-iban-number">
+        {% field_data _('IBAN account number') admission.comptabilite.numero_compte_iban %}
+      </div>
     {% elif admission.comptabilite.type_numero_compte == 'AUTRE_FORMAT' %}
       {% field_data _('Account number') admission.comptabilite.numero_compte_autre_format %}
       <div id="bank-account-bic-swift-number">
@@ -203,17 +198,8 @@
       </div>
     {% endif %}
   {% endpanel %}
-{% endblock %}
 
-{% block style %}
-  {{ block.super }}
-  <style>
-    .fa-check {
-      margin-left: 0.5em;
-    }
-  </style>
 {% endblock %}
-
 {% block script %}
   {{ block.super }}
 
@@ -232,7 +218,7 @@
               translation:  {'Z': {pattern: /[a-zA-Z\d]/, optional: true}}
           });
 
-          $('#bank-account-iban-number').mask('SS## ZZZZ ZZZZ ZZZZ ZZZZ ZZZZ ZZZZ ZZZZ ZZ', {
+          $('#bank-account-iban-number dd').mask('SS## ZZZZ ZZZZ ZZZZ ZZZZ ZZZZ ZZZZ ZZZZ ZZ', {
               translation:  {'Z': {pattern: /[a-zA-Z\d]/, optional: true}}
           });
       })

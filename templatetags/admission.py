@@ -32,10 +32,8 @@ from inspect import getfullargspec
 from django import template
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.shortcuts import resolve_url
 from django.utils.safestring import SafeString
 from django.utils.translation import get_language, gettext_lazy as _, pgettext
-
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
@@ -103,20 +101,6 @@ class Tab:
 
 
 TAB_TREES = {
-    'create': {
-        Tab('personal', _('Personal data'), 'user'): [
-            Tab('person', _('Identification')),
-            Tab('coordonnees', _('Contact details')),
-        ],
-        Tab('experience', _('Previous experience'), 'list-alt'): [
-            Tab('education', _('Secondary studies')),
-            Tab('curriculum', _('Curriculum')),
-            Tab('languages', _('Languages knowledge')),
-        ],
-        Tab('training', _('Training choice'), 'graduation-cap'): [
-            Tab('training-choice', _('Training choice')),
-        ],
-    },
     'doctorate': {
         Tab('personal', _('Personal data'), 'user'): [
             Tab('person', _('Identification')),
@@ -128,13 +112,12 @@ TAB_TREES = {
             Tab('languages', _('Languages knowledge')),
         ],
         Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'graduation-cap'): [
-            Tab('training-choice', _('Training choice')),
             Tab('project', pgettext('tab name', 'Research project')),
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Supervision')),
         ],
         # TODO specifics
-        Tab('completion', _('Completion'), 'flag'): [
+        Tab('completion', _('Completion'), 'check-circle'): [
             Tab('accounting', _('Accounting')),
             Tab('confirm', _('Confirmation')),
         ],
@@ -154,33 +137,7 @@ TAB_TREES = {
         #     Tab('public-defense', _('Public defense')),
         # ],
         # TODO documents
-    },
-    'general-education': {
-        Tab('personal', _('Personal data'), 'user'): [
-            Tab('person', _('Identification')),
-            Tab('coordonnees', _('Contact details')),
-        ],
-        Tab('experience', _('Previous experience'), 'list-alt'): [
-            Tab('education', _('Secondary studies')),
-            Tab('curriculum', _('Curriculum')),
-        ],
-        Tab('general-education', _('General education'), 'graduation-cap'): [
-            Tab('training-choice', _('Training choice')),
-        ],
-    },
-    'continuing-education': {
-        Tab('personal', _('Personal data'), 'user'): [
-            Tab('person', _('Identification')),
-            Tab('coordonnees', _('Contact details')),
-        ],
-        Tab('experience', _('Previous experience'), 'list-alt'): [
-            Tab('education', _('Secondary studies')),
-            Tab('curriculum', _('Curriculum')),
-        ],
-        Tab('continuing-education', _('Continuing education'), 'graduation-cap'): [
-            Tab('training-choice', _('Training choice')),
-        ],
-    },
+    }
 }
 
 
@@ -248,7 +205,7 @@ def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
     current_tab_name = get_current_tab_name(context)
 
     # Create a new tab tree based on the default one but depending on the permissions links
-    tab_tree = get_current_tab_tree(context)
+    tab_tree = TAB_TREES['doctorate']
     context['tab_tree'] = get_valid_tab_tree(tab_tree, admission)
 
     return {
@@ -261,23 +218,23 @@ def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
     }
 
 
-def get_subtab_label(tab_name, tab_tree_name):
+def get_subtab_label(tab_name):
     return next(
-        subtab for subtabs in TAB_TREES[tab_tree_name].values() for subtab in subtabs if subtab.name == tab_name
+        subtab for subtabs in TAB_TREES['doctorate'].values() for subtab in subtabs if subtab.name == tab_name
     ).label  # pragma : no branch
 
 
 @register.simple_tag(takes_context=True)
 def current_subtabs(context):
     current_tab_name = get_current_tab_name(context)
-    current_tab_tree = get_current_tab_tree(context)
+    current_tab_tree = TAB_TREES['doctorate']
     return current_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), [])
 
 
 @register.simple_tag(takes_context=True)
 def get_current_tab(context):
     current_tab_name = get_current_tab_name(context)
-    current_tab_tree = get_current_tab_tree(context)
+    current_tab_tree = TAB_TREES['doctorate']
     return next(
         (tab for subtabs in current_tab_tree.values() for tab in subtabs if tab.name == current_tab_name),
         None,
@@ -287,7 +244,7 @@ def get_current_tab(context):
 @register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
 def doctorate_subtabs(context, admission=None, no_status=False):
     current_tab_name = get_current_tab_name(context)
-    current_tab_tree = get_current_tab_tree(context)
+    current_tab_tree = TAB_TREES['doctorate']
     valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(current_tab_tree, admission))
     return {
         'subtabs': valid_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), []),
@@ -299,29 +256,8 @@ def doctorate_subtabs(context, admission=None, no_status=False):
     }
 
 
-def get_current_tab_tree(context):
-    namespaces = context['request'].resolver_match.namespaces
-    return TAB_TREES.get(namespaces[1])
-
-
-@register.simple_tag(takes_context=True)
-def get_detail_url(context, tab_name, pk, base_namespace=''):
-    if not base_namespace:
-        base_namespace = ':'.join(context['request'].resolver_match.namespaces[:2])
-    return resolve_url('{}:{}'.format(base_namespace, tab_name), pk=pk)
-
-
 @register.inclusion_tag('admission/field_data.html')
-def field_data(
-    name,
-    data=None,
-    css_class=None,
-    hide_empty=False,
-    translate_data=False,
-    inline=False,
-    html_tag='',
-    empty_value=_('Not specified'),
-):
+def field_data(name, data=None, css_class=None, hide_empty=False, translate_data=False, inline=False, html_tag=''):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
@@ -332,13 +268,13 @@ def field_data(
     if inline is True:
         name = _("%(label)s:") % {'label': name}
         css_class = (css_class + ' inline-field-data') if css_class else 'inline-field-data'
+
     return {
         'name': name,
         'data': data,
         'css_class': css_class,
         'hide_empty': hide_empty,
         'html_tag': html_tag,
-        'empty_value': empty_value,
     }
 
 
@@ -397,13 +333,13 @@ def add_str(arg1, arg2):
     return str(arg1) + str(arg2)
 
 
-@register.simple_tag(takes_context=True)
-def has_error_in_tab(context, admission, tab):
+@register.filter
+def has_error_in_tab(admission, tab):
     """Return true if the tab (or subtab) has errors"""
     if not admission or not hasattr(admission, 'erreurs'):
         return False
     if tab not in BUSINESS_EXCEPTIONS_BY_TAB:
-        children = get_current_tab_tree(context).get(tab)
+        children = TAB_TREES['doctorate'].get(tab)
         if children is None:
             raise ImproperlyConfigured(
                 f"{tab} has no children and is not in BUSINESS_EXCEPTIONS_BY_TAB, use no_status=1 or correct name"
@@ -454,13 +390,11 @@ def display(*args):
                 reduce_wrapping.append(next(iterargs, None))
             ret.append(reduce_wrapping_parenthesis(*reduce_wrapping[:-1]))
         elif nextarg == ",":
-            ret, val = ret[:-1], next(iter(ret[-1:]), '')
-            ret.append(reduce_list_separated(val, next(iterargs, None)))
+            ret.append(reduce_list_separated(ret.pop(), next(iterargs, None)))
         elif nextarg in ["-", ':']:
-            ret, val = ret[:-1], next(iter(ret[-1:]), '')
-            ret.append(reduce_list_separated(val, next(iterargs, None), separator=f" {nextarg} "))
+            ret.append(reduce_list_separated(ret.pop(), next(iterargs, None), separator=f" {nextarg} "))
         elif isinstance(nextarg, str) and len(nextarg) > 1 and re.match(r'\s', nextarg[0]):
-            ret, suffixed_val = ret[:-1], next(iter(ret[-1:]), '')
+            suffixed_val = ret.pop()
             ret.append(f"{suffixed_val}{nextarg}" if suffixed_val else "")
         else:
             ret.append(SafeString(nextarg) if nextarg else '')

@@ -29,36 +29,27 @@ from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import get_language, gettext_lazy as _
 
+# Do not remove the following import as it is used by enum_display templatetag
 from osis_admission_sdk.model.professional_experience import ProfessionalExperience
 
-# Do not remove the following import as it is used by enum_display templatetag
 from admission.contrib.enums.curriculum import *
 
 from django.views.generic import TemplateView
 
-from admission.contrib.views.mixins import (
-    LoadDossierViewMixin,
-    LoadGeneralEducationDossierViewMixin,
-    LoadContinuingEducationDossierViewMixin,
-)
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from osis_admission_sdk.model.educational_experience import EducationalExperience
 
 from admission.constants import BE_ISO_CODE
-from admission.services.person import (
-    AdmissionPersonService,
-    GeneralEducationAdmissionPersonService,
-    ContinuingEducationAdmissionPersonService,
-)
+from admission.services.person import AdmissionPersonService
 from admission.services.reference import LanguageService, DiplomaService, SuperiorNonUniversityService
 
 
-class AdmissionCurriculumDetailView(TemplateView):
+class DoctorateAdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/curriculum.html'
-    service = AdmissionPersonService
 
     @cached_property
     def curriculum(self):
-        return self.service.get_curriculum(
+        return AdmissionPersonService.get_curriculum(
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
@@ -80,37 +71,14 @@ class AdmissionCurriculumDetailView(TemplateView):
         return context_data
 
 
-class DoctorateAdmissionCurriculumDetailView(
-    LoadDossierViewMixin,
-    AdmissionCurriculumDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = AdmissionPersonService
-
-
-class GeneralEducationAdmissionCurriculumDetailView(
-    LoadGeneralEducationDossierViewMixin,
-    AdmissionCurriculumDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = GeneralEducationAdmissionPersonService
-
-
-class ContinuingEducationAdmissionCurriculumDetailView(
-    LoadContinuingEducationDossierViewMixin,
-    AdmissionCurriculumDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = ContinuingEducationAdmissionPersonService
-
-
-class AdmissionCurriculumMixin:
-    service = AdmissionPersonService
-
+class DoctorateAdmissionCurriculumMixin(LoadDossierViewMixin):
     @cached_property
     def experience_id(self) -> str:
         return str(self.kwargs.get('experience_id', ''))
 
     @cached_property
     def professional_experience(self) -> ProfessionalExperience:
-        return self.service.retrieve_professional_experience(
+        return AdmissionPersonService.retrieve_professional_experience(
             experience_id=self.experience_id,
             person=self.request.user.person,
             uuid=self.admission_uuid,
@@ -118,7 +86,7 @@ class AdmissionCurriculumMixin:
 
     @cached_property
     def educational_experience(self) -> EducationalExperience:
-        return self.service.retrieve_educational_experience(
+        return AdmissionPersonService.retrieve_educational_experience(
             experience_id=self.experience_id,
             person=self.request.user.person,
             uuid=self.admission_uuid,
@@ -128,9 +96,9 @@ class AdmissionCurriculumMixin:
         # Redirect to the list of experiences
         messages.info(self.request, _("Your data has been saved"))
         return (
-            resolve_url(self.base_namespace + ':update:curriculum', pk=self.admission_uuid)
+            resolve_url('admission:doctorate:update:curriculum', pk=self.admission_uuid)
             if self.admission_uuid
-            else resolve_url('admission:create:curriculum')
+            else resolve_url('admission:doctorate-create:curriculum')
         )
 
 
@@ -163,8 +131,8 @@ def get_educational_experience_year_set_with_lost_years(educational_experience_y
     }
 
 
-class AdmissionCurriculumProfessionalExperienceDetailView(
-    AdmissionCurriculumMixin,
+class DoctorateAdmissionCurriculumProfessionalExperienceDetailView(
+    DoctorateAdmissionCurriculumMixin,
     TemplateView,
 ):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/curriculum_professional_experience.html'
@@ -175,31 +143,10 @@ class AdmissionCurriculumProfessionalExperienceDetailView(
         return context
 
 
-class DoctorateAdmissionCurriculumProfessionalExperienceDetailView(
-    LoadDossierViewMixin,
-    AdmissionCurriculumProfessionalExperienceDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = AdmissionPersonService
-
-
-class GeneralEducationAdmissionCurriculumProfessionalExperienceDetailView(
-    LoadGeneralEducationDossierViewMixin,
-    AdmissionCurriculumProfessionalExperienceDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = GeneralEducationAdmissionPersonService
-
-
-class ContinuingEducationAdmissionCurriculumProfessionalExperienceDetailView(
-    LoadContinuingEducationDossierViewMixin,
-    AdmissionCurriculumProfessionalExperienceDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = ContinuingEducationAdmissionPersonService
-
-
-class AdmissionCurriculumEducationalExperienceDetailView(
-    AdmissionCurriculumMixin,
+class DoctorateAdmissionCurriculumEducationalExperienceDetailView(
+    DoctorateAdmissionCurriculumMixin,
     TemplateView,
-):
+):  # pylint: disable=too-many-ancestors
     template_name = 'admission/doctorate/details/curriculum_educational_experience.html'
 
     def get_context_data(self, **kwargs):
@@ -218,27 +165,6 @@ class AdmissionCurriculumEducationalExperienceDetailView(
         )
         initialize_field_texts(self.request.user.person, [self.educational_experience])
         return context
-
-
-class DoctorateAdmissionCurriculumEducationalExperienceDetailView(
-    LoadDossierViewMixin,
-    AdmissionCurriculumEducationalExperienceDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = AdmissionPersonService
-
-
-class GeneralEducationAdmissionCurriculumEducationalExperienceDetailView(
-    LoadGeneralEducationDossierViewMixin,
-    AdmissionCurriculumEducationalExperienceDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = GeneralEducationAdmissionPersonService
-
-
-class ContinuingEducationAdmissionCurriculumEducationalExperienceDetailView(
-    LoadContinuingEducationDossierViewMixin,
-    AdmissionCurriculumEducationalExperienceDetailView,
-):  # pylint: disable=too-many-ancestors
-    service = ContinuingEducationAdmissionPersonService
 
 
 def initialize_field_texts(person, curriculum_experiences):
