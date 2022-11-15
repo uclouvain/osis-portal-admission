@@ -36,12 +36,7 @@ from rest_framework import status
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
 from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
-from admission.contrib.enums.projet import (
-    ChoixStatutProposition,
-    ChoixLangueRedactionThese,
-    ChoixStatutPropositionFormationGenerale,
-    ChoixStatutPropositionFormationContinue,
-)
+from admission.contrib.enums.projet import ChoixStatutProposition, ChoixLangueRedactionThese
 from admission.contrib.enums.proximity_commission import (
     ChoixProximityCommissionCDE,
     ChoixProximityCommissionCDSS,
@@ -153,7 +148,7 @@ class ProjectViewTestCase(TestCase):
         self.client.force_login(self.person.user)
 
     def test_create(self):
-        url = resolve_url('admission:create:project')
+        url = resolve_url('admission:doctorate-create:project')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'SSH')
@@ -234,7 +229,7 @@ class ProjectViewTestCase(TestCase):
         self.assertContains(response, "Something went wrong globally")
 
     def test_sent_data_on_create(self):
-        url = resolve_url('admission:create:project')
+        url = resolve_url('admission:doctorate-create:project')
 
         self.mock_proposition_api.return_value.create_proposition.return_value = {
             'uuid': "3c5cdc60-2537-4a12-a396-64d2e9e34876",
@@ -568,31 +563,3 @@ class ProjectViewTestCase(TestCase):
         response = self.client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_proposition_api.return_value.destroy_proposition.assert_called()
-
-    def test_cancel_general_education_proposition(self):
-        url = resolve_url('admission:general-education:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = Mock(
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
-            links={'destroy_proposition': {'url': 'ok'}},
-        )
-        response = self.client.get(url)
-        self.mock_proposition_api.return_value.destroy_general_education_proposition.assert_not_called()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, ChoixStatutPropositionFormationGenerale.IN_PROGRESS.value)
-        response = self.client.post(url, {})
-        self.assertRedirects(response, expected_url=resolve_url('admission:list'))
-        self.mock_proposition_api.return_value.destroy_general_education_proposition.assert_called()
-
-    def test_cancel_continuing_education_proposition(self):
-        url = resolve_url('admission:continuing-education:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = Mock(
-            statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
-            links={'destroy_proposition': {'url': 'ok'}},
-        )
-        response = self.client.get(url)
-        self.mock_proposition_api.return_value.destroy_continuing_education_proposition.assert_not_called()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, ChoixStatutPropositionFormationContinue.IN_PROGRESS.value)
-        response = self.client.post(url, {})
-        self.assertRedirects(response, expected_url=resolve_url('admission:list'))
-        self.mock_proposition_api.return_value.destroy_continuing_education_proposition.assert_called()

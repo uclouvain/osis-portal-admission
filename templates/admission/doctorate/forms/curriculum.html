@@ -1,6 +1,8 @@
-{% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
+{% extends "admission/doctorate/detail_tab_layout.html" %}
 {% load bootstrap3 i18n static admission %}
 
+
+{{ admission.errors }}
 {% block tab_content %}
   <!-- List of experiences -->
   {% include 'admission/doctorate/includes/curriculum_experience_list.html' with minimal_year=minimal_year professional_experiences=professional_experiences educational_experiences=educational_experiences proposition_id=view.kwargs.pk with_editing_options=True %}

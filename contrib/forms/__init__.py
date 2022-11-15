@@ -28,10 +28,8 @@ from functools import partial
 
 from django import forms
 from django.conf import settings
-from django.utils.translation import get_language, gettext_lazy as _, gettext
+from django.utils.translation import get_language, gettext_lazy as _
 
-from admission.services.autocomplete import AdmissionAutocompleteService
-from admission.services.campus import AdmissionCampusService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import (
     CountriesService,
@@ -45,7 +43,6 @@ from admission.utils import format_entity_title, format_high_school_title
 from base.tests.factories.academic_year import get_current_year
 
 EMPTY_CHOICE = (('', ' - '),)
-EMPTY_VALUE = '__all__'
 FORM_SET_PREFIX = '__prefix__'
 FOLLOWING_FORM_SET_PREFIX = '__prefix_1__'
 OSIS_DOCUMENT_UPLOADER_CLASS = 'document-uploader'
@@ -107,12 +104,6 @@ def get_high_school_initial_choices(uuid, person):
         return EMPTY_CHOICE
     high_school = HighSchoolService.get_high_school(person=person, uuid=uuid)
     return EMPTY_CHOICE + ((high_school.uuid, format_high_school_title(high_school=high_school)),)
-
-
-def get_campus_choices(person):
-    """Return the unique initial choice for the campus."""
-    ucl_campus = AdmissionCampusService.list_campus(person=person)
-    return [(EMPTY_VALUE, _('All'))] + [(campus['uuid'], campus['name']) for campus in ucl_campus]
 
 
 def get_past_academic_years_choices(person, exclude_current=False):
@@ -253,11 +244,3 @@ class BooleanRadioSelect(forms.RadioSelect):
             context['widget']['optgroups'][0][1][0]['selected'] = True
             context['widget']['optgroups'][0][1][0]['attrs']['checked'] = True
         return context
-
-
-# Add django-localflavours translations
-gettext("%(character)s is not a valid character for IBAN.")
-gettext("%(country_code)s IBANs must contain %(number)s characters.")
-gettext("%(country_code)s is not a valid country code for IBAN.")
-gettext("%(country_code)s IBANs are not allowed in this field.")
-gettext("Not a valid IBAN.")

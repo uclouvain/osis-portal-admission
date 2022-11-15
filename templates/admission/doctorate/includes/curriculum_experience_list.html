@@ -25,11 +25,11 @@
 {% endcomment %}
 
 {% if pk %}
-  {% url base_namespace|add:':update:curriculum:educational_create' pk as curriculum_educational_create_url %}
-  {% url base_namespace|add:':update:curriculum:professional_create' pk as curriculum_professional_create_url %}
+  {% url 'admission:doctorate:update:curriculum:educational_create' pk as curriculum_educational_create_url %}
+  {% url 'admission:doctorate:update:curriculum:professional_create' pk as curriculum_professional_create_url %}
 {% else %}
-  {% url 'admission:create:curriculum:educational_create' as curriculum_educational_create_url %}
-  {% url 'admission:create:curriculum:professional_create' as curriculum_professional_create_url %}
+  {% url 'admission:doctorate-create:curriculum:educational_create' as curriculum_educational_create_url %}
+  {% url 'admission:doctorate-create:curriculum:professional_create' as curriculum_professional_create_url %}
 {% endif %}
 
 <div class="alert alert-info" role="alert">
@@ -68,13 +68,13 @@
         <tbody>
         {% for educational_experience in educational_experiences %}
           {% if pk %}
-            {% url base_namespace|add:':update:curriculum:educational_update' pk educational_experience.uuid as experience_update_url %}
-            {% url base_namespace|add:':curriculum:educational_read' pk educational_experience.uuid as experience_read_url %}
-            {% url base_namespace|add:':update:curriculum:educational_delete' pk educational_experience.uuid as experience_delete_url %}
+            {% url 'admission:doctorate:update:curriculum:educational_update' pk educational_experience.uuid as experience_update_url %}
+            {% url 'admission:doctorate:curriculum:educational_read' pk educational_experience.uuid as experience_read_url %}
+            {% url 'admission:doctorate:update:curriculum:educational_delete' pk educational_experience.uuid as experience_delete_url %}
           {% else %}
-            {% url 'admission:create:curriculum:educational_update' educational_experience.uuid as experience_update_url %}
-            {% url 'admission:create:curriculum:educational_read' educational_experience.uuid as experience_read_url %}
-            {% url 'admission:create:curriculum:educational_delete' educational_experience.uuid as experience_delete_url %}
+            {% url 'admission:doctorate-create:curriculum:educational_update' educational_experience.uuid as experience_update_url %}
+            {% url 'admission:doctorate-create:curriculum:educational_read' educational_experience.uuid as experience_read_url %}
+            {% url 'admission:doctorate-create:curriculum:educational_delete' educational_experience.uuid as experience_delete_url %}
           {% endif %}
           <tr>
             <td>
@@ -95,7 +95,7 @@
             <td>
               <div class="btn-group" role="group">
                 {% if with_editing_options %}
-                  {% if educational_experience.valuated_from_admission %}
+                  {% if educational_experience.valuated_from %}
                     <span
                         class="glyphicon glyphicon-check btn btn-default disabled"
                         title="{% trans "This experience has been valuated so cannot be updated." %}"
@@ -171,13 +171,13 @@
         <tbody>
         {% for professional_experience in professional_experiences %}
           {% if pk %}
-            {% url base_namespace|add:':update:curriculum:professional_update' pk professional_experience.uuid as experience_update_url %}
-            {% url base_namespace|add:':curriculum:professional_read' pk professional_experience.uuid as experience_read_url %}
-            {% url base_namespace|add:':update:curriculum:professional_delete' pk professional_experience.uuid as experience_delete_url %}
+            {% url 'admission:doctorate:update:curriculum:professional_update' pk professional_experience.uuid as experience_update_url %}
+            {% url 'admission:doctorate:curriculum:professional_read' pk professional_experience.uuid as experience_read_url %}
+            {% url 'admission:doctorate:update:curriculum:professional_delete' pk professional_experience.uuid as experience_delete_url %}
           {% else %}
-            {% url 'admission:create:curriculum:professional_update' professional_experience.uuid as experience_update_url %}
-            {% url 'admission:create:curriculum:professional_read' professional_experience.uuid as experience_read_url %}
-            {% url 'admission:create:curriculum:professional_delete' professional_experience.uuid as experience_delete_url %}
+            {% url 'admission:doctorate-create:curriculum:professional_update' professional_experience.uuid as experience_update_url %}
+            {% url 'admission:doctorate-create:curriculum:professional_read' professional_experience.uuid as experience_read_url %}
+            {% url 'admission:doctorate-create:curriculum:professional_delete' professional_experience.uuid as experience_delete_url %}
           {% endif %}
           <tr>
             <td>
@@ -194,7 +194,7 @@
             <td>
               <div class="btn-group" role="group">
                 {% if with_editing_options %}
-                  {% if professional_experience.valuated_from_admission %}
+                  {% if professional_experience.valuated_from %}
                     <span
                         class="glyphicon glyphicon-check btn btn-default disabled"
                         title="{% trans "This experience has been valuated so cannot be updated." %}"

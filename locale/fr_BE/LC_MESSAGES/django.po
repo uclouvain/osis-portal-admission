@@ -41,22 +41,6 @@ msgid "%(added)s ECTS added with %(validated)s validated by the CDD."
 msgstr "%(added)s ECTS ajoutés dont %(validated)s validés par la CDD."
 
 #, python-format
-msgid "%(character)s is not a valid character for IBAN."
-msgstr "%(character)s n'est pas un caractère valide pour l'IBAN."
-
-#, python-format
-msgid "%(country_code)s IBANs are not allowed in this field."
-msgstr "Les IBAN %(country_code)s ne sont pas autorisés dans ce champ."
-
-#, python-format
-msgid "%(country_code)s IBANs must contain %(number)s characters."
-msgstr "Les IBANs de %(country_code)s doivent contenir %(number)s caractères."
-
-#, python-format
-msgid "%(country_code)s is not a valid country code for IBAN."
-msgstr "%(country_code)s n'est pas un code pays valide pour l'IBAN."
-
-#, python-format
 msgid "%(label)s:"
 msgstr "%(label)s :"
 
@@ -299,17 +283,8 @@ msgstr "Admission"
 msgid "Admission type"
 msgstr "Type de l'admission"
 
-msgid "Admissions"
-msgstr "Admissions"
-
 msgid "Affiliations"
 msgstr "Affiliations"
-
-msgid "Aggregation and CAPAES"
-msgstr "Agrégation et CAPAES"
-
-msgid "All"
-msgstr "Tous"
 
 msgctxt "filters"
 msgid "All"
@@ -363,12 +338,6 @@ msgstr "Approuver de la part de %(first_name)s %(last_name)s"
 msgctxt "admission decision"
 msgid "Approved"
 msgstr "Approuvée"
-
-msgid "Are you a double degree student?"
-msgstr "Êtes-vous en double diplomation ?"
-
-msgid "Are you an erasmus mundus student?"
-msgstr "Êtes-vous Erasmus Mundus ?"
 
 msgid "Are you sure you want to cancel this request?"
 msgstr "Êtes-vous sûr de vouloir supprimer cette demande ?"
@@ -456,9 +425,6 @@ msgstr "Code BIC/SWIFT identifiant la banque dont provient le compte"
 msgid "BIOLOGY"
 msgstr "Biologie"
 
-msgid "Bachelor"
-msgstr "Bachelier"
-
 msgid "Back to requests"
 msgstr "Retour aux demandes"
 
@@ -536,9 +502,6 @@ msgstr "Cours, formation et écoles"
 
 msgid "CSC - China Scholarship Council"
 msgstr "CSC - China Scholarship Council"
-
-msgid "Campus"
-msgstr "Campus"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -674,9 +637,6 @@ msgstr "Langue de contact"
 msgid "Context"
 msgstr "Contexte"
 
-msgid "Continuing education"
-msgstr "Formation continue"
-
 msgid ""
 "Copy of 6 salary slips issued in the 12 months preceding the application"
 msgstr ""
@@ -700,15 +660,6 @@ msgstr ""
 "Copie recto-verso de la CIRE - séjour illimité (Carte B) ou copie de la "
 "carte d'étranger - séjour illimité (Carte C)"
 
-msgid ""
-"Copy of both sides of the Certificate of Registration in the Register of "
-"Foreigners CIRE - unlimited stay (B card) or copy of the foreigner's card - "
-"unlimited stay (C card)"
-msgstr ""
-"Copie recto-verso du Certificat d'Inscription au Registre des Etrangers CIRE "
-"- séjour illimité (Carte B) ou copie de la carte d'étranger - séjour "
-"illimité (Carte C)"
-
 msgid "Copy of both sides of the EC long-term resident card (D card)"
 msgstr "Copie recto-verso de la carte de résident longue durée-CE (Carte D)"
 
@@ -726,10 +677,10 @@ msgstr ""
 #, python-format
 msgid ""
 "Copy of both sides of the long-term residence permit in Belgium of "
-"%(person_concerned)s (B, C, D, F, F+ or M cards)"
+"%(person_concerned)s"
 msgstr ""
 "Copie recto-verso du titre de séjour de longue durée en Belgique de "
-"%(person_concerned)s (cartes B, C, D, F, F+ ou M)"
+"%(person_concerned)s"
 
 msgid ""
 "Copy of both sides of the permanent residence card of a family member of a "
@@ -871,9 +822,6 @@ msgstr "Cours et formation"
 msgid "Create and manage my enrolment request for UCLouvain"
 msgstr "Créer et gérer ma demande d'inscription UCLouvain"
 
-msgid "Create new admission"
-msgstr "Créer une nouvelle admission"
-
 msgid "Create new doctorate admission"
 msgstr "Créer une nouvelle admission en doctorat"
 
@@ -975,9 +923,6 @@ msgstr "Divorcé·e"
 msgid "Do you have a high school diploma?"
 msgstr "Avez-vous obtenu un diplôme de fin d'études secondaires ?"
 
-msgid "Do you have an international scholarship?"
-msgstr "Bénéficiez-vous d'une bourse internationale ?"
-
 msgid ""
 "Do you want, on the basis of this training, to realize a cycle continuation "
 "for the bachelor you are registering for?"
@@ -1018,11 +963,8 @@ msgstr "Formation doctorale"
 msgid "Doctorate"
 msgstr "Doctorat"
 
-msgid "Double degree scholarship"
-msgstr "Bourse double diplomation"
-
-msgid "Double or triple diplomation"
-msgstr "Double ou triple diplomation"
+msgid "Doctorate admissions"
+msgstr "Admissions en doctorat"
 
 msgid "Download as PDF"
 msgstr "Télécharger en tant que PDF"
@@ -1086,9 +1028,6 @@ msgstr "Intitulé de la formation"
 msgid "Education type"
 msgstr "Type d'enseignement"
 
-msgid "Education you are applying for"
-msgstr "Formation à laquelle vous vous inscrivez"
-
 msgid "Educational community"
 msgstr "Communauté d'enseignement"
 
@@ -1118,12 +1057,6 @@ msgstr "S'inscrire à un cours"
 
 msgid "Enrolled"
 msgstr "Inscrit"
-
-msgid "Erasmus Mundus"
-msgstr "Erasmus Mundus"
-
-msgid "Erasmus mundus scholarship"
-msgstr "Bourse Erasmus Mundus"
 
 msgid "Estimated time to complete the doctorate (in months)"
 msgstr "Durée prévue pour la réalisation du doctorat (en mois)"
@@ -1261,9 +1194,6 @@ msgstr "Graphe de Gantt"
 
 msgid "Gender"
 msgstr "Genre"
-
-msgid "General education"
-msgstr "Formation générale"
 
 msgid "General information"
 msgstr "Informations générales"
@@ -1662,15 +1592,6 @@ msgstr "Commentaire interne :"
 msgid "International Baccalaureate"
 msgstr "Baccalauréat international (IBO)"
 
-msgid "International for doctorate"
-msgstr "Internationale pour les doctorats"
-
-msgid "International for general education"
-msgstr "Internationale pour la formation générale"
-
-msgid "International scholarship"
-msgstr "Bourse internationale"
-
 msgid "Internship"
 msgstr "Stage"
 
@@ -1761,9 +1682,6 @@ msgctxt "admission"
 msgid "Married"
 msgstr "Marié·e"
 
-msgid "Master"
-msgstr "Master"
-
 msgid "Mathematics"
 msgstr "Mathématiques"
 
@@ -1850,9 +1768,6 @@ msgstr "Non"
 msgid "No activity created yet"
 msgstr "Aucune activité créée pour le moment"
 
-msgid "No activity selected."
-msgstr "Aucune activité n'a été sélectionnée."
-
 msgid "No cotutelle"
 msgstr "Pas de cotutelle"
 
@@ -1874,8 +1789,8 @@ msgstr "Aucune connaissance des langues renseignée."
 msgid "No one invited"
 msgstr "Aucun invité"
 
-msgid "No reference yet - Go to 'Training choice' tab"
-msgstr "Pas de reference pour le moment - Voir l'onglet 'Choix de formation'"
+msgid "No reference yet - Go to Project tab"
+msgstr "Pas de reference pour le moment - Voir l'onglet projet"
 
 msgid "No result"
 msgstr "Pas de résultat"
@@ -1897,9 +1812,6 @@ msgstr "Parcours non académique"
 
 msgid "None of these proposals are relevant to me"
 msgstr "Aucune de ces propositions ne me correspond"
-
-msgid "Not a valid IBAN."
-msgstr "IBAN invalide."
 
 msgid "Not specified"
 msgstr "Non renseigné(e)"
@@ -2464,9 +2376,6 @@ msgstr "Statut :"
 msgid "Street"
 msgstr "Rue"
 
-msgid "Student profile"
-msgstr "Profil de l'étudiant"
-
 msgid "Study system"
 msgstr "Système d'études"
 
@@ -2707,9 +2616,6 @@ msgstr "Il s'agit d'un diplôme"
 msgid "This language is set more than once."
 msgstr "Cette langue est définie plusieurs fois."
 
-msgid "This number has been checked"
-msgstr "Ce numéro a été vérifié"
-
 msgid "This value cannot be greater than the entered credits number"
 msgstr "Cette valeur ne peut être supérieure au nombre de crédits inscrits"
 
@@ -2757,12 +2663,6 @@ msgid "Training certificate, with dates, justifying the specified period."
 msgstr ""
 "Attestation de stage, avec mention des dates, justifiant la période "
 "concernée."
-
-msgid "Training choice"
-msgstr "Choix de formation"
-
-msgid "Training type"
-msgstr "Type de formation"
 
 msgid "Transcript"
 msgstr "Relevé de notes"

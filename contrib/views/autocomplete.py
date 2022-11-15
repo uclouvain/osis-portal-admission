@@ -23,16 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
 
 from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import get_language
-from waffle import switch_is_active
-
-from admission.contrib.forms import EMPTY_VALUE
-from osis_admission_sdk.model.scholarship import Scholarship
 from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 
 from admission.constants import BE_ISO_CODE
@@ -46,14 +41,7 @@ from admission.services.reference import (
     HighSchoolService,
     SuperiorNonUniversityService,
 )
-from admission.utils import (
-    format_entity_address,
-    format_entity_title,
-    format_high_school_title,
-    format_scholarship,
-    format_training,
-    format_training_with_year,
-)
+from admission.utils import format_entity_address, format_entity_title, format_high_school_title
 
 from base.models.enums.entity_type import INSTITUTE
 
@@ -70,29 +58,20 @@ __all__ = [
     "DiplomaAutocomplete",
     "LearningUnitYearsAutocomplete",
     "SuperiorNonUniversityAutocomplete",
-    "GeneralEducationAutocomplete",
-    "ContinuingEducationAutocomplete",
-    "ScholarshipAutocomplete",
 ]
 
 
 class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     def get_list(self):
-        selected_campus = self.forwarded.get('campus', EMPTY_VALUE)
-        return AdmissionAutocompleteService.get_doctorates(
-            person=self.request.user.person,
-            sigle=self.forwarded['sector'],
-            campus=selected_campus if selected_campus != EMPTY_VALUE else '',
-        )
+        return AdmissionAutocompleteService.get_doctorates(self.request.user.person, self.forwarded['sector'])
 
     def results(self, results):
-        format_method = format_training_with_year if switch_is_active('debug') else format_training
         return [
             dict(
                 id="{result.sigle}-{result.annee}".format(result=result),
                 sigle=result.sigle,
                 sigle_entite_gestion=result.sigle_entite_gestion,
-                text=format_method(result),
+                text="{sigle} - {intitule}".format(sigle=result.sigle, intitule=result.intitule),
             )
             for result in results
         ]
@@ -104,61 +83,6 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             for x in results
             if self.q.lower() in "{sigle} - {intitule}".format(sigle=x.sigle, intitule=x.intitule).lower()
         ]
-
-
-class GeneralEducationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
-    def get_list(self):
-        selected_campus = self.forwarded.get('campus', EMPTY_VALUE)
-        return AdmissionAutocompleteService.get_general_education_trainings(
-            person=self.request.user.person,
-            training_type=self.forwarded.get('training_type'),
-            name=self.q,
-            campus=selected_campus if selected_campus != EMPTY_VALUE else '',
-        )
-
-    def results(self, results):
-        format_method = format_training_with_year if switch_is_active('debug') else format_training
-        return [
-            dict(
-                id="{result.sigle}-{result.annee}".format(result=result),
-                text=format_method(result),
-            )
-            for result in results
-        ]
-
-    def autocomplete_results(self, results):
-        return results
-
-
-class ContinuingEducationAutocomplete(GeneralEducationAutocomplete):
-    def get_list(self):
-        selected_campus = self.forwarded.get('campus', EMPTY_VALUE)
-        return AdmissionAutocompleteService.get_continuing_education_trainings(
-            person=self.request.user.person,
-            name=self.q,
-            campus=selected_campus if selected_campus != EMPTY_VALUE else '',
-        )
-
-
-class ScholarshipAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
-    def get_list(self):
-        return AdmissionAutocompleteService.get_scholarships(
-            person=self.request.user.person,
-            scholarship_type=self.forwarded.get('scholarship_type'),
-            search=self.q,
-        ).get('results')
-
-    def results(self, results: List[Scholarship]):
-        return [
-            dict(
-                id="{result.uuid}".format(result=result),
-                text=format_scholarship(result),
-            )
-            for result in results
-        ]
-
-    def autocomplete_results(self, results):
-        return results
 
 
 class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
