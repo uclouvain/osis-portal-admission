@@ -26,6 +26,7 @@
 
 
 {% block form_content %}
+  {% url request.resolver_match.namespace pk=view.kwargs.pk as back_url %}
   {% doctorate_tabs doctorate no_status=True %}
   <div class="row">
     <div class="col-md-2 visible-md visible-lg">
@@ -34,7 +35,7 @@
     <div class="col-md-10 quitting-context-excluded">
       {% include form.template_name %}
       <div class="text-right form-group">
-        <a href="{% url "admission:doctorate:doctoral-training" pk=view.kwargs.pk %}" class="text-danger">
+        <a href="{{ back_url }}" class="text-danger">
           {% trans "Cancel" %}
         </a>
         <button type="submit" class="btn btn-primary">

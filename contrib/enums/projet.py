@@ -41,3 +41,21 @@ class ChoixStatutProposition(ChoiceEnum):
     SUBMITTED = _('SUBMITTED')
     SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
     ENROLLED = _('ENROLLED')
+
+
+class ChoixStatutPropositionFormationGenerale(ChoiceEnum):
+    CANCELLED = _('CANCELLED')
+    # During the enrolment step
+    IN_PROGRESS = _('IN_PROGRESS')
+    SUBMITTED = _('SUBMITTED')
+    # After the enrolment step
+    ENROLLED = _('ENROLLED')
+
+
+class ChoixStatutPropositionFormationContinue(ChoiceEnum):
+    CANCELLED = _('CANCELLED')
+    # During the enrolment step
+    IN_PROGRESS = _('IN_PROGRESS')
+    SUBMITTED = _('SUBMITTED')
+    # After the enrolment step
+    ENROLLED = _('ENROLLED')

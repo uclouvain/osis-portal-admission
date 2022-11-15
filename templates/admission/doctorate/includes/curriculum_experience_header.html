@@ -27,54 +27,54 @@
 
 {% if admission %}
   {% if educational_tab %}
-    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from %}
+    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from_admission %}
       {% if not on_update %}
-        {% url 'admission:doctorate:update:curriculum:educational_update' view.kwargs.pk view.kwargs.experience_id as experience_update_url %}
+        {% url base_namespace|add:':update:curriculum:educational_update' view.kwargs.pk view.kwargs.experience_id as experience_update_url %}
       {% endif %}
       {% if not on_delete %}
-        {% url 'admission:doctorate:update:curriculum:educational_delete' view.kwargs.pk view.kwargs.experience_id as experience_delete_url %}
+        {% url base_namespace|add:':update:curriculum:educational_delete' view.kwargs.pk view.kwargs.experience_id as experience_delete_url %}
       {% endif %}
     {% endif %}
     {% if not on_reading and admission|can_make_action:'retrieve_curriculum' %}
-      {% url 'admission:doctorate:curriculum:educational_read' view.kwargs.pk view.kwargs.experience_id as experience_read_url %}
+      {% url base_namespace|add:':curriculum:educational_read' view.kwargs.pk view.kwargs.experience_id as experience_read_url %}
     {% endif %}
   {% else %}
-    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from %}
+    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from_admission %}
       {% if not on_update %}
-        {% url 'admission:doctorate:update:curriculum:professional_update' view.kwargs.pk view.kwargs.experience_id as experience_update_url %}
+        {% url base_namespace|add:':update:curriculum:professional_update' view.kwargs.pk view.kwargs.experience_id as experience_update_url %}
       {% endif %}
       {% if not on_delete %}
-        {% url 'admission:doctorate:update:curriculum:professional_delete' view.kwargs.pk view.kwargs.experience_id as experience_delete_url %}
+        {% url base_namespace|add:':update:curriculum:professional_delete' view.kwargs.pk view.kwargs.experience_id as experience_delete_url %}
       {% endif %}
     {% endif %}
     {% if not on_reading and admission|can_make_action:'retrieve_curriculum' %}
-      {% url 'admission:doctorate:curriculum:professional_read' view.kwargs.pk view.kwargs.experience_id as experience_read_url %}
+      {% url base_namespace|add:':curriculum:professional_read' view.kwargs.pk view.kwargs.experience_id as experience_read_url %}
     {% endif %}
   {% endif %}
-{% elif not experience.valuated_from %}
+{% elif not experience.valuated_from_admission %}
   {% if educational_tab %}
     {% if not on_update %}
-      {% url 'admission:doctorate-create:curriculum:educational_update' view.kwargs.experience_id as experience_update_url %}
+      {% url 'admission:create:curriculum:educational_update' view.kwargs.experience_id as experience_update_url %}
     {% endif %}
     {% if not on_delete %}
-      {% url 'admission:doctorate-create:curriculum:educational_delete' view.kwargs.experience_id as experience_delete_url %}
+      {% url 'admission:create:curriculum:educational_delete' view.kwargs.experience_id as experience_delete_url %}
     {% endif %}
   {% else %}
     {% if not on_update %}
-      {% url 'admission:doctorate-create:curriculum:professional_update' view.kwargs.experience_id as experience_update_url %}
+      {% url 'admission:create:curriculum:professional_update' view.kwargs.experience_id as experience_update_url %}
     {% endif %}
     {% if not on_delete %}
-      {% url 'admission:doctorate-create:curriculum:professional_delete' view.kwargs.experience_id as experience_delete_url %}
+      {% url 'admission:create:curriculum:professional_delete' view.kwargs.experience_id as experience_delete_url %}
     {% endif %}
   {% endif %}
 {% endif %}
 
 {% if not admission %}
-  {% url 'admission:doctorate-create:curriculum' as experience_list %}
+  {% url 'admission:create:curriculum' as experience_list %}
 {% elif on_reading %}
-  {% url 'admission:doctorate:curriculum' view.kwargs.pk as experience_list %}
+  {% url base_namespace|add:':curriculum' view.kwargs.pk as experience_list %}
 {% else %}
-  {% url 'admission:doctorate:update:curriculum' view.kwargs.pk as experience_list %}
+  {% url base_namespace|add:':update:curriculum' view.kwargs.pk as experience_list %}
 {% endif %}
 
 <div class="panel-heading flex-container">
@@ -124,7 +124,7 @@
         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
       </a>
     {% endif %}
-    {% if experience.valuated_from %}
+    {% if experience.valuated_from_admission %}
       <span
           class="glyphicon glyphicon-check"
           title="{% trans "This experience has been valuated so cannot be updated." %}"

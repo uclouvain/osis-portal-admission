@@ -105,7 +105,7 @@ class TemplateTagsTestCase(TestCase):
             def __new__(cls, *args, **kwargs):
                 return Mock(kwargs={}, spec=cls)
 
-        person_tab_url = '/admission/doctorate/create/person'
+        person_tab_url = '/admission/create/person'
         template = Template("{% load admission %}{% doctorate_tabs %}")
 
         request = RequestFactory().get(person_tab_url)
@@ -114,7 +114,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertNotIn('confirm-paper', rendered)
         self.assertInHTML(
             """<li role="presentation" class="active">
-            <a href="/admission/doctorate/create/person">
+            <a href="/admission/create/person">
                 <span class="fa fa-user"></span>
                 {}
             </a>
@@ -131,7 +131,7 @@ class TemplateTagsTestCase(TestCase):
         rendered = template.render(Context({'view': MockedFormView(), 'request': request}))
         self.assertInHTML(
             """<li role="presentation">
-            <a href="/admission/doctorate/create/person">
+            <a href="/admission/create/person">
                 <span class="fa fa-user"></span>
                 {}
             </a>
@@ -248,6 +248,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertTrue(can_update_tab(admission, Tab('coordonnees', '')))
 
     def test_has_error_in_tab(self):
+        context = {'request': Mock(resolver_match=Mock(namespaces=['admission', 'doctorate']))}
         erreurs = [
             {
                 'detail': "Merci de spécifier au-moins un numéro d'identité.",
@@ -267,12 +268,12 @@ class TemplateTagsTestCase(TestCase):
             },
         ]
         admission = Mock(erreurs=erreurs)
-        self.assertFalse(has_error_in_tab('', 'personal'))
-        self.assertTrue(has_error_in_tab(admission, 'personal'))
+        self.assertFalse(has_error_in_tab(context, '', 'personal'))
+        self.assertTrue(has_error_in_tab(context, admission, 'personal'))
         with self.assertRaises(ImproperlyConfigured):
-            has_error_in_tab(admission, 'unknown')
-        self.assertTrue(has_error_in_tab(admission, 'curriculum'))
-        self.assertFalse(has_error_in_tab(admission, 'coordonnees'))
+            has_error_in_tab(context, admission, 'unknown')
+        self.assertTrue(has_error_in_tab(context, admission, 'curriculum'))
+        self.assertFalse(has_error_in_tab(context, admission, 'coordonnees'))
 
     def test_get_dashboard_links_tag(self):
         template = Template(
@@ -299,6 +300,10 @@ class DisplayTagTestCase(TestCase):
         self.assertEqual(display('foo', '-', None, '-', ''), 'foo')
         self.assertEqual(display('foo', '-', None, '-', 'baz'), 'foo - baz')
         self.assertEqual(display('foo', '-', "bar", '-', 'baz'), 'foo - bar - baz')
+        self.assertEqual(display('-'), '')
+        self.assertEqual(display('', '-', ''), '')
+        self.assertEqual(display('-', '-'), '-')
+        self.assertEqual(display('-', '-', '-'), '-')
 
     def test_parenthesis(self):
         self.assertEqual(display('(', '', ")"), '')

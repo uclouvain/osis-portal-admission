@@ -26,9 +26,10 @@
 from typing import Set
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _, ngettext
-from localflavor.generic.forms import BICFormField, IBANFormField
+from localflavor.generic.forms import BICFormField, IBAN_MIN_LENGTH
 
 from osis_document.contrib import FileUploadField
 from admission.constants import FIELD_REQUIRED_MESSAGE
@@ -45,7 +46,11 @@ from admission.contrib.enums.accounting import (
 )
 from admission.contrib.forms import RadioBooleanField, get_example_text
 from admission.templatetags.admission import get_academic_year
-from reference.services.iban_validator import IBANValidatorService, IBANValidatorException
+from reference.services.iban_validator import (
+    IBANValidatorService,
+    IBANValidatorException,
+    IBANValidatorRequestException,
+)
 
 
 class DoctorateAdmissionAccountingForm(forms.Form):
@@ -97,8 +102,8 @@ class DoctorateAdmissionAccountingForm(forms.Form):
     )
     carte_cire_sejour_illimite_etranger = FileUploadField(
         label=_(
-            "Copy of both sides of the CIRE - unlimited stay (B card) or copy of the foreigner's "
-            "card - unlimited stay (C card)"
+            "Copy of both sides of the Certificate of Registration in the Register of Foreigners CIRE - unlimited stay "
+            "(B card) or copy of the foreigner's card - unlimited stay (C card)"
         ),
         required=False,
     )
@@ -218,7 +223,10 @@ class DoctorateAdmissionAccountingForm(forms.Form):
     )
     titre_sejour_longue_duree_parent = FileUploadField(
         label=mark_safe(
-            _('Copy of both sides of the long-term residence permit in Belgium of %(person_concerned)s')
+            _(
+                'Copy of both sides of the long-term residence permit in Belgium of %(person_concerned)s (B, C, D, F, '
+                'F+ or M cards)'
+            )
             % {'person_concerned': dynamic_person_concerned}
         ),
         required=False,
@@ -293,7 +301,6 @@ class DoctorateAdmissionAccountingForm(forms.Form):
 
     # Affiliations
     affiliation_sport = forms.ChoiceField(
-        choices=ChoixAffiliationSport.limited_choices(),
         label=mark_safe(
             _(
                 "Do you wish to join the <a href='https://uclouvain.be/fr/etudier/sport/le-sport-uclouvain.html' "
@@ -320,8 +327,10 @@ class DoctorateAdmissionAccountingForm(forms.Form):
         label=_('Would you like to enter an account number so that we can process a refund if necessary?'),
         widget=forms.RadioSelect,
     )
-    numero_compte_iban = IBANFormField(
+    numero_compte_iban = forms.CharField(
         label=_('IBAN account number'),
+        min_length=IBAN_MIN_LENGTH,
+        max_length=34,
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -379,11 +388,12 @@ class DoctorateAdmissionAccountingForm(forms.Form):
             'last_french_community_high_education_institutes_attended',
             None,
         )
+        self.valid_iban = None
 
         super().__init__(**kwargs)
 
         if self.education_site:
-            self.fields['affiliation_sport'].choices = ChoixAffiliationSport.limited_choices(self.education_site)
+            self.fields['affiliation_sport'].choices = ChoixAffiliationSport.choices(self.education_site)
 
         if self.last_french_community_high_education_institutes_attended:
             names = self.last_french_community_high_education_institutes_attended.get('names')
@@ -566,12 +576,15 @@ class DoctorateAdmissionAccountingForm(forms.Form):
 
     def clean_numero_compte_iban(self):
         value = self.cleaned_data.get('numero_compte_iban')
-        try:
-            IBANValidatorService.validate(value)
-        except IBANValidatorException as e:
-            # TODO maybe trigger two exceptions to know if the value is incorrect or if the service doesn't respond
-            pass
-            # raise ValidationError(e.message)
+        if value:
+            try:
+                IBANValidatorService.validate(value)
+                self.valid_iban = True
+            except IBANValidatorException as e:
+                self.valid_iban = False
+                raise ValidationError(e.message)
+            except IBANValidatorRequestException:
+                pass
         return value
 
     def clean(self):
@@ -622,9 +635,10 @@ class DoctorateAdmissionAccountingForm(forms.Form):
 
     def clean_bank_fields(self, cleaned_data):
         type_numero_banque = cleaned_data.get('type_numero_compte')
+        cleaned_data['iban_valide'] = self.valid_iban
 
         if type_numero_banque == ChoixTypeCompteBancaire.IBAN.name:
-            if not cleaned_data.get('numero_compte_iban'):
+            if not cleaned_data.get('numero_compte_iban') and 'numero_compte_iban' not in self.errors:
                 self.add_error('numero_compte_iban', FIELD_REQUIRED_MESSAGE)
         else:
             cleaned_data['numero_compte_iban'] = ''
@@ -632,7 +646,7 @@ class DoctorateAdmissionAccountingForm(forms.Form):
         if type_numero_banque == ChoixTypeCompteBancaire.AUTRE_FORMAT.name:
             if not cleaned_data.get('numero_compte_autre_format'):
                 self.add_error('numero_compte_autre_format', FIELD_REQUIRED_MESSAGE)
-            if not cleaned_data.get('code_bic_swift_banque'):
+            if not cleaned_data.get('code_bic_swift_banque') and 'code_bic_swift_banque' not in self.errors:
                 self.add_error('code_bic_swift_banque', FIELD_REQUIRED_MESSAGE)
         else:
             cleaned_data['numero_compte_autre_format'] = ''

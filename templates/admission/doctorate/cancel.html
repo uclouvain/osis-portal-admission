@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/form_tab_layout.html" %}
+{% extends form_base_template %}
 {% load i18n static admission enums %}
 
 {% comment "License" %}
@@ -25,40 +25,7 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block content %}
-    {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
-    <div class="page-header h3">
-    <span class="d-inline-block">
-      {% if admission %}
-          {{ doctorate_title }}
-      {% else %}
-          {% trans "Create new doctorate admission" %}
-      {% endif %}
-    </span>
-        <a
-            href="{% url 'admission:doctorate-list' %}"
-            class="pull-right h5 text-primary"
-        >
-            <span class="fa fa-stream"></span>
-            {% trans "Back to requests" %}
-        </a>
-    </div>
-
-    <div class="well">
-        <div>
-            {% trans "Reference:" %}
-            {% if not admission %}
-                {% trans "No reference yet - Go to Project tab" %}
-            {% else %}
-                {{ doctorate_title }} ({{ admission.reference }})
-            {% endif %}
-        </div>
-        <div>
-            {% trans "Status:" %}
-            {{ admission.statut|enum_display:'ChoixStatutProposition' }}
-        </div>
-    </div>
-
+{% block tab_content %}
     <form class="osis-form" method="post" action="">
         {% csrf_token %}
         <p>
@@ -72,7 +39,7 @@
         >
             {% trans "Confirm" %}
         </button>
-        <a href="{% url 'admission:doctorate-list' %}">
+        <a href="{% url 'admission:list' %}">
             {% trans "Back to requests" %}
         </a>
 

@@ -41,11 +41,11 @@
     {% if doctorate.matricule_doctorant != user.person.global_id %}
         {% url 'admission:supervised-list' as list_url %}
     {% else %}
-        {% url 'admission:doctorate-list' as list_url %}
+        {% url 'admission:list' as list_url %}
     {% endif %}
     <ol class="breadcrumb">
         <li>
-          <a href="{{ list_url }}">{% trans "Doctorate admissions" %}</a>
+          <a href="{{ list_url }}">{% trans "Admissions" %}</a>
         </li>
         <li class="active">
           {{ doctorate.intitule_formation }} ({{ doctorate.reference }})
@@ -59,7 +59,7 @@
     {% if doctorate.matricule_doctorant != user.person.global_id %}
         {% url 'admission:supervised-list' as list_url %}
     {% else %}
-        {% url 'admission:doctorate-list' as list_url %}
+        {% url 'admission:list' as list_url %}
     {% endif %}
 
     <div class="page-header h3 clearfix">

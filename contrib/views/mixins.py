@@ -33,10 +33,26 @@ from admission.services.doctorate import AdmissionDoctorateService
 
 
 class LoadViewMixin(LoginRequiredMixin, ContextMixin):
+    detail_base_template = ''
+    form_base_template = ''
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['detail_base_template'] = self.detail_base_template
+        context['form_base_template'] = self.form_base_template
+        context['base_namespace'] = self.base_namespace
+        return context
+
+    @cached_property
+    def base_namespace(self):
+        return ':'.join(self.request.resolver_match.namespaces[:2])
+
     @cached_property
     def admission_uuid(self):
         return str(self.kwargs.get('pk', ''))
 
+
+class DoctorateLoadViewMixin(LoadViewMixin):
     @cached_property
     def admission(self):
         return AdmissionPropositionService.get_proposition(
@@ -52,8 +68,10 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         )
 
 
-class LoadDossierViewMixin(LoadViewMixin):
+class LoadDossierViewMixin(DoctorateLoadViewMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
+    detail_base_template = 'admission/doctorate/detail_tab_layout.html'
+    form_base_template = 'admission/doctorate/form_tab_layout.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,13 +86,57 @@ class LoadDossierViewMixin(LoadViewMixin):
         return context
 
 
-class LoadDoctorateViewMixin(LoadViewMixin):
+class LoadDoctorateViewMixin(DoctorateLoadViewMixin):
     """Mixin that can be used to load data for tabs used after the enrolment."""
+    detail_base_template = 'admission/doctorate/details/doctorate_tab_layout.html'
+    form_base_template = 'admission/doctorate/forms/doctorate_tab_layout.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         if self.admission_uuid:
             context['doctorate'] = self.doctorate
+
+        return context
+
+
+class LoadGeneralEducationDossierViewMixin(LoadViewMixin):
+    """Mixin that can be used to load data for tabs used during the enrolment for the general education."""
+    detail_base_template = 'admission/admission/general_education/details/tab_layout.html'
+    form_base_template = 'admission/admission/general_education/forms/tab_layout.html'
+
+    @cached_property
+    def admission(self):
+        return AdmissionPropositionService.get_general_education_proposition(
+            person=self.request.user.person,
+            uuid=self.admission_uuid,
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.admission_uuid:
+            context['admission'] = self.admission
+
+        return context
+
+
+class LoadContinuingEducationDossierViewMixin(LoadViewMixin):
+    """Mixin that can be used to load data for tabs used during the enrolment for the continuing education."""
+    detail_base_template = 'admission/admission/continuing_education/details/tab_layout.html'
+    form_base_template = 'admission/admission/continuing_education/forms/tab_layout.html'
+
+    @cached_property
+    def admission(self):
+        return AdmissionPropositionService.get_continuing_education_proposition(
+            person=self.request.user.person,
+            uuid=self.admission_uuid,
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.admission_uuid:
+            context['admission'] = self.admission
 
         return context

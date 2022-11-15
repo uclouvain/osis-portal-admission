@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/detail_tab_layout.html" %}
+{% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
 {% load bootstrap3 i18n admission %}
 
 {% comment "License" %}
@@ -39,9 +39,9 @@
           {% trans "Confirm" %}
         </button>
         {% if admission %}
-          {% url 'admission:doctorate:update:curriculum' view.kwargs.pk as experience_delete_url%}
+          {% url base_namespace|add:':update:curriculum' view.kwargs.pk as experience_delete_url%}
         {% else %}
-          {% url 'admission:doctorate-create:curriculum' as experience_delete_url %}
+          {% url 'admission:create:curriculum' as experience_delete_url %}
         {% endif %}
         <a href="{{ experience_delete_url }}">
           {% trans "Cancel" %}

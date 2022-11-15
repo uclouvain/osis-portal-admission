@@ -1,3 +1,13 @@
+import re
+from typing import Union
+
+from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.model.scholarship import Scholarship
+
+from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
+
+from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
+
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.address import Address
 from osis_reference_sdk.model.high_school import HighSchool
@@ -27,6 +37,18 @@ def format_high_school_title(high_school: HighSchool):
     )
 
 
+def format_training(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
+    return '{intitule} ({campus}) - {sigle}'.format_map(training)
+
+
+def format_training_with_year(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
+    return '{annee} - {intitule} ({campus}) - {sigle}'.format_map(training)
+
+
+def format_scholarship(scholarship: Scholarship):
+    return scholarship['long_name'] or scholarship['short_name']
+
+
 def force_title(string: str):
     """
     Return a string in which all words are lowercase, except for the first letter of each one, which can written in
@@ -42,3 +64,15 @@ def force_title(string: str):
 
 def to_snake_case(value):
     return ''.join(['_' + i.lower() if i.isupper() else i for i in value]).lstrip('_')
+
+
+def split_training_id(training_id):
+    result = re.match(r"^(.*)-(\d{4})$", training_id)
+    return result.groups() if result else tuple()
+
+
+def get_training_id(training):
+    return "{sigle}-{annee}".format(
+        sigle=training['sigle'],
+        annee=training['annee'],
+    )

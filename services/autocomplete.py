@@ -47,8 +47,37 @@ class AdmissionAutocompleteService(metaclass=ServiceMeta):
         return AdmissionAutocompleteAPIClient().list_sector_dtos(**build_mandatory_auth_headers(person))
 
     @classmethod
-    def get_doctorates(cls, person=None, sigle=""):
-        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(sigle, **build_mandatory_auth_headers(person))
+    def get_doctorates(cls, person=None, sigle="", campus=""):
+        return AdmissionAutocompleteAPIClient().list_doctorat_dtos(
+            sigle=sigle,
+            campus=campus,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_general_education_trainings(cls, person, training_type, name, campus=''):
+        return AdmissionAutocompleteAPIClient().list_formation_generale_dtos(
+            type=training_type,
+            name=name,
+            campus=campus,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_continuing_education_trainings(cls, person, name, campus=''):
+        return AdmissionAutocompleteAPIClient().list_formation_continue_dtos(
+            name=name,
+            campus=campus,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_scholarships(cls, person, scholarship_type, search=''):
+        return AdmissionAutocompleteAPIClient().list_scholarships(
+            scholarship_type=scholarship_type,
+            search=search,
+            **build_mandatory_auth_headers(person),
+        )
 
     @classmethod
     def autocomplete_tutors(cls, person, **kwargs):
