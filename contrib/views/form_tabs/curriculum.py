@@ -26,6 +26,7 @@
 import calendar
 import datetime
 from abc import ABCMeta
+from decimal import Decimal
 
 from django import forms
 from django.http import HttpResponseRedirect
@@ -42,8 +43,8 @@ from admission.constants import (
 from admission.contrib.enums.curriculum import (
     TranscriptType,
     EvaluationSystemsWithCredits,
-    SuccessfulResults,
     EvaluationSystem,
+    Result,
 )
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms import (
@@ -393,7 +394,7 @@ class AdmissionCurriculumEducationalExperienceFormView(
                 if not last_enrolled_year:
                     last_enrolled_year = form.cleaned_data.get('academic_year')
 
-                if form.cleaned_data.get('result') in SuccessfulResults:
+                if form.cleaned_data.get('result') == Result.SUCCESS.name:
                     at_least_one_successful_year = True
 
                 self.clean_experience_year_form(
@@ -440,24 +441,26 @@ class AdmissionCurriculumEducationalExperienceFormView(
             if acquired_credit_number is None or acquired_credit_number == '':
                 form.add_error('acquired_credit_number', FIELD_REQUIRED_MESSAGE)
             else:
-                acquired_credit_number = int(acquired_credit_number)
+                acquired_credit_number = Decimal(acquired_credit_number)
                 if acquired_credit_number < MINIMUM_CREDIT_NUMBER:
                     form.add_error(
                         'acquired_credit_number',
-                        _('This value must be equal to or greater than %(MINIMUM_CREDIT_NUMBER)s'),
+                        _('This value must be equal to or greater than %(MINIMUM_CREDIT_NUMBER)s')
+                        % {'MINIMUM_CREDIT_NUMBER': MINIMUM_CREDIT_NUMBER},
                     )
 
             if registered_credit_number is None or registered_credit_number == '':
                 form.add_error('registered_credit_number', FIELD_REQUIRED_MESSAGE)
             else:
-                registered_credit_number = int(registered_credit_number)
+                registered_credit_number = Decimal(registered_credit_number)
                 if registered_credit_number <= MINIMUM_CREDIT_NUMBER:
                     form.add_error(
                         'registered_credit_number',
-                        _('This value must be greater than %(MINIMUM_CREDIT_NUMBER)s'),
+                        _('This value must be greater than %(MINIMUM_CREDIT_NUMBER)s')
+                        % {'MINIMUM_CREDIT_NUMBER': MINIMUM_CREDIT_NUMBER},
                     )
 
-            if isinstance(acquired_credit_number, int) and isinstance(registered_credit_number, int):
+            if isinstance(acquired_credit_number, Decimal) and isinstance(registered_credit_number, Decimal):
                 if acquired_credit_number > registered_credit_number:
                     form.add_error(
                         'acquired_credit_number',

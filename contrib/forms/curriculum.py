@@ -28,7 +28,7 @@ from datetime import datetime
 from dal import autocomplete
 from django import forms
 from django.forms import BaseFormSet
-from django.utils.dates import MONTHS
+from django.utils.dates import MONTHS_ALT
 from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
 from admission.constants import (
@@ -69,7 +69,7 @@ def year_choices():
 
 
 def month_choices():
-    return [EMPTY_CHOICE[0]] + [(index, month) for index, month in MONTHS.items()]
+    return [EMPTY_CHOICE[0]] + [(index, month) for index, month in MONTHS_ALT.items()]
 
 
 class DoctorateAdmissionCurriculumProfessionalExperienceForm(forms.Form):
@@ -394,6 +394,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
                 'dissertation_score',
                 'dissertation_summary',
                 'graduate_degree',
+                'rank_in_diploma',
             ]:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
@@ -428,9 +429,12 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         # Program field
         if not cleaned_data.get('education_name'):
             self.add_error('education_name', FIELD_REQUIRED_MESSAGE)
-        # Equivalence field
-        if not cleaned_data.get('diploma_equivalence'):
-            self.add_error('diploma_equivalence', FIELD_REQUIRED_MESSAGE)
+        if obtained_diploma:
+            # Equivalence field
+            if not cleaned_data.get('diploma_equivalence'):
+                self.add_error('diploma_equivalence', FIELD_REQUIRED_MESSAGE)
+        else:
+            cleaned_data['diploma_equivalence'] = []
         # Linguistic fields
         linguistic_regime = cleaned_data.get('linguistic_regime')
         if not linguistic_regime:
@@ -467,7 +471,6 @@ MINIMUM_CREDIT_NUMBER = 0
 
 
 class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
-
     def __init__(self, prefix_index_start=0, **kwargs):
         super().__init__(**kwargs)
 
@@ -489,10 +492,12 @@ class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
     registered_credit_number = forms.FloatField(
         label=_('Registered credits'),
         required=False,
+        localize=True,
     )
     acquired_credit_number = forms.FloatField(
         label=_('Acquired credits'),
         required=False,
+        localize=True,
     )
     transcript = FileUploadField(
         label=_('Transcript'),

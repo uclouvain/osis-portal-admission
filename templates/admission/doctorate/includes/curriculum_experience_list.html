@@ -80,13 +80,13 @@
             <td>
               {% with educational_experience.educationalexperienceyear_set|length as nb_years %}
                 {% if nb_years > 0 %}
-                  {{ educational_experience.educationalexperienceyear_set.0.academic_year|get_academic_year }}
                   {% if nb_years > 1 %}
-                    {% translate 'to' %}
                     {% with educational_experience.educationalexperienceyear_set|last as last_experience %}
                       {{ last_experience.academic_year|get_academic_year }}
                     {% endwith %}
+                    {% translate 'to' context 'admission-date' %}
                   {% endif %}
+                  {{ educational_experience.educationalexperienceyear_set.0.academic_year|get_academic_year }}
                 {% endif %}
               {% endwith %}
             </td>
@@ -164,7 +164,6 @@
         <tr>
           <th style="width: 150px;">{% translate "Period" %}</th>
           <th>{% translate "Activity type" %}</th>
-          <th>{% translate "Institute" %}</th>
           <th style="width: 100px;">{% translate "Actions" %}</th>
         </tr>
         </thead>
@@ -184,13 +183,12 @@
               {% with start_date=professional_experience.start_date|date:"YEAR_MONTH_FORMAT" end_date=professional_experience.end_date|date:"YEAR_MONTH_FORMAT"  %}
                 {{ start_date }}
                 {% if start_date != end_date %}
-                  {% translate "to" %}
+                  {% translate 'to' context 'admission-date' %}
                   {{ end_date }}
                 {% endif %}
               {% endwith %}
             </td>
             <td><span>{{ professional_experience.type.value|enum_display:'ActivityType' }}</span></td>
-            <td><span>{{ professional_experience.institute_name }}</span></td>
             <td>
               <div class="btn-group" role="group">
                 {% if with_editing_options %}
