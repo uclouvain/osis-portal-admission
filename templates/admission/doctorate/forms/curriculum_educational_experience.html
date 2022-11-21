@@ -96,7 +96,7 @@
       </div>
     </div>
 
-    <div id="global-transcript" class="border-top flex-container">
+    <div id="global-transcript" class="border-top flex-container align-top">
       <div class="required_field flex-1">
         {% bootstrap_field base_form.transcript %}
       </div>
@@ -149,12 +149,12 @@
       <div class="col-md-6 required_field">
         {% bootstrap_field base_form.obtained_diploma %}
       </div>
-      <div id="obtained-grade" class="col-md-6">
+      <div id="obtained-grade" class="col-md-6 diploma-year-field">
         {% bootstrap_field base_form.obtained_grade %}
       </div>
     </div>
     <div class="row diploma-year-field">
-      <div class="col-md-6">
+      <div class="col-md-6 required_field">
         {% bootstrap_field base_form.rank_in_diploma %}
       </div>
       <div class="col-md-6 required_field">
@@ -176,7 +176,7 @@
       </div>
     </div>
 
-    <div class="flex-container diploma-year-field border-top">
+    <div class="flex-container align-top diploma-year-field border-top">
       <div class="flex-1 required_field">
         {% bootstrap_field base_form.graduate_degree %}
       </div>
@@ -186,7 +186,7 @@
     </div>
 
     <div class="row foreign-field">
-      <div class="col-md-12 required_field">
+      <div class="col-md-12 required_field diploma-year-field">
         {% bootstrap_field base_form.diploma_equivalence %}
       </div>
     </div>
@@ -217,7 +217,7 @@
     .academic-year-container {
       border-right: 1px solid #ddd;
     }
-    #formset-container td, th {
+    #formset-container th, #formset-container td.academic-year-container {
       vertical-align: middle !important;
       text-align: center;
     }
@@ -300,7 +300,7 @@
               {# Display the bachelor cycle continuation field if one year is successful #}
               const bachelorCycleContinuationInput = $('#bachelor-cycle-continuation')
 
-              if ($('#formset-container .result:visible option[value^="SUCCESS"]:selected').length > 0) {
+              if ($('#formset-container .result:visible option[value="SUCCESS"]:selected').length > 0) {
                   bachelorCycleContinuationInput.removeClass('hidden');
                   bachelorCycleContinuationInput.find('select').prop('disabled', false);
               } else {
@@ -502,10 +502,6 @@
           $('.diploma-year-field').dependsOn({
               'input[name=base_form-obtained_diploma]': { values: ['True'] },
           });
-
-          $('#obtained-grade').dependsOn({
-              'input[name=base_form-obtained_diploma]': { values: ['True'] },
-          }, requiredField);
 
           {#  Display the bachelor cycle continuation field depending on results #}
           $('#formset-container').on('change', '.result select', function(event) {

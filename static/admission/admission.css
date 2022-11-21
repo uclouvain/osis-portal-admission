@@ -80,8 +80,12 @@ textarea {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-	align-items: center;
+  align-items: center;
   gap: 1em;
+}
+
+.flex-container.align-top {
+  align-items: start;
 }
 
 .flex-1 {

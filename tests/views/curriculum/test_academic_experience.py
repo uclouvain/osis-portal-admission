@@ -486,12 +486,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
-        for field in [
-            'education_name',
-            'diploma_equivalence',
-            'linguistic_regime',
-        ]:
-            self.assertFormError(response, 'base_form', field, FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response, 'base_form', 'education_name', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response, 'base_form', 'linguistic_regime', FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_missing_translations(self):
         response = self.client.post(
@@ -561,7 +557,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'base_form-transcript_type': TranscriptType.ONE_A_YEAR.name,
                 'base_form-linguistic_regime': self.language_with_translation.code,
                 'year_formset-2020-is_enrolled': True,
-                'year_formset-2020-result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+                'year_formset-2020-result': Result.SUCCESS.name,
                 'year_formset-2020-academic_year': '2020',
                 'year_formset-TOTAL_FORMS': '1',
                 'year_formset-INITIAL_FORMS': '0',
@@ -629,11 +625,13 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             forms_by_year[2005].errors.get('acquired_credit_number', []),
         )
         self.assertIn(
-            gettext('This value must be greater than %(MINIMUM_CREDIT_NUMBER)s'),
+            gettext('This value must be greater than %(MINIMUM_CREDIT_NUMBER)s')
+            % {'MINIMUM_CREDIT_NUMBER': 0},
             forms_by_year[2006].errors.get('registered_credit_number', []),
         )
         self.assertIn(
-            gettext('This value must be equal to or greater than %(MINIMUM_CREDIT_NUMBER)s'),
+            gettext('This value must be equal to or greater than %(MINIMUM_CREDIT_NUMBER)s')
+            % {'MINIMUM_CREDIT_NUMBER': 0},
             forms_by_year[2006].errors.get('acquired_credit_number', []),
         )
 
@@ -816,7 +814,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_score': '',
                 'dissertation_summary': [],
                 'bachelor_cycle_continuation': None,
-                'diploma_equivalence': ['f4.pdf'],
+                'diploma_equivalence': [],
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
@@ -889,7 +887,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_score': '',
                 'dissertation_summary': [],
                 'bachelor_cycle_continuation': None,
-                'diploma_equivalence': ['f4.pdf'],
+                'diploma_equivalence': [],
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,

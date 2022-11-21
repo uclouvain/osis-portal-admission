@@ -77,11 +77,14 @@
   {% panel _('Obtained results') %}
     <div class="row">
       <div class="col-md-6">
+        {% field_data _("Transcript type") experience.transcript_type.value|enum_display:'TranscriptType' %}
+      </div>
+      <div class="col-md-6">
         {% field_data _("Evaluation type") experience.evaluation_type.value|enum_display:'EvaluationSystem' %}
       </div>
     </div>
 
-    {% if experience.transcript_type == 'ONE_FOR_ALL_YEARS' %}
+    {% if experience.transcript_type.value == 'ONE_FOR_ALL_YEARS' %}
       <div class="row border-top">
         <div class="col-md-6">
           {% field_data _("Transcript") experience.transcript %}
@@ -153,17 +156,22 @@
       </table>
     </div>
 
-    {% if experience.obtained_diploma %}
-      <div class="border-top">
+    <div class="border-top">
+      <div class="row">
+        <div class="col-md-6">
+          {% field_data _('Did you obtain a diploma at the end of this training?') experience.obtained_diploma|yesno:_("Yes,No,") %}
+        </div>
+      {% if not experience.obtained_diploma %}
+      </div>
+      {% else %}
+        <div class="col-md-6">
+          {% field_data _('Obtained grade') experience.obtained_grade.value|enum_display:'Grade' %}
+        </div>
+      </div>
         <div class="row">
-          <div class="col-md-6">
-            {% field_data _('Obtained grade') experience.obtained_grade.value|enum_display:'Grade' %}
-          </div>
           <div class="col-md-6">
             {% field_data _('Rank in diploma') experience.rank_in_diploma %}
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6">
             {% field_data _('Expected graduation date') experience.expected_graduation_date|date:"DATE_FORMAT" %}
           </div>
@@ -194,12 +202,8 @@
             {% field_data _('Diploma equivalence') experience.diploma_equivalence hide_empty=True %}
           </div>
         </div>
-      </div>
-    {% else %}
-      <div class="border-top">
-        {% field_data _('Obtained grade') experience.obtained_grade.value|enum_display:'Grade' %}
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
   {% endpanel %}
 
 {% endblock %}
