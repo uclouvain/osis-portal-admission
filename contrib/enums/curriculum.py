@@ -31,7 +31,7 @@ from base.models.utils.utils import ChoiceEnum
 
 class TeachingTypeEnum(ChoiceEnum):
     SOCIAL_PROMOTION = _("Social promotion")
-    FULL_EXERCICES = _("Full exercises")
+    FULL_TIME = _("Full-time")
 
 
 class Result(ChoiceEnum):

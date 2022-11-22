@@ -1258,7 +1258,7 @@ msgstr "Français"
 msgid "French-speaking Community"
 msgstr "Communauté française"
 
-msgid "Full exercises"
+msgid "Full-time"
 msgstr "Plein exercice"
 
 #, no-python-format
