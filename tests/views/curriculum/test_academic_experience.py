@@ -240,7 +240,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'institute_address': "Place de l'Université",
                 'program': self.first_diploma.uuid,
                 'education_name': 'Other computer science',
-                'study_system': TeachingTypeEnum.FULL_EXERCICES.name,
+                'study_system': TeachingTypeEnum.FULL_TIME.name,
                 'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
                 'linguistic_regime': self.language_without_translation.code,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,

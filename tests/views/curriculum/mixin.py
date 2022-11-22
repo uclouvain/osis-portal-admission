@@ -121,7 +121,7 @@ class MixinTestCase(TestCase):
             institute_address='Place de l\'Université',
             program=cls.first_diploma.uuid,
             education_name='Other computer science',
-            study_system=TeachingTypeEnum(value='FULL_EXERCICES'),
+            study_system=TeachingTypeEnum(value='FULL_TIME'),
             evaluation_type=EvaluationSystem(value='ECTS_CREDITS'),
             linguistic_regime=cls.language_without_translation.code,
             transcript_type=TranscriptType(value='ONE_FOR_ALL_YEARS'),
