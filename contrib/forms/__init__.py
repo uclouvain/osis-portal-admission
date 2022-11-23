@@ -30,7 +30,6 @@ from django import forms
 from django.conf import settings
 from django.utils.translation import get_language, gettext_lazy as _, gettext
 
-from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.campus import AdmissionCampusService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import (
@@ -51,6 +50,7 @@ FORM_SET_PREFIX = '__prefix__'
 FOLLOWING_FORM_SET_PREFIX = '__prefix_1__'
 OSIS_DOCUMENT_UPLOADER_CLASS = 'document-uploader'
 OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX = '__{}__'.format(OSIS_DOCUMENT_UPLOADER_CLASS)
+PDF_MIME_TYPE = 'application/pdf'
 
 
 def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):
@@ -265,6 +265,14 @@ class BooleanRadioSelect(forms.RadioSelect):
             context['widget']['optgroups'][0][1][0]['selected'] = True
             context['widget']['optgroups'][0][1][0]['attrs']['checked'] = True
         return context
+
+
+class NoInput(forms.Widget):
+    input_type = "hidden"
+    template_name = ""
+
+    def render(self, name, value, attrs=None, renderer=None):
+        return ""
 
 
 # Add django-localflavours translations

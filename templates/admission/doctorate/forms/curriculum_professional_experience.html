@@ -29,7 +29,12 @@
   {% bootstrap_form_errors form %}
 
   <div class="panel panel-default">
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_update=True %}
+    {% if view.kwargs.experience_id %}
+      {% display _("Update of a non-academic activity") as header_title %}
+    {% else %}
+      {% display _("Creation of a non-academic activity") as header_title %}
+    {% endif %}
+    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_update=True title=header_title %}
     <div class="panel-body">
       <div class="row">
         <div class="col-md-6 form-group">
@@ -109,6 +114,22 @@
           $('#id_type').change(function() {
               $('#certificate .popover-buttons').attr('data-content', this.value ? CERTIFICATE_HELP_TEXT[this.value] : '');
           }).change()
+
+          {# Display the options of the end date depending on the start date #}
+          const startSelect = $('#id_start_date_year');
+          let startYear = parseInt(startSelect.val());
+
+          startSelect.on('change', function() {
+              startYear = parseInt(this.value);
+          })
+
+          function formatState (result) {
+              return result.id && parseInt(result.id) >= startYear ? result.text : null;
+          }
+
+          $('#id_end_date_year').select2({
+            templateResult: formatState
+          });
 
           document.dispatchEvent(new Event('refreshFormInitial'));
       });

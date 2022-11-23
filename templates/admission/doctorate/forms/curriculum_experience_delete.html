@@ -1,5 +1,5 @@
 {% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
-{% load bootstrap3 i18n admission %}
+{% load bootstrap3 i18n admission enums %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -27,12 +27,21 @@
 
 {% block tab_content %}
   <div class="panel panel-default">
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_delete=True educational_tab=educational_tab %}
+    {% if educational_tab %}
+      {% translate "Deletion of an academic activity" as header_title %}
+      {% blocktranslate with name=experience.education_name asvar question trimmed %}
+        Are you sure you want to delete the training "{{ name }}"?
+      {% endblocktranslate %}
+    {% else %}
+      {% translate "Deletion of a non-academic activity" as header_title %}
+      {% blocktranslate with type=experience.type|enum_display:'ActivityType' start=experience.start_date|date:"YEAR_MONTH_FORMAT" end=experience.end_date|date:"YEAR_MONTH_FORMAT" asvar question trimmed %}
+        Are you sure you want to delete the activity "{{ type }}" that took place from {{ start }} to {{ end }}?
+      {% endblocktranslate %}
+    {% endif %}
+    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with educational_tab=educational_tab title=header_title %}
     <div class="panel-body">
-      <p>{% translate "Are you sure you want to remove this experience?" %}</p>
-
+      <p>{{ question }}</p>
       {% bootstrap_form_errors form %}
-
       <form method="POST">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">

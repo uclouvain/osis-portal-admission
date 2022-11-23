@@ -49,6 +49,7 @@ from admission.contrib.enums.proximity_commission import (
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
+from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
@@ -124,6 +125,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 links=[],
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle='FOOBARBAZ',
@@ -131,6 +133,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle='BARBAZ',
@@ -138,6 +141,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle=SCIENCE_DOCTORATE,
@@ -145,6 +149,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
+                type=TrainingType.PHD.name,
             ),
         ]
         self.addCleanup(autocomplete_api_patcher.stop)
@@ -463,6 +468,7 @@ class ProjectViewTestCase(TestCase):
                 'sigle': 'FOOBARBAZ',
                 'annee': '2021',
                 'code_secteur_formation': "SSH",
+                'type': TrainingType.PHD.name,
             },
             'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
             "commission_proximite": ChoixProximityCommissionCDSS.ECLI.name,

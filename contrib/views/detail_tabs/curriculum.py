@@ -72,7 +72,6 @@ class AdmissionCurriculumDetailView(TemplateView):
 
         context_data['professional_experiences'] = curriculum.professional_experiences
         context_data['educational_experiences'] = curriculum.educational_experiences
-        context_data['curriculum_file'] = curriculum.file
         context_data['minimal_year'] = curriculum.minimal_year
 
         context_data['BE_ISO_CODE'] = BE_ISO_CODE

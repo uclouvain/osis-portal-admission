@@ -38,7 +38,7 @@ from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
 
 from admission.contrib.enums.scholarship import TypeBourse
-from admission.contrib.enums.training_choice import TypeFormation
+from admission.contrib.enums.training_choice import TypeFormation, TrainingType
 from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
@@ -70,6 +70,7 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 campus="Louvain-La-Neuve",
+                type=TrainingType.PHD.name,
             ),
             DoctoratDTO(
                 sigle='BARBAZ',
@@ -77,6 +78,7 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 campus="Mons",
+                type=TrainingType.PHD.name,
             ),
         ]
         url = reverse('admission:autocomplete:doctorate')
@@ -470,12 +472,14 @@ class AutocompleteTestCase(TestCase):
                 intitule='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
+                type=TrainingType.MASTER_M1.name,
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
                 intitule='Barbaz',
                 annee=2021,
                 campus="Mons",
+                type=TrainingType.MASTER_M1.name,
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -502,12 +506,14 @@ class AutocompleteTestCase(TestCase):
                 intitule='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
+                type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
                 intitule='Barbaz',
                 annee=2021,
                 campus="Mons",
+                type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
             ),
         ]
         url = reverse('admission:autocomplete:general-education')

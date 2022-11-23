@@ -247,15 +247,10 @@ class AdmissionPersonService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def update_curriculum(cls, person, data, uuid=None):
-        if uuid:
-            return AdmissionPersonAPIClient().update_curriculum_admission(
-                uuid=str(uuid),
-                curriculum=data,
-                **build_mandatory_auth_headers(person),
-            )
-        return AdmissionPersonAPIClient().update_curriculum(
-            curriculum=data,
+    def update_curriculum(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_doctorat_completer_curriculum_command_admission(
+            uuid=uuid,
+            doctorat_completer_curriculum_command=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -387,9 +382,9 @@ class GeneralEducationAdmissionPersonService(metaclass=ServiceMeta):
 
     @classmethod
     def update_curriculum(cls, person, data, uuid):
-        return AdmissionPersonAPIClient().update_curriculum_general_education_admission(
-            uuid=str(uuid),
-            curriculum=data,
+        return AdmissionPersonAPIClient().update_general_education_completer_curriculum_command_admission(
+            uuid=uuid,
+            general_education_completer_curriculum_command=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -521,8 +516,8 @@ class ContinuingEducationAdmissionPersonService(metaclass=ServiceMeta):
 
     @classmethod
     def update_curriculum(cls, person, data, uuid):
-        return AdmissionPersonAPIClient().update_curriculum_continuing_education_admission(
-            uuid=str(uuid),
-            curriculum=data,
+        return AdmissionPersonAPIClient().update_continuing_education_completer_curriculum_command_admission(
+            uuid=uuid,
+            continuing_education_completer_curriculum_command=data,
             **build_mandatory_auth_headers(person),
         )

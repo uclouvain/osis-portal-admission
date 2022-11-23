@@ -167,9 +167,6 @@ msgstr ""
 msgid "Academic graduation year"
 msgstr ""
 
-msgid "Academic training"
-msgstr ""
-
 msgid "Academic trainings"
 msgstr ""
 
@@ -346,10 +343,17 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Are you sure you want to remove %(first_name)s %(last_name)s as %(role)s?"
+"Are you sure you want to delete the activity \"%(type)s\" that took place "
+"from %(start)s to %(end)s?"
 msgstr ""
 
-msgid "Are you sure you want to remove this experience?"
+#, python-format
+msgid "Are you sure you want to delete the training \"%(name)s\"?"
+msgstr ""
+
+#, python-format
+msgid ""
+"Are you sure you want to remove %(first_name)s %(last_name)s as %(role)s?"
 msgstr ""
 
 msgid "Are you sure you want to request signatures for this admission?"
@@ -418,6 +422,9 @@ msgid "Bachelor"
 msgstr ""
 
 msgid "Back to requests"
+msgstr ""
+
+msgid "Back to the list"
 msgstr ""
 
 msgid "Bank account"
@@ -505,6 +512,11 @@ msgid "Cancel"
 msgstr ""
 
 msgid "Certificate"
+msgstr ""
+
+msgid ""
+"Certificate allowing the continuation of studies for a bachelor's degree in "
+"veterinary medicine"
 msgstr ""
 
 msgid ""
@@ -608,6 +620,12 @@ msgid "Confirmation"
 msgstr ""
 
 msgid "Confirmation paper"
+msgstr ""
+
+msgid "Consultation of a non-academic activity"
+msgstr ""
+
+msgid "Consultation of an academic activity"
 msgstr ""
 
 msgid "Contact"
@@ -795,6 +813,12 @@ msgctxt "an admission"
 msgid "Created at:"
 msgstr ""
 
+msgid "Creation of a non-academic activity"
+msgstr ""
+
+msgid "Creation of an academic activity"
+msgstr ""
+
 msgid "Curriculum"
 msgstr ""
 
@@ -828,6 +852,11 @@ msgstr ""
 msgid "Decision"
 msgstr ""
 
+msgid ""
+"Decision of equivalence for your diploma(s) giving access to the training, "
+"if this(these) has(have) been obtained outside Belgium"
+msgstr ""
+
 msgid "Defense date"
 msgstr ""
 
@@ -835,6 +864,12 @@ msgid "Definitive admission date"
 msgstr ""
 
 msgid "Delete"
+msgstr ""
+
+msgid "Deletion of a non-academic activity"
+msgstr ""
+
+msgid "Deletion of an academic activity"
 msgstr ""
 
 msgid ""
@@ -860,10 +895,7 @@ msgstr ""
 msgid "Detailed curriculum vitae"
 msgstr ""
 
-msgid "Did you obtain a diploma at the end of this training?"
-msgstr ""
-
-msgid "Diploma equivalence"
+msgid "Did you graduate from this training?"
 msgstr ""
 
 msgid "Dissent from reference promoter"
@@ -982,9 +1014,6 @@ msgstr ""
 msgid "Edit the publication of this conference"
 msgstr ""
 
-msgid "Education"
-msgstr ""
-
 msgid "Education name"
 msgstr ""
 
@@ -1044,7 +1073,7 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
-msgid "Expected graduation date"
+msgid "Expected date of graduation (signed document)"
 msgstr ""
 
 msgid ""
@@ -1162,9 +1191,6 @@ msgid "Gender"
 msgstr ""
 
 msgid "General education"
-msgstr ""
-
-msgid "General information"
 msgstr ""
 
 msgid "German"
@@ -1481,9 +1507,6 @@ msgstr ""
 msgid "Institute address"
 msgstr ""
 
-msgid "Institute choice"
-msgstr ""
-
 msgid "Institute name"
 msgstr ""
 
@@ -1564,9 +1587,6 @@ msgid "Less than 65%"
 msgstr ""
 
 msgid "Linguistic regime"
-msgstr ""
-
-msgid "List of experiences"
 msgstr ""
 
 msgid "Listening comprehension"
@@ -1717,9 +1737,6 @@ msgstr ""
 msgid "No reference yet - Go to 'Training choice' tab"
 msgstr ""
 
-msgid "No result"
-msgstr ""
-
 msgid "No secondary studies provided."
 msgstr ""
 
@@ -1729,10 +1746,7 @@ msgstr ""
 msgid "Non-European credits"
 msgstr ""
 
-msgid "Non-academic activity"
-msgstr ""
-
-msgid "Non-academic background"
+msgid "Non-academic activities"
 msgstr ""
 
 msgid "None of these proposals are relevant to me"
@@ -1754,9 +1768,6 @@ msgid "Number of days participating"
 msgstr ""
 
 msgid "Obtained grade"
-msgstr ""
-
-msgid "Obtained results"
 msgstr ""
 
 msgid "Ongoing request"
@@ -1956,9 +1967,6 @@ msgid "Professional education + Maturity exam"
 msgstr ""
 
 msgid "Program"
-msgstr ""
-
-msgid "Program choice"
 msgstr ""
 
 msgid "Project resume"
@@ -2309,9 +2317,6 @@ msgstr ""
 msgid "Submit and notify the DDC"
 msgstr ""
 
-msgid "Submit my curriculum vitae"
-msgstr ""
-
 msgid "Submit my decision"
 msgstr ""
 
@@ -2558,6 +2563,10 @@ msgstr ""
 msgid "Transcript"
 msgstr ""
 
+msgctxt "cv-attachment"
+msgid "Transcript"
+msgstr ""
+
 msgid "Transcript translation"
 msgstr ""
 
@@ -2565,6 +2574,9 @@ msgid "Transcript type"
 msgstr ""
 
 msgid "Transition method"
+msgstr ""
+
+msgid "Translation"
 msgstr ""
 
 msgid "Translation of the transcript"
@@ -2608,6 +2620,12 @@ msgstr ""
 msgid "Unsubmitted"
 msgstr ""
 
+msgid "Update of a non-academic activity"
+msgstr ""
+
+msgid "Update of an academic activity"
+msgstr ""
+
 msgid "Update the experience"
 msgstr ""
 
@@ -2628,6 +2646,9 @@ msgstr ""
 
 msgid "WORK_CONTRACT"
 msgstr "Work contract"
+
+msgid "Waiting for a result"
+msgstr ""
 
 msgid "Website"
 msgstr ""
@@ -2754,11 +2775,6 @@ msgid ""
 "related to this program."
 msgstr ""
 
-msgid ""
-"You wish, on the basis of this training, to realize a cycle continuation for "
-"the bachelor you are registering for."
-msgstr ""
-
 msgid "Your data has been saved"
 msgstr ""
 
@@ -2817,9 +2833,6 @@ msgid "label is required"
 msgstr ""
 
 msgid "the person concerned"
-msgstr ""
-
-msgid "to"
 msgstr ""
 
 msgctxt "admission-date"

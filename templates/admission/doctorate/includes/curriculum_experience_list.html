@@ -39,12 +39,12 @@
     {% endblocktranslate %}
   </p>
 </div>
-<div class="panel panel-default">
+<div id="academic-activities" class="panel panel-default scroll-with-margin">
   <div class="panel-heading flex-container">
     <h4 class="panel-title">{% translate "Academic trainings" %}</h4>
     {% if with_editing_options %}
       <a
-          href="{{ curriculum_educational_create_url }}"
+          href="{{ curriculum_educational_create_url }}#curriculum-header"
           class="btn btn-primary"
           aria-label="{% trans "Add a new academic experience" %}"
           title="{% trans "Add a new academic experience" %}"
@@ -62,7 +62,7 @@
           <th style="width: 150px;">{% translate "Period" %}</th>
           <th>{% translate "Training" %}</th>
           <th>{% translate "Institute" %}</th>
-          <th style="width: 100px;">{% translate "Actions" %}</th>
+          <th class="action-container">{% translate "Actions" %}</th>
         </tr>
         </thead>
         <tbody>
@@ -78,33 +78,33 @@
           {% endif %}
           <tr>
             <td>
-              {% with educational_experience.educationalexperienceyear_set|length as nb_years %}
-                {% if nb_years > 0 %}
-                  {% if nb_years > 1 %}
-                    {% with educational_experience.educationalexperienceyear_set|last as last_experience %}
-                      {{ last_experience.academic_year|get_academic_year }}
-                    {% endwith %}
-                    {% translate 'to' context 'admission-date' %}
-                  {% endif %}
-                  {{ educational_experience.educationalexperienceyear_set.0.academic_year|get_academic_year }}
-                {% endif %}
-              {% endwith %}
+              {% for educational_experience_year in educational_experience.educationalexperienceyear_set %}
+                {{ educational_experience_year.academic_year|get_academic_year }}
+              {% endfor %}
             </td>
             <td><span>{{ educational_experience.education_name }}</span></td>
             <td><span>{{ educational_experience.institute_name }}</span></td>
-            <td>
-              <div class="btn-group" role="group">
-                {% if with_editing_options %}
-                  {% if educational_experience.valuated_from_admission %}
-                    <span
-                        class="glyphicon glyphicon-check btn btn-default disabled"
-                        title="{% trans "This experience has been valuated so cannot be updated." %}"
-                        aria-label="{% trans "This experience has been valuated so cannot be updated." %}"
-                    ></span>
-                  {% else %}
+            <td class="action-container">
+              <div class="btn-toolbar" role="group">
+                <a
+                    href="{{ experience_read_url }}"
+                    class="btn btn-info"
+                    aria-label="{% translate "See the experience details" %}"
+                    title="{% translate "See the experience details" %}"
+                >
+                  <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </a>
+                {% if educational_experience.valuated_from_admission %}
+                  <span
+                      class="glyphicon glyphicon-check btn btn-default disabled"
+                      title="{% trans "This experience has been valuated so cannot be updated." %}"
+                      aria-label="{% trans "This experience has been valuated so cannot be updated." %}"
+                  ></span>
+                {% else %}
+                  {% if with_editing_options %}
                     <a
-                        href="{{ experience_update_url }}"
-                        class="btn btn-default"
+                        href="{{ experience_update_url }}#curriculum-header"
+                        class="btn btn-info"
                         aria-label="{% translate "Update the experience" %}"
                         title="{% translate "Update the experience" %}"
                     >
@@ -116,18 +116,9 @@
                         aria-label="{% translate "Remove the experience" %}"
                         title="{% translate "Remove the experience" %}"
                     >
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                   {% endif %}
-                {% else %}
-                  <a
-                      href="{{ experience_read_url }}"
-                      class="btn btn-default"
-                      aria-label="{% translate "See the experience details" %}"
-                      title="{% translate "See the experience details" %}"
-                  >
-                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                  </a>
                 {% endif %}
               </div>
             </td>
@@ -142,12 +133,12 @@
   </div>
 </div>
 
-<div class="panel panel-default">
+<div id="non-academic-activities" class="panel panel-default scroll-with-margin">
   <div class="panel-heading flex-container">
-    <h4 class="panel-title">{% translate "Non-academic background" %}</h4>
+    <h4 class="panel-title">{% translate "Non-academic activities" %}</h4>
     {% if with_editing_options %}
       <a
-          href="{{ curriculum_professional_create_url }}"
+          href="{{ curriculum_professional_create_url }}#curriculum-header"
           class="btn btn-primary"
           aria-label="{% translate "Add a new non-academic experience" %}"
           title="{% translate "Add a new non-academic experience" %}"
@@ -164,7 +155,7 @@
         <tr>
           <th style="width: 150px;">{% translate "Period" %}</th>
           <th>{% translate "Activity type" %}</th>
-          <th style="width: 100px;">{% translate "Actions" %}</th>
+          <th class="action-container">{% translate "Actions" %}</th>
         </tr>
         </thead>
         <tbody>
@@ -180,7 +171,7 @@
           {% endif %}
           <tr>
             <td>
-              {% with start_date=professional_experience.start_date|date:"YEAR_MONTH_FORMAT" end_date=professional_experience.end_date|date:"YEAR_MONTH_FORMAT"  %}
+              {% with start_date=professional_experience.start_date|date:"YEAR_MONTH_FORMAT"|title end_date=professional_experience.end_date|date:"YEAR_MONTH_FORMAT"|title %}
                 {{ start_date }}
                 {% if start_date != end_date %}
                   {% translate 'to' context 'admission-date' %}
@@ -189,19 +180,27 @@
               {% endwith %}
             </td>
             <td><span>{{ professional_experience.type.value|enum_display:'ActivityType' }}</span></td>
-            <td>
-              <div class="btn-group" role="group">
-                {% if with_editing_options %}
-                  {% if professional_experience.valuated_from_admission %}
-                    <span
-                        class="glyphicon glyphicon-check btn btn-default disabled"
-                        title="{% trans "This experience has been valuated so cannot be updated." %}"
-                        aria-label="{% trans "This experience has been valuated so cannot be updated." %}"
-                    ></span>
-                  {% else %}
+            <td class="action-container">
+              <div class="btn-toolbar" role="group">
+                <a
+                    href="{{ experience_read_url }}"
+                    class="btn btn-info"
+                    aria-label="{% translate "See the experience details" %}"
+                    title="{% translate "See the experience details" %}"
+                >
+                  <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </a>
+                {% if professional_experience.valuated_from_admission %}
+                  <span
+                      class="glyphicon glyphicon-check btn btn-default disabled"
+                      title="{% trans "This experience has been valuated so cannot be updated." %}"
+                      aria-label="{% trans "This experience has been valuated so cannot be updated." %}"
+                  ></span>
+                {% else %}
+                  {% if with_editing_options %}
                     <a
-                        href="{{ experience_update_url }}"
-                        class="btn btn-default"
+                        href="{{ experience_update_url }}#curriculum-header"
+                        class="btn btn-info"
                         aria-label="{% translate "Update the experience" %}"
                         title="{% translate "Update the experience" %}"
                     >
@@ -213,18 +212,9 @@
                         aria-label="{% translate "Remove the experience" %}"
                         title="{% translate "Remove the experience" %}"
                     >
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                   {% endif %}
-                {% else %}
-                  <a
-                      href="{{ experience_read_url }}"
-                      class="btn btn-default"
-                      aria-label="{% translate "See the experience details" %}"
-                      title="{% translate "See the experience details" %}"
-                  >
-                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                  </a>
                 {% endif %}
               </div>
             </td>

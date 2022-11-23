@@ -202,6 +202,10 @@ select.select2-hidden-accessible + span {
   min-width: auto;
 }
 
+.select2-selection.select2-selection--single {
+  padding: 6px 12px;
+}
+
 .d-block {
   display: block;
 }
@@ -284,4 +288,12 @@ input:checked + .osis-slider:before {
 
 .debug-content {
   background-color: #ffb4ff78;
+}
+
+.scroll-with-margin {
+  scroll-margin-top: 65px; /* To scroll under the nav menu */
+}
+
+body, html {
+  scroll-behavior: smooth;
 }
