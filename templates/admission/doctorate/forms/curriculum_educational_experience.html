@@ -31,166 +31,152 @@
 
   {{ year_formset.management_form }}
 
+  {% if view.kwargs.experience_id %}
+    {% display _("Update of an academic activity") as header_title %}
+  {% else %}
+    {% display _("Creation of an academic activity") as header_title %}
+  {% endif %}
   <div class="panel panel-default">
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_update=True educational_tab=True %}
+    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_update=True educational_tab=True title=header_title %}
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4 required_field">
+          {% bootstrap_field base_form.start %}
+        </div>
+        <div id="end-date-select" class="col-md-4 required_field">
+          {% bootstrap_field base_form.end %}
+        </div>
+        <div class="col-md-4 required_field">
+          {% bootstrap_field base_form.country %}
+        </div>
+      </div>
+      <div class="row vertical-align">
+        <div class="col-md-8 required_field">
+          {% bootstrap_field base_form.institute placeholder="" %}
+        </div>
+        <div class="col-md-4">
+          {% bootstrap_field base_form.other_institute %}
+        </div>
+      </div>
+      <div id="other-institute" class="row">
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.institute_name placeholder="" %}
+        </div>
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.institute_address placeholder="" %}
+        </div>
+      </div>
+      <div id="belgian-program" class="row vertical-align">
+        <div class="col-md-8 required_field">
+          {% bootstrap_field base_form.program %}
+        </div>
+        <div class="col-md-4">
+          {% bootstrap_field base_form.other_program %}
+        </div>
+      </div>
+      <div id="other-program" class="row">
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.education_name placeholder="" %}
+        </div>
+      </div>
+      <div class="row foreign-field">
+        <div id="linguistic-regime" class="col-md-8 required_field">
+          {% bootstrap_field base_form.linguistic_regime %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.transcript_type %}
+        </div>
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.evaluation_type %}
+        </div>
+      </div>
+
+      <div id="global-transcript" class="flex-container align-top">
+        <div class="required_field flex-1">
+          {% bootstrap_field base_form.transcript %}
+        </div>
+        <div class="required_field translated-fields flex-1">
+          {% bootstrap_field base_form.transcript_translation %}
+        </div>
+      </div>
+
+      <table id="formset-container" class="table">
+        <caption class="required_text">{% translate "Results by year" %}</caption>
+        <thead>
+          <tr>
+            <th style="width: 140px;">
+              <span>{% translate 'Academic year' %}</span>
+              <a
+                  class="fa fa-info-circle popover-buttons"
+                  role="button"
+                  tabindex="0"
+                  data-content="{% blocktrans trimmed %}
+                If you have not attended your training for one or more years,
+                please indicate this by turning off the switch for those years.
+                {% endblocktrans %}"
+              >
+              </a>
+            </th>
+            <th class="required_text" style="width: 150px;">{% translate 'Registered credits' %}</th>
+            <th class="required_text" style="width: 150px;">{% translate 'Acquired credits' %}</th>
+            <th class="required_text">{% translate 'Result' %}</th>
+          </tr>
+        </thead>
+        {% for year_form in year_formset %}
+          {% include 'admission/doctorate/includes/curriculum_experience_year_form.html' with year_form=year_form next_year=year_form.academic_year.value|add:1  %}
+        {% endfor %}
+        <tfoot id="empty-formset" class="hidden">
+          <tr>
+            <td colspan="4">
+              <p>{% translate "No year has been added." %}</p>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="row">
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.obtained_diploma %}
+        </div>
+        <div id="obtained-grade" class="col-md-6 diploma-year-field">
+          {% bootstrap_field base_form.obtained_grade %}
+        </div>
+      </div>
+      <div class="row diploma-year-field">
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.rank_in_diploma %}
+        </div>
+        <div class="col-md-6 required_field">
+          {% bootstrap_field_with_tooltip base_form.expected_graduation_date %}
+        </div>
+      </div>
+
+      <div class="row diploma-year-field">
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.dissertation_title placeholder="" %}
+        </div>
+        <div class="col-md-6 required_field">
+          {% bootstrap_field base_form.dissertation_score %}
+        </div>
+      </div>
+      <div class="row diploma-year-field">
+        <div class="col-md-12 required_field">
+          {% bootstrap_field base_form.dissertation_summary %}
+        </div>
+      </div>
+
+      <div class="flex-container align-top diploma-year-field">
+        <div class="flex-1 required_field">
+          {% bootstrap_field base_form.graduate_degree %}
+        </div>
+        <div class="flex-1 required_field translated-fields">
+          {% bootstrap_field base_form.graduate_degree_translation %}
+        </div>
+      </div>
+    </div>
   </div>
-  {% panel _('General information') %}
-    <div class="row">
-      <div class="col-md-4 required_field">
-        {% bootstrap_field base_form.start %}
-      </div>
-      <div class="col-md-4 required_field">
-        {% bootstrap_field base_form.end %}
-      </div>
-      <div class="col-md-4 required_field">
-        {% bootstrap_field base_form.country %}
-      </div>
-    </div>
-  {% endpanel %}
-  {% panel _('Institute choice') %}
-    <div class="row vertical-align">
-      <div class="col-md-8 required_field">
-        {% bootstrap_field base_form.institute placeholder="" %}
-      </div>
-      <div class="col-md-4">
-        {% bootstrap_field base_form.other_institute %}
-      </div>
-    </div>
-    <div id="other-institute" class="row">
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.institute_name placeholder="" %}
-      </div>
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.institute_address placeholder="" %}
-      </div>
-    </div>
-  {% endpanel %}
-  {% panel _('Program choice') %}
-    <div id="belgian-program" class="row vertical-align">
-      <div class="col-md-8 required_field">
-        {% bootstrap_field base_form.program %}
-      </div>
-      <div class="col-md-4">
-        {% bootstrap_field base_form.other_program %}
-      </div>
-    </div>
-    <div id="other-program" class="row">
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.education_name placeholder="" %}
-      </div>
-    </div>
-    <div class="row foreign-field">
-      <div id="linguistic-regime" class="col-md-8 required_field">
-        {% bootstrap_field base_form.linguistic_regime %}
-      </div>
-    </div>
-  {% endpanel %}
-  {% panel _('Obtained results') %}
-
-    <div class="row">
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.transcript_type %}
-      </div>
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.evaluation_type %}
-      </div>
-    </div>
-
-    <div id="global-transcript" class="border-top flex-container align-top">
-      <div class="required_field flex-1">
-        {% bootstrap_field base_form.transcript %}
-      </div>
-      <div class="required_field translated-fields flex-1">
-        {% bootstrap_field base_form.transcript_translation %}
-      </div>
-    </div>
-
-    <table id="formset-container" class="table">
-      <caption class="required_text">{% translate "Results by year" %}</caption>
-      <thead>
-        <tr>
-          <th style="width: 140px;">
-            <span>{% translate 'Academic year' %}</span>
-            <a
-                class="fa fa-info-circle popover-buttons"
-                role="button"
-                tabindex="0"
-                data-content="{% blocktrans trimmed %}
-              If you have not attended your training for one or more years,
-              please indicate this by turning off the switch for those years.
-              {% endblocktrans %}"
-            >
-            </a>
-          </th>
-          <th class="required_text" style="width: 150px;">{% translate 'Registered credits' %}</th>
-          <th class="required_text" style="width: 150px;">{% translate 'Acquired credits' %}</th>
-          <th class="required_text">{% translate 'Result' %}</th>
-        </tr>
-      </thead>
-      {% for year_form in year_formset %}
-        {% include 'admission/doctorate/includes/curriculum_experience_year_form.html' with year_form=year_form next_year=year_form.academic_year.value|add:1  %}
-      {% endfor %}
-      <tfoot id="empty-formset" class="hidden">
-        <tr>
-          <td colspan="4">
-            <p>{% translate "No year has been added." %}</p>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-
-    <div class="row" id="bachelor-cycle-continuation">
-      <div class="col-md-12 required_field">
-        {% bootstrap_field base_form.bachelor_cycle_continuation %}
-      </div>
-    </div>
-
-    <div class="row border-top">
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.obtained_diploma %}
-      </div>
-      <div id="obtained-grade" class="col-md-6 diploma-year-field">
-        {% bootstrap_field base_form.obtained_grade %}
-      </div>
-    </div>
-    <div class="row diploma-year-field">
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.rank_in_diploma %}
-      </div>
-      <div class="col-md-6 required_field">
-        {% bootstrap_field_with_tooltip base_form.expected_graduation_date %}
-      </div>
-    </div>
-
-    <div class="row diploma-year-field border-top">
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.dissertation_title placeholder="" %}
-      </div>
-      <div class="col-md-6 required_field">
-        {% bootstrap_field base_form.dissertation_score %}
-      </div>
-    </div>
-    <div class="row diploma-year-field">
-      <div class="col-md-12 required_field">
-        {% bootstrap_field base_form.dissertation_summary %}
-      </div>
-    </div>
-
-    <div class="flex-container align-top diploma-year-field border-top">
-      <div class="flex-1 required_field">
-        {% bootstrap_field base_form.graduate_degree %}
-      </div>
-      <div class="flex-1 required_field translated-fields">
-        {% bootstrap_field base_form.graduate_degree_translation %}
-      </div>
-    </div>
-
-    <div class="row foreign-field">
-      <div class="col-md-12 required_field diploma-year-field">
-        {% bootstrap_field base_form.diploma_equivalence %}
-      </div>
-    </div>
-  {% endpanel %}
 {% endblock %}
 
 {% block extra_content %}
@@ -217,16 +203,18 @@
     .academic-year-container {
       border-right: 1px solid #ddd;
     }
-    #formset-container th, #formset-container td.academic-year-container {
+    #formset-container th, #formset-container td.academic-year-container, #formset-container td.non-active-year {
       vertical-align: middle !important;
       text-align: center;
     }
+    #formset-container p {
+      margin: 0;
+    }
+    #formset-container .switch {
+      margin-top: 5px;
+    }
     #formset-container .form-group {
       margin: 5px 0;
-    }
-    #formset-container .non-active-year p {
-      text-align: center;
-      margin: 0;
     }
     .credit-input input:disabled{
       color: transparent;
@@ -235,6 +223,12 @@
       font-style: italic;
       margin: 2em 0;
       text-align: center;
+    }
+    .fa-circle-xmark {
+      color: orange;
+    }
+    .fa-circle-check {
+      color: #30ab30;
     }
   </style>
 {% endblock %}
@@ -252,6 +246,9 @@
           const country = $('#id_base_form-country');
           const linguisticRegime = $('#id_base_form-linguistic_regime');
           const evaluationType = $('#id_base_form-evaluation_type');
+          let startYear = parseInt(startSelect.val());
+          let transcriptType;
+          let attachmentsToToggle;
 
           const is_truthy = val => !!val;
           const beIsoCode = '{{ BE_ISO_CODE }}';
@@ -274,13 +271,6 @@
               return countryData.length > 0 && countryData[0].european_union;
           }
 
-          const requiredField = {
-              toggleClass: 'required_field',
-              disable: false,
-              hide: false,
-              duration: 0,
-          };
-
           function manageTranslatedFields(countryValue, linguisticRegimeValue) {
               {# Display the translated fields for the foreign countries whose the linguistic regime is not managed #}
               const translatedFields = $('.translated-fields');
@@ -293,19 +283,6 @@
               } else {
                   translatedFields.addClass('hidden');
                   translatedFields.find('input').prop('disabled', true);
-              }
-          }
-
-          function manageBachelorCycleContinuation() {
-              {# Display the bachelor cycle continuation field if one year is successful #}
-              const bachelorCycleContinuationInput = $('#bachelor-cycle-continuation')
-
-              if ($('#formset-container .result:visible option[value="SUCCESS"]:selected').length > 0) {
-                  bachelorCycleContinuationInput.removeClass('hidden');
-                  bachelorCycleContinuationInput.find('select').prop('disabled', false);
-              } else {
-                  bachelorCycleContinuationInput.addClass('hidden');
-                  bachelorCycleContinuationInput.find('select').prop('disabled', true);
               }
           }
 
@@ -359,14 +336,14 @@
 
           {# Dynamically update the formset depending on the base form values #}
           $([startSelect[0], endSelect[0]]).change(function() {
-              const startYear = parseInt(startSelect.val());
+              startYear = parseInt(startSelect.val());
               const endYear = parseInt(endSelect.val());
               const nbYearsOfTheExperience = endYear - startYear + 1;
 
               const allYears = $('#formset-container > .year-form');
               const visibleYears = allYears.filter(':not(.hidden)');
 
-              {# Hide all the visible years if the number of year is invalid or is zero #}
+              {# Hide all the visible years if the number of years is invalid or is zero #}
               if (!(nbYearsOfTheExperience > 0)) {
                   visibleYears.addClass('hidden');
                   emptyFormSet.removeClass('hidden')
@@ -394,12 +371,17 @@
                   const yearsToHide = visibleYears.filter(function() { return !yearsToDisplay.has($(this).attr('id'))});
                   yearsToHide.addClass('hidden');
 
+                  {# Hide the switchs of the first and the last years #}
+                  $('.year-form .switch').removeClass('hidden');
+                  const switchToHide = $(`#year_form_${startYear} .switch, #year_form_${endYear} .switch`);
+                  switchToHide.addClass('hidden');
+                  switchToHide.find('input').prop('checked', true).change();
+
                   totalFormInput.val(nbYearsOfTheExperience);
               }
               {# Update fields depending on the fields of the year forms #}
               const countryValue = country.val();
               if (countryValue === beIsoCode) manageCreditsFields(evaluationType.val(), countryValue);
-              manageBachelorCycleContinuation();
           });
 
           endSelect.change();
@@ -462,22 +444,25 @@
 
           {# Transcript fields #}
           $('#id_base_form-transcript_type').change(function() {
+              transcriptType = this.value;
               const globalTranscript = $('#global-transcript');
               const annualTranscripts = $('.annual-transcript');
+              const annualTranscriptsButtons = $('.result button');
 
-              if (this.value === 'ONE_FOR_ALL_YEARS') {
+              if (transcriptType === 'ONE_FOR_ALL_YEARS') {
                   globalTranscript.filter('input').prop('disabled', false);
                   globalTranscript.removeClass('hidden');
               } else {
                   globalTranscript.filter('input').prop('disabled', true);
                   globalTranscript.addClass('hidden');
               }
-              if (this.value === 'ONE_A_YEAR') {
+              if (transcriptType === 'ONE_A_YEAR') {
                   annualTranscripts.filter('input').prop('disabled', false);
-                  annualTranscripts.removeClass('hidden');
+                  annualTranscriptsButtons.removeClass('hidden');
               } else {
                   annualTranscripts.filter('input').prop('disabled', true);
                   annualTranscripts.addClass('hidden');
+                  annualTranscriptsButtons.addClass('hidden');
               }
           }).change();
 
@@ -495,7 +480,6 @@
                   activeElts.addClass('hidden');
                   nonActiveElts.removeClass('hidden');
               }
-              manageBachelorCycleContinuation();
           }).change();
 
           {# Graduate fields #}
@@ -503,13 +487,72 @@
               'input[name=base_form-obtained_diploma]': { values: ['True'] },
           });
 
-          {#  Display the bachelor cycle continuation field depending on results #}
-          $('#formset-container').on('change', '.result select', function(event) {
-              manageBachelorCycleContinuation();
-          }).change();
+          {# Display the options of the end date depending on the start date #}
+          function formatState (result) {
+              return result.id && parseInt(result.id) >= startYear ? result.text : null;
+          }
 
-          document.dispatchEvent(new Event('refreshFormInitial'));
+          $('#id_base_form-end').select2({
+            templateResult: formatState,
+          });
+
+          {# Show the annual attachments if the related button is clicked #}
+          $('#formset-container').on('click', '.result button', function(event) {
+            const tbodyContainer = $(event.target).closest('tbody');
+
+            const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
+
+            {# Hide the attachments for the other years #}
+            if (attachmentsToToggle && !attachmentsToToggle.is(newAttachmentsToToggle)) {
+                attachmentsToToggle.addClass('hidden');
+            }
+
+            newAttachmentsToToggle.toggleClass('hidden');
+
+            attachmentsToToggle = newAttachmentsToToggle;
+          });
+
+        {# Display a badge specifying if the transcript and its translation have been uploaded #}
+        function displayBadgesAccordingToSubmittedTranscripts(event, badgeSelector) {
+          const tbodyContainer = $(event.target).closest('tbody');
+          const transcriptBadge = tbodyContainer.find(badgeSelector);
+          if (Object.keys(event.originalEvent.detail.newTokens).length === 0) {
+            transcriptBadge.addClass('fa-circle-xmark').removeClass('fa-circle-check');
+          } else {
+            transcriptBadge.addClass('fa-circle-check').removeClass('fa-circle-xmark');
+          }
+        }
+
+      $('#formset-container').on('osisdocument:add osisdocument:delete', '.annual-transcript-file .osis-document-uploader', function(event) {
+          displayBadgesAccordingToSubmittedTranscripts(event, '.transcript-badge > span');
       });
+
+      $('#formset-container').on('osisdocument:add osisdocument:delete', '.annual-transcript-translation-file .osis-document-uploader', function(event) {
+          displayBadgesAccordingToSubmittedTranscripts(event, '.translation-badge > span');
+      });
+
+      {# Display the right badges at page initialization #}
+      const allYears = $('#formset-container > .year-form');
+
+      allYears.each(function() {
+          const hasTranslationFile = $(this).find('.annual-transcript-translation-file input[type=hidden]').length > 0;
+          const hasTranscriptFile = $(this).find('.annual-transcript-file input[type=hidden]').length > 0;
+
+          if (hasTranslationFile) {
+            const translationBadge = $(this).find('.translation-badge > span');
+            translationBadge.addClass('fa-circle-check');
+            translationBadge.removeClass('fa-circle-xmark');
+          }
+
+          if (hasTranscriptFile) {
+            const transcriptBadge = $(this).find('.transcript-badge > span');
+            transcriptBadge.addClass('fa-circle-check');
+            transcriptBadge.removeClass('fa-circle-xmark');
+          }
+      });
+
+      document.dispatchEvent(new Event('refreshFormInitial'));
+    });
   </script>
   {{ block.super }}
 {% endblock %}

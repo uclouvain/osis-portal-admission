@@ -28,184 +28,154 @@
 
 {% block tab_content %}
   <div class="panel panel-default">
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True %}
-  </div>
-
-  {% panel _('Institute') %}
-    <div class="row">
-      <div class="col-md-6">
-        {% field_data _("Institute name") experience.institute_name %}
-      </div>
-      <div class="col-md-6">
-        {% field_data _("Institute address") experience.institute_address hide_empty=True %}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        {% get_country_name experience.country as experience_country %}
-        {% field_data _("Country") experience_country %}
-      </div>
-    </div>
-  {% endpanel %}
-
-  {% panel _('Education') %}
-    <div class="row">
-      <div class="col-md-6">
-        {% field_data _("Education name") experience.education_name %}
-      </div>
-      <div class="col-md-6">
-        {% field_data _('Study system') experience.study_system.value|enum_display:'TeachingTypeEnum' %}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        {% field_data _("Linguistic regime") experience.linguistic_regime_name hide_empty=True %}
-      </div>
-    </div>
-
-    {% if experience.bachelor_cycle_continuation %}
-      <div class="row">
-        <div class="col-md-12">
-          <p>
-            {% translate 'You wish, on the basis of this training, to realize a cycle continuation for the bachelor you are registering for.' %}
-          </p>
-        </div>
-      </div>
-    {% endif %}
-  {% endpanel %}
-
-  {% panel _('Obtained results') %}
-    <div class="row">
-      <div class="col-md-6">
-        {% field_data _("Transcript type") experience.transcript_type.value|enum_display:'TranscriptType' %}
-      </div>
-      <div class="col-md-6">
-        {% field_data _("Evaluation type") experience.evaluation_type.value|enum_display:'EvaluationSystem' %}
-      </div>
-    </div>
-
-    {% if experience.transcript_type.value == 'ONE_FOR_ALL_YEARS' %}
-      <div class="row border-top">
-        <div class="col-md-6">
-          {% field_data _("Transcript") experience.transcript %}
-        </div>
-        <div class="col-md-6">
-          {% field_data _("Translation of the transcript") experience.transcript_translation hide_empty=True %}
-        </div>
-      </div>
-    {% endif %}
-
-    <div id="table-container">
-      <table class="table table-bordered">
-        <caption>{% translate "Results by year" %}</caption>
-        <thead>
-          <tr>
-            <th>{% translate 'Academic year' %}</th>
-            {% if experience.evaluation_system_with_credits %}
-              <th>{% translate 'Registered credits' %}</th>
-              <th>{% translate 'Acquired credits' %}</th>
-            {% endif %}
-            <th>{% translate 'Result' %}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for experience_year in experience_years %}
-            {% if experience_year.result %}
-              <tr>
-                <td class="academic-year-container" {% if experience.transcript_type.value == 'ONE_A_YEAR' %}rowspan="2"{% endif %}>
-                  {{ experience_year.academic_year|get_academic_year }}
-                </td>
-                {% if experience.evaluation_system_with_credits %}
-                  <td>
-                    {{ experience_year.registered_credit_number }}
-                  </td>
-                  <td>
-                    {{ experience_year.acquired_credit_number }}
-                  </td>
-                {% endif %}
-                <td>
-                  {{ experience_year.result.value|enum_display:'Result' }}
-                </td>
-              </tr>
-              {% if experience.transcript_type.value == 'ONE_A_YEAR' %}
-                <tr>
-                  <td colspan="3">
-                    <div class="row">
-                      <div class="col-md-6">
-                        {% field_data _('Transcript') experience_year.transcript %}
-                      </div>
-                      {% if experience_year.transcript_translation %}
-                        <div class="col-md-6">
-                          {% field_data _('Transcript translation') experience_year.transcript_translation %}
-                        </div>
-                      {% endif %}
-                    </div>
-                  </td>
-                </tr>
-              {% endif %}
-            {% else %}
-              <tr>
-                <td class="academic-year-container">{{ experience_year.academic_year|get_academic_year }}</td>
-                <td {% if experience.evaluation_system_with_credits %}colspan="3"{% endif %}>
-                  {% translate 'Year without registration for the training.' %}
-                </td>
-              </tr>
-            {% endif %}
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
-    <div class="border-top">
+    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True title=_("Consultation of an academic activity") %}
+    <div class="panel-body">
       <div class="row">
         <div class="col-md-6">
-          {% field_data _('Did you obtain a diploma at the end of this training?') experience.obtained_diploma|yesno:_("Yes,No,") %}
+          {% field_data _("Institute name") experience.institute_name %}
         </div>
-      {% if not experience.obtained_diploma %}
-      </div>
-      {% else %}
         <div class="col-md-6">
-          {% field_data _('Obtained grade') experience.obtained_grade.value|enum_display:'Grade' %}
+          {% field_data _("Institute address") experience.institute_address hide_empty=True %}
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-6">
+          {% get_country_name experience.country as experience_country %}
+          {% field_data _("Country") experience_country %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          {% field_data _("Education name") experience.education_name %}
+        </div>
+        <div class="col-md-6">
+          {% field_data _('Study system') experience.study_system.value|enum_display:'TeachingTypeEnum' hide_empty=True %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          {% field_data _("Linguistic regime") experience.linguistic_regime_name hide_empty=True %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          {% field_data _("Transcript type") experience.transcript_type.value|enum_display:'TranscriptType' %}
+        </div>
+        <div class="col-md-6">
+          {% field_data _("Evaluation type") experience.evaluation_type.value|enum_display:'EvaluationSystem' %}
+        </div>
+      </div>
+
+      {% if experience.transcript_type.value == 'ONE_FOR_ALL_YEARS' %}
         <div class="row">
           <div class="col-md-6">
-            {% field_data _('Rank in diploma') experience.rank_in_diploma %}
+            {% field_data _("Transcript") experience.transcript %}
           </div>
           <div class="col-md-6">
-            {% field_data _('Expected graduation date') experience.expected_graduation_date|date:"DATE_FORMAT" %}
-          </div>
-        </div>
-        <div class="row border-top">
-          <div class="col-md-6">
-            {% field_data _('Title of the dissertation') experience.dissertation_title %}
-          </div>
-          <div class="col-md-6">
-            {% field_data _('Dissertation score') experience.dissertation_score %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            {% field_data _('Dissertation summary') experience.dissertation_summary %}
-          </div>
-        </div>
-        <div class="row border-top">
-          <div class="col-md-6">
-            {% field_data _('Graduate degree') experience.graduate_degree %}
-          </div>
-          <div class="col-md-6">
-            {% field_data _('Graduate degree translation') experience.graduate_degree_translation hide_empty=True %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            {% field_data _('Diploma equivalence') experience.diploma_equivalence hide_empty=True %}
+            {% field_data _("Translation of the transcript") experience.transcript_translation hide_empty=True %}
           </div>
         </div>
       {% endif %}
-    </div>
-  {% endpanel %}
 
+      <div id="table-container">
+        <table class="table table-bordered">
+          <caption>{% translate "Results by year" %}</caption>
+          <thead>
+            <tr>
+              <th>{% translate 'Academic year' %}</th>
+              {% if experience.evaluation_system_with_credits %}
+                <th>{% translate 'Registered credits' %}</th>
+                <th>{% translate 'Acquired credits' %}</th>
+              {% endif %}
+              <th>{% translate 'Result' %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for experience_year in experience_years %}
+              {% if experience_year.result %}
+                <tr>
+                  <td class="academic-year-container" {% if experience.transcript_type.value == 'ONE_A_YEAR' %}rowspan="2"{% endif %}>
+                    {{ experience_year.academic_year|get_academic_year }}
+                  </td>
+                  {% if experience.evaluation_system_with_credits %}
+                    <td>
+                      {{ experience_year.registered_credit_number }}
+                    </td>
+                    <td>
+                      {{ experience_year.acquired_credit_number }}
+                    </td>
+                  {% endif %}
+                  <td>
+                    {{ experience_year.result.value|enum_display:'Result' }}
+                  </td>
+                </tr>
+                {% if experience.transcript_type.value == 'ONE_A_YEAR' %}
+                  <tr>
+                    <td colspan="3">
+                      <div class="flex-container">
+                        {% field_data _('Transcript') experience_year.transcript %}
+                        {% if experience_year.transcript_translation %}
+                          {% field_data _('Transcript translation') experience_year.transcript_translation %}
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                {% endif %}
+              {% else %}
+                <tr>
+                  <td class="academic-year-container">{{ experience_year.academic_year|get_academic_year }}</td>
+                  <td {% if experience.evaluation_system_with_credits %}colspan="3"{% endif %}>
+                    {% translate 'Year without registration for the training.' %}
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          {% field_data _('Did you graduate from this training?') experience.obtained_diploma|yesno:_("Yes,No,") %}
+        </div>
+        {% if not experience.obtained_diploma %}
+          </div>
+        {% else %}
+          <div class="col-md-6">
+            {% field_data _('Obtained grade') experience.obtained_grade.value|enum_display:'Grade' %}
+          </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              {% field_data _('Rank in diploma') experience.rank_in_diploma %}
+            </div>
+            <div class="col-md-6">
+              {% field_data _('Expected date of graduation (signed document)') experience.expected_graduation_date|date:"DATE_FORMAT" %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              {% field_data _('Title of the dissertation') experience.dissertation_title html_tag="blockquote" %}
+            </div>
+            <div class="col-md-6">
+              {% field_data _('Dissertation score') experience.dissertation_score %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              {% field_data _('Dissertation summary') experience.dissertation_summary %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              {% field_data _('Graduate degree') experience.graduate_degree %}
+            </div>
+            <div class="col-md-6">
+              {% field_data _('Graduate degree translation') experience.graduate_degree_translation hide_empty=True %}
+            </div>
+          </div>
+        {% endif %}
+    </div>
+  </div>
 {% endblock %}
 
 {% block style %}

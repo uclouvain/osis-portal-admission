@@ -34,6 +34,7 @@ from admission.contrib.enums import (
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
+from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from base.tests.factories.person import PersonFactory
 from osis_admission_sdk.model.campus import Campus
@@ -203,6 +204,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'intitule': 'Formation',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR1',
+                'type': TrainingType.MASTER_M1.name,
             },
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
@@ -239,6 +241,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'intitule': 'Formation',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR2',
+                'type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
             },
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
@@ -258,6 +261,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'intitule': 'Formation',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR3',
+                'type': TrainingType.PHD.name,
             },
             code_secteur_formation="SSH",
             documents_projet=[],
@@ -313,6 +317,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 links=[],
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle='FOOBARBAZ',
@@ -320,6 +325,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle='BARBAZ',
@@ -327,6 +333,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle=SCIENCE_DOCTORATE,
@@ -334,6 +341,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
+                type=TrainingType.PHD.name,
             ),
         ]
 
@@ -343,12 +351,14 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 intitule='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
+                type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
                 intitule='Barbaz',
                 annee=2021,
                 campus="Mons",
+                type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
             ),
         ]
 
@@ -358,12 +368,14 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 intitule='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
+                type=TrainingType.MASTER_M1.name,
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
                 intitule='Barbaz',
                 annee=2021,
                 campus="Mons",
+                type=TrainingType.MASTER_M1.name,
             ),
         ]
 

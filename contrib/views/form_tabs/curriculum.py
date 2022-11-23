@@ -59,11 +59,14 @@ from admission.contrib.forms.curriculum import (
     DoctorateAdmissionCurriculumEducationalExperienceForm,
     DoctorateAdmissionCurriculumEducationalExperienceYearFormSet,
     MINIMUM_CREDIT_NUMBER,
+    GeneralAdmissionCurriculumFileForm,
+    ContinuingAdmissionCurriculumFileForm,
 )
 from admission.contrib.views.detail_tabs.curriculum import (
     AdmissionCurriculumMixin,
     get_educational_experience_year_set_with_lost_years,
     AdmissionCurriculumDetailView,
+    initialize_field_texts,
 )
 from admission.contrib.views.mixins import (
     LoadDossierViewMixin,
@@ -110,15 +113,7 @@ class AdmissionCurriculumFormView(
     AdmissionCurriculumDetailView,
     AdmissionCurriculumFormMixin,
 ):  # pylint: disable=too-many-ancestors
-    form_class = DoctorateAdmissionCurriculumFileForm
-    template_name = 'admission/doctorate/forms/curriculum.html'
     tab_of_specific_questions = Onglets.CURRICULUM.name
-
-    def get_initial(self):
-        return {
-            'specific_question_answers': self.admission.reponses_questions_specifiques if self.admission_uuid else {},
-            'curriculum': self.curriculum.file.get('curriculum'),
-        }
 
     def call_webservice(self, data):
         self.service.update_curriculum(
@@ -127,12 +122,21 @@ class AdmissionCurriculumFormView(
             uuid=self.admission_uuid,
         )
 
+    def get_initial(self):
+        return self.admission.to_dict()
+
+    def prepare_data(self, data):
+        data['uuid_proposition'] = self.admission_uuid
+        return data
+
 
 class DoctorateAdmissionCurriculumFormView(
     LoadDossierViewMixin,
     AdmissionCurriculumFormView,
 ):  # pylint: disable=too-many-ancestors
     service = AdmissionPersonService
+    form_class = DoctorateAdmissionCurriculumFileForm
+    template_name = 'admission/doctorate/forms/curriculum.html'
 
 
 class GeneralEducationAdmissionCurriculumFormView(
@@ -140,6 +144,20 @@ class GeneralEducationAdmissionCurriculumFormView(
     AdmissionCurriculumFormView,
 ):  # pylint: disable=too-many-ancestors
     service = GeneralEducationAdmissionPersonService
+    form_class = GeneralAdmissionCurriculumFileForm
+    template_name = 'admission/admission/general_education/forms/curriculum.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['training_acronym'] = self.admission.formation['sigle']
+        kwargs['training_type'] = self.admission.formation['type']
+        kwargs['has_foreign_diploma'] = any(
+            experience.country != BE_ISO_CODE for experience in self.curriculum.educational_experiences
+        )
+        kwargs['has_belgian_diploma'] = any(
+            experience.country == BE_ISO_CODE for experience in self.curriculum.educational_experiences
+        )
+        return kwargs
 
 
 class ContinuingEducationAdmissionCurriculumFormView(
@@ -147,6 +165,16 @@ class ContinuingEducationAdmissionCurriculumFormView(
     AdmissionCurriculumFormView,
 ):  # pylint: disable=too-many-ancestors
     service = ContinuingEducationAdmissionPersonService
+    form_class = ContinuingAdmissionCurriculumFileForm
+    template_name = 'admission/admission/continuing_education/forms/curriculum.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['training_type'] = self.admission.formation['type']
+        kwargs['has_foreign_diploma'] = any(
+            experience.country != BE_ISO_CODE for experience in self.curriculum.educational_experiences
+        )
+        return kwargs
 
 
 class AdmissionCurriculumProfessionalExperienceFormView(
@@ -229,6 +257,12 @@ class AdmissionCurriculumProfessionalExperienceDeleteView(
             uuid=self.admission_uuid,
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        initialize_field_texts(self.request.user.person, [self.professional_experience])
+        context['experience'] = self.professional_experience
+        return context
+
 
 class DoctorateAdmissionCurriculumProfessionalExperienceDeleteView(
     LoadDossierViewMixin,
@@ -267,6 +301,12 @@ class AdmissionCurriculumEducationalExperienceDeleteView(
             person=self.person,
             uuid=self.admission_uuid,
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        initialize_field_texts(self.request.user.person, [self.educational_experience])
+        context['experience'] = self.educational_experience
+        return context
 
 
 class DoctorateAdmissionCurriculumEducationalExperienceDeleteView(
@@ -372,7 +412,6 @@ class AdmissionCurriculumEducationalExperienceFormView(
         base_form.is_valid()
         year_formset.is_valid()
 
-        at_least_one_successful_year = False
         last_enrolled_year = None
 
         country = base_form.cleaned_data.get('country')
@@ -394,9 +433,6 @@ class AdmissionCurriculumEducationalExperienceFormView(
                 if not last_enrolled_year:
                     last_enrolled_year = form.cleaned_data.get('academic_year')
 
-                if form.cleaned_data.get('result') == Result.SUCCESS.name:
-                    at_least_one_successful_year = True
-
                 self.clean_experience_year_form(
                     be_country,
                     credits_are_required,
@@ -404,13 +440,6 @@ class AdmissionCurriculumEducationalExperienceFormView(
                     transcript_is_required,
                     transcript_translation_is_required,
                 )
-
-        # The bachelor cycle continuation field is required if at least one year is successful
-        if at_least_one_successful_year:
-            if base_form.cleaned_data.get('bachelor_cycle_continuation') is None:
-                base_form.add_error('bachelor_cycle_continuation', FIELD_REQUIRED_MESSAGE)
-        else:
-            base_form.cleaned_data['bachelor_cycle_continuation'] = None
 
         if not last_enrolled_year:
             base_form.add_error(None, _('At least one academic year is required.'))

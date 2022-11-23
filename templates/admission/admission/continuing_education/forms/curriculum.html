@@ -1,5 +1,6 @@
 {% extends "admission/admission/forms/curriculum.html" %}
 {% load bootstrap3 %}
 {% block attachments_fields %}
-  {% bootstrap_field form.curriculum form_group_class="form_group required_field" %}
+  {% bootstrap_field form.equivalence_diplome %}
+  {% bootstrap_field form.curriculum %}
 {% endblock %}

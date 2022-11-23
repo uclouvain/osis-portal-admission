@@ -30,6 +30,7 @@ from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 
 from admission.contrib.enums.scholarship import TypeBourse
+from admission.contrib.enums.training_choice import TrainingType
 from admission.utils import *
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
@@ -122,6 +123,7 @@ class UtilsTestCase(TestCase):
             campus='Mons',
             intitule='Certificat en informatique',
             annee=2020,
+            type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
         )
         self.assertEqual(format_training(formation), 'Certificat en informatique (Mons) - INFO-1')
 
@@ -131,6 +133,7 @@ class UtilsTestCase(TestCase):
             campus='Mons',
             intitule='Master en informatique',
             annee=2020,
+            type=TrainingType.MASTER_M1.name,
         )
         self.assertEqual(format_training(formation), 'Master en informatique (Mons) - INFO-1')
 
@@ -141,6 +144,7 @@ class UtilsTestCase(TestCase):
             annee=2021,
             sigle_entite_gestion="CDE",
             campus="Mons",
+            type=TrainingType.PHD.name,
         )
         self.assertEqual(format_training_with_year(formation), '2021 - Foobar (Mons) - FOOBAR')
 

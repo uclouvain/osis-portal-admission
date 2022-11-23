@@ -1,0 +1,53 @@
+{% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
+{% load bootstrap3 i18n static admission %}
+
+{% block tab_content %}
+  <!-- List of experiences -->
+  {% include 'admission/doctorate/includes/curriculum_experience_list.html' with minimal_year=minimal_year professional_experiences=professional_experiences educational_experiences=educational_experiences proposition_id=view.kwargs.pk with_editing_options=True %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% bootstrap_form_errors form %}
+
+    {% panel _('Attachments') %}
+      {% block attachments_fields %}
+      {% endblock %}
+    {% endpanel %}
+
+    {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
+
+    <button
+        type="submit"
+        class="btn btn-primary pull-right"
+    >
+      {% translate "Save" %}
+    </button>
+  </form>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {{ form.media }}
+
+  <script type="application/javascript">
+      $(function () {
+          document.dispatchEvent(new Event('refreshFormInitial'));
+      });
+  </script>
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    td {
+      vertical-align : middle !important;
+    }
+    .action-container {
+      text-align: right;
+    }
+    .action-container > div {
+      display: inline-block;
+    }
+  </style>
+{% endblock %}

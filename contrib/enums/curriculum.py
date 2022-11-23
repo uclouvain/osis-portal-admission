@@ -38,7 +38,7 @@ class Result(ChoiceEnum):
     SUCCESS = _("Success")
     SUCCESS_WITH_RESIDUAL_CREDITS = _('Success with residual credits')
     FAILURE = _('Failure')
-    NO_RESULT = _('No result')
+    WAITING_RESULT = _('Waiting for a result')
 
 
 class Grade(ChoiceEnum):

@@ -1,4 +1,4 @@
-{% load i18n admission %}
+{% load i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -24,51 +24,6 @@
   * at the root of the source code of this program.  If not,
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-{% if admission %}
-  {% if educational_tab %}
-    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from_admission %}
-      {% if not on_update %}
-        {% url base_namespace|add:':update:curriculum:educational_update' view.kwargs.pk view.kwargs.experience_id as experience_update_url %}
-      {% endif %}
-      {% if not on_delete %}
-        {% url base_namespace|add:':update:curriculum:educational_delete' view.kwargs.pk view.kwargs.experience_id as experience_delete_url %}
-      {% endif %}
-    {% endif %}
-    {% if not on_reading and admission|can_make_action:'retrieve_curriculum' %}
-      {% url base_namespace|add:':curriculum:educational_read' view.kwargs.pk view.kwargs.experience_id as experience_read_url %}
-    {% endif %}
-  {% else %}
-    {% if admission|can_make_action:'update_curriculum' and not experience.valuated_from_admission %}
-      {% if not on_update %}
-        {% url base_namespace|add:':update:curriculum:professional_update' view.kwargs.pk view.kwargs.experience_id as experience_update_url %}
-      {% endif %}
-      {% if not on_delete %}
-        {% url base_namespace|add:':update:curriculum:professional_delete' view.kwargs.pk view.kwargs.experience_id as experience_delete_url %}
-      {% endif %}
-    {% endif %}
-    {% if not on_reading and admission|can_make_action:'retrieve_curriculum' %}
-      {% url base_namespace|add:':curriculum:professional_read' view.kwargs.pk view.kwargs.experience_id as experience_read_url %}
-    {% endif %}
-  {% endif %}
-{% elif not experience.valuated_from_admission %}
-  {% if educational_tab %}
-    {% if not on_update %}
-      {% url 'admission:create:curriculum:educational_update' view.kwargs.experience_id as experience_update_url %}
-    {% endif %}
-    {% if not on_delete %}
-      {% url 'admission:create:curriculum:educational_delete' view.kwargs.experience_id as experience_delete_url %}
-    {% endif %}
-  {% else %}
-    {% if not on_update %}
-      {% url 'admission:create:curriculum:professional_update' view.kwargs.experience_id as experience_update_url %}
-    {% endif %}
-    {% if not on_delete %}
-      {% url 'admission:create:curriculum:professional_delete' view.kwargs.experience_id as experience_delete_url %}
-    {% endif %}
-  {% endif %}
-{% endif %}
-
 {% if not admission %}
   {% url 'admission:create:curriculum' as experience_list %}
 {% elif on_reading %}
@@ -76,60 +31,10 @@
 {% else %}
   {% url base_namespace|add:':update:curriculum' view.kwargs.pk as experience_list %}
 {% endif %}
-
-<div class="panel-heading flex-container">
-  <ol class="breadcrumb no-margin no-padding">
-    <li>
-      <a href="{{ experience_list }}">
-        {% translate "List of experiences" %}
-      </a>
-    </li>
-    <li>
-      {% if educational_tab %}
-        {% translate "Academic training" %}
-      {% else %}
-        {% translate "Non-academic activity" %}
-      {% endif %}
-    </li>
-  </ol>
-
-  <div class="btn-group" role="group">
-    {% if experience_read_url %}
-      <a
-          href="{{ experience_read_url }}"
-          class="btn btn-default"
-          aria-label="{% translate "See the experience details" %}"
-          title="{% translate "See the experience details" %}"
-      >
-        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-      </a>
-    {% endif %}
-    {% if experience_update_url %}
-      <a
-          href="{{ experience_update_url }}"
-          class="btn btn-default"
-          aria-label="{% translate "Update the experience" %}"
-          title="{% translate "Update the experience" %}"
-      >
-        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-      </a>
-    {% endif %}
-    {% if experience_delete_url %}
-      <a
-          href="{{ experience_delete_url }}"
-          class="btn btn-danger"
-          aria-label="{% translate "Remove the experience" %}"
-          title="{% translate "Remove the experience" %}"
-      >
-        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-      </a>
-    {% endif %}
-    {% if experience.valuated_from_admission %}
-      <span
-          class="glyphicon glyphicon-check"
-          title="{% trans "This experience has been valuated so cannot be updated." %}"
-          aria-label="{% trans "This experience has been valuated so cannot be updated." %}"
-      ></span>
-    {% endif %}
-  </div>
+<div id="curriculum-header" class="panel-heading flex-container scroll-with-margin">
+  <span>{{ title }}</span>
+  <a href="{{ experience_list }}#{% if educational_tab %}academic-activities{% else %}non-academic-activities{% endif %}">
+    <i class="fa fa-stream"></i>
+    {% translate "Back to the list" %}
+  </a>
 </div>

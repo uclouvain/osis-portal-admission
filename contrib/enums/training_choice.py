@@ -49,34 +49,68 @@ TYPES_FORMATION_GENERALE = {
     TypeFormation.CERTIFICAT.name,
 }
 
+
+class TrainingType(ChoiceEnum):
+    AGGREGATION = "Aggregation"
+    CERTIFICATE_OF_PARTICIPATION = "Certificate of participation"
+    CERTIFICATE_OF_SUCCESS = "Certificate of success"
+    CERTIFICATE_OF_HOLDING_CREDITS = "Certificate of holding credits"
+    BACHELOR = "Bachelor"
+    CERTIFICATE = "Certificate"
+    CAPAES = "CAPAES"
+    RESEARCH_CERTIFICATE = "Research certificate"
+    UNIVERSITY_FIRST_CYCLE_CERTIFICATE = "University first cycle certificate"
+    UNIVERSITY_SECOND_CYCLE_CERTIFICATE = "University second cycle certificate"
+    ACCESS_CONTEST = "Access contest"
+    LANGUAGE_CLASS = "Language classes"
+    ISOLATED_CLASS = "Isolated classes"
+    PHD = "Ph.D"
+    FORMATION_PHD = "Formation PhD"
+    JUNIOR_YEAR = "Junior year"
+    PGRM_MASTER_120 = "Program master 120"
+    MASTER_MA_120 = "Master MA 120"
+    MASTER_MD_120 = "Master MD 120"
+    MASTER_MS_120 = "Master MS 120"
+    PGRM_MASTER_180_240 = "Program master 180-240"
+    MASTER_MA_180_240 = "Master MA 180-240"
+    MASTER_MD_180_240 = "Master MD 180-240"
+    MASTER_MS_180_240 = "Master MS 180-240"
+    MASTER_M1 = "Master in 60 credits"
+    MASTER_MC = "Master of specialist"
+    INTERNSHIP = "Internship"
+
+
+VETERINARY_BACHELOR_CODE = 'VETE1BA'
+
+
 OSIS_ADMISSION_EDUCATION_TYPES_MAPPING = {
     TypeFormation.BACHELIER.name: [
-        'BACHELOR',
+        TrainingType.BACHELOR.name,
     ],
     TypeFormation.MASTER.name: [
-        'MASTER_MA_120',
-        'MASTER_MD_120',
-        'MASTER_MS_120',
-        'MASTER_MS_180_240',
-        'MASTER_M1',
-        'MASTER_MC',
+        TrainingType.MASTER_MA_120.name,
+        TrainingType.MASTER_MD_120.name,
+        TrainingType.MASTER_MS_120.name,
+        TrainingType.MASTER_MS_180_240.name,
+        TrainingType.MASTER_M1.name,
+        TrainingType.MASTER_MC.name,
     ],
     TypeFormation.DOCTORAT.name: [
-        'PHD',
+        TrainingType.PHD.name,
     ],
     TypeFormation.AGREGATION_CAPES.name: [
-        'AGGREGATION',
-        'CAPAES',
+        TrainingType.AGGREGATION.name,
+        TrainingType.CAPAES.name,
     ],
     TypeFormation.FORMATION_CONTINUE.name: [
-        'CERTIFICATE_OF_PARTICIPATION',
-        'CERTIFICATE_OF_SUCCESS',
-        'UNIVERSITY_FIRST_CYCLE_CERTIFICATE',
-        'UNIVERSITY_SECOND_CYCLE_CERTIFICATE',
+        TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+        TrainingType.CERTIFICATE_OF_SUCCESS.name,
+        TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name,
+        TrainingType.UNIVERSITY_SECOND_CYCLE_CERTIFICATE.name,
     ],
     TypeFormation.CERTIFICAT.name: [
-        'CERTIFICATE',
-        'RESEARCH_CERTIFICATE',
+        TrainingType.CERTIFICATE.name,
+        TrainingType.RESEARCH_CERTIFICATE.name,
     ],
 }
 

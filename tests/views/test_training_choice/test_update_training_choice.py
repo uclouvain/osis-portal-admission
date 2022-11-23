@@ -31,7 +31,7 @@ from rest_framework import status
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import AdmissionType
-from admission.contrib.enums.training_choice import TypeFormation
+from admission.contrib.enums.training_choice import TypeFormation, TrainingType
 from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.views.test_training_choice import AdmissionTrainingChoiceFormViewTestCase
 

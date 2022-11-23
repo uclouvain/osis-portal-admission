@@ -197,9 +197,6 @@ msgstr "Absence de dettes"
 msgid "Academic graduation year"
 msgstr "Année d'obtention du diplôme universitaire"
 
-msgid "Academic training"
-msgstr "Formation académique"
-
 msgid "Academic trainings"
 msgstr "Formations académiques"
 
@@ -382,13 +379,22 @@ msgstr "Êtes-vous sûr de vouloir supprimer \"%(object)s\" ?"
 
 #, python-format
 msgid ""
+"Are you sure you want to delete the activity \"%(type)s\" that took place "
+"from %(start)s to %(end)s?"
+msgstr ""
+"Êtes-vous sûr de vouloir supprimer l'activité \"%(type)s\"ayant eu lieu de "
+"%(start)s à %(end)s ?"
+
+#, python-format
+msgid "Are you sure you want to delete the training \"%(name)s\"?"
+msgstr "Êtes-vous sûr de vouloir supprimer la formation \"%(name)s\" ?"
+
+#, python-format
+msgid ""
 "Are you sure you want to remove %(first_name)s %(last_name)s as %(role)s?"
 msgstr ""
 "Êtes-vous sûr de vouloir supprimer %(first_name)s %(last_name)s en tant que "
 "%(role)s ?"
-
-msgid "Are you sure you want to remove this experience?"
-msgstr "Êtes-vous sûr de vouloir supprimer cette expérience ?"
 
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr "Êtes-vous sûr de vouloir requérir les signatures pour cette demande ?"
@@ -464,6 +470,9 @@ msgstr "Bachelier"
 
 msgid "Back to requests"
 msgstr "Retour aux demandes"
+
+msgid "Back to the list"
+msgstr "Retour à la liste"
 
 msgid "Bank account"
 msgstr "Compte bancaire"
@@ -551,6 +560,11 @@ msgstr "Annuler"
 
 msgid "Certificate"
 msgstr "Certificat"
+
+msgid ""
+"Certificate allowing the continuation of studies for a bachelor's degree in "
+"veterinary medicine"
+msgstr "Attestation autorisant à poursuivre les études de bachelier en médecine vétérinaire"
 
 msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
@@ -664,6 +678,12 @@ msgstr "Confirmation"
 
 msgid "Confirmation paper"
 msgstr "Épreuve de confirmation"
+
+msgid "Consultation of a non-academic activity"
+msgstr "Consultation d'une activité non-académique"
+
+msgid "Consultation of an academic activity"
+msgstr "Consultation d'une activité académique"
 
 msgid "Contact"
 msgstr "Contact"
@@ -887,6 +907,12 @@ msgctxt "an admission"
 msgid "Created at:"
 msgstr "Créée le :"
 
+msgid "Creation of a non-academic activity"
+msgstr "Création d'une activité non-académique"
+
+msgid "Creation of an academic activity"
+msgstr "Création d'une activité académique"
+
 msgid "Curriculum"
 msgstr "Curriculum"
 
@@ -920,6 +946,13 @@ msgstr "Date limite pour la confirmation"
 msgid "Decision"
 msgstr "Décision"
 
+msgid ""
+"Decision of equivalence for your diploma(s) giving access to the training, "
+"if this(these) has(have) been obtained outside Belgium"
+msgstr ""
+"Décision d'équivalence pour votre/vos diplôme(s) donnant accès à la formation, "
+"dans le cas où celui(ceux)-ci aurai(en)t été obtenu(s) ailleurs qu'en Belgique"
+
 msgid "Defense date"
 msgstr "Date de soutenance"
 
@@ -928,6 +961,12 @@ msgstr "Date de l'admission définitive"
 
 msgid "Delete"
 msgstr "Supprimer"
+
+msgid "Deletion of a non-academic activity"
+msgstr "Suppression d'une activité non-académique"
+
+msgid "Deletion of an academic activity"
+msgstr "Suppression d'une activité académique"
 
 msgid ""
 "Depending on your previous experience and your research project, a "
@@ -956,11 +995,8 @@ msgstr "Détaillez ici les raisons justifiant une admission provisoire."
 msgid "Detailed curriculum vitae"
 msgstr "Curriculum vitae détaillé"
 
-msgid "Did you obtain a diploma at the end of this training?"
-msgstr "Avez-vous obtenu un diplôme au terme de cette formation ?"
-
-msgid "Diploma equivalence"
-msgstr "Équivalence du diplôme"
+msgid "Did you graduate from this training?"
+msgstr "Avez-vous été diplômé au terme de cette formation ?"
 
 msgid "Dissent from reference promoter"
 msgstr "Avis négatif du promoteur de référence"
@@ -988,7 +1024,7 @@ msgid ""
 "Do you want, on the basis of this training, to realize a cycle continuation "
 "for the bachelor you are registering for?"
 msgstr ""
-"Demandez-vous, sur base de cette formation, de réaliser une poursuite de "
+"Demandez-vous, sur base de cette formation, à réaliser une poursuite de "
 "cycle pour le bachelier auquel vous vous inscrivez ?"
 
 msgid ""
@@ -1086,9 +1122,6 @@ msgstr "Modifier la communication de ce séminaire"
 msgid "Edit the publication of this conference"
 msgstr "Modifier la publication de cette conférence"
 
-msgid "Education"
-msgstr "Formation"
-
 msgid "Education name"
 msgstr "Intitulé de la formation"
 
@@ -1152,8 +1185,8 @@ msgstr "Site web de l'événement"
 msgid "Exit"
 msgstr "Quitter"
 
-msgid "Expected graduation date"
-msgstr "Date (prévue) de délivrance du diplôme"
+msgid "Expected date of graduation (signed document)"
+msgstr "Date (prévue) de délivrance du diplôme (document signé)"
 
 msgid ""
 "Extract from the Doctoral Regulations (Article 2.1):<br /> \"Pre-admission "
@@ -1277,9 +1310,6 @@ msgstr "Genre"
 msgid "General education"
 msgstr "Formation générale"
 
-msgid "General information"
-msgstr "Informations générales"
-
 msgid "German"
 msgstr "Allemand"
 
@@ -1294,10 +1324,10 @@ msgid "Give assent/dissent"
 msgstr "Donner son avis"
 
 msgid "Graduate degree"
-msgstr "Diplôme d'études supérieures"
+msgstr "Diplôme"
 
 msgid "Graduate degree translation"
-msgstr "Traduction du diplôme d'études supérieures"
+msgstr "Traduction du diplôme"
 
 msgid "Great distinction"
 msgstr "Grande distinction"
@@ -1686,9 +1716,6 @@ msgstr "Établissement"
 msgid "Institute address"
 msgstr "Adresse de l'établissement"
 
-msgid "Institute choice"
-msgstr "Choix de l'établissement"
-
 msgid "Institute name"
 msgstr "Nom de l'établissement"
 
@@ -1773,9 +1800,6 @@ msgstr "Moins de 65%"
 
 msgid "Linguistic regime"
 msgstr "Régime linguistique"
-
-msgid "List of experiences"
-msgstr "Liste des expériences"
 
 msgid "Listening comprehension"
 msgstr "Compréhension à l'audition"
@@ -1928,9 +1952,6 @@ msgstr "Aucun invité"
 msgid "No reference yet - Go to 'Training choice' tab"
 msgstr "Pas de reference pour le moment - Voir l'onglet 'Choix de formation'"
 
-msgid "No result"
-msgstr "Pas de résultat"
-
 msgid "No secondary studies provided."
 msgstr "Pas d'études secondaires renseignées."
 
@@ -1940,11 +1961,8 @@ msgstr "Aucune année n'a encore été ajoutée"
 msgid "Non-European credits"
 msgstr "Crédits non-européens"
 
-msgid "Non-academic activity"
-msgstr "Activité non-académique"
-
-msgid "Non-academic background"
-msgstr "Parcours non académique"
+msgid "Non-academic activities"
+msgstr "Activités non-académiques"
 
 msgid "None of these proposals are relevant to me"
 msgstr "Aucune de ces propositions ne me correspond"
@@ -1966,9 +1984,6 @@ msgstr "Nombre de jours de participation"
 
 msgid "Obtained grade"
 msgstr "Grade obtenu"
-
-msgid "Obtained results"
-msgstr "Résultats obtenus"
 
 msgid "Ongoing request"
 msgstr "En cours de demande"
@@ -2179,9 +2194,6 @@ msgstr "Enseignement professionnel + Examen de maturité"
 
 msgid "Program"
 msgstr "Formation"
-
-msgid "Program choice"
-msgstr "Choix de la formation"
 
 msgid "Project resume"
 msgstr "Résumé"
@@ -2536,9 +2548,6 @@ msgstr "Soumettre"
 msgid "Submit and notify the DDC"
 msgstr "Soumettre et avertir la CDD"
 
-msgid "Submit my curriculum vitae"
-msgstr "Soumettre mon curriculum vitae"
-
 msgid "Submit my decision"
 msgstr "Soumettre ma décision"
 
@@ -2837,6 +2846,10 @@ msgstr "Type de formation"
 msgid "Transcript"
 msgstr "Relevé de notes"
 
+msgctxt "cv-attachment"
+msgid "Transcript"
+msgstr "Relevé"
+
 msgid "Transcript translation"
 msgstr "Traduction du relevé de notes"
 
@@ -2845,6 +2858,9 @@ msgstr "Type de relevé de notes"
 
 msgid "Transition method"
 msgstr "Technique de transition"
+
+msgid "Translation"
+msgstr "Traduction"
 
 msgid "Translation of the transcript"
 msgstr "Traduction du relevé"
@@ -2889,6 +2905,12 @@ msgstr "Date de naissance exacte inconnue"
 msgid "Unsubmitted"
 msgstr "Non soumis"
 
+msgid "Update of a non-academic activity"
+msgstr "Modification d'une activité non-académique"
+
+msgid "Update of an academic activity"
+msgstr "Modification d'une activité académique"
+
 msgid "Update the experience"
 msgstr "Mettre à jour l'expérience"
 
@@ -2909,6 +2931,9 @@ msgstr "WBI - Wallonie Bruxelles International"
 
 msgid "WORK_CONTRACT"
 msgstr "Contrat de travail"
+
+msgid "Waiting for a result"
+msgstr "En attente de résultat"
 
 msgid "Website"
 msgstr "Site web"
@@ -3061,13 +3086,6 @@ msgstr ""
 "Vous recevrez une newsletter mensuelle comprenant tous les avantages et "
 "activités liés à ce programme."
 
-msgid ""
-"You wish, on the basis of this training, to realize a cycle continuation for "
-"the bachelor you are registering for."
-msgstr ""
-"Vous désirez, sur base de cette formation, réaliser une poursuite de cycle "
-"pour le bachelier auquel vous vous inscrivez."
-
 msgid "Your data has been saved"
 msgstr "Vos données ont été enregistrées"
 
@@ -3131,9 +3149,6 @@ msgstr "un label est requis"
 
 msgid "the person concerned"
 msgstr "la personne concernée"
-
-msgid "to"
-msgstr "à"
 
 msgctxt "admission-date"
 msgid "to"

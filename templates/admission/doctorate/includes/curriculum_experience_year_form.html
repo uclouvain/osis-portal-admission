@@ -40,20 +40,33 @@
     <td class="active-year required_field credit-input {% if not year_form.is_enrolled.value %}hidden{% endif %}">
       {% bootstrap_field year_form.acquired_credit_number show_label=False placeholder='' %}
     </td>
-    <td class="active-year required_field result {% if not year_form.is_enrolled.value %}hidden{% endif %}">
-      {% bootstrap_field year_form.result show_label=False %}
+    <td class="active-year required_field result flex-container {% if not year_form.is_enrolled.value %}hidden{% endif %}">
+      {% bootstrap_field year_form.result show_label=False form_group_class="form-group flex-1" %}
+      <button class="btn btn-primary" type="button">
+        {% translate "Transcript" context "cv-attachment" %}
+        <span class="text-invalid transcript-badge">
+          <span class="fa-solid fa-circle-xmark"></span>
+        </span>
+        <span class="translated-fields">
+          {% translate "Translation" %}
+          <span class="text-invalid translation-badge">
+            <span class="fa-solid fa-circle-xmark"></span>
+          </span>
+        </span>
+        <span class="caret"></span>
+      </button>
     </td>
     <td colspan="3" class="non-active-year {% if year_form.is_enrolled.value %}hidden{% endif %}">
       <p>{% translate "Year without registration for the training." %}</p>
     </td>
   </tr>
   <tr class="active-year {% if not year_form.is_enrolled.value %}hidden{% endif %}">
-    <td class="annual-transcript" colspan="3">
+    <td class="annual-transcript hidden" colspan="3">
       <div class="flex-container align-top">
-        <div class="required_field flex-1">
+        <div class="annual-transcript-file required_field flex-1">
           {% bootstrap_field year_form.transcript %}
         </div>
-        <div class="required_field translated-fields flex-1">
+        <div class="annual-transcript-translation-file required_field translated-fields flex-1">
           {% bootstrap_field year_form.transcript_translation %}
         </div>
       </div>

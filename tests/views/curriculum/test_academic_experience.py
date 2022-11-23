@@ -177,8 +177,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'base_form-dissertation_title': 'The new title',
             'base_form-dissertation_score': 'A',
             'base_form-dissertation_summary_0': ['f3.pdf'],
-            'base_form-bachelor_cycle_continuation': False,
-            'base_form-diploma_equivalence_0': ['f4.pdf'],
             'year_formset-2018-is_enrolled': True,
             'year_formset-2018-academic_year': '2018',
             'year_formset-2018-result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
@@ -190,7 +188,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'year_formset-2019-academic_year': '2019',
             'year_formset-2019-acquired_credit_number': 100,
             'year_formset-2019-registered_credit_number': 150,
-            'year_formset-2019-result': Result.NO_RESULT.name,
+            'year_formset-2019-result': Result.WAITING_RESULT.name,
             'year_formset-2019-transcript_0': ['f1_2019.pdf'],
             'year_formset-2019-transcript_translation_0': ['f11_2019.pdf'],
             'year_formset-2020-is_enrolled': True,
@@ -248,8 +246,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'graduate_degree_translation': ['f11.pdf'],
                 'transcript': ['f2.pdf'],
                 'transcript_translation': ['f22.pdf'],
-                'bachelor_cycle_continuation': True,
-                'diploma_equivalence': ['f3.pdf'],
                 'rank_in_diploma': '10 on 100',
                 'expected_graduation_date': datetime.date(2022, 8, 30),
                 'dissertation_title': 'Title',
@@ -546,33 +542,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         ]:
             self.assertFormsetError(response, 'year_formset', 0, field, errors=FIELD_REQUIRED_MESSAGE)
 
-    def test_with_admission_on_update_experience_post_form_missing_bachelor_cycle_continuation_for_enrolled_year(self):
-        response = self.client.post(
-            self.admission_update_url,
-            data={
-                'base_form-start': '2020',
-                'base_form-end': '2020',
-                'base_form-country': self.not_ue_country.iso_code,
-                'base_form-evaluation_type': EvaluationSystem.NON_EUROPEAN_CREDITS.name,
-                'base_form-transcript_type': TranscriptType.ONE_A_YEAR.name,
-                'base_form-linguistic_regime': self.language_with_translation.code,
-                'year_formset-2020-is_enrolled': True,
-                'year_formset-2020-result': Result.SUCCESS.name,
-                'year_formset-2020-academic_year': '2020',
-                'year_formset-TOTAL_FORMS': '1',
-                'year_formset-INITIAL_FORMS': '0',
-            },
-        )
-
-        # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
-
-        # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
-
-        # Check the context data
-        self.assertFormError(response, 'base_form', 'bachelor_cycle_continuation', FIELD_REQUIRED_MESSAGE)
-
     def test_with_admission_on_update_experience_post_form_for_be_country_invalid_credits_for_required_years(self):
         response = self.client.post(
             self.admission_update_url,
@@ -674,8 +643,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': 'The new title',
                 'dissertation_score': 'A',
                 'dissertation_summary': ['f3.pdf'],
-                'bachelor_cycle_continuation': False,
-                'diploma_equivalence': [],
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
@@ -741,8 +708,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': 'The new title',
                 'dissertation_score': 'A',
                 'dissertation_summary': ['f3.pdf'],
-                'bachelor_cycle_continuation': False,
-                'diploma_equivalence': [],
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
@@ -775,8 +740,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'base_form-transcript_type': TranscriptType.ONE_A_YEAR.name,
                 'base_form-evaluation_type': EvaluationSystem.NO_CREDIT_SYSTEM.name,
                 'year_formset-2018-result': Result.FAILURE.name,
-                'year_formset-2019-result': Result.NO_RESULT.name,
-                'year_formset-2020-result': Result.NO_RESULT.name,
+                'year_formset-2019-result': Result.WAITING_RESULT.name,
+                'year_formset-2020-result': Result.WAITING_RESULT.name,
             },
         )
 
@@ -813,12 +778,10 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': '',
                 'dissertation_score': '',
                 'dissertation_summary': [],
-                'bachelor_cycle_continuation': None,
-                'diploma_equivalence': [],
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
-                        'result': Result.NO_RESULT.name,
+                        'result': Result.WAITING_RESULT.name,
                         'registered_credit_number': None,
                         'acquired_credit_number': None,
                         'transcript': ['f1_2020.pdf'],
@@ -848,8 +811,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'base_form-transcript_type': TranscriptType.ONE_A_YEAR.name,
                 'base_form-evaluation_type': EvaluationSystem.NO_CREDIT_SYSTEM.name,
                 'year_formset-2018-result': Result.FAILURE.name,
-                'year_formset-2019-result': Result.NO_RESULT.name,
-                'year_formset-2020-result': Result.NO_RESULT.name,
+                'year_formset-2019-result': Result.WAITING_RESULT.name,
+                'year_formset-2020-result': Result.WAITING_RESULT.name,
             },
         )
 
@@ -886,12 +849,10 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': '',
                 'dissertation_score': '',
                 'dissertation_summary': [],
-                'bachelor_cycle_continuation': None,
-                'diploma_equivalence': [],
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
-                        'result': Result.NO_RESULT.name,
+                        'result': Result.WAITING_RESULT.name,
                         'registered_credit_number': None,
                         'acquired_credit_number': None,
                         'transcript': ['f1_2020.pdf'],
@@ -951,8 +912,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': 'The new title',
                 'dissertation_score': 'A',
                 'dissertation_summary': ['f3.pdf'],
-                'bachelor_cycle_continuation': False,
-                'diploma_equivalence': ['f4.pdf'],
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
