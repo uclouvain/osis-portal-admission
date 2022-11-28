@@ -105,38 +105,38 @@ class Tab:
 
 TAB_TREES = {
     'create': {
-        Tab('personal', _('Personal data'), 'user'): [
+        Tab('personal', _('Personal data'), 'id-card'): [
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('experience', _('Previous experience'), 'list-alt'): [
+        Tab('training', _('Training choice'), 'person-chalkboard'): [
+            Tab('training-choice', _('Training choice')),
+        ],
+        Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
             Tab('languages', _('Languages knowledge')),
-        ],
-        Tab('training', _('Training choice'), 'graduation-cap'): [
-            Tab('training-choice', _('Training choice')),
         ],
     },
     'doctorate': {
-        Tab('personal', _('Personal data'), 'user'): [
+        Tab('personal', _('Personal data'), 'id-card'): [
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('experience', _('Previous experience'), 'list-alt'): [
-            Tab('education', _('Secondary studies')),
+        Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('curriculum', _('Curriculum')),
             Tab('languages', _('Languages knowledge')),
         ],
-        Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'graduation-cap'): [
+        Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'person-chalkboard'): [
+            Tab('training-choice', _('Training choice')),
             Tab('project', pgettext('tab name', 'Research project')),
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Supervision')),
         ],
         # TODO specifics
-        Tab('completion', _('Completion'), 'flag'): [
+        Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('accounting', _('Accounting')),
-            Tab('confirm', _('Confirmation')),
+            Tab('confirm-submit', _('Confirmation and submission')),
         ],
         Tab('confirmation-paper', _('Confirmation'), 'list-check'): [
             Tab('confirmation-paper', _('Confirmation paper')),
@@ -156,35 +156,41 @@ TAB_TREES = {
         # TODO documents
     },
     'general-education': {
-        Tab('personal', _('Personal data'), 'user'): [
+        Tab('personal', _('Personal data'), 'id-card'): [
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('general-education', _('General education'), 'graduation-cap'): [
+        Tab('general-education', _('General education'), 'person-chalkboard'): [
             Tab('training-choice', _('Training choice')),
         ],
-        Tab('experience', _('Previous experience'), 'list-alt'): [
+        Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('specific-questions', _('Specific questions')),
+        ],
+        Tab('confirm-submit', _('Completion'), 'flag'): [
+            Tab('confirm-submit', _('Confirmation and submission')),
         ],
     },
     'continuing-education': {
-        Tab('personal', _('Personal data'), 'user'): [
+        Tab('personal', _('Personal data'), 'id-card'): [
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('continuing-education', _('Continuing education'), 'graduation-cap'): [
+        Tab('continuing-education', _('Continuing education'), 'person-chalkboard'): [
             Tab('training-choice', _('Training choice')),
         ],
-        Tab('experience', _('Previous experience'), 'list-alt'): [
+        Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('specific-questions', _('Specific questions')),
+        ],
+        Tab('confirm-submit', _('Completion'), 'flag'): [
+            Tab('confirm-submit', _('Confirmation and submission')),
         ],
     },
 }
