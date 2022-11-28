@@ -71,7 +71,7 @@ from .detail_tabs.supervision import (
     DoctorateAdmissionSupervisionDetailView,
 )
 from .form_tabs.accounting import DoctorateAdmissionAccountingFormView
-from .form_tabs.confirm import DoctorateAdmissionConfirmFormView
+from .form_tabs.confirm_submit import *
 from .form_tabs.confirmation_paper import DoctorateAdmissionConfirmationPaperFormView
 from .form_tabs.coordonnees import (
     DoctorateAdmissionCoordonneesFormView,
