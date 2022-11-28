@@ -45,6 +45,7 @@ __all__ = [
     "AdmissionPropositionService",
     "AdmissionCotutelleService",
     "AdmissionSupervisionService",
+    "TAB_OF_BUSINESS_EXCEPTION",
 ]
 
 
@@ -190,6 +191,34 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def verify_general_proposition(cls, person: Person, uuid):
+        return APIClient().verify_general_education_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def submit_general_proposition(cls, person: Person, uuid):
+        return APIClient().submit_general_education_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def verify_continuing_proposition(cls, person: Person, uuid):
+        return APIClient().verify_continuing_education_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def submit_continuing_proposition(cls, person: Person, uuid):
+        return APIClient().submit_continuing_education_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def retrieve_accounting_conditions(cls, person: Person, uuid: str) -> AccountingConditions:
         return APIClient().retrieve_accounting(
             uuid=uuid,
@@ -299,10 +328,23 @@ class PropositionBusinessException(Enum):
 
 class GlobalPropositionBusinessException(Enum):
     BourseNonTrouveeException = "ADMISSION-1"
+    ConditionsAccessNonRempliesException = "ADMISSION-2"
     QuestionsSpecifiquesChoixFormationNonCompleteesException = "ADMISSION-3"
     QuestionsSpecifiquesCurriculumNonCompleteesException = "ADMISSION-4"
     QuestionsSpecifiquesEtudesSecondairesNonCompleteesException = "ADMISSION-5"
     QuestionsSpecifiquesInformationsComplementairesNonCompleteesException = "ADMISSION-6"
+    FormationNonTrouveeException = "ADMISSION-7"
+    ReorientationInscriptionExterneNonConfirmeeException = "ADMISSION-8"
+    ModificationInscriptionExterneNonConfirmeeException = "ADMISSION-9"
+    PoolNonResidentContingenteNonOuvertException = "ADMISSION-10"
+    ResidenceAuSensDuDecretNonRenseigneeException = "ADMISSION-11"
+    AucunPoolCorrespondantException = "ADMISSION-12"
+
+
+class FormationGeneraleBusinessException(Enum):
+    FormationNonTrouveeException = "FORMATION-GENERALE-1"
+    PropositionNonTrouveeException = "FORMATION-GENERALE-2"
+    EtudesSecondairesNonCompleteesException = "FORMATION-GENERALE-3"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -322,6 +364,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     },
     'education': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesEtudesSecondairesNonCompleteesException,
+        FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesException,
     },
     'curriculum': {
         PropositionBusinessException.FichierCurriculumNonRenseigneException,
@@ -336,6 +379,8 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     },
     'training-choice': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesChoixFormationNonCompleteesException,
+        GlobalPropositionBusinessException.BourseNonTrouveeException,
+        GlobalPropositionBusinessException.FormationNonTrouveeException,
     },
     'cotutelle': {
         PropositionBusinessException.CotutelleNonCompleteException,
@@ -345,10 +390,16 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
         PropositionBusinessException.PropositionNonApprouveeParMembresCAException,
     },
-    'confirm': set(),
+    'confirm-submit': {
+        GlobalPropositionBusinessException.ConditionsAccessNonRempliesException,
+        GlobalPropositionBusinessException.PoolNonResidentContingenteNonOuvertException,
+        GlobalPropositionBusinessException.AucunPoolCorrespondantException,
+    },
     'confirmation-paper': set(),
     'extension-request': set(),
-    'training': set(),
+    'doctoral-training': set(),
+    'complementary-training': set(),
+    'course-enrollment': set(),
     'accounting': {
         PropositionBusinessException.AbsenceDeDetteNonCompleteeException,
         PropositionBusinessException.ReductionDesDroitsInscriptionNonCompleteeException,
@@ -357,8 +408,11 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.CarteBancaireRemboursementIbanNonCompleteException,
         PropositionBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteException,
     },
-    'specific_question': {
+    'specific-questions': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesInformationsComplementairesNonCompleteesException,
+        GlobalPropositionBusinessException.ReorientationInscriptionExterneNonConfirmeeException,
+        GlobalPropositionBusinessException.ModificationInscriptionExterneNonConfirmeeException,
+        GlobalPropositionBusinessException.ResidenceAuSensDuDecretNonRenseigneeException,
     },
 }
 

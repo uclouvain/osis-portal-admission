@@ -41,7 +41,7 @@ READ_ACTIONS_BY_TAB = {
     # Accounting
     'accounting': 'retrieve_accounting',
     # Confirmation
-    'confirm': 'submit_proposition',
+    'confirm-submit': 'submit_proposition',
     # Confirmation paper
     'confirmation-paper': 'retrieve_confirmation',
     'extension-request': 'update_confirmation_extension',
@@ -74,7 +74,7 @@ UPDATE_ACTIONS_BY_TAB = {
     # Accounting
     'accounting': 'update_accounting',
     # Confirmation
-    'confirm': 'submit_proposition',
+    'confirm-submit': 'submit_proposition',
     # Confirmation paper
     'confirmation-paper': 'update_confirmation',
     'extension-request': 'update_confirmation_extension',

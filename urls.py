@@ -241,7 +241,7 @@ doctorate_paths = [
     path('approve-by-pdf', views.DoctorateAdmissionApprovalByPdfView.as_view(), name='approve-by-pdf'),
     path("update/", include((doctorate_update_paths, "update"))),
     path("cancel", views.DoctorateAdmissionCancelView.as_view(), name="cancel"),
-    path("confirm", views.DoctorateAdmissionConfirmFormView.as_view(), name="confirm"),
+    path("confirm-submit", views.DoctorateAdmissionConfirmFormView.as_view(), name="confirm-submit"),
     path("accounting", views.DoctorateAdmissionAccountingDetailView.as_view(), name="accounting"),
     path("confirmation", views.DoctorateAdmissionConfirmationPaperDetailView.as_view(), name="confirmation-paper"),
     path(
@@ -278,6 +278,7 @@ general_education_paths = [
     path("education", views.GeneralEducationAdmissionEducationDetailView.as_view(), name="education"),
     path("training-choice", views.GeneralEducationTrainingChoiceDetailView.as_view(), name="training-choice"),
     path("specific-questions", views.GeneralEducationSpecificQuestionDetailView.as_view(), name="specific-questions"),
+    path("confirm-submit", views.GeneralAdmissionConfirmFormView.as_view(), name="confirm-submit"),
     path("cancel", views.GeneralEducationAdmissionCancelView.as_view(), name="cancel"),
     path("update/", include((update_general_education_paths, "update"))),
 ]
@@ -302,6 +303,7 @@ continuing_education_paths = [
     path(
         "specific-questions", views.ContinuingEducationSpecificQuestionDetailView.as_view(), name="specific-questions"
     ),
+    path("confirm-submit", views.ContinuingAdmissionConfirmFormView.as_view(), name="confirm-submit"),
     path("cancel", views.ContinuingEducationAdmissionCancelView.as_view(), name="cancel"),
     path("update/", include((update_continuing_education_paths, "update"))),
 ]
