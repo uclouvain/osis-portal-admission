@@ -192,7 +192,9 @@ class EducationTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_high_school_diploma.assert_called()
         sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
-        self.assertEqual(sent, {})
+        self.assertEqual(sent, {
+            'specific_question_answers': {},
+        })
 
     def test_form_belgian(self):
         response = self.client.post(
@@ -685,6 +687,7 @@ class EducationTestCase(TestCase):
                 "high_school_diploma_alternative": {
                     "first_cycle_admission_exam": ["test"],
                 },
+                "specific_question_answers": {},
             },
         )
 
