@@ -306,14 +306,17 @@ class AdmissionEducationFormView(
         got_diploma = data.pop("got_diploma")
 
         if got_diploma == "":
-            return {}
+            return {
+                'specific_question_answers': data.get('specific_question_answers'),
+            }
 
         first_cycle_admission_exam = data.pop("first_cycle_admission_exam", [])
         if got_diploma == GotDiploma.NO.name:
             return {
                 'high_school_diploma_alternative': {
                     'first_cycle_admission_exam': first_cycle_admission_exam,
-                }
+                },
+                'specific_question_answers': data.get('specific_question_answers'),
             }
 
         if got_diploma == GotDiploma.THIS_YEAR.name:
