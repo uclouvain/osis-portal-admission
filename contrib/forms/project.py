@@ -50,8 +50,6 @@ from admission.contrib.forms import (
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
 
-from osis_admission_sdk.model.scholarship import Scholarship
-
 SCIENCE_DOCTORATE = 'SC3DP'
 
 COMMISSION_CDSS = 'CDSS'
@@ -301,67 +299,3 @@ class DoctorateAdmissionProjectForm(forms.Form):
         return next(  # pragma: no branch
             d for d in doctorats if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
         )
-
-
-class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
-    sector = forms.CharField(
-        label=_("Sector"),
-        widget=autocomplete.Select2(),
-    )
-    doctorate = forms.CharField(
-        label=_("Doctorate"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:doctorate", forward=['sector']),
-    )
-
-    def __init__(self, person=None, *args, **kwargs):
-        self.person = person
-        super().__init__(hide_proximity_commission_fields=False, *args, **kwargs)
-        self.fields['sector'].widget.choices = [('', '-')] + [
-            (sector.sigle, f"{sector.sigle} - {sector.intitule}")
-            for sector in AdmissionAutocompleteService.get_sectors(person)
-        ]
-
-        # If we have a POST value, set the doctorate
-        data = kwargs.get('data', None)
-        self.doctorate_data = {}
-        if data and data.get('doctorate'):
-            # Populate doctorate choices
-            doctorate = self.get_selected_doctorate(data.get('sector'), data.get('doctorate'))
-            self.fields['doctorate'].widget.choices = [
-                (
-                    "{doctorat.sigle}-{doctorat.annee}".format(doctorat=doctorate),
-                    "{sigle} - {intitule}".format(
-                        sigle=doctorate.sigle,
-                        intitule=doctorate.intitule,
-                    ),
-                )
-            ]
-            # This is used in the template to make proximity commission field appear
-            self.doctorate_data = dict(
-                id="{result.sigle}-{result.annee}".format(result=doctorate),
-                sigle=doctorate.sigle,
-                sigle_entite_gestion=doctorate.sigle_entite_gestion,
-            )
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        if (
-            # Commission CDE/CLSM is required but not set
-            self.doctorate_data.get('sigle_entite_gestion') in COMMISSIONS_CDE_CLSM
-            and not cleaned_data.get('commission_proximite_cde')
-        ):
-            self.add_error('commission_proximite_cde', _("This field is required."))
-
-        if (
-            # Commission CDSS is required but not set
-            self.doctorate_data.get('sigle_entite_gestion') == COMMISSION_CDSS
-            and not cleaned_data.get('commission_proximite_cdss')
-        ):
-            self.add_error('commission_proximite_cdss', _("This field is required."))
-
-        # Science doctorate but no subdomain set
-        if self.doctorate_data.get('sigle') == SCIENCE_DOCTORATE and not cleaned_data.get('sous_domaine'):
-            self.add_error('sous_domaine', _("This field is required."))
-
-        return cleaned_data
