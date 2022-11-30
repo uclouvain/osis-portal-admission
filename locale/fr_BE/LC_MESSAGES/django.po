@@ -676,6 +676,9 @@ msgstr "Confirmer ma demande d'inscription"
 msgid "Confirmation"
 msgstr "Confirmation"
 
+msgid "Confirmation and submission"
+msgstr "Confirmation et soumission"
+
 msgid "Confirmation paper"
 msgstr "Épreuve de confirmation"
 

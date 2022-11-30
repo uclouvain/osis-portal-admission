@@ -121,7 +121,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertInHTML(
             """<li role="presentation" class="active">
             <a href="/admission/create/person">
-                <span class="fa fa-user"></span>
+                <span class="fa fa-id-card"></span>
                 {}
             </a>
         </li>""".format(
@@ -138,7 +138,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertInHTML(
             """<li role="presentation">
             <a href="/admission/create/person">
-                <span class="fa fa-user"></span>
+                <span class="fa fa-id-card"></span>
                 {}
             </a>
         </li>""".format(

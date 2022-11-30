@@ -619,6 +619,9 @@ msgstr ""
 msgid "Confirmation"
 msgstr ""
 
+msgid "Confirmation and submission"
+msgstr ""
+
 msgid "Confirmation paper"
 msgstr ""
 

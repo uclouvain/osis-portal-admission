@@ -1,0 +1,23 @@
+{% extends "admission/forms/curriculum.html" %}
+{% load bootstrap3 %}
+{% block attachments_fields %}
+  {% bootstrap_field form.equivalence_diplome form_group_class=form.equivalence_diplome.field.widget.attrs.class|add:' form_group' %}
+  {% bootstrap_field form.curriculum form_group_class="form_group required_field" %}
+  {% bootstrap_field form.continuation_cycle_bachelier form_group_class="form_group required_field" %}
+  {% bootstrap_field form.attestation_continuation_cycle_bachelier form_group_class="form_group required_field bachelor-cycle-continuation-certificate" %}
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {{ form.media }}
+
+  <script type="application/javascript">
+      $(function () {
+          {% if not form.attestation_continuation_cycle_bachelier.field.disabled %}
+              $('.bachelor-cycle-continuation-certificate').dependsOn({
+                  'input[name=continuation_cycle_bachelier]': { values: ['True'] },
+              })
+          {% endif %}
+      });
+  </script>
+{% endblock %}

@@ -14,3 +14,4 @@ sort = Miss
 exclude_lines =
     pragma: no cover
     raise NotImplementedError
+    if settings.DEBUG:

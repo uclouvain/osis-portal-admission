@@ -27,19 +27,23 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.functional import cached_property
 from django.views.generic.base import ContextMixin
 
-from admission.contrib.enums.projet import ChoixStatutProposition
-from admission.services.proposition import AdmissionPropositionService
 from admission.services.doctorate import AdmissionDoctorateService
+from admission.services.proposition import AdmissionPropositionService
 
 
 class LoadViewMixin(LoginRequiredMixin, ContextMixin):
     detail_base_template = ''
     form_base_template = ''
 
+    @property
+    def current_context(self):
+        return self.request.resolver_match.namespaces[1]
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['detail_base_template'] = self.detail_base_template
-        context['form_base_template'] = self.form_base_template
+        namespace = 'doctorate' if self.current_context == 'create' else self.current_context.replace('-', '_')
+        context['detail_base_template'] = f'admission/{namespace}/details/tab_layout.html'
+        context['form_base_template'] = f'admission/{namespace}/forms/tab_layout.html'
         context['base_namespace'] = self.base_namespace
         return context
 
@@ -52,13 +56,64 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         return str(self.kwargs.get('pk', ''))
 
 
-class DoctorateLoadViewMixin(LoadViewMixin):
+class LoadDossierViewMixin(LoadViewMixin):
+    """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
+
+    detail_base_template = 'admission/doctorate/detail_tab_layout.html'
+    form_base_template = 'admission/doctorate/form_tab_layout.html'
+
     @cached_property
     def admission(self):
-        return AdmissionPropositionService.get_proposition(
+        mapping = {
+            'doctorate': AdmissionPropositionService.get_proposition,
+            'general-education': AdmissionPropositionService.get_general_education_proposition,
+            'continuing-education': AdmissionPropositionService.get_continuing_education_proposition,
+        }
+        return mapping[self.current_context](
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
+
+    @cached_property
+    def specific_questions(self):
+        mapping = {
+            'doctorate': AdmissionPropositionService.retrieve_doctorate_specific_questions,
+            'general-education': AdmissionPropositionService.retrieve_general_specific_questions,
+            'continuing-education': AdmissionPropositionService.retrieve_continuing_specific_questions,
+        }
+        return mapping[self.current_context](
+            person=self.request.user.person,
+            uuid=self.admission_uuid,
+            tab_name=self.tab_of_specific_questions,
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.admission_uuid:
+            context['admission'] = self.admission
+
+            if hasattr(self, 'tab_of_specific_questions'):
+                context['specific_questions'] = self.specific_questions
+
+        return context
+
+
+class LoadDoctorateViewMixin(LoadViewMixin):
+    """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
+
+    detail_base_template = 'admission/doctorate/detail_tab_layout.html'
+    form_base_template = 'admission/doctorate/form_tab_layout.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['admission'] = self.doctorate
+        context['doctorate'] = self.doctorate
+        # We display the information related to the doctorate instead of the admission
+        context['detail_base_template'] = 'admission/doctorate/details/doctorate_tab_layout.html'
+
+        return context
 
     @cached_property
     def doctorate(self):
@@ -66,111 +121,3 @@ class DoctorateLoadViewMixin(LoadViewMixin):
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
-
-    @cached_property
-    def specific_questions(self):
-        return AdmissionPropositionService.retrieve_doctorate_specific_questions(
-            person=self.request.user.person,
-            uuid=self.admission_uuid,
-            tab_name=self.tab_of_specific_questions,
-        )
-
-
-class LoadDossierViewMixin(DoctorateLoadViewMixin):
-    """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
-    detail_base_template = 'admission/doctorate/detail_tab_layout.html'
-    form_base_template = 'admission/doctorate/form_tab_layout.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        if self.admission_uuid:
-            context['admission'] = self.admission
-
-            if hasattr(self, 'tab_of_specific_questions'):
-                context['specific_questions'] = self.specific_questions
-
-            if self.admission.statut == ChoixStatutProposition.ENROLLED.name:
-                context['doctorate'] = self.doctorate
-                # We display the information related to the doctorate instead of the admission
-                context['detail_base_template'] = 'admission/doctorate/details/doctorate_tab_layout.html'
-
-        return context
-
-
-class LoadDoctorateViewMixin(DoctorateLoadViewMixin):
-    """Mixin that can be used to load data for tabs used after the enrolment."""
-    detail_base_template = 'admission/doctorate/details/doctorate_tab_layout.html'
-    form_base_template = 'admission/doctorate/forms/doctorate_tab_layout.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        if self.admission_uuid:
-            context['doctorate'] = self.doctorate
-
-        return context
-
-
-class LoadGeneralEducationDossierViewMixin(LoadViewMixin):
-    """Mixin that can be used to load data for tabs used during the enrolment for the general education."""
-    detail_base_template = 'admission/admission/general_education/details/tab_layout.html'
-    form_base_template = 'admission/admission/general_education/forms/tab_layout.html'
-
-    @cached_property
-    def admission(self):
-        return AdmissionPropositionService.get_general_education_proposition(
-            person=self.request.user.person,
-            uuid=self.admission_uuid,
-        )
-
-    @cached_property
-    def specific_questions(self):
-        return AdmissionPropositionService.retrieve_general_specific_questions(
-            person=self.request.user.person,
-            uuid=self.admission_uuid,
-            tab_name=self.tab_of_specific_questions,
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        if self.admission_uuid:
-            context['admission'] = self.admission
-
-            if hasattr(self, 'tab_of_specific_questions'):
-                context['specific_questions'] = self.specific_questions
-
-        return context
-
-
-class LoadContinuingEducationDossierViewMixin(LoadViewMixin):
-    """Mixin that can be used to load data for tabs used during the enrolment for the continuing education."""
-    detail_base_template = 'admission/admission/continuing_education/details/tab_layout.html'
-    form_base_template = 'admission/admission/continuing_education/forms/tab_layout.html'
-
-    @cached_property
-    def admission(self):
-        return AdmissionPropositionService.get_continuing_education_proposition(
-            person=self.request.user.person,
-            uuid=self.admission_uuid,
-        )
-
-    @cached_property
-    def specific_questions(self):
-        return AdmissionPropositionService.retrieve_continuing_specific_questions(
-            person=self.request.user.person,
-            uuid=self.admission_uuid,
-            tab_name=self.tab_of_specific_questions,
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        if self.admission_uuid:
-            context['admission'] = self.admission
-
-            if hasattr(self, 'tab_of_specific_questions'):
-                context['specific_questions'] = self.specific_questions
-
-        return context
