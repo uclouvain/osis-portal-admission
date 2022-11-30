@@ -46,6 +46,7 @@ __all__ = [
     "AdmissionCotutelleService",
     "AdmissionSupervisionService",
     "TAB_OF_BUSINESS_EXCEPTION",
+    "PropositionBusinessException",
 ]
 
 
@@ -70,14 +71,14 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def create_general_education_choice(cls, person: Person, data):
+    def create_general_education_proposition(cls, person: Person, data):
         return APIClient().create_general_training_choice(
             initier_proposition_generale_command=data,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def create_continuing_education_choice(cls, person: Person, data):
+    def create_continuing_education_proposition(cls, person: Person, data):
         return APIClient().create_continuing_training_choice(
             initier_proposition_continue_command=data,
             **build_mandatory_auth_headers(person),

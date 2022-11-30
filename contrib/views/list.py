@@ -26,16 +26,18 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from admission.services.proposition import AdmissionPropositionService
+from admission.templatetags.admission import TAB_TREES
+
 __all__ = [
     "AdmissionListView",
     "DoctorateAdmissionMemberListView",
 ]
-
-from admission.services.proposition import AdmissionPropositionService
-from admission.templatetags.admission import TAB_TREES
+__namespace__ = False
 
 
 class AdmissionListView(LoginRequiredMixin, TemplateView):
+    urlpatterns = {'list': ''}
     template_name = "admission/doctorate/admission_list.html"
 
     def get_context_data(self, **kwargs):
@@ -57,6 +59,7 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
 
 
 class DoctorateAdmissionMemberListView(LoginRequiredMixin, TemplateView):
+    urlpatterns = {'supervised-list': 'supervised'}
     template_name = "admission/doctorate/supervised_list.html"
 
     def get_context_data(self, **kwargs):

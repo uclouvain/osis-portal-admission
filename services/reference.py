@@ -37,6 +37,7 @@ from osis_reference_sdk.api import (
 )
 
 from admission.services.mixins import ServiceMeta
+from base.models.person import Person
 from frontoffice.settings.osis_sdk import reference as reference_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
@@ -52,21 +53,29 @@ class CountriesService(metaclass=ServiceMeta):
 
     @classmethod
     def get_countries(cls, person=None, *args, **kwargs):
-        return CountriesAPIClient().countries_list(
-            *args,
-            **kwargs,
-            **build_mandatory_auth_headers(person),
-        ).results
+        return (
+            CountriesAPIClient()
+            .countries_list(
+                *args,
+                **kwargs,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
 
     @classmethod
     @lru_cache()
     def get_country(cls, person=None, *args, **kwargs):
-        return CountriesAPIClient().countries_list(
-            *args,
-            **kwargs,
-            **build_mandatory_auth_headers(person),
-            limit=1,
-        ).results[0]
+        return (
+            CountriesAPIClient()
+            .countries_list(
+                *args,
+                **kwargs,
+                **build_mandatory_auth_headers(person),
+                limit=1,
+            )
+            .results[0]
+        )
 
 
 class CitiesAPIClient:
@@ -79,11 +88,16 @@ class CitiesService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
     @classmethod
-    def get_cities(cls, person: None, *args, **kwargs):
-        return CitiesAPIClient().cities_list(
-            *args, **kwargs,
-            **build_mandatory_auth_headers(person),
-        ).results
+    def get_cities(cls, person: 'Person' = None, *args, **kwargs):
+        return (
+            CitiesAPIClient()
+            .cities_list(
+                *args,
+                **kwargs,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
 
 
 class AcademicYearAPIClient:
@@ -97,10 +111,14 @@ class AcademicYearService(metaclass=ServiceMeta):
 
     @classmethod
     def get_academic_years(cls, person):
-        return AcademicYearAPIClient().get_academic_years(
-            limit=100,
-            **build_mandatory_auth_headers(person),
-        ).results
+        return (
+            AcademicYearAPIClient()
+            .get_academic_years(
+                limit=100,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
 
 
 class LanguagesAPIClient:
@@ -114,20 +132,28 @@ class LanguageService(metaclass=ServiceMeta):
 
     @classmethod
     def get_languages(cls, person, *args, **kwargs):
-        return LanguagesAPIClient().languages_list(
-            limit=100,
-            *args,
-            **kwargs,
-            **build_mandatory_auth_headers(person),
-        ).results
+        return (
+            LanguagesAPIClient()
+            .languages_list(
+                limit=100,
+                *args,
+                **kwargs,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
 
     @classmethod
     def get_language(cls, code, person=None):
-        languages = LanguagesAPIClient().languages_list(
-            limit=1,
-            code=code,
-            **build_mandatory_auth_headers(person),
-        ).results
+        languages = (
+            LanguagesAPIClient()
+            .languages_list(
+                limit=1,
+                code=code,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
         return languages[0] if languages else None
 
 
@@ -142,10 +168,14 @@ class HighSchoolService(metaclass=ServiceMeta):
 
     @classmethod
     def get_high_schools(cls, person, **kwargs):
-        return HighSchoolAPIClient().high_schools_list(
-            **kwargs,
-            **build_mandatory_auth_headers(person),
-        ).results
+        return (
+            HighSchoolAPIClient()
+            .high_schools_list(
+                **kwargs,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
 
     @classmethod
     def get_high_school(cls, person, uuid):
@@ -166,11 +196,15 @@ class DiplomaService(metaclass=ServiceMeta):
 
     @classmethod
     def get_diplomas(cls, person, **kwargs):
-        return DiplomaAPIClient().diplomas_list(
-            limit=100,
-            **kwargs,
-            **build_mandatory_auth_headers(person),
-        ).results
+        return (
+            DiplomaAPIClient()
+            .diplomas_list(
+                limit=100,
+                **kwargs,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
 
     @classmethod
     def get_diploma(cls, person, uuid, **kwargs):
@@ -192,11 +226,15 @@ class SuperiorNonUniversityService(metaclass=ServiceMeta):
 
     @classmethod
     def get_superior_non_universities(cls, person, **kwargs):
-        return SuperiorNonUniversityAPIClient().superior_non_universities_list(
-            limit=100,
-            **kwargs,
-            **build_mandatory_auth_headers(person),
-        ).results
+        return (
+            SuperiorNonUniversityAPIClient()
+            .superior_non_universities_list(
+                limit=100,
+                **kwargs,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
 
     @classmethod
     def get_superior_non_university(cls, person, uuid, **kwargs):
