@@ -79,6 +79,8 @@ class AdmissionTrainingChoiceFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
+        if self.admission_uuid:
+            kwargs['admission_uuid'] = self.admission_uuid
         return kwargs
 
     def get_form_class(self):

@@ -35,11 +35,9 @@ from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 from rest_framework import status
 
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
-from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
+from admission.contrib.enums.financement import ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.enums.projet import (
     ChoixStatutProposition,
-    ChoixLangueRedactionThese,
     ChoixStatutPropositionFormationGenerale,
     ChoixStatutPropositionFormationContinue,
 )
@@ -51,9 +49,7 @@ from admission.contrib.enums.proximity_commission import (
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
-from admission.services.proposition import PropositionBusinessException
 from base.tests.factories.person import PersonFactory
-from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
@@ -106,6 +102,7 @@ class ProjectViewTestCase(TestCase):
             lettres_recommandation=[],
             links={'update_proposition': {'url': 'ok'}},
             bourse_recherche=Mock(uuid=self.doctorate_international_scholarship.uuid),
+            erreurs=[],
         )
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -313,6 +310,7 @@ class ProjectViewTestCase(TestCase):
             commission_proximite="ECONOMY",
             institut_these=self.mock_entities[0].uuid,
             links={},
+            erreurs=[],
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -326,6 +324,7 @@ class ProjectViewTestCase(TestCase):
             commission_proximite="ECLI",
             institut_these="",
             links={},
+            erreurs=[],
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

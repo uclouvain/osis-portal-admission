@@ -50,3 +50,9 @@ class AdmissionAccountingDetailView(LoadDossierViewMixin, TemplateView):
         context_data['dynamic_person_concerned_lowercase'] = mark_safe(dynamic_person_concerned_lowercase)
 
         return context_data
+
+    def get_template_names(self):
+        return [
+            f'admission/{self.formatted_current_context}/details/accounting.html',
+            'admission/details/wip.html',
+        ]

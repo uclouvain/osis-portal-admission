@@ -50,6 +50,7 @@ class CotutelleTestCase(TestCase):
 
         self.mock_api.return_value.retrieve_proposition.return_value = Mock(
             links={'update_cotutelle': {'url': 'ok'}},
+            erreurs=[],
         )
         self.mock_api.return_value.retrieve_cotutelle.return_value.to_dict.return_value = dict(
             cotutelle=True,

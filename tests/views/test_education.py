@@ -57,7 +57,8 @@ class EducationTestCase(TestCase):
     def setUpTestData(cls):
         cls.person = PersonFactory()
         cls.detail_url = resolve_url("admission:doctorate:education", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        cls.form_url = resolve_url("admission:create:education")
+        cls.form_url = resolve_url("admission:doctorate:update:education", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        cls.create_url = resolve_url("admission:create:education")
         cls.foreign_data = {
             "got_diploma": GotDiploma.YES.name,
             "diploma_type": DiplomaTypes.FOREIGN.name,
@@ -185,16 +186,31 @@ class EducationTestCase(TestCase):
     def test_form_empty(self):
         response = self.client.get(self.form_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.retrieve_high_school_diploma.assert_called()
-        self.mock_proposition_api.assert_not_called()
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
+        self.mock_proposition_api.assert_called()
 
         response = self.client.post(self.form_url, {})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
-        self.assertEqual(sent, {
-            'specific_question_answers': {},
-        })
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]
+        self.assertEqual(
+            sent,
+            {
+                'specific_question_answers': {},
+            },
+        )
+
+    def test_create(self):
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mock_person_api.return_value.retrieve_high_school_diploma.assert_not_called()
+        self.mock_proposition_api.assert_not_called()
+        self.assertTrue(
+            _("You must choose your training before filling in your previous experience."),
+            response.content.decode("utf-8"),
+        )
 
     def test_form_belgian(self):
         response = self.client.post(
@@ -217,8 +233,10 @@ class EducationTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]
         self.assertEqual(
             sent,
             {
@@ -272,8 +290,10 @@ class EducationTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]
         self.assertEqual(
             sent,
             {
@@ -333,7 +353,7 @@ class EducationTestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, "schedule_form", None, _("A field of the schedule must at least be set."))
-        self.mock_person_api.return_value.update_high_school_diploma.assert_not_called()
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_not_called()
 
     def test_form_foreign_error_if_no_translations_when_needed_for_this_year_in_ue_country(self):
         response = self.client.post(
@@ -455,10 +475,10 @@ class EducationTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"][
-            "foreign_diploma"
-        ]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.NO.name)
         self.assertEqual(sent.get("final_equivalence_decision"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
@@ -485,10 +505,10 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"][
-            "foreign_diploma"
-        ]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.PENDING.name)
         self.assertEqual(sent.get("final_equivalence_decision"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), ["test"])
@@ -515,10 +535,10 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"][
-            "foreign_diploma"
-        ]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.YES.name)
         self.assertEqual(sent.get("final_equivalence_decision"), ["test_ue"])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
@@ -545,10 +565,10 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"][
-            "foreign_diploma"
-        ]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), '')
         self.assertEqual(sent.get("final_equivalence_decision"), ["test_not_ue"])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
@@ -573,8 +593,10 @@ class EducationTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]
         self.assertEqual(
             sent,
             {
@@ -626,8 +648,10 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]
         self.assertEqual(
             sent,
             {
@@ -653,7 +677,7 @@ class EducationTestCase(TestCase):
         )
 
     def test_form_no_high_school_diploma(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
             "belgian_diploma": {},
             "foreign_diploma": {},
             "high_school_diploma_alternative": {
@@ -679,8 +703,10 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]
         self.assertEqual(
             sent,
             {
@@ -692,7 +718,7 @@ class EducationTestCase(TestCase):
         )
 
     def test_form_will_get_foreign_diploma_this_year(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
             "belgian_diploma": {},
             "foreign_diploma": {
                 "academic_graduation_year": get_current_year(),
@@ -723,8 +749,10 @@ class EducationTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma.call_args[1]["high_school_diploma"]
+        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+            "high_school_diploma"
+        ]
         self.assertEqual(
             sent,
             {
@@ -764,7 +792,7 @@ class EducationTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_form_will_get_belgian_diploma_this_year(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma.return_value.to_dict.return_value = {
+        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
             "belgian_diploma": {
                 "academic_graduation_year": get_current_year(),
             },

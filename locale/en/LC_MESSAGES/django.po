@@ -580,6 +580,9 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Coming implementation."
+msgstr ""
+
 msgid "Comment"
 msgstr ""
 
@@ -1448,22 +1451,25 @@ msgid ""
 "seminar, nor the different activities within it."
 msgstr ""
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Bachelor, Master, "
 "Aggregation, CAPAES, Continuing Education or Certificate application, please "
-"delete the current application and create a new one."
+"<a href=\"%(url)s\">cancel the current application</a> and create a new one."
 msgstr ""
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Bachelor, Master, "
-"Aggregation, CAPAES, Doctorate or Certificate application, please delete the "
-"current application and create a new one."
+"Aggregation, CAPAES, Doctorate or Certificate application, please <a href="
+"\"%(url)s\">cancel the current application</a> and create a new one."
 msgstr ""
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Doctorate or Continuing "
-"Education application, please delete the current application and create a "
-"new one."
+"Education application, please <a href=\"%(url)s\">cancel the current "
+"application</a> and create a new one."
 msgstr ""
 
 msgid "Important information:"
@@ -2761,6 +2767,10 @@ msgid "You have now reached the confirmation tab of your enrolment request."
 msgstr ""
 
 msgid "You indicated that you don't have a high school diploma."
+msgstr ""
+
+msgid ""
+"You must choose your training before filling in your previous experience."
 msgstr ""
 
 msgid ""

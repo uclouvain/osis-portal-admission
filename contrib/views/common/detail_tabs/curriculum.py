@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
