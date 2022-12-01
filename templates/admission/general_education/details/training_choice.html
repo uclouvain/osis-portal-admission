@@ -35,23 +35,17 @@
     {% endswitch %}
   {% endpanel %}
 
-  {% if admission.bourse_double_diplome or admission.bourse_erasmus_mundus or admission.bourse_internationale %}
+  {% if admission.formation.type|admission_training_type == 'MASTER' %}
     {% panel _('Student profile') %}
-      {% if admission.bourse_double_diplome %}
-        {% with admission.bourse_double_diplome.nom_court as short_name %}
-          {% field_data _('Double degree scholarship') admission.bourse_double_diplome.nom_long|default:short_name %}
-        {% endwith %}
-      {% endif %}
-      {% if admission.bourse_erasmus_mundus %}
-        {% with admission.bourse_erasmus_mundus.nom_court as short_name %}
-          {% field_data _('Erasmus mundus scholarship') admission.bourse_erasmus_mundus.nom_long|default:short_name %}
-        {% endwith %}
-      {% endif %}
-      {% if admission.bourse_internationale %}
-        {% with admission.bourse_internationale.nom_court as short_name %}
-          {% field_data _('International scholarship') admission.bourse_internationale.nom_long|default:short_name %}
-        {% endwith %}
-      {% endif %}
+      {% with admission.bourse_double_diplome.nom_court as short_name %}
+        {% field_data _('Double degree scholarship') admission.bourse_double_diplome.nom_long|default:short_name %}
+      {% endwith %}
+      {% with admission.bourse_erasmus_mundus.nom_court as short_name %}
+        {% field_data _('Erasmus mundus scholarship') admission.bourse_erasmus_mundus.nom_long|default:short_name %}
+      {% endwith %}
+      {% with admission.bourse_internationale.nom_court as short_name %}
+        {% field_data _('International scholarship') admission.bourse_internationale.nom_long|default:short_name %}
+      {% endwith %}
     {% endpanel %}
   {% endif %}
 

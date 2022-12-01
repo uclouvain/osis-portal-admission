@@ -39,9 +39,13 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
     def current_context(self):
         return self.request.resolver_match.namespaces[1]
 
+    @cached_property
+    def formatted_current_context(self):
+        return self.current_context.replace('-', '_')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        namespace = 'doctorate' if self.current_context == 'create' else self.current_context.replace('-', '_')
+        namespace = 'doctorate' if self.current_context == 'create' else self.formatted_current_context
         context['detail_base_template'] = f'admission/{namespace}/details/tab_layout.html'
         context['form_base_template'] = f'admission/{namespace}/forms/tab_layout.html'
         context['base_namespace'] = self.base_namespace

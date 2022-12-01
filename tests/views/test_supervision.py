@@ -75,6 +75,7 @@ class SupervisionTestCase(TestCase):
                 'request_signatures': {'error': 'nope'},
                 'add_member': {'error': 'nope'},
             },
+            erreurs=[],
         )
 
         self.mock_api.return_value.retrieve_supervision.return_value.to_dict.return_value = dict(

@@ -40,6 +40,7 @@ from django.utils.translation import get_language, gettext_lazy as _, pgettext
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
+from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from admission.services.reference import CountriesService
 from admission.utils import to_snake_case, get_uuid_value
@@ -123,19 +124,23 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
+        Tab('training-choice', _('Training choice'), 'person-chalkboard'): [
+            Tab('training-choice', _('Training choice')),
+        ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('curriculum', _('Curriculum')),
             Tab('languages', _('Languages knowledge')),
         ],
+        Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
+            Tab('accounting', _('Accounting')),
+        ],
         Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'person-chalkboard'): [
-            Tab('training-choice', _('Training choice')),
             Tab('project', pgettext('tab name', 'Research project')),
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Supervision')),
         ],
         # TODO specifics
         Tab('confirm-submit', _('Completion'), 'flag'): [
-            Tab('accounting', _('Accounting')),
             Tab('confirm-submit', _('Confirmation and submission')),
         ],
         Tab('confirmation-paper', _('Confirmation'), 'list-check'): [
@@ -160,7 +165,7 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('general-education', _('General education'), 'person-chalkboard'): [
+        Tab('general-education', _('Training choice'), 'person-chalkboard'): [
             Tab('training-choice', _('Training choice')),
         ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
@@ -169,6 +174,7 @@ TAB_TREES = {
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('specific-questions', _('Specific questions')),
+            Tab('accounting', _('Accounting')),
         ],
         Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
@@ -179,7 +185,7 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('continuing-education', _('Continuing education'), 'person-chalkboard'): [
+        Tab('continuing-education', _('Training choice'), 'person-chalkboard'): [
             Tab('training-choice', _('Training choice')),
         ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
@@ -188,6 +194,7 @@ TAB_TREES = {
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('specific-questions', _('Specific questions')),
+            Tab('accounting', _('Accounting')),
         ],
         Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
@@ -296,13 +303,11 @@ def get_current_tab(context):
     )
 
 
-@register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
-def doctorate_subtabs(context, admission=None, no_status=False):
+@register.inclusion_tag('admission/admission_subtabs_bar.html', takes_context=True)
+def admission_subtabs(context, admission=None, no_status=False, tabs=None):
     current_tab_name = get_current_tab_name(context)
-    current_tab_tree = get_current_tab_tree(context)
-    valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(current_tab_tree, admission))
     return {
-        'subtabs': valid_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), []),
+        'subtabs': tabs or current_subtabs(context),
         'admission': admission,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'no_status': no_status,
@@ -646,3 +651,8 @@ def multiple_field_data(configurations, data, title=''):
         'fields': configurations,
         'title': title,
     }
+
+
+@register.filter
+def admission_training_type(osis_training_type: str):
+    return ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(osis_training_type)

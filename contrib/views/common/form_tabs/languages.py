@@ -25,6 +25,7 @@
 # ##############################################################################
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.template import Context, Template
 from django.urls import reverse_lazy
 from django.utils.translation import get_language
@@ -44,6 +45,11 @@ class AdmissionLanguagesFormView(LoadDossierViewMixin, WebServiceFormMixin, Form
     template_name = "admission/doctorate/forms/languages.html"
     success_url = reverse_lazy("admission:list")
     form_class = DoctorateAdmissionLanguagesKnowledgeFormSet
+
+    def get(self, request, *args, **kwargs):
+        if not self.admission_uuid:
+            return render(request, 'admission/details/need_training_choice.html', {'view': self})
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

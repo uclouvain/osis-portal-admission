@@ -371,7 +371,7 @@ msgid "Are you an erasmus mundus student?"
 msgstr "Êtes-vous Erasmus Mundus ?"
 
 msgid "Are you sure you want to cancel this request?"
-msgstr "Êtes-vous sûr de vouloir supprimer cette demande ?"
+msgstr "Êtes-vous sûr de vouloir annuler cette demande ?"
 
 #, python-format
 msgid "Are you sure you want to delete \"%(object)s\"?"
@@ -636,6 +636,9 @@ msgstr "État civil"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Coming implementation."
+msgstr "Développement à venir."
 
 msgid "Comment"
 msgstr "Commentaire"
@@ -1630,32 +1633,36 @@ msgstr ""
 "Si vous soumettez l'activité, vous ne pourrez plus modifier le séminaire, ni "
 "les différentes activités en faisant partie."
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Bachelor, Master, "
 "Aggregation, CAPAES, Continuing Education or Certificate application, please "
-"delete the current application and create a new one."
+"<a href=\"%(url)s\">cancel the current application</a> and create a new one."
 msgstr ""
 "Si vous souhaitez modifier votre choix de formation pour une demande en "
 "Bachelier, Master, Agrégation, CAPAES, Formation continue ou Certificat, "
-"merci de supprimer la présente demande et d’en créer une nouvelle."
+"merci d'<a href=\"%(url)s\">annuler la présente demande</a> et d’en créer "
+"une nouvelle."
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Bachelor, Master, "
-"Aggregation, CAPAES, Doctorate or Certificate application, please delete the "
-"current application and create a new one."
+"Aggregation, CAPAES, Doctorate or Certificate application, please <a href="
+"\"%(url)s\">cancel the current application</a> and create a new one."
 msgstr ""
 "Si vous souhaitez modifier votre choix de formation pour une demande en "
-"Bachelier, Master, Doctorat, Agrégation, CAPAES ou Certificat, merci de "
-"supprimer la présente demande et d’en créer une nouvelle."
+"Bachelier, Master, Doctorat, Agrégation, CAPAES ou Certificat, merci d'<a "
+"href=\"%(url)s\">annuler la présente demande</a> et d’en créer une nouvelle."
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Doctorate or Continuing "
-"Education application, please delete the current application and create a "
-"new one."
+"Education application, please <a href=\"%(url)s\">cancel the current "
+"application</a> and create a new one."
 msgstr ""
 "Si vous souhaitez modifier votre choix de formation pour une demande en "
-"Doctorat ou Formation continue, merci de supprimer la présente demande et "
-"d’en créer une nouvelle."
+"Doctorat ou Formation continue, merci d'<a href=\"%(url)s\">annuler la "
+"présente demande</a> et d’en créer une nouvelle."
 
 msgid "Important information:"
 msgstr "Informations importantes :"
@@ -3066,6 +3073,12 @@ msgstr ""
 
 msgid "You indicated that you don't have a high school diploma."
 msgstr "Vous avez indiqué ne pas avoir de diplôme de fin d'études secondaires."
+
+msgid ""
+"You must choose your training before filling in your previous experience."
+msgstr ""
+"Vous devez faire votre choix de formation avant de renseigner votre parcours "
+"antérieur."
 
 msgid ""
 "You must correct your proposition before being able to request signatures."

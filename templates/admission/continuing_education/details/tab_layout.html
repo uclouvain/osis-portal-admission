@@ -87,12 +87,17 @@
   {% endif %}
 
   {% doctorate_tabs admission=admission no_status=True %}
+  {% current_subtabs as subtabs %}
+  {% if subtabs|length > 1 %}
   <div class="row">
     <div class="col-md-2 visible-md visible-lg">
-      {% doctorate_subtabs admission=admission no_status=True %}
+      {% admission_subtabs admission tabs=subtabs no_status=True %}
     </div>
     <div class="col-md-10 quitting-context-excluded">
-      {% block tab_content %}{% endblock %}
+  {% endif %}
+  {% block tab_content %}{% endblock %}
+  {% if subtabs|length > 1 %}
     </div>
   </div>
+  {% endif %}
 {% endblock %}

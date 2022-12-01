@@ -1,6 +1,5 @@
-{% extends detail_base_template %}
-
-{% load i18n admission waffle_tags %}
+{% extends 'admission/doctorate/detail_tab_layout.html' %}
+{% load i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -27,19 +26,7 @@
 {% endcomment %}
 
 {% block tab_content %}
-  {% panel _('Education you are applying for') %}
-    {% field_data _('Education name') admission.doctorat.intitule %}
-    {% field_data _('Campus') admission.doctorat.campus %}
-    {% switch 'debug' %}
-      {% field_data _('Academic year') admission.doctorat.annee|get_academic_year css_class='debug-content' %}
-    {% endswitch %}
-  {% endpanel %}
-
-  {% panel _('Student profile') %}
-    {% with admission.bourse_erasmus_mundus.nom_court as short_name %}
-      {% field_data _('Erasmus mundus scholarship') admission.bourse_erasmus_mundus.nom_long|default:short_name %}
-    {% endwith %}
-  {% endpanel %}
-
-  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
+  <div class="alert alert-warning">
+    <p>{% translate "You must choose your training before filling in your previous experience." %}</p>
+  </div>
 {% endblock %}

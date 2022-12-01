@@ -263,6 +263,16 @@ class DoctorateAdmissionPersonForm(forms.Form):
             self.add_error('first_name', _('This field is required if the last name is missing.'))
             self.add_error('last_name', _('This field is required if the first name is missing.'))
 
+        if data.get('has_national_number'):
+            if not data.get('national_number'):
+                self.add_error('national_number', FIELD_REQUIRED_MESSAGE)
+        elif data.get('identification_type') == IdentificationType.ID_CARD_NUMBER.name:
+            if not data.get('id_card_number'):
+                self.add_error('id_card_number', FIELD_REQUIRED_MESSAGE)
+        elif data.get('identification_type') == IdentificationType.PASSPORT_NUMBER.name:
+            if not data.get('passport_number'):
+                self.add_error('passport_number', FIELD_REQUIRED_MESSAGE)
+
         # Lowercase the specified names
         for field in ['first_name', 'last_name', 'middle_name', 'first_name_in_use', 'birth_place']:
             if data.get(field):

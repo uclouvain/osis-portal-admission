@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.shortcuts import resolve_url
+from django.utils.translation import gettext as _
 from rest_framework.status import HTTP_200_OK
 
 from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
@@ -42,17 +43,14 @@ class CreateGlobalCurriculumTestCase(MixinTestCase):
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
 
-        # Check that the right API calls are done
-        self.mock_person_api.return_value.retrieve_curriculum_details.assert_called()
+        # Check that the API calls aren't done
+        self.mock_person_api.return_value.retrieve_curriculum_details.assert_not_called()
+        self.mock_proposition_api.assert_not_called()
 
-        # Check the context data
-        self.assertEqual(len(response.context.get('professional_experiences')), 1)
-        self.assertEqual(response.context.get('professional_experiences')[0], self.lite_professional_experience)
-
-        self.assertEqual(len(response.context.get('educational_experiences')), 1)
-        self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
-
-        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+        self.assertTrue(
+            _("You must choose your training before filling in your previous experience."),
+            response.content.decode("utf-8"),
+        )
 
 
 class DoctorateGlobalCurriculumTestCase(MixinTestCase):

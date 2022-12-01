@@ -72,16 +72,19 @@
     {% include "template_messages.html" %}
   </div>
 
+  {% current_subtabs as subtabs %}
   {% block tab_content %}
     <form class="osis-form" method="post" action="">
       {% csrf_token %}
       {% block form_content %}
         {% doctorate_tabs admission with_submit=True no_status=True %}
+        {% if subtabs|length > 1 %}
         <div class="row">
           <div class="col-md-2 visible-md visible-lg">
-            {% doctorate_subtabs admission no_status=True %}
+            {% admission_subtabs admission no_status=True tabs=subtabs %}
           </div>
-          <div class="col-md-10 quitting-context-excluded">
+        {% endif %}
+          <div class="{% if subtabs|length > 1 %}col-md-10 {% endif %}quitting-context-excluded">
             {% block form %}{% endblock %}
             {% get_current_tab as current_tab %}
             <div class="text-right form-group">
@@ -100,7 +103,9 @@
               </button>
             </div>
           </div>
-        </div>
+        {% if subtabs|length > 1 %}
+          </div>
+        {% endif %}
       {% endblock form_content %}
     </form>
   {% endblock %}

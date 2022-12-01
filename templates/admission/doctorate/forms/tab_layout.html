@@ -107,16 +107,19 @@
 
     {% url "admission:doctorate:"|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
 
+    {% current_subtabs as subtabs %}
     {% block tab_content %}
         <form class="osis-form" method="post" action="">
             {% csrf_token %}
             {% block form_content %}
                 {% doctorate_tabs admission with_submit=True %}
-                <div class="row">
+                {% if subtabs|length > 1 %}
+                  <div class="row">
                     <div class="col-md-2 visible-md visible-lg">
-                        {% doctorate_subtabs admission %}
+                        {% admission_subtabs admission tabs=subtabs %}
                     </div>
-                    <div class="col-md-10 quitting-context-excluded">
+                {% endif %}
+                    <div class="{% if subtabs|length > 1 %}col-md-10 {% endif %}quitting-context-excluded">
                         {% block form %}{% endblock %}
                         {% block submit_button_bottom %}
                             {% get_current_tab as current_tab %}
@@ -136,7 +139,9 @@
                             </div>
                         {% endblock submit_button_bottom %}
                     </div>
-                </div>
+                {% if subtabs|length > 1 %}
+                  </div>
+                {% endif %}
             {% endblock form_content %}
         </form>
     {% endblock %}

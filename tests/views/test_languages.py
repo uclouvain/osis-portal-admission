@@ -40,7 +40,8 @@ class LanguagesTestCase(TestCase):
     def setUpTestData(cls):
         cls.person = PersonFactory()
         cls.detail_url = resolve_url('admission:doctorate:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        cls.form_url = resolve_url('admission:create:languages')
+        cls.form_url = resolve_url('admission:doctorate:update:languages', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        cls.create_url = resolve_url('admission:create:languages')
 
     def setUp(self):
         self.client.force_login(self.person.user)
@@ -119,13 +120,23 @@ class LanguagesTestCase(TestCase):
     def test_form_empty(self):
         response = self.client.get(self.form_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.list_language_knowledges.assert_called()
-        self.mock_proposition_api.assert_not_called()
+        self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
+        self.mock_proposition_api.assert_called()
 
         response = self.client.post(self.form_url, {"form-INITIAL_FORMS": 0, "form-TOTAL_FORMS": 0})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
         self.assertFormsetError(response, "form", None, None, _("Mandatory languages are missing."))
+
+    def test_create(self):
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mock_person_api.return_value.list_language_knowledges.assert_not_called()
+        self.mock_proposition_api.assert_not_called()
+        self.assertTrue(
+            _("You must choose your training before filling in your previous experience."),
+            response.content.decode("utf-8"),
+        )
 
     def test_form_language_duplicate(self):
         response = self.client.post(
@@ -148,7 +159,7 @@ class LanguagesTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
         self.assertFormsetError(
             response,
             "form",
@@ -172,7 +183,7 @@ class LanguagesTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
         self.assertFormsetError(response, "form", 0, 'speaking_ability', _("This field is required."))
 
     def test_form_ok(self):
@@ -192,8 +203,8 @@ class LanguagesTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.create_language_knowledge.assert_called()
-        sent = self.mock_person_api.return_value.create_language_knowledge.call_args[1]["language_knowledge"]
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_called()
+        sent = self.mock_person_api.return_value.create_language_knowledge_admission.call_args[1]["language_knowledge"]
         self.assertEqual(
             sent,
             [

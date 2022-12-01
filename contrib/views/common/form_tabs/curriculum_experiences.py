@@ -73,8 +73,6 @@ __namespace__ = 'curriculum'
 
 class AdmissionCurriculumFormMixin(WebServiceFormMixin, AdmissionCurriculumMixin, ABC):
     def get_success_url(self):
-        if self.current_context == 'create':
-            return resolve_url("admission:create:curriculum")
         return resolve_url(f"admission:{self.current_context}:update:curriculum", pk=self.admission_uuid)
 
 
@@ -124,12 +122,6 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
                 experience['end_date_month'] = end_date.month
                 experience['end_date_year'] = end_date.year
             return experience
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        initialize_field_texts(self.person, [self.professional_experience])
-        context['experience'] = self.professional_experience
-        return context
 
 
 class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFormMixin, FormView):

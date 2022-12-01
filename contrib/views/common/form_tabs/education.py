@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -75,6 +76,11 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
         'continuing-education': ContinuingEducationAdmissionPersonService,
     }
     tab_of_specific_questions = Onglets.ETUDES_SECONDAIRES.name
+
+    def get(self, request, *args, **kwargs):
+        if not self.admission_uuid:
+            return render(request, 'admission/details/need_training_choice.html', {'view': self})
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

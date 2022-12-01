@@ -25,7 +25,7 @@
 # ##############################################################################
 from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import resolve_url
+from django.shortcuts import resolve_url, render
 from django.utils.functional import cached_property
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import TemplateView
@@ -82,11 +82,12 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
     def get_success_url(self):
         # Redirect to the list of experiences
         messages.info(self.request, _("Your data has been saved"))
-        return (
-            resolve_url(self.base_namespace + ':update:curriculum', pk=self.admission_uuid)
-            if self.admission_uuid
-            else resolve_url('admission:create:curriculum')
-        )
+        return resolve_url(self.base_namespace + ':update:curriculum', pk=self.admission_uuid)
+
+    def get(self, request, *args, **kwargs):
+        if not self.admission_uuid:
+            return render(request, 'admission/details/need_training_choice.html', {'view': self})
+        return super().get(request, *args, **kwargs)
 
 
 class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMixin, TemplateView):

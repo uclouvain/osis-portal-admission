@@ -32,5 +32,10 @@ __all__ = ['TrainingChoiceDetailView']
 
 
 class TrainingChoiceDetailView(LoadDossierViewMixin, TemplateView):
-    template_name = 'admission/details/training_choice.html'
     tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+
+    def get_template_names(self):
+        return [
+            f'admission/{self.formatted_current_context}/details/training_choice.html',
+            'admission/details/training_choice.html',
+        ]
