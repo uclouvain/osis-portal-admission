@@ -30,7 +30,7 @@
   {% doctorate_tabs admission with_submit=True %}.
 
   It also display subtabs while on mobile displays, but you need to show
-  {% doctorate_subtabs admission %} for other displays.
+  {% admission_subtabs admission %} for other displays.
 {% endcomment %}
 
 <div class="form-group">
@@ -65,7 +65,7 @@
           {% if parent == active_parent %}
             {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
             <div class="col-xs-offset-1">
-              {% doctorate_subtabs admission %}
+              {% admission_subtabs admission %}
             </div>
           {% else %}
             {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}

@@ -73,8 +73,6 @@ __namespace__ = 'curriculum'
 
 class AdmissionCurriculumFormMixin(WebServiceFormMixin, AdmissionCurriculumMixin, ABC):
     def get_success_url(self):
-        if self.current_context == 'create':
-            return resolve_url("admission:create:curriculum")
         return resolve_url(f"admission:{self.current_context}:update:curriculum", pk=self.admission_uuid)
 
 

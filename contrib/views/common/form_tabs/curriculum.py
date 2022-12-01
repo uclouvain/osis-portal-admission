@@ -45,7 +45,6 @@ class AdmissionCurriculumFormView(
     AdmissionCurriculumFormMixin,
     FormView,
 ):
-    # FIXME prevent accessing this view with 'create' context
     template_name = 'admission/doctorate/forms/curriculum.html'
     tab_of_specific_questions = Onglets.CURRICULUM.name
 

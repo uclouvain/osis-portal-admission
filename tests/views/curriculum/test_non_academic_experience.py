@@ -117,17 +117,20 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             },
         )
 
-    def test_without_admission_on_update_experience_form_is_initialized(self):
+    def test_without_admission_on_update_experience_form_is_not_initialized(self):
         response = self.client.get(self.without_admission_update_url)
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
 
-        # Check that the right API calls are done
-        self.mock_person_api.return_value.retrieve_professional_experience.assert_called()
+        # Check that the API calls aren't done
+        self.mock_person_api.return_value.retrieve_professional_experience.assert_not_called()
+        self.mock_proposition_api.assert_not_called()
 
-        # Check the context data
-        self.assertTrue('uuid' in response.context.get('form').initial)
+        self.assertTrue(
+            gettext("You must choose your training before filling in your previous experience."),
+            response.content.decode("utf-8"),
+        )
 
     def test_with_admission_on_update_experience_post_form_empty_data(self):
         response = self.client.post(self.admission_update_url, data={})
@@ -483,34 +486,6 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             **self.api_default_params,
         )
 
-    def test_without_admission_on_update_experience_post_form_for_other_activity(self):
-        response = self.client.post(
-            self.without_admission_update_url,
-            data={
-                **self.all_form_data,
-                'type': ActivityType.OTHER.name,
-            },
-        )
-
-        # Check the request
-        self.assertRedirects(response=response, expected_url=resolve_url('admission:create:curriculum'))
-
-        # Check that the API calls are done
-        self.mock_person_api.return_value.update_professional_experience.assert_called_once_with(
-            experience_id=self.professional_experience.uuid,
-            professional_experience={
-                'start_date': datetime.date(2021, 1, 1),
-                'end_date': datetime.date(2022, 1, 31),
-                'activity': 'Activity name',
-                'role': '',
-                'certificate': [],
-                'type': ActivityType.OTHER.name,
-                'institute_name': '',
-                'sector': '',
-            },
-            **self.api_default_params,
-        )
-
     # On create
     def test_with_admission_on_create_experience_post_form_for_other_activity(self):
         response = self.client.post(
@@ -537,25 +512,19 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             **self.api_default_params,
         )
 
-    def test_without_admission_on_create_experience_post_form_for_other_activity(self):
-        response = self.client.post(
-            resolve_url('admission:create:curriculum:professional_create'),
-            data={
-                **self.all_form_data,
-                'type': ActivityType.OTHER.name,
-            },
-        )
+    def test_without_admission_on_create_experience_form_is_not_initialized(self):
+        response = self.client.get(resolve_url('admission:create:curriculum:professional_create'))
 
         # Check the request
-        self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:create:curriculum'),
-        )
+        self.assertEqual(response.status_code, HTTP_200_OK)
 
-        # Check that the API calls are done
-        self.mock_person_api.return_value.create_professional_experience.assert_called_once_with(
-            professional_experience=ANY,
-            **self.api_default_params,
+        # Check that the API calls aren't done
+        self.mock_person_api.return_value.retrieve_professional_experience.assert_not_called()
+        self.mock_proposition_api.assert_not_called()
+
+        self.assertTrue(
+            gettext("You must choose your training before filling in your previous experience."),
+            response.content.decode("utf-8"),
         )
 
 
@@ -582,19 +551,22 @@ class CurriculumNonAcademicExperienceDeleteTestCase(MixinTestCase):
             **self.api_default_params,
         )
 
-    def test_without_admission_on_delete_experience_post_form(self):
-        response = self.client.post(
+    def test_without_admission_on_delete_experience_form_is_not_initialized(self):
+        response = self.client.get(
             resolve_url(
                 'admission:create:curriculum:professional_delete',
                 experience_id=self.professional_experience.uuid,
-            )
+            ),
         )
 
         # Check the request
-        self.assertRedirects(response=response, expected_url=resolve_url('admission:create:curriculum'))
+        self.assertEqual(response.status_code, HTTP_200_OK)
 
-        # Check that the API calls are done
-        self.mock_person_api.return_value.destroy_professional_experience.assert_called_once_with(
-            experience_id=self.professional_experience.uuid,
-            **self.api_default_params,
+        # Check that the API calls aren't done
+        self.mock_person_api.return_value.retrieve_professional_experience.assert_not_called()
+        self.mock_proposition_api.assert_not_called()
+
+        self.assertTrue(
+            gettext("You must choose your training before filling in your previous experience."),
+            response.content.decode("utf-8"),
         )

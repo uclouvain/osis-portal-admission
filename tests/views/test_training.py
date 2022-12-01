@@ -64,6 +64,7 @@ class TrainingTestCase(TestCase):
             prenom_doctorant='John',
             nom_doctorantig='Doe',
             uuid='uuid1',
+            erreurs=[],
         )
         self.mock_api.return_value.list_doctoral_training.return_value = []
         self.mock_api.return_value.create_doctoral_training.return_value = dict(
