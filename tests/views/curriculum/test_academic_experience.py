@@ -133,13 +133,13 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
     def test_without_admission_on_delete_experience_post_form(self):
         response = self.client.post(
             resolve_url(
-                'admission:create:curriculum:educational_delete',
+                'admission:doctorate-create:curriculum:educational_delete',
                 experience_id=self.educational_experience.uuid,
             )
         )
 
         # Check the request
-        self.assertRedirects(response=response, expected_url=resolve_url('admission:create:curriculum'))
+        self.assertRedirects(response=response, expected_url=resolve_url('admission:doctorate-create:curriculum'))
 
         # Check that the API calls are done
         self.mock_person_api.return_value.destroy_educational_experience.assert_called_once_with(
@@ -210,7 +210,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             experience_id=self.educational_experience.uuid,
         )
         self.without_admission_update_url = resolve_url(
-            'admission:create:curriculum:educational_update',
+            'admission:doctorate-create:curriculum:educational_update',
             experience_id=self.educational_experience.uuid,
         )
 
@@ -883,7 +883,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:create:curriculum'),
+            expected_url=resolve_url('admission:doctorate-create:curriculum'),
         )
 
         # Check that the API calls are done
@@ -959,14 +959,14 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
     def test_without_admission_on_create_experience_post_form_for_be_country(self):
         response = self.client.post(
-            resolve_url('admission:create:curriculum:educational_create'),
+            resolve_url('admission:doctorate-create:curriculum:educational_create'),
             data=self.all_form_data,
         )
 
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:create:curriculum'),
+            expected_url=resolve_url('admission:doctorate-create:curriculum'),
         )
 
         # Check that the API calls are done

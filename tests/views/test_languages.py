@@ -40,7 +40,7 @@ class LanguagesTestCase(TestCase):
     def setUpTestData(cls):
         cls.person = PersonFactory()
         cls.detail_url = resolve_url('admission:doctorate:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        cls.form_url = resolve_url('admission:create:languages')
+        cls.form_url = resolve_url('admission:doctorate-create:languages')
 
     def setUp(self):
         self.client.force_login(self.person.user)

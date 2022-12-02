@@ -58,21 +58,8 @@ from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.tests.factories import PropositionDTOComptabiliteFactory
 from base.tests.factories.person import PersonFactory
 
-from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
-from reference.services.iban_validator import IBANValidatorException, IBANValidatorRequestException
-
-
-def validate_with_no_service_exception(value):
-    raise IBANValidatorRequestException()
-
-
-def validate_with_invalid_iban_exception(value):
-    raise IBANValidatorException('Invalid IBAN')
-
-
-def validate_ok(value):
-    return True
+from osis_admission_sdk.model.proposition_dto import PropositionDTO
+from osis_admission_sdk.model.proposition_dto_links import PropositionDTOLinks
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
@@ -80,11 +67,11 @@ class AccountingViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.proposition = DoctoratePropositionDTO._from_openapi_data(
+        cls.proposition = PropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
             type_admission=AdmissionType.ADMISSION.name,
             reference='22-300001',
-            links=DoctoratePropositionDTOLinks(),
+            links=PropositionDTOLinks(),
             doctorat=PropositionSearchDoctorat._from_openapi_data(
                 sigle='CS1',
                 annee=2020,
@@ -156,13 +143,6 @@ class AccountingViewTestCase(TestCase):
         patcher = patch("osis_document.api.utils.get_remote_metadata", return_value={"name": "myfile"})
         patcher.start()
         self.addCleanup(patcher.stop)
-
-        # Mock iban validator
-        iban_validator_patcher = patch("admission.contrib.forms.accounting.IBANValidatorService.validate")
-        self.mock_iban_validator = iban_validator_patcher.start()
-        self.mock_iban_validator.side_effect = validate_ok
-        # self.mock_iban_validator.return_value.validate.return_value = True
-        self.addCleanup(iban_validator_patcher.stop)
 
         self.client.force_login(self.person.user)
 
@@ -277,7 +257,6 @@ class AccountingViewTestCase(TestCase):
             'etudiant_solidaire': False,
             'type_numero_compte': ChoixTypeCompteBancaire.AUTRE_FORMAT.name,
             'numero_compte_iban': '',
-            'iban_valide': None,
             'numero_compte_autre_format': '123456',
             'code_bic_swift_banque': 'GKCCBEBB',
             'prenom_titulaire_compte': 'John',
@@ -289,7 +268,6 @@ class AccountingViewTestCase(TestCase):
             **self.default_kwargs,
         )
 
-        # Valid IBAN
         self.client.post(
             self.update_url,
             data={
@@ -303,31 +281,6 @@ class AccountingViewTestCase(TestCase):
         command_params['numero_compte_iban'] = 'BE43068999999501'
         command_params['code_bic_swift_banque'] = ''
         command_params['numero_compte_autre_format'] = ''
-        command_params['iban_valide'] = True
-
-        self.mock_proposition_api.return_value.update_accounting.assert_called_with(
-            uuid=self.proposition.uuid,
-            completer_comptabilite_proposition_command=command_params,
-            **self.default_kwargs,
-        )
-
-        # The IBAN validator doesn't work
-        self.mock_iban_validator.side_effect = validate_with_no_service_exception
-
-        self.client.post(
-            self.update_url,
-            data={
-                **data,
-                'type_numero_compte': ChoixTypeCompteBancaire.IBAN.name,
-                'numero_compte_iban': 'BE43068999999501',
-            },
-        )
-
-        command_params['type_numero_compte'] = ChoixTypeCompteBancaire.IBAN.name
-        command_params['numero_compte_iban'] = 'BE43068999999501'
-        command_params['code_bic_swift_banque'] = ''
-        command_params['numero_compte_autre_format'] = ''
-        command_params['iban_valide'] = None
 
         self.mock_proposition_api.return_value.update_accounting.assert_called_with(
             uuid=self.proposition.uuid,
@@ -418,23 +371,6 @@ class AccountingViewTestCase(TestCase):
         self.assertFormError(response, 'form', 'numero_compte_iban', FIELD_REQUIRED_MESSAGE)
         self.assertFormError(response, 'form', 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
         self.assertFormError(response, 'form', 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
-
-    def test_accounting_with_invalid_iban(self):
-        # The IBAN is not valid
-        self.mock_iban_validator.side_effect = validate_with_invalid_iban_exception
-
-        response = self.client.post(
-            self.update_url,
-            data={'type_numero_compte': ChoixTypeCompteBancaire.IBAN.name, 'numero_compte_iban': 'BE4306899999950'},
-        )
-
-        self.assertEqual(response.status_code, 200)
-
-        # Check the form
-        form = response.context.get('form')
-
-        self.assertFalse(form.is_valid())
-        self.assertFormError(response, 'form', 'numero_compte_iban', 'Invalid IBAN')
 
     def test_accounting_form_with_incomplete_bank_account_for_other_format(self):
         response = self.client.post(

@@ -35,9 +35,9 @@
   <ol class="breadcrumb">
     <li>
       {% if admission and admission.matricule_candidat != user.person.global_id %}
-        <a href="{% url 'admission:supervised-list' %}">{% trans "Admissions" %}</a>
+        <a href="{% url 'admission:supervised-list' %}">{% trans "Doctorate admissions" %}</a>
       {% else %}
-        <a href="{% url 'admission:list' %}">{% trans "Admissions" %}</a>
+        <a href="{% url 'admission:doctorate-list' %}">{% trans "Doctorate admissions" %}</a>
       {% endif %}
     </li>
     {% if admission %}
@@ -70,7 +70,7 @@
         {% if admission and admission.matricule_candidat != user.person.global_id %}
           href="{% url 'admission:supervised-list' %}"
         {% else %}
-          href="{% url 'admission:list' %}"
+          href="{% url 'admission:doctorate-list' %}"
         {% endif %}
           class="pull-right h5 text-primary"
       >
@@ -83,7 +83,7 @@
         <div>
             {% trans "Reference:" %}
             {% if not admission %}
-                {% trans "No reference yet - Go to 'Training choice' tab" %}
+                {% trans "No reference yet - Go to Project tab" %}
             {% else %}
                 {{ doctorate_title }} ({{ admission.reference }})
             {% endif %}
