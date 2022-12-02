@@ -28,6 +28,8 @@ from unittest.mock import patch, ANY
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
+
+from admission.contrib.enums.training_choice import TrainingType
 from osis_admission_sdk.model.accounting_conditions_last_french_community_high_education_institutes_attended import (
     AccountingConditionsLastFrenchCommunityHighEducationInstitutesAttended,
 )
@@ -76,6 +78,7 @@ class AccountingViewTestCase(TestCase):
                 intitule='Doctorate name',
                 sigle_entite_gestion="CDSS",
                 campus="Mons",
+                type=TrainingType.PHD.name,
             ),
             matricule_candidat=cls.person.global_id,
             code_secteur_formation='CS',
@@ -99,6 +102,7 @@ class AccountingViewTestCase(TestCase):
                 sous_type_situation_assimilation_5=ChoixAssimilation5.A_NATIONALITE_UE.name,
                 relation_parente=LienParente.COHABITANT_LEGAL.name,
             ),
+            curriculum=[],
         )
 
         cls.detail_url = resolve_url('admission:doctorate:accounting', pk=cls.proposition.uuid)

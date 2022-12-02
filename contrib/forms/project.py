@@ -23,14 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete
+from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
 from admission.contrib.enums.financement import (
-    BourseRecherche,
     ChoixTypeContratTravail,
     ChoixTypeFinancement,
 )
@@ -40,11 +39,13 @@ from admission.contrib.enums.proximity_commission import (
     ChoixProximityCommissionCDSS,
     ChoixSousDomaineSciences,
 )
+from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.forms import (
     CustomDateInput,
     EMPTY_CHOICE,
     SelectOrOtherField,
     get_thesis_location_initial_choices,
+    get_scholarship_choices,
 )
 from admission.services.autocomplete import AdmissionAutocompleteService
 from osis_document.contrib import FileUploadField
@@ -107,9 +108,16 @@ class DoctorateAdmissionProjectForm(forms.Form):
         max_value=100,
         required=False,
     )
-    bourse_recherche = SelectOrOtherField(
+    bourse_recherche = forms.CharField(
         label=_("Scholarship grant"),
-        choices=EMPTY_CHOICE + BourseRecherche.choices(),
+        required=False,
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:scholarship',
+            forward=[forward.Const(TypeBourse.BOURSE_INTERNATIONALE_DOCTORAT.name, 'scholarship_type')],
+        ),
+    )
+    autre_bourse_recherche = forms.CharField(
+        label=_("If other scholarship, specify"),
         required=False,
     )
     bourse_date_debut = forms.DateField(
@@ -254,6 +262,13 @@ class DoctorateAdmissionProjectForm(forms.Form):
         if self.data.get(self.add_prefix("raison_non_soutenue"), self.initial.get("raison_non_soutenue")):
             self.fields['non_soutenue'].initial = True
 
+        scholarship_uuid = self.data.get(self.add_prefix('bourse_recherche'), self.initial.get('bourse_recherche'))
+        if scholarship_uuid:
+            self.fields['bourse_recherche'].widget.choices = get_scholarship_choices(
+                uuid=scholarship_uuid,
+                person=self.person,
+            )
+
     def clean(self):
         data = super().clean()
 
@@ -265,10 +280,14 @@ class DoctorateAdmissionProjectForm(forms.Form):
             if not data.get('eft'):
                 self.add_error('eft', _("This field is required."))
 
-        elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name and not data.get(
-            'bourse_recherche'
-        ):
-            self.add_error('bourse_recherche', _("This field is required."))
+        elif data.get('type_financement') == ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
+            if data.get('bourse_recherche'):
+                data['autre_bourse_recherche'] = ''
+            elif data.get('autre_bourse_recherche'):
+                data['bourse_recherche'] = ''
+            else:
+                self.add_error('bourse_recherche', _('This field is required.'))
+                self.add_error('autre_bourse_recherche', '')
 
         if data.get('non_soutenue') and not data.get('raison_non_soutenue'):
             self.add_error('raison_non_soutenue', _("This field is required."))
@@ -280,67 +299,3 @@ class DoctorateAdmissionProjectForm(forms.Form):
         return next(  # pragma: no branch
             d for d in doctorats if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
         )
-
-
-class DoctorateAdmissionProjectCreateForm(DoctorateAdmissionProjectForm):
-    sector = forms.CharField(
-        label=_("Sector"),
-        widget=autocomplete.Select2(),
-    )
-    doctorate = forms.CharField(
-        label=_("Doctorate"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:doctorate", forward=['sector']),
-    )
-
-    def __init__(self, person=None, *args, **kwargs):
-        self.person = person
-        super().__init__(hide_proximity_commission_fields=False, *args, **kwargs)
-        self.fields['sector'].widget.choices = [('', '-')] + [
-            (sector.sigle, f"{sector.sigle} - {sector.intitule}")
-            for sector in AdmissionAutocompleteService.get_sectors(person)
-        ]
-
-        # If we have a POST value, set the doctorate
-        data = kwargs.get('data', None)
-        self.doctorate_data = {}
-        if data and data.get('doctorate'):
-            # Populate doctorate choices
-            doctorate = self.get_selected_doctorate(data.get('sector'), data.get('doctorate'))
-            self.fields['doctorate'].widget.choices = [
-                (
-                    "{doctorat.sigle}-{doctorat.annee}".format(doctorat=doctorate),
-                    "{sigle} - {intitule}".format(
-                        sigle=doctorate.sigle,
-                        intitule=doctorate.intitule,
-                    ),
-                )
-            ]
-            # This is used in the template to make proximity commission field appear
-            self.doctorate_data = dict(
-                id="{result.sigle}-{result.annee}".format(result=doctorate),
-                sigle=doctorate.sigle,
-                sigle_entite_gestion=doctorate.sigle_entite_gestion,
-            )
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        if (
-            # Commission CDE/CLSM is required but not set
-            self.doctorate_data.get('sigle_entite_gestion') in COMMISSIONS_CDE_CLSM
-            and not cleaned_data.get('commission_proximite_cde')
-        ):
-            self.add_error('commission_proximite_cde', _("This field is required."))
-
-        if (
-            # Commission CDSS is required but not set
-            self.doctorate_data.get('sigle_entite_gestion') == COMMISSION_CDSS
-            and not cleaned_data.get('commission_proximite_cdss')
-        ):
-            self.add_error('commission_proximite_cdss', _("This field is required."))
-
-        # Science doctorate but no subdomain set
-        if self.doctorate_data.get('sigle') == SCIENCE_DOCTORATE and not cleaned_data.get('sous_domaine'):
-            self.add_error('sous_domaine', _("This field is required."))
-
-        return cleaned_data

@@ -31,14 +31,14 @@ from base.models.utils.utils import ChoiceEnum
 
 class TeachingTypeEnum(ChoiceEnum):
     SOCIAL_PROMOTION = _("Social promotion")
-    FULL_EXERCICES = _("Full exercises")
+    FULL_TIME = _("Full-time")
 
 
 class Result(ChoiceEnum):
-    FAILURE = _('Failure')
-    NO_RESULT = _('No result')
     SUCCESS = _("Success")
     SUCCESS_WITH_RESIDUAL_CREDITS = _('Success with residual credits')
+    FAILURE = _('Failure')
+    WAITING_RESULT = _('Waiting for a result')
 
 
 class Grade(ChoiceEnum):

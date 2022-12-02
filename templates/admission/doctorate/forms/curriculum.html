@@ -1,46 +1,5 @@
-{% extends "admission/doctorate/detail_tab_layout.html" %}
-{% load bootstrap3 i18n static admission %}
-
-
-{{ admission.errors }}
-{% block tab_content %}
-  <!-- List of experiences -->
-  {% include 'admission/doctorate/includes/curriculum_experience_list.html' with minimal_year=minimal_year professional_experiences=professional_experiences educational_experiences=educational_experiences proposition_id=view.kwargs.pk with_editing_options=True %}
-
-  {% panel _('Submit my curriculum vitae') %}
-    <form method="post">
-      {% csrf_token %}
-
-      {% bootstrap_form_errors form %}
-
-      <div class="required_field">
-        {% bootstrap_field form.curriculum %}
-      </div>
-
-      <button
-          type="submit"
-          class="btn btn-primary pull-right"
-      >
-        {% translate "Upload" %}
-      </button>
-    </form>
-  {% endpanel %}
-{% endblock %}
-
-{% block script %}
-  {{ block.super }}
-  <script type="application/javascript">
-      $(function () {
-          document.dispatchEvent(new Event('refreshFormInitial'));
-      });
-  </script>
-{% endblock %}
-
-{% block style %}
-  {{ block.super }}
-  <style>
-    td {
-      vertical-align : middle !important;
-    }
-  </style>
+{% extends "admission/admission/forms/curriculum.html" %}
+{% load bootstrap3 %}
+{% block attachments_fields %}
+  {% bootstrap_field form.curriculum form_group_class="form_group required_field" %}
 {% endblock %}

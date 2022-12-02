@@ -35,11 +35,10 @@ from base.tests.factories.person import PersonFactory
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class ConfirmationTestCase(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.url = resolve_url('admission:doctorate:confirm', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        cls.url = resolve_url('admission:doctorate:confirm-submit', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         cls.default_kwargs = {
             'accept_language': ANY,
             'x_user_first_name': ANY,
@@ -73,10 +72,13 @@ class ConfirmationTestCase(TestCase):
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
         self.mock_proposition_api.return_value.verify_proposition.assert_called()
 
-        self.assertNotContains(response, _(
-            "I authorize the UCLouvain to transmit to the secondary school in which I obtained my CESS, the information"
-            " on the success."
-        ))
+        self.assertNotContains(
+            response,
+            _(
+                "I authorize the UCLouvain to transmit to the secondary school in "
+                "which I obtained my CESS, the information on the success."
+            ),
+        )
         self.assertContains(
             response, _('Your enrolment can be confirmed as all the necessary conditions have been met.')
         )
@@ -101,10 +103,13 @@ class ConfirmationTestCase(TestCase):
 
         response = self.client.get(self.url)
 
-        self.assertContains(response, _(
-            "I authorize the UCLouvain to transmit to the secondary school in which I obtained my CESS, the information"
-            " on the success."
-        ))
+        self.assertContains(
+            response,
+            _(
+                "I authorize the UCLouvain to transmit to the secondary school in "
+                "which I obtained my CESS, the information on the success."
+            ),
+        )
 
     def test_get_with_incomplete_admission(self):
         self.mock_proposition_api.return_value.verify_proposition.return_value = Mock().return_value = [
@@ -118,12 +123,8 @@ class ConfirmationTestCase(TestCase):
             response, _('Your enrolment cannot be confirmed. All the following conditions must be met to do it.')
         )
         # Display the missing conditions retrieves by the API
-        self.assertContains(
-            response, 'Some data is missing.'
-        )
-        self.assertContains(
-            response, 'Every promoter must approve the proposition.'
-        )
+        self.assertContains(response, 'Some data is missing.')
+        self.assertContains(response, 'Every promoter must approve the proposition.')
 
     def test_post_with_incomplete_form_without_belgian_diploma(self):
         response = self.client.post(self.url, data={})
@@ -171,23 +172,25 @@ class ConfirmationTestCase(TestCase):
 
     def test_post_with_complete_form_but_bad_values(self):
         # One checkbox is not checked -> invalid
-        response = self.client.post(self.url, data={
+        data = {
             'accept_regulations': True,
             'accept_data_protection_policy': False,
             'accept_regulated_professions_rules': True,
             'accept_max_response_time': True,
-        })
+        }
+        response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'accept_data_protection_policy', _('This field is required.'))
 
     def test_post_with_complete_form(self):
         # All checkboxes are checked -> valid
-        response = self.client.post(self.url, data={
+        data = {
             'accept_regulations': True,
             'accept_data_protection_policy': True,
             'accept_regulated_professions_rules': True,
             'accept_max_response_time': True,
-        })
+        }
+        response = self.client.post(self.url, data=data)
         self.mock_proposition_api.return_value.submit_proposition.assert_called_with(
             uuid="3c5cdc60-2537-4a12-a396-64d2e9e34876",
             **self.default_kwargs,

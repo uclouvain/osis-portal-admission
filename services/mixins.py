@@ -26,6 +26,7 @@
 from copy import copy
 
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 
@@ -60,6 +61,9 @@ class WebServiceFormMixin:
                 else:
                     form.add_error(None, exception.detail)
             return self.form_invalid(form)
+        except PermissionDenied as e:
+            form.add_error(None, str(e))
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def call_webservice(self, data):
@@ -81,6 +85,16 @@ class WebServiceFormMixin:
     @property
     def person(self) -> Person:
         return self.request.user.person
+
+
+class FormMixinWithSpecificQuestions:
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['form_item_configurations'] = [
+            configuration.to_dict()
+            for configuration in getattr(self, 'specific_questions', [])
+        ] if self.kwargs.get('pk') else []
+        return kwargs
 
 
 class ServiceMeta(type):

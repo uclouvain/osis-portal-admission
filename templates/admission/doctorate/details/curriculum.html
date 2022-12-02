@@ -5,7 +5,12 @@
   <!-- List of experiences -->
   {% include 'admission/doctorate/includes/curriculum_experience_list.html' with minimal_year=minimal_year professional_experiences=professional_experiences educational_experiences=educational_experiences proposition_id=view.kwargs.pk with_editing_options=False %}
 
-  {% field_data _('Curriculum') curriculum_file.curriculum hide_empty=True %}
+  {% field_data _('Decision of equivalence for your diploma(s) giving access to the training, if this(these) has(have) been obtained outside Belgium') admission.equivalence_diplome hide_empty=True %}
+  {% field_data _('Curriculum') admission.curriculum hide_empty=True %}
+  {% field_data _('Do you want, on the basis of this training, to realize a cycle continuation for the bachelor you are registering for?') admission.continuation_cycle_bachelier hide_empty=True %}
+  {% field_data _("Certificate allowing the continuation of studies for a bachelor's degree in veterinary medicine") admission.attestation_continuation_cycle_bachelier hide_empty=True %}
+
+  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
 
 {% endblock %}
 
@@ -14,6 +19,12 @@
   <style>
       td {
           vertical-align : middle !important;
+      }
+      .action-container {
+          text-align: right;
+      }
+      .action-container > div {
+        display: inline-block;
       }
   </style>
 {% endblock %}

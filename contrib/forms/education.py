@@ -27,7 +27,7 @@ from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.constants import FIELD_REQUIRED_MESSAGE, LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
@@ -44,12 +44,13 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     EMPTY_CHOICE,
 )
+from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 from base.tests.factories.academic_year import get_current_year
 from osis_document.contrib import FileUploadField
 
 
-class DoctorateAdmissionEducationForm(forms.Form):
+class DoctorateAdmissionEducationForm(ConfigurableFormMixin):
     got_diploma = forms.ChoiceField(
         label=_("Do you have a high school diploma?"),
         choices=GotDiploma.choices(),
@@ -447,7 +448,6 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        from admission.contrib.views.form_tabs.education import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
 
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
             self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))

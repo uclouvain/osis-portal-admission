@@ -23,14 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest.mock import Mock, patch
+import uuid
+from unittest.mock import Mock, patch, MagicMock
 
 from django.core.exceptions import ImproperlyConfigured
 from django.template import Context, Template
 from django.test import RequestFactory, TestCase
+from django.test.utils import override_settings
 from django.urls import resolve
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
+
+from admission.contrib.enums.specific_question import TypeItemFormulaire
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 from admission.templatetags.admission import (
     TAB_TREES,
@@ -42,6 +47,7 @@ from admission.templatetags.admission import (
     get_valid_tab_tree,
     has_error_in_tab,
     strip,
+    multiple_field_data,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
@@ -105,7 +111,7 @@ class TemplateTagsTestCase(TestCase):
             def __new__(cls, *args, **kwargs):
                 return Mock(kwargs={}, spec=cls)
 
-        person_tab_url = '/admission/doctorate/create/person'
+        person_tab_url = '/admission/create/person'
         template = Template("{% load admission %}{% doctorate_tabs %}")
 
         request = RequestFactory().get(person_tab_url)
@@ -114,8 +120,8 @@ class TemplateTagsTestCase(TestCase):
         self.assertNotIn('confirm-paper', rendered)
         self.assertInHTML(
             """<li role="presentation" class="active">
-            <a href="/admission/doctorate/create/person">
-                <span class="fa fa-user"></span>
+            <a href="/admission/create/person">
+                <span class="fa fa-id-card"></span>
                 {}
             </a>
         </li>""".format(
@@ -131,8 +137,8 @@ class TemplateTagsTestCase(TestCase):
         rendered = template.render(Context({'view': MockedFormView(), 'request': request}))
         self.assertInHTML(
             """<li role="presentation">
-            <a href="/admission/doctorate/create/person">
-                <span class="fa fa-user"></span>
+            <a href="/admission/create/person">
+                <span class="fa fa-id-card"></span>
                 {}
             </a>
         </li>""".format(
@@ -248,6 +254,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertTrue(can_update_tab(admission, Tab('coordonnees', '')))
 
     def test_has_error_in_tab(self):
+        context = {'request': Mock(resolver_match=Mock(namespaces=['admission', 'doctorate']))}
         erreurs = [
             {
                 'detail': "Merci de spécifier au-moins un numéro d'identité.",
@@ -267,12 +274,12 @@ class TemplateTagsTestCase(TestCase):
             },
         ]
         admission = Mock(erreurs=erreurs)
-        self.assertFalse(has_error_in_tab('', 'personal'))
-        self.assertTrue(has_error_in_tab(admission, 'personal'))
+        self.assertFalse(has_error_in_tab(context, '', 'personal'))
+        self.assertTrue(has_error_in_tab(context, admission, 'personal'))
         with self.assertRaises(ImproperlyConfigured):
-            has_error_in_tab(admission, 'unknown')
-        self.assertTrue(has_error_in_tab(admission, 'curriculum'))
-        self.assertFalse(has_error_in_tab(admission, 'coordonnees'))
+            has_error_in_tab(context, admission, 'unknown')
+        self.assertTrue(has_error_in_tab(context, admission, 'curriculum'))
+        self.assertFalse(has_error_in_tab(context, admission, 'coordonnees'))
 
     def test_get_dashboard_links_tag(self):
         template = Template(
@@ -299,6 +306,10 @@ class DisplayTagTestCase(TestCase):
         self.assertEqual(display('foo', '-', None, '-', ''), 'foo')
         self.assertEqual(display('foo', '-', None, '-', 'baz'), 'foo - baz')
         self.assertEqual(display('foo', '-', "bar", '-', 'baz'), 'foo - bar - baz')
+        self.assertEqual(display('-'), '')
+        self.assertEqual(display('', '-', ''), '')
+        self.assertEqual(display('-', '-'), '-')
+        self.assertEqual(display('-', '-', '-'), '-')
 
     def test_parenthesis(self):
         self.assertEqual(display('(', '', ")"), '')
@@ -323,3 +334,61 @@ class DisplayTagTestCase(TestCase):
         self.assertEqual(strip(' coucou '), 'coucou')
         self.assertEqual(strip(0), 0)
         self.assertEqual(strip(None), None)
+
+
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/', LANGUAGE_CODE='en')
+class MultipleFieldDataTestCase(TestCase):
+    default_translated_value = {'en': '', 'fr-be': ''}
+
+    def setUp(self):
+        self.configurations = [
+            SpecificQuestion._from_openapi_data(
+                uuid='fe254203-17c7-47d6-95e4-3c5c532da551',
+                type=TypeItemFormulaire.MESSAGE.name,
+                required=False,
+                title=self.default_translated_value,
+                text={'en': 'The very short message.', 'fr-be': 'Le très court message.'},
+                help_text=self.default_translated_value,
+                configuration={},
+            ),
+            SpecificQuestion._from_openapi_data(
+                uuid='fe254203-17c7-47d6-95e4-3c5c532da552',
+                type=TypeItemFormulaire.TEXTE.name,
+                required=True,
+                title={'en': 'Text field', 'fr-be': 'Champ texte'},
+                text={'en': 'Write here', 'fr-be': 'Ecrivez ici'},
+                help_text={'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                configuration={},
+            ),
+            SpecificQuestion._from_openapi_data(
+                uuid='fe254203-17c7-47d6-95e4-3c5c532da553',
+                type=TypeItemFormulaire.DOCUMENT.name,
+                required=False,
+                title={'en': 'Document field', 'fr-be': 'Champ document'},
+                text=self.default_translated_value,
+                help_text={'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                configuration={},
+            ),
+        ]
+
+    def test_multiple_field_data_return_right_values_with_valid_data(self):
+        first_uuid = uuid.uuid4()
+        result = multiple_field_data(
+            configurations=self.configurations,
+            data={
+                'fe254203-17c7-47d6-95e4-3c5c532da552': 'My response',
+                'fe254203-17c7-47d6-95e4-3c5c532da553': [str(first_uuid), 'other-token'],
+            },
+        )
+        self.assertEqual(result['fields'][0].value, 'The very short message.')
+        self.assertEqual(result['fields'][1].value, 'My response')
+        self.assertEqual(result['fields'][2].value, [first_uuid, 'other-token'])
+
+    def test_multiple_field_data_return_right_values_with_empty_data(self):
+        result = multiple_field_data(
+            configurations=self.configurations,
+            data={},
+        )
+        self.assertEqual(result['fields'][0].value, 'The very short message.')
+        self.assertEqual(result['fields'][1].value, None)
+        self.assertEqual(result['fields'][2].value, [])

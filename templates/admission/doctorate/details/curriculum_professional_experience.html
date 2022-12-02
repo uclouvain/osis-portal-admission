@@ -29,14 +29,14 @@
 {% block tab_content %}
 
   <div class="panel panel-default">
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_reading=True %}
+    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_reading=True title=_("Consultation of a non-academic activity") %}
     <div class="panel-body">
       <div class="row">
         <div class="col-md-6">
-          {% field_data _('Start date') experience.start_date|date:"YEAR_MONTH_FORMAT" %}
+          {% field_data _('Start date') experience.start_date|date:"YEAR_MONTH_FORMAT"|title %}
         </div>
         <div class="col-md-6">
-          {% field_data _('End date') experience.start_date|date:"YEAR_MONTH_FORMAT" %}
+          {% field_data _('End date') experience.start_date|date:"YEAR_MONTH_FORMAT"|title %}
         </div>
       </div>
       <div class="row">
@@ -45,6 +45,9 @@
         </div>
         <div class="col-md-6">
           {% field_data _('Sector') experience.sector.value|enum_display:'ActivitySector' hide_empty=True %}
+        </div>
+        <div class="col-md-6">
+          {% field_data _('Activity') experience.activity hide_empty=True %}
         </div>
       </div>
       <div class="row">

@@ -61,6 +61,7 @@ textarea {
 .vertical-align {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .inline-field-data dl {
@@ -79,8 +80,12 @@ textarea {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-	align-items: center;
+  align-items: center;
   gap: 1em;
+}
+
+.flex-container.align-top {
+  align-items: start;
 }
 
 .flex-1 {
@@ -197,6 +202,10 @@ select.select2-hidden-accessible + span {
   min-width: auto;
 }
 
+.select2-selection.select2-selection--single {
+  padding: 6px 12px;
+}
+
 .d-block {
   display: block;
 }
@@ -270,4 +279,21 @@ input:checked + .osis-slider:before {
 
 .pull-right > .input-group {
   width: 0; /* Chrome fix of input-group inside panel title (doctoral training) */
+}
+
+.plain-text-widget {
+  width: 100%;
+  white-space: pre-line;
+}
+
+.debug-content {
+  background-color: #ffb4ff78;
+}
+
+.scroll-with-margin {
+  scroll-margin-top: 65px; /* To scroll under the nav menu */
+}
+
+body, html {
+  scroll-behavior: smooth;
 }

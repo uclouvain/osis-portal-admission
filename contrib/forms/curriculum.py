@@ -24,11 +24,12 @@
 #
 # ##############################################################################
 from datetime import datetime
+from functools import partial
 
 from dal import autocomplete
 from django import forms
 from django.forms import BaseFormSet
-from django.utils.dates import MONTHS
+from django.utils.dates import MONTHS_ALT
 from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
 from admission.constants import (
@@ -39,6 +40,7 @@ from admission.constants import (
 )
 
 from admission.contrib.enums.curriculum import *
+from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
 from admission.contrib.forms import (
     EMPTY_CHOICE,
     get_country_initial_choices,
@@ -50,17 +52,131 @@ from admission.contrib.forms import (
     RadioBooleanField,
     get_superior_non_university_initial_choices,
     FORM_SET_PREFIX,
+    PDF_MIME_TYPE,
+    NoInput,
 )
 from osis_document.contrib.forms import FileUploadField
 
+from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 
 
-class DoctorateAdmissionCurriculumFileForm(forms.Form):
-    curriculum = FileUploadField(
-        label=_('Curriculum vitae detailed, dated and signed'),
-        required=True,
+CurriculumField = partial(
+    FileUploadField,
+    label=_('Curriculum vitae detailed, dated and signed'),
+    max_files=1,
+    mimetypes=[PDF_MIME_TYPE],
+    required=False,
+)
+
+DiplomaEquivalenceField = partial(
+    FileUploadField,
+    label=_(
+        'Decision of equivalence for your diploma(s) giving access to the training, '
+        'if this(these) has(have) been obtained outside Belgium'
+    ),
+    required=False,
+)
+
+TRAINING_TYPES_WITH_EQUIVALENCE = {
+    TrainingType.AGGREGATION.name,
+    TrainingType.CAPAES.name,
+}
+
+REQUIRED_FIELD_CLASS = 'required_field'
+
+
+class DoctorateAdmissionCurriculumFileForm(ConfigurableFormMixin):
+    configurable_form_field_name = 'reponses_questions_specifiques'
+
+    curriculum = CurriculumField()
+
+
+class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
+    configurable_form_field_name = 'reponses_questions_specifiques'
+
+    curriculum = CurriculumField()
+    equivalence_diplome = DiplomaEquivalenceField()
+    continuation_cycle_bachelier = RadioBooleanField(
+        label=_(
+            'Do you want, on the basis of this training, to realize a cycle '
+            'continuation for the bachelor you are registering for?'
+        ),
+        required=False,
     )
+    attestation_continuation_cycle_bachelier = FileUploadField(
+        label=_("Certificate allowing the continuation of studies for a bachelor's degree in veterinary medicine"),
+        required=False,
+    )
+
+    def __init__(
+        self,
+        training_acronym: str,
+        training_type: TrainingType,
+        has_foreign_diploma: bool,
+        has_belgian_diploma: bool,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+        if not (training_type in TRAINING_TYPES_WITH_EQUIVALENCE and has_foreign_diploma):
+            self.fields['equivalence_diplome'].disabled = True
+            self.fields['equivalence_diplome'].widget = NoInput()
+
+        elif not has_belgian_diploma:
+            self.fields['equivalence_diplome'].widget.attrs['class'] = REQUIRED_FIELD_CLASS
+
+        if training_type == TrainingType.BACHELOR.name:
+            self.fields['curriculum'].disabled = True
+            self.fields['curriculum'].widget = NoInput()
+        else:
+            self.fields['continuation_cycle_bachelier'].disabled = True
+            self.fields['continuation_cycle_bachelier'].widget = NoInput()
+
+        if training_acronym != VETERINARY_BACHELOR_CODE:
+            self.fields['attestation_continuation_cycle_bachelier'].disabled = True
+            self.fields['attestation_continuation_cycle_bachelier'].widget = NoInput()
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if not cleaned_data['continuation_cycle_bachelier']:
+            cleaned_data['attestation_continuation_cycle_bachelier'] = []
+
+        for f in ['curriculum', 'equivalence_diplome', 'attestation_continuation_cycle_bachelier']:
+            if self.fields[f].disabled:
+                cleaned_data[f] = []
+
+        if self.fields['continuation_cycle_bachelier'].disabled:
+            cleaned_data['continuation_cycle_bachelier'] = None
+
+        return cleaned_data
+
+    class Media:
+        js = ('js/dependsOn.min.js',)
+
+
+class ContinuingAdmissionCurriculumFileForm(ConfigurableFormMixin):
+    configurable_form_field_name = 'reponses_questions_specifiques'
+
+    curriculum = CurriculumField()
+    equivalence_diplome = DiplomaEquivalenceField()
+
+    def __init__(self, training_type: TrainingType, has_foreign_diploma: bool, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not (training_type == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name and has_foreign_diploma):
+            self.fields['equivalence_diplome'].disabled = True
+            self.fields['equivalence_diplome'].widget = NoInput()
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if self.fields['equivalence_diplome'].disabled:
+            cleaned_data['equivalence_diplome'] = []
+
+        return cleaned_data
 
 
 def year_choices():
@@ -68,7 +184,7 @@ def year_choices():
 
 
 def month_choices():
-    return [EMPTY_CHOICE[0]] + [(index, month) for index, month in MONTHS.items()]
+    return [EMPTY_CHOICE[0]] + [(index, month) for index, month in MONTHS_ALT.items()]
 
 
 class DoctorateAdmissionCurriculumProfessionalExperienceForm(forms.Form):
@@ -232,7 +348,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         label=_('Transcript type'),
     )
     obtained_diploma = RadioBooleanField(
-        label=_('Did you obtain a diploma at the end of this training?'),
+        label=_('Did you graduate from this training?'),
     )
     obtained_grade = forms.ChoiceField(
         choices=EMPTY_CHOICE + Grade.choices(),
@@ -266,7 +382,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
     )
     expected_graduation_date = forms.DateField(
         help_text=_('Date on which you expect to graduate.'),
-        label=_('Expected graduation date'),
+        label=_('Expected date of graduation (signed document)'),
         required=False,
         widget=CustomDateInput(),
     )
@@ -290,17 +406,6 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
     )
     dissertation_summary = FileUploadField(
         label=_('Dissertation summary'),
-        required=False,
-    )
-    bachelor_cycle_continuation = RadioBooleanField(
-        label=_(
-            'Do you want, on the basis of this training, to realize a cycle '
-            'continuation for the bachelor you are registering for?'
-        ),
-        required=False,
-    )
-    diploma_equivalence = FileUploadField(
-        label=_('Diploma equivalence'),
         required=False,
     )
 
@@ -393,6 +498,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
                 'dissertation_score',
                 'dissertation_summary',
                 'graduate_degree',
+                'rank_in_diploma',
             ]:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
@@ -427,9 +533,6 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         # Program field
         if not cleaned_data.get('education_name'):
             self.add_error('education_name', FIELD_REQUIRED_MESSAGE)
-        # Equivalence field
-        if not cleaned_data.get('diploma_equivalence'):
-            self.add_error('diploma_equivalence', FIELD_REQUIRED_MESSAGE)
         # Linguistic fields
         linguistic_regime = cleaned_data.get('linguistic_regime')
         if not linguistic_regime:
@@ -459,14 +562,12 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         cleaned_data['linguistic_regime'] = None
         cleaned_data['graduate_degree_translation'] = []
         cleaned_data['transcript_translation'] = []
-        cleaned_data['diploma_equivalence'] = []
 
 
 MINIMUM_CREDIT_NUMBER = 0
 
 
 class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
-
     def __init__(self, prefix_index_start=0, **kwargs):
         super().__init__(**kwargs)
 
@@ -488,10 +589,12 @@ class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
     registered_credit_number = forms.FloatField(
         label=_('Registered credits'),
         required=False,
+        localize=True,
     )
     acquired_credit_number = forms.FloatField(
         label=_('Acquired credits'),
         required=False,
+        localize=True,
     )
     transcript = FileUploadField(
         label=_('Transcript'),

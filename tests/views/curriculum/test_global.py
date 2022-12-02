@@ -26,16 +26,15 @@
 from django.shortcuts import resolve_url
 from rest_framework.status import HTTP_200_OK
 
-from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
+from admission.contrib.forms.curriculum import REQUIRED_FIELD_CLASS
 from admission.tests.views.curriculum.mixin import MixinTestCase
 
 
-class GlobalCurriculumTestCase(MixinTestCase):
+class CreateGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()
-        self.admission_read_url = resolve_url('admission:doctorate:curriculum', pk=self.proposition.uuid)
-        self.admission_update_url = resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-        self.create_url = resolve_url('admission:doctorate-create:curriculum')
+        self.create_url = resolve_url('admission:create:curriculum')
 
     def test_on_create_curriculum_is_loaded(self):
         response = self.client.get(self.create_url)
@@ -44,7 +43,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the right API calls are done
-        self.mock_person_api.return_value.retrieve_curriculum.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details.assert_called()
 
         # Check the context data
         self.assertEqual(len(response.context.get('professional_experiences')), 1)
@@ -53,8 +52,14 @@ class GlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('curriculum_file'), self.curriculum_file)
         self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+
+
+class DoctorateGlobalCurriculumTestCase(MixinTestCase):
+    def setUp(self):
+        super().setUp()
+        self.admission_read_url = resolve_url('admission:doctorate:curriculum', pk=self.proposition.uuid)
+        self.admission_update_url = resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
 
     def test_with_admission_on_reading_curriculum_is_loaded(self):
         response = self.client.get(self.admission_read_url)
@@ -64,7 +69,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
 
         # Check that the right API calls are done
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
-        self.mock_person_api.return_value.retrieve_curriculum_admission.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details_admission.assert_called()
 
         # Check the context data
         self.assertEqual(len(response.context.get('professional_experiences')), 1)
@@ -73,7 +78,6 @@ class GlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('curriculum_file'), self.curriculum_file)
         self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
 
     def test_with_admission_on_update_curriculum_is_loaded(self):
@@ -84,7 +88,7 @@ class GlobalCurriculumTestCase(MixinTestCase):
 
         # Check that the right API calls are done
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
-        self.mock_person_api.return_value.retrieve_curriculum_admission.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details_admission.assert_called()
 
         # Check the context data
         self.assertEqual(len(response.context.get('professional_experiences')), 1)
@@ -93,32 +97,9 @@ class GlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('curriculum_file'), self.curriculum_file)
         self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
 
-        self.assertEqual(response.context.get('form').initial['curriculum'], self.curriculum_file.get('curriculum'))
-
-    def test_on_create_post_curriculum_file(self):
-        response = self.client.post(
-            self.create_url,
-            data={
-                'curriculum_0': ['f1.pdf'],
-            },
-        )
-
-        # Check the request
-        self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:doctorate-create:curriculum'),
-        )
-
-        # Check that the right API calls are done
-        self.mock_person_api.return_value.update_curriculum_file.assert_called_once_with(
-            curriculum_file={
-                'curriculum': ['f1.pdf'],
-            },
-            **self.api_default_params,
-        )
+        self.assertEqual(response.context.get('form').initial['curriculum'], self.proposition.curriculum)
 
     def test_with_admission_on_update_post_curriculum_file(self):
         response = self.client.post(
@@ -135,27 +116,678 @@ class GlobalCurriculumTestCase(MixinTestCase):
         )
 
         # Check that the right API calls are done
-        self.mock_person_api.return_value.update_curriculum_file_admission.assert_called_once_with(
+        update_method = self.mock_person_api.return_value.update_doctorat_completer_curriculum_command_admission
+        update_method.assert_called_once_with(
             uuid=self.proposition.uuid,
-            curriculum_file={
+            doctorat_completer_curriculum_command={
                 'curriculum': ['f1.pdf'],
+                'reponses_questions_specifiques': {},
+                'uuid_proposition': self.proposition.uuid,
             },
             **self.api_default_params,
         )
 
-    def test_with_admission_on_update_post_without_curriculum_file_returns_error(self):
-        response = self.client.post(
-            self.admission_update_url,
-            data={
-                'curriculum_0': [],
-            },
+
+class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
+    def setUp(self):
+        super().setUp()
+        self.admission_read_url = resolve_url(
+            'admission:general-education:curriculum',
+            pk=self.general_proposition.uuid,
         )
+        self.admission_update_url = resolve_url(
+            'admission:general-education:update:curriculum',
+            pk=self.general_proposition.uuid,
+        )
+        self.post_data = {
+            'curriculum_0': ['new_file1.pdf'],
+            'equivalence_diplome_0': ['new_file2.pdf'],
+            'continuation_cycle_bachelier': True,
+            'attestation_continuation_cycle_bachelier_0': ['new_file3.pdf'],
+        }
+
+    def test_with_admission_on_reading_curriculum_is_loaded(self):
+        response = self.client.get(self.admission_read_url)
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
 
-        # Check that the API calls are not done
-        self.mock_person_api.return_value.update_curriculum_file_admission.assert_not_called()
+        # Check that the right API calls are done
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details_general_education_admission.assert_called()
 
         # Check the context data
-        self.assertFormError(response=response, form='form', field='curriculum', errors=FIELD_REQUIRED_MESSAGE)
+        self.assertEqual(len(response.context.get('professional_experiences')), 1)
+        self.assertEqual(response.context.get('professional_experiences')[0], self.lite_professional_experience)
+
+        self.assertEqual(len(response.context.get('educational_experiences')), 1)
+        self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
+
+        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_master(self):
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check that the right API calls are done
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details_general_education_admission.assert_called()
+
+        # Check the context data
+        self.assertEqual(len(response.context.get('professional_experiences')), 1)
+        self.assertEqual(response.context.get('professional_experiences')[0], self.lite_professional_experience)
+
+        self.assertEqual(len(response.context.get('educational_experiences')), 1)
+        self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
+
+        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+
+        # Check the form
+        form = response.context.get('form')
+        self.assertEqual(
+            form.initial['curriculum'],
+            self.general_proposition.curriculum,
+        )
+        self.assertEqual(
+            form.initial['equivalence_diplome'],
+            self.general_proposition.equivalence_diplome,
+        )
+        self.assertEqual(
+            form.initial['continuation_cycle_bachelier'],
+            self.general_proposition.continuation_cycle_bachelier,
+        )
+        self.assertEqual(
+            form.initial['attestation_continuation_cycle_bachelier'],
+            self.general_proposition.attestation_continuation_cycle_bachelier,
+        )
+
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
+        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_bachelor(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+        self.assertEqual(
+            form.initial['curriculum'],
+            self.general_proposition.curriculum,
+        )
+        self.assertEqual(
+            form.initial['equivalence_diplome'],
+            self.general_proposition.equivalence_diplome,
+        )
+        self.assertEqual(
+            form.initial['continuation_cycle_bachelier'],
+            self.general_proposition.continuation_cycle_bachelier,
+        )
+        self.assertEqual(
+            form.initial['attestation_continuation_cycle_bachelier'],
+            self.general_proposition.attestation_continuation_cycle_bachelier,
+        )
+
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+        self.assertFalse(form.fields['continuation_cycle_bachelier'].disabled)
+        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_veterinary_bachelor(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.sigle = (
+            VETERINARY_BACHELOR_CODE
+        )
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+        self.assertEqual(
+            form.initial['curriculum'],
+            self.general_proposition.curriculum,
+        )
+        self.assertEqual(
+            form.initial['equivalence_diplome'],
+            self.general_proposition.equivalence_diplome,
+        )
+        self.assertEqual(
+            form.initial['continuation_cycle_bachelier'],
+            self.general_proposition.continuation_cycle_bachelier,
+        )
+        self.assertEqual(
+            form.initial['attestation_continuation_cycle_bachelier'],
+            self.general_proposition.attestation_continuation_cycle_bachelier,
+        )
+
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+        self.assertFalse(form.fields['continuation_cycle_bachelier'].disabled)
+        self.assertFalse(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_aggregation_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.AGGREGATION.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+        ]
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertFalse(form.fields['equivalence_diplome'].disabled)
+        self.assertEqual(form.fields['equivalence_diplome'].widget.attrs.get('class'), REQUIRED_FIELD_CLASS)
+        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
+        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_aggregation_and_be_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.AGGREGATION.name
+        )
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
+        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_capes_and_be_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.CAPAES.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+            self.lite_educational_experience,
+        ]
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertFalse(form.fields['equivalence_diplome'].disabled)
+        self.assertNotEqual(form.fields['equivalence_diplome'].widget.attrs.get('class'), REQUIRED_FIELD_CLASS)
+        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
+        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_update_post_curriculum_file_with_master(self):
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_general_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.general_proposition.uuid,
+            general_education_completer_curriculum_command={
+                'curriculum': ['new_file1.pdf'],
+                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.general_proposition.uuid,
+                'equivalence_diplome': [],
+                'continuation_cycle_bachelier': None,
+                'attestation_continuation_cycle_bachelier': [],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_post_curriculum_with_veterinary_bachelor(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.sigle = (
+            VETERINARY_BACHELOR_CODE
+        )
+
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_general_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.general_proposition.uuid,
+            general_education_completer_curriculum_command={
+                'curriculum': [],
+                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.general_proposition.uuid,
+                'equivalence_diplome': [],
+                'continuation_cycle_bachelier': True,
+                'attestation_continuation_cycle_bachelier': ['new_file3.pdf'],
+            },
+            **self.api_default_params,
+        )
+
+        response = self.client.post(
+            self.admission_update_url,
+            data={
+                'continuation_cycle_bachelier': False,
+                'attestation_continuation_cycle_bachelier_0': ['new_file3.pdf'],
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
+        )
+
+        # Check that the right API calls are done
+        update_method.assert_called_with(
+            uuid=self.general_proposition.uuid,
+            general_education_completer_curriculum_command={
+                'curriculum': [],
+                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.general_proposition.uuid,
+                'equivalence_diplome': [],
+                'continuation_cycle_bachelier': False,
+                'attestation_continuation_cycle_bachelier': [],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_post_curriculum_with_bachelor(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_general_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.general_proposition.uuid,
+            general_education_completer_curriculum_command={
+                'curriculum': [],
+                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.general_proposition.uuid,
+                'equivalence_diplome': [],
+                'continuation_cycle_bachelier': True,
+                'attestation_continuation_cycle_bachelier': [],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_post_curriculum_is_loaded_with_aggregation_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.AGGREGATION.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+        ]
+
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_general_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.general_proposition.uuid,
+            general_education_completer_curriculum_command={
+                'curriculum': ['new_file1.pdf'],
+                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.general_proposition.uuid,
+                'equivalence_diplome': ['new_file2.pdf'],
+                'continuation_cycle_bachelier': None,
+                'attestation_continuation_cycle_bachelier': [],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_post_curriculum_is_loaded_with_aggregation_and_be_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.AGGREGATION.name
+        )
+
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_general_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.general_proposition.uuid,
+            general_education_completer_curriculum_command={
+                'curriculum': ['new_file1.pdf'],
+                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.general_proposition.uuid,
+                'equivalence_diplome': [],
+                'continuation_cycle_bachelier': None,
+                'attestation_continuation_cycle_bachelier': [],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_post_curriculum_is_loaded_with_capes_and_be_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.CAPAES.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+            self.lite_educational_experience,
+        ]
+
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_general_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.general_proposition.uuid,
+            general_education_completer_curriculum_command={
+                'curriculum': ['new_file1.pdf'],
+                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.general_proposition.uuid,
+                'equivalence_diplome': ['new_file2.pdf'],
+                'continuation_cycle_bachelier': None,
+                'attestation_continuation_cycle_bachelier': [],
+            },
+            **self.api_default_params,
+        )
+
+
+class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
+    def setUp(self):
+        super().setUp()
+        self.admission_read_url = resolve_url(
+            'admission:continuing-education:curriculum',
+            pk=self.continuing_proposition.uuid,
+        )
+        self.admission_update_url = resolve_url(
+            'admission:continuing-education:update:curriculum',
+            pk=self.continuing_proposition.uuid,
+        )
+        self.post_data = {
+            'curriculum_0': ['new_file1.pdf'],
+            'equivalence_diplome_0': ['new_file2.pdf'],
+        }
+
+    def test_with_admission_on_reading_curriculum_is_loaded(self):
+        response = self.client.get(self.admission_read_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check that the right API calls are done
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details_continuing_education_admission.assert_called()
+
+        # Check the context data
+        self.assertEqual(len(response.context.get('professional_experiences')), 1)
+        self.assertEqual(response.context.get('professional_experiences')[0], self.lite_professional_experience)
+
+        self.assertEqual(len(response.context.get('educational_experiences')), 1)
+        self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
+
+        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_certificate_of_participation(self):
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check that the right API calls are done
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.assert_called()
+        self.mock_person_api.return_value.retrieve_curriculum_details_continuing_education_admission.assert_called()
+
+        # Check the context data
+        self.assertEqual(len(response.context.get('professional_experiences')), 1)
+        self.assertEqual(response.context.get('professional_experiences')[0], self.lite_professional_experience)
+
+        self.assertEqual(len(response.context.get('educational_experiences')), 1)
+        self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
+
+        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+
+        # Check the form
+        form = response.context.get('form')
+        self.assertEqual(
+            form.initial['curriculum'],
+            self.continuing_proposition.curriculum,
+        )
+        self.assertEqual(
+            form.initial['equivalence_diplome'],
+            self.continuing_proposition.equivalence_diplome,
+        )
+
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_first_cycle_certificate(self):
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
+            TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+        )
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+        self.assertEqual(
+            form.initial['curriculum'],
+            self.continuing_proposition.curriculum,
+        )
+        self.assertEqual(
+            form.initial['equivalence_diplome'],
+            self.continuing_proposition.equivalence_diplome,
+        )
+
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_first_cycle_certificate_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
+            TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_continuing_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+        ]
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertFalse(form.fields['equivalence_diplome'].disabled)
+
+    def test_with_admission_on_update_post_curriculum_file_with_certificate_of_participation(self):
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:continuing-education:update:curriculum',
+                pk=self.continuing_proposition.uuid,
+            ),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_continuing_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.continuing_proposition.uuid,
+            continuing_education_completer_curriculum_command={
+                'curriculum': ['new_file1.pdf'],
+                'reponses_questions_specifiques': self.continuing_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.continuing_proposition.uuid,
+                'equivalence_diplome': [],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_post_curriculum_with_first_cycle_certificate(self):
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
+            TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+        )
+
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:continuing-education:update:curriculum',
+                pk=self.continuing_proposition.uuid,
+            ),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_continuing_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.continuing_proposition.uuid,
+            continuing_education_completer_curriculum_command={
+                'curriculum': ['new_file1.pdf'],
+                'reponses_questions_specifiques': self.continuing_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.continuing_proposition.uuid,
+                'equivalence_diplome': [],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_post_curriculum_with_first_cycle_certificate_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
+            TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_continuing_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+        ]
+
+        response = self.client.post(
+            self.admission_update_url,
+            data=self.post_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:continuing-education:update:curriculum',
+                pk=self.continuing_proposition.uuid,
+            ),
+        )
+
+        # Check that the right API calls are done
+        update_method = (
+            self.mock_person_api.return_value.update_continuing_education_completer_curriculum_command_admission
+        )
+        update_method.assert_called_once_with(
+            uuid=self.continuing_proposition.uuid,
+            continuing_education_completer_curriculum_command={
+                'curriculum': ['new_file1.pdf'],
+                'reponses_questions_specifiques': self.continuing_proposition.reponses_questions_specifiques,
+                'uuid_proposition': self.continuing_proposition.uuid,
+                'equivalence_diplome': ['new_file2.pdf'],
+            },
+            **self.api_default_params,
+        )
