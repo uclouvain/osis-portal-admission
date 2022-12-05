@@ -30,6 +30,7 @@ from rest_framework.status import HTTP_200_OK
 from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
 from admission.contrib.forms.curriculum import REQUIRED_FIELD_CLASS
 from admission.tests.views.curriculum.mixin import MixinTestCase
+from osis_admission_sdk.model.result import Result
 
 
 class CreateGlobalCurriculumTestCase(MixinTestCase):
@@ -238,6 +239,43 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
         self.assertFalse(form.fields['continuation_cycle_bachelier'].disabled)
+        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_bachelor_without_success(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+        mock_return = self.mock_person_api.return_value
+        xp = mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences[0]
+        xp.educationalexperienceyear_set[0].result = Result(value='WAITING_RESULT')
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+        self.assertEqual(
+            form.initial['curriculum'],
+            self.general_proposition.curriculum,
+        )
+        self.assertEqual(
+            form.initial['equivalence_diplome'],
+            self.general_proposition.equivalence_diplome,
+        )
+        self.assertEqual(
+            form.initial['continuation_cycle_bachelier'],
+            self.general_proposition.continuation_cycle_bachelier,
+        )
+        self.assertEqual(
+            form.initial['attestation_continuation_cycle_bachelier'],
+            self.general_proposition.attestation_continuation_cycle_bachelier,
+        )
+
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
         self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
     def test_with_admission_on_update_curriculum_is_loaded_with_veterinary_bachelor(self):
