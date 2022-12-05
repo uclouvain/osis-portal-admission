@@ -168,8 +168,14 @@ class MixinTestCase(TestCase):
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
             educationalexperienceyear_set=[
-                CurriculumDetailsEducationalexperienceyearSet(academic_year=cls.academic_year_2020.year),
-                CurriculumDetailsEducationalexperienceyearSet(academic_year=cls.academic_year_2018.year),
+                CurriculumDetailsEducationalexperienceyearSet(
+                    academic_year=cls.academic_year_2020.year,
+                    result=Result(value='SUCCESS'),
+                ),
+                CurriculumDetailsEducationalexperienceyearSet(
+                    academic_year=cls.academic_year_2018.year,
+                    result=Result(value='WAITING_RESULT'),
+                ),
             ],
             country=cls.be_country.iso_code,
         )
@@ -179,7 +185,10 @@ class MixinTestCase(TestCase):
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
             educationalexperienceyear_set=[
-                CurriculumDetailsEducationalexperienceyearSet(academic_year=cls.academic_year_2020.year),
+                CurriculumDetailsEducationalexperienceyearSet(
+                    academic_year=cls.academic_year_2020.year,
+                    result=Result(value='SUCCESS'),
+                ),
             ],
             country=cls.not_ue_country.iso_code,
         )
