@@ -115,6 +115,7 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
         training_type: TrainingType,
         has_foreign_diploma: bool,
         has_belgian_diploma: bool,
+        has_success_year: bool,
         *args,
         **kwargs,
     ):
@@ -130,6 +131,10 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
         if training_type == TrainingType.BACHELOR.name:
             self.fields['curriculum'].disabled = True
             self.fields['curriculum'].widget = NoInput()
+            if not has_success_year:
+                self.fields['continuation_cycle_bachelier'].disabled = True
+                self.fields['continuation_cycle_bachelier'].widget = NoInput()
+
         else:
             self.fields['continuation_cycle_bachelier'].disabled = True
             self.fields['continuation_cycle_bachelier'].widget = NoInput()

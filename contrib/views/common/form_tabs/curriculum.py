@@ -26,9 +26,12 @@
 from django.views.generic import FormView
 
 from admission.constants import BE_ISO_CODE
+from admission.contrib.enums import Result
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms.curriculum import (
-    ContinuingAdmissionCurriculumFileForm, DoctorateAdmissionCurriculumFileForm, GeneralAdmissionCurriculumFileForm,
+    ContinuingAdmissionCurriculumFileForm,
+    DoctorateAdmissionCurriculumFileForm,
+    GeneralAdmissionCurriculumFileForm,
 )
 from admission.contrib.views.common.detail_tabs.curriculum import AdmissionCurriculumDetailView
 from admission.contrib.views.common.form_tabs.curriculum_experiences import AdmissionCurriculumFormMixin
@@ -85,5 +88,10 @@ class AdmissionCurriculumFormView(
             kwargs['training_acronym'] = self.admission.formation['sigle']
             kwargs['has_belgian_diploma'] = any(
                 experience.country == BE_ISO_CODE for experience in self.curriculum.educational_experiences
+            )
+            kwargs['has_success_year'] = any(
+                year['result'].value == Result.SUCCESS.name
+                for experience in self.curriculum.educational_experiences
+                for year in experience.educationalexperienceyear_set
             )
         return kwargs
