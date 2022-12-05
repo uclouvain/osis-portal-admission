@@ -23,8 +23,7 @@
 {% endcomment %}
 {% spaceless %}
   {% if fields|length %}
-  <div class="panel panel-default">
-    <div class="multi-widget panel-body">
+    <div class="multi-widget">
       {% for widget, field in fields %}
         <div class="form-group
         {% if field.errors %} has-error{% elif is_bound %} has-success{% endif %}
@@ -56,6 +55,5 @@
         </div>
       {% endfor %}
     </div>
-  </div>
   {% endif %}
 {% endspaceless %}

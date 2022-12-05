@@ -113,7 +113,11 @@
     </div>
   {% endpanel %}
 
-  {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+  {% if form.specific_question_answers.field.fields %}
+    {% panel _('Specific questions') %}
+      {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+    {% endpanel %}
+  {% endif %}
 {% endblock %}
 
 {% block style %}

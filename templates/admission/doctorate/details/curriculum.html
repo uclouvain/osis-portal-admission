@@ -1,16 +1,42 @@
 {% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
 {% load bootstrap3 i18n static admission %}
 
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
 {% block tab_content %}
   <!-- List of experiences -->
   {% include 'admission/doctorate/includes/curriculum_experience_list.html' with minimal_year=minimal_year professional_experiences=professional_experiences educational_experiences=educational_experiences proposition_id=view.kwargs.pk with_editing_options=False %}
 
-  {% field_data _('Decision of equivalence for your diploma(s) giving access to the training, if this(these) has(have) been obtained outside Belgium') admission.equivalence_diplome hide_empty=True %}
-  {% field_data _('Curriculum') admission.curriculum hide_empty=True %}
-  {% field_data _('Do you want, on the basis of this training, to realize a cycle continuation for the bachelor you are registering for?') admission.continuation_cycle_bachelier hide_empty=True %}
-  {% field_data _("Certificate allowing the continuation of studies for a bachelor's degree in veterinary medicine") admission.attestation_continuation_cycle_bachelier hide_empty=True %}
+  {% panel _('Specific questions') %}
+    {% field_data _('Decision of equivalence for your diploma(s) giving access to the training, if this(these) has(have) been obtained outside Belgium') admission.equivalence_diplome hide_empty=True %}
+    {% field_data _('Curriculum') admission.curriculum hide_empty=True %}
+    {% field_data _('Do you want, on the basis of this training, to realize a cycle continuation for the bachelor you are registering for?') admission.continuation_cycle_bachelier hide_empty=True %}
+    {% field_data _("Certificate allowing the continuation of studies for a bachelor's degree in veterinary medicine") admission.attestation_continuation_cycle_bachelier hide_empty=True %}
 
-  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
+    {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
+  {% endpanel %}
 
 {% endblock %}
 
