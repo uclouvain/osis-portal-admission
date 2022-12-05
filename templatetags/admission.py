@@ -631,7 +631,8 @@ def get_country_name(context, iso_code: str):
 
 
 @register.inclusion_tag('admission/config/multiple_field_data.html')
-def multiple_field_data(configurations, data, title=''):
+def multiple_field_data(configurations, data, title=_('Specific questions')):
+    """Display the answers of the specific questions based on a list of configurations and a data dictionary"""
     current_language = get_language()
 
     if not data:
