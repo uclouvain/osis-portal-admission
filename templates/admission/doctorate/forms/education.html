@@ -275,8 +275,11 @@
     {% endpanel %}
   </div>
 
-  {% bootstrap_field main_form.specific_question_answers show_label=False error_css_class='' %}
-
+  {% if main_form.specific_question_answers.field.fields %}
+    {% panel _('Specific questions') %}
+      {% bootstrap_field main_form.specific_question_answers show_label=False error_css_class='' %}
+    {% endpanel %}
+  {% endif %}
 {% endblock %}
 
 {% block script %}

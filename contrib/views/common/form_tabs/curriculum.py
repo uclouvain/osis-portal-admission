@@ -69,7 +69,7 @@ class AdmissionCurriculumFormView(
 
     def get_template_names(self):
         return [
-            f"admission/{self.current_context.replace('-', '_')}/forms/curriculum.html",
+            f"admission/{self.formatted_current_context}/forms/curriculum.html",
             'admission/forms/curriculum.html',
         ]
 

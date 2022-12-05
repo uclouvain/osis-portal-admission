@@ -1,5 +1,5 @@
 {% extends form_base_template %}
-{% load bootstrap3 %}
+{% load bootstrap3 admission%}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -27,5 +27,9 @@
 
 {% block form %}
   {% bootstrap_form_errors form %}
-  {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+  {% if form.specific_question_answers.field.fields %}
+    {% panel _('Specific questions') %}
+      {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+    {% endpanel %}
+  {% endif %}
 {% endblock %}
