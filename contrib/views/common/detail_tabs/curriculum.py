@@ -31,6 +31,8 @@ from admission.constants import BE_ISO_CODE
 # Do not remove the following import as it is used by enum_display templatetag
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.specific_question import Onglets
+from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
+from admission.contrib.forms.curriculum import TRAINING_TYPES_WITH_EQUIVALENCE
 from admission.contrib.views.common.detail_tabs.curriculum_experiences import initialize_field_texts
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
@@ -43,7 +45,6 @@ __all__ = ['AdmissionCurriculumDetailView']
 
 
 class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
-    template_name = 'admission/doctorate/details/curriculum.html'
     service_mapping = {
         'create': AdmissionPersonService,
         'doctorate': AdmissionPersonService,
@@ -59,6 +60,12 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
             uuid=self.admission_uuid,
         )
 
+    def get_template_names(self):
+        return [
+            f"admission/{self.formatted_current_context}/details/curriculum.html",
+            'admission/details/curriculum.html',
+        ]
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
@@ -66,10 +73,58 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
 
         context_data['professional_experiences'] = curriculum.professional_experiences
         context_data['educational_experiences'] = curriculum.educational_experiences
-        context_data['minimal_year'] = curriculum.minimal_year
-
+        context_data['minimal_date'] = curriculum.minimal_date
+        context_data['need_to_complete'] = curriculum.minimal_date <= curriculum.maximal_date
+        context_data['missing_periods_messages'] = curriculum.incomplete_periods
+        context_data['display_curriculum'] = self.display_curriculum
+        context_data['display_equivalence'] = self.display_equivalence
+        context_data['display_bachelor_continuation'] = self.display_bachelor_continuation
+        context_data['display_bachelor_continuation_attestation'] = self.display_bachelor_continuation_attestation
         context_data['BE_ISO_CODE'] = BE_ISO_CODE
 
         initialize_field_texts(self.request.user.person, context_data['educational_experiences'])
 
         return context_data
+
+    @cached_property
+    def has_foreign_diploma(self):
+        return any(experience.country != BE_ISO_CODE for experience in self.curriculum.educational_experiences)
+
+    @cached_property
+    def has_belgian_diploma(self):
+        return any(experience.country == BE_ISO_CODE for experience in self.curriculum.educational_experiences)
+
+    @cached_property
+    def has_success_year(self):
+        return any(
+            year['result'].value == Result.SUCCESS.name
+            for experience in self.curriculum.educational_experiences
+            for year in experience.educationalexperienceyear_set
+        )
+
+    @cached_property
+    def display_curriculum(self):
+        if self.current_context == 'general-education':
+            return self.admission.formation['type'] != TrainingType.BACHELOR.name
+        return True
+
+    @cached_property
+    def display_equivalence(self):
+        if self.current_context == 'general-education':
+            return self.admission.formation['type'] in TRAINING_TYPES_WITH_EQUIVALENCE and self.has_foreign_diploma
+        elif self.current_context == 'continuing-education':
+            return (
+                self.admission.formation['type'] == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+                and self.has_foreign_diploma
+            )
+        return False
+
+    @cached_property
+    def display_bachelor_continuation(self):
+        if self.current_context == 'general-education':
+            return self.admission.formation['type'] == TrainingType.BACHELOR.name and self.has_success_year
+        return False
+
+    @cached_property
+    def display_bachelor_continuation_attestation(self):
+        return self.display_bachelor_continuation and self.admission.formation['sigle'] == VETERINARY_BACHELOR_CODE

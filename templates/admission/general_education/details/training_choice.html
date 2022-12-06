@@ -37,13 +37,13 @@
 
   {% if admission.formation.type|admission_training_type == 'MASTER' %}
     {% panel _('Student profile') %}
-      {% with admission.bourse_double_diplome.nom_court as short_name %}
+      {% with admission.bourse_double_diplome.nom_court|default:_('No') as short_name %}
         {% field_data _('Double degree scholarship') admission.bourse_double_diplome.nom_long|default:short_name %}
       {% endwith %}
-      {% with admission.bourse_erasmus_mundus.nom_court as short_name %}
+      {% with admission.bourse_erasmus_mundus.nom_court|default:_('No') as short_name %}
         {% field_data _('Erasmus mundus scholarship') admission.bourse_erasmus_mundus.nom_long|default:short_name %}
       {% endwith %}
-      {% with admission.bourse_internationale.nom_court as short_name %}
+      {% with admission.bourse_internationale.nom_court|default:_('No') as short_name %}
         {% field_data _('International scholarship') admission.bourse_internationale.nom_long|default:short_name %}
       {% endwith %}
     {% endpanel %}

@@ -28,7 +28,7 @@
 
 {% block tab_content %}
   <div class="panel panel-default">
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True title=_("Consultation of an academic activity") %}
+    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True title=_("Consultation of an academic training") %}
     <div class="panel-body">
       <div class="row">
         <div class="col-md-6">
@@ -112,7 +112,7 @@
                 {% if experience.transcript_type.value == 'ONE_A_YEAR' %}
                   <tr>
                     <td colspan="3">
-                      <div class="flex-container">
+                      <div class="flex-container-no-wrap">
                         {% field_data _('Transcript') experience_year.transcript %}
                         {% if experience_year.transcript_translation %}
                           {% field_data _('Transcript translation') experience_year.transcript_translation %}

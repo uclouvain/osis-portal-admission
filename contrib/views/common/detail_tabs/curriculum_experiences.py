@@ -82,7 +82,8 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
     def get_success_url(self):
         # Redirect to the list of experiences
         messages.info(self.request, _("Your data has been saved"))
-        return resolve_url(self.base_namespace + ':update:curriculum', pk=self.admission_uuid)
+        url = resolve_url(self.base_namespace + ':update:curriculum', pk=self.admission_uuid)
+        return url + getattr(self, 'url_hash', '')
 
     def get(self, request, *args, **kwargs):
         if not self.admission_uuid:

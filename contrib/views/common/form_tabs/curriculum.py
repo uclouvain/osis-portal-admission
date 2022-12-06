@@ -25,8 +25,6 @@
 # ##############################################################################
 from django.views.generic import FormView
 
-from admission.constants import BE_ISO_CODE
-from admission.contrib.enums import Result
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms.curriculum import (
     ContinuingAdmissionCurriculumFileForm,
@@ -48,7 +46,7 @@ class AdmissionCurriculumFormView(
     AdmissionCurriculumFormMixin,
     FormView,
 ):
-    template_name = 'admission/doctorate/forms/curriculum.html'
+    template_name = 'admission/details/curriculum.html'
     tab_of_specific_questions = Onglets.CURRICULUM.name
 
     def get_initial(self):
@@ -73,25 +71,17 @@ class AdmissionCurriculumFormView(
     def get_template_names(self):
         return [
             f"admission/{self.formatted_current_context}/forms/curriculum.html",
-            'admission/forms/curriculum.html',
+            'admission/details/curriculum.html',
         ]
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         if self.current_context == 'doctorate' or not self.admission_uuid:
             return kwargs
-        kwargs['training_type'] = self.admission.formation['type']
-        kwargs['has_foreign_diploma'] = any(
-            experience.country != BE_ISO_CODE for experience in self.curriculum.educational_experiences
-        )
+        kwargs['display_equivalence'] = self.display_equivalence
         if self.current_context == 'general-education':
-            kwargs['training_acronym'] = self.admission.formation['sigle']
-            kwargs['has_belgian_diploma'] = any(
-                experience.country == BE_ISO_CODE for experience in self.curriculum.educational_experiences
-            )
-            kwargs['has_success_year'] = any(
-                year['result'].value == Result.SUCCESS.name
-                for experience in self.curriculum.educational_experiences
-                for year in experience.educationalexperienceyear_set
-            )
+            kwargs['display_curriculum'] = self.display_curriculum
+            kwargs['display_bachelor_continuation'] = self.display_bachelor_continuation
+            kwargs['display_bachelor_continuation_attestation'] = self.display_bachelor_continuation_attestation
+            kwargs['has_belgian_diploma'] = self.has_belgian_diploma
         return kwargs

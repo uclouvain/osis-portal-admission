@@ -420,7 +420,13 @@ class MixinTestCase(TestCase):
         curriculum_data = MagicMock(
             educational_experiences=[self.lite_educational_experience],
             professional_experiences=[self.lite_professional_experience],
-            minimal_year=self.academic_year_2020.year,
+            minimal_date=datetime.date(self.academic_year_2020.year, 9, 1),
+            maximal_date=datetime.date(2022, 11, 1),
+            incomplete_periods=[
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ]
         )
         person_api_return = self.mock_person_api.return_value
 
