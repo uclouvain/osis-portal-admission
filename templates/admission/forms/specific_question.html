@@ -1,5 +1,5 @@
 {% extends form_base_template %}
-{% load bootstrap3 admission%}
+{% load bootstrap3 admission i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -26,10 +26,80 @@
 {% endcomment %}
 
 {% block form %}
-  {% bootstrap_form_errors form %}
-  {% if form.specific_question_answers.field.fields %}
-    {% panel _('Specific questions') %}
-      {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
-    {% endpanel %}
+  {# Specific questions #}
+  {% with form=forms.0 %}
+    {% bootstrap_form_errors form %}
+    {% if form.specific_question_answers.field.fields %}
+      {% panel _('Specific questions') %}
+        {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+      {% endpanel %}
+    {% endif %}
+  {% endwith %}
+
+  {# Pool questions #}
+  {% if forms.1 %}
+    {% with form=forms.1 %}
+
+      {% if form.is_external_modification %}
+        {% panel _("Registration change") %}
+          {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
+          <div class="belgian-bachelor-children">
+            {% bootstrap_field form.is_external_modification form_group_class="form-group required_field" %}
+
+            <div class="registration-change-form">
+              <p>{% blocktrans trimmed with date=modification_pool_end_date|date:'d/m/Y H:i' %}
+                In the case of an external registration change, you must confirm your request before {{ date }}.
+              {% endblocktrans %}</p>
+              {% bootstrap_field form.registration_change_form form_group_class="form-group required_field" %}
+            </div>
+          </div>
+        {% endpanel %}
+
+      {% elif form.is_external_reorientation %}
+        {% panel _("Reorientation") %}
+          {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
+          <div class="belgian-bachelor-children">
+            {% bootstrap_field form.is_external_reorientation form_group_class="form-group required_field" %}
+
+            <div class="regular-registration-proof">
+              <p>{% blocktrans trimmed with date=reorientation_pool_end_date|date:'d/m/Y H:i' %}
+                In the case of an external reorientation, you must confirm your request before {{ date }}.
+              {% endblocktrans %}</p>
+              {% bootstrap_field form.regular_registration_proof form_group_class="form-group required_field" %}
+            </div>
+          </div>
+        {% endpanel %}
+
+      {% elif form.is_non_resident %}
+        {% panel _("Enrollment in a bachelor with quota") %}
+          {% bootstrap_field form.is_non_resident form_group_class="form-group required_field" %}
+        {% endpanel %}
+      {% endif %}
+
+    {% endwith %}
   {% endif %}
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {% for form in forms %}{{ form.media }}{% endfor %}
+
+  <script>
+  $(function () {
+    const $belgianChildren = $('.belgian-bachelor-children');
+    $belgianChildren.length && $belgianChildren.dependsOn({
+      'input[name=pool_questions-is_belgian_bachelor]': { values: ['True'] },
+    });
+
+    const $registrationForm = $('.registration-change-form');
+    $registrationForm.length && $registrationForm.dependsOn({
+      'input[name=pool_questions-is_external_modification]': { values: ['True'] },
+    });
+
+    const $registrationProof = $('.regular-registration-proof');
+    $registrationProof.length && $registrationProof.dependsOn({
+      'input[name=pool_questions-is_external_reorientation]': { values: ['True'] },
+    });
+  });
+  </script>
 {% endblock %}

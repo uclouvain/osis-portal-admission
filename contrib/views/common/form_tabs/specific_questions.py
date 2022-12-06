@@ -23,9 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.http import HttpResponseRedirect
+from django.utils.functional import cached_property
 from django.views.generic import FormView
 
 from admission.contrib.enums.specific_question import Onglets
+from admission.contrib.forms.pool_questions import PoolQuestionsForm
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
@@ -34,24 +37,64 @@ from admission.services.proposition import AdmissionPropositionService
 __all__ = ['SpecificQuestionsFormView']
 
 
-class SpecificQuestionsFormView(LoadDossierViewMixin, FormMixinWithSpecificQuestions, WebServiceFormMixin, FormView):
+class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormMixinWithSpecificQuestions, FormView):
     template_name = 'admission/forms/specific_question.html'
-    form_class = ConfigurableFormMixin
     tab_of_specific_questions = Onglets.INFORMATIONS_ADDITIONNELLES.name
-    method_to_call = None
     service_mapping = {
         'general-education': AdmissionPropositionService.update_general_specific_question,
         'continuing-education': AdmissionPropositionService.update_continuing_specific_question,
     }
 
-    def get_initial(self):
-        return {
-            'specific_question_answers': self.admission.reponses_questions_specifiques,
-        }
+    def post(self, request, *args, **kwargs):
+        forms = self.get_forms()
+        if all(form.is_valid() for form in forms):
+            self.service_mapping[self.current_context](
+                person=self.person,
+                uuid=self.admission_uuid,
+                data=forms[0].cleaned_data,
+            )
+            if self.current_context == 'general-education':
+                AdmissionPropositionService.update_pool_questions(
+                    person=self.person,
+                    uuid=self.admission_uuid,
+                    data=forms[1].cleaned_data,
+                )
+            return HttpResponseRedirect(self.get_success_url())
+        return self.form_invalid(forms)
 
     def call_webservice(self, data):
-        self.service_mapping[self.current_context](
-            person=self.person,
-            uuid=self.admission_uuid,
-            data=data,
-        )
+        # Replaced by the custom calls in post()
+        raise NotImplementedError
+
+    def get_context_data(self, **kwargs):
+        kwargs['form'] = None
+        kwargs['extra_form_attrs'] = ' autocomplete="off"'
+        kwargs['forms'] = self.get_forms()
+        if self.current_context == 'general-education':
+            kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
+            kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
+        return super().get_context_data(**kwargs)
+
+    def get_forms(self):
+        form_kwargs = self.get_form_kwargs()
+        forms = [
+            ConfigurableFormMixin(
+                self.request.POST or None,
+                form_item_configurations=form_kwargs['form_item_configurations'],
+                initial={'specific_question_answers': self.admission.reponses_questions_specifiques},
+                prefix='specific_questions',
+            )
+        ]
+        if self.current_context == 'general-education':
+            forms.append(
+                PoolQuestionsForm(
+                    self.request.POST or None,
+                    initial=self.pool_questions,
+                    prefix='pool_questions',
+                )
+            )
+        return forms
+
+    @cached_property
+    def pool_questions(self):
+        return AdmissionPropositionService.get_pool_questions(self.person, self.admission_uuid).to_dict()

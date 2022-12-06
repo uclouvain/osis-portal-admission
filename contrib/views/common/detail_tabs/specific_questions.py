@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
 from admission.contrib.enums.specific_question import Onglets
@@ -31,7 +31,18 @@ from admission.contrib.views.mixins import LoadDossierViewMixin
 
 __all__ = ['SpecificQuestionDetailView']
 
+from admission.services.proposition import AdmissionPropositionService
+
 
 class SpecificQuestionDetailView(LoadDossierViewMixin, TemplateView):
     template_name = 'admission/details/specific_question.html'
     tab_of_specific_questions = Onglets.INFORMATIONS_ADDITIONNELLES.name
+
+    @cached_property
+    def pool_questions(self):
+        return AdmissionPropositionService.get_pool_questions(self.person, self.admission_uuid).to_dict()
+
+    def get_context_data(self, **kwargs):
+        if self.current_context == 'general-education':
+            kwargs['pool_questions'] = self.pool_questions
+        return super().get_context_data(**kwargs)

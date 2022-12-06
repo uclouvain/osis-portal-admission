@@ -115,6 +115,14 @@ msgstr ""
 "<a href=\"%(enrollment_url)s\">Aller à l'inscription aux cours</a> ou <a "
 "href=\"%(add_url)s\">ajouter un cours</a>"
 
+#, python-brace-format
+msgid ""
+"<a href=\"{url}\" target=_blank\">Registration modification form</a>, duly "
+"completed and accompanied by the annexes mentioned"
+msgstr ""
+"<a href=\"{url}\" target=_blank\">Formulaire de modification d'inscription</"
+"a>, dûment complété et accompagné des annexes mentionnées"
+
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
@@ -367,8 +375,18 @@ msgstr "Approuvée"
 msgid "Are you a double degree student?"
 msgstr "Êtes-vous en double diplomation ?"
 
+msgid "Are you a non-resident (as defined in decree)?"
+msgstr "Êtes-vous non-résident (au sens du décret) ?"
+
 msgid "Are you an erasmus mundus student?"
 msgstr "Êtes-vous Erasmus Mundus ?"
+
+msgid ""
+"Are you currently enrolled in the first year of a bachelor's degree at a "
+"college or university in the French Community of Belgium?"
+msgstr ""
+"Êtes-vous actuellement inscrit∙e en première année de bachelier dans une "
+"haute école ou une université de la Communauté française de Belgique ?"
 
 msgid "Are you sure you want to cancel this request?"
 msgstr "Êtes-vous sûr de vouloir annuler cette demande ?"
@@ -564,7 +582,9 @@ msgstr "Certificat"
 msgid ""
 "Certificate allowing the continuation of studies for a bachelor's degree in "
 "veterinary medicine"
-msgstr "Attestation autorisant à poursuivre les études de bachelier en médecine vétérinaire"
+msgstr ""
+"Attestation autorisant à poursuivre les études de bachelier en médecine "
+"vétérinaire"
 
 msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
@@ -587,6 +607,19 @@ msgstr "Attestation de cohabitation légale"
 
 msgid "Certificate of participation in the presentation"
 msgstr "Attestation de participation à l'exposé"
+
+msgid "Certificate of regular enrolment"
+msgstr "Attestation d'inscription régulière"
+
+#, python-format
+msgid ""
+"Certificate of regular enrolment for the academic year %(year)s from the "
+"institution in which you are currently enrolled (dated no earlier than 1st "
+"of November)"
+msgstr ""
+"Attestation d'inscription régulière pour l'année académique %(year)s de "
+"l'établissement dans lequel vous êtes actuellement inscrit(e) (datée au plus "
+"tôt au 1er novembre)"
 
 msgid ""
 "Certificate of successful completion of the admission test for the first "
@@ -956,8 +989,9 @@ msgid ""
 "Decision of equivalence for your diploma(s) giving access to the training, "
 "if this(these) has(have) been obtained outside Belgium"
 msgstr ""
-"Décision d'équivalence pour votre/vos diplôme(s) donnant accès à la formation, "
-"dans le cas où celui(ceux)-ci aurai(en)t été obtenu(s) ailleurs qu'en Belgique"
+"Décision d'équivalence pour votre/vos diplôme(s) donnant accès à la "
+"formation, dans le cas où celui(ceux)-ci aurai(en)t été obtenu(s) ailleurs "
+"qu'en Belgique"
 
 msgid "Defense date"
 msgstr "Date de soutenance"
@@ -1166,6 +1200,9 @@ msgstr "S'inscrire à un cours"
 
 msgid "Enrolled"
 msgstr "Inscrit"
+
+msgid "Enrollment in a bachelor with quota"
+msgstr "Inscription à un bachelier contigenté"
 
 msgid "Erasmus Mundus"
 msgstr "Erasmus Mundus"
@@ -1712,6 +1749,22 @@ msgstr "En présentiel"
 
 msgid "In review"
 msgstr "En attente de validation"
+
+#, python-format
+msgid ""
+"In the case of an external registration change, you must confirm your "
+"request before %(date)s."
+msgstr ""
+"Dans le cadre d'une réorientation externe, vous devez impérativement "
+"confirmer votre demande avant le %(date)s."
+
+#, python-format
+msgid ""
+"In the case of an external reorientation, you must confirm your request "
+"before %(date)s."
+msgstr ""
+"Dans le cadre d'une modification d'inscription externe, vous devez "
+"impérativement confirmer votre demande avant le %(date)s."
 
 msgid ""
 "Indicate here any previous doctoral course, completed or interrupted, in "
@@ -2343,6 +2396,12 @@ msgstr "Référence :"
 msgid "Registered credits"
 msgstr "Crédits inscrits"
 
+msgid "Registration change"
+msgstr "Modification d'inscription"
+
+msgid "Registration modification form"
+msgstr "Formulaire de modification d'inscription"
+
 msgctxt "admission decision"
 msgid "Rejected"
 msgstr "Rejetée"
@@ -2355,6 +2414,9 @@ msgstr "Retirer"
 
 msgid "Remove the experience"
 msgstr "Retirer l'expérience"
+
+msgid "Reorientation"
+msgstr "Réorientation"
 
 msgid "Report of the supervisory panel"
 msgstr "Procès-verbal du comité d'accompagnement"
@@ -3006,11 +3068,39 @@ msgstr ""
 "cette affiliation qui est de 12 EUR sera ajouté à vos droits d'inscription."
 
 msgid ""
+"Would you like to change your registration for this academic year at "
+"UCLouvain?"
+msgstr ""
+"Souhaitez-vous modifier votre inscription pour cette année académique, à "
+"l'UCLouvain ?"
+
+#, python-brace-format
+msgid ""
+"Would you like to change your registration for this academic year at "
+"UCLouvain? (<a href=\"{url}\" target=_blank\">Informations</a>)"
+msgstr ""
+"Souhaitez-vous modifier votre inscription pour cette année académique, à "
+"l'UCLouvain ? (<a href=\"{url}\" target=_blank\">Informations</a>)"
+
+msgid ""
 "Would you like to enter an account number so that we can process a refund if "
 "necessary?"
 msgstr ""
 "Voulez-vous renseigner un numéro de compte pour que nous puissions procéder "
 "à un éventuel remboursement ?"
+
+msgid ""
+"Would you like to reorient yourself for this academic year at UCLouvain?"
+msgstr ""
+"Souhaitez-vous vous réorienter pour cette année académique, à l’UCLouvain ?"
+
+#, python-brace-format
+msgid ""
+"Would you like to reorient yourself for this academic year at UCLouvain? (<a "
+"href=\"{url}\" target=_blank\">Informations</a>)"
+msgstr ""
+"Souhaitez-vous vous réorienter pour cette année académique, à l’UCLouvain ?"
+"(<a href=\"{url}\" target=_blank\">Informations</a>)"
 
 msgid "Writing ability"
 msgstr "Écrire"

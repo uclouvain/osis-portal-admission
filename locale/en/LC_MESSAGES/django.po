@@ -97,6 +97,12 @@ msgid ""
 "\"%(add_url)s\">add a course</a>"
 msgstr ""
 
+#, python-brace-format
+msgid ""
+"<a href=\"{url}\" target=_blank\">Registration modification form</a>, duly "
+"completed and accompanied by the annexes mentioned"
+msgstr ""
+
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
@@ -331,7 +337,15 @@ msgstr ""
 msgid "Are you a double degree student?"
 msgstr ""
 
+msgid "Are you a non-resident (as defined in decree)?"
+msgstr ""
+
 msgid "Are you an erasmus mundus student?"
+msgstr ""
+
+msgid ""
+"Are you currently enrolled in the first year of a bachelor's degree at a "
+"college or university in the French Community of Belgium?"
 msgstr ""
 
 msgid "Are you sure you want to cancel this request?"
@@ -537,6 +551,16 @@ msgid "Certificate of legal cohabitation"
 msgstr ""
 
 msgid "Certificate of participation in the presentation"
+msgstr ""
+
+msgid "Certificate of regular enrolment"
+msgstr ""
+
+#, python-format
+msgid ""
+"Certificate of regular enrolment for the academic year %(year)s from the "
+"institution in which you are currently enrolled (dated no earlier than 1st "
+"of November)"
 msgstr ""
 
 msgid ""
@@ -1055,6 +1079,9 @@ msgstr ""
 msgid "Enrolled"
 msgstr ""
 
+msgid "Enrollment in a bachelor with quota"
+msgstr ""
+
 msgid "Erasmus Mundus"
 msgstr ""
 
@@ -1503,6 +1530,18 @@ msgid "In person"
 msgstr ""
 
 msgid "In review"
+msgstr ""
+
+#, python-format
+msgid ""
+"In the case of an external registration change, you must confirm your "
+"request before %(date)s."
+msgstr ""
+
+#, python-format
+msgid ""
+"In the case of an external reorientation, you must confirm your request "
+"before %(date)s."
 msgstr ""
 
 msgid ""
@@ -2111,6 +2150,12 @@ msgstr ""
 msgid "Registered credits"
 msgstr ""
 
+msgid "Registration change"
+msgstr ""
+
+msgid "Registration modification form"
+msgstr ""
+
 msgctxt "admission decision"
 msgid "Rejected"
 msgstr ""
@@ -2122,6 +2167,9 @@ msgid "Remove"
 msgstr ""
 
 msgid "Remove the experience"
+msgstr ""
+
+msgid "Reorientation"
 msgstr ""
 
 msgid "Report of the supervisory panel"
@@ -2708,8 +2756,29 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Would you like to change your registration for this academic year at "
+"UCLouvain?"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Would you like to change your registration for this academic year at "
+"UCLouvain? (<a href=\"{url}\" target=_blank\">Informations</a>)"
+msgstr ""
+
+msgid ""
 "Would you like to enter an account number so that we can process a refund if "
 "necessary?"
+msgstr ""
+
+msgid ""
+"Would you like to reorient yourself for this academic year at UCLouvain?"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Would you like to reorient yourself for this academic year at UCLouvain? (<a "
+"href=\"{url}\" target=_blank\">Informations</a>)"
 msgstr ""
 
 msgid "Writing ability"
