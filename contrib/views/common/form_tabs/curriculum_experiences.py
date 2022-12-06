@@ -125,12 +125,6 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
                 experience['end_date_year'] = end_date.year
             return experience
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        initialize_field_texts(self.person, [self.professional_experience])
-        context['experience'] = self.professional_experience
-        return context
-
 
 class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFormMixin, FormView):
     urlpatterns = {'professional_delete': 'professional/<uuid:experience_id>/delete'}

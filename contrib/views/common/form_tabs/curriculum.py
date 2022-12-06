@@ -70,8 +70,8 @@ class AdmissionCurriculumFormView(
 
     def get_template_names(self):
         return [
-            'admission/forms/curriculum.html',
             f"admission/{self.current_context.replace('-', '_')}/forms/curriculum.html",
+            'admission/forms/curriculum.html',
         ]
 
     def get_form_kwargs(self):
