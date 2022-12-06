@@ -23,7 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from datetime import datetime
+from unittest.mock import patch
+
 from django.shortcuts import resolve_url
+from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.contrib.enums.specific_question import Onglets
@@ -51,6 +55,45 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         )
         self.assertEqual(response.context['admission'].uuid, self.general_proposition.uuid)
         self.assertEqual(response.context['specific_questions'], self.specific_questions)
+
+    def test_get_page_with_reorientation(self):
+        self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
+            'reorientation_pool_end_date': datetime(2022, 12, 30, 23, 59),
+            'modification_pool_end_date': None,
+            'is_belgian_bachelor': None,
+            'is_external_reorientation': None,
+            'regular_registration_proof': [],
+        }
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Reorientation"))
+
+    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    def test_get_page_with_modification(self, remote_metadata, remote_token):
+        self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
+            'reorientation_pool_end_date': None,
+            'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'is_belgian_bachelor': True,
+            'is_external_modification': True,
+            'registration_change_form': ['uuid'],
+        }
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, '30/03/2023 23:59')
+
+    def test_get_page_with_residency(self):
+        self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
+            'reorientation_pool_end_date': None,
+            'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'is_non_resident': None,
+        }
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Enrollment in a bachelor with quota"))
 
 
 class ContinuingEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -83,6 +126,13 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         cls.url = resolve_url('admission:general-education:update:specific-questions', pk=cls.proposition_uuid)
         cls.detail_url = resolve_url('admission:general-education:specific-questions', pk=cls.proposition_uuid)
 
+    def setUp(self):
+        super().setUp()
+        self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
+            'reorientation_pool_end_date': None,
+            'modification_pool_end_date': None,
+        }
+
     def test_get_page(self):
         response = self.client.get(self.url)
 
@@ -99,27 +149,185 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         self.assertEqual(response.context['admission'].uuid, self.general_proposition.uuid)
         self.assertEqual(response.context['specific_questions'], self.specific_questions)
         self.assertEqual(
-            response.context['form'].initial,
-            {
-                'specific_question_answers': self.general_proposition.reponses_questions_specifiques,
-            },
+            response.context['forms'][0].initial,
+            {'specific_question_answers': self.general_proposition.reponses_questions_specifiques},
         )
 
     def test_post_page(self):
         response = self.client.post(
             self.url,
-            data={
-                'specific_question_answers_1': 'My updated answer',
-            },
+            data={'specific_questions-specific_question_answers_1': 'My updated answer'},
         )
 
         self.assertRedirects(response, expected_url=self.detail_url)
         self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
             modifier_questions_specifiques_command={
-                'specific_question_answers': {
-                    self.first_question_uuid: 'My updated answer',
-                },
+                'specific_question_answers': {self.first_question_uuid: 'My updated answer'},
+            },
+            **self.default_kwargs,
+        )
+
+    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    def test_with_reorientation(self, *__):
+        self.mock_proposition_api.return_value.list_doctorate_specific_questions.return_value = []
+        self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
+            'reorientation_pool_end_date': datetime(2022, 12, 30, 23, 59),
+            'modification_pool_end_date': None,
+            'is_belgian_bachelor': None,
+            'is_external_reorientation': None,
+            'regular_registration_proof': [],
+        }
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Reorientation"))
+        self.assertContains(response, '30/12/2022 23:59')
+
+        response = self.client.post(self.url, data={'': ''})
+        self.assertIn('is_belgian_bachelor', response.context['forms'][1].errors)
+
+        response = self.client.post(self.url, data={'pool_questions-is_belgian_bachelor': True})
+        self.assertIn('is_external_reorientation', response.context['forms'][1].errors)
+
+        data = {
+            'pool_questions-is_belgian_bachelor': True,
+            'pool_questions-is_external_reorientation': True,
+            'pool_questions-regular_registration_proof': [],
+        }
+        response = self.client.post(self.url, data=data)
+        self.assertIn('regular_registration_proof', response.context['forms'][1].errors)
+
+        data = {
+            'pool_questions-is_belgian_bachelor': True,
+            'pool_questions-is_external_reorientation': True,
+            'pool_questions-regular_registration_proof_0': 'uuid',
+        }
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, expected_url=self.detail_url)
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': True,
+                'is_external_reorientation': True,
+                'regular_registration_proof': ['uuid'],
+            },
+            **self.default_kwargs,
+        )
+
+        data = {
+            'pool_questions-is_belgian_bachelor': False,
+            'pool_questions-is_external_reorientation': True,
+            'pool_questions-regular_registration_proof_0': 'uuid',
+        }
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, expected_url=self.detail_url)
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': False,
+                'is_external_reorientation': False,
+                'regular_registration_proof': [],
+            },
+            **self.default_kwargs,
+        )
+
+        data = {
+            'pool_questions-is_belgian_bachelor': True,
+            'pool_questions-is_external_reorientation': False,
+            'pool_questions-regular_registration_proof_0': 'uuid',
+        }
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, expected_url=self.detail_url)
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': True,
+                'is_external_reorientation': False,
+                'regular_registration_proof': [],
+            },
+            **self.default_kwargs,
+        )
+
+    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    def test_with_modification(self, *__):
+        self.mock_proposition_api.return_value.list_doctorate_specific_questions.return_value = []
+        self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
+            'reorientation_pool_end_date': None,
+            'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'is_belgian_bachelor': None,
+            'is_external_modification': None,
+            'registration_change_form': [],
+        }
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Registration change"))
+        self.assertContains(response, '30/03/2023 23:59')
+
+        response = self.client.post(self.url, data={'pool_questions-is_belgian_bachelor': 'Foo'})
+        self.assertIn('is_belgian_bachelor', response.context['forms'][1].errors)
+
+        response = self.client.post(self.url, data={'pool_questions-is_belgian_bachelor': True})
+        self.assertIn('is_external_modification', response.context['forms'][1].errors)
+
+        data = {
+            'pool_questions-is_belgian_bachelor': True,
+            'pool_questions-is_external_modification': True,
+            'pool_questions-registration_change_form': [],
+        }
+        response = self.client.post(self.url, data)
+        self.assertIn('registration_change_form', response.context['forms'][1].errors)
+
+        data = {
+            'pool_questions-is_belgian_bachelor': True,
+            'pool_questions-is_external_modification': True,
+            'pool_questions-registration_change_form_0': 'uuid',
+        }
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, expected_url=self.detail_url)
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': True,
+                'is_external_modification': True,
+                'registration_change_form': ['uuid'],
+            },
+            **self.default_kwargs,
+        )
+
+        data = {
+            'pool_questions-is_belgian_bachelor': False,
+            'pool_questions-is_external_modification': True,
+            'pool_questions-registration_change_form_0': 'uuid',
+        }
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, expected_url=self.detail_url)
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': False,
+                'is_external_modification': False,
+                'registration_change_form': [],
+            },
+            **self.default_kwargs,
+        )
+
+        data = {
+            'pool_questions-is_belgian_bachelor': True,
+            'pool_questions-is_external_modification': False,
+            'pool_questions-registration_change_form_0': 'uuid',
+        }
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, expected_url=self.detail_url)
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': True,
+                'is_external_modification': False,
+                'registration_change_form': [],
             },
             **self.default_kwargs,
         )
@@ -148,27 +356,21 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertEqual(response.context['admission'].uuid, self.continuing_proposition.uuid)
         self.assertEqual(response.context['specific_questions'], self.specific_questions)
         self.assertEqual(
-            response.context['form'].initial,
-            {
-                'specific_question_answers': self.continuing_proposition.reponses_questions_specifiques,
-            },
+            response.context['forms'][0].initial,
+            {'specific_question_answers': self.continuing_proposition.reponses_questions_specifiques},
         )
 
     def test_post_page(self):
         response = self.client.post(
             self.url,
-            data={
-                'specific_question_answers_1': 'My updated answer',
-            },
+            data={'specific_questions-specific_question_answers_1': 'My updated answer'},
         )
 
         self.assertRedirects(response, expected_url=self.detail_url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
             modifier_questions_specifiques_command={
-                'specific_question_answers': {
-                    self.first_question_uuid: 'My updated answer',
-                },
+                'specific_question_answers': {self.first_question_uuid: 'My updated answer'},
             },
             **self.default_kwargs,
         )

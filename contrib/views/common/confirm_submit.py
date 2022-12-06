@@ -39,7 +39,7 @@ from admission.services.proposition import (
     AdmissionPropositionService,
     TAB_OF_BUSINESS_EXCEPTION,
 )
-from admission.templatetags.admission import get_subtab_label
+from admission.templatetags.admission import TAB_TREES
 
 __all__ = [
     'AdmissionConfirmSubmitFormView',
@@ -49,7 +49,10 @@ __all__ = [
 class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/doctorate/forms/confirm-submit.html'
     service_mapping = {
-        'doctorate': (AdmissionPropositionService.verify_proposition, AdmissionPropositionService.submit_proposition),
+        'doctorate': (
+            AdmissionPropositionService.verify_proposition,
+            AdmissionPropositionService.submit_proposition,
+        ),
         'general-education': (
             AdmissionPropositionService.verify_general_proposition,
             AdmissionPropositionService.submit_general_proposition,
@@ -64,36 +67,24 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         context = super().get_context_data(**kwargs)
 
         # Retrieve the missing confirmation conditions
-        proposition_completion_errors = self.service_mapping[self.current_context][0](
+        completion_errors = self.service_mapping[self.current_context][0](
             person=self.person,
             uuid=self.admission_uuid,
         )
 
         # Group the missing conditions by tab if any
-        if proposition_completion_errors:
-
-            proposition_completion_errors_by_tab = {
-                tab: {'name': get_subtab_label(tab, 'doctorate'), 'errors': []}
-                for tab in [
-                    'person',
-                    'coordonnees',
-                    'curriculum',
-                    'languages',
-                    'training-choice',
-                    'project',
-                    'cotutelle',
-                    'supervision',
-                    'accounting',
-                    'confirm-submit',
-                ]
+        if completion_errors:
+            completion_errors_by_tab = {
+                tab.name: {'name': tab.label, 'errors': []}
+                for child_tabs in TAB_TREES[self.current_context].values()
+                for tab in child_tabs
             }
 
-            for error in proposition_completion_errors:
-                proposition_completion_errors_by_tab[TAB_OF_BUSINESS_EXCEPTION[error.status_code]]['errors'].append(
-                    error.detail
-                )
+            for error in completion_errors:
+                error_tab = TAB_OF_BUSINESS_EXCEPTION[error.status_code]
+                completion_errors_by_tab[error_tab]['errors'].append(error.detail)
 
-            context['missing_confirmation_conditions'] = proposition_completion_errors_by_tab
+            context['missing_confirmation_conditions'] = completion_errors_by_tab
 
         return context
 
@@ -106,10 +97,9 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         return high_school_diploma.belgian_diploma is not None
 
     def get_form_class(self):
-        if self.check_candidate_has_belgian_diploma():
+        if self.current_context == 'doctorate' and self.check_candidate_has_belgian_diploma():
             return DoctorateAdmissionConfirmationWithBelgianDiplomaForm
-        else:
-            return DoctorateAdmissionConfirmationForm
+        return DoctorateAdmissionConfirmationForm
 
     def get_success_url(self):
         messages.info(self.request, _("Your proposition has been confirmed."))

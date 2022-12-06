@@ -59,6 +59,10 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
     def admission_uuid(self):
         return str(self.kwargs.get('pk', ''))
 
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
 
 class LoadDossierViewMixin(LoadViewMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""

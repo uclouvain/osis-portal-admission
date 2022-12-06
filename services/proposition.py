@@ -275,6 +275,21 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def get_pool_questions(cls, person: Person, uuid: str):
+        return APIClient().retrieve_pool_questions(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_pool_questions(cls, person: Person, uuid: str, data: dict):
+        return APIClient().update_pool_questions(
+            uuid=uuid,
+            pool_questions=data,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
