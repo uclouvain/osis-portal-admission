@@ -120,7 +120,8 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid),
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
         )
 
         # Check that the API calls are done
@@ -617,7 +618,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid),
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
         )
 
         # Check that the API calls are done
@@ -682,7 +684,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid),
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
         )
 
         # Check that the API calls are done
@@ -752,7 +755,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid),
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
         )
 
         # Check that the API calls are done
@@ -823,7 +827,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid),
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
         )
 
         # Check that the API calls are done
@@ -887,7 +892,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid),
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
         )
 
         # Check that the API calls are done
@@ -952,7 +958,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid),
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
         )
 
         # Check that the API calls are done

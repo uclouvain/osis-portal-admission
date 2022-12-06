@@ -1,5 +1,5 @@
 {% extends "admission/details/curriculum.html" %}
-{% load bootstrap3 %}
+{% load admission i18n %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -25,24 +25,12 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block attachments_fields %}
-  {% bootstrap_field form.equivalence_diplome form_group_class=form.equivalence_diplome.field.widget.attrs.class|add:' form_group' %}
-  {% bootstrap_field form.curriculum form_group_class="form_group required_field" %}
-  {% bootstrap_field form.continuation_cycle_bachelier form_group_class="form_group required_field" %}
-  {% bootstrap_field form.attestation_continuation_cycle_bachelier form_group_class="form_group required_field bachelor-cycle-continuation-certificate" %}
-{% endblock %}
-
-{% block script %}
-  {{ block.super }}
-  {{ form.media }}
-
-  <script type="application/javascript">
-      $(function () {
-          {% if not form.attestation_continuation_cycle_bachelier.field.disabled %}
-              $('.bachelor-cycle-continuation-certificate').dependsOn({
-                  'input[name=continuation_cycle_bachelier]': { values: ['True'] },
-              })
-          {% endif %}
-      });
-  </script>
+{% block specific_question_answers %}
+  {% panel _('Specific questions') %}
+    {% if display_equivalence %}
+      {% field_data _('Decision of equivalence for your diploma(s) giving access to the training, if this(these) has(have) been obtained outside Belgium') admission.equivalence_diplome %}
+    {% endif %}
+    {% field_data _('Curriculum') admission.curriculum %}
+    {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
+  {% endpanel %}
 {% endblock %}

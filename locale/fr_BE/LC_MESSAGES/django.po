@@ -290,6 +290,12 @@ msgstr "Ajouter un service"
 msgid "Add an activity"
 msgstr "Ajouter une activité"
 
+msgid "Adding a non-academic activity"
+msgstr "Ajout d'une activité non-académique"
+
+msgid "Adding an academic training"
+msgstr "Ajout d'une formation académique"
+
 msgid "Additional information"
 msgstr "Informations complémentaires"
 
@@ -382,8 +388,16 @@ msgid ""
 "Are you sure you want to delete the activity \"%(type)s\" that took place "
 "from %(start)s to %(end)s?"
 msgstr ""
-"Êtes-vous sûr de vouloir supprimer l'activité \"%(type)s\"ayant eu lieu de "
+"Êtes-vous sûr de vouloir supprimer l'activité \"%(type)s\" ayant eu lieu de "
 "%(start)s à %(end)s ?"
+
+#, python-format
+msgid ""
+"Are you sure you want to delete the activity \"%(type)s\" that took place in "
+"%(date)s?"
+msgstr ""
+"Êtes-vous sûr de vouloir supprimer l'activité \"%(type)s\" ayant eu lieu en "
+"%(date)s ?"
 
 #, python-format
 msgid "Are you sure you want to delete the training \"%(name)s\"?"
@@ -564,7 +578,9 @@ msgstr "Certificat"
 msgid ""
 "Certificate allowing the continuation of studies for a bachelor's degree in "
 "veterinary medicine"
-msgstr "Attestation autorisant à poursuivre les études de bachelier en médecine vétérinaire"
+msgstr ""
+"Attestation autorisant à poursuivre les études de bachelier en médecine "
+"vétérinaire"
 
 msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
@@ -688,8 +704,8 @@ msgstr "Épreuve de confirmation"
 msgid "Consultation of a non-academic activity"
 msgstr "Consultation d'une activité non-académique"
 
-msgid "Consultation of an academic activity"
-msgstr "Consultation d'une activité académique"
+msgid "Consultation of an academic training"
+msgstr "Consultation d'une formation académique"
 
 msgid "Contact"
 msgstr "Contact"
@@ -913,12 +929,6 @@ msgctxt "an admission"
 msgid "Created at:"
 msgstr "Créée le :"
 
-msgid "Creation of a non-academic activity"
-msgstr "Création d'une activité non-académique"
-
-msgid "Creation of an academic activity"
-msgstr "Création d'une activité académique"
-
 msgid "Curriculum"
 msgstr "Curriculum"
 
@@ -956,8 +966,9 @@ msgid ""
 "Decision of equivalence for your diploma(s) giving access to the training, "
 "if this(these) has(have) been obtained outside Belgium"
 msgstr ""
-"Décision d'équivalence pour votre/vos diplôme(s) donnant accès à la formation, "
-"dans le cas où celui(ceux)-ci aurai(en)t été obtenu(s) ailleurs qu'en Belgique"
+"Décision d'équivalence pour votre/vos diplôme(s) donnant accès à la "
+"formation, dans le cas où celui(ceux)-ci aurai(en)t été obtenu(s) ailleurs "
+"qu'en Belgique"
 
 msgid "Defense date"
 msgstr "Date de soutenance"
@@ -971,8 +982,8 @@ msgstr "Supprimer"
 msgid "Deletion of a non-academic activity"
 msgstr "Suppression d'une activité non-académique"
 
-msgid "Deletion of an academic activity"
-msgstr "Suppression d'une activité académique"
+msgid "Deletion of an academic training"
+msgstr "Suppression d'une formation académique"
 
 msgid ""
 "Depending on your previous experience and your research project, a "
@@ -1995,6 +2006,14 @@ msgstr "Nombre de jours de participation"
 msgid "Obtained grade"
 msgstr "Grade obtenu"
 
+msgid ""
+"On the basis of the data you have filled in, it is not necessary to complete "
+"your academic trainings and non-academic activities below."
+msgstr ""
+"Sur base des données que vous avez renseignées, il n'est pas nécessaire de "
+"compléter ci-dessous vos formations académiques et vos activités non-"
+"académiques."
+
 msgid "Ongoing request"
 msgstr "En cours de demande"
 
@@ -2136,8 +2155,12 @@ msgid "Please correct the errors first"
 msgstr "Veuillez d'abord corriger les erreurs"
 
 #, python-format
-msgid "Please fill in what you have achieved since year %(year)s."
-msgstr "Veuillez renseigner ce que vous avez réalisé depuis l’année %(year)s."
+msgid ""
+"Please fill in the academic trainings and non-academic activities you have "
+"completed since %(date)s."
+msgstr ""
+"Veuillez renseigner les formations académiques et les activités non-"
+"académiques que vous avez réalisées depuis %(date)s."
 
 msgid "Please mention the academic graduation year"
 msgstr "Veuillez indiquer l'année académique d'obtention"
@@ -2685,6 +2708,11 @@ msgstr ""
 "remplit ces conditions, et dans l'affirmative, demande l'attestation qui le "
 "confirme."
 
+msgid "The following period must be justified in the curriculum:"
+msgid_plural "The following periods must be justified in the curriculum:"
+msgstr[0] "La période suivante doit impérativement être justifiée :"
+msgstr[1] "Les périodes suivantes doivent impérativement être justifiées :"
+
 msgid ""
 "The format of the documents to be uploaded below as well as the deadlines "
 "for submission may vary from one DDC to another; please check with your "
@@ -2918,8 +2946,8 @@ msgstr "Non soumis"
 msgid "Update of a non-academic activity"
 msgstr "Modification d'une activité non-académique"
 
-msgid "Update of an academic activity"
-msgstr "Modification d'une activité académique"
+msgid "Update of an academic training"
+msgstr "Modification d'une formation académique"
 
 msgid "Update the experience"
 msgstr "Mettre à jour l'expérience"

@@ -33,10 +33,10 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-6">
-          {% field_data _('Start date') experience.start_date|date:"YEAR_MONTH_FORMAT"|title %}
+          {% field_data _('Start date') experience.start_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
         </div>
         <div class="col-md-6">
-          {% field_data _('End date') experience.start_date|date:"YEAR_MONTH_FORMAT"|title %}
+          {% field_data _('End date') experience.end_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
         </div>
       </div>
       <div class="row">

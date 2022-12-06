@@ -260,6 +260,12 @@ msgstr ""
 msgid "Add an activity"
 msgstr ""
 
+msgid "Adding a non-academic activity"
+msgstr ""
+
+msgid "Adding an academic training"
+msgstr ""
+
 msgid "Additional information"
 msgstr ""
 
@@ -345,6 +351,12 @@ msgstr ""
 msgid ""
 "Are you sure you want to delete the activity \"%(type)s\" that took place "
 "from %(start)s to %(end)s?"
+msgstr ""
+
+#, python-format
+msgid ""
+"Are you sure you want to delete the activity \"%(type)s\" that took place in "
+"%(date)s?"
 msgstr ""
 
 #, python-format
@@ -631,7 +643,7 @@ msgstr ""
 msgid "Consultation of a non-academic activity"
 msgstr ""
 
-msgid "Consultation of an academic activity"
+msgid "Consultation of an academic training"
 msgstr ""
 
 msgid "Contact"
@@ -819,12 +831,6 @@ msgctxt "an admission"
 msgid "Created at:"
 msgstr ""
 
-msgid "Creation of a non-academic activity"
-msgstr ""
-
-msgid "Creation of an academic activity"
-msgstr ""
-
 msgid "Curriculum"
 msgstr ""
 
@@ -875,7 +881,7 @@ msgstr ""
 msgid "Deletion of a non-academic activity"
 msgstr ""
 
-msgid "Deletion of an academic activity"
+msgid "Deletion of an academic training"
 msgstr ""
 
 msgid ""
@@ -1779,6 +1785,11 @@ msgstr ""
 msgid "Obtained grade"
 msgstr ""
 
+msgid ""
+"On the basis of the data you have filled in, it is not necessary to complete "
+"your academic trainings and non-academic activities below."
+msgstr ""
+
 msgid "Ongoing request"
 msgstr ""
 
@@ -1913,7 +1924,9 @@ msgid "Please correct the errors first"
 msgstr ""
 
 #, python-format
-msgid "Please fill in what you have achieved since year %(year)s."
+msgid ""
+"Please fill in the academic trainings and non-academic activities you have "
+"completed since %(date)s."
 msgstr ""
 
 msgid "Please mention the academic graduation year"
@@ -2427,6 +2440,11 @@ msgid ""
 "conditions and, if so, request the certificate confirming this."
 msgstr ""
 
+msgid "The following period must be justified in the curriculum:"
+msgid_plural "The following periods must be justified in the curriculum:"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid ""
 "The format of the documents to be uploaded below as well as the deadlines "
 "for submission may vary from one DDC to another; please check with your "
@@ -2632,7 +2650,7 @@ msgstr ""
 msgid "Update of a non-academic activity"
 msgstr ""
 
-msgid "Update of an academic activity"
+msgid "Update of an academic training"
 msgstr ""
 
 msgid "Update the experience"

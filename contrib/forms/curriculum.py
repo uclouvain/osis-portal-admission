@@ -40,7 +40,7 @@ from admission.constants import (
 )
 
 from admission.contrib.enums.curriculum import *
-from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
+from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import (
     EMPTY_CHOICE,
     get_country_initial_choices,
@@ -111,35 +111,32 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
 
     def __init__(
         self,
-        training_acronym: str,
-        training_type: TrainingType,
-        has_foreign_diploma: bool,
+        display_equivalence: bool,
+        display_curriculum: bool,
+        display_bachelor_continuation: bool,
+        display_bachelor_continuation_attestation: bool,
         has_belgian_diploma: bool,
-        has_success_year: bool,
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
 
-        if not (training_type in TRAINING_TYPES_WITH_EQUIVALENCE and has_foreign_diploma):
+        if not display_equivalence:
             self.fields['equivalence_diplome'].disabled = True
             self.fields['equivalence_diplome'].widget = NoInput()
 
         elif not has_belgian_diploma:
             self.fields['equivalence_diplome'].widget.attrs['class'] = REQUIRED_FIELD_CLASS
 
-        if training_type == TrainingType.BACHELOR.name:
+        if not display_curriculum:
             self.fields['curriculum'].disabled = True
             self.fields['curriculum'].widget = NoInput()
-            if not has_success_year:
-                self.fields['continuation_cycle_bachelier'].disabled = True
-                self.fields['continuation_cycle_bachelier'].widget = NoInput()
 
-        else:
+        if not display_bachelor_continuation:
             self.fields['continuation_cycle_bachelier'].disabled = True
             self.fields['continuation_cycle_bachelier'].widget = NoInput()
 
-        if training_acronym != VETERINARY_BACHELOR_CODE:
+        if not display_bachelor_continuation_attestation:
             self.fields['attestation_continuation_cycle_bachelier'].disabled = True
             self.fields['attestation_continuation_cycle_bachelier'].widget = NoInput()
 
@@ -168,10 +165,10 @@ class ContinuingAdmissionCurriculumFileForm(ConfigurableFormMixin):
     curriculum = CurriculumField()
     equivalence_diplome = DiplomaEquivalenceField()
 
-    def __init__(self, training_type: TrainingType, has_foreign_diploma: bool, *args, **kwargs):
+    def __init__(self, display_equivalence: bool, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if not (training_type == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name and has_foreign_diploma):
+        if not display_equivalence:
             self.fields['equivalence_diplome'].disabled = True
             self.fields['equivalence_diplome'].widget = NoInput()
 

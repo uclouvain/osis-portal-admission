@@ -73,7 +73,8 @@ __namespace__ = 'curriculum'
 
 class AdmissionCurriculumFormMixin(WebServiceFormMixin, AdmissionCurriculumMixin, ABC):
     def get_success_url(self):
-        return resolve_url(f"admission:{self.current_context}:update:curriculum", pk=self.admission_uuid)
+        url = resolve_url(f"admission:{self.current_context}:update:curriculum", pk=self.admission_uuid)
+        return url + getattr(self, 'url_hash', '')
 
 
 class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormMixin, FormView):
@@ -83,6 +84,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
     }
     template_name = 'admission/doctorate/forms/curriculum_professional_experience.html'
     form_class = DoctorateAdmissionCurriculumProfessionalExperienceForm
+    url_hash = '#non-academic-activities'
 
     def prepare_data(self, data):
         # The start date is the first day of the specified month
@@ -128,6 +130,7 @@ class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFor
     urlpatterns = {'professional_delete': 'professional/<uuid:experience_id>/delete'}
     form_class = forms.Form
     template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
+    url_hash = '#non-academic-activities'
 
     def call_webservice(self, _):
         self.service_mapping[self.current_context].delete_professional_experience(
@@ -150,6 +153,7 @@ class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumForm
     }
     form_class = forms.Form
     template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
+    url_hash = '#academic-activities'
 
     def call_webservice(self, _):
         self.service_mapping[self.current_context].delete_educational_experience(
@@ -171,6 +175,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         'educational_create': 'educational/create',
     }
     template_name = 'admission/doctorate/forms/curriculum_educational_experience.html'
+    url_hash = '#academic-activities'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

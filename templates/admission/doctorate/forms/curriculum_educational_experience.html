@@ -32,9 +32,9 @@
   {{ year_formset.management_form }}
 
   {% if view.kwargs.experience_id %}
-    {% display _("Update of an academic activity") as header_title %}
+    {% display _("Update of an academic training") as header_title %}
   {% else %}
-    {% display _("Creation of an academic activity") as header_title %}
+    {% display _("Adding an academic training") as header_title %}
   {% endif %}
   <div class="panel panel-default">
     {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_update=True educational_tab=True title=header_title %}
