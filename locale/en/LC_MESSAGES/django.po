@@ -2654,8 +2654,8 @@ msgstr ""
 msgid "Type of publication"
 msgstr ""
 
-msgid "UCLOUVAIN_ASSISTANT"
-msgstr "Uclouvain assistant"
+msgid "UCLOUVAIN_SCIENTIFIC_STAFF"
+msgstr "UCLouvain scientific staff"
 
 msgid "UCL_COURSE"
 msgstr "UCL Course"

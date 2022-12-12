@@ -256,7 +256,7 @@ class ProjectViewTestCase(TestCase):
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
-            'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
+            'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_SCIENTIFIC_STAFF.name,
         }
         response = self.client.post(url, data)
         self.assertFormError(response, 'form', 'eft', _("This field is required."))
@@ -264,7 +264,7 @@ class ProjectViewTestCase(TestCase):
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
-            'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_ASSISTANT.name,
+            'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_SCIENTIFIC_STAFF.name,
             'eft': 80,
         }
         response = self.client.post(url, data)
