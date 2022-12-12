@@ -36,7 +36,7 @@ class ChoixTypeFinancement(ChoiceEnum):
 
 
 class ChoixTypeContratTravail(ChoiceEnum):
-    UCLOUVAIN_ASSISTANT = _('UCLOUVAIN_ASSISTANT')
+    UCLOUVAIN_SCIENTIFIC_STAFF = _('UCLOUVAIN_SCIENTIFIC_STAFF')
 
 
 class BourseRecherche(ChoiceEnum):
