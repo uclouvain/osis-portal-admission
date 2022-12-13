@@ -123,6 +123,35 @@ msgstr ""
 "<a href=\"{url}\" target=_blank\">Formulaire de modification d'inscription</"
 "a>, dûment complété et accompagné des annexes mentionnées"
 
+#, python-format
+msgid ""
+"<p> On the basis of the <a href=\"%(url)s\">registration calendar</a> and "
+"the information you have provided, your application will be considered for "
+"the academic year <strong>%(year)s</strong>. </p> <p> Unfortunately, the "
+"training you have selected, %(training_title)s, will not be organised in "
+"%(year)s. </p> <p>We invite you to choose another training.</p>"
+msgstr ""
+"<p>Sur base du <a href=\"%(url)s\">calendrier d'inscription</a> et des "
+"éléments que vous avez renseignés, votre demande d'inscription sera prise en "
+"compte pour l'année académique <strong>%(year)s</strong>.</p> "
+"<p>Malheureusement, la formation que vous avez sélectionnée, "
+"%(training_title)s, ne sera pas organisée en %(year)s.</p> <p>Nous vous "
+"invitons à choisir une autre formation.</p>"
+
+#, python-format
+msgid ""
+"<p> On the basis of the information you have provided in your previous "
+"experience, you do not appear to meet the <a href=\"%(url)s\" target=\"_blank"
+"\">access conditions for the training</a> <em>%(training_title)s</em>. </p> "
+"<p>We invite you to check your previous course data or to choose another "
+"course.</p>"
+msgstr ""
+"<p>Sur base des éléments que vous avez renseignés dans votre parcours "
+"antérieur,vous ne semblez pas remplir les <a href=\"%(url)s\" target=\"_blank"
+"\">conditions d'accès de la formation</a> <em>%(training_title)s</em>.</"
+"p><p>Nous vous invitons à vérifier les données de votre parcours antérieur "
+"ou à choisir une autre formation.</p>"
+
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
@@ -213,6 +242,9 @@ msgstr "Année académique"
 
 msgid "Accepted"
 msgstr "Acceptée"
+
+msgid "Access conditions"
+msgstr "Conditions d'accès"
 
 msgid "Access my doctoral students' requests"
 msgstr "Accéder aux dossiers de mes doctorants"
@@ -666,11 +698,17 @@ msgstr[1] ""
 msgid "Certificate, with dates, justifying the specified period."
 msgstr "Attestation, avec mention des dates, justifiant la période concernée."
 
+msgid "Check my previous experience"
+msgstr "Vérifier mon parcours antérieur"
+
 msgid "Chemistry"
 msgstr "Chimie"
 
 msgid "Choose among the following proposals"
 msgstr "Choisissez parmi les propositions suivantes"
+
+msgid "Choose another training"
+msgstr "Choisir une autre formation"
 
 msgid "Chosen assimilation"
 msgstr "Assimilation choisie"
@@ -1043,6 +1081,12 @@ msgstr "Détaillez ici les raisons justifiant une admission provisoire."
 msgid "Detailed curriculum vitae"
 msgstr "Curriculum vitae détaillé"
 
+msgid "Determined academic year"
+msgstr "Année académique déterminée"
+
+msgid "Determined pool"
+msgstr "Pot déterminé"
+
 msgid "Did you graduate from this training?"
 msgstr "Avez-vous été diplômé au terme de cette formation ?"
 
@@ -1210,7 +1254,7 @@ msgid "Enrolled"
 msgstr "Inscrit"
 
 msgid "Enrollment in a bachelor with quota"
-msgstr "Inscription à un bachelier contigenté"
+msgstr "Inscription à un bachelier contingenté"
 
 msgid "Erasmus Mundus"
 msgstr "Erasmus Mundus"
@@ -2035,6 +2079,9 @@ msgstr "Crédits non-européens"
 msgid "Non-academic activities"
 msgstr "Activités non-académiques"
 
+msgid "Non-organised training"
+msgstr "Formation non-organisée"
+
 msgid "None of these proposals are relevant to me"
 msgstr "Aucune de ces propositions ne me correspond"
 
@@ -2119,7 +2166,7 @@ msgid "PARTIAL"
 msgstr "Partiel"
 
 msgid "PASSED_CONFIRMATION"
-msgstr "Epreuve de confirmation réussie"
+msgstr "Épreuve de confirmation réussie"
 
 msgid "PDF file"
 msgstr "Fichier PDF"
@@ -2152,7 +2199,7 @@ msgid "Passport number"
 msgstr "Numéro de passeport"
 
 msgid "Past confirmation papers"
-msgstr "Epreuves de confirmation passées"
+msgstr "Épreuves de confirmation passées"
 
 msgid "Period"
 msgstr "Période"
@@ -2812,7 +2859,7 @@ msgstr ""
 "demande qui peut être interrompue et reprise à tout moment."
 
 msgid "The person concerned"
-msgstr "La personne concerncée"
+msgstr "La personne concernée"
 
 msgid ""
 "The purpose of the confirmation test is to establish, on the basis of the "
@@ -2996,6 +3043,13 @@ msgstr ""
 "Attestation de chômage émise par l'organisme concerné, justifiant la période "
 "concernée."
 
+#, python-format
+msgid ""
+"Unexpected error, please <a href=\"%(url)s\">contact the service desk</a>."
+msgstr ""
+"Erreur inattendue, veuillez <a href=\"%(url)s\">contacter le service desk</"
+"a>."
+
 msgid "Unknown birth date"
 msgstr "Date de naissance exacte inconnue"
 
@@ -3172,6 +3226,14 @@ msgstr "Oui, sur Tournai uniquement (10 EUR)"
 msgid "Yes,No,"
 msgstr "Oui,Non,"
 
+#, python-format
+msgid ""
+"You are enrolling in a bachelor with quota, the application can only be "
+"submitted in the period from %(start_date)s to %(end_date)s."
+msgstr ""
+"Vous vous inscrivez dans un bachelor contingenté, la demande ne peut être "
+"soumise que pendant la période du %(start_date)s au %(end_date)s."
+
 msgid "You can specify the location or the postal code in your search."
 msgstr ""
 "Vous pouvez inclure la localité ou le code postal dans votre recherche."
@@ -3216,6 +3278,20 @@ msgid ""
 msgstr ""
 "Vous recevrez une newsletter mensuelle comprenant tous les avantages et "
 "activités liés à ce programme."
+
+msgid ""
+"Your application cannot be confirmed. The conditions of access do not seem "
+"to be fulfilled."
+msgstr ""
+"Votre demande d'inscription ne peut être confirmée. Les conditions d'accès "
+"ne semblent pas remplies."
+
+msgid ""
+"Your application cannot be confirmed. The requested training is not "
+"organised."
+msgstr ""
+"Votre demande d'inscription ne peut être confirmée. La formation demandée "
+"n'est pas organisée."
 
 msgid "Your data has been saved"
 msgstr "Vos données ont été enregistrées"

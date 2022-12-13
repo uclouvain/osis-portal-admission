@@ -121,8 +121,10 @@ class PoolQuestionsForm(forms.Form):
             data['is_external_reorientation'] = False
             data['regular_registration_proof'] = []
 
-        elif data.get('is_belgian_bachelor') is None and (
-            self.initial['modification_pool_end_date'] or self.initial['reorientation_pool_end_date']
+        elif (
+            'is_belgian_bachelor' in data
+            and data['is_belgian_bachelor'] is None
+            and (self.initial['modification_pool_end_date'] or self.initial['reorientation_pool_end_date'])
         ):
             # no belgian bachelor, modification asked
             self.add_error(

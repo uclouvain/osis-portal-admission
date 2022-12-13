@@ -103,6 +103,24 @@ msgid ""
 "completed and accompanied by the annexes mentioned"
 msgstr ""
 
+#, python-format
+msgid ""
+"<p> On the basis of the <a href=\"%(url)s\">registration calendar</a> and "
+"the information you have provided, your application will be considered for "
+"the academic year <strong>%(year)s</strong>. </p> <p> Unfortunately, the "
+"training you have selected, %(training_title)s, will not be organised in "
+"%(year)s. </p> <p>We invite you to choose another training.</p>"
+msgstr ""
+
+#, python-format
+msgid ""
+"<p> On the basis of the information you have provided in your previous "
+"experience, you do not appear to meet the <a href=\"%(url)s\" target=\"_blank"
+"\">access conditions for the training</a> <em>%(training_title)s</em>. </p> "
+"<p>We invite you to check your previous course data or to choose another "
+"course.</p>"
+msgstr ""
+
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
@@ -180,6 +198,9 @@ msgid "Academic year"
 msgstr ""
 
 msgid "Accepted"
+msgstr ""
+
+msgid "Access conditions"
 msgstr ""
 
 msgid "Access my doctoral students' requests"
@@ -598,10 +619,16 @@ msgstr[1] ""
 msgid "Certificate, with dates, justifying the specified period."
 msgstr ""
 
+msgid "Check my previous experience"
+msgstr ""
+
 msgid "Chemistry"
 msgstr ""
 
 msgid "Choose among the following proposals"
+msgstr ""
+
+msgid "Choose another training"
 msgstr ""
 
 msgid "Chosen assimilation"
@@ -929,6 +956,12 @@ msgid ""
 msgstr ""
 
 msgid "Detailed curriculum vitae"
+msgstr ""
+
+msgid "Determined academic year"
+msgstr ""
+
+msgid "Determined pool"
 msgstr ""
 
 msgid "Did you graduate from this training?"
@@ -1801,6 +1834,9 @@ msgid "Non-European credits"
 msgstr ""
 
 msgid "Non-academic activities"
+msgstr ""
+
+msgid "Non-organised training"
 msgstr ""
 
 msgid "None of these proposals are relevant to me"
@@ -2689,6 +2725,11 @@ msgid ""
 "specified period."
 msgstr ""
 
+#, python-format
+msgid ""
+"Unexpected error, please <a href=\"%(url)s\">contact the service desk</a>."
+msgstr ""
+
 msgid "Unknown birth date"
 msgstr ""
 
@@ -2844,6 +2885,12 @@ msgstr ""
 msgid "Yes,No,"
 msgstr ""
 
+#, python-format
+msgid ""
+"You are enrolling in a bachelor with quota, the application can only be "
+"submitted in the period from %(start_date)s to %(end_date)s."
+msgstr ""
+
 msgid "You can specify the location or the postal code in your search."
 msgstr ""
 
@@ -2873,6 +2920,16 @@ msgstr ""
 msgid ""
 "You will receive a monthly newsletter with all the benefits and activities "
 "related to this program."
+msgstr ""
+
+msgid ""
+"Your application cannot be confirmed. The conditions of access do not seem "
+"to be fulfilled."
+msgstr ""
+
+msgid ""
+"Your application cannot be confirmed. The requested training is not "
+"organised."
 msgstr ""
 
 msgid "Your data has been saved"

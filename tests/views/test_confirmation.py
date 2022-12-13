@@ -23,8 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from datetime import date
 from unittest.mock import ANY, Mock, patch
 
+import freezegun
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
@@ -52,8 +54,17 @@ class ConfirmationTestCase(TestCase):
 
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
-        self.mock_proposition_api.return_value.verify_proposition.return_value = Mock().return_value = []
-        self.mock_proposition_api.return_value.submit_proposition.return_value = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
+        api = self.mock_proposition_api.return_value
+        api.retrieve_proposition.return_value = Mock(
+            uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+            erreurs=[],
+            links={
+                'retrieve_person': {'url': 'ok'},
+                'retrieve_supervision': {'url': 'ok'},
+            },
+        )
+        api.verify_proposition.return_value.to_dict.return_value = {'errors': []}
+        api.submit_proposition.return_value.to_dict.return_value = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
         self.addCleanup(propositions_api_patcher.stop)
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
@@ -70,7 +81,7 @@ class ConfirmationTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
-        self.mock_proposition_api.return_value.verify_proposition.assert_called()
+        self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.assert_called()
 
         self.assertNotContains(
             response,
@@ -112,10 +123,12 @@ class ConfirmationTestCase(TestCase):
         )
 
     def test_get_with_incomplete_admission(self):
-        self.mock_proposition_api.return_value.verify_proposition.return_value = Mock().return_value = [
-            Mock(status_code='PROPOSITION-25', detail='Some data is missing.'),
-            Mock(status_code='PROPOSITION-38', detail='Every promoter must approve the proposition.'),
-        ]
+        self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.return_value = {
+            'errors': [
+                dict(status_code='PROPOSITION-25', detail='Some data is missing.'),
+                dict(status_code='PROPOSITION-38', detail='Every promoter must approve the proposition.'),
+            ]
+        }
 
         response = self.client.get(self.url)
         # Display an error message as some conditions aren't meet
@@ -125,6 +138,20 @@ class ConfirmationTestCase(TestCase):
         # Display the missing conditions retrieves by the API
         self.assertContains(response, 'Some data is missing.')
         self.assertContains(response, 'Every promoter must approve the proposition.')
+
+    @freezegun.freeze_time('2022-09-22')
+    def test_get_late_message(self):
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value.pot_calcule = (
+            'ADMISSION_POOL_UE5_BELGIAN'
+        )
+        self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.return_value = {
+            'errors': [],
+            'pool_end_date': date(2022, 9, 30),
+        }
+
+        response = self.client.get(self.url)
+        # Display a message for late enrollment
+        self.assertContains(response, 'Late enrollment!')
 
     def test_post_with_incomplete_form_without_belgian_diploma(self):
         response = self.client.post(self.url, data={})
@@ -189,10 +216,13 @@ class ConfirmationTestCase(TestCase):
             'accept_data_protection_policy': True,
             'accept_regulated_professions_rules': True,
             'accept_max_response_time': True,
+            'pool': 'DOCTORATE_EDUCATION_ENROLLMENT',
+            'annee': 2020,
         }
         response = self.client.post(self.url, data=data)
         self.mock_proposition_api.return_value.submit_proposition.assert_called_with(
             uuid="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            submit_proposition=data,
             **self.default_kwargs,
         )
         self.assertEqual(response.status_code, 302)
