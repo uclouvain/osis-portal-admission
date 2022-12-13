@@ -28,6 +28,7 @@ import re
 from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
+from typing import Union
 
 from django import template
 from django.conf import settings
@@ -610,8 +611,12 @@ def status_list(admission):
 
 
 @register.filter
-def get_academic_year(year: int):
+def get_academic_year(year: Union[int, str]):
     """Return the academic year related to a specific year."""
+    if not year:
+        return ''
+    if isinstance(year, str):
+        year = int(year)
     return f'{year}-{year + 1}'
 
 

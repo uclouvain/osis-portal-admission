@@ -185,10 +185,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_proposition(cls, person: Person, uuid):
+    def submit_proposition(cls, person: Person, uuid, **kwargs):
         return APIClient().submit_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
+            submit_proposition=kwargs,
         )
 
     @classmethod
@@ -199,10 +200,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_general_proposition(cls, person: Person, uuid):
+    def submit_general_proposition(cls, person: Person, uuid, **kwargs):
         return APIClient().submit_general_education_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
+            submit_proposition=kwargs,
         )
 
     @classmethod
@@ -213,10 +215,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_continuing_proposition(cls, person: Person, uuid):
+    def submit_continuing_proposition(cls, person: Person, uuid, **kwargs):
         return APIClient().submit_continuing_education_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
+            submit_proposition=kwargs,
         )
 
     @classmethod
@@ -413,6 +416,9 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.ProcedureDemandeSignatureNonLanceeException,
         PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
         PropositionBusinessException.PropositionNonApprouveeParMembresCAException,
+        PropositionBusinessException.PromoteurManquantException,
+        PropositionBusinessException.PromoteurDeReferenceManquantException,
+        PropositionBusinessException.MembreCAManquantException,
     },
     'confirm-submit': {
         GlobalPropositionBusinessException.ConditionsAccessNonRempliesException,

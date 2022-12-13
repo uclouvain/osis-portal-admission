@@ -1,0 +1,244 @@
+{% extends form_base_template %}
+{% load bootstrap3 i18n static admission waffle_tags %}
+
+{% block tab_content %}
+  {% doctorate_tabs admission %}
+  {% current_subtabs as subtabs %}
+  {% if subtabs|length > 1 %}
+    <div class="row">
+    <div class="col-md-2 visible-md visible-lg">
+      {% admission_subtabs admission tabs=subtabs %}
+    </div>
+    <div class="col-md-10">
+  {% endif %}
+
+<div>
+  <div class="alert alert-info confirmation-header">
+    <p>{% trans "You have now reached the confirmation tab of your enrolment request." %}</p>
+    <p class="text-justify">
+      {% blocktrans trimmed %}
+        BEFORE proceeding to confirmation here below, please read again the data you entered in the previous tabs in
+        order to
+        be sure you did not enter any errors or forgot to complete certain fields. It are indeed these same data that
+        will be used
+        during the complete period of your university studies.
+        If all data seem correct according to you, please proceed to the confirmation of your enrolment request here
+        below.
+      {% endblocktrans %}
+    </p>
+  </div>
+
+  {% if display_late_message %}
+    <div class="alert alert-warning">
+      <p>{# TODO #}Late enrollment! Enroll before {{ admission.pool_end_date }}</p>
+    </div>
+  {% endif %}
+
+  {% switch 'debug' %}
+    {% firstof admission.doctorat.annee admission.formation.annee as annee %}
+    {% field_data _('Academic year') annee|get_academic_year css_class='debug-content' %}
+    {% field_data _('Determined academic year') admission.annee_calculee|get_academic_year css_class='debug-content' %}
+    {% field_data _('Determined pool') admission.pot_calcule css_class='debug-content' %}
+  {% endswitch %}
+
+  {% if missing_confirmation_conditions %}
+    {% url base_namespace|add:':training-choice' admission.uuid as training_choice_url %}
+    {% url base_namespace|add:':curriculum' admission.uuid as cv_url %}
+
+    <p class="alert alert-danger">
+      {% trans "Your enrolment cannot be confirmed. All the following conditions must be met to do it." %}
+    </p>
+
+    <table class="table table-bordered">
+      {% for tab_name, tab in missing_confirmation_conditions.items %}
+        <tr class="errors-tab">
+          <td>
+            {% if tab.errors %}
+              <p class="tab-name">
+                <i class="fa fa-times text-danger"></i>
+                <a href="{% url base_namespace|add:':'|add:tab_name admission.uuid %}">{{ tab.label }}</a>
+              </p>
+              <ul>
+                {% for error_code, error in tab.errors %}
+
+                  {# Pool non-resident contingenté non-ouvert #}
+                  {% if error_code == 'ADMISSION-10' %}
+                    <li>
+                      {# TODO message #}
+                      <p>
+                        {% blocktrans with start_date=pool_start_date|date:'d/m/Y' end_date=pool_end_date|date:'d/m/Y' trimmed %}
+                          You are enrolling in a bachelor with quota, the application can only be submitted
+                          in the period from {{ start_date }} to {{ end_date }}.
+                        {% endblocktrans %}</p>
+                    </li>
+
+                    {# Pool non déterminé #}
+                  {% elif error_code == 'ADMISSION-12' %}
+                    <li>
+                      {# TODO url #}
+                      <p>{% blocktrans with url="#" trimmed %}
+                        Unexpected error, please <a href="{{ url }}">contact the service desk</a>.
+                      {% endblocktrans %}</p>
+                    </li>
+
+                    {# Conditions d'accès non remplies #}
+                  {% elif error_code == 'ADMISSION-2' %}
+                    <li>
+                      <p>{% trans "Your application cannot be confirmed. The conditions of access do not seem to be fulfilled." %}</p>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">{% trans "Access conditions" %}</div>
+                        {% if admission.doctorat %}
+                          {% display admission.doctorat.intitule as training_title %}
+                        {% else %}
+                          {% display admission.formation.intitule as training_title %}
+                        {% endif %}
+                        <div class="panel-body">
+                          {# TODO url #}
+                          {% blocktrans with url=access_conditions_url training_title=training_title trimmed %}
+                            <p>
+                              On the basis of the information you have provided in your previous experience, you do not
+                              appear to meet the
+                              <a href="{{ url }}" target="_blank">access conditions for the training</a>
+                              <em>{{ training_title }}</em>.
+                            </p>
+                            <p>We invite you to check your previous course data or to choose another course.</p>
+                          {% endblocktrans %}
+                          <div class="text-right">
+                            <a href="{{ cv_url }}" class="btn btn-primary">
+                              <span class="fa fa-person-walking-luggage"></span>
+                              {% trans "Check my previous experience" %}
+                            </a>
+                            <a href="{{ training_choice_url }}" class="btn btn-primary">
+                              <span class="fa fa-person-chalkboard"></span>
+                              {% trans "Choose another training" %}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+
+                    {# Formation non organisée #}
+                    {% elif error_code == 'ADMISSION-7' %}
+                    <li>
+                      <p>{% trans "Your application cannot be confirmed. The requested training is not organised." %}</p>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">{% trans "Non-organised training" %}</div>
+                        {% if admission.doctorat %}
+                          {% display admission.doctorat.intitule as training_title %}
+                        {% else %}
+                          {% display admission.formation.intitule as training_title %}
+                        {% endif %}
+                        <div class="panel-body">
+                          {% blocktrans with url=calendar_url year=admission.annee_calculee|get_academic_year trimmed %}
+                            <p>
+                              On the basis of the <a href="{{ url }}">registration calendar</a> and the information you
+                              have provided, your
+                              application will be considered for the academic year <strong>{{ year }}</strong>.
+                            </p>
+                            <p>
+                              Unfortunately, the training you have selected, {{ training_title }}, will not be
+                              organised in {{ year }}.
+                            </p>
+                            <p>We invite you to choose another training.</p>
+                          {% endblocktrans %}
+                          <div class="text-right">
+                            <a href="{{ training_choice_url }}" class="btn btn-primary">
+                              <span class="fa fa-person-chalkboard"></span>
+                              {% trans "Choose another training" %}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+
+                  {% else %}
+                    <li>{{ error }}</li>
+                  {% endif %}
+
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="tab-name">
+                <i class="fa fa-check text-success"></i>
+                {{ tab.label }}
+              </p>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+  {% else %}
+    <p class="alert alert-success">
+      {% trans "Your enrolment can be confirmed as all the necessary conditions have been met." %}
+    </p>
+    <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <p class="confirmation-warning">
+        {% blocktrans trimmed %}
+          Any false declaration or deliberate omission regarding the constitution of the application file
+          constitues a fraud on registration. Anyone suspected of fraud will be invited to provide further
+          explanation or clarification (Article 16 et 17 - Section 2 du Chapitre 1 du Titre III du
+          Reglement general des etudes et des examens de l'UCLouvain).
+        {% endblocktrans %}
+      </p>
+      <button
+        type="submit"
+        class="btn btn-primary pull-right"
+        disabled
+      >
+        {% trans "Confirm my request for application" %}
+      </button>
+    </form>
+  {% endif %}
+</div>
+{% if subtabs|length > 1 %}
+  </div>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+
+  <style>
+    .confirmation-header {
+      padding: 1em;
+    }
+
+    .tab-name {
+      margin: 0.5em;
+      font-weight: bold;
+    }
+
+    .confirmation-warning {
+      margin: 2em 0;
+    }
+
+    .form-group label:after {
+      content: " *";
+      color: red;
+    }
+
+  </style>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+
+  <script type="application/javascript">
+  $(function () {
+    const form = $('#confirmation-form')[0];
+    const formButton = $('button', form).first();
+
+    {% if missing_confirmation_conditions %}
+      formButton.prop('disabled', true);
+    {% else %}
+      $('input[type="checkbox"]', form).change(function () {
+        formButton.prop('disabled', !form.checkValidity());
+      }).change()
+    {% endif %}
+  })
+  </script>
+{% endblock %}

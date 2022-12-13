@@ -27,15 +27,19 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 
-class DoctorateAdmissionConfirmationForm(forms.Form):
+class AdmissionConfirmationForm(forms.Form):
+    pool = forms.CharField(widget=forms.HiddenInput())
+    annee = forms.IntegerField(widget=forms.HiddenInput())
+
+
+class DoctorateAdmissionConfirmationForm(AdmissionConfirmationForm):
     accept_regulations = forms.BooleanField(
         label=_(
             "In accordance with the information on the "
             "<a href='https://uclouvain.be/en/study/inscriptions/reglementations.html' target='blank'>"
             "Reglementations</a> page, "
             "I declare that I have read and accept the terms of the university regulations."
-        ),
-        required=True,
+        )
     )
     accept_data_protection_policy = forms.BooleanField(
         label=_(
@@ -43,8 +47,7 @@ class DoctorateAdmissionConfirmationForm(forms.Form):
             "<a href='https://uclouvain.be/en/study/inscriptions/vie-privee.html'"
             " target='blank'>Data protection policy</a> page, I declare that I have"
             " read and accept the terms of the data protection policy of the University of Louvain."
-        ),
-        required=True,
+        )
     )
     accept_regulated_professions_rules = forms.BooleanField(
         label=_(
@@ -54,24 +57,21 @@ class DoctorateAdmissionConfirmationForm(forms.Form):
             "should it apply to me, I declare that I have received the information relating to the admission and "
             "graduation requirements and to the particular rules and restrictions of accreditation and professional "
             "establishment to which the professional or teacher training title is subject and I accept the terms."
-        ),
-        required=True,
+        )
     )
     accept_max_response_time = forms.BooleanField(
         label=_(
             "The Enrolment Department reserves the right to ask you for any additional supporting documents it deems "
             "useful. This must <strong>imperatively reach us within 15 calendar days</strong>. "
             "Otherwise, your enrolment request will be closed."
-        ),
-        required=True,
+        )
     )
 
 
 class DoctorateAdmissionConfirmationWithBelgianDiplomaForm(DoctorateAdmissionConfirmationForm):
     accept_ucl_transfer_information_to_secondary_school = forms.BooleanField(
         label=_(
-            "I authorize the UCLouvain to transmit to the secondary school in which I obtained my CESS, the information"
-            " on the success."
-        ),
-        required=True,
+            "I authorize the UCLouvain to transmit to the secondary school in which I obtained my CESS, "
+            "the information on the success."
+        )
     )
