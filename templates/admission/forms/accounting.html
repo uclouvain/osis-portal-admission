@@ -1,30 +1,32 @@
-{% extends "admission/doctorate/form_tab_layout.html" %}
+{% extends form_base_template %}
 {% load bootstrap3 i18n admission %}
 
 {% block form %}
   {% csrf_token %}
 
-  {% if True %}
+  {% if accounting.derniers_etablissements_superieurs_communaute_fr_frequentes %}
     {% panel _('Absence of debt') %}
       {% bootstrap_field form.attestation_absence_dette_etablissement form_group_class="form-group required_field" %}
     {% endpanel %}
   {% endif %}
 
-  {% panel _('Reduced registration fees') %}
-    {% bootstrap_field form.demande_allocation_d_etudes_communaute_francaise_belgique form_group_class="form-group required_field" %}
-    {% bootstrap_field form.enfant_personnel form_group_class="form-group required_field" %}
-    <div id="staff-child-container">
-      {% bootstrap_field form.attestation_enfant_personnel form_group_class="form-group required_field" %}
-      {% blocktranslate trimmed %}
-        The child of a member of staff may, under some conditions, benefit from a reduction of the registration fee for
-        any registration for a bachelor's or master's degree. This parent should contact the Human Resources
-        Administration of his or her employer to check whether he or she meets these conditions and, if so,
-        request the certificate confirming this.
-      {% endblocktranslate %}
-    </div>
-  {% endpanel %}
+  {% if is_general %}
+    {% panel _('Reduced registration fees') %}
+      {% bootstrap_field form.demande_allocation_d_etudes_communaute_francaise_belgique form_group_class="form-group required_field" %}
+      {% bootstrap_field form.enfant_personnel form_group_class="form-group required_field" %}
+      <div id="staff-child-container">
+        {% bootstrap_field form.attestation_enfant_personnel form_group_class="form-group required_field" %}
+        {% blocktranslate trimmed %}
+          The child of a member of staff may, under some conditions, benefit from a reduction of the registration fee for
+          any registration for a bachelor's or master's degree. This parent should contact the Human Resources
+          Administration of his or her employer to check whether he or she meets these conditions and, if so,
+          request the certificate confirming this.
+        {% endblocktranslate %}
+      </div>
+    {% endpanel %}
+  {% endif %}
 
-  {% if has_ue_nationality == False %}
+  {% if is_general and accounting.a_nationalite_ue == False %}
     {% panel _('Assimilation') %}
       {% bootstrap_field form.type_situation_assimilation form_group_class="form-group required_field" %}
 
@@ -140,7 +142,9 @@
   {% endif %}
 
   {% panel _('Affiliations') %}
-    {% bootstrap_field form.affiliation_sport form_group_class="form-group required_field" %}
+    {% if is_general %}
+      {% bootstrap_field form.affiliation_sport form_group_class="form-group required_field" %}
+    {% endif %}
     {% bootstrap_field form.etudiant_solidaire form_group_class="form-group required_field" %}
     <p id="solidarity-student-explication">
       {% blocktranslate trimmed %}
@@ -182,14 +186,16 @@
           const assimilation5FieldLabelsToUpdate = $('label.control-label .relationship');
           const assimilation5RadioLabelsToUpdate = $('#id_sous_type_situation_assimilation_5 label .relationship');
 
-          {# Reduced registration fees #}
-          $('#staff-child-container').dependsOn({
-              'input[name=enfant_personnel]': { values: ["True"] },
-          });
+          {% if is_general %}
+            {# Reduced registration fees #}
+            $('#staff-child-container').dependsOn({
+                'input[name=enfant_personnel]': { values: ["True"] },
+            });
+          {% endif %}
 
           {# Assimilation #}
 
-          {% if has_ue_nationality == False %}
+          {% if is_general and accounting.a_nationalite_ue == False %}
 
               {# Assimilation 1 #}
               $('#assimilation1-container').dependsOn({

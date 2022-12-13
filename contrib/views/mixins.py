@@ -49,6 +49,9 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         context['detail_base_template'] = f'admission/{namespace}/details/tab_layout.html'
         context['form_base_template'] = f'admission/{namespace}/forms/tab_layout.html'
         context['base_namespace'] = self.base_namespace
+        context['is_general'] = self.current_context == 'general-education'
+        context['is_continuing'] = self.current_context == 'continuing-education'
+        context['is_doctorate'] = self.current_context == 'doctorate'
         return context
 
     @cached_property

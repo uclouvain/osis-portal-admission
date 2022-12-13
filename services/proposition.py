@@ -26,6 +26,12 @@
 from enum import Enum
 from typing import List
 
+from osis_admission_sdk.model.general_education_accounting_dto import GeneralEducationAccountingDTO
+
+from osis_admission_sdk.model.continuing_education_accounting_dto import ContinuingEducationAccountingDTO
+
+from osis_admission_sdk.model.doctorate_education_accounting_dto import DoctorateEducationAccountingDTO
+
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 from admission.services.mixins import ServiceMeta
@@ -34,7 +40,6 @@ from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
-from osis_admission_sdk.model.accounting_conditions import AccountingConditions
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
@@ -223,18 +228,50 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def retrieve_accounting_conditions(cls, person: Person, uuid: str) -> AccountingConditions:
+    def retrieve_doctorate_accounting(cls, person: Person, uuid: str) -> DoctorateEducationAccountingDTO:
         return APIClient().retrieve_accounting(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def update_accounting(cls, person: Person, uuid: str, data: dict):
+    def retrieve_continuing_accounting(cls, person: Person, uuid: str) -> ContinuingEducationAccountingDTO:
+        return APIClient().retrieve_continuing_accounting(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_general_accounting(cls, person: Person, uuid: str) -> GeneralEducationAccountingDTO:
+        return APIClient().retrieve_general_accounting(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_doctorate_accounting(cls, person: Person, uuid: str, data: dict):
         data['uuid_proposition'] = uuid
         return APIClient().update_accounting(
             uuid=uuid,
-            completer_comptabilite_proposition_command=data,
+            completer_comptabilite_proposition_doctorale_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_general_accounting(cls, person: Person, uuid: str, data: dict):
+        data['uuid_proposition'] = uuid
+        return APIClient().update_general_accounting(
+            uuid=uuid,
+            completer_comptabilite_proposition_generale_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_continuing_accounting(cls, person: Person, uuid: str, data: dict):
+        data['uuid_proposition'] = uuid
+        return APIClient().update_continuing_accounting(
+            uuid=uuid,
+            completer_comptabilite_proposition_continue_command=data,
             **build_mandatory_auth_headers(person),
         )
 

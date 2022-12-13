@@ -344,6 +344,13 @@ def field_data(
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
+
+    elif type(data) == bool:
+        if data is True:
+            data = _('Yes')
+        elif data is False:
+            data = _('No')
+
     elif translate_data is True:
         data = _(data)
 
