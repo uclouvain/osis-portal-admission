@@ -35,24 +35,23 @@ __all__ = ['AdmissionAccountingDetailView']
 
 
 class AdmissionAccountingDetailView(LoadDossierViewMixin, TemplateView):
-    template_name = 'admission/doctorate/details/accounting.html'
+    template_name = 'admission/details/accounting.html'
+
+    retrieve_accounting = {
+        'doctorate': AdmissionPropositionService.retrieve_doctorate_accounting,
+        'general-education': AdmissionPropositionService.retrieve_general_accounting,
+        'continuing-education': AdmissionPropositionService.retrieve_continuing_accounting,
+    }
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        retrieved_accounting_conditions = AdmissionPropositionService.retrieve_accounting_conditions(
+        context_data['accounting'] = self.retrieve_accounting[self.current_context](
             person=self.request.user.person,
             uuid=self.admission_uuid,
         ).to_dict()
 
-        context_data.update(retrieved_accounting_conditions)
         context_data['formatted_relationships'] = FORMATTED_RELATIONSHIPS
         context_data['dynamic_person_concerned_lowercase'] = mark_safe(dynamic_person_concerned_lowercase)
 
         return context_data
-
-    def get_template_names(self):
-        return [
-            f'admission/{self.formatted_current_context}/details/accounting.html',
-            'admission/details/wip.html',
-        ]

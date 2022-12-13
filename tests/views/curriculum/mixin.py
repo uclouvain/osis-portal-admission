@@ -36,7 +36,6 @@ from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePr
 from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 
-from admission.tests.factories import PropositionDTOComptabiliteFactory
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
 from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
 
@@ -242,7 +241,6 @@ class MixinTestCase(TestCase):
             fiche_archive_signatures_envoyees=[],
             statut=ChoixStatutProposition.IN_PROGRESS.name,
             erreurs=[],
-            comptabilite=PropositionDTOComptabiliteFactory(),
             reponses_questions_specifiques={},
             curriculum=['file1.pdf'],
         )

@@ -53,7 +53,7 @@ from reference.services.iban_validator import (
 )
 
 
-class DoctorateAdmissionAccountingForm(forms.Form):
+class AccountingForm(forms.Form):
     dynamic_person_concerned = '<span class="relationship">the person concerned</span>'
 
     # Absence of debt
@@ -72,9 +72,11 @@ class DoctorateAdmissionAccountingForm(forms.Form):
                 "target='_blank'>study allowance</a> from the French Community of Belgium?"
             )
         ),
+        required=False,
     )
     enfant_personnel = RadioBooleanField(
         label=_('Are you the child of a member of the staff of the UCLouvain or the Martin V entity?'),
+        required=False,
     )
     attestation_enfant_personnel = FileUploadField(
         label=_('Staff child certificate'),
@@ -309,6 +311,7 @@ class DoctorateAdmissionAccountingForm(forms.Form):
             )
         ),
         widget=forms.RadioSelect,
+        required=False,
     )
     etudiant_solidaire = RadioBooleanField(
         label=mark_safe(
@@ -381,7 +384,8 @@ class DoctorateAdmissionAccountingForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, **kwargs):
+    def __init__(self, is_general_admission, **kwargs):
+        self.is_general_admission = is_general_admission
         self.education_site = kwargs.pop('education_site', None)
         self.has_ue_nationality = kwargs.pop('has_ue_nationality', None)
         self.last_french_community_high_education_institutes_attended = kwargs.pop(
@@ -391,9 +395,6 @@ class DoctorateAdmissionAccountingForm(forms.Form):
         self.valid_iban = None
 
         super().__init__(**kwargs)
-
-        if self.education_site:
-            self.fields['affiliation_sport'].choices = ChoixAffiliationSport.choices(self.education_site)
 
         if self.last_french_community_high_education_institutes_attended:
             names = self.last_french_community_high_education_institutes_attended.get('names')
@@ -410,6 +411,17 @@ class DoctorateAdmissionAccountingForm(forms.Form):
                 'names': ', '.join(names),
             }
             self.fields['attestation_absence_dette_etablissement'].required = True
+
+        if self.is_general_admission:
+            self.fields['demande_allocation_d_etudes_communaute_francaise_belgique'].required = True
+            self.fields['enfant_personnel'].required = True
+            self.fields['affiliation_sport'].required = True
+
+            if self.education_site:
+                self.fields['affiliation_sport'].choices = ChoixAffiliationSport.choices(self.education_site)
+
+            if self.has_ue_nationality is False:
+                self.fields['type_situation_assimilation'].required = True
 
     class Media:
         js = (
@@ -590,15 +602,15 @@ class DoctorateAdmissionAccountingForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        # Reduced registration fees
-        if cleaned_data.get('enfant_personnel'):
-            if not cleaned_data.get('attestation_enfant_personnel'):
-                self.add_error('attestation_enfant_personnel', FIELD_REQUIRED_MESSAGE)
-        else:
-            cleaned_data['attestation_enfant_personnel'] = []
+        if self.is_general_admission:
+            if cleaned_data.get('enfant_personnel'):
+                if not cleaned_data.get('attestation_enfant_personnel'):
+                    self.add_error('attestation_enfant_personnel', FIELD_REQUIRED_MESSAGE)
+            else:
+                cleaned_data['attestation_enfant_personnel'] = []
 
-        # Assimilation
-        self.clean_assimilation_fields(cleaned_data)
+            # Assimilation
+            self.clean_assimilation_fields(cleaned_data)
 
         # Bank account
         self.clean_bank_fields(cleaned_data)
@@ -611,9 +623,7 @@ class DoctorateAdmissionAccountingForm(forms.Form):
         # Can have assimilation
         if self.has_ue_nationality is False:
 
-            if not cleaned_data.get('type_situation_assimilation'):
-                self.add_error('type_situation_assimilation', FIELD_REQUIRED_MESSAGE)
-            else:
+            if cleaned_data.get('type_situation_assimilation'):
                 assimilation_required_fields = self.get_assimilation_required_fields(
                     'type_situation_assimilation',
                     cleaned_data,

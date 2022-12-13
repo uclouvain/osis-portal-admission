@@ -19,3 +19,4 @@ from .proximity_commission import *
 from .secondary_studies import *
 from .supervision import *
 from .training import *
+from .training_choice import *
