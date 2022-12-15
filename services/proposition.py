@@ -393,6 +393,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.FichierCurriculumNonRenseigneException,
         PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
         GlobalPropositionBusinessException.QuestionsSpecifiquesCurriculumNonCompleteesException,
+        FormationGeneraleBusinessException.FichierCurriculumNonRenseigneException,
         FormationGeneraleBusinessException.FormationNonTrouveeException,
         FormationGeneraleBusinessException.EquivalenceNonRenseigneeException,
         FormationGeneraleBusinessException.ContinuationBachelierNonRenseigneeException,
