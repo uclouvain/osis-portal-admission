@@ -29,6 +29,7 @@ from abc import ABC
 from decimal import Decimal
 
 from django import forms
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 from django.template import loader
@@ -73,6 +74,7 @@ __namespace__ = 'curriculum'
 
 class AdmissionCurriculumFormMixin(WebServiceFormMixin, AdmissionCurriculumMixin, ABC):
     def get_success_url(self):
+        messages.info(self.request, _("Your data has been saved"))
         url = resolve_url(f"admission:{self.current_context}:update:curriculum", pk=self.admission_uuid)
         return url + getattr(self, 'url_hash', '')
 
