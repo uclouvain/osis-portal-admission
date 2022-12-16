@@ -26,10 +26,9 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
-from admission.constants import FIELD_REQUIRED_MESSAGE, LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+from admission.constants import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaTypes,
@@ -40,19 +39,21 @@ from admission.contrib.enums.secondary_studies import (
     HAS_DIPLOMA_CHOICES,
 )
 from admission.contrib.enums.specific_question import Onglets
+from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.education import (
-    DoctorateAdmissionEducationBelgianDiplomaForm,
-    DoctorateAdmissionEducationForeignDiplomaForm,
-    DoctorateAdmissionEducationForm,
-    DoctorateAdmissionEducationScheduleForm,
+    BachelorAdmissionEducationBelgianDiplomaForm,
+    BachelorAdmissionEducationForeignDiplomaForm,
+    BachelorAdmissionEducationForm,
+    BachelorAdmissionEducationScheduleForm,
+    BaseAdmissionEducationForm,
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
 from admission.services.person import (
-    AdmissionPersonService,
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
+from admission.utils import is_med_dent_training
 from base.tests.factories.academic_year import get_current_year
 
 EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
@@ -67,11 +68,8 @@ __all__ = [
 class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = "admission/forms/education.html"
     success_url = reverse_lazy("admission:list")
-    form_class = DoctorateAdmissionEducationForm
     forms = None
     service_mapping = {
-        'create': AdmissionPersonService,
-        'doctorate': AdmissionPersonService,
         'general-education': GeneralEducationAdmissionPersonService,
         'continuing-education': ContinuingEducationAdmissionPersonService,
     }
@@ -86,15 +84,26 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data.update(self.get_forms(context_data))
-        context_data['form'] = context_data['main_form']  # Trick template to display form tag
-        context_data['foreign_diploma_type_images'] = {
-            'INTERNATIONAL_BACCALAUREATE': 'admission/images/IBO.png',
-            'EUROPEAN_BACHELOR': 'admission/images/schola_europa.png',
-        }
-        context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
-        context_data['educational_types_requiring_schedule'] = EDUCATIONAL_TYPES_REQUIRING_SCHEDULE
+        if self.is_bachelor:
+            context_data.update(self.get_forms(context_data))
+            context_data['form'] = context_data['main_form']  # Trick template to display form tag
+            context_data['foreign_diploma_type_images'] = {
+                'INTERNATIONAL_BACCALAUREATE': 'admission/images/IBO.png',
+                'EUROPEAN_BACHELOR': 'admission/images/schola_europa.png',
+            }
+            context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+            context_data['educational_types_requiring_schedule'] = EDUCATIONAL_TYPES_REQUIRING_SCHEDULE
+            context_data['is_med_dent_training'] = self.is_med_dent_training
+            context_data['is_vae_potential'] = self.high_school_diploma['is_vae_potential']
         return context_data
+
+    @cached_property
+    def current_year(self):
+        return get_current_year()
+
+    @cached_property
+    def is_bachelor(self):
+        return self.admission.formation.type == TrainingType.BACHELOR.name
 
     @cached_property
     def high_school_diploma(self):
@@ -106,6 +115,24 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             )
             .to_dict()
         )
+
+    def get_template_names(self):
+        if self.is_bachelor:
+            return ['admission/general_education/forms/bachelor_education.html']
+        return ['admission/forms/education.html']
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["person"] = self.person
+        kwargs["current_year"] = self.current_year
+        return kwargs
+
+    def get_form_class(self):
+        return BachelorAdmissionEducationForm if self.is_bachelor else BaseAdmissionEducationForm
+
+    @cached_property
+    def is_med_dent_training(self):
+        return is_med_dent_training(self.admission.formation)
 
     def get_initial(self):
         return {
@@ -121,6 +148,9 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             form.empty_permitted = False
 
     def post(self, request, *args, **kwargs):
+        if not self.is_bachelor:
+            return super().post(request, *args, **kwargs)
+
         forms = self.get_forms()
 
         main_form = forms["main_form"]
@@ -143,102 +173,10 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             else:
                 forms["schedule_form"].is_bound = False  # drop data if schedule is not required
 
-        # Cross-form check for the foreign diploma
-        if main_form.is_bound and foreign_diploma_form.is_bound:
-            got_diploma = main_form.data.get(main_form.add_prefix("got_diploma"))
-            high_school_diploma = main_form.fields['high_school_diploma'].widget.value_from_datadict(
-                main_form.data, main_form.files, main_form.add_prefix("high_school_diploma")
-            )
-            enrolment_certificate = main_form.fields['enrolment_certificate'].widget.value_from_datadict(
-                main_form.data, main_form.files, main_form.add_prefix("enrolment_certificate")
-            )
-
-            linguistic_regime = foreign_diploma_form.data.get(foreign_diploma_form.add_prefix("linguistic_regime"))
-
-            high_school_diploma_translation = foreign_diploma_form.fields[
-                'high_school_diploma_translation'
-            ].widget.value_from_datadict(
-                foreign_diploma_form.data,
-                foreign_diploma_form.files,
-                foreign_diploma_form.add_prefix("high_school_diploma_translation"),
-            )
-            enrolment_certificate_translation = foreign_diploma_form.fields[
-                'enrolment_certificate_translation'
-            ].widget.value_from_datadict(
-                foreign_diploma_form.data,
-                foreign_diploma_form.files,
-                foreign_diploma_form.add_prefix("enrolment_certificate_translation"),
-            )
-
-            if got_diploma == GotDiploma.THIS_YEAR.name:
-                if foreign_diploma_form.fields['country'].is_ue_country:
-                    if not high_school_diploma and not enrolment_certificate:
-                        main_form.add_error(
-                            'high_school_diploma',
-                            _('Please specify either your high school diploma or your enrolment certificate'),
-                        )
-                        main_form.add_error("enrolment_certificate", '')
-                else:
-                    if not high_school_diploma:
-                        main_form.add_error("high_school_diploma", FIELD_REQUIRED_MESSAGE)
-
-            # Translated files required for some foreign diploma linguistic regimes
-            if linguistic_regime not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION:
-                self.clean_foreign_diploma_translation_fields(
-                    foreign_diploma_form,
-                    got_diploma,
-                    enrolment_certificate,
-                    enrolment_certificate_translation,
-                    high_school_diploma,
-                    high_school_diploma_translation,
-                )
-
         # Page is valid if all bound forms are valid
         if all(not form.is_bound or form.is_valid() for form in forms.values()):
             return self.form_valid(main_form)
         return self.form_invalid(main_form)
-
-    @classmethod
-    def clean_foreign_diploma_translation_fields(
-        cls,
-        foreign_diploma_form,
-        got_diploma,
-        enrolment_certificate,
-        enrolment_certificate_translation,
-        high_school_diploma,
-        high_school_diploma_translation,
-    ):
-        if got_diploma == GotDiploma.YES.name:
-            # High school diploma is required
-            if not high_school_diploma_translation:
-                foreign_diploma_form.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
-
-        elif got_diploma == GotDiploma.THIS_YEAR.name:
-
-            if foreign_diploma_form.fields['country'].is_ue_country:
-                # Either high school diploma or enrolment certificate is required
-                if high_school_diploma and not high_school_diploma_translation:
-                    foreign_diploma_form.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
-                if enrolment_certificate and not enrolment_certificate_translation:
-                    foreign_diploma_form.add_error("enrolment_certificate_translation", FIELD_REQUIRED_MESSAGE)
-                if (
-                    not high_school_diploma
-                    and not enrolment_certificate
-                    and not high_school_diploma_translation
-                    and not enrolment_certificate_translation
-                ):
-                    # Empty errors because the related fields already have errors
-                    foreign_diploma_form.add_error('high_school_diploma_translation', '')
-                    foreign_diploma_form.add_error("enrolment_certificate_translation", '')
-
-            elif not high_school_diploma_translation:
-                # High school diploma is required
-                foreign_diploma_form.add_error("high_school_diploma_translation", FIELD_REQUIRED_MESSAGE)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["person"] = self.person
-        return kwargs
 
     def get_forms(self, context_data=None):
         if context_data is None:
@@ -253,14 +191,15 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             kwargs.pop("prefix")
             initial = kwargs.pop("initial")
             kwargs.pop('form_item_configurations')
+            kwargs.pop('current_year')
 
-            got_diploma = data and data.get("got_diploma") in HAS_DIPLOMA_CHOICES
-            got_belgian_diploma = got_diploma and data.get("diploma_type") == DiplomaTypes.BELGIAN.name
-            got_foreign_diploma = got_diploma and data.get("diploma_type") == DiplomaTypes.FOREIGN.name
+            graduated_from_high_school = data and data.get("graduated_from_high_school") in HAS_DIPLOMA_CHOICES
+            got_belgian_diploma = graduated_from_high_school and data.get("diploma_type") == DiplomaTypes.BELGIAN.name
+            got_foreign_diploma = graduated_from_high_school and data.get("diploma_type") == DiplomaTypes.FOREIGN.name
 
             self.forms = {
                 "main_form": context_data.pop('form') if 'form' in context_data else self.get_form(),
-                "belgian_diploma_form": DoctorateAdmissionEducationBelgianDiplomaForm(
+                "belgian_diploma_form": BachelorAdmissionEducationBelgianDiplomaForm(
                     person=self.person,
                     prefix="belgian_diploma",
                     initial=initial.get("belgian_diploma"),
@@ -270,17 +209,18 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                     data=data if data and got_belgian_diploma else None,
                     **kwargs,
                 ),
-                "foreign_diploma_form": DoctorateAdmissionEducationForeignDiplomaForm(
+                "foreign_diploma_form": BachelorAdmissionEducationForeignDiplomaForm(
                     prefix="foreign_diploma",
                     initial=initial.get("foreign_diploma"),
                     empty_permitted=True,
                     use_required_attribute=False,
                     person=person,
+                    is_med_dent_training=self.is_med_dent_training,
                     # don't send data to prevent validation
                     data=data if data and got_foreign_diploma else None,
                     **kwargs,
                 ),
-                "schedule_form": DoctorateAdmissionEducationScheduleForm(
+                "schedule_form": BachelorAdmissionEducationScheduleForm(
                     prefix="schedule",
                     initial=initial.get("belgian_diploma") and initial["belgian_diploma"].get("schedule"),
                     # don't send data to prevent validation
@@ -302,48 +242,46 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
     @staticmethod
     def prepare_diploma(data, forms, diploma):
         data[diploma] = forms["{}_form".format(diploma)].cleaned_data
-        data[diploma]["academic_graduation_year"] = data.pop("academic_graduation_year")
+        data[diploma]["academic_graduation_year"] = data.get("graduated_from_high_school_year")
         data[diploma]["high_school_diploma"] = data.pop("high_school_diploma")
-        enrolment_certificate = data.pop("enrolment_certificate")
-        data[diploma]["enrolment_certificate"] = (
-            enrolment_certificate if data[diploma]["academic_graduation_year"] == get_current_year() else []
-        )
 
     def prepare_data(self, main_form_data):
-        # Process the form data to match API
+        # General education (except bachelor) and continuing education admission
+        if not self.is_bachelor:
+            return main_form_data
+
+        # Bachelor admission
         forms = self.get_forms()
         for form in forms.values():
             form.is_valid()
 
         data = forms["main_form"].cleaned_data
 
-        got_diploma = data.pop("got_diploma")
+        graduated_from_high_school = data.get("graduated_from_high_school")
 
-        if got_diploma == "":
+        if graduated_from_high_school == "":
             return {
                 'specific_question_answers': data.get('specific_question_answers'),
             }
 
         first_cycle_admission_exam = data.pop("first_cycle_admission_exam", [])
-        if got_diploma == GotDiploma.NO.name:
+        if graduated_from_high_school == GotDiploma.NO.name:
             return {
-                'high_school_diploma_alternative': {
-                    'first_cycle_admission_exam': first_cycle_admission_exam,
-                },
                 'specific_question_answers': data.get('specific_question_answers'),
+                'graduated_from_high_school': graduated_from_high_school,
+                'graduated_from_high_school_year': data.get('graduated_from_high_school_year'),
+                'high_school_diploma_alternative': {'first_cycle_admission_exam': first_cycle_admission_exam},
             }
 
-        if got_diploma == GotDiploma.THIS_YEAR.name:
-            data["academic_graduation_year"] = get_current_year()
-
+        enrolment_certificate = data.pop("enrolment_certificate", [])
         if data.pop("diploma_type") == DiplomaTypes.BELGIAN.name:
             self.prepare_diploma(data, forms, "belgian_diploma")
             schedule = forms.get("schedule_form")
             belgian_diploma = data.get("belgian_diploma")
 
             if belgian_diploma.get("community") != BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name:
-                data["belgian_diploma"]["educational_type"] = ""
-                data["belgian_diploma"]["educational_other"] = ""
+                belgian_diploma["educational_type"] = ""
+                belgian_diploma["educational_other"] = ""
 
             educational_type = belgian_diploma.get("educational_type")
 
@@ -351,13 +289,17 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 data["belgian_diploma"]["educational_other"] = ""
 
             if belgian_diploma.pop('other_institute'):
-                data["belgian_diploma"]["institute"] = ""
+                belgian_diploma["institute"] = ""
             else:
-                data["belgian_diploma"]['other_institute_name'] = ""
-                data["belgian_diploma"]['other_institute_address'] = ""
+                belgian_diploma['other_institute_name'] = ""
+                belgian_diploma['other_institute_address'] = ""
 
             if schedule and educational_type in EDUCATIONAL_TYPES_REQUIRING_SCHEDULE:
-                data["belgian_diploma"]["schedule"] = schedule.cleaned_data
+                belgian_diploma["schedule"] = schedule.cleaned_data
+
+            belgian_diploma['enrolment_certificate'] = (
+                enrolment_certificate if graduated_from_high_school == GotDiploma.THIS_YEAR.name else []
+            )
 
         else:
             self.prepare_diploma(data, forms, "foreign_diploma")
@@ -365,29 +307,34 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             foreign_diploma_form = forms['foreign_diploma_form']
 
             is_bachelor = foreign_diploma_data.get("foreign_diploma_type") == ForeignDiplomaTypes.NATIONAL_BACHELOR.name
-            is_ue_country = foreign_diploma_form.fields['country'].is_ue_country
+            equivalence_ue_country = foreign_diploma_form.fields['country'].is_ue_country or self.is_med_dent_training
 
-            # Clean and define equivalence fields
-            foreign_diploma_data["final_equivalence_decision"] = []
+            # Define and clean main form fields
+            if graduated_from_high_school == GotDiploma.THIS_YEAR.name and equivalence_ue_country:
+                foreign_diploma_data['enrolment_certificate'] = enrolment_certificate
+            else:
+                foreign_diploma_data['enrolment_certificate'] = []
 
-            if is_bachelor:
-                if not is_ue_country:
-                    foreign_diploma_data["final_equivalence_decision"] = foreign_diploma_data[
-                        "final_equivalence_decision_not_ue"
-                    ]
-                elif foreign_diploma_data["equivalence"] == Equivalence.YES.name:
-                    foreign_diploma_data["final_equivalence_decision"] = foreign_diploma_data[
-                        "final_equivalence_decision_ue"
-                    ]
-
-            if not is_bachelor or not is_ue_country:
+            # Clean equivalence fields
+            if not is_bachelor or not equivalence_ue_country:
                 foreign_diploma_data["equivalence"] = ''
 
-            if not is_bachelor or not is_ue_country or foreign_diploma_data["equivalence"] != Equivalence.PENDING.name:
+            if not is_bachelor or equivalence_ue_country:
+                foreign_diploma_data["final_equivalence_decision_not_ue"] = []
+
+            if (
+                not is_bachelor
+                or not equivalence_ue_country
+                or foreign_diploma_data["equivalence"] != Equivalence.PENDING.name
+            ):
                 foreign_diploma_data["equivalence_decision_proof"] = []
 
-            foreign_diploma_data.pop("final_equivalence_decision_not_ue")
-            foreign_diploma_data.pop("final_equivalence_decision_ue")
+            if (
+                not is_bachelor
+                or not equivalence_ue_country
+                or foreign_diploma_data["equivalence"] != Equivalence.YES.name
+            ):
+                foreign_diploma_data["final_equivalence_decision_ue"] = []
 
             # Clean fields depending on the linguistic regime
             if foreign_diploma_data.get("linguistic_regime"):
@@ -398,7 +345,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                     foreign_diploma_data["high_school_diploma_translation"] = []
                     foreign_diploma_data["enrolment_certificate_translation"] = []
 
-            if foreign_diploma_data["academic_graduation_year"] != get_current_year():
+            if foreign_diploma_data["academic_graduation_year"] != self.current_year:
                 foreign_diploma_data["enrolment_certificate_translation"] = []
 
         return data

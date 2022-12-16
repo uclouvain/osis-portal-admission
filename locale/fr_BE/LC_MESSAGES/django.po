@@ -2047,11 +2047,11 @@ msgstr "Aucun invité"
 msgid "No reference yet - Go to 'Training choice' tab"
 msgstr "Pas de reference pour le moment - Voir l'onglet 'Choix de formation'"
 
-msgid "No secondary studies provided."
-msgstr "Pas d'études secondaires renseignées."
-
 msgid "No year has been added."
 msgstr "Aucune année n'a encore été ajoutée"
+
+msgid "No."
+msgstr "Non."
 
 msgid "Non-European credits"
 msgstr "Crédits non-européens"
@@ -2126,9 +2126,6 @@ msgstr "Adresse autre établissement"
 
 msgid "Other institute name"
 msgstr "Nom autre établissement"
-
-msgid "Other linguistic regime"
-msgstr "Autre régime linguistique"
 
 msgid "Other names"
 msgstr "Autres prénoms"
@@ -2267,12 +2264,6 @@ msgstr "Veuillez définir l'établissement ou précisez un autre établissement"
 
 msgid "Please specify a value for the following field: {}"
 msgstr "Merci de spécifier une valeur pour le champ suivant : {}"
-
-msgid ""
-"Please specify either your high school diploma or your enrolment certificate"
-msgstr ""
-"Merci d'ajouter votre diplôme d'études secondaires, ou à défaut un "
-"certificat d'inscription ou de fréquentation scolaire"
 
 msgid "Postal code"
 msgstr "Code postal"
@@ -3184,6 +3175,10 @@ msgstr "Oui, un numéro de compte au format IBAN"
 msgid "Yes, an account number in another format"
 msgstr "Oui, un numéro de compte dans un autre format"
 
+#, python-format
+msgid "Yes, in %(year)s."
+msgstr "Oui, en %(year)s."
+
 msgid "Yes, in Louvain-la-Neuve and/or Woluwe-Saint-Lambert (50 EUR)"
 msgstr "Oui, sur Louvain-la-Neuve et/ou sur Woluwé-Saint-Lambert (50 EUR)"
 
@@ -3228,13 +3223,14 @@ msgstr ""
 "Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le "
 "formulaire."
 
+#, python-format
+msgid "You have indicated that you will receive one in %(year)s."
+msgstr "Vous avez indiqué que vous alliez en recevoir un en %(year)s."
+
 msgid "You have now reached the confirmation tab of your enrolment request."
 msgstr ""
 "Vous voici arrivé(e) sur l'onglet de confirmation de votre demande "
 "d'inscription."
-
-msgid "You indicated that you don't have a high school diploma."
-msgstr "Vous avez indiqué ne pas avoir de diplôme de fin d'études secondaires."
 
 msgid ""
 "You must choose your training before filling in your previous experience."

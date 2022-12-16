@@ -24,16 +24,19 @@
 #
 # ##############################################################################
 import uuid
-from unittest.mock import Mock, patch
+from datetime import datetime
+from unittest.mock import Mock, patch, MagicMock, ANY
 
+import freezegun
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_reference_sdk.model.high_school import HighSchool
 from rest_framework import status
-from rest_framework.status import HTTP_200_OK, HTTP_302_FOUND
+from rest_framework.status import HTTP_302_FOUND
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.contrib.enums import TrainingType, ChoixStatutPropositionFormationGenerale
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
@@ -50,18 +53,47 @@ from base.tests.factories.person import PersonFactory
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL="http://dummyurl.com/document/")
-class EducationTestCase(TestCase):
-    maxDiff = None
+class BaseEducationTestCase(TestCase):
     REQUIRED_TEXT = _("This field is required.")
 
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.detail_url = resolve_url("admission:doctorate:education", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        cls.form_url = resolve_url("admission:doctorate:update:education", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        cls.proposition_uuid = uuid.uuid4()
+        cls.proposition_uuid_str = str(cls.proposition_uuid)
+        cls.first_question_uuid = str(uuid.uuid4())
+
+        cls.proposition = MagicMock(
+            uuid=cls.proposition_uuid,
+            formation=MagicMock(
+                annee=2020,
+                intitule='Formation',
+                campus='Louvain-La-Neuve',
+                sigle='TR1',
+                type=TrainingType.MASTER_M1.name,
+                code_domaine='10A',
+            ),
+            matricule_candidat=cls.person.global_id,
+            prenom_candidat=cls.person.first_name,
+            nom_candidat=cls.person.last_name,
+            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            links={},
+            erreurs={},
+            bourse_double_diplome=None,
+            bourse_internationale=None,
+            bourse_erasmus_mundus=None,
+            reponses_questions_specifiques={
+                cls.first_question_uuid: 'My answer',
+            },
+        )
+
+        cls.detail_url = resolve_url("admission:general-education:education", pk=cls.proposition_uuid)
+        cls.form_url = resolve_url("admission:general-education:update:education", pk=cls.proposition_uuid)
         cls.create_url = resolve_url("admission:create:education")
+
         cls.foreign_data = {
-            "got_diploma": GotDiploma.YES.name,
+            "graduated_from_high_school": GotDiploma.YES.name,
+            "graduated_from_high_school_year": 2020,
             "diploma_type": DiplomaTypes.FOREIGN.name,
             "high_school_diploma_0": "test",
             "academic_graduation_year": 2020,
@@ -75,23 +107,37 @@ class EducationTestCase(TestCase):
             "foreign_diploma-final_equivalence_decision_not_ue_0": "test_not_ue",
         }
 
+        cls.default_kwargs = {
+            'accept_language': ANY,
+            'x_user_first_name': ANY,
+            'x_user_last_name': ANY,
+            'x_user_email': ANY,
+            'x_user_global_id': ANY,
+        }
+
     def setUp(self):
         self.client.force_login(self.person.user)
 
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = self.proposition
         self.addCleanup(propositions_api_patcher.stop)
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = person_api_patcher.start()
         person_api_ret = self.mock_person_api.return_value
-        default_return = {
+        self.mock_retrieve_high_school_diploma_for_general = {
+            "graduated_from_high_school": "",
+            "graduated_from_high_school_year": None,
             "belgian_diploma": None,
             "foreign_diploma": None,
+            "high_school_diploma_alternative": None,
+            "is_vae_potential": False,
         }
-        person_api_ret.retrieve_high_school_diploma.return_value.to_dict.return_value = (
-            person_api_ret.retrieve_high_school_diploma_admission.return_value.to_dict.return_value
-        ) = default_return
+        person_api_ret.retrieve_high_school_diploma_general_education_admission.return_value.to_dict.return_value = (
+            self.mock_retrieve_high_school_diploma_for_general
+        )
+
         self.addCleanup(person_api_patcher.stop)
 
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
@@ -187,44 +233,415 @@ class EducationTestCase(TestCase):
         self.mock_academic_year_api = academic_year_api_patcher.start()
         self.addCleanup(academic_year_api_patcher.stop)
 
-    def test_form_empty(self):
-        response = self.client.get(self.form_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
-        self.mock_proposition_api.assert_called()
 
-        response = self.client.post(self.form_url, {})
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
-            "high_school_diploma"
-        ]
+class EducationTestCase(BaseEducationTestCase):
+    def test_detail_without_specified_graduation(self):
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
+        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+
+        # Check response context
+        self.assertEqual(response.context['admission'], self.proposition)
+        self.assertEqual(response.context['belgian_diploma'], None)
+        self.assertEqual(response.context['foreign_diploma'], None)
+        self.assertEqual(response.context['high_school_diploma_alternative'], None)
+        self.assertEqual(response.context['graduated_from_high_school_year'], None)
+        self.assertEqual(response.context['graduated_from_high_school'], "")
+        self.assertEqual(response.context['is_vae_potential'], False)
+
+        # Check template
+        self.assertContains(response, 'Non renseigné(e)')
+
+    def test_detail_with_graduation_from_high_school(self):
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school'] = GotDiploma.YES.name
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school_year'] = 2020
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertEqual(response.context['graduated_from_high_school_year'], 2020)
+        self.assertEqual(response.context['graduated_from_high_school'], GotDiploma.YES.name)
+
+        # Check template
+        self.assertContains(response, 'Oui, en 2020-21.')
+
+    def test_detail_with_graduation_from_high_school_this_year(self):
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school'] = GotDiploma.THIS_YEAR.name
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school_year'] = 2020
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertEqual(response.context['graduated_from_high_school_year'], 2020)
+        self.assertEqual(response.context['graduated_from_high_school'], GotDiploma.THIS_YEAR.name)
+
+        # Check template
+        self.assertContains(response, 'Vous avez indiqué que vous alliez en recevoir un en 2020-21.')
+
+    def test_detail_without_graduation_from_high_school_this_year(self):
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school'] = GotDiploma.NO.name
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertEqual(response.context['graduated_from_high_school'], GotDiploma.NO.name)
+
+        # Check template
+        self.assertContains(response, 'Non.')
+
+    def test_detail_belgian_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma'] = {
+            "academic_graduation_year": 2020,
+            "other_institute_name": "Special school",
+            "other_institute_address": "Louvain-La-Neuve",
+            "schedule": {
+                "latin": 10,
+                "greek": 10,
+                "chemistry": 10,
+            },
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
         self.assertEqual(
-            sent,
+            response.context['belgian_diploma'],
             {
-                'specific_question_answers': {},
+                "academic_graduation_year": 2020,
+                "institute_name": "Special school",
+                "institute_address": "Louvain-La-Neuve",
+                "schedule": {
+                    "latin": 10,
+                    "greek": 10,
+                    "chemistry": 10,
+                },
             },
         )
 
+        # Check template
+        self.assertContains(response, "Special school (Louvain-La-Neuve)")
+
+        # With existing institute
+        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma']['institute'] = self.first_high_school_uuid
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertContains(response, "Diplôme belge")
+        self.assertEqual(response.context['belgian_diploma']['institute_name'], 'HighSchool 1')
+        self.assertEqual(response.context['belgian_diploma']['institute_address'], 'Louvain-La-Neuve')
+
+        # Check template
+        self.assertContains(response, "HighSchool 1 (Louvain-La-Neuve)")
+
+    def test_detail_foreign_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {
+            "academic_graduation_year": 2019,
+            "result": DiplomaResults.LT_65_RESULT.name,
+            "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
+            "linguistic_regime": "EN",
+            "other_linguistic_regime": "",
+            "country": "FR",
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertEqual(
+            response.context['foreign_diploma'],
+            {
+                "academic_graduation_year": 2019,
+                "result": DiplomaResults.LT_65_RESULT.name,
+                "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
+                "linguistic_regime": "Anglais",
+                "other_linguistic_regime": "",
+                "country": {'european_union': True, 'name': 'France'},
+            },
+        )
+
+        # Check template
+        self.assertContains(response, "Diplôme étranger")
+        self.assertContains(response, "France")
+        self.assertContains(response, "Anglais")
+
+        self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {
+            "academic_graduation_year": 2019,
+            "result": DiplomaResults.LT_65_RESULT.name,
+            "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
+            "linguistic_regime": None,
+            "other_linguistic_regime": "Français",
+            "country": "FR",
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check template
+        self.assertContains(response, "Diplôme étranger")
+        self.assertContains(response, "Français")
+
+    def test_detail_alternative_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['high_school_diploma_alternative'] = {
+            "first_cycle_admission_exam": ["test"],
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertEqual(
+            response.context['high_school_diploma_alternative'],
+            {
+                "first_cycle_admission_exam": ["test"],
+            },
+        )
+
+        self.assertContains(
+            response,
+            _("Certificate of successful completion of the admission test for the first cycle of higher education"),
+        )
+        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called()
+        self.assertIn("admission", response.context)
+
+    def test_detail_without_country_and_language(self):
+        self.mock_retrieve_high_school_diploma_for_general = {
+            "foreign_diploma": {
+                "linguistic_regime": None,
+                "other_linguistic_regime": "",
+                "country": None,
+            }
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_create(self):
         response = self.client.get(self.create_url)
+
+        # Check response status
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
         self.mock_person_api.return_value.retrieve_high_school_diploma.assert_not_called()
         self.mock_proposition_api.assert_not_called()
+
+        # Check template content
         self.assertTrue(
             _("You must choose your training before filling in your previous experience."),
             response.content.decode("utf-8"),
         )
 
-    def test_form_belgian(self):
+    def test_form_initialization(self):
+        response = self.client.get(self.form_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
+        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+
+        # Check response context
+        self.assertIn('form', response.context)
+        self.assertTrue(response.context['form'].fields['graduated_from_high_school'].required)
+        self.assertFalse(response.context['form'].fields['graduated_from_high_school_year'].required)
+        self.assertIn('specific_question_answers', response.context['form'].fields)
+
+    def test_form_submission_if_empty(self):
+        response = self.client.post(self.form_url, {})
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_not_called()
+
+        # Check response context
+        form = response.context['form']
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('graduated_from_high_school', []))
+
+    def test_form_submission_if_got_diploma_and_no_year(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                'graduated_from_high_school': GotDiploma.YES.name,
+            },
+        )
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_not_called()
+
+        # Check response context
+        form = response.context['form']
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('graduated_from_high_school_year', []))
+
+    def test_form_submission_if_got_diploma_and_year(self):
+        response = self.client.post(
+            self.form_url,
+            {
+                'graduated_from_high_school': GotDiploma.YES.name,
+                'graduated_from_high_school_year': 2020,
+            },
+        )
+
+        # Check response status
+        self.assertRedirects(response, expected_url=self.detail_url)
+
+        # Check api calls
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            high_school_diploma={
+                'graduated_from_high_school': GotDiploma.YES.name,
+                'graduated_from_high_school_year': 2020,
+                'specific_question_answers': self.proposition.reponses_questions_specifiques,
+            },
+            **self.default_kwargs,
+        )
+
+    @freezegun.freeze_time(datetime(2020, 12, 1))
+    def test_form_submission_if_got_diploma_this_year_and_other_year(self):
+        response = self.client.post(
+            self.form_url,
+            {
+                'graduated_from_high_school': GotDiploma.THIS_YEAR.name,
+                'graduated_from_high_school_year': 2012,
+            },
+        )
+
+        # Check response status
+        self.assertRedirects(response, expected_url=self.detail_url)
+
+        # Check api calls
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            high_school_diploma={
+                'graduated_from_high_school': GotDiploma.THIS_YEAR.name,
+                'graduated_from_high_school_year': 2020,
+                'specific_question_answers': self.proposition.reponses_questions_specifiques,
+            },
+            **self.default_kwargs,
+        )
+
+    def test_form_submission_if_no_diploma(self):
+        response = self.client.post(
+            self.form_url,
+            {
+                'graduated_from_high_school': GotDiploma.NO.name,
+                'graduated_from_high_school_year': 2020,
+            },
+        )
+
+        # Check response status
+        self.assertRedirects(response, expected_url=self.detail_url)
+
+        # Check api calls
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            high_school_diploma={
+                'graduated_from_high_school': GotDiploma.NO.name,
+                'graduated_from_high_school_year': None,
+                'specific_question_answers': self.proposition.reponses_questions_specifiques,
+            },
+            **self.default_kwargs,
+        )
+
+
+class BachelorFormEducationTestCase(BaseEducationTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.proposition.formation.type = TrainingType.BACHELOR.name
+
+    def test_bachelor_form_initialization(self):
+        response = self.client.get(self.form_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
+        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+
+        # Check response context
+        self.assertIn('main_form', response.context)
+        self.assertIn('belgian_diploma_form', response.context)
+        self.assertIn('foreign_diploma_form', response.context)
+        self.assertIn('schedule_form', response.context)
+
+    def test_bachelor_form_empty(self):
+        self.proposition.formation.type = TrainingType.BACHELOR.name
+
+        response = self.client.post(self.form_url, {})
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_not_called()
+
+        # Check response context
+        form = response.context['form']
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('graduated_from_high_school', []))
+
+    def test_bachelor_form_belgian(self):
+        response = self.client.post(
+            self.form_url,
+            {
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
                 "high_school_diploma_0": "test",
                 "enrolment_certificate_0": "test",
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
                 "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
                 "belgian_diploma-institute": self.first_high_school_uuid,
@@ -237,13 +654,15 @@ class EducationTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]
         self.assertEqual(
             sent,
             {
+                "graduated_from_high_school": GotDiploma.YES.name,
+                "graduated_from_high_school_year": 2020,
                 "belgian_diploma": {
                     "academic_graduation_year": 2020,
                     "community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
@@ -258,17 +677,17 @@ class EducationTestCase(TestCase):
                     "educational_type": "",
                     "educational_other": "",
                 },
-                "specific_question_answers": {},
+                "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
         )
 
-    def test_form_belgian_schedule(self):
+    def test_bachelor_form_belgian_schedule(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
                 "high_school_diploma_0": "test",
                 "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
@@ -294,13 +713,15 @@ class EducationTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]
         self.assertEqual(
             sent,
             {
+                "graduated_from_high_school": GotDiploma.YES.name,
+                "graduated_from_high_school_year": 2020,
                 "belgian_diploma": {
                     "academic_graduation_year": 2020,
                     "enrolment_certificate": [],
@@ -333,17 +754,17 @@ class EducationTestCase(TestCase):
                         "social_sciences": 5,
                     },
                 },
-                "specific_question_answers": {},
+                "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
         )
 
-    def test_form_belgian_bad_schedule(self):
+    def test_bachelor_form_belgian_bad_schedule(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
                 "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
                 "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
@@ -357,110 +778,9 @@ class EducationTestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, "schedule_form", None, _("A field of the schedule must at least be set."))
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_not_called()
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_not_called()
 
-    def test_form_foreign_error_if_no_translations_when_needed_for_this_year_in_ue_country(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "got_diploma": GotDiploma.THIS_YEAR.name,
-                "diploma_type": DiplomaTypes.FOREIGN.name,
-                "high_school_diploma_0": "test",
-                "enrolment_certificate_0": "test",
-                "high_school_transcript_0": "test",
-                "foreign_diploma-linguistic_regime": "AR",
-                "foreign_diploma-country": "BE",
-            },
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        for field in [
-            "high_school_transcript_translation",
-            "high_school_diploma_translation",
-            "enrolment_certificate_translation",
-        ]:
-            self.assertFormError(response, "foreign_diploma_form", field, self.REQUIRED_TEXT)
-
-    def test_form_foreign_error_if_no_translations_when_needed_for_this_year_in_not_ue_country(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "got_diploma": GotDiploma.THIS_YEAR.name,
-                "diploma_type": DiplomaTypes.FOREIGN.name,
-                "high_school_diploma_0": "test",
-                "enrolment_certificate_0": "test",
-                "high_school_transcript_0": "test",
-                "foreign_diploma-linguistic_regime": "AR",
-                "foreign_diploma-country": "BE",
-            },
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        for field in [
-            "high_school_transcript_translation",
-            "high_school_diploma_translation",
-        ]:
-            self.assertFormError(response, "foreign_diploma_form", field, self.REQUIRED_TEXT)
-
-    def test_form_foreign_error_if_no_translations_when_needed_for_past_year(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "got_diploma": GotDiploma.YES.name,
-                "diploma_type": DiplomaTypes.FOREIGN.name,
-                "high_school_diploma_0": "test",
-                "enrolment_certificate_0": "test",
-                "high_school_transcript_0": "test",
-                "foreign_diploma-linguistic_regime": "AR",
-                "foreign_diploma-country": "BE",
-                "academic_graduation_year": 2020,
-            },
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        for field in [
-            "high_school_transcript_translation",
-            "high_school_diploma_translation",
-        ]:
-            self.assertFormError(response, "foreign_diploma_form", field, self.REQUIRED_TEXT)
-
-    def test_form_foreign_error_if_got_diploma_this_year_without_attachments_for_ue_country(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "got_diploma": GotDiploma.THIS_YEAR.name,
-                "diploma_type": DiplomaTypes.FOREIGN.name,
-                "academic_graduation_year": 2020,
-                "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-                "foreign_diploma-linguistic_regime": "AR",
-                "foreign_diploma-country": "FR",
-                "foreign_diploma-equivalence": Equivalence.PENDING.name,
-            },
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertFormError(
-            response,
-            "main_form",
-            "high_school_diploma",
-            _("Please specify either your high school diploma or your enrolment certificate"),
-        )
-
-    def test_form_foreign_error_if_got_diploma_this_year_without_attachments_for_not_ue_country(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "got_diploma": GotDiploma.THIS_YEAR.name,
-                "diploma_type": DiplomaTypes.FOREIGN.name,
-                "academic_graduation_year": 2020,
-                "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-                "foreign_diploma-linguistic_regime": "AR",
-                "foreign_diploma-country": "US",
-                "foreign_diploma-equivalence": Equivalence.PENDING.name,
-            },
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertFormError(response, "main_form", "high_school_diploma", self.REQUIRED_TEXT)
-
-    def test_form_foreign_error_if_no_equivalence_for_ue_country(self):
+    def test_bachelor_form_foreign_error_if_no_equivalence_for_ue_country(self):
         response = self.client.post(
             self.form_url,
             {
@@ -479,26 +799,16 @@ class EducationTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.NO.name)
-        self.assertEqual(sent.get("final_equivalence_decision"), [])
+        self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
 
-    def test_form_foreign_pending_equivalence_for_ue_country(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                **self.foreign_data,
-                "foreign_diploma-equivalence": Equivalence.PENDING.name,
-                "foreign_diploma-equivalence_decision_proof_0": "",
-            },
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "foreign_diploma_form", "equivalence_decision_proof", self.REQUIRED_TEXT)
-
+    def test_bachelor_form_foreign_pending_equivalence_for_ue_country(self):
         response = self.client.post(
             self.form_url,
             {
@@ -509,26 +819,16 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.PENDING.name)
-        self.assertEqual(sent.get("final_equivalence_decision"), [])
+        self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), ["test"])
 
-    def test_form_foreign_existing_equivalence_for_ue_country(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                **self.foreign_data,
-                "foreign_diploma-equivalence": Equivalence.YES.name,
-                "foreign_diploma-final_equivalence_decision_ue_0": "",
-            },
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "foreign_diploma_form", "final_equivalence_decision_ue", self.REQUIRED_TEXT)
-
+    def test_bachelor_form_foreign_existing_equivalence_for_ue_country(self):
         response = self.client.post(
             self.form_url,
             {
@@ -539,26 +839,94 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.YES.name)
-        self.assertEqual(sent.get("final_equivalence_decision"), ["test_ue"])
+        self.assertEqual(sent.get("final_equivalence_decision_ue"), ["test_ue"])
+        self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
 
-    def test_form_foreign_existing_equivalence_for_not_ue_country(self):
+    def test_bachelor_form_foreign_error_if_no_equivalence_for_ue_country_equivalence(self):
+        self.proposition.formation.code_domaine = '11A'
+
         response = self.client.post(
             self.form_url,
             {
                 **self.foreign_data,
                 "foreign_diploma-country": "US",
-                "foreign_diploma-final_equivalence_decision_not_ue_0": "",
+                "foreign_diploma-equivalence": "",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "foreign_diploma_form", "final_equivalence_decision_not_ue", self.REQUIRED_TEXT)
 
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, "foreign_diploma_form", "equivalence", self.REQUIRED_TEXT)
+
+        response = self.client.post(
+            self.form_url,
+            {
+                **self.foreign_data,
+                "foreign_diploma-equivalence": Equivalence.NO.name,
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
+            "high_school_diploma"
+        ]["foreign_diploma"]
+        self.assertEqual(sent.get("equivalence"), Equivalence.NO.name)
+        self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("equivalence_decision_proof"), [])
+
+    def test_bachelor_form_foreign_pending_equivalence_for_ue_country_equivalence(self):
+        self.proposition.formation.code_domaine = '11A'
+
+        response = self.client.post(
+            self.form_url,
+            {
+                **self.foreign_data,
+                "foreign_diploma-country": "US",
+                "foreign_diploma-equivalence": Equivalence.PENDING.name,
+                "foreign_diploma-equivalence_decision_proof_0": "test",
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
+            "high_school_diploma"
+        ]["foreign_diploma"]
+        self.assertEqual(sent.get("equivalence"), Equivalence.PENDING.name)
+        self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("equivalence_decision_proof"), ["test"])
+
+    def test_bachelor_form_foreign_existing_equivalence_for_ue_country_equivalence(self):
+        self.proposition.formation.code_domaine = '11A'
+
+        response = self.client.post(
+            self.form_url,
+            {
+                **self.foreign_data,
+                "foreign_diploma-country": "US",
+                "foreign_diploma-equivalence": Equivalence.YES.name,
+                "foreign_diploma-final_equivalence_decision_ue_0": "test_ue",
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
+            "high_school_diploma"
+        ]["foreign_diploma"]
+        self.assertEqual(sent.get("equivalence"), Equivalence.YES.name)
+        self.assertEqual(sent.get("final_equivalence_decision_ue"), ["test_ue"])
+        self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("equivalence_decision_proof"), [])
+
+    def test_bachelor_form_foreign_existing_equivalence_for_not_ue_country(self):
         response = self.client.post(
             self.form_url,
             {
@@ -569,22 +937,23 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), '')
-        self.assertEqual(sent.get("final_equivalence_decision"), ["test_not_ue"])
+        self.assertEqual(sent.get("final_equivalence_decision_not_ue"), ["test_not_ue"])
+        self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
 
-    def test_form_foreign(self):
+    def test_bachelor_form_foreign(self):
         # Complete international baccalaureate
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.FOREIGN.name,
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
                 "foreign_diploma-high_school_transcript_0": "test",
                 "high_school_diploma_0": "test",
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.INTERNATIONAL_BACCALAUREATE.name,
@@ -597,13 +966,15 @@ class EducationTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]
         self.assertEqual(
             sent,
             {
+                "graduated_from_high_school": GotDiploma.YES.name,
+                "graduated_from_high_school_year": 2020,
                 "foreign_diploma": {
                     "academic_graduation_year": 2020,
                     "high_school_transcript": ["test"],
@@ -619,9 +990,10 @@ class EducationTestCase(TestCase):
                     "enrolment_certificate": [],
                     "enrolment_certificate_translation": [],
                     "equivalence_decision_proof": [],
-                    "final_equivalence_decision": [],
+                    "final_equivalence_decision_ue": [],
+                    "final_equivalence_decision_not_ue": [],
                 },
-                "specific_question_answers": {},
+                "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
         )
 
@@ -629,9 +1001,9 @@ class EducationTestCase(TestCase):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.FOREIGN.name,
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
                 "foreign_diploma-high_school_transcript_0": "test",
                 "high_school_diploma_0": "test",
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
@@ -652,13 +1024,15 @@ class EducationTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]
         self.assertEqual(
             sent,
             {
+                "graduated_from_high_school": GotDiploma.YES.name,
+                "graduated_from_high_school_year": 2020,
                 "foreign_diploma": {
                     "academic_graduation_year": 2020,
                     "high_school_transcript": ["test"],
@@ -674,68 +1048,64 @@ class EducationTestCase(TestCase):
                     "enrolment_certificate": [],
                     "enrolment_certificate_translation": [],
                     "equivalence_decision_proof": ["test"],
-                    "final_equivalence_decision": [],
+                    "final_equivalence_decision_ue": [],
+                    "final_equivalence_decision_not_ue": [],
                 },
-                "specific_question_answers": {},
+                "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
         )
 
-    def test_form_no_high_school_diploma(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
+    def test_bachelor_form_no_high_school_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general = {
             "belgian_diploma": {},
             "foreign_diploma": {},
             "high_school_diploma_alternative": {
                 "first_cycle_admission_exam": ["test"],
             },
         }
-        response = self.client.post(
-            self.form_url,
-            {
-                "got_diploma": GotDiploma.NO.name,
-            },
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "main_form", "first_cycle_admission_exam", _("This field is required."))
 
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.NO.name,
+                "graduated_from_high_school": GotDiploma.NO.name,
                 "first_cycle_admission_exam_0": "test",
             },
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]
         self.assertEqual(
             sent,
             {
+                "graduated_from_high_school": GotDiploma.NO.name,
+                "graduated_from_high_school_year": None,
                 "high_school_diploma_alternative": {
                     "first_cycle_admission_exam": ["test"],
                 },
-                "specific_question_answers": {},
+                "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
         )
 
-    def test_form_will_get_foreign_diploma_this_year(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
+    @freezegun.freeze_time(datetime(2020, 12, 1))
+    def test_bachelor_form_will_get_foreign_diploma_this_year(self):
+        self.mock_retrieve_high_school_diploma_for_general = {
             "belgian_diploma": {},
             "foreign_diploma": {
                 "academic_graduation_year": get_current_year(),
                 "result": DiplomaResults.GT_75_RESULT.name,
                 "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 "linguistic_regime": "EN",
+                "other_linguistic_regime": "",
                 "country": "FR",
             },
         }
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.THIS_YEAR.name,
+                "graduated_from_high_school": GotDiploma.THIS_YEAR.name,
                 "diploma_type": DiplomaTypes.FOREIGN.name,
                 "foreign_diploma-high_school_transcript_0": "test",
                 "high_school_diploma_0": "test",
@@ -753,13 +1123,15 @@ class EducationTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_admission.call_args[1][
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
             "high_school_diploma"
         ]
         self.assertEqual(
             sent,
             {
+                "graduated_from_high_school": GotDiploma.THIS_YEAR.name,
+                "graduated_from_high_school_year": 2020,
                 "foreign_diploma": {
                     "academic_graduation_year": get_current_year(),
                     "high_school_transcript": ["test"],
@@ -775,15 +1147,16 @@ class EducationTestCase(TestCase):
                     "high_school_transcript_translation": [],
                     "high_school_diploma_translation": [],
                     "equivalence": "NO",
-                    "final_equivalence_decision": [],
+                    "final_equivalence_decision_ue": [],
+                    "final_equivalence_decision_not_ue": [],
                 },
-                "specific_question_answers": {},
+                "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
         )
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.THIS_YEAR.name,
+                "graduated_from_high_school": GotDiploma.THIS_YEAR.name,
                 "diploma_type": DiplomaTypes.FOREIGN.name,
                 "foreign_diploma-high_school_transcript_0": "test",
                 "high_school_diploma_0": "test",
@@ -795,8 +1168,9 @@ class EducationTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
-    def test_form_will_get_belgian_diploma_this_year(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
+    @freezegun.freeze_time(datetime(2020, 12, 1))
+    def test_bachelor_form_will_get_belgian_diploma_this_year(self):
+        self.mock_retrieve_high_school_diploma_for_general = {
             "belgian_diploma": {
                 "academic_graduation_year": get_current_year(),
             },
@@ -805,35 +1179,7 @@ class EducationTestCase(TestCase):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.THIS_YEAR.name,
-                "diploma_type": DiplomaTypes.BELGIAN.name,
-                "belgian_diploma-other_institute": True,
-                "schedule-greek": 5,
-            },
-        )
-        self.assertEqual(response.status_code, HTTP_200_OK)
-        self.assertFormError(
-            response,
-            "main_form",
-            "high_school_diploma",
-            _("Please specify either your high school diploma or your enrolment certificate"),
-        )
-        self.assertFormError(
-            response,
-            "belgian_diploma_form",
-            "other_institute_name",
-            FIELD_REQUIRED_MESSAGE,
-        )
-        self.assertFormError(
-            response,
-            "belgian_diploma_form",
-            "other_institute_address",
-            FIELD_REQUIRED_MESSAGE,
-        )
-        response = self.client.post(
-            self.form_url,
-            {
-                "got_diploma": GotDiploma.THIS_YEAR.name,
+                "graduated_from_high_school": GotDiploma.THIS_YEAR.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
                 "enrolment_certificate_0": "test",
                 "belgian_diploma-other_institute": True,
@@ -846,25 +1192,24 @@ class EducationTestCase(TestCase):
         )
         self.assertEqual(response.status_code, HTTP_302_FOUND)
 
-    def test_form_error_if_got_diploma_but_nothing_else(self):
+    def test_bachelor_form_error_if_got_diploma_but_nothing_else(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("academic_graduation_year", response.context["main_form"].errors)
+        self.assertIn("graduated_from_high_school_year", response.context["main_form"].errors)
         self.assertIn("diploma_type", response.context["main_form"].errors)
-        self.assertIn("high_school_diploma", response.context["main_form"].errors)
 
-    def test_belgian_form_error_if_hour_or_label_not_set(self):
+    def test_bachelor_belgian_form_error_if_hour_or_label_not_set(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
                 "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
                 "schedule-modern_languages_other_label": "Chinese",
@@ -875,39 +1220,39 @@ class EducationTestCase(TestCase):
         self.assertIn("modern_languages_other_hours", response.context["schedule_form"].errors)
         self.assertIn("other_label", response.context["schedule_form"].errors)
 
-    def test_belgian_form_error_if_french_community_and_no_educational(self):
+    def test_bachelor_belgian_form_error_if_french_community_and_no_educational(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("educational_type", response.context["belgian_diploma_form"].errors)
 
-    def test_belgian_form_error_if_no_institute(self):
+    def test_bachelor_belgian_form_error_if_no_institute(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("institute", response.context["belgian_diploma_form"].errors)
         self.assertIn("other_institute", response.context["belgian_diploma_form"].errors)
 
-    def test_belgian_form_error_linguistic_regime(self):
+    def test_bachelor_belgian_form_error_linguistic_regime(self):
         response = self.client.post(
             self.form_url,
             {
-                "got_diploma": GotDiploma.YES.name,
+                "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.FOREIGN.name,
-                "academic_graduation_year": 2020,
+                "graduated_from_high_school_year": 2020,
                 "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 "foreign_diploma-country": "FR",
@@ -915,118 +1260,3 @@ class EducationTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("linguistic_regime", response.context["foreign_diploma_form"].errors)
-
-    def test_update_admission_in_context(self):
-        url = resolve_url("admission:doctorate:update:education", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
-            "belgian_diploma": {},
-            "foreign_diploma": {
-                "academic_graduation_year": 2020,
-                "result": DiplomaResults.GT_75_RESULT.name,
-                "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-                "linguistic_regime": "EN",
-                "country": "FR",
-            },
-        }
-
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "France")
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
-        self.mock_proposition_api.assert_called()
-        self.assertIn("admission", response.context)
-
-        response = self.client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_admission.assert_called()
-
-    def test_detail_without_data(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {}
-
-        response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, _("No secondary studies provided."))
-
-    def test_detail_without_country_and_language(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
-            "foreign_diploma": {
-                "linguistic_regime": None,
-                "country": None,
-            }
-        }
-
-        response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_detail_belgian_diploma(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
-            "belgian_diploma": {
-                "academic_graduation_year": 2020,
-                "other_institute_name": "Special school",
-                "other_institute_address": "Louvain-La-Neuve",
-                "schedule": {
-                    "latin": 10,
-                    "greek": 10,
-                    "chemistry": 10,
-                },
-            },
-            "foreign_diploma": {},
-            "high_school_diploma_alternative": {},
-        }
-
-        response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "Special school (Louvain-La-Neuve)")
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
-        self.assertIn("admission", response.context)
-
-        # With specified institute
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
-            "belgian_diploma": {
-                "academic_graduation_year": 2020,
-                "institute": self.first_high_school_uuid,
-            },
-            "foreign_diploma": {},
-            "high_school_diploma_alternative": {},
-        }
-
-        response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "HighSchool 1 (Louvain-La-Neuve)")
-
-    def test_detail_foreign_diploma(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
-            "belgian_diploma": {},
-            "foreign_diploma": {
-                "academic_graduation_year": 2019,
-                "result": DiplomaResults.LT_65_RESULT.name,
-                "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-                "linguistic_regime": "EN",
-                "country": "FR",
-            },
-            "high_school_diploma_alternative": {},
-        }
-
-        response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "France")
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
-        self.assertIn("admission", response.context)
-
-    def test_detail_alternative_diploma(self):
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.return_value.to_dict.return_value = {
-            "belgian_diploma": {},
-            "foreign_diploma": {},
-            "high_school_diploma_alternative": {
-                "first_cycle_admission_exam": ["test"],
-            },
-        }
-
-        response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(
-            response,
-            _("Certificate of successful completion of the admission test for the first cycle of higher education"),
-        )
-        self.mock_person_api.return_value.retrieve_high_school_diploma_admission.assert_called()
-        self.assertIn("admission", response.context)

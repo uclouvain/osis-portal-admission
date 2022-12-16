@@ -131,9 +131,9 @@ def get_scholarship_choices(uuid, person):
     return EMPTY_CHOICE + ((uuid, format_scholarship(scholarship)),)
 
 
-def get_past_academic_years_choices(person, exclude_current=False):
+def get_past_academic_years_choices(person, exclude_current=False, current_year=None):
     """Return a list of choices of past academic years."""
-    current_year = get_current_year()
+    current_year = current_year if current_year else get_current_year()
     if exclude_current:
         current_year -= 1
     lower_year = current_year - 100
