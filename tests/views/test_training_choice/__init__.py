@@ -234,6 +234,29 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 cls.first_question_uuid: 'My answer',
             },
         )
+        cls.bachelor_proposition = Mock(
+            uuid=cls.proposition_uuid,
+            formation={
+                'annee': 2020,
+                'intitule': 'Formation',
+                'campus': 'Louvain-La-Neuve',
+                'sigle': 'TR0',
+                'type': TrainingType.BACHELOR.name,
+            },
+            matricule_candidat=cls.person.global_id,
+            prenom_candidat=cls.person.first_name,
+            nom_candidat=cls.person.last_name,
+            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            links={},
+            erreurs={},
+            bourse_double_diplome=None,
+            bourse_internationale=None,
+            bourse_erasmus_mundus=None,
+            reponses_questions_specifiques={
+                cls.first_question_uuid: 'My answer',
+            },
+        )
+
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
             formation={

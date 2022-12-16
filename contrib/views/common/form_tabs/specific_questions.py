@@ -28,6 +28,7 @@ from django.utils.functional import cached_property
 from django.views.generic import FormView
 
 from admission.contrib.enums.specific_question import Onglets
+from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.pool_questions import PoolQuestionsForm
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -53,7 +54,7 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                 uuid=self.admission_uuid,
                 data=forms[0].cleaned_data,
             )
-            if self.current_context == 'general-education':
+            if self.display_pool_questions_form:
                 AdmissionPropositionService.update_pool_questions(
                     person=self.person,
                     uuid=self.admission_uuid,
@@ -70,7 +71,7 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
         kwargs['form'] = None
         kwargs['extra_form_attrs'] = ' autocomplete="off"'
         kwargs['forms'] = self.get_forms()
-        if self.current_context == 'general-education':
+        if self.display_pool_questions_form:
             kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
             kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
         return super().get_context_data(**kwargs)
@@ -85,7 +86,7 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                 prefix='specific_questions',
             )
         ]
-        if self.current_context == 'general-education':
+        if self.display_pool_questions_form:
             forms.append(
                 PoolQuestionsForm(
                     self.request.POST or None,
@@ -94,6 +95,13 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                 )
             )
         return forms
+
+    @property
+    def display_pool_questions_form(self):
+        return (
+            self.current_context == 'general-education'
+            and self.admission.formation['type'] == TrainingType.BACHELOR.name
+        )
 
     @cached_property
     def pool_questions(self):

@@ -35,6 +35,16 @@ from admission.tests.views.test_training_choice import AdmissionTrainingChoiceFo
 
 
 class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
+    def setUp(self):
+        super().setUp()
+        propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
+        self.mock_proposition_api = propositions_api_patcher.start()
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = (
+            self.bachelor_proposition
+        )
+        self.mock_proposition_api.return_value.list_general_specific_questions.side_effect = self.get_specific_questions
+        self.addCleanup(propositions_api_patcher.stop)
+
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -128,6 +138,14 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
     def setUp(self):
         super().setUp()
+        propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
+        self.mock_proposition_api = propositions_api_patcher.start()
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = (
+            self.bachelor_proposition
+        )
+        self.mock_proposition_api.return_value.list_general_specific_questions.side_effect = self.get_specific_questions
+        self.addCleanup(propositions_api_patcher.stop)
+
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
             'modification_pool_end_date': None,
