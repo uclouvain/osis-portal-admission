@@ -36,6 +36,7 @@ from bootstrap3.utils import add_css_class
 from django import template
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.core.validators import EMPTY_VALUES
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.safestring import SafeString
@@ -360,11 +361,7 @@ def field_data(
         data = template.Template(template_string).render(template.Context(template_context))
 
     elif type(data) == bool:
-        if data is True:
-            data = _('Yes')
-        elif data is False:
-            data = _('No')
-
+        data = _('Yes') if data else _('No')
     elif translate_data is True:
         data = _(data)
 
@@ -713,3 +710,9 @@ def multiple_field_data(configurations, data, title=_('Specific questions')):
 @register.filter
 def admission_training_type(osis_training_type: str):
     return ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(osis_training_type)
+
+
+@register.filter(is_safe=False)
+def default_if_none_or_empty(value, arg):
+    """If value is None or empty, use given default."""
+    return value if value not in EMPTY_VALUES else arg

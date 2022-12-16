@@ -27,6 +27,7 @@ from django.conf import settings
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
+from admission.constants import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
@@ -34,7 +35,9 @@ from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
-from admission.services.reference import HighSchoolService, LanguageService
+from admission.services.reference import HighSchoolService, LanguageService, CountriesService
+from admission.utils import is_med_dent_training
+
 
 __all__ = ['AdmissionEducationDetailView']
 
@@ -51,7 +54,7 @@ class AdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        # Person
+
         high_school_diploma = (
             self.service_mapping[self.current_context]
             .retrieve_high_school_diploma(
@@ -60,14 +63,15 @@ class AdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
             )
             .to_dict()
         )
+
+        context_data.update(high_school_diploma)
+
         translated_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
 
         belgian_diploma = high_school_diploma.get('belgian_diploma')
         foreign_diploma = high_school_diploma.get('foreign_diploma')
-        high_school_diploma_alternative = high_school_diploma.get('high_school_diploma_alternative')
 
         if belgian_diploma:
-            context_data['belgian_diploma'] = high_school_diploma['belgian_diploma']
             institute_uuid = context_data['belgian_diploma'].get('institute')
             if institute_uuid:
                 institute = HighSchoolService.get_high_school(
@@ -85,13 +89,22 @@ class AdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
                 )
 
         elif foreign_diploma:
-            context_data["foreign_diploma"] = high_school_diploma["foreign_diploma"]
             if context_data["foreign_diploma"].get("linguistic_regime"):
                 linguistic_regime = LanguageService.get_language(
                     code=context_data["foreign_diploma"]["linguistic_regime"],
                     person=self.request.user.person,
                 )
                 context_data["foreign_diploma"]['linguistic_regime'] = getattr(linguistic_regime, translated_field)
-        elif high_school_diploma_alternative:
-            context_data["high_school_diploma_alternative"] = high_school_diploma_alternative
+                context_data["need_translations"] = linguistic_regime.code not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+
+            if context_data["foreign_diploma"].get('country'):
+                country = CountriesService.get_country(
+                    iso_code=context_data["foreign_diploma"].get('country'),
+                    person=self.request.user.person,
+                )
+                context_data["foreign_diploma"]['country'] = {
+                    'name': getattr(country, translated_field),
+                    'european_union': country.european_union or is_med_dent_training(self.admission.formation),
+                }
+
         return context_data
