@@ -27,6 +27,7 @@ from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
 from admission.contrib.enums.specific_question import Onglets
+from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.views.mixins import LoadDossierViewMixin
 
 __all__ = ['SpecificQuestionDetailView']
@@ -43,6 +44,9 @@ class SpecificQuestionDetailView(LoadDossierViewMixin, TemplateView):
         return AdmissionPropositionService.get_pool_questions(self.person, self.admission_uuid).to_dict()
 
     def get_context_data(self, **kwargs):
-        if self.current_context == 'general-education':
+        if (
+            self.current_context == 'general-education'
+            and self.admission.formation['type'] == TrainingType.BACHELOR.name
+        ):
             kwargs['pool_questions'] = self.pool_questions
         return super().get_context_data(**kwargs)
