@@ -59,10 +59,22 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         ]
         context['base_template'] = select_template(templates)
         context['base_namespace'] = self.base_namespace
-        context['is_general'] = self.current_context == 'general-education'
-        context['is_continuing'] = self.current_context == 'continuing-education'
-        context['is_doctorate'] = self.current_context == 'doctorate'
+        context['is_general'] = self.is_general
+        context['is_continuing'] = self.is_continuing
+        context['is_doctorate'] = self.is_doctorate
         return context
+
+    @property
+    def is_general(self):
+        return self.current_context == 'general-education'
+
+    @property
+    def is_continuing(self):
+        return self.current_context == 'continuing-education'
+
+    @property
+    def is_doctorate(self):
+        return self.current_context == 'doctorate'
 
     @cached_property
     def base_namespace(self):

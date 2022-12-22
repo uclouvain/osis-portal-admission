@@ -175,10 +175,10 @@ RadioBooleanField = partial(
 )
 
 
-AdmissionFileUploadField = partial(
-    FileUploadField,
-    mimetypes=DEFAULT_MIME_TYPES,
-)
+class AdmissionFileUploadField(FileUploadField):
+    def __init__(self, **kwargs):
+        kwargs.setdefault('mimetypes', DEFAULT_MIME_TYPES)
+        super().__init__(**kwargs)
 
 
 def get_example_text(example: str):

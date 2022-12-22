@@ -52,7 +52,6 @@ from admission.contrib.forms import (
     RadioBooleanField,
     get_superior_non_university_initial_choices,
     FORM_SET_PREFIX,
-    PDF_MIME_TYPE,
     NoInput,
     AdmissionFileUploadField as FileUploadField,
 )
@@ -240,6 +239,13 @@ class DoctorateAdmissionCurriculumProfessionalExperienceForm(forms.Form):
         required=False,
     )
 
+    def __init__(self, is_continuing, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.is_continuing = is_continuing
+        if self.is_continuing:
+            self.fields['certificate'].disabled = True
+            self.fields['certificate'].widget = forms.MultipleHiddenInput()
+
     class Media:
         js = ('js/dependsOn.min.js',)
 
@@ -286,7 +292,20 @@ class DoctorateAdmissionCurriculumProfessionalExperienceForm(forms.Form):
         else:
             cleaned_data['activity'] = ''
 
+        if self.is_continuing:
+            # This field is disabled so we need to convert the uuid to a writing token
+            cleaned_data['certificate'] = self.fields['certificate'].prepare_value(cleaned_data['certificate'])
+
         return cleaned_data
+
+
+DOCTORATE_EDUCATIONAL_EXPERIENCE_FIELDS = [
+    'expected_graduation_date',
+    'rank_in_diploma',
+    'dissertation_title',
+    'dissertation_score',
+    'dissertation_summary',
+]
 
 
 class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
@@ -419,8 +438,9 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
             'jquery.mask.min.js',
         )
 
-    def __init__(self, person, *args, **kwargs):
+    def __init__(self, person, is_doctorate, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.is_doctorate = is_doctorate
 
         # Initialize the field with dynamic choices
         academic_years_choices = get_past_academic_years_choices(person)
@@ -457,6 +477,16 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
             self.initial['other_program'] = bool(self.initial.get('education_name'))
             self.initial['other_institute'] = bool(self.initial.get('institute_name'))
 
+        # Disable fields that are not available in all contexts
+        if not self.is_doctorate:
+            for field in DOCTORATE_EDUCATIONAL_EXPERIENCE_FIELDS:
+                self.fields[field].disabled = True
+                self.fields[field].widget = (
+                    forms.MultipleHiddenInput()
+                    if isinstance(self.fields[field], FileUploadField)
+                    else forms.HiddenInput()
+                )
+
     def clean(self):
         cleaned_data = super().clean()
 
@@ -477,10 +507,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         self.clean_data_institute(cleaned_data)
 
         # Transcript field
-        if global_transcript:
-            if not cleaned_data.get('transcript'):
-                self.add_error('transcript', FIELD_REQUIRED_MESSAGE)
-        else:
+        if not global_transcript:
             cleaned_data['transcript'] = []
             cleaned_data['transcript_translation'] = []
 
@@ -495,15 +522,17 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
 
     def clean_data_diploma(self, cleaned_data, obtained_diploma):
         if obtained_diploma:
-            for field in [
+            mandatory_fields = [
                 'obtained_grade',
-                'expected_graduation_date',
-                'dissertation_title',
-                'dissertation_score',
-                'dissertation_summary',
-                'graduate_degree',
-                'rank_in_diploma',
-            ]:
+            ]
+            if self.is_doctorate:
+                mandatory_fields += [
+                    'expected_graduation_date',
+                    'rank_in_diploma',
+                    'dissertation_title',
+                    'dissertation_score',
+                ]
+            for field in mandatory_fields:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
         else:
@@ -544,11 +573,6 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         if not linguistic_regime or linguistic_regime in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION:
             cleaned_data['graduate_degree_translation'] = []
             cleaned_data['transcript_translation'] = []
-        else:
-            if obtained_diploma and not cleaned_data.get('graduate_degree_translation'):
-                self.add_error('graduate_degree_translation', FIELD_REQUIRED_MESSAGE)
-            if global_transcript and not cleaned_data.get('transcript_translation'):
-                self.add_error('transcript_translation', FIELD_REQUIRED_MESSAGE)
         # Clean belgian fields
         cleaned_data['program'] = None
 

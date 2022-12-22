@@ -88,6 +88,17 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             'admission:create:curriculum:professional_update',
             experience_id=self.professional_experience.uuid,
         )
+        self.continuing_update_url = resolve_url(
+            'admission:continuing-education:update:curriculum:professional_update',
+            pk=self.continuing_proposition.uuid,
+            experience_id=self.professional_experience.uuid,
+        )
+        self.general_update_url = resolve_url(
+            'admission:general-education:update:curriculum:professional_update',
+            pk=self.general_proposition.uuid,
+            experience_id=self.professional_experience.uuid,
+        )
+        self.mockapi = self.mock_person_api.return_value
 
     # On update
     def test_with_admission_on_update_experience_form_is_initialized(self):
@@ -97,7 +108,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the right API calls are done
-        self.mock_person_api.return_value.retrieve_professional_experience_admission.assert_called()
+        self.mockapi.retrieve_professional_experience_admission.assert_called()
 
         # Check the context data
         self.assertEqual(
@@ -117,6 +128,30 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             },
         )
 
+    def test_with_admission_on_update_experience_form_is_initialized_with_continuing_education(self):
+        response = self.client.get(self.continuing_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check that the right API calls are done
+        self.mockapi.retrieve_professional_experience_continuing_education_admission.assert_called()
+
+        # Check the context data
+        form = response.context.get('form')
+        hidden_fields = [f.field for f in form.hidden_fields()]
+        self.assertTrue(form.fields['certificate'].disabled)
+        self.assertIn(form.fields['certificate'], hidden_fields)
+
+    def test_with_admission_on_update_experience_form_is_initialized_with_general_education(self):
+        response = self.client.get(self.general_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check that the right API calls are done
+        self.mockapi.retrieve_professional_experience_general_education_admission.assert_called()
+
     def test_without_admission_on_update_experience_form_is_not_initialized(self):
         response = self.client.get(self.without_admission_update_url)
 
@@ -124,7 +159,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.retrieve_professional_experience.assert_not_called()
+        self.mockapi.retrieve_professional_experience.assert_not_called()
         self.mock_proposition_api.assert_not_called()
 
         self.assertTrue(
@@ -139,7 +174,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_not_called()
+        self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertEqual(len(response.context['form'].errors), 5)
@@ -165,7 +200,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_not_called()
+        self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertEqual(len(response.context['form'].errors), 3)
@@ -189,7 +224,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_not_called()
+        self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertEqual(len(response.context['form'].errors), 2)
@@ -212,7 +247,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_not_called()
+        self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertEqual(len(response.context['form'].errors), 2)
@@ -235,7 +270,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_not_called()
+        self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertEqual(len(response.context['form'].errors), 1)
@@ -259,7 +294,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_not_called()
+        self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertFormError(
@@ -284,7 +319,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_not_called()
+        self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertFormError(
@@ -311,7 +346,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_called_once_with(
+        self.mockapi.update_professional_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.professional_experience.uuid,
             professional_experience={
@@ -344,7 +379,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_called_once_with(
+        self.mockapi.update_professional_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.professional_experience.uuid,
             professional_experience={
@@ -377,7 +412,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_called_once_with(
+        self.mockapi.update_professional_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.professional_experience.uuid,
             professional_experience={
@@ -410,8 +445,80 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_called_once_with(
+        self.mockapi.update_professional_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
+            experience_id=self.professional_experience.uuid,
+            professional_experience={
+                'start_date': datetime.date(2021, 1, 1),
+                'end_date': datetime.date(2022, 1, 31),
+                'activity': '',
+                'role': '',
+                'certificate': ['f1.pdf'],
+                'type': ActivityType.UNEMPLOYMENT.name,
+                'institute_name': '',
+                'sector': '',
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_experience_post_form_for_unemployment_with_continuing_education(self):
+        response = self.client.post(
+            self.continuing_update_url,
+            data={
+                **self.all_form_data,
+                'type': ActivityType.UNEMPLOYMENT.name,
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:continuing-education:update:curriculum',
+                pk=self.continuing_proposition.uuid,
+            )
+            + '#non-academic-activities',
+        )
+
+        # Check that the API calls are done
+        self.mockapi.update_professional_experience_continuing_education_admission.assert_called_once_with(
+            uuid=self.continuing_proposition.uuid,
+            experience_id=self.professional_experience.uuid,
+            professional_experience={
+                'start_date': datetime.date(2021, 1, 1),
+                'end_date': datetime.date(2022, 1, 31),
+                'activity': '',
+                'role': '',
+                'certificate': ['foobar'],
+                'type': ActivityType.UNEMPLOYMENT.name,
+                'institute_name': '',
+                'sector': '',
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_experience_post_form_for_unemployment_with_general_education(self):
+        response = self.client.post(
+            self.general_update_url,
+            data={
+                **self.all_form_data,
+                'type': ActivityType.UNEMPLOYMENT.name,
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:general-education:update:curriculum',
+                pk=self.general_proposition.uuid,
+            )
+            + '#non-academic-activities',
+        )
+
+        # Check that the API calls are done
+        self.mockapi.update_professional_experience_general_education_admission.assert_called_once_with(
+            uuid=self.general_proposition.uuid,
             experience_id=self.professional_experience.uuid,
             professional_experience={
                 'start_date': datetime.date(2021, 1, 1),
@@ -443,7 +550,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_called_once_with(
+        self.mockapi.update_professional_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.professional_experience.uuid,
             professional_experience={
@@ -476,7 +583,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_professional_experience_admission.assert_called_once_with(
+        self.mockapi.update_professional_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.professional_experience.uuid,
             professional_experience={
@@ -513,7 +620,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.create_professional_experience_admission.assert_called_once_with(
+        self.mockapi.create_professional_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             professional_experience=ANY,
             **self.api_default_params,
@@ -526,7 +633,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.retrieve_professional_experience.assert_not_called()
+        self.mockapi.retrieve_professional_experience.assert_not_called()
         self.mock_proposition_api.assert_not_called()
 
         self.assertTrue(
