@@ -124,6 +124,7 @@ class UtilsTestCase(TestCase):
             intitule='Certificat en informatique',
             annee=2020,
             type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+            code_domaine='10C',
         )
         self.assertEqual(format_training(formation), 'Certificat en informatique (Mons) - INFO-1')
 
@@ -134,6 +135,7 @@ class UtilsTestCase(TestCase):
             intitule='Master en informatique',
             annee=2020,
             type=TrainingType.MASTER_M1.name,
+            code_domaine='10C',
         )
         self.assertEqual(format_training(formation), 'Master en informatique (Mons) - INFO-1')
 

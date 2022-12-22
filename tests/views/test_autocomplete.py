@@ -473,6 +473,7 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.MASTER_M1.name,
+                code_domaine='10C',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -480,6 +481,7 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.MASTER_M1.name,
+                code_domaine='10C',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -507,6 +509,7 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                code_domaine='10C',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -514,6 +517,7 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                code_domaine='10C',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')

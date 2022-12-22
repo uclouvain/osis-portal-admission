@@ -253,6 +253,7 @@ class MixinTestCase(TestCase):
                 campus='Louvain-La-Neuve',
                 sigle='TR1',
                 type=TrainingType.MASTER_M1.name,
+                code_domaine='10C',
             ),
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
@@ -281,6 +282,7 @@ class MixinTestCase(TestCase):
                 campus='Louvain-La-Neuve',
                 sigle='TR2',
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                code_domaine='10C',
             ),
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
@@ -424,7 +426,7 @@ class MixinTestCase(TestCase):
                 'De Septembre 2020 à Janvier 2021',
                 'De Septembre 2021 à Janvier 2022',
                 'De Septembre 2022 à Octobre 2022',
-            ]
+            ],
         )
         person_api_return = self.mock_person_api.return_value
 
