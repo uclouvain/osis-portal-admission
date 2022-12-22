@@ -82,11 +82,23 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
         self.assertEqual(response.context.get('need_to_complete'), True)
 
-        self.assertEqual(response.context.get('missing_periods_messages'), [
-            'De Septembre 2020 à Janvier 2021',
-            'De Septembre 2021 à Janvier 2022',
-            'De Septembre 2022 à Octobre 2022',
-        ])
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
+
+        self.assertEqual(
+            response.context.get('incomplete_experiences'),
+            {
+                self.educational_experience.uuid: ['Cette expérience académique est incomplète.'],
+            },
+        )
+
+        self.assertRegex(response.rendered_content, r'Les expériences préfixées par .* sont incomplètes.')
 
     def test_with_admission_on_update_curriculum_is_loaded(self):
         response = self.client.get(self.admission_update_url)
@@ -108,11 +120,14 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
         self.assertEqual(response.context.get('need_to_complete'), True)
 
-        self.assertEqual(response.context.get('missing_periods_messages'), [
-            'De Septembre 2020 à Janvier 2021',
-            'De Septembre 2021 à Janvier 2022',
-            'De Septembre 2022 à Octobre 2022',
-        ])
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
 
         self.assertEqual(response.context.get('form').initial['curriculum'], self.proposition.curriculum)
 
@@ -181,11 +196,14 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
         self.assertEqual(response.context.get('need_to_complete'), True)
 
-        self.assertEqual(response.context.get('missing_periods_messages'), [
-            'De Septembre 2020 à Janvier 2021',
-            'De Septembre 2021 à Janvier 2022',
-            'De Septembre 2022 à Octobre 2022',
-        ])
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
 
     def test_with_admission_on_update_curriculum_is_loaded_with_master(self):
         response = self.client.get(self.admission_update_url)
@@ -761,11 +779,14 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
         self.assertEqual(response.context.get('need_to_complete'), True)
 
-        self.assertEqual(response.context.get('missing_periods_messages'), [
-            'De Septembre 2020 à Janvier 2021',
-            'De Septembre 2021 à Janvier 2022',
-            'De Septembre 2022 à Octobre 2022',
-        ])
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
 
     def test_with_admission_on_update_curriculum_is_loaded_with_certificate_of_participation(self):
         response = self.client.get(self.admission_update_url)
@@ -787,11 +808,14 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
         self.assertEqual(response.context.get('need_to_complete'), True)
 
-        self.assertEqual(response.context.get('missing_periods_messages'), [
-            'De Septembre 2020 à Janvier 2021',
-            'De Septembre 2021 à Janvier 2022',
-            'De Septembre 2022 à Octobre 2022',
-        ])
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
 
         # Check the form
         form = response.context.get('form')

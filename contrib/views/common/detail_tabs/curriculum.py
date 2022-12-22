@@ -77,6 +77,7 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
         context_data['minimal_date'] = curriculum.minimal_date
         context_data['need_to_complete'] = curriculum.minimal_date <= curriculum.maximal_date
         context_data['missing_periods_messages'] = curriculum.incomplete_periods
+        context_data['incomplete_experiences'] = curriculum.incomplete_experiences
         context_data['display_curriculum'] = self.display_curriculum
         context_data['display_equivalence'] = self.display_equivalence
         context_data['display_bachelor_continuation'] = self.display_bachelor_continuation

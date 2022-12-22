@@ -36,7 +36,11 @@
 
   <div class="alert alert-info" role="alert">
     <p>
-      {% if need_to_complete %}
+      {% if view.is_continuing %}
+        {% blocktranslate trimmed %}
+          Please fill in at least the details of your most recent academic training and your most recent non-academic experience.
+        {% endblocktranslate %}
+      {% elif need_to_complete %}
         {% blocktranslate trimmed with date=minimal_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
           Please fill in the academic trainings and non-academic activities you have completed since {{ date }}.
         {% endblocktranslate %}
@@ -79,6 +83,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
+              <th style="width: 5px;"></th>
               <th style="width: 150px;">{% translate "Period" %}</th>
               <th>{% translate "Training" %}</th>
               <th>{% translate "Institute" %}</th>
@@ -97,6 +102,13 @@
                 {% url 'admission:create:curriculum:educational_delete' educational_experience.uuid as experience_delete_url %}
               {% endif %}
               <tr>
+                <td>
+                  {% if incomplete_experiences|get_item:educational_experience.uuid %}
+                  <i class="fa-solid fa-triangle-exclamation text-danger" title="{% translate 'Incomplete' %}"></i>
+                  {% else %}
+                  <i class="fa-solid fa-check text-success" title="{% translate 'Complete' %}"></i>
+                  {% endif %}
+                </td>
                 <td>
                   {% for educational_experience_year in educational_experience.educationalexperienceyear_set %}
                     {{ educational_experience_year.academic_year|get_academic_year }}<br>
@@ -148,6 +160,13 @@
             <tr></tr>
           </tbody>
         </table>
+        {% if incomplete_experiences %}
+          <p class="alert alert-danger">
+            {% blocktranslate trimmed with icon="<i class='fa-solid fa-triangle-exclamation'></i>" %}
+               The experiences prefixed by {{ icon }} are incomplete.
+            {% endblocktranslate %}
+          </p>
+        {% endif %}
       {% else %}
         {% trans "The CV doesn't yet contain any educational experience." %}
       {% endif %}

@@ -88,6 +88,11 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
     form_class = DoctorateAdmissionCurriculumProfessionalExperienceForm
     url_hash = '#non-academic-activities'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['is_continuing'] = self.is_continuing
+        return kwargs
+
     def prepare_data(self, data):
         # The start date is the first day of the specified month
         data['start_date'] = datetime.date(int(data.pop('start_date_year')), int(data.pop('start_date_month')), 1)
@@ -185,7 +190,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         educational_experience = None
         all_educational_experience_years = None
 
-        if self.experience_id and self.request.method == 'GET':
+        if self.experience_id:
             educational_experience = self.educational_experience.to_dict()
             all_years_config = get_educational_experience_year_set_with_lost_years(
                 educational_experience.pop('educationalexperienceyear_set')
@@ -196,6 +201,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
 
         base_form = DoctorateAdmissionCurriculumEducationalExperienceForm(
             person=self.request.user.person,
+            is_doctorate=self.is_doctorate,
             data=self.request.POST or None,
             initial=educational_experience,
             prefix='base_form',
@@ -248,6 +254,12 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
 
         data.pop('other_institute')
         data.pop('other_program')
+
+        if not self.is_doctorate:
+            # This field is disabled so we need to prepare the value to convert the uuid to a writing token
+            data['dissertation_summary'] = base_form.fields['dissertation_summary'].prepare_value(
+                data['dissertation_summary']
+            )
 
         return data
 
@@ -345,15 +357,9 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
             cleaned_data['registered_credit_number'] = None
 
         # Transcript fields
-        if transcript_is_required:
-            if not cleaned_data.get('transcript'):
-                form.add_error('transcript', FIELD_REQUIRED_MESSAGE)
-        else:
+        if not transcript_is_required:
             cleaned_data['transcript'] = []
-        if transcript_translation_is_required:
-            if not cleaned_data.get('transcript_translation'):
-                form.add_error('transcript_translation', FIELD_REQUIRED_MESSAGE)
-        else:
+        if not transcript_translation_is_required:
             cleaned_data['transcript_translation'] = []
 
     def post(self, request, *args, **kwargs):

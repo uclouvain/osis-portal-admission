@@ -688,6 +688,9 @@ msgstr ""
 msgid "Complementary training proposition"
 msgstr ""
 
+msgid "Complete"
+msgstr ""
+
 msgid "Completion"
 msgstr ""
 
@@ -1572,6 +1575,9 @@ msgid ""
 "before %(date)s."
 msgstr ""
 
+msgid "Incomplete"
+msgstr ""
+
 msgid ""
 "Indicate here any previous doctoral course, completed or interrupted, in "
 "which you are no longer registered."
@@ -1986,6 +1992,11 @@ msgid "Please correct the errors below"
 msgstr ""
 
 msgid "Please correct the errors first"
+msgstr ""
+
+msgid ""
+"Please fill in at least the details of your most recent academic training "
+"and your most recent non-academic experience."
 msgstr ""
 
 #, python-format
@@ -2511,6 +2522,10 @@ msgid ""
 "master's degree. This parent should contact the Human Resources "
 "Administration of his or her employer to check whether he or she meets these "
 "conditions and, if so, request the certificate confirming this."
+msgstr ""
+
+#, python-format
+msgid "The experiences prefixed by %(icon)s are incomplete."
 msgstr ""
 
 msgid "The following period must be justified in the curriculum:"

@@ -105,6 +105,7 @@ class MixinTestCase(TestCase):
             european_union=False,
         )
         cls.first_question_uuid = str(uuid.uuid4())
+        cls.document_uuid = str(uuid.uuid4())
 
         # Languages
         cls.language_without_translation = Language(code='FR', name='Français', name_en='French')
@@ -143,7 +144,7 @@ class MixinTestCase(TestCase):
             expected_graduation_date=datetime.date(2022, 8, 30),
             dissertation_title='Title',
             dissertation_score='15/20',
-            dissertation_summary=['f4.pdf'],
+            dissertation_summary=[cls.document_uuid],
             uuid=str(uuid.uuid4()),
             educationalexperienceyear_set=[
                 EducationalExperienceEducationalexperienceyearSet(
@@ -201,7 +202,7 @@ class MixinTestCase(TestCase):
             sector=ActivitySector(value='PUBLIC'),
             activity='Work - activity',
             uuid=str(uuid.uuid4()),
-            certificate=[],
+            certificate=[cls.document_uuid],
         )
 
         cls.lite_professional_experience = CurriculumDetailsProfessionalExperiences._from_openapi_data(
@@ -430,6 +431,9 @@ class MixinTestCase(TestCase):
                 'De Septembre 2021 à Janvier 2022',
                 'De Septembre 2022 à Octobre 2022',
             ],
+            incomplete_experiences={
+                self.educational_experience.uuid: ['Cette expérience académique est incomplète.'],
+            },
         )
         person_api_return = self.mock_person_api.return_value
 
