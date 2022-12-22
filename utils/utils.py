@@ -84,3 +84,10 @@ def get_uuid_value(value: str) -> Union[uuid.UUID, str]:
         return uuid.UUID(hex=value)
     except ValueError:
         return value
+
+
+PREFIXES_DOMAINES_FORMATIONS_DENT_MED = {'11', '13'}
+
+
+def is_med_dent_training(training) -> bool:
+    return training.code_domaine[:2] in PREFIXES_DOMAINES_FORMATIONS_DENT_MED
