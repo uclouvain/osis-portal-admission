@@ -262,11 +262,17 @@ class HighSchoolAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
     def get_list(self):
         # Return a list of high schools whose name / city / postal code city is specified by the user
+        additional_filters = {}
+        community = self.forwarded.get('community')
+        if community:
+            additional_filters['linguistic_regime'] = community
+
         return HighSchoolService.get_high_schools(
             limit=100,
             person=self.request.user.person,
             search=self.q,
             active=True,
+            **additional_filters,
         )
 
     def autocomplete_results(self, results):
@@ -378,10 +384,16 @@ class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2
     urlpatterns = 'superior-non-university'
 
     def get_list(self):
+        additional_filters = {}
+        country = self.forwarded.get('country')
+        if country:
+            additional_filters['country_iso_code'] = country
+
         return SuperiorNonUniversityService.get_superior_non_universities(
             person=self.request.user.person,
             search=self.q,
             active=True,
+            **additional_filters,
         )
 
     def results(self, results):

@@ -318,7 +318,10 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         empty_value=None,
         label=_('Institute'),
         required=False,
-        widget=autocomplete.ListSelect2(url='admission:autocomplete:superior-non-university'),
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:superior-non-university',
+            forward=['country'],
+        ),
     )
     program = forms.CharField(
         empty_value=None,
