@@ -774,6 +774,9 @@ msgstr "Formation complémentaire"
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
 
+msgid "Complete"
+msgstr "Complet"
+
 msgid "Completion"
 msgstr "Finalisation"
 
@@ -1794,6 +1797,9 @@ msgstr ""
 "Dans le cadre d'une modification d'inscription externe, vous devez "
 "impérativement confirmer votre demande avant le %(date)s."
 
+msgid "Incomplete"
+msgstr "Incomplet"
+
 msgid ""
 "Indicate here any previous doctoral course, completed or interrupted, in "
 "which you are no longer registered."
@@ -2227,6 +2233,13 @@ msgstr "Veuillez corriger les erreurs ci-dessous"
 
 msgid "Please correct the errors first"
 msgstr "Veuillez d'abord corriger les erreurs"
+
+msgid ""
+"Please fill in at least the details of your most recent academic training "
+"and your most recent non-academic experience."
+msgstr ""
+"Veuillez renseigner au minimum les informations de votre dernière formation "
+"académique ainsi que votre expérience non-académique la plus récente."
 
 #, python-format
 msgid ""
@@ -2783,6 +2796,10 @@ msgstr ""
 "l'Administration des ressources humaines de son employeur pour vérifier s'il "
 "remplit ces conditions, et dans l'affirmative, demande l'attestation qui le "
 "confirme."
+
+#, python-format
+msgid "The experiences prefixed by %(icon)s are incomplete."
+msgstr "Les expériences préfixées par %(icon)s sont incomplètes."
 
 msgid "The following period must be justified in the curriculum:"
 msgid_plural "The following periods must be justified in the curriculum:"

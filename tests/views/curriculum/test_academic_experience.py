@@ -217,6 +217,17 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'admission:create:curriculum:educational_update',
             experience_id=self.educational_experience.uuid,
         )
+        self.general_admission_update_url = resolve_url(
+            'admission:general-education:update:curriculum:educational_update',
+            pk=self.general_proposition.uuid,
+            experience_id=self.educational_experience.uuid,
+        )
+        self.continuing_admission_update_url = resolve_url(
+            'admission:continuing-education:update:curriculum:educational_update',
+            pk=self.continuing_proposition.uuid,
+            experience_id=self.educational_experience.uuid,
+        )
+        self.mockapi = self.mock_person_api.return_value
 
     # On update
     def test_with_admission_on_update_experience_form_is_initialized(self):
@@ -226,7 +237,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the right API calls are done
-        self.mock_person_api.return_value.retrieve_educational_experience_admission.assert_called()
+        self.mockapi.retrieve_educational_experience_admission.assert_called()
 
         # Check the context data
         # Base form
@@ -254,7 +265,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'expected_graduation_date': datetime.date(2022, 8, 30),
                 'dissertation_title': 'Title',
                 'dissertation_score': '15/20',
-                'dissertation_summary': ['f4.pdf'],
+                'dissertation_summary': [self.document_uuid],
                 'uuid': self.educational_experience.uuid,
                 'start': 2018,
                 'end': 2020,
@@ -318,6 +329,59 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             },
         )
 
+    # On update
+    def test_with_admission_on_update_experience_form_is_initialized_with_general_education(self):
+        response = self.client.get(self.general_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check that the right API calls are done
+        self.mockapi.retrieve_educational_experience_general_education_admission.assert_called()
+
+        # Check the context data
+        base_form = response.context.get('base_form')
+        self.assertTrue(base_form.fields['expected_graduation_date'].disabled)
+        self.assertTrue(base_form.fields['rank_in_diploma'].disabled)
+        self.assertTrue(base_form.fields['dissertation_title'].disabled)
+        self.assertTrue(base_form.fields['dissertation_score'].disabled)
+        self.assertCountEqual(
+            [f.field for f in base_form.hidden_fields()],
+            [
+                base_form.fields['expected_graduation_date'],
+                base_form.fields['rank_in_diploma'],
+                base_form.fields['dissertation_title'],
+                base_form.fields['dissertation_score'],
+                base_form.fields['dissertation_summary'],
+            ],
+        )
+
+    def test_with_admission_on_update_experience_form_is_initialized_with_continuing_education(self):
+        response = self.client.get(self.continuing_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check that the right API calls are done
+        self.mockapi.retrieve_educational_experience_continuing_education_admission.assert_called()
+
+        # Check the context data
+        base_form = response.context.get('base_form')
+        self.assertTrue(base_form.fields['expected_graduation_date'].disabled)
+        self.assertTrue(base_form.fields['rank_in_diploma'].disabled)
+        self.assertTrue(base_form.fields['dissertation_title'].disabled)
+        self.assertTrue(base_form.fields['dissertation_score'].disabled)
+        self.assertCountEqual(
+            [f.field for f in base_form.hidden_fields()],
+            [
+                base_form.fields['expected_graduation_date'],
+                base_form.fields['rank_in_diploma'],
+                base_form.fields['dissertation_title'],
+                base_form.fields['dissertation_score'],
+                base_form.fields['dissertation_summary'],
+            ],
+        )
+
     def test_without_admission_on_update_experience_form_is_not_initialized(self):
         response = self.client.get(self.without_admission_update_url)
 
@@ -325,7 +389,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.retrieve_educational_experience.assert_not_called()
+        self.mockapi.retrieve_educational_experience.assert_not_called()
         self.mock_proposition_api.assert_not_called()
 
         self.assertTrue(
@@ -345,7 +409,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertEqual(len(response.context['base_form'].errors), 8)
@@ -367,7 +431,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertFormError(
@@ -389,28 +453,11 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
         for field in ['institute_name', 'institute_address']:
             self.assertFormError(response, 'base_form', field, FIELD_REQUIRED_MESSAGE)
-
-    def test_with_admission_on_update_experience_post_form_missing_global_transcript(self):
-        response = self.client.post(
-            self.admission_update_url,
-            data={
-                'base_form-transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
-            },
-        )
-
-        # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
-
-        # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
-
-        # Check the context data
-        self.assertFormError(response, 'base_form', 'transcript', FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_missing_obtained_diploma_information(self):
         response = self.client.post(
@@ -424,7 +471,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
         for field in [
@@ -432,8 +479,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'expected_graduation_date',
             'dissertation_title',
             'dissertation_score',
-            'dissertation_summary',
-            'graduate_degree',
         ]:
             self.assertFormError(response, 'base_form', field, FIELD_REQUIRED_MESSAGE)
 
@@ -450,7 +495,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertFormError(response, 'base_form', 'education_name', FIELD_REQUIRED_MESSAGE)
@@ -468,7 +513,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertFormError(response, 'base_form', 'program', FIELD_REQUIRED_MESSAGE)
@@ -485,35 +530,11 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
         self.assertFormError(response, 'base_form', 'education_name', FIELD_REQUIRED_MESSAGE)
         self.assertFormError(response, 'base_form', 'linguistic_regime', FIELD_REQUIRED_MESSAGE)
-
-    def test_with_admission_on_update_experience_post_form_missing_translations(self):
-        response = self.client.post(
-            self.admission_update_url,
-            data={
-                'base_form-country': self.not_ue_country.iso_code,
-                'base_form-linguistic_regime': self.language_with_translation.code,
-                'base_form-transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
-                'base_form-obtained_diploma': True,
-            },
-        )
-
-        # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
-
-        # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
-
-        # Check the context data
-        for field in [
-            'transcript_translation',
-            'graduate_degree_translation',
-        ]:
-            self.assertFormError(response, 'base_form', field, FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_for_foreign_country_missing_fields_for_enrolled_year(self):
         response = self.client.post(
@@ -536,14 +557,12 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
         for field in [
             'acquired_credit_number',
             'registered_credit_number',
-            'transcript',
-            'transcript_translation',
             'result',
         ]:
             self.assertFormsetError(response, 'year_formset', 0, field, errors=FIELD_REQUIRED_MESSAGE)
@@ -577,7 +596,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         forms = response.context['year_formset'].forms
         self.assertEqual(len(forms), 4)
@@ -623,7 +642,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_called_once_with(
+        self.mockapi.update_educational_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.educational_experience.uuid,
             educational_experience={
@@ -671,6 +690,133 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             **self.api_default_params,
         )
 
+    def test_with_admission_on_update_experience_post_form_for_be_country_general_education(self):
+        response = self.client.post(
+            self.general_admission_update_url,
+            data=self.all_form_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid)
+            + '#academic-activities',
+        )
+
+        # Check that the API calls are done
+        self.mockapi.update_educational_experience_general_education_admission.assert_called_once_with(
+            uuid=self.general_proposition.uuid,
+            experience_id=self.educational_experience.uuid,
+            educational_experience={
+                'start': '2018',
+                'end': '2020',
+                'country': 'BE',
+                'institute_name': 'UCL',
+                'institute_address': 'Louvain-La-Neuve',
+                'institute': None,
+                'program': None,
+                'education_name': 'Other computer science',
+                'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
+                'linguistic_regime': None,
+                'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
+                'obtained_diploma': True,
+                'obtained_grade': Grade.GREAT_DISTINCTION.name,
+                'graduate_degree': ['f1.pdf'],
+                'graduate_degree_translation': [],
+                'transcript': ['f2.pdf'],
+                'transcript_translation': [],
+                'rank_in_diploma': '10 on 100',
+                'expected_graduation_date': datetime.date(2022, 8, 30),
+                'dissertation_title': 'Title',
+                'dissertation_score': '15/20',
+                'dissertation_summary': ['foobar'],
+                'educationalexperienceyear_set': [
+                    {
+                        'academic_year': 2020,
+                        'result': Result.SUCCESS.name,
+                        'registered_credit_number': 150.0,
+                        'acquired_credit_number': 100.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                    {
+                        'academic_year': 2018,
+                        'result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+                        'registered_credit_number': 150.0,
+                        'acquired_credit_number': 100.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                ],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_experience_post_form_for_be_country_continuing_education(self):
+        response = self.client.post(
+            self.continuing_admission_update_url,
+            data=self.all_form_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:continuing-education:update:curriculum',
+                pk=self.continuing_proposition.uuid,
+            )
+            + '#academic-activities',
+        )
+
+        # Check that the API calls are done
+        self.mockapi.update_educational_experience_continuing_education_admission.assert_called_once_with(
+            uuid=self.continuing_proposition.uuid,
+            experience_id=self.educational_experience.uuid,
+            educational_experience={
+                'start': '2018',
+                'end': '2020',
+                'country': 'BE',
+                'institute_name': 'UCL',
+                'institute_address': 'Louvain-La-Neuve',
+                'institute': None,
+                'program': None,
+                'education_name': 'Other computer science',
+                'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
+                'linguistic_regime': None,
+                'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
+                'obtained_diploma': True,
+                'obtained_grade': Grade.GREAT_DISTINCTION.name,
+                'graduate_degree': ['f1.pdf'],
+                'graduate_degree_translation': [],
+                'transcript': ['f2.pdf'],
+                'transcript_translation': [],
+                'rank_in_diploma': '10 on 100',
+                'expected_graduation_date': datetime.date(2022, 8, 30),
+                'dissertation_title': 'Title',
+                'dissertation_score': '15/20',
+                'dissertation_summary': ['foobar'],
+                'educationalexperienceyear_set': [
+                    {
+                        'academic_year': 2020,
+                        'result': Result.SUCCESS.name,
+                        'registered_credit_number': 150.0,
+                        'acquired_credit_number': 100.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                    {
+                        'academic_year': 2018,
+                        'result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+                        'registered_credit_number': 150.0,
+                        'acquired_credit_number': 100.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                ],
+            },
+            **self.api_default_params,
+        )
+
     def test_with_admission_on_update_experience_post_form_for_be_country_known_program(self):
         response = self.client.post(
             self.admission_update_url,
@@ -689,7 +835,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_called_once_with(
+        self.mockapi.update_educational_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.educational_experience.uuid,
             educational_experience={
@@ -760,7 +906,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_called_once_with(
+        self.mockapi.update_educational_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.educational_experience.uuid,
             educational_experience={
@@ -832,7 +978,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_called_once_with(
+        self.mockapi.update_educational_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.educational_experience.uuid,
             educational_experience={
@@ -897,7 +1043,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.update_educational_experience_admission.assert_called_once_with(
+        self.mockapi.update_educational_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             experience_id=self.educational_experience.uuid,
             educational_experience={
@@ -963,7 +1109,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check that the API calls are done
-        self.mock_person_api.return_value.create_educational_experience_admission.assert_called_once_with(
+        self.mockapi.create_educational_experience_admission.assert_called_once_with(
             uuid=self.proposition.uuid,
             educational_experience=ANY,
             **self.api_default_params,
@@ -979,7 +1125,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
-        self.mock_person_api.return_value.retrieve_educational_experience.assert_not_called()
+        self.mockapi.retrieve_educational_experience.assert_not_called()
         self.mock_proposition_api.assert_not_called()
 
         self.assertTrue(
