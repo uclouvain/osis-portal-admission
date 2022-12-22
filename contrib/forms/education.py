@@ -184,6 +184,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
                 'data-minimum-input-length': 3,
                 'data-html': True,
             },
+            forward=['community'],
         ),
     )
     other_institute = forms.BooleanField(
