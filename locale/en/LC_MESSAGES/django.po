@@ -122,6 +122,15 @@ msgid ""
 msgstr ""
 
 msgid ""
+"<p><strong>What happens now?</strong></p> <ul> <li>Your application will be "
+"process by the Enrolment service</li> <li>An email confirming your "
+"application submission will be sent to the e-mail address you specified</li> "
+"<li>Your application summary will be available at all time by connecting to "
+"this website</li> </ul> <p>We thank you for choosing UCLouvain and wish you "
+"a successful training!</p>"
+msgstr ""
+
+msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
 
@@ -322,6 +331,9 @@ msgstr ""
 msgid "Allocated time for the thesis (in %)"
 msgstr ""
 
+msgid "An error has occurred, please check the values and try again."
+msgstr ""
+
 msgid "Ancient languages"
 msgstr ""
 
@@ -348,6 +360,9 @@ msgstr ""
 "général des études et des examens de l'UCLouvain)."
 
 msgid "Approval"
+msgstr ""
+
+msgid "Approvals"
 msgstr ""
 
 msgid "Approve by PDF"
@@ -983,6 +998,9 @@ msgctxt "admission"
 msgid "Divorced"
 msgstr ""
 
+msgid "Do you confirm that you actually want to submit it?"
+msgstr ""
+
 msgid "Do you have a high school diploma?"
 msgstr ""
 
@@ -1212,6 +1230,9 @@ msgstr ""
 msgid "Financing type"
 msgstr ""
 
+msgid "Finish"
+msgstr ""
+
 msgid "First name"
 msgstr ""
 
@@ -1360,11 +1381,6 @@ msgstr ""
 msgid ""
 "I am supported by the CPAS, or by a CPAS rest home or designated by the CPAS "
 "(assimilation 4)"
-msgstr ""
-
-msgid ""
-"I authorize the UCLouvain to transmit to the secondary school in which I "
-"obtained my CESS, the information on the success."
 msgstr ""
 
 msgid "I benefit from a Development Cooperation grant"
@@ -1541,30 +1557,6 @@ msgstr ""
 msgid "Important information:"
 msgstr ""
 
-msgid ""
-"In accordance with the information on the <a href='https://uclouvain.be/en/"
-"study/inscriptions/acces-aux-professions-reglementees.html' "
-"target='blank'>Access to regulated professions</a> page, should it apply to "
-"me, I declare that I have received the information relating to the admission "
-"and graduation requirements and to the particular rules and restrictions of "
-"accreditation and professional establishment to which the professional or "
-"teacher training title is subject and I accept the terms."
-msgstr ""
-
-msgid ""
-"In accordance with the information on the <a href='https://uclouvain.be/en/"
-"study/inscriptions/reglementations.html' target='blank'>Reglementations</a> "
-"page, I declare that I have read and accept the terms of the university "
-"regulations."
-msgstr ""
-
-msgid ""
-"In accordance with the information on the <a href='https://uclouvain.be/en/"
-"study/inscriptions/vie-privee.html' target='blank'>Data protection policy</"
-"a> page, I declare that I have read and accept the terms of the data "
-"protection policy of the University of Louvain."
-msgstr ""
-
 msgid "In person"
 msgstr ""
 
@@ -1655,6 +1647,10 @@ msgid "Last name of the account holder"
 msgstr ""
 
 msgid "Last registration year"
+msgstr ""
+
+#, python-format
+msgid "Late enrollment! Enroll before %(date)s"
 msgstr ""
 
 msgid "Latin"
@@ -2417,6 +2413,9 @@ msgstr ""
 msgid "Study system"
 msgstr ""
 
+msgid "Submission confirmation"
+msgstr ""
+
 msgid "Submit"
 msgstr ""
 
@@ -2485,13 +2484,6 @@ msgid "The CV doesn't yet contain any educational experience."
 msgstr ""
 
 msgid "The CV doesn't yet contain any non-academic experience."
-msgstr ""
-
-msgid ""
-"The Enrolment Department reserves the right to ask you for any additional "
-"supporting documents it deems useful. This must <strong>imperatively reach "
-"us within 15 calendar days</strong>. Otherwise, your enrolment request will "
-"be closed."
 msgstr ""
 
 msgid ""
@@ -2717,6 +2709,9 @@ msgstr "UCL Course"
 msgid "Undecided"
 msgstr ""
 
+msgid "Undertake and declaration"
+msgstr ""
+
 msgid "Unemployment"
 msgstr ""
 
@@ -2882,6 +2877,9 @@ msgstr ""
 msgid "Yes, only in Tournai (10 EUR)"
 msgstr ""
 
+msgid "Yes, submit"
+msgstr ""
+
 msgid "Yes,No,"
 msgstr ""
 
@@ -2932,6 +2930,12 @@ msgid ""
 "organised."
 msgstr ""
 
+msgid "Your application has been submitted"
+msgstr ""
+
+msgid "Your application will be sent to the Enrolment Service of UCLouvain."
+msgstr ""
+
 msgid "Your data has been saved"
 msgstr ""
 
@@ -2952,9 +2956,6 @@ msgid "Your participation to the event"
 msgstr ""
 
 msgid "Your previous NOMA (registration id)"
-msgstr ""
-
-msgid "Your proposition has been confirmed."
 msgstr ""
 
 msgid "belgian"

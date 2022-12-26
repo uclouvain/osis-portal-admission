@@ -34,6 +34,12 @@ __all__ = ['TrainingChoiceDetailView']
 class TrainingChoiceDetailView(LoadDossierViewMixin, TemplateView):
     tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
 
+    def get_context_data(self, **kwargs):
+        if 'submitted' in self.request.session:
+            del self.request.session['submitted']
+            kwargs['just_submitted'] = True
+        return super().get_context_data(**kwargs)
+
     def get_template_names(self):
         return [
             f'admission/{self.formatted_current_context}/details/training_choice.html',
