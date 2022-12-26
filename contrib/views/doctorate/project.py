@@ -74,4 +74,8 @@ class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):
             )
             context_data['admission'].institut_these = format_entity_title(institute)
 
+        if 'submitted' in self.request.session:
+            del self.request.session['submitted']
+            context_data['just_submitted'] = True
+
         return context_data

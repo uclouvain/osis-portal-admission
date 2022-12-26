@@ -89,4 +89,8 @@
             {% endif %}
         {% endif %}
     {% endpanel %}
+
+  {% if just_submitted %}
+    {% include "admission/includes/just-submitted.html" %}
+  {% endif %}
 {% endblock %}

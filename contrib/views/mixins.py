@@ -23,12 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.datetime_safe import date
 from django.utils.functional import cached_property
 from django.views.generic.base import ContextMixin
+from django.utils.translation import gettext_lazy as _
 
 from admission.services.doctorate import AdmissionDoctorateService
 from admission.services.proposition import AdmissionPropositionService
+
+LATE_MESSAGE_POOLS = [
+    'ADMISSION_POOL_HUE_UCL_PATHWAY_CHANGE',
+    'ADMISSION_POOL_UE5_BELGIAN',
+]
+LATE_MESSAGE_DAYS_THRESHOLD = 30
 
 
 class LoadViewMixin(LoginRequiredMixin, ContextMixin):
@@ -107,6 +116,17 @@ class LoadDossierViewMixin(LoadViewMixin):
             if hasattr(self, 'tab_of_specific_questions'):
                 context['specific_questions'] = self.specific_questions
 
+        # Late message
+        if (
+            self.admission_uuid
+            and self.admission.date_fin_pot
+            and self.admission.pot_calcule in LATE_MESSAGE_POOLS
+            and (self.admission.date_fin_pot - date.today()).days < LATE_MESSAGE_DAYS_THRESHOLD
+        ):
+            messages.warning(
+                self.request,
+                _("Late enrollment! Enroll before %(date)s") % {'date': self.admission.date_fin_pot},
+            )
         return context
 
 

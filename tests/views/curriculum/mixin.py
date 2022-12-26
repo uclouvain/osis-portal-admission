@@ -218,6 +218,7 @@ class MixinTestCase(TestCase):
             type_admission=AdmissionType.ADMISSION.name,
             reference='22-300001',
             links=DoctoratePropositionDTOLinks(),
+            date_fin_pot=None,
             doctorat=PropositionSearchDoctorat._from_openapi_data(
                 sigle='CS1',
                 annee=cls.academic_year_2020.year,
@@ -260,6 +261,7 @@ class MixinTestCase(TestCase):
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
             links=GeneralEducationPropositionDTOLinks(),
+            date_fin_pot=None,
             erreurs=[],
             bourse_double_diplome=None,
             bourse_internationale=None,
@@ -284,6 +286,7 @@ class MixinTestCase(TestCase):
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 code_domaine='10C',
             ),
+            date_fin_pot=None,
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,

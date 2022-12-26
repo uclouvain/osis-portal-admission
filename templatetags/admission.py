@@ -30,13 +30,16 @@ from dataclasses import dataclass
 from inspect import getfullargspec
 from typing import Union
 
-from django import template
+from bootstrap3.forms import render_field
+from bootstrap3.renderers import FieldRenderer
+from bootstrap3.utils import add_css_class
+from django import forms, template
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import resolve_url
+from django.test import override_settings
 from django.utils.safestring import SafeString
 from django.utils.translation import get_language, gettext_lazy as _, pgettext
-
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
@@ -450,6 +453,33 @@ def bootstrap_field_with_tooltip(field, classes='', show_help=False):
         'classes': classes,
         'show_help': show_help,
     }
+
+
+class NoPostWidgetRenderFieldRenderer(FieldRenderer):
+    def post_widget_render(self, html):
+        # Override rendering to prevent replacing <ul><li> with <div> in value
+        classes = add_css_class('checkbox', self.get_size_class())
+        mapping = [
+            (rf'<ul id="id_{self.field.name}">\s*<li>', '<div><div class="{klass}">'.format(klass=classes)),
+            (r"</label>\s*</li>\s*</ul>", "</label></div></div>"),
+        ]
+        for k, v in mapping:
+            html = re.sub(k, v, html)
+        return html
+
+
+@register.simple_tag
+def bootstrap_field_no_post_widget_render(field, **kwargs):
+    # Override rendering to prevent bootstrap3 replacing <ul><li> with <div> in value
+    with override_settings(
+        BOOTSTRAP3={
+            "field_renderers": {
+                'default': '',
+                'custom': 'admission.templatetags.admission.NoPostWidgetRenderFieldRenderer',
+            }
+        }
+    ):
+        return render_field(field, layout='custom', **kwargs)
 
 
 @register.filter
