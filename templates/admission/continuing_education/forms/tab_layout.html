@@ -77,11 +77,11 @@
     <form class="osis-form" method="post" action="">
       {% csrf_token %}
       {% block form_content %}
-        {% doctorate_tabs admission with_submit=True no_status=True %}
+        {% admission_tabs admission with_submit=True %}
         {% if subtabs|length > 1 %}
         <div class="row">
           <div class="col-md-2 visible-md visible-lg">
-            {% admission_subtabs admission no_status=True tabs=subtabs %}
+            {% admission_subtabs admission tabs=subtabs %}
           </div>
         {% endif %}
           <div class="{% if subtabs|length > 1 %}col-md-10 {% endif %}quitting-context-excluded">

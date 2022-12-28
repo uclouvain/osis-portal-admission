@@ -51,6 +51,7 @@ __all__ = [
     "AdmissionCotutelleService",
     "AdmissionSupervisionService",
     "TAB_OF_BUSINESS_EXCEPTION",
+    "BUSINESS_EXCEPTIONS_BY_TAB",
     "PropositionBusinessException",
 ]
 

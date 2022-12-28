@@ -28,7 +28,7 @@ from django.views.generic import FormView
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
-from admission.contrib.enums.financement import BourseRecherche, ChoixTypeContratTravail, ChoixTypeFinancement
+from admission.contrib.enums.financement import ChoixTypeFinancement
 from admission.contrib.forms.project import (
     COMMISSIONS_CDE_CLSM,
     COMMISSION_CDSS,

@@ -119,7 +119,7 @@ class LoadDossierViewMixin(LoadViewMixin):
         # Late message
         if (
             self.admission_uuid
-            and self.admission.date_fin_pot
+            and getattr(self.admission, 'date_fin_pot', None)
             and self.admission.pot_calcule in LATE_MESSAGE_POOLS
             and (self.admission.date_fin_pot - date.today()).days < LATE_MESSAGE_DAYS_THRESHOLD
         ):

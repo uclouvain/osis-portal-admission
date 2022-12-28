@@ -33,7 +33,7 @@ from typing import Union
 from bootstrap3.forms import render_field
 from bootstrap3.renderers import FieldRenderer
 from bootstrap3.utils import add_css_class
-from django import forms, template
+from django import template
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import resolve_url
@@ -42,12 +42,13 @@ from django.utils.safestring import SafeString
 from django.utils.translation import get_language, gettext_lazy as _, pgettext
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from admission.contrib.enums import ChoixStatutProposition
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
 from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from admission.services.reference import CountriesService
-from admission.utils import to_snake_case, get_uuid_value
+from admission.utils import get_uuid_value, to_snake_case
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
@@ -266,8 +267,9 @@ def get_current_tab_name(context):
     return match.url_name
 
 
-@register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
-def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
+@register.inclusion_tag('admission/admission_tabs_bar.html', takes_context=True)
+def admission_tabs(context, admission=None, with_submit=False):
+    """Display current tabs given context (if with_submit=True, display the submit button within tabs)"""
     current_tab_name = get_current_tab_name(context)
 
     # Create a new tab tree based on the default one but depending on the permissions links
@@ -279,7 +281,7 @@ def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
         'admission': admission,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'with_submit': with_submit,
-        'no_status': no_status,
+        'no_status': admission and admission.statut not in ['SIGNING_IN_PROGRESS', 'IN_PROGRESS'],
         **context.flatten(),
     }
 
@@ -308,13 +310,18 @@ def get_current_tab(context):
 
 
 @register.inclusion_tag('admission/admission_subtabs_bar.html', takes_context=True)
-def admission_subtabs(context, admission=None, no_status=False, tabs=None):
+def admission_subtabs(context, admission=None, tabs=None):
+    """Display current subtabs given context (if tabs is specified, display provided tabs)"""
     current_tab_name = get_current_tab_name(context)
     return {
         'subtabs': tabs or current_subtabs(context),
         'admission': admission,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
-        'no_status': no_status,
+        'no_status': (
+            admission
+            and admission.statut
+            not in [ChoixStatutProposition.IN_PROGRESS.name, ChoixStatutProposition.SIGNING_IN_PROGRESS.name]
+        ),
         'active_tab': current_tab_name,
         **context.flatten(),
     }
@@ -433,9 +440,7 @@ def has_error_in_tab(context, admission, tab):
     if tab not in BUSINESS_EXCEPTIONS_BY_TAB:
         children = get_current_tab_tree(context).get(tab)
         if children is None:
-            raise ImproperlyConfigured(
-                f"{tab} has no children and is not in BUSINESS_EXCEPTIONS_BY_TAB, use no_status=1 or correct name"
-            )
+            raise ImproperlyConfigured(f"{tab} has no children and is not in BUSINESS_EXCEPTIONS_BY_TAB, correct name")
         return any(
             erreur['status_code'] in [e.value for e in BUSINESS_EXCEPTIONS_BY_TAB[subtab]]
             for subtab in children
@@ -623,7 +628,7 @@ def training_categories(activities):
             categories[_("Scientific residencies")][index] += activity.ects
         elif category == CategorieActivite.VAE.name:
             categories[_("VAE")][index] += activity.ects
-        elif activity.category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
+        elif category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
             categories[_("Courses and training")][index] += activity.ects
         elif category == CategorieActivite.PAPER.name and activity.type == ChoixTypeEpreuve.CONFIRMATION_PAPER.name:
             categories[_("Confirmation paper")][index] += activity.ects
