@@ -124,18 +124,22 @@
           </ul>
         </div>
         {% if not remove_batch_action and activity.status|safe == "NON_SOUMISE" %}
-          <label class="input-group-addon">
-            <input
+          <label
+            class="input-group-addon"
+            {% if not activity.can_be_submitted %}
+            data-toggle="tooltip"
+            data-container="body"
+              {% if activity.category == 'SEMINAR' %}
+            title="{{ not_complete_sub }}"
+              {% else %}
+            title="{{ not_complete }}"
+              {% endif %}
+            {% endif %}
+          >
+          <input
               type="checkbox" name="activity_ids" value="{{ activity.uuid }}"
               {% if not activity.can_be_submitted %}
               disabled="disabled"
-              data-toggle="tooltip"
-              data-container="body"
-                {% if activity.category|safe == 'SEMINAR' %}
-              title="{{ not_complete_sub }}"
-                {% else %}
-              title="{{ not_complete }}"
-                {% endif %}
               {% else %}
               aria-label="{% trans "Select for batch action" %}"
               {% endif %}

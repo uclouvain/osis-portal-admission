@@ -2,7 +2,7 @@
 {% load bootstrap3 i18n static admission waffle_tags %}
 
 {% block tab_content %}
-  {% doctorate_tabs admission %}
+  {% admission_tabs admission %}
   {% current_subtabs as subtabs %}
   {% if subtabs|length > 1 %}
     <div class="row">

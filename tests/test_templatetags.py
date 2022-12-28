@@ -112,7 +112,7 @@ class TemplateTagsTestCase(TestCase):
                 return Mock(kwargs={}, spec=cls)
 
         person_tab_url = '/admission/create/person'
-        template = Template("{% load admission %}{% doctorate_tabs %}")
+        template = Template("{% load admission %}{% admission_tabs %}")
 
         request = RequestFactory().get(person_tab_url)
         request.resolver_match = resolve(person_tab_url)

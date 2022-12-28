@@ -98,10 +98,10 @@
       </div>
   {% endif %}
 
-  {% doctorate_tabs admission=doctorate no_status=True %}
+  {% admission_tabs admission=doctorate %}
   <div class="row">
     <div class="col-md-2 visible-md visible-lg">
-      {% admission_subtabs admission=doctorate no_status=True %}
+      {% admission_subtabs admission=doctorate %}
     </div>
     <div class="col-md-10 quitting-context-excluded">
       {% block tab_content %}{% endblock %}
