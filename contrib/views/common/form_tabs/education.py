@@ -65,7 +65,7 @@ __all__ = [
 
 
 class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierViewMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/forms/education.html"
+    template_name = "admission/forms/education.html"
     success_url = reverse_lazy("admission:list")
     form_class = DoctorateAdmissionEducationForm
     forms = None
@@ -79,12 +79,15 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
 
     def get(self, request, *args, **kwargs):
         if not self.admission_uuid:
-            return render(request, 'admission/details/need_training_choice.html', {'view': self})
+            # Trick template to not display form and buttons
+            context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
+            return render(request, 'admission/forms/need_training_choice.html', context)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update(self.get_forms(context_data))
+        context_data['form'] = context_data['main_form']  # Trick template to display form tag
         context_data['foreign_diploma_type_images'] = {
             'INTERNATIONAL_BACCALAUREATE': 'admission/images/IBO.png',
             'EUROPEAN_BACHELOR': 'admission/images/schola_europa.png',

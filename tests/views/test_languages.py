@@ -44,6 +44,18 @@ class LanguagesTestCase(TestCase):
         cls.create_url = resolve_url('admission:create:languages')
 
     def setUp(self):
+        self.data_ok = {
+            "form-0-language": 'FR',
+            "form-0-listening_comprehension": "1",
+            "form-0-speaking_ability": "1",
+            "form-0-writing_ability": "3",
+            "form-1-language": 'EN',
+            "form-1-listening_comprehension": "5",
+            "form-1-speaking_ability": "6",
+            "form-1-writing_ability": "1",
+            "form-INITIAL_FORMS": 0,
+            "form-TOTAL_FORMS": 2,
+        }
         self.client.force_login(self.person.user)
 
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -142,19 +154,11 @@ class LanguagesTestCase(TestCase):
         response = self.client.post(
             self.form_url,
             {
-                "form-0-language": 'FR',
-                "form-0-listening_comprehension": "1",
-                "form-0-speaking_ability": "1",
-                "form-0-writing_ability": "3",
-                "form-1-language": 'EN',
-                "form-1-listening_comprehension": "4",
-                "form-1-speaking_ability": "5",
-                "form-1-writing_ability": "1",
+                **self.data_ok,
                 "form-2-language": 'EN',
                 "form-2-listening_comprehension": "4",
                 "form-2-speaking_ability": "5",
                 "form-2-writing_ability": "1",
-                "form-INITIAL_FORMS": 0,
                 "form-TOTAL_FORMS": 3,
             },
         )
@@ -187,21 +191,7 @@ class LanguagesTestCase(TestCase):
         self.assertFormsetError(response, "form", 0, 'speaking_ability', _("This field is required."))
 
     def test_form_ok(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "form-0-language": 'FR',
-                "form-0-listening_comprehension": "1",
-                "form-0-speaking_ability": "1",
-                "form-0-writing_ability": "3",
-                "form-1-language": 'EN',
-                "form-1-listening_comprehension": "5",
-                "form-1-speaking_ability": "6",
-                "form-1-writing_ability": "1",
-                "form-INITIAL_FORMS": 0,
-                "form-TOTAL_FORMS": 2,
-            },
-        )
+        response = self.client.post(self.form_url, self.data_ok)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_called()
         sent = self.mock_person_api.return_value.create_language_knowledge_admission.call_args[1]["language_knowledge"]
@@ -224,6 +214,16 @@ class LanguagesTestCase(TestCase):
                 },
             ],
         )
+
+    def test_form_ok_redirects_on_continue(self):
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            matricule_candidat=self.person.global_id,
+            links={'update_accounting': {'url': 'ok'}},
+        )
+        response = self.client.post(self.form_url, {**self.data_ok, '_submit_and_continue': ''})
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_called()
+        redirect_url = resolve_url('admission:doctorate:accounting', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        self.assertRedirects(response, redirect_url)
 
     def test_update_admission_in_context(self):
         url = resolve_url('admission:doctorate:update:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

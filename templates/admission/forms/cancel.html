@@ -1,5 +1,5 @@
-{% extends 'admission/doctorate/detail_tab_layout.html' %}
-{% load i18n %}
+{% extends base_template %}
+{% load i18n static admission enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -25,8 +25,23 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block tab_content %}
-  <div class="alert alert-warning">
-    <p>{% translate "You must choose your training before filling in your previous experience." %}</p>
-  </div>
+{% block tabs_content %}
+  <form class="osis-form" method="post" action="">
+    {% csrf_token %}
+    <p>
+      {% trans "Are you sure you want to cancel this request?" %}
+    </p>
+
+    <button
+      type="submit"
+      class="btn btn-danger"
+      {% if not admission|can_make_action:'destroy_proposition' %}disabled{% endif %}
+    >
+      {% trans "Confirm" %}
+    </button>
+    <a href="{% url 'admission:list' %}">
+      {% trans "Back to requests" %}
+    </a>
+
+  </form>
 {% endblock %}

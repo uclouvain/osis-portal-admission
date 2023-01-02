@@ -32,6 +32,7 @@
   It also display subtabs while on mobile displays, but you need to show
   {% admission_subtabs admission %} for other displays.
 {% endcomment %}
+{% trans "Save" context 'admission' as save_label %}
 
 <div class="form-group">
   {# Nav for mobile display #}
@@ -63,12 +64,12 @@
       <ul class="nav navbar-nav">
         {% for parent, children in tab_tree.items %}
           {% if parent == active_parent %}
-            {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
+            {% include 'admission/admission_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
             <div class="col-xs-offset-1">
               {% admission_subtabs admission %}
             </div>
           {% else %}
-            {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
+            {% include 'admission/admission_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
           {% endif %}
         {% endfor %}
     </div><!-- /.navbar-collapse -->
@@ -78,9 +79,9 @@
   <ul class="nav nav-tabs visible-md visible-lg">
     {% for parent, children in tab_tree.items %}
       {% if parent == active_parent %}
-        {% include 'admission/doctorate_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
+        {% include 'admission/admission_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
       {% else %}
-        {% include 'admission/doctorate_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
+        {% include 'admission/admission_tab_entry.html' with tab=children.0 icon=parent.icon label=parent.label for_navigation=True no_status=no_status %}
       {% endif %}
     {% endfor %}
 
@@ -94,8 +95,8 @@
           disabled
           {% endif %}
         >
-          <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-          {{ submit_label|default:_("Save") }}
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ submit_label|default:save_label }}
         </button>
       </div>
     {% else %}
@@ -123,8 +124,8 @@
         disabled
         {% endif %}
       >
-        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-        {{ submit_label|default:_("Save") }}
+        <i class="fa-solid fa-floppy-disk"></i>
+        {{ submit_label|default:save_label }}
       </button>
     </div>
   {% endif %}

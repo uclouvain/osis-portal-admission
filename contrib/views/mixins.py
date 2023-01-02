@@ -25,10 +25,11 @@
 # ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.loader import select_template
 from django.utils.datetime_safe import date
 from django.utils.functional import cached_property
-from django.views.generic.base import ContextMixin
 from django.utils.translation import gettext_lazy as _
+from django.views.generic.base import ContextMixin
 
 from admission.services.doctorate import AdmissionDoctorateService
 from admission.services.proposition import AdmissionPropositionService
@@ -41,9 +42,6 @@ LATE_MESSAGE_DAYS_THRESHOLD = 30
 
 
 class LoadViewMixin(LoginRequiredMixin, ContextMixin):
-    detail_base_template = ''
-    form_base_template = ''
-
     @property
     def current_context(self):
         return self.request.resolver_match.namespaces[1]
@@ -54,9 +52,11 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        namespace = 'doctorate' if self.current_context == 'create' else self.formatted_current_context
-        context['detail_base_template'] = f'admission/{namespace}/details/tab_layout.html'
-        context['form_base_template'] = f'admission/{namespace}/forms/tab_layout.html'
+        templates = [
+            f'admission/{self.formatted_current_context}/tab_layout.html',
+            'admission/tab_layout.html',
+        ]
+        context['base_template'] = select_template(templates)
         context['base_namespace'] = self.base_namespace
         context['is_general'] = self.current_context == 'general-education'
         context['is_continuing'] = self.current_context == 'continuing-education'
@@ -78,9 +78,6 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
 
 class LoadDossierViewMixin(LoadViewMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
-
-    detail_base_template = 'admission/doctorate/detail_tab_layout.html'
-    form_base_template = 'admission/doctorate/form_tab_layout.html'
 
     @cached_property
     def admission(self):
@@ -133,17 +130,11 @@ class LoadDossierViewMixin(LoadViewMixin):
 class LoadDoctorateViewMixin(LoadViewMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
 
-    detail_base_template = 'admission/doctorate/detail_tab_layout.html'
-    form_base_template = 'admission/doctorate/form_tab_layout.html'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['admission'] = self.doctorate
         context['doctorate'] = self.doctorate
-        # We display the information related to the doctorate instead of the admission
-        context['detail_base_template'] = 'admission/doctorate/details/doctorate_tab_layout.html'
-
         return context
 
     @cached_property

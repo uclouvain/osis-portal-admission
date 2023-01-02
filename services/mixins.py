@@ -27,7 +27,7 @@ from copy import copy
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import resolve_url
+from django.shortcuts import redirect, resolve_url
 from django.utils.translation import gettext_lazy as _
 
 from base.models.person import Person
@@ -66,18 +66,37 @@ class WebServiceFormMixin:
             return self.form_invalid(form)
         return super().form_valid(form)
 
-    def call_webservice(self, data):
-        raise NotImplementedError
+    def get_next_tab(self):
+        from admission.templatetags.admission import TAB_TREES
+
+        base_namespace = getattr(self, 'base_namespace', ':'.join(self.request.resolver_match.namespaces[:2]))
+        flat_tab_list = [child.name for tab, children in TAB_TREES[self.current_context].items() for child in children]
+        next_tab_name = flat_tab_list[flat_tab_list.index(self.request.resolver_match.url_name) + 1]
+        if self.admission_uuid:
+            # TODO add :update here
+            return resolve_url('{}:{}'.format(base_namespace, next_tab_name), pk=self.admission_uuid)
+        return resolve_url('{}:{}'.format(base_namespace, next_tab_name))
 
     def get_detail_url(self):
         base_namespace = getattr(self, 'base_namespace', ':'.join(self.request.resolver_match.namespaces[:2]))
         tab_name = self.request.resolver_match.url_name
         return resolve_url('{}:{}'.format(base_namespace, tab_name), pk=self.kwargs.get('pk'))
 
+    def call_webservice(self, data):
+        raise NotImplementedError
+
     def get_success_url(self):
         messages.info(self.request, _("Your data has been saved"))
-        pk = self.kwargs.get('pk')
-        if pk:
+
+        if not self.kwargs.get('pk', None) or (
+            hasattr(self, 'admission') and self.admission.matricule_candidat == self.request.user.person.global_id
+        ):
+            # Redirect on next tab in line if submit_and_continue and not creating
+            if '_submit_and_continue' in self.request.POST and not getattr(self, 'created_uuid', None):
+                return self.get_next_tab()
+
+        if self.kwargs.get('pk'):
+            # if this is the candidate saving and form
             # On update, redirect on admission detail
             return self.get_detail_url()
         # On creation, display a message and redirect on same form
@@ -91,10 +110,11 @@ class WebServiceFormMixin:
 class FormMixinWithSpecificQuestions:
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['form_item_configurations'] = [
-            configuration.to_dict()
-            for configuration in getattr(self, 'specific_questions', [])
-        ] if self.kwargs.get('pk') else []
+        kwargs['form_item_configurations'] = (
+            [configuration.to_dict() for configuration in getattr(self, 'specific_questions', [])]
+            if self.kwargs.get('pk')
+            else []
+        )
         return kwargs
 
 

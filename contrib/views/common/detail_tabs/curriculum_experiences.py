@@ -87,13 +87,15 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
 
     def get(self, request, *args, **kwargs):
         if not self.admission_uuid:
-            return render(request, 'admission/details/need_training_choice.html', {'view': self})
+            # Trick template to not display form and buttons
+            context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
+            return render(request, 'admission/forms/need_training_choice.html', context)
         return super().get(request, *args, **kwargs)
 
 
 class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMixin, TemplateView):
     urlpatterns = {'professional_read': 'professional/<uuid:experience_id>/'}
-    template_name = 'admission/doctorate/details/curriculum_professional_experience.html'
+    template_name = 'admission/details/curriculum_professional_experience.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -103,7 +105,7 @@ class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMix
 
 class AdmissionCurriculumEducationalExperienceDetailView(AdmissionCurriculumMixin, TemplateView):
     urlpatterns = {'educational_read': 'educational/<uuid:experience_id>/'}
-    template_name = 'admission/doctorate/details/curriculum_educational_experience.html'
+    template_name = 'admission/details/curriculum_educational_experience.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -45,7 +45,7 @@ DEFAULT_MAX_NB_DOCUMENTS = 1
 class PlainTextWidget(forms.Widget):
     """Widget to display a text content inside a paragraph."""
 
-    template_name = 'admission/config/plain_text_widget.html'
+    template_name = 'admission/widgets/plain_text_widget.html'
 
     def __init__(self, content, css_class='', **kwargs):
         self.content = content
@@ -63,7 +63,7 @@ class PlainTextWidget(forms.Widget):
 
 
 class ConfigurableFormItemWidget(forms.MultiWidget):
-    template_name = 'admission/config/multiwidget.html'
+    template_name = 'admission/widgets/multiwidget.html'
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)

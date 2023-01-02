@@ -267,7 +267,7 @@ def get_current_tab_name(context):
     return match.url_name
 
 
-@register.inclusion_tag('admission/admission_tabs_bar.html', takes_context=True)
+@register.inclusion_tag('admission/tags/admission_tabs_bar.html', takes_context=True)
 def admission_tabs(context, admission=None, with_submit=False):
     """Display current tabs given context (if with_submit=True, display the submit button within tabs)"""
     current_tab_name = get_current_tab_name(context)
@@ -309,7 +309,7 @@ def get_current_tab(context):
     )
 
 
-@register.inclusion_tag('admission/admission_subtabs_bar.html', takes_context=True)
+@register.inclusion_tag('admission/tags/admission_subtabs_bar.html', takes_context=True)
 def admission_subtabs(context, admission=None, tabs=None):
     """Display current subtabs given context (if tabs is specified, display provided tabs)"""
     current_tab_name = get_current_tab_name(context)
@@ -339,7 +339,7 @@ def get_detail_url(context, tab_name, pk, base_namespace=''):
     return resolve_url('{}:{}'.format(base_namespace, tab_name), pk=pk)
 
 
-@register.inclusion_tag('admission/field_data.html')
+@register.inclusion_tag('admission/tags/field_data.html')
 def field_data(
     name,
     data=None,
@@ -377,7 +377,7 @@ def field_data(
     }
 
 
-@register_panel('panel.html', takes_context=True)
+@register_panel('admission/tags/panel.html', takes_context=True)
 def panel(context, title='', title_level=4, additional_class='', **kwargs):
     """
     Template tag for panel
@@ -451,7 +451,7 @@ def has_error_in_tab(context, admission, tab):
     )
 
 
-@register.inclusion_tag('admission/bootstrap_field_with_tooltip.html')
+@register.inclusion_tag('admission/tags/bootstrap_field_with_tooltip.html')
 def bootstrap_field_with_tooltip(field, classes='', show_help=False):
     return {
         'field': field,
@@ -677,7 +677,7 @@ def get_country_name(context, iso_code: str):
     return getattr(result, translated_field, '')
 
 
-@register.inclusion_tag('admission/config/multiple_field_data.html')
+@register.inclusion_tag('admission/tags/multiple_field_data.html')
 def multiple_field_data(configurations, data, title=_('Specific questions')):
     """Display the answers of the specific questions based on a list of configurations and a data dictionary"""
     current_language = get_language()

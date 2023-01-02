@@ -68,9 +68,9 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
         raise NotImplementedError
 
     def get_context_data(self, **kwargs):
-        kwargs['form'] = None
         kwargs['extra_form_attrs'] = ' autocomplete="off"'
         kwargs['forms'] = self.get_forms()
+        kwargs['form'] = kwargs['forms'][0]  # Trick template to display form tag and buttons
         if self.display_pool_questions_form:
             kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
             kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']

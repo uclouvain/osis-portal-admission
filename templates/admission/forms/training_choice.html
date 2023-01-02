@@ -1,4 +1,4 @@
-{% extends form_base_template|default:'admission/doctorate/form_tab_layout.html' %}
+{% extends base_template %}
 {% load bootstrap3 i18n admission static %}
 
 {% comment "License" %}
@@ -117,6 +117,10 @@
     {% panel _('Specific questions') %}
       {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
     {% endpanel %}
+  {% endif %}
+
+  {% if just_submitted %}
+    {% include "admission/modal/just_submitted_modal.html" %}
   {% endif %}
 {% endblock %}
 

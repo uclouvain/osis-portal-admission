@@ -1,5 +1,4 @@
-{% extends form_base_template %}
-{% load i18n static admission enums %}
+{% load i18n admission %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -25,23 +24,12 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block tab_content %}
-    <form class="osis-form" method="post" action="">
-        {% csrf_token %}
-        <p>
-            {% trans "Are you sure you want to cancel this request?" %}
-        </p>
-
-        <button
-                type="submit"
-                class="btn btn-danger"
-                {% if not admission|can_make_action:'destroy_proposition' %}disabled{% endif %}
-        >
-            {% trans "Confirm" %}
-        </button>
-        <a href="{% url 'admission:list' %}">
-            {% trans "Back to requests" %}
-        </a>
-
-    </form>
-{% endblock %}
+<ul class="nav nav-pills nav-stacked nav-grey">
+    {% for child in subtabs %}
+        {% if child.name == active_tab %}
+          {% include 'admission/admission_tab_entry.html' with tab=child no_status=no_status is_active=True %}
+        {% else %}
+          {% include 'admission/admission_tab_entry.html' with tab=child no_status=no_status %}
+        {% endif %}
+    {% endfor %}
+</ul>

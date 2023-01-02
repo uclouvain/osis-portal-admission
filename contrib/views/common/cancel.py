@@ -35,7 +35,7 @@ __all__ = ['AdmissionCancelView']
 
 
 class AdmissionCancelView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/cancel.html"
+    template_name = "admission/forms/cancel.html"
     form_class = Form
     service_mapping = {
         'doctorate': AdmissionPropositionService.cancel_proposition,

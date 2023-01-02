@@ -84,7 +84,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
         'professional_update': 'professional/<uuid:experience_id>/update',
         'professional_create': 'professional/create',
     }
-    template_name = 'admission/doctorate/forms/curriculum_professional_experience.html'
+    template_name = 'admission/forms/curriculum_professional_experience.html'
     form_class = DoctorateAdmissionCurriculumProfessionalExperienceForm
     url_hash = '#non-academic-activities'
 
@@ -131,7 +131,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
 class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFormMixin, FormView):
     urlpatterns = {'professional_delete': 'professional/<uuid:experience_id>/delete'}
     form_class = forms.Form
-    template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
+    template_name = 'admission/forms/curriculum_experience_delete.html'
     url_hash = '#non-academic-activities'
 
     def call_webservice(self, _):
@@ -154,7 +154,7 @@ class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumForm
         'educational_tab': True,
     }
     form_class = forms.Form
-    template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
+    template_name = 'admission/forms/curriculum_experience_delete.html'
     url_hash = '#academic-activities'
 
     def call_webservice(self, _):
@@ -176,7 +176,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         'educational_update': 'educational/<uuid:experience_id>/update',
         'educational_create': 'educational/create',
     }
-    template_name = 'admission/doctorate/forms/curriculum_educational_experience.html'
+    template_name = 'admission/forms/curriculum_educational_experience.html'
     url_hash = '#academic-activities'
 
     def get_context_data(self, **kwargs):
@@ -220,13 +220,14 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         # in the default form and will be reset in the duplicated form, allowing osis-document to detect the file
         # fields in this new form, and set up the appropriate VueJS components.
         context_data["empty_form"] = loader.render_to_string(
-            template_name='admission/doctorate/includes/curriculum_experience_year_form.html',
+            template_name='admission/includes/curriculum_experience_year_form.html',
             context={
                 'year_form': year_formset.empty_form,
                 'next_year': FOLLOWING_FORM_SET_PREFIX,
             },
         ).replace(OSIS_DOCUMENT_UPLOADER_CLASS, OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX)
 
+        context_data['form'] = base_form  # Trick template to display form tag
         context_data['base_form'] = base_form
         context_data['year_formset'] = year_formset
         context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION

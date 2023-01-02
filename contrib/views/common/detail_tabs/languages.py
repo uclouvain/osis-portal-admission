@@ -35,7 +35,7 @@ __all__ = ['AdmissionLanguagesDetailView']
 
 
 class AdmissionLanguagesDetailView(LoadDossierViewMixin, TemplateView):
-    template_name = 'admission/doctorate/details/languages.html'
+    template_name = 'admission/details/languages.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

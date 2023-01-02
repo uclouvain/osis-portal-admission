@@ -1,6 +1,5 @@
 {% extends base_template %}
-
-{% load i18n admission waffle_tags %}
+{% load i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -27,17 +26,7 @@
 {% endcomment %}
 
 {% block tab_content %}
-  {% panel _('Education you are applying for') %}
-    {% field_data _('Education name') admission.formation.intitule %}
-    {% field_data _('Campus') admission.formation.campus %}
-    {% switch 'debug' %}
-      {% field_data _('Academic year') admission.formation.annee|get_academic_year css_class='debug-content' %}
-    {% endswitch %}
-  {% endpanel %}
-
-  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
-
-  {% if just_submitted %}
-    {% include "admission/modal/just_submitted_modal.html" %}
-  {% endif %}
+  <div class="alert alert-warning">
+    <p>{% translate "You must choose your training before filling in your previous experience." %}</p>
+  </div>
 {% endblock %}

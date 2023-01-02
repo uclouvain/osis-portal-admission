@@ -38,7 +38,7 @@ __namespace__ = False
 
 class AdmissionListView(LoginRequiredMixin, TemplateView):
     urlpatterns = {'list': ''}
-    template_name = "admission/doctorate/admission_list.html"
+    template_name = "admission/admission_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

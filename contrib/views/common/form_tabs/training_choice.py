@@ -73,7 +73,7 @@ class AdmissionTrainingChoiceFormView(
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.uuid: Optional[str] = None
+        self.created_uuid: Optional[str] = None
         self.training_type: Optional[TypeFormation] = None
 
     def get_form_kwargs(self):
@@ -148,7 +148,7 @@ class AdmissionTrainingChoiceFormView(
             namespace = NAMESPACE_KEY_BY_ADMISSION_TYPE[self.training_type].replace('-', '_')
             method = getattr(AdmissionPropositionService, f"create_{namespace}_proposition")
             response = method(person=self.person, data=data)
-            self.uuid = response.get('uuid')
+            self.created_uuid = response.get('uuid')
         else:
             # Update the choice
             {
@@ -165,7 +165,7 @@ class AdmissionTrainingChoiceFormView(
         messages.info(self.request, _("Your data has been saved"))
         return resolve_url(
             'admission:{}:training-choice'.format(NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type)),
-            pk=self.uuid or self.admission_uuid,
+            pk=self.created_uuid or self.admission_uuid,
         )
 
     def get_initial(self):
