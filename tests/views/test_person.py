@@ -136,6 +136,38 @@ class PersonViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification.assert_called()
 
+    def test_form_redirect_with_continue(self):
+        self.client.force_login(self.person.user)
+
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name="John",
+            last_name="Doe",
+            id_card=[],
+            passport=[],
+            id_photo=[],
+            birth_year="1990",
+        )
+        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
+        self.mock_countries_api = countries_api_patcher.start()
+        self.addCleanup(countries_api_patcher.stop)
+
+        response = self.client.post(
+            resolve_url('admission:create:person'),
+            {
+                'first_name': "Joe",
+                'last_name': "Doe",
+                'sex': 'M',
+                'gender': 'X',
+                'civil_state': CivilState.MARRIED.name,
+                'birth_country': 'BE',
+                'birth_place': 'Louvain-la-Neuve',
+                'birth_date': datetime.date(1990, 1, 1),
+                '_submit_and_continue': '',
+            },
+        )
+
+        self.assertRedirects(response, resolve_url('admission:create:coordonnees'))
+
     def test_update(self):
         url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.client.force_login(self.person.user)

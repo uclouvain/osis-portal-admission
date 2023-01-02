@@ -1,4 +1,5 @@
-{% load i18n admission %}
+{% extends base_template %}
+{% load i18n static admission index academic_year_display %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -25,33 +26,19 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% if not admission %}
-  {# We've not submitted an admission yet, display creation siblings #}
-  {% url 'admission:create:'|add:tab.name as tab_url %}
-{% elif admission|can_read_tab:tab %}
-  {# By default, display detail siblings #}
-  {% url base_namespace|add:':'|add:tab.name pk=admission_uuid as tab_url %}
-{% endif %}
-<li
-  role="presentation"
-  {% if is_active %}class="active"
-  {% elif not tab_url %}class="hidden"{% endif %}
->
-  <a href="{{ tab_url }}">
-    {% firstof icon tab.icon as icon %}
-    {% firstof label tab.label as label %}
-    {% if icon %}
-      <span class="fa fa-{{ icon }}"></span>
-    {% endif %}
-    {{ label }}
-    {% if not no_status and admission and tab.name != 'confirm' %}
-      {% firstof parent.name tab.name as error_tab_name %}
-      {% has_error_in_tab admission=admission tab=error_tab_name as has_error %}
-      {% if has_error %}
-        <span class="fa fa-times-circle text-danger"></span>
-      {% else %}
-        <span class="fa fa-check-circle text-success"></span>
-      {% endif %}
-    {% endif %}
-  </a>
-</li>
+{% block tab_content %}
+  {% if languages_knowledge %}
+    {% for language_knowledge in languages_knowledge %}
+      {% panel language_knowledge.language %}
+        {% field_data _("Listening comprehension") language_knowledge.listening_comprehension %}
+        {% field_data _("Speaking ability") language_knowledge.speaking_ability %}
+        {% field_data _("Writing ability") language_knowledge.writing_ability %}
+        {% if language_knowledge.certificate %}
+          {% field_data _("Certificate of language knowledge") language_knowledge.certificate %}
+        {% endif %}
+      {% endpanel %}
+    {% endfor %}
+  {% else %}
+    <p>{% trans "No languages knowledge provided." %}</p>
+  {% endif %}
+{% endblock %}

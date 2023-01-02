@@ -40,7 +40,7 @@ __all__ = ['AdmissionEducationDetailView']
 
 
 class AdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
-    template_name = 'admission/doctorate/details/education.html'
+    template_name = 'admission/details/education.html'
     service_mapping = {
         'create': AdmissionPersonService,
         'doctorate': AdmissionPersonService,

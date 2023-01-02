@@ -56,6 +56,7 @@ class TrainingTestCase(TestCase):
         self.mock_api.return_value.retrieve_doctorate_dto.return_value = Mock(
             links={'add_training': {'url': 'ok'}},
             reference='21-300001',
+            doctorat=None,
             intitule_formation='Informatique',
             statut=ChoixStatutDoctorat.ADMITTED.name,
             sigle_formation='INFO',

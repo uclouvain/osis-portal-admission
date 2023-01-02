@@ -178,7 +178,7 @@ def get_example_text(example: str):
 class SelectOrOtherWidget(forms.MultiWidget):
     """Form widget to handle a configurable (from CDDConfiguration) list of choices, or other"""
 
-    template_name = 'admission/doctorate/forms/select_or_other_widget.html'
+    template_name = 'admission/widgets/select_or_other_widget.html'
     media = forms.Media(
         js=[
             'js/dependsOn.min.js',

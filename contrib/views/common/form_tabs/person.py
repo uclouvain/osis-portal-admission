@@ -47,7 +47,7 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         'general-education': GeneralEducationAdmissionPersonService,
         'continuing-education': ContinuingEducationAdmissionPersonService,
     }
-    template_name = 'admission/doctorate/forms/person.html'
+    template_name = 'admission/forms/person.html'
     form_class = DoctorateAdmissionPersonForm
 
     def get_context_data(self, **kwargs):

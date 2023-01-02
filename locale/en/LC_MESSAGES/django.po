@@ -890,9 +890,6 @@ msgstr ""
 msgid "Create new admission"
 msgstr ""
 
-msgid "Create new doctorate admission"
-msgstr ""
-
 msgctxt "an admission"
 msgid "Created at:"
 msgstr ""
@@ -1160,7 +1157,7 @@ msgstr ""
 msgid "Event website"
 msgstr ""
 
-msgid "Exit"
+msgid "Exit without saving"
 msgstr ""
 
 msgid "Expected date of graduation (signed document)"
@@ -2292,6 +2289,13 @@ msgid "Satisfaction"
 msgstr "Satisfaction"
 
 msgid "Save"
+msgstr ""
+
+msgctxt "admission"
+msgid "Save"
+msgstr ""
+
+msgid "Save and continue"
 msgstr ""
 
 msgid "Scholarship"

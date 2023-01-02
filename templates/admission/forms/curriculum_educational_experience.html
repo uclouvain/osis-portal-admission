@@ -1,4 +1,4 @@
-{% extends form_base_template|default:"admission/doctorate/form_tab_layout.html" %}
+{% extends base_template %}
 {% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
@@ -25,6 +25,8 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+{% block submit_and_continue %}{# Removed #}{% endblock %}
+
 {% block form %}
   {% bootstrap_form_errors base_form %}
   {% bootstrap_formset_errors year_formset %}
@@ -37,7 +39,7 @@
     {% display _("Adding an academic training") as header_title %}
   {% endif %}
   <div class="panel panel-default">
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_update=True educational_tab=True title=header_title %}
+    {% include 'admission/includes/curriculum_experience_header.html' with on_update=True educational_tab=True title=header_title %}
     <div class="panel-body">
       <div class="row">
         <div class="col-md-4 required_field">
@@ -125,7 +127,7 @@
           </tr>
         </thead>
         {% for year_form in year_formset %}
-          {% include 'admission/doctorate/includes/curriculum_experience_year_form.html' with year_form=year_form next_year=year_form.academic_year.value|add:1  %}
+          {% include 'admission/includes/curriculum_experience_year_form.html' with year_form=year_form next_year=year_form.academic_year.value|add:1  %}
         {% endfor %}
         <tfoot id="empty-formset" class="hidden">
           <tr>

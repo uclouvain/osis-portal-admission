@@ -1,4 +1,4 @@
-{% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
+{% extends base_template %}
 {% load i18n admission enums %}
 
 {% comment "License" %}
@@ -28,7 +28,7 @@
 
 {% block tab_content %}
   <div class="panel panel-default">
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True title=_("Consultation of an academic training") %}
+    {% include 'admission/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True title=_("Consultation of an academic training") %}
     <div class="panel-body">
       <div class="row">
         <div class="col-md-6">

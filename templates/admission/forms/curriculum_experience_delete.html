@@ -1,4 +1,4 @@
-{% extends detail_base_template|default:"admission/doctorate/detail_tab_layout.html" %}
+{% extends base_template %}
 {% load bootstrap3 i18n admission enums %}
 
 {% comment "License" %}
@@ -44,7 +44,7 @@
         {% endblocktranslate %}
       {% endif %}
     {% endif %}
-    {% include 'admission/doctorate/includes/curriculum_experience_header.html' with educational_tab=educational_tab title=header_title %}
+    {% include 'admission/includes/curriculum_experience_header.html' with educational_tab=educational_tab title=header_title %}
     <div class="panel-body">
       <p>{{ question }}</p>
       {% bootstrap_form_errors form %}

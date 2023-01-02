@@ -1013,9 +1013,6 @@ msgstr "Créer et gérer ma demande d'inscription UCLouvain"
 msgid "Create new admission"
 msgstr "Créer une nouvelle admission"
 
-msgid "Create new doctorate admission"
-msgstr "Créer une nouvelle admission en doctorat"
-
 msgctxt "an admission"
 msgid "Created at:"
 msgstr "Créée le :"
@@ -1302,8 +1299,8 @@ msgstr "Description de l'événement"
 msgid "Event website"
 msgstr "Site web de l'événement"
 
-msgid "Exit"
-msgstr "Quitter"
+msgid "Exit without saving"
+msgstr "Quitter sans enregistrer"
 
 msgid "Expected date of graduation (signed document)"
 msgstr "Date (prévue) de délivrance du diplôme (document signé)"
@@ -2544,6 +2541,13 @@ msgstr "Satisfaction"
 
 msgid "Save"
 msgstr "Enregistrer"
+
+msgctxt "admission"
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Save and continue"
+msgstr "Enregistrer et continuer"
 
 msgid "Scholarship"
 msgstr "Boursier"

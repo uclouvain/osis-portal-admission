@@ -42,13 +42,15 @@ __all__ = ['AdmissionLanguagesFormView']
 
 
 class AdmissionLanguagesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/forms/languages.html"
+    template_name = "admission/forms/languages.html"
     success_url = reverse_lazy("admission:list")
     form_class = DoctorateAdmissionLanguagesKnowledgeFormSet
 
     def get(self, request, *args, **kwargs):
         if not self.admission_uuid:
-            return render(request, 'admission/details/need_training_choice.html', {'view': self})
+            # Trick template to not display form and buttons
+            context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
+            return render(request, 'admission/forms/need_training_choice.html', context)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
