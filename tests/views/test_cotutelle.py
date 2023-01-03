@@ -31,6 +31,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.contrib.enums.projet import ChoixStatutProposition
+from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
 
 
@@ -112,7 +113,7 @@ class CotutelleTestCase(TestCase):
         self.assertEqual(response.context['form'].initial['cotutelle'], None)
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
     def test_cotutelle_update_with_data(self, *args):
         response = self.client.post(
             self.url,

@@ -35,8 +35,8 @@ from admission.contrib.enums.specific_question import (
     TypeChampTexteFormulaire,
     CleConfigurationItemFormulaire,
 )
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField, DEFAULT_MIME_TYPES
 from admission.utils import get_uuid_value
-from osis_document.contrib import FileUploadField
 
 
 DEFAULT_MAX_NB_DOCUMENTS = 1
@@ -144,7 +144,10 @@ def _get_field_from_configuration(configuration, current_language):
                 CleConfigurationItemFormulaire.NOMBRE_MAX_DOCUMENTS.name,
                 DEFAULT_MAX_NB_DOCUMENTS,
             ),
-            mimetypes=configuration['configuration'].get(CleConfigurationItemFormulaire.TYPES_MIME_FICHIER.name),
+            mimetypes=configuration['configuration'].get(
+                CleConfigurationItemFormulaire.TYPES_MIME_FICHIER.name,
+                DEFAULT_MIME_TYPES,
+            ),
         )
 
     else:

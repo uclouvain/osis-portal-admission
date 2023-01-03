@@ -54,8 +54,8 @@ from admission.contrib.forms import (
     FORM_SET_PREFIX,
     PDF_MIME_TYPE,
     NoInput,
+    AdmissionFileUploadField as FileUploadField,
 )
-from osis_document.contrib.forms import FileUploadField
 
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
@@ -65,7 +65,6 @@ CurriculumField = partial(
     FileUploadField,
     label=_('Curriculum vitae detailed, dated and signed'),
     max_files=1,
-    mimetypes=[PDF_MIME_TYPE],
     required=False,
 )
 

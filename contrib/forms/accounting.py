@@ -31,7 +31,6 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _, ngettext
 from localflavor.generic.forms import BICFormField, IBAN_MIN_LENGTH
 
-from osis_document.contrib import FileUploadField
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.accounting import (
     TypeSituationAssimilation,
@@ -44,7 +43,7 @@ from admission.contrib.enums.accounting import (
     ChoixTypeCompteBancaire,
     LienParente,
 )
-from admission.contrib.forms import RadioBooleanField, get_example_text
+from admission.contrib.forms import RadioBooleanField, get_example_text, AdmissionFileUploadField as FileUploadField
 from admission.templatetags.admission import get_academic_year
 from reference.services.iban_validator import (
     IBANValidatorService,

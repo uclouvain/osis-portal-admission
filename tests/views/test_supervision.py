@@ -33,6 +33,7 @@ from rest_framework import status
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
+from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 from osis_admission_sdk import ApiException
@@ -346,7 +347,7 @@ class SupervisionTestCase(TestCase):
 
     @patch(
         'osis_document.api.utils.get_remote_metadata',
-        return_value={'name': 'myfile', 'mimetype': 'application/pdf'},
+        return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
     )
     def test_should_approval_by_pdf_redirect_without_errors(self, *args):
         url = resolve_url("admission:doctorate:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

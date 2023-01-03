@@ -43,6 +43,7 @@ from admission.contrib.enums.secondary_studies import (
     ForeignDiplomaTypes,
     GotDiploma,
 )
+from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.academic_year import get_current_year
 from base.tests.factories.person import PersonFactory
@@ -117,7 +118,10 @@ class EducationTestCase(TestCase):
         patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch("osis_document.api.utils.get_remote_metadata", return_value={"name": "myfile"})
+        patcher = patch(
+            "osis_document.api.utils.get_remote_metadata",
+            return_value={"name": "myfile", 'mimetype': PDF_MIME_TYPE},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 

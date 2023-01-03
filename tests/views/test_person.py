@@ -33,6 +33,7 @@ from rest_framework import status
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.person import CivilState
+from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.person import YES, NO
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
@@ -81,7 +82,10 @@ class PersonViewTestCase(TestCase):
         patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+        patcher = patch(
+            'osis_document.api.utils.get_remote_metadata',
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 

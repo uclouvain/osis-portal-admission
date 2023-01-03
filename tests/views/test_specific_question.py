@@ -31,6 +31,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.contrib.enums.specific_question import Onglets
+from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests.views.test_training_choice import AdmissionTrainingChoiceFormViewTestCase
 
 
@@ -80,7 +81,7 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.assertContains(response, _("Reorientation"))
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
     def test_get_page_with_modification(self, remote_metadata, remote_token):
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
@@ -187,7 +188,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         )
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
     def test_with_reorientation(self, *__):
         self.mock_proposition_api.return_value.list_doctorate_specific_questions.return_value = []
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
@@ -269,7 +270,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         )
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
     def test_with_modification(self, *__):
         self.mock_proposition_api.return_value.list_doctorate_specific_questions.return_value = []
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {

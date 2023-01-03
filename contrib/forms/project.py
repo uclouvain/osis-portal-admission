@@ -46,9 +46,9 @@ from admission.contrib.forms import (
     SelectOrOtherField,
     get_thesis_location_initial_choices,
     get_scholarship_choices,
+    AdmissionFileUploadField as FileUploadField,
 )
 from admission.services.autocomplete import AdmissionAutocompleteService
-from osis_document.contrib import FileUploadField
 
 SCIENCE_DOCTORATE = 'SC3DP'
 

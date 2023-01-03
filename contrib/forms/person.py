@@ -40,8 +40,8 @@ from admission.contrib.forms import (
     get_example_text,
     get_past_academic_years_choices,
     RadioBooleanField,
+    AdmissionFileUploadField as FileUploadField,
 )
-from osis_document.contrib.forms import FileUploadField
 
 from admission.utils import force_title
 

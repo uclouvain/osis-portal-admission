@@ -37,6 +37,7 @@ from django.views.generic import FormView
 from admission.contrib.enums.specific_question import TypeItemFormulaire
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 
+from admission.contrib.forms import PDF_MIME_TYPE
 from admission.templatetags.admission import (
     TAB_TREES,
     Tab,
@@ -161,7 +162,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertIn(str(_('Personal data')), rendered)
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
     def test_field_data_with_list(self, *args):
         template = Template("{% load admission %}{% field_data 'title' data %}")
         rendered = template.render(Context({'data': ['55375049-9d61-4c11-9f41-7460463a5ae3']}))
