@@ -31,8 +31,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.languages_knowledge import LanguageKnowledgeGrade
-from admission.contrib.forms import get_language_initial_choices
-from osis_document.contrib import FileUploadField
+from admission.contrib.forms import get_language_initial_choices, AdmissionFileUploadField as FileUploadField
 
 MANDATORY_LANGUAGES = ["EN", "FR"]
 
@@ -101,7 +100,6 @@ class DoctorateAdmissionLanguageForm(forms.Form):
         ),
         required=False,
         max_files=1,
-        mimetypes=['application/pdf'],
     )
 
     def __init__(self, *args, person=None, **kwargs):

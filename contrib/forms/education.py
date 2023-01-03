@@ -43,11 +43,11 @@ from admission.contrib.forms import (
     get_language_initial_choices,
     get_past_academic_years_choices,
     EMPTY_CHOICE,
+    AdmissionFileUploadField as FileUploadField,
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 from base.tests.factories.academic_year import get_current_year
-from osis_document.contrib import FileUploadField
 
 
 class DoctorateAdmissionEducationForm(ConfigurableFormMixin):

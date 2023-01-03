@@ -43,6 +43,7 @@ from admission.services.reference import (
 from admission.services.scholarship import AdmissionScholarshipService
 from admission.utils import format_entity_title, format_high_school_title, format_scholarship
 from base.tests.factories.academic_year import get_current_year
+from osis_document.contrib import FileUploadField
 
 EMPTY_CHOICE = (('', ' - '),)
 EMPTY_VALUE = '__all__'
@@ -51,6 +52,9 @@ FOLLOWING_FORM_SET_PREFIX = '__prefix_1__'
 OSIS_DOCUMENT_UPLOADER_CLASS = 'document-uploader'
 OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX = '__{}__'.format(OSIS_DOCUMENT_UPLOADER_CLASS)
 PDF_MIME_TYPE = 'application/pdf'
+JPEG_MIME_TYPE = 'image/jpeg'
+PNG_MIME_TYPE = 'image/png'
+DEFAULT_MIME_TYPES = [PDF_MIME_TYPE, JPEG_MIME_TYPE, PNG_MIME_TYPE]
 
 
 def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):
@@ -168,6 +172,12 @@ RadioBooleanField = partial(
     choices=((True, _('Yes')), (False, _('No'))),
     widget=forms.RadioSelect,
     empty_value=None,
+)
+
+
+AdmissionFileUploadField = partial(
+    FileUploadField,
+    mimetypes=DEFAULT_MIME_TYPES,
 )
 
 

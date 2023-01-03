@@ -29,8 +29,7 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.enums.supervision import DecisionApprovalEnum
-from admission.contrib.forms import get_thesis_institute_initial_choices
-from osis_document.contrib.forms import FileUploadField
+from admission.contrib.forms import get_thesis_institute_initial_choices, AdmissionFileUploadField as FileUploadField
 
 
 class DoctorateAdmissionSupervisionForm(forms.Form):

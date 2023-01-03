@@ -31,6 +31,7 @@ from django.test import TestCase, override_settings
 from rest_framework.status import HTTP_302_FOUND
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
+from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
 
 
@@ -176,7 +177,10 @@ class ConfirmationPaperFormViewTestCase(TestCase):
         patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+        patcher = patch(
+            'osis_document.api.utils.get_remote_metadata',
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -221,12 +225,15 @@ class ConfirmationPaperFormViewTestCase(TestCase):
     def test_post_a_confirmation_paper_with_a_phd_student(self):
         self.client.force_login(self.phd_student.user)
 
-        self.client.post(self.url, data={
-            'date': datetime.date(2022, 4, 4),
-            'rapport_recherche_0': ['f11'],
-            'avis_renouvellement_mandat_recherche_0': ['f22'],
-            'proces_verbal_ca_0': ['f33'],
-        })
+        self.client.post(
+            self.url,
+            data={
+                'date': datetime.date(2022, 4, 4),
+                'rapport_recherche_0': ['f11'],
+                'avis_renouvellement_mandat_recherche_0': ['f22'],
+                'proces_verbal_ca_0': ['f33'],
+            },
+        )
         # Call the API with the right data
         self.mock_api.return_value.submit_confirmation_paper.assert_called()
         self.mock_api.return_value.submit_confirmation_paper.assert_called_with(
@@ -236,7 +243,6 @@ class ConfirmationPaperFormViewTestCase(TestCase):
                 'rapport_recherche': ['f11'],
                 'avis_renouvellement_mandat_recherche': ['f22'],
                 'proces_verbal_ca': ['f33'],
-
             },
             **self.api_default_params,
         )
@@ -280,10 +286,13 @@ class ConfirmationPaperFormViewTestCase(TestCase):
     def test_post_a_confirmation_paper_with_another_user(self):
         self.client.force_login(self.promoter.user)
 
-        self.client.post(self.url, data={
-            'avis_renouvellement_mandat_recherche_0': ['f22'],
-            'proces_verbal_ca_0': ['f33'],
-        })
+        self.client.post(
+            self.url,
+            data={
+                'avis_renouvellement_mandat_recherche_0': ['f22'],
+                'proces_verbal_ca_0': ['f33'],
+            },
+        )
         # Call the API with the right data
         self.mock_api.return_value.complete_confirmation_paper_by_promoter.assert_called()
         self.mock_api.return_value.complete_confirmation_paper_by_promoter.assert_called_with(
@@ -291,7 +300,6 @@ class ConfirmationPaperFormViewTestCase(TestCase):
             complete_confirmation_paper_by_promoter_command={
                 'avis_renouvellement_mandat_recherche': ['f22'],
                 'proces_verbal_ca': ['f33'],
-
             },
             **self.api_default_params,
         )

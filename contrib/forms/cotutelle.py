@@ -26,9 +26,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from osis_document.contrib import FileUploadField
-
 from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 
 
 class DoctorateAdmissionCotutelleForm(forms.Form):

@@ -47,6 +47,7 @@ from admission.contrib.enums import (
 )
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import ChoixStatutProposition, ChoixStatutPropositionFormationGenerale
+from admission.contrib.forms import PDF_MIME_TYPE
 
 from base.tests.factories.person import PersonFactory
 from reference.services.iban_validator import IBANValidatorException, IBANValidatorRequestException
@@ -141,7 +142,10 @@ class DoctorateAccountingViewTestCase(TestCase):
         patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch("osis_document.api.utils.get_remote_metadata", return_value={"name": "myfile"})
+        patcher = patch(
+            'osis_document.api.utils.get_remote_metadata',
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -533,7 +537,10 @@ class GeneralAccountingViewTestCase(TestCase):
         patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch("osis_document.api.utils.get_remote_metadata", return_value={"name": "myfile"})
+        patcher = patch(
+            "osis_document.api.utils.get_remote_metadata",
+            return_value={"name": "myfile", 'mimetype': PDF_MIME_TYPE},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -1509,7 +1516,10 @@ class ContinuingAccountingViewTestCase(TestCase):
         patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch("osis_document.api.utils.get_remote_metadata", return_value={"name": "myfile"})
+        patcher = patch(
+            "osis_document.api.utils.get_remote_metadata",
+            return_value={"name": "myfile", 'mimetype': PDF_MIME_TYPE},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 

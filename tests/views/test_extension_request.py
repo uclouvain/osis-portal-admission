@@ -30,6 +30,7 @@ from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
+from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
 
 
@@ -172,7 +173,10 @@ class ExtensionRequestFormViewTestCase(TestCase):
         patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+        patcher = patch(
+            'osis_document.api.utils.get_remote_metadata',
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -213,11 +217,14 @@ class ExtensionRequestFormViewTestCase(TestCase):
     def test_post_a_confirmation_paper(self):
         self.client.force_login(self.phd_student.user)
 
-        self.client.post(self.url, data={
-            'nouvelle_echeance': datetime.date(2024, 1, 1),
-            'justification_succincte': 'My second reason',
-            'lettre_justification_0': ['f22'],
-        })
+        self.client.post(
+            self.url,
+            data={
+                'nouvelle_echeance': datetime.date(2024, 1, 1),
+                'justification_succincte': 'My second reason',
+                'lettre_justification_0': ['f22'],
+            },
+        )
         # Call the API with the right data
         self.mock_api.return_value.submit_confirmation_paper_extension_request.assert_called()
         self.mock_api.return_value.submit_confirmation_paper_extension_request.assert_called_with(
@@ -226,7 +233,6 @@ class ExtensionRequestFormViewTestCase(TestCase):
                 'nouvelle_echeance': datetime.date(2024, 1, 1),
                 'justification_succincte': 'My second reason',
                 'lettre_justification': ['f22'],
-
             },
             **self.api_default_params,
         )
