@@ -135,7 +135,6 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
     def setUpTestData(cls):
         super().setUpTestData()
         cls.url = resolve_url('admission:general-education:update:specific-questions', pk=cls.proposition_uuid)
-        cls.detail_url = resolve_url('admission:general-education:specific-questions', pk=cls.proposition_uuid)
 
     def setUp(self):
         super().setUp()
@@ -178,7 +177,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             data={'specific_questions-specific_question_answers_1': 'My updated answer'},
         )
 
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
             modifier_questions_specifiques_command={
@@ -224,7 +223,8 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-regular_registration_proof_0': 'uuid',
         }
         response = self.client.post(self.url, data)
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.url)
+
         self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
             uuid=self.proposition_uuid,
             pool_questions={
@@ -241,7 +241,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-regular_registration_proof_0': 'uuid',
         }
         response = self.client.post(self.url, data)
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
             uuid=self.proposition_uuid,
             pool_questions={
@@ -258,7 +258,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-regular_registration_proof_0': 'uuid',
         }
         response = self.client.post(self.url, data)
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
             uuid=self.proposition_uuid,
             pool_questions={
@@ -306,7 +306,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-registration_change_form_0': 'uuid',
         }
         response = self.client.post(self.url, data)
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
             uuid=self.proposition_uuid,
             pool_questions={
@@ -323,7 +323,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-registration_change_form_0': 'uuid',
         }
         response = self.client.post(self.url, data)
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
             uuid=self.proposition_uuid,
             pool_questions={
@@ -340,7 +340,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-registration_change_form_0': 'uuid',
         }
         response = self.client.post(self.url, data)
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
             uuid=self.proposition_uuid,
             pool_questions={
@@ -357,7 +357,6 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
     def setUpTestData(cls):
         super().setUpTestData()
         cls.url = resolve_url('admission:continuing-education:update:specific-questions', pk=cls.proposition_uuid)
-        cls.detail_url = resolve_url('admission:continuing-education:specific-questions', pk=cls.proposition_uuid)
 
     def test_get_page(self):
         response = self.client.get(self.url)
@@ -385,7 +384,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
             data={'specific_questions-specific_question_answers_1': 'My updated answer'},
         )
 
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
             modifier_questions_specifiques_command={

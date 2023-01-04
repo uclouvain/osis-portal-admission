@@ -181,26 +181,30 @@
         {% block submit_button_bottom %}
           {% get_current_tab as current_tab %}
           <div class="text-right form-group">
-            <button
-              type="submit" class="btn btn-default"
-              {% if cancel_url and not admission|can_update_tab:current_tab %}
-              disabled
-              {% endif %}
-            >
-              <i class="fa-solid fa-floppy-disk"></i>
-              {% trans "Save" context 'admission' %}
-            </button>
-            {% block submit_and_continue %}
+            {% block submit_button %}
               <button
-                type="submit" class="btn btn-primary"
-                name="_submit_and_continue"
+                type="submit" class="btn btn-default"
                 {% if cancel_url and not admission|can_update_tab:current_tab %}
                 disabled
                 {% endif %}
               >
-                <i class="fa-solid fa-forward-step"></i>
-                {% trans "Save and continue" %}
+                <i class="fa-solid fa-floppy-disk"></i>
+                {% trans "Save" context 'admission' %}
               </button>
+            {% endblock submit_button %}
+            {% block submit_and_continue %}
+              {% if not admission or admission.statut == 'IN_PROGRESS' %}
+                <button
+                  type="submit" class="btn btn-primary"
+                  name="_submit_and_continue"
+                  {% if cancel_url and not admission|can_update_tab:current_tab %}
+                  disabled
+                  {% endif %}
+                >
+                  <i class="fa-solid fa-forward-step"></i>
+                  {% trans "Save and continue" %}
+                </button>
+              {% endif %}
             {% endblock %}
           </div>
         {% endblock submit_button_bottom %}

@@ -27,6 +27,13 @@
 
 {% block submit_and_continue %}{# Removed #}{% endblock %}
 
+{% block submit_button %}
+  <button type="submit" class="btn btn-primary">
+    <i class="fa-solid fa-floppy-disk"></i>
+    {% trans "Save" context 'admission' %}
+  </button>
+{% endblock submit_button %}
+
 {% block form %}
   {% bootstrap_form_errors base_form %}
   {% bootstrap_formset_errors year_formset %}

@@ -31,7 +31,7 @@ from rest_framework import status
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import AdmissionType
-from admission.contrib.enums.training_choice import TypeFormation, TrainingType
+from admission.contrib.enums.training_choice import TypeFormation
 from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.views.test_training_choice import AdmissionTrainingChoiceFormViewTestCase
 
@@ -77,16 +77,11 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
             form.fields['general_education_training'].widget.choices,
             [
                 ('TR1-2020', 'Formation 1 (Louvain-La-Neuve) - TR1'),
-            ]
+            ],
         )
 
     def test_form_submitting_missing_fields(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'campus': EMPTY_VALUE,
-            },
-        )
+        response = self.client.post(self.url, data={'campus': EMPTY_VALUE})
 
         form = response.context['form']
 
@@ -180,10 +175,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
             **self.default_kwargs,
         )
 
-        self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:general-education:training-choice', pk=self.proposition_uuid),
-        )
+        self.assertRedirects(response, self.url)
 
 
 class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -221,19 +213,14 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
             form.fields['continuing_education_training'].widget.choices,
             [
                 ('TR2-2020', 'Formation 2 (Louvain-La-Neuve) - TR2'),
-            ]
+            ],
         )
 
         # Disabled fields
         self.assertTrue(form.fields['training_type'].disabled)
 
     def test_form_submitting_missing_fields(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'campus': EMPTY_VALUE,
-            },
-        )
+        response = self.client.post(self.url, data={'campus': EMPTY_VALUE})
 
         form = response.context['form']
 
@@ -264,10 +251,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
             **self.default_kwargs,
         )
 
-        self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:continuing-education:training-choice', pk=self.proposition_uuid),
-        )
+        self.assertRedirects(response, self.url)
 
 
 class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -305,17 +289,15 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
             ],
         )
 
-        self.assertEqual(
-            form.fields['doctorate_training'].widget.attrs['data-data'],
-            json.dumps([
-                {
-                    'id': 'TR3-2020',
-                    'sigle': 'TR3',
-                    'sigle_entite_gestion': 'CDE',
-                    'text': 'Formation 3 (Louvain-La-Neuve) - TR3',
-                }
-            ])
-        )
+        expected = [
+            {
+                'id': 'TR3-2020',
+                'sigle': 'TR3',
+                'sigle_entite_gestion': 'CDE',
+                'text': 'Formation 3 (Louvain-La-Neuve) - TR3',
+            }
+        ]
+        self.assertEqual(form.fields['doctorate_training'].widget.attrs['data-data'], json.dumps(expected))
 
         # Disabled fields
         self.assertTrue(form.fields['training_type'].disabled)
@@ -342,12 +324,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['admission_type'])
 
     def test_form_submitting_missing_scholarship_fields(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'has_erasmus_mundus_scholarship': True,
-            }
-        )
+        response = self.client.post(self.url, data={'has_erasmus_mundus_scholarship': True})
 
         form = response.context['form']
 
@@ -357,12 +334,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['erasmus_mundus_scholarship'])
 
     def test_form_submitting_missing_pre_admission_comment_field(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'admission_type': AdmissionType.PRE_ADMISSION.name,
-            }
-        )
+        response = self.client.post(self.url, data={'admission_type': AdmissionType.PRE_ADMISSION.name})
 
         form = response.context['form']
 
@@ -398,7 +370,4 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
             **self.default_kwargs,
         )
 
-        self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:doctorate:training-choice', pk=self.proposition_uuid),
-        )
+        self.assertRedirects(response, self.url)

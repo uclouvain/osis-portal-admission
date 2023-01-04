@@ -121,8 +121,8 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:continuing-education:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:continuing-education:update:training-choice', pk=self.proposition_uuid),
         )
 
     def test_general_education_form_submitting_without_required_fields(self):
@@ -203,8 +203,8 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:general-education:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:general-education:update:training-choice', pk=self.proposition_uuid),
         )
 
     def test_doctorate_education_form_submitting_without_required_fields(self):
@@ -326,8 +326,8 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:doctorate:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:doctorate:update:training-choice', pk=self.proposition_uuid),
         )
 
     def test_doctorate_education_form_submitting_cde(self):
@@ -362,8 +362,8 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:doctorate:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:doctorate:update:training-choice', pk=self.proposition_uuid),
         )
 
     def test_doctorate_education_form_submitting_cdss(self):
@@ -398,6 +398,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:doctorate:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:doctorate:update:training-choice', pk=self.proposition_uuid),
         )

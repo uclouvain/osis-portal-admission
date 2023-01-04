@@ -41,7 +41,7 @@ class ConfirmSubmitTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.url = resolve_url('admission:doctorate:confirm-submit', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        cls.url = resolve_url('admission:doctorate:update:confirm-submit', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         cls.default_kwargs = {
             'accept_language': ANY,
             'x_user_first_name': ANY,
@@ -107,6 +107,12 @@ class ConfirmSubmitTestCase(TestCase):
         }
         api.submit_proposition.return_value.to_dict.return_value = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
         self.addCleanup(propositions_api_patcher.stop)
+
+    def test_redirect(self):
+        response = self.client.get(
+            resolve_url('admission:doctorate:confirm-submit', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        )
+        self.assertRedirects(response, self.url)
 
     def test_get_without_errors(self):
         response = self.client.get(self.url)
@@ -224,14 +230,15 @@ class ConfirmSubmitTestCase(TestCase):
         api = self.mock_proposition_api.return_value
         verification = api.verify_continuing_education_proposition.return_value.to_dict
         verification.return_value = api.verify_proposition.return_value.to_dict.return_value
-        url = resolve_url('admission:continuing-education:confirm-submit', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        uuid = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
+        url = resolve_url('admission:continuing-education:update:confirm-submit', pk=uuid)
         data = {**self.data_ok, 'pool': 'CONTINUING_EDUCATION_ENROLLMENT'}
 
         response = self.client.post(url, data=data, follow=True)
-        url = resolve_url('admission:continuing-education:training-choice', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:continuing-education:training-choice', pk=uuid)
         self.assertRedirects(response, url)
         api.submit_continuing_education_proposition.assert_called_with(
-            uuid="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            uuid=uuid,
             submit_proposition={
                 'pool': 'CONTINUING_EDUCATION_ENROLLMENT',
                 'annee': 2020,

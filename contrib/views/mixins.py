@@ -25,6 +25,7 @@
 # ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import resolve_url
 from django.template.loader import select_template
 from django.utils.datetime_safe import date
 from django.utils.functional import cached_property
@@ -74,6 +75,18 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
     @cached_property
     def person(self):
         return self.request.user.person
+
+    def _get_url(self, tab_name, update=False):
+        """Return the URL for the given tab."""
+        mapping = {
+            'base_namespace': self.base_namespace,
+            'tab_name': tab_name,
+            'update': ':update' if update and self.kwargs.get('pk', None) else '',
+        }
+        pattern = '{base_namespace}{update}:{tab_name}'.format(**mapping)
+        if self.kwargs.get('pk', None):
+            return resolve_url(pattern, pk=self.admission_uuid)
+        return resolve_url(pattern)
 
 
 class LoadDossierViewMixin(LoadViewMixin):

@@ -30,6 +30,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums import ChoixStatutProposition
 from admission.tests.utils import MockLanguage
 from base.tests.factories.person import PersonFactory
 
@@ -218,11 +219,12 @@ class LanguagesTestCase(TestCase):
     def test_form_ok_redirects_on_continue(self):
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             matricule_candidat=self.person.global_id,
+            statut=ChoixStatutProposition.IN_PROGRESS.name,
             links={'update_accounting': {'url': 'ok'}},
         )
         response = self.client.post(self.form_url, {**self.data_ok, '_submit_and_continue': ''})
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_called()
-        redirect_url = resolve_url('admission:doctorate:accounting', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        redirect_url = resolve_url('admission:doctorate:update:accounting', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
         self.assertRedirects(response, redirect_url)
 
     def test_update_admission_in_context(self):

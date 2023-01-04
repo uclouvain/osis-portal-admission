@@ -163,8 +163,18 @@ class AdmissionTrainingChoiceFormView(
 
     def get_success_url(self):
         messages.info(self.request, _("Your data has been saved"))
+
+        tab_to_redirect = (
+            self.get_next_tab_name()
+            # Redirect on next tab in tab list if submit_and_continue
+            if '_submit_and_continue' in self.request.POST
+            else self.request.resolver_match.url_name
+        )
         return resolve_url(
-            'admission:{}:training-choice'.format(NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type)),
+            'admission:{namespace}:update:{tab_name}'.format(
+                namespace=NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type),
+                tab_name=tab_to_redirect,
+            ),
             pk=self.created_uuid or self.admission_uuid,
         )
 
