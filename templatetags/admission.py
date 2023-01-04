@@ -281,7 +281,11 @@ def admission_tabs(context, admission=None, with_submit=False):
         'admission': admission,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'with_submit': with_submit,
-        'no_status': admission and admission.statut not in ['SIGNING_IN_PROGRESS', 'IN_PROGRESS'],
+        'no_status': (
+            admission
+            and admission.statut
+            not in [ChoixStatutProposition.IN_PROGRESS.name, ChoixStatutProposition.SIGNING_IN_PROGRESS.name]
+        ),
         **context.flatten(),
     }
 
@@ -405,6 +409,11 @@ def get_dashboard_links(context):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+def split(string: str, delimiter=','):
+    return string.split(delimiter)
 
 
 @register.filter

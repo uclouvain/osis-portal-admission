@@ -29,8 +29,6 @@
 {% block submit_button_affix %}{% endblock %}
 
 {% block tab_content %}
-    {% csrf_token %}
-
     {% if admission.statut != "IN_PROGRESS" %}
       {% panel _("Summary of the proposition") %}
           {% if admission.fiche_archive_signatures_envoyees %}
@@ -45,25 +43,25 @@
       {% endpanel %}
     {% endif %}
 
-    {% if admission|can_make_action:'add_approval' and form and form.decision %}
+    {% if admission|can_make_action:'add_approval' and approval_form and approval_form.decision %}
       {% include "admission/modal/prevent_quitting_modal.html" %}
       {% panel _("Proposition approval") %}
-        {% bootstrap_form_errors form %}
+        {% bootstrap_form_errors approval_form %}
         <form class="osis-form approval-form" method="post" action="">
           {% csrf_token %}
-          {% bootstrap_field form.decision %}
-          {% bootstrap_field form.motif_refus %}
-          {% if form.institut_these %}
+          {% bootstrap_field approval_form.decision %}
+          {% bootstrap_field approval_form.motif_refus %}
+          {% if approval_form.institut_these %}
             <div id="institut_these">
-              {% bootstrap_field form.institut_these %}
+              {% bootstrap_field approval_form.institut_these %}
             </div>
           {% endif %}
           <div class="row">
             <div class="col-md-6">
-              {% bootstrap_field form.commentaire_interne %}
+              {% bootstrap_field approval_form.commentaire_interne %}
             </div>
             <div class="col-md-6">
-              {% bootstrap_field form.commentaire_externe %}
+              {% bootstrap_field approval_form.commentaire_externe %}
             </div>
           </div>
           {% bootstrap_button button_type="submit" content=_("Submit my decision") name="approval_submit" button_class="btn btn-primary" %}
@@ -87,19 +85,19 @@
         {% endfor %}
     {% endpanel %}
 
-    {% if admission|can_make_action:'add_member' and form and form.type %}
+    {% if admission|can_make_action:'add_member' and add_form and add_form.type %}
         <form class="osis-form" method="post" action="">
             {% csrf_token %}
-            {% bootstrap_form_errors form %}
+            {% bootstrap_form_errors add_form %}
             {% panel _("Add a promoter or a CA member") %}
                 <div class="row">
                     <div class="col-md-6">
-                        {% bootstrap_field form.type %}
+                        {% bootstrap_field add_form.type %}
                         <div id="person">
-                            {% bootstrap_field form.person %}
+                            {% bootstrap_field add_form.person %}
                         </div>
                         <div id="tutor">
-                            {% bootstrap_field form.tutor %}
+                            {% bootstrap_field add_form.tutor %}
                         </div>
                     </div>
                 </div>
@@ -123,13 +121,13 @@
             </button>
         </div>
 
-
         {% include "admission/doctorate/includes/request_signature_modal.html" %}
     {% endif %}
 {% endblock tab_content %}
 
 {% block script %}
-    {{ form.media }}
+    {{ add_form.media }}
+    {{ approval_form.media }}
     {{ approve_by_pdf_form.media }}
     <script type="application/javascript">
     $(function () {
@@ -140,7 +138,7 @@
         $('#tutor').length && $('#tutor').dependsOn({
             'input[name=type]': { values: ['MAIN_PROMOTER', 'PROMOTER'] },
         }, { duration: 0 });
-        // Hide the reason input if the the promoter approves the proposition
+        // Hide the reason input if the promoter approves the proposition
         $('#id_motif_refus').length && $('#id_motif_refus').dependsOn({
             'input[name="decision"]': {
                 values: ['DECLINED'],

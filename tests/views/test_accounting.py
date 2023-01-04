@@ -74,7 +74,7 @@ class DoctorateAccountingViewTestCase(TestCase):
             uuid=str(uuid.uuid4()),
             type_admission=AdmissionType.ADMISSION.name,
             reference='22-300001',
-            links={},
+            links={'update_accounting': {'url': 'ok'}},
             doctorat=MagicMock(
                 sigle='CS1',
                 annee=2020,
@@ -225,7 +225,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         response = self.client.post(self.update_url, data=data)
 
         # Check status and redirection
-        self.assertRedirects(response=response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.update_url)
 
         # Check API calls
         self.mock_proposition_api.return_value.update_accounting.assert_called_with(
@@ -259,7 +259,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         )
 
         # Check status and redirection
-        self.assertRedirects(response=response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.update_url)
 
         # Check API calls
         self.mock_proposition_api.return_value.update_accounting.assert_called_with(
@@ -295,7 +295,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         )
 
         # Check status and redirection
-        self.assertRedirects(response=response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.update_url)
 
         # Check API calls
         self.mock_proposition_api.return_value.update_accounting.assert_called_with(
@@ -443,7 +443,7 @@ class GeneralAccountingViewTestCase(TestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
-            links={},
+            links={'update_accounting': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=None,
             bourse_internationale=None,
@@ -631,7 +631,7 @@ class GeneralAccountingViewTestCase(TestCase):
         response = self.client.post(self.update_url, data=data)
 
         # Check status and redirection
-        self.assertRedirects(response=response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.update_url)
 
         # Check API calls
         command_params = {
@@ -1473,7 +1473,7 @@ class ContinuingAccountingViewTestCase(TestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
-            links={},
+            links={'update_accounting': {'url': 'ok'}},
             erreurs={},
             reponses_questions_specifiques={},
         )
@@ -1589,7 +1589,7 @@ class ContinuingAccountingViewTestCase(TestCase):
         response = self.client.post(self.update_url, data=data)
 
         # Check status and redirection
-        self.assertRedirects(response=response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.update_url)
 
         # Check API calls
         self.mock_proposition_api.return_value.update_continuing_accounting.assert_called_with(
@@ -1622,7 +1622,7 @@ class ContinuingAccountingViewTestCase(TestCase):
         )
 
         # Check status and redirection
-        self.assertRedirects(response=response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.update_url)
 
         # Check API calls
         self.mock_proposition_api.return_value.update_continuing_accounting.assert_called_with(
@@ -1657,7 +1657,7 @@ class ContinuingAccountingViewTestCase(TestCase):
         )
 
         # Check status and redirection
-        self.assertRedirects(response=response, expected_url=self.detail_url)
+        self.assertRedirects(response, self.update_url)
 
         # Check API calls
         self.mock_proposition_api.return_value.update_continuing_accounting.assert_called_with(

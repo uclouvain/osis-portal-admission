@@ -210,7 +210,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
-            links={},
+            links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=Mock(
                 uuid=cls.double_degree_scholarship.uuid,
@@ -247,7 +247,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
-            links={},
+            links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=None,
             bourse_internationale=None,
@@ -270,7 +270,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
-            links={},
+            links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             reponses_questions_specifiques={
                 cls.first_question_uuid: 'My answer',

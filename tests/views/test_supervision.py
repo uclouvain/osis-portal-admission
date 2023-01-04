@@ -145,12 +145,12 @@ class SupervisionTestCase(TestCase):
 
         response = self.client.post(self.update_url, {'type': ActorType.CA_MEMBER.name, 'tutor': "0123456978"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('person', response.context['form'].errors)
+        self.assertIn('person', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
 
         response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name, 'person': "0123456978"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('tutor', response.context['form'].errors)
+        self.assertIn('tutor', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
 
         response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name, 'tutor': "0123456978"})
@@ -237,7 +237,7 @@ class SupervisionTestCase(TestCase):
         self.client.force_login(PersonFactory(global_id='0123456978').user)
         response = self.client.post(self.detail_url, {'decision': DecisionApprovalEnum.APPROVED.name})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "form", 'institut_these', _('This field is required.'))
+        self.assertFormError(response, "approval_form", 'institut_these', _('This field is required.'))
 
     def test_should_reject_proposition(self):
         # All data is provided and the proposition is rejected
@@ -277,7 +277,7 @@ class SupervisionTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('decision', response.context['form'].errors)
+        self.assertIn('decision', response.context['approval_form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
         self.mock_api.return_value.approve_proposition.assert_not_called()
@@ -292,7 +292,7 @@ class SupervisionTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('motif_refus', response.context['form'].errors)
+        self.assertIn('motif_refus', response.context['approval_form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
         self.mock_api.return_value.approve_proposition.assert_not_called()

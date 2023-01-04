@@ -27,9 +27,9 @@ from copy import copy
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, resolve_url
 from django.utils.translation import gettext_lazy as _
 
+from admission.contrib.enums import ChoixStatutProposition
 from base.models.person import Person
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException, api_exception_handler
 
@@ -66,41 +66,44 @@ class WebServiceFormMixin:
             return self.form_invalid(form)
         return super().form_valid(form)
 
-    def get_next_tab(self):
+    def get_next_tab_name(self):
         from admission.templatetags.admission import TAB_TREES
 
-        base_namespace = getattr(self, 'base_namespace', ':'.join(self.request.resolver_match.namespaces[:2]))
         flat_tab_list = [child.name for tab, children in TAB_TREES[self.current_context].items() for child in children]
-        next_tab_name = flat_tab_list[flat_tab_list.index(self.request.resolver_match.url_name) + 1]
-        if self.admission_uuid:
-            # TODO add :update here
-            return resolve_url('{}:{}'.format(base_namespace, next_tab_name), pk=self.admission_uuid)
-        return resolve_url('{}:{}'.format(base_namespace, next_tab_name))
-
-    def get_detail_url(self):
-        base_namespace = getattr(self, 'base_namespace', ':'.join(self.request.resolver_match.namespaces[:2]))
-        tab_name = self.request.resolver_match.url_name
-        return resolve_url('{}:{}'.format(base_namespace, tab_name), pk=self.kwargs.get('pk'))
+        return flat_tab_list[flat_tab_list.index(self.request.resolver_match.url_name) + 1]
 
     def call_webservice(self, data):
         raise NotImplementedError
 
     def get_success_url(self):
+        from admission.templatetags.admission import can_update_tab, TAB_TREES
+
         messages.info(self.request, _("Your data has been saved"))
+        tab_mapping = {
+            child.name: child for tab, children in TAB_TREES[self.current_context].items() for child in children
+        }
 
-        if not self.kwargs.get('pk', None) or (
-            hasattr(self, 'admission') and self.admission.matricule_candidat == self.request.user.person.global_id
+        if (
+            # We are creating an admission, on profile tabs
+            not self.kwargs.get('pk', None)
+            or (
+                # We are on an admission in progress, as candidate
+                hasattr(self, 'admission')
+                and self.admission.matricule_candidat == self.request.user.person.global_id
+                and self.admission.statut == ChoixStatutProposition.IN_PROGRESS.name
+            )
         ):
-            # Redirect on next tab in line if submit_and_continue and not creating
-            if '_submit_and_continue' in self.request.POST and not getattr(self, 'created_uuid', None):
-                return self.get_next_tab()
+            tab_to_redirect = tab_mapping[
+                self.get_next_tab_name()
+                # Redirect on next tab in tab list if submit_and_continue
+                if '_submit_and_continue' in self.request.POST
+                else self.request.resolver_match.url_name
+            ]
+            if not self.kwargs.get('pk', None) or can_update_tab(self.admission, tab_to_redirect):
+                return self._get_url(tab_to_redirect.name, update=True)
 
-        if self.kwargs.get('pk'):
-            # if this is the candidate saving and form
-            # On update, redirect on admission detail
-            return self.get_detail_url()
-        # On creation, display a message and redirect on same form
-        return self.request.get_full_path()
+        # Redirect on detail
+        return self._get_url(self.request.resolver_match.url_name)
 
     @property
     def person(self) -> Person:

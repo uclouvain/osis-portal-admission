@@ -28,6 +28,12 @@
 {% if not admission %}
   {# We've not submitted an admission yet, display creation siblings #}
   {% url 'admission:create:'|add:tab.name as tab_url %}
+{% elif admission.statut == 'IN_PROGRESS' and admission|can_update_tab:tab %}
+  {# When admission in progress, display update siblings #}
+  {% url base_namespace|add:':update:'|add:tab.name pk=admission_uuid as tab_url %}
+{% elif admission.statut == 'SIGNING_IN_PROGRESS' and tab not in 'project,cotutelle,supervision'|split and admission|can_update_tab:tab %}
+  {# When signing in progress, display update siblings except doctoral tabs #}
+  {% url base_namespace|add:':update:'|add:tab.name pk=admission_uuid as tab_url %}
 {% elif admission|can_read_tab:tab %}
   {# By default, display detail siblings #}
   {% url base_namespace|add:':'|add:tab.name pk=admission_uuid as tab_url %}
