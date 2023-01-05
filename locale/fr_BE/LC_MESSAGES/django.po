@@ -2898,6 +2898,12 @@ msgstr ""
 msgid "This comment will only be visible to the administrators."
 msgstr "Ce commentaire ne sera visible que par les gestionnaires."
 
+msgid ""
+"This experience has been partially valuated so only few fields are editable."
+msgstr ""
+"Cette expérience ayant déjà été partiellement valorisée, seuls quelques "
+"champs sont éditables."
+
 msgid "This experience has been valuated so cannot be updated."
 msgstr ""
 "Cette expérience a été valorisée et ne peut donc plus être mise à jour."

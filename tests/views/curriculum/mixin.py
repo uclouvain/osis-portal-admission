@@ -160,6 +160,7 @@ class MixinTestCase(TestCase):
                     graduate_degree_translation=['f11_2018.pdf'],
                 ),
             ],
+            valuated_from_trainings=[],
         )
 
         cls.lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
@@ -178,6 +179,7 @@ class MixinTestCase(TestCase):
                 ),
             ],
             country=cls.be_country.iso_code,
+            valuated_from_trainings=[],
         )
         cls.foreign_lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
             uuid=cls.educational_experience.uuid,
@@ -191,6 +193,7 @@ class MixinTestCase(TestCase):
                 ),
             ],
             country=cls.not_ue_country.iso_code,
+            valuated_from_trainings=[],
         )
 
         cls.professional_experience = ProfessionalExperience._from_openapi_data(
@@ -203,6 +206,7 @@ class MixinTestCase(TestCase):
             activity='Work - activity',
             uuid=str(uuid.uuid4()),
             certificate=[cls.document_uuid],
+            valuated_from_trainings=[],
         )
 
         cls.lite_professional_experience = CurriculumDetailsProfessionalExperiences._from_openapi_data(
@@ -211,6 +215,7 @@ class MixinTestCase(TestCase):
             type=cls.professional_experience.type,
             start_date=cls.professional_experience.start_date,
             end_date=cls.professional_experience.start_date,
+            valuated_from_trainings=[],
         )
 
         # Proposition
