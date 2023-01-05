@@ -48,6 +48,11 @@
   <div class="panel panel-default">
     {% include 'admission/includes/curriculum_experience_header.html' with on_update=True educational_tab=True title=header_title %}
     <div class="panel-body">
+      {% if educational_experience.valuated_from_trainings and educational_experience.can_be_updated %}
+        <div class="alert alert-warning">
+          {% translate 'This experience has been partially valuated so only few fields are editable.' %}
+        </div>
+      {% endif %}
       <div class="row">
         <div class="col-md-4 required_field">
           {% bootstrap_field base_form.start %}
@@ -225,9 +230,6 @@
     #formset-container .form-group {
       margin: 5px 0;
     }
-    .credit-input input:disabled{
-      color: transparent;
-    }
     #empty-formset p {
       font-style: italic;
       margin: 2em 0;
@@ -307,17 +309,22 @@
                   {# Belgian -> Disable the credit inputs according to the year #}
                   const years = $('#formset-container > .year-form');
                   years.each(function() {
-                      $(this).find('.credit-input input').prop(
-                          'disabled',
-                          parseInt($(this).find('input[type=hidden]').val()) < firstYearWithECTSBe,
-                      )
+                      const creditsInputs = $(this).find('.credit-input input');
+                      const currentYear = parseInt($(this).find('input[type=hidden]').val());
+                      if (currentYear < firstYearWithECTSBe) {
+                        creditsInputs.val('').prop('readonly', true);
+                      } else {
+                        creditsInputs.prop('readonly', false);
+                      }
                   })
               } else {
                   {# Foreign country -> Disable the value according to the value of the evaluation type #}
-                  $('.credit-input input').prop(
-                      'disabled',
-                      evaluationTypeValue !== 'ECTS_CREDITS' && evaluationTypeValue !== 'NON_EUROPEAN_CREDITS',
-                  );
+                  const creditsInputs = $('.credit-input input');
+                  if (evaluationTypeValue !== 'ECTS_CREDITS' && evaluationTypeValue !== 'NON_EUROPEAN_CREDITS') {
+                        creditsInputs.val('').prop('readonly', true);
+                      } else {
+                        creditsInputs.prop('readonly', false);
+                  }
               }
           }
 

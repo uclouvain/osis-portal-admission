@@ -2603,6 +2603,10 @@ msgstr ""
 msgid "This comment will only be visible to the administrators."
 msgstr ""
 
+msgid ""
+"This experience has been partially valuated so only few fields are editable."
+msgstr ""
+
 msgid "This experience has been valuated so cannot be updated."
 msgstr ""
 
