@@ -30,6 +30,7 @@ from decimal import Decimal
 
 from django import forms
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 from django.template import loader
@@ -59,6 +60,7 @@ from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
     AdmissionCurriculumMixin,
     get_educational_experience_year_set_with_lost_years,
     initialize_field_texts,
+    experience_can_be_updated,
 )
 from admission.services.mixins import WebServiceFormMixin
 
@@ -122,6 +124,10 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
     def get_initial(self):
         if self.experience_id:
             experience = self.professional_experience.to_dict()
+
+            if self.professional_experience.valuated_from_trainings:
+                raise PermissionDenied
+
             start_date = experience.pop('start_date')
             end_date = experience.pop('end_date')
             if start_date:
@@ -148,8 +154,11 @@ class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFor
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        initialize_field_texts(self.person, [self.professional_experience])
         context['experience'] = self.professional_experience
+
+        if self.professional_experience.valuated_from_trainings:
+            raise PermissionDenied
+
         return context
 
 
@@ -171,8 +180,14 @@ class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        initialize_field_texts(self.person, [self.educational_experience])
+
+        initialize_field_texts(self.person, [self.educational_experience], self.current_context)
+
+        if self.educational_experience.valuated_from_trainings:
+            raise PermissionDenied
+
         context['experience'] = self.educational_experience
+
         return context
 
 
@@ -192,6 +207,14 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
 
         if self.experience_id:
             educational_experience = self.educational_experience.to_dict()
+            educational_experience['can_be_updated'] = experience_can_be_updated(
+                self.educational_experience,
+                self.current_context,
+            )
+
+            if not educational_experience['can_be_updated']:
+                raise PermissionDenied
+
             all_years_config = get_educational_experience_year_set_with_lost_years(
                 educational_experience.pop('educationalexperienceyear_set')
             )
@@ -200,10 +223,10 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
             educational_experience['end'] = all_years_config['end']
 
         base_form = DoctorateAdmissionCurriculumEducationalExperienceForm(
+            educational_experience=educational_experience,
             person=self.request.user.person,
-            is_doctorate=self.is_doctorate,
+            current_context=self.current_context,
             data=self.request.POST or None,
-            initial=educational_experience,
             prefix='base_form',
         )
 
@@ -218,6 +241,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
                         base_form.initial['end'] if all_educational_experience_years else 0,
                     )
                 ),
+                'is_valuated': educational_experience and educational_experience['valuated_from_trainings'],
             },
         )
 
@@ -243,6 +267,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         context_data['FOLLOWING_FORM_SET_PREFIX'] = FOLLOWING_FORM_SET_PREFIX
         context_data['OSIS_DOCUMENT_UPLOADER_CLASS'] = OSIS_DOCUMENT_UPLOADER_CLASS
         context_data['OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX'] = OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX
+        context_data['educational_experience'] = educational_experience
 
         return context_data
 
@@ -254,12 +279,6 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
 
         data.pop('other_institute')
         data.pop('other_program')
-
-        if not self.is_doctorate:
-            # This field is disabled so we need to prepare the value to convert the uuid to a writing token
-            data['dissertation_summary'] = base_form.fields['dissertation_summary'].prepare_value(
-                data['dissertation_summary']
-            )
 
         return data
 

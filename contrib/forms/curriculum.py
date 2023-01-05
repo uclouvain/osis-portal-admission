@@ -31,6 +31,7 @@ from django import forms
 from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
 from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
+from osis_document.contrib.widgets import HiddenFileWidget
 
 from admission.constants import (
     BE_ISO_CODE,
@@ -292,20 +293,31 @@ class DoctorateAdmissionCurriculumProfessionalExperienceForm(forms.Form):
         else:
             cleaned_data['activity'] = ''
 
-        if self.is_continuing:
-            # This field is disabled so we need to convert the uuid to a writing token
-            cleaned_data['certificate'] = self.fields['certificate'].prepare_value(cleaned_data['certificate'])
-
         return cleaned_data
 
 
-DOCTORATE_EDUCATIONAL_EXPERIENCE_FIELDS = [
-    'expected_graduation_date',
-    'rank_in_diploma',
-    'dissertation_title',
-    'dissertation_score',
-    'dissertation_summary',
-]
+SPECIFIC_FIELDS_BY_CONTEXT = {
+    'doctorate': {
+        'expected_graduation_date',
+        'rank_in_diploma',
+        'dissertation_title',
+        'dissertation_score',
+        'dissertation_summary',
+    },
+    'general-education': set(),
+    'continuing-education': set(),
+}
+
+MANDATORY_FIELDS_BY_CONTEXT = {
+    'doctorate': [
+        'expected_graduation_date',
+        'rank_in_diploma',
+        'dissertation_title',
+        'dissertation_score',
+    ],
+    'general-education': [],
+    'continuing-education': [],
+}
 
 
 class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
@@ -438,9 +450,11 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
             'jquery.mask.min.js',
         )
 
-    def __init__(self, person, is_doctorate, *args, **kwargs):
+    def __init__(self, educational_experience, person, current_context, *args, **kwargs):
+        kwargs.setdefault('initial', educational_experience)
+
         super().__init__(*args, **kwargs)
-        self.is_doctorate = is_doctorate
+        self.current_context = current_context
 
         # Initialize the field with dynamic choices
         academic_years_choices = get_past_academic_years_choices(person)
@@ -477,15 +491,20 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
             self.initial['other_program'] = bool(self.initial.get('education_name'))
             self.initial['other_institute'] = bool(self.initial.get('institute_name'))
 
-        # Disable fields that are not available in all contexts
-        if not self.is_doctorate:
-            for field in DOCTORATE_EDUCATIONAL_EXPERIENCE_FIELDS:
-                self.fields[field].disabled = True
-                self.fields[field].widget = (
-                    forms.MultipleHiddenInput()
-                    if isinstance(self.fields[field], FileUploadField)
-                    else forms.HiddenInput()
-                )
+        # Disable and hide fields that are specific to other contexts
+        for context in SPECIFIC_FIELDS_BY_CONTEXT:
+            if context != current_context:
+                for field in SPECIFIC_FIELDS_BY_CONTEXT.get(context):
+                    self.fields[field].disabled = True
+                    self.fields[field].widget = self.fields[field].hidden_widget()
+
+        if educational_experience and educational_experience.get('valuated_from_trainings'):
+            # Disable all fields except the ones specific to the current context
+            for f in self.fields:
+                if f not in SPECIFIC_FIELDS_BY_CONTEXT.get(current_context):
+                    self.fields[f].disabled = True
+                    if isinstance(self.fields[f], FileUploadField):
+                        self.fields[f].widget = HiddenFileWidget(display_visualizer=True)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -522,16 +541,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
 
     def clean_data_diploma(self, cleaned_data, obtained_diploma):
         if obtained_diploma:
-            mandatory_fields = [
-                'obtained_grade',
-            ]
-            if self.is_doctorate:
-                mandatory_fields += [
-                    'expected_graduation_date',
-                    'rank_in_diploma',
-                    'dissertation_title',
-                    'dissertation_score',
-                ]
+            mandatory_fields = ['obtained_grade'] + MANDATORY_FIELDS_BY_CONTEXT.get(self.current_context)
             for field in mandatory_fields:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
@@ -596,8 +606,13 @@ MINIMUM_CREDIT_NUMBER = 0
 
 
 class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
-    def __init__(self, prefix_index_start=0, **kwargs):
+    def __init__(self, is_valuated=False, prefix_index_start=0, **kwargs):
         super().__init__(**kwargs)
+        if is_valuated:
+            for f in self.fields:
+                self.fields[f].disabled = True
+                if isinstance(self.fields[f], FileUploadField):
+                    self.fields[f].widget = HiddenFileWidget(display_visualizer=True)
 
     academic_year = forms.IntegerField(
         initial=FORM_SET_PREFIX,

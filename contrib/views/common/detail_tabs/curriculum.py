@@ -84,7 +84,7 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
         context_data['display_bachelor_continuation_attestation'] = self.display_bachelor_continuation_attestation
         context_data['BE_ISO_CODE'] = BE_ISO_CODE
 
-        initialize_field_texts(self.request.user.person, context_data['educational_experiences'])
+        initialize_field_texts(self.request.user.person, context_data['educational_experiences'], self.current_context)
 
         return context_data
 

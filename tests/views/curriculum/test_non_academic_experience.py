@@ -28,7 +28,7 @@ from unittest.mock import ANY
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.curriculum import ActivityType, ActivitySector
@@ -125,6 +125,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'certificate': self.professional_experience.certificate,
                 'activity': self.professional_experience.activity,
                 'uuid': self.professional_experience.uuid,
+                'valuated_from_trainings': ANY,
             },
         )
 
@@ -599,6 +600,31 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             **self.api_default_params,
         )
 
+    def test_with_admission_on_update_valuated_experience_is_forbidden(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
+        mock_retrieve.return_value.valuated_from_trainings = ['1']
+
+        response = self.client.get(
+            resolve_url(
+                self.admission_update_url,
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+        response = self.client.post(
+            resolve_url(
+                self.admission_update_url,
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+                data=self.all_form_data,
+            )
+        )
+
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
     # On create
     def test_with_admission_on_create_experience_post_form_for_other_activity(self):
         response = self.client.post(
@@ -665,6 +691,20 @@ class CurriculumNonAcademicExperienceDeleteTestCase(MixinTestCase):
             experience_id=self.professional_experience.uuid,
             **self.api_default_params,
         )
+
+    def test_with_admission_on_delete_valuated_experience_is_forbidden(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
+        mock_retrieve.return_value.valuated_from_trainings = ['1']
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:update:curriculum:professional_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
     def test_without_admission_on_delete_experience_form_is_not_initialized(self):
         response = self.client.get(
