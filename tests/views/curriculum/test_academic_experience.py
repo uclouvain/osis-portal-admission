@@ -28,9 +28,10 @@ from unittest.mock import ANY
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.contrib.enums import TypeFormation
 from admission.contrib.enums.curriculum import (
     TranscriptType,
     EvaluationSystem,
@@ -130,6 +131,20 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
             experience_id=self.educational_experience.uuid,
             **self.api_default_params,
         )
+
+    def test_with_admission_on_delete_valuated_experience_is_forbidden(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_educational_experience_admission
+        mock_retrieve.return_value.valuated_from_trainings = [TypeFormation.DOCTORAT.name]
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:update:curriculum:educational_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
     def test_without_admission_on_delete_experience_form_is_not_initialized(self):
         response = self.client.get(
@@ -271,6 +286,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'end': 2020,
                 'other_program': True,
                 'other_institute': True,
+                'can_be_updated': ANY,
+                'valuated_from_trainings': ANY,
             },
         )
         # Check the choices of the fields
@@ -299,6 +316,12 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             base_form.fields['institute'].widget.choices,
             EMPTY_CHOICE + ((self.institute.uuid, self.institute.name),),
         )
+
+        # Check that no field is hidden or disabled
+        self.assertEqual(len(base_form.hidden_fields()), 0)
+        for f in base_form.fields:
+            self.assertFalse(base_form.fields[f].disabled)
+
         # Check formset
         year_formset = response.context.get('year_formset')
         forms = year_formset.forms
@@ -329,7 +352,67 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             },
         )
 
-    # On update
+    def test_with_admission_on_update_experience_form_is_forbidden_with_doctorate_and_valuated_by_doctorate(self):
+        # Valuated by a doctorate admission
+        self.mockapi.retrieve_educational_experience_admission.return_value.valuated_from_trainings = [
+            TypeFormation.DOCTORAT.name,
+        ]
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+    def test_with_admission_on_update_experience_form_is_initialized_with_doctorate_and_valuated_by_general(self):
+        doctorate_fields = {
+            'expected_graduation_date',
+            'rank_in_diploma',
+            'dissertation_title',
+            'dissertation_score',
+            'dissertation_summary',
+        }
+
+        self.mockapi.retrieve_educational_experience_admission.return_value.valuated_from_trainings = [
+            TypeFormation.MASTER.name,
+        ]
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the context data
+        base_form = response.context.get('base_form')
+
+        # Check that the right fields are disabled
+        for f in base_form.fields:
+            self.assertEqual(f not in doctorate_fields, base_form.fields[f].disabled)
+
+    def test_with_admission_on_update_experience_form_is_initialized_with_doctorate_and_valuated_by_continuing(self):
+        doctorate_fields = {
+            'expected_graduation_date',
+            'rank_in_diploma',
+            'dissertation_title',
+            'dissertation_score',
+            'dissertation_summary',
+        }
+
+        self.mockapi.retrieve_educational_experience_admission.return_value.valuated_from_trainings = [
+            TypeFormation.FORMATION_CONTINUE.name,
+        ]
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the context data
+        base_form = response.context.get('base_form')
+
+        # Check that the right fields are disabled
+        for f in base_form.fields:
+            self.assertEqual(f not in doctorate_fields, base_form.fields[f].disabled)
+
     def test_with_admission_on_update_experience_form_is_initialized_with_general_education(self):
         response = self.client.get(self.general_admission_update_url)
 
@@ -356,6 +439,39 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             ],
         )
 
+    def test_with_admission_on_update_experience_form_is_forbidden_with_general_and_valuated_by_doctorate(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
+        mock_retrieve_experience.return_value.valuated_from_trainings = [
+            TypeFormation.DOCTORAT.name,
+        ]
+
+        response = self.client.get(self.general_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+    def test_with_admission_on_update_experience_form_is_forbidden_with_general_and_valuated_by_general(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
+        mock_retrieve_experience.return_value.valuated_from_trainings = [
+            TypeFormation.MASTER.name,
+        ]
+
+        response = self.client.get(self.general_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+    def test_with_admission_on_update_experience_form_is_forbidden_with_general_and_valuated_by_continuing(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
+        mock_retrieve_experience.return_value.valuated_from_trainings = [
+            TypeFormation.FORMATION_CONTINUE.name,
+        ]
+
+        response = self.client.get(self.general_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
     def test_with_admission_on_update_experience_form_is_initialized_with_continuing_education(self):
         response = self.client.get(self.continuing_admission_update_url)
 
@@ -381,6 +497,39 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 base_form.fields['dissertation_summary'],
             ],
         )
+
+    def test_with_admission_on_update_experience_form_is_forbidden_with_continuing_and_valuated_by_doctorate(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_continuing_education_admission
+        mock_retrieve_experience.return_value.valuated_from_trainings = [
+            TypeFormation.DOCTORAT.name,
+        ]
+
+        response = self.client.get(self.continuing_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+    def test_with_admission_on_update_experience_form_is_forbidden_with_continuing_and_valuated_by_general(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_continuing_education_admission
+        mock_retrieve_experience.return_value.valuated_from_trainings = [
+            TypeFormation.MASTER.name,
+        ]
+
+        response = self.client.get(self.continuing_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+    def test_with_admission_on_update_experience_form_is_forbidden_with_continuing_and_valuated_by_continuing(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_continuing_education_admission
+        mock_retrieve_experience.return_value.valuated_from_trainings = [
+            TypeFormation.FORMATION_CONTINUE.name,
+        ]
+
+        response = self.client.get(self.continuing_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
     def test_without_admission_on_update_experience_form_is_not_initialized(self):
         response = self.client.get(self.without_admission_update_url)
