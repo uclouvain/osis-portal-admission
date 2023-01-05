@@ -275,6 +275,11 @@ input:checked + .osis-slider:before {
   transform: translateX(13px);
 }
 
+input:disabled + .osis-slider {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
 /* Rounded sliders */
 .osis-slider.round {
   border-radius: 17px;

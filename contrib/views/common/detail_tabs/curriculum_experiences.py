@@ -30,7 +30,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import TemplateView
 
-from admission.contrib.enums import EvaluationSystemsWithCredits
+from admission.contrib.enums import EvaluationSystemsWithCredits, TypeFormation
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
     AdmissionPersonService,
@@ -43,6 +43,7 @@ from osis_admission_sdk.model.professional_experience import ProfessionalExperie
 
 __all__ = [
     'initialize_field_texts',
+    'experience_can_be_updated',
     'get_educational_experience_year_set_with_lost_years',
     'AdmissionCurriculumMixin',
     'AdmissionCurriculumProfessionalExperienceDetailView',
@@ -120,7 +121,7 @@ class AdmissionCurriculumEducationalExperienceDetailView(AdmissionCurriculumMixi
         context['experience'].evaluation_system_with_credits = (
             self.educational_experience.evaluation_type.value in EvaluationSystemsWithCredits
         )
-        initialize_field_texts(self.request.user.person, [self.educational_experience])
+        initialize_field_texts(self.request.user.person, [self.educational_experience], self.current_context)
         return context
 
 
@@ -153,7 +154,7 @@ def get_educational_experience_year_set_with_lost_years(educational_experience_y
     }
 
 
-def initialize_field_texts(person, curriculum_experiences):
+def initialize_field_texts(person, curriculum_experiences, context):
     """
     Add into each experience, the names of the country and the linguistic regime.
     """
@@ -186,3 +187,17 @@ def initialize_field_texts(person, curriculum_experiences):
                 person=person,
             )
             experience.institute_name = institute.name
+
+        experience.can_be_updated = experience_can_be_updated(experience, context)
+
+
+def experience_can_be_updated(experience, context):
+    """Return if the educational experience can be updated in the specific context."""
+    # An experience can be updated...
+    return (
+        # ... if it is not valuated
+        not getattr(experience, 'valuated_from_trainings', [])
+        # ... or, for a doctorate admission, if it is not valuated by another doctorate admission
+        or context == 'doctorate'
+        and not any(training == TypeFormation.DOCTORAT.name for training in experience.valuated_from_trainings)
+    )

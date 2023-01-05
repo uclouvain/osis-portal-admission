@@ -119,7 +119,7 @@
                 <td class="action-container">
                   <div class="btn-toolbar" role="group">
                     {% if form %}
-                      {% if educational_experience.valuated_from_admission %}
+                      {% if not educational_experience.can_be_updated %}
                         <span
                             class="glyphicon glyphicon-check btn btn-default disabled"
                             title="{% trans "This experience has been valuated so cannot be updated." %}"
@@ -223,7 +223,7 @@
                 <td class="action-container">
                   <div class="btn-toolbar" role="group">
                     {% if form %}
-                      {% if professional_experience.valuated_from_admission %}
+                      {% if professional_experience.valuated_from_trainings %}
                         <span
                             class="glyphicon glyphicon-check btn btn-default disabled"
                             title="{% trans "This experience has been valuated so cannot be updated." %}"
