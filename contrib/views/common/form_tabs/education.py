@@ -84,6 +84,8 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
+        context_data['is_valuated'] = self.high_school_diploma['is_valuated']
+
         if self.is_bachelor:
             context_data.update(self.get_forms(context_data))
             context_data['form'] = context_data['main_form']  # Trick template to display form tag
@@ -125,6 +127,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
         kwargs = super().get_form_kwargs()
         kwargs["person"] = self.person
         kwargs["current_year"] = self.current_year
+        kwargs["is_valuated"] = self.high_school_diploma["is_valuated"]
         return kwargs
 
     def get_form_class(self):
@@ -148,7 +151,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             form.empty_permitted = False
 
     def post(self, request, *args, **kwargs):
-        if not self.is_bachelor:
+        if not self.is_bachelor or self.high_school_diploma['is_valuated']:
             return super().post(request, *args, **kwargs)
 
         forms = self.get_forms()
@@ -247,7 +250,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
 
     def prepare_data(self, main_form_data):
         # General education (except bachelor) and continuing education admission
-        if not self.is_bachelor:
+        if not self.is_bachelor or self.high_school_diploma['is_valuated']:
             return main_form_data
 
         # Bachelor admission

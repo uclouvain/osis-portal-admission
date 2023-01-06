@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n admission %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -26,7 +26,7 @@
 {% endcomment %}
 {% if not admission %}
   {% url 'admission:create:curriculum' as experience_list %}
-{% elif on_reading %}
+{% elif on_reading and not admission|can_update_tab:'curriculum' %}
   {% url base_namespace|add:':curriculum' view.kwargs.pk as experience_list %}
 {% else %}
   {% url base_namespace|add:':update:curriculum' view.kwargs.pk as experience_list %}

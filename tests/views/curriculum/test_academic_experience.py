@@ -161,9 +161,9 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
         self.mock_person_api.return_value.retrieve_educational_experience.assert_not_called()
         self.mock_proposition_api.assert_not_called()
 
-        self.assertTrue(
+        self.assertContains(
+            response,
             gettext("You must choose your training before filling in your previous experience."),
-            response.content.decode("utf-8"),
         )
 
 
@@ -541,9 +541,9 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.retrieve_educational_experience.assert_not_called()
         self.mock_proposition_api.assert_not_called()
 
-        self.assertTrue(
+        self.assertContains(
+            response,
             gettext("You must choose your training before filling in your previous experience."),
-            response.content.decode("utf-8"),
         )
 
     def test_with_admission_on_update_experience_post_form_empty_data(self):
@@ -1277,7 +1277,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.retrieve_educational_experience.assert_not_called()
         self.mock_proposition_api.assert_not_called()
 
-        self.assertTrue(
+        self.assertContains(
+            response,
             gettext("You must choose your training before filling in your previous experience."),
-            response.content.decode("utf-8"),
         )

@@ -29,6 +29,13 @@
   {% bootstrap_form_errors form %}
 
   {% panel _('Secondary studies') %}
+    {% if is_valuated %}
+      <div class="alert alert-warning">
+        {% blocktranslate trimmed %}
+          Your secondary education data can no longer be updated. If you wish to make any changes, please contact the Enrolment service.
+        {% endblocktranslate %}
+      </div>
+    {% endif %}
     <div class="row">
       <div class="col-md-12 required_field">
         {% bootstrap_field_with_tooltip form.graduated_from_high_school %}

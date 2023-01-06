@@ -50,9 +50,9 @@ class CreateGlobalCurriculumTestCase(MixinTestCase):
         self.mock_person_api.return_value.retrieve_curriculum_details.assert_not_called()
         self.mock_proposition_api.assert_not_called()
 
-        self.assertTrue(
+        self.assertContains(
+            response,
             _("You must choose your training before filling in your previous experience."),
-            response.content.decode("utf-8"),
         )
 
 

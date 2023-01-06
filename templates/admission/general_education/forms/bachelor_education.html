@@ -32,6 +32,14 @@
   {% bootstrap_form_errors belgian_diploma_form %}
   {% bootstrap_form_errors schedule_form %}
 
+  {% if is_valuated %}
+    <div class="alert alert-warning">
+      {% blocktranslate trimmed %}
+        Your secondary education data can no longer be updated. If you wish to make any changes, please contact the Enrolment service.
+      {% endblocktranslate %}
+    </div>
+  {% endif %}
+
   {% bootstrap_field_with_tooltip main_form.graduated_from_high_school classes="required_field" %}
 
   {# Hide it by default to prevent FOUC #}
@@ -128,7 +136,9 @@
 
       {% bootstrap_field belgian_diploma_form.result form_group_class="form-group required_field" %}
 
-      {% bootstrap_field belgian_diploma_form.institute placeholder="" form_group_class="form-group required_field" %}
+      <div id="belgian-institute-container">
+        {% bootstrap_field belgian_diploma_form.institute placeholder="" form_group_class="form-group required_field" %}
+      </div>
       {% bootstrap_field belgian_diploma_form.other_institute %}
 
       {% with bound_css_class=belgian_diploma_form.other_institute.value|yesno:"has-success," %}
@@ -350,10 +360,8 @@
           $('#other_institute').dependsOn({
               '#id_belgian_diploma-other_institute': { checked: true},
           })
-          $('#id_belgian_diploma-institute').dependsOn({
+          $('#belgian-institute-container').dependsOn({
               '#id_belgian_diploma-other_institute': { checked: false},
-          }, {
-              hide: false,
           })
 
           $('#schedule').dependsOn({

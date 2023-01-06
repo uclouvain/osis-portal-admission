@@ -48,6 +48,19 @@ from admission.contrib.forms import (
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
+from osis_document.contrib.widgets import HiddenFileWidget
+
+
+def disable_fields_if_valuated(is_valuated, fields, fields_to_keep_enabled_names=None):
+    if fields_to_keep_enabled_names is None:
+        fields_to_keep_enabled_names = set()
+
+    if is_valuated:
+        for field in fields:
+            if field not in fields_to_keep_enabled_names:
+                fields[field].disabled = True
+                if isinstance(fields[field], FileUploadField):
+                    fields[field].widget = HiddenFileWidget(display_visualizer=True)
 
 
 class BaseAdmissionEducationForm(ConfigurableFormMixin):
@@ -72,7 +85,7 @@ class BaseAdmissionEducationForm(ConfigurableFormMixin):
         required=False,
     )
 
-    def __init__(self, person, current_year, *args, **kwargs):
+    def __init__(self, person, current_year, is_valuated, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.current_year = current_year
         self.fields["graduated_from_high_school_year"].widget.choices = get_past_academic_years_choices(
@@ -80,6 +93,7 @@ class BaseAdmissionEducationForm(ConfigurableFormMixin):
             exclude_current=True,
             current_year=self.current_year,
         )
+        disable_fields_if_valuated(is_valuated, self.fields, {self.configurable_form_field_name})
 
     def clean(self):
         cleaned_data = super().clean()
@@ -205,13 +219,15 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         widget=forms.RadioSelect,
     )
 
-    def __init__(self, person, *args, **kwargs):
+    def __init__(self, person, is_valuated, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['other_institute'] = bool(self.initial.get('other_institute_name'))
         self.fields['institute'].widget.choices = get_high_school_initial_choices(
             self.data.get(self.add_prefix("institute"), self.initial.get("institute")),
             person,
         )
+
+        disable_fields_if_valuated(is_valuated, self.fields)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -289,6 +305,10 @@ class BachelorAdmissionEducationScheduleForm(forms.Form):
     other_hours = HourField(
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
     )
+
+    def __init__(self, is_valuated, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        disable_fields_if_valuated(is_valuated, self.fields)
 
     def get_initial_for_field(self, field, field_name):
         # Set all hours fields to None if initial is 0, so that nothing is displayed in field
@@ -422,7 +442,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, is_med_dent_training, person=None, *args, **kwargs):
+    def __init__(self, is_med_dent_training, person, is_valuated, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.is_med_dent_training = is_med_dent_training
@@ -441,6 +461,8 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
             self.data.get(self.add_prefix("linguistic_regime"), self.initial.get("linguistic_regime")),
             person,
         )
+
+        disable_fields_if_valuated(is_valuated, self.fields)
 
     def clean(self):
         cleaned_data = super().clean()
