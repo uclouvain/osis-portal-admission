@@ -133,6 +133,7 @@ class BaseEducationTestCase(TestCase):
             "foreign_diploma": None,
             "high_school_diploma_alternative": None,
             "is_vae_potential": False,
+            "is_valuated": False,
         }
         person_api_ret.retrieve_high_school_diploma_general_education_admission.return_value.to_dict.return_value = (
             self.mock_retrieve_high_school_diploma_for_general
@@ -461,9 +462,9 @@ class EducationTestCase(BaseEducationTestCase):
         self.mock_proposition_api.assert_not_called()
 
         # Check template content
-        self.assertTrue(
+        self.assertContains(
+            response,
             _("You must choose your training before filling in your previous experience."),
-            response.content.decode("utf-8"),
         )
 
     def test_form_initialization(self):
@@ -489,6 +490,31 @@ class EducationTestCase(BaseEducationTestCase):
         self.assertTrue(response.context['form'].fields['graduated_from_high_school'].required)
         self.assertFalse(response.context['form'].fields['graduated_from_high_school_year'].required)
         self.assertIn('specific_question_answers', response.context['form'].fields)
+        for field in ['graduated_from_high_school', 'graduated_from_high_school_year']:
+            self.assertFalse(response.context['form'].fields[field].disabled)
+        self.assertEqual(len(response.context['form'].visible_fields()), 2)
+
+    def test_form_initialization_with_valuated_experience(self):
+        self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
+        response = self.client.get(self.form_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
+        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+
+        # Check response context
+        self.assertIn('form', response.context)
+        for field in ['graduated_from_high_school', 'graduated_from_high_school_year']:
+            self.assertTrue(response.context['form'].fields[field].disabled)
 
     def test_form_submission_if_empty(self):
         response = self.client.post(self.form_url, {})
@@ -619,6 +645,28 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         self.assertIn('belgian_diploma_form', response.context)
         self.assertIn('foreign_diploma_form', response.context)
         self.assertIn('schedule_form', response.context)
+
+    def test_form_initialization_with_valuated_experience(self):
+        self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
+        response = self.client.get(self.form_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check api calls
+        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+
+        # Check response context
+        self.assertIn('form', response.context)
+        for field in ['graduated_from_high_school', 'graduated_from_high_school_year']:
+            self.assertTrue(response.context['form'].fields[field].disabled)
 
     def test_bachelor_form_empty(self):
         self.proposition.formation.type = TrainingType.BACHELOR.name

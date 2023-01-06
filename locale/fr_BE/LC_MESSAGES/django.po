@@ -2905,10 +2905,6 @@ msgstr ""
 "Cette expérience ayant déjà été partiellement valorisée, seuls quelques "
 "champs sont éditables."
 
-msgid "This experience has been valuated so cannot be updated."
-msgstr ""
-"Cette expérience a été valorisée et ne peut donc plus être mise à jour."
-
 msgid "This field is required if the first name is missing."
 msgstr "Ce champ est obligatoire si le prénom est manquant."
 
@@ -3331,6 +3327,14 @@ msgstr "Votre participation à l'événement"
 
 msgid "Your previous NOMA (registration id)"
 msgstr "Votre ancien NOMA (numéro de matricule)"
+
+msgid ""
+"Your secondary education data can no longer be updated. If you wish to make "
+"any changes, please contact the Enrolment service."
+msgstr ""
+"Les informations relatives à vos études secondaires ne sont plus "
+"modifiables. Si vous souhaitez y apporter des modifications, merci de "
+"contacter le service des inscriptions."
 
 msgid "belgian"
 msgstr "belge"

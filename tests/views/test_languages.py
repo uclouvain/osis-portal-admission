@@ -153,9 +153,9 @@ class LanguagesTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.list_language_knowledges.assert_not_called()
         self.mock_proposition_api.assert_not_called()
-        self.assertTrue(
+        self.assertContains(
+            response,
             _("You must choose your training before filling in your previous experience."),
-            response.content.decode("utf-8"),
         )
 
     def test_form_language_duplicate(self):

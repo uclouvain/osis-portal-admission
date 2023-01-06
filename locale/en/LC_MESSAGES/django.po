@@ -2607,9 +2607,6 @@ msgid ""
 "This experience has been partially valuated so only few fields are editable."
 msgstr ""
 
-msgid "This experience has been valuated so cannot be updated."
-msgstr ""
-
 msgid "This field is required if the first name is missing."
 msgstr ""
 
@@ -2977,6 +2974,11 @@ msgid "Your participation to the event"
 msgstr ""
 
 msgid "Your previous NOMA (registration id)"
+msgstr ""
+
+msgid ""
+"Your secondary education data can no longer be updated. If you wish to make "
+"any changes, please contact the Enrolment service."
 msgstr ""
 
 msgid "belgian"

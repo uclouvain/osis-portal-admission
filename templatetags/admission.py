@@ -109,6 +109,9 @@ class Tab:
         # Only hash the name, as lazy strings have different memory addresses
         return hash(self.name)
 
+    def __str__(self):
+        return self.name
+
 
 TAB_TREES = {
     'create': {
@@ -423,13 +426,13 @@ def strip(value):
 @register.filter
 def can_read_tab(admission, tab):
     """Return true if the specified tab can be opened in reading mode for this admission, otherwise return False"""
-    return _can_access_tab(admission, tab.name, READ_ACTIONS_BY_TAB)
+    return _can_access_tab(admission, str(tab), READ_ACTIONS_BY_TAB)
 
 
 @register.filter
 def can_update_tab(admission, tab):
     """Return true if the specified tab can be opened in writing mode for this admission, otherwise return False"""
-    return _can_access_tab(admission, tab.name, UPDATE_ACTIONS_BY_TAB)
+    return _can_access_tab(admission, str(tab), UPDATE_ACTIONS_BY_TAB)
 
 
 @register.filter
