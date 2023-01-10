@@ -167,8 +167,8 @@ class ConfirmSubmitTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        self.assertFormError(response, 'form', 'foo', _('This field is required.'))
-        self.assertFormError(response, 'form', 'bar', _('This field is required.'))
+        self.assertFormError(response, 'confirmation_form', 'foo', _('This field is required.'))
+        self.assertFormError(response, 'confirmation_form', 'bar', _('This field is required.'))
 
     def test_post_with_complete_form_but_bad_values(self):
         self.mock_proposition_api.return_value.submit_proposition.side_effect = MultipleApiBusinessException(

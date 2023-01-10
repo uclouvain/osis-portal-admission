@@ -90,6 +90,7 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
     def get_context_data(self, **kwargs):
         # It is important to get the errors before loading admission data
         context = super().get_context_data(**kwargs)
+        context['confirmation_form'] = context.pop('form')
 
         # Group the missing conditions by tab if any
         if self.confirmation_conditions['errors']:
