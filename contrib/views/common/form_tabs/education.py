@@ -54,7 +54,6 @@ from admission.services.person import (
     GeneralEducationAdmissionPersonService,
 )
 from admission.utils import is_med_dent_training
-from base.tests.factories.academic_year import get_current_year
 
 EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
     EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
@@ -100,10 +99,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
         return context_data
 
     @cached_property
-    def current_year(self):
-        return get_current_year()
-
-    @cached_property
     def is_bachelor(self):
         return self.admission.formation.type == TrainingType.BACHELOR.name
 
@@ -126,7 +121,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["person"] = self.person
-        kwargs["current_year"] = self.current_year
         kwargs["is_valuated"] = self.high_school_diploma["is_valuated"]
         return kwargs
 
@@ -194,7 +188,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             kwargs.pop("prefix")
             initial = kwargs.pop("initial")
             kwargs.pop('form_item_configurations')
-            kwargs.pop('current_year')
 
             graduated_from_high_school = data and data.get("graduated_from_high_school") in HAS_DIPLOMA_CHOICES
             got_belgian_diploma = graduated_from_high_school and data.get("diploma_type") == DiplomaTypes.BELGIAN.name
@@ -317,6 +310,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 foreign_diploma_data['enrolment_certificate'] = enrolment_certificate
             else:
                 foreign_diploma_data['enrolment_certificate'] = []
+                foreign_diploma_data["enrolment_certificate_translation"] = []
 
             # Clean equivalence fields
             if not is_bachelor or not equivalence_ue_country:
@@ -347,8 +341,5 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                     foreign_diploma_data["high_school_transcript_translation"] = []
                     foreign_diploma_data["high_school_diploma_translation"] = []
                     foreign_diploma_data["enrolment_certificate_translation"] = []
-
-            if foreign_diploma_data["academic_graduation_year"] != self.current_year:
-                foreign_diploma_data["enrolment_certificate_translation"] = []
 
         return data

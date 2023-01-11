@@ -1616,6 +1616,11 @@ msgstr ""
 "J’ai une autorisation d’établissement, ou je suis résident de longue durée "
 "en Belgique (assimilation 1)"
 
+msgid "I will have a high school diploma this year"
+msgstr ""
+"Je vais obtenir mon diplôme d'études secondaires au cours de cette année "
+"académique"
+
 #, python-format
 msgid "I will have a high school diploma this year %s"
 msgstr ""

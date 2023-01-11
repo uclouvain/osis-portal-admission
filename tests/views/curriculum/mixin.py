@@ -31,6 +31,7 @@ from django.test import TestCase, override_settings
 
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
+from admission.tests import get_paginated_years
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
 from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
@@ -40,7 +41,6 @@ from osis_admission_sdk.model.general_education_proposition_dto import GeneralEd
 from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
 
 from osis_admission_sdk.model.proposition_search_doctorat import PropositionSearchDoctorat
-from osis_reference_sdk.model.paginated_academic_years import PaginatedAcademicYears
 
 from osis_admission_sdk.model.educational_experience_educationalexperienceyear_set import (
     EducationalExperienceEducationalexperienceyearSet,
@@ -119,9 +119,21 @@ class MixinTestCase(TestCase):
         cls.institute = SuperiorNonUniversity(uuid=str(uuid.uuid4()), name="Institute of Technology")
 
         # Academic years
-        cls.academic_year_2018 = AcademicYear(year=2018)
-        cls.academic_year_2019 = AcademicYear(year=2019)
-        cls.academic_year_2020 = AcademicYear(year=2020)
+        cls.academic_year_2018 = AcademicYear(
+            year=2018,
+            start_date=datetime.date(2018, 9, 15),
+            end_date=datetime.date(2019, 7, 5),
+        )
+        cls.academic_year_2019 = AcademicYear(
+            year=2019,
+            start_date=datetime.date(2019, 9, 15),
+            end_date=datetime.date(2020, 7, 5),
+        )
+        cls.academic_year_2020 = AcademicYear(
+            year=2020,
+            start_date=datetime.date(2020, 9, 15),
+            end_date=datetime.date(2021, 7, 5),
+        )
 
         cls.educational_experience = EducationalExperience._from_openapi_data(
             country=cls.be_country.iso_code,
@@ -348,13 +360,7 @@ class MixinTestCase(TestCase):
         academic_years_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_years_api = academic_years_api_patcher.start()
 
-        self.mock_academic_years_api.return_value.get_academic_years.return_value = PaginatedAcademicYears(
-            results=[
-                self.academic_year_2018,
-                self.academic_year_2019,
-                self.academic_year_2020,
-            ]
-        )
+        self.mock_academic_years_api.return_value.get_academic_years.return_value = get_paginated_years(2018, 2025)
         self.addCleanup(academic_years_api_patcher.stop)
 
     def mock_languages_api(self):

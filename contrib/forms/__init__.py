@@ -42,7 +42,6 @@ from admission.services.reference import (
 )
 from admission.services.scholarship import AdmissionScholarshipService
 from admission.utils import format_entity_title, format_high_school_title, format_scholarship
-from base.tests.factories.academic_year import get_current_year
 from osis_document.contrib import FileUploadField
 
 EMPTY_CHOICE = (('', ' - '),)
@@ -131,15 +130,22 @@ def get_scholarship_choices(uuid, person):
     return EMPTY_CHOICE + ((uuid, format_scholarship(scholarship)),)
 
 
-def get_past_academic_years_choices(person, exclude_current=False, current_year=None):
+def get_past_academic_years_choices(person, exclude_current=False, current_year=None, academic_years=None):
     """Return a list of choices of past academic years."""
-    current_year = current_year if current_year else get_current_year()
+    if academic_years is None:
+        academic_years = AcademicYearService.get_academic_years(person)
+
+    if current_year is None:
+        current_year = AcademicYearService.get_current_academic_year(person, academic_years)
+
     if exclude_current:
         current_year -= 1
+
     lower_year = current_year - 100
+
     return EMPTY_CHOICE + tuple(
         (academic_year.year, f"{academic_year.year}-{academic_year.year + 1}")
-        for academic_year in AcademicYearService.get_academic_years(person)
+        for academic_year in academic_years
         if current_year >= academic_year.year >= lower_year
     )
 

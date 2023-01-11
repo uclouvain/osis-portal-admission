@@ -293,7 +293,14 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the choices of the fields
         self.assertEqual(
             base_form.fields['start'].choices,
-            [EMPTY_CHOICE[0]] + [(2018, '2018-2019'), (2019, '2019-2020'), (2020, '2020-2021')],
+            [EMPTY_CHOICE[0]]
+            + [
+                (2018, '2018-2019'),
+                (2019, '2019-2020'),
+                (2020, '2020-2021'),
+                (2021, '2021-2022'),
+                (2022, '2022-2023'),
+            ],
         )
         self.assertEqual(
             base_form.fields['end'].choices,
