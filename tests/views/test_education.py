@@ -47,6 +47,7 @@ from admission.contrib.enums.secondary_studies import (
     GotDiploma,
 )
 from admission.contrib.forms import PDF_MIME_TYPE
+from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.academic_year import get_current_year
 from base.tests.factories.person import PersonFactory
@@ -232,6 +233,10 @@ class BaseEducationTestCase(TestCase):
 
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
+        self.mock_academic_year_api.return_value.get_academic_years.return_value = get_paginated_years(
+            2018,
+            2022,
+        )
         self.addCleanup(academic_year_api_patcher.stop)
 
 

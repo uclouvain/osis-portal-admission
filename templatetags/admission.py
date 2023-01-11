@@ -49,7 +49,7 @@ from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve
 from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from admission.services.reference import CountriesService
-from admission.utils import get_uuid_value, to_snake_case
+from admission.utils import get_uuid_value, to_snake_case, format_academic_year
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
@@ -664,11 +664,7 @@ def status_list(admission):
 @register.filter
 def get_academic_year(year: Union[int, str]):
     """Return the academic year related to a specific year."""
-    if not year:
-        return ''
-    if isinstance(year, str):
-        year = int(year)
-    return f'{year}-{year + 1}'
+    return format_academic_year(year)
 
 
 @register.filter

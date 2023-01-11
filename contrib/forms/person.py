@@ -31,7 +31,7 @@ from django.conf import settings
 from django.core import validators
 from django.utils.translation import gettext_lazy as _
 
-from admission.constants import FIELD_REQUIRED_MESSAGE, BE_ISO_CODE
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.person import CivilState, GenderEnum, SexEnum, IdentificationType
 from admission.contrib.forms import (
     CustomDateInput,

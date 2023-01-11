@@ -35,6 +35,7 @@ from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.person import CivilState
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.person import YES, NO
+from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
 
@@ -89,16 +90,12 @@ class PersonViewTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        def get_academic_years(**kwargs):
-            years = [
-                Mock(year=self.current_year - 2),
-                Mock(year=self.current_year + 2),
-            ]
-            return Mock(results=years)
-
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
-        self.mock_academic_year_api.return_value.get_academic_years.side_effect = get_academic_years
+        self.mock_academic_year_api.return_value.get_academic_years.return_value = get_paginated_years(
+            self.current_year - 2,
+            self.current_year + 2,
+        )
 
         self.addCleanup(academic_year_api_patcher.stop)
 
