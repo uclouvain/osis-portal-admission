@@ -195,3 +195,15 @@ class UtilsTestCase(TestCase):
     def test_get_uuid_returns_input_value_if_not_uuid(self):
         other_value = 'abcdef'
         self.assertEqual(get_uuid_value(other_value), other_value)
+
+    def test_format_academic_year_with_empty_string(self):
+        """Check that the format_academic_year returns an empty string if the input is empty."""
+        self.assertEqual(format_academic_year(''), '')
+
+    def test_format_academic_year_with_string_year(self):
+        """Check that the format_academic_year returns a valid string if the input is a string."""
+        self.assertEqual(format_academic_year('2018'), '2018-2019')
+
+    def test_format_academic_year_with_int_year(self):
+        """Check that the format_academic_year returns a valid string if the input is an integer."""
+        self.assertEqual(format_academic_year(2018), '2018-2019')

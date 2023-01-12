@@ -71,7 +71,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
 
     @classmethod
     def create_doctorate_proposition(cls, person: Person, data):
-        return APIClient().create_proposition(
+        return APIClient().create_doctorate_training_choice(
             initier_proposition_command=data,
             **build_mandatory_auth_headers(person),
         )
@@ -397,6 +397,9 @@ class GlobalPropositionBusinessException(Enum):
     PoolNonResidentContingenteNonOuvertException = "ADMISSION-10"
     ResidenceAuSensDuDecretNonRenseigneeException = "ADMISSION-11"
     AucunPoolCorrespondantException = "ADMISSION-12"
+    PoolOuAnneeDifferentException = "ADMISSION-13"
+    ElementsConfirmationNonConcordants = "ADMISSION-14"
+    NombrePropositionsSoumisesDepasseException = "ADMISSION-15"
 
 
 class FormationGeneraleBusinessException(Enum):
@@ -471,6 +474,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.ConditionsAccessNonRempliesException,
         GlobalPropositionBusinessException.PoolNonResidentContingenteNonOuvertException,
         GlobalPropositionBusinessException.AucunPoolCorrespondantException,
+        GlobalPropositionBusinessException.NombrePropositionsSoumisesDepasseException,
     },
     'confirmation-paper': set(),
     'extension-request': set(),

@@ -32,19 +32,24 @@
       <div class="col-md-12">
         <h2>
           {% trans "Admissions" %}
-          {% if can_create_proposition %}
-            <a
-              href="{% url 'admission:create' %}"
-              class="btn btn-primary pull-right"
-            >
-              <span class="glyphicon glyphicon-plus"></span>
-              {% trans "Create new admission" %}
-            </a>
-          {% endif %}
+          <a
+            href="{% url 'admission:create' %}"
+            id="create-link"
+            class="btn btn-primary pull-right{% if not can_create_proposition %} disabled{% endif %}"
+          >
+            <span class="glyphicon glyphicon-plus"></span>
+            {% trans "Create new admission" %}
+          </a>
         </h2>
       </div>
     </div>
   </div>
+
+  {% if not can_create_proposition %}
+    <p class="alert alert-warning">
+      {{ creation_error_message }}
+    </p>
+  {% endif %}
 
   {% if doctorate_propositions %}
     <h3>{% trans "Doctorate" %}</h3>
@@ -67,4 +72,14 @@
     {% endfor %}
   {% endif %}
 
+{% endblock %}
+
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    #create-link.disabled {
+      color: #fff;
+    }
+  </style>
 {% endblock %}
