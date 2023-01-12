@@ -424,7 +424,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         )
         self.mock_proposition_api.return_value.create_continuing_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.create_general_training_choice.side_effect = self.init_training_choice
-        self.mock_proposition_api.return_value.create_proposition.side_effect = self.init_training_choice
+        self.mock_proposition_api.return_value.create_doctorate_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.update_general_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.update_continuing_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.update_doctorate_training_choice.side_effect = self.init_training_choice

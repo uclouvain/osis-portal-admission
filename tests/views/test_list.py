@@ -36,16 +36,14 @@ class ListTestCase(TestCase):
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
     def test_list_empty(self, api, *args):
         self.client.force_login(PersonFactory().user)
-        api.return_value.list_propositions.return_value = {
-            'doctorate_propositions': [],
-            'continuing_education_propositions': [],
-            'general_education_propositions': [],
-            'links': {
-                'create_doctorate_proposition': {'url': 'access granted'},
-                'create_general_proposition': {'url': 'access granted'},
-                'create_continuing_proposition': {'url': 'access granted'},
+        api.return_value.list_propositions.return_value = Mock(
+            doctorate_propositions=[],
+            continuing_education_propositions=[],
+            general_education_propositions=[],
+            links={
+                'create_training_choice': {'url': 'access granted'},
             },
-        }
+        )
         url = reverse('admission:list')
         response = self.client.get(url)
         self.assertTrue(response.context['can_create_proposition'])
@@ -55,55 +53,40 @@ class ListTestCase(TestCase):
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
     def test_list(self, api, *args):
         self.client.force_login(PersonFactory().user)
-        api.return_value.list_propositions.return_value = {
-            'doctorate_propositions': [
+        api.return_value.list_propositions.return_value = Mock(
+            doctorate_propositions=[
                 Mock(
                     uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                     links={'retrieve_proposition': {'url': 'access granted'}},
                     erreurs=[],
                 ),
-                Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}, erreurs=[]),
+                Mock(
+                    uuid='b3729603-c991-489f-8d8d-1d3a11b64dad',
+                    links={},
+                    erreurs=[],
+                ),
             ],
-            'continuing_education_propositions': [
+            continuing_education_propositions=[
                 Mock(
                     uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                     links={'retrieve_training_choice': {'url': 'access granted'}},
                     erreurs=[],
                 ),
             ],
-            'general_education_propositions': [
+            general_education_propositions=[
                 Mock(
                     uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                     links={'retrieve_training_choice': {'url': 'access granted'}},
                     erreurs=[],
                 ),
             ],
-            'links': {
-                'create_doctorate_proposition': {'errors': ['error']},
-                'create_general_proposition': {'errors': ['error']},
-                'create_continuing_proposition': {'errors': ['error']},
+            links={
+                'create_training_choice': {'error': 'My error message'},
             },
-        }
+        )
         url = reverse('admission:list')
         response = self.client.get(url)
         self.assertFalse(response.context['can_create_proposition'])
-
-        doctorate_proposition_detail_url = resolve_url(
-            'admission:doctorate:project',
-            pk='3c5cdc60-2537-4a12-a396-64d2e9e34876',
-        )
-        continuing_proposition_detail_url = resolve_url(
-            'admission:continuing-education:training-choice',
-            pk='3c5cdc60-2537-4a12-a396-64d2e9e34876',
-        )
-        general_proposition_detail_url = resolve_url(
-            'admission:general-education:training-choice',
-            pk='3c5cdc60-2537-4a12-a396-64d2e9e34876',
-        )
-
-        self.assertContains(response, doctorate_proposition_detail_url)
-        self.assertContains(response, continuing_proposition_detail_url)
-        self.assertContains(response, general_proposition_detail_url)
 
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
     def test_list_supervised(self, api, *args):

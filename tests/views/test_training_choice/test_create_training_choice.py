@@ -312,7 +312,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             },
         )
 
-        self.mock_proposition_api.return_value.create_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
                 'type_admission': AdmissionType.PRE_ADMISSION.name,
                 'sigle_formation': 'SC3DP',
@@ -348,7 +348,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             },
         )
 
-        self.mock_proposition_api.return_value.create_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
                 'type_admission': AdmissionType.ADMISSION.name,
                 'sigle_formation': 'TR3',
@@ -384,7 +384,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             },
         )
 
-        self.mock_proposition_api.return_value.create_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
                 'type_admission': AdmissionType.ADMISSION.name,
                 'sigle_formation': 'TR4',
