@@ -1,54 +1,54 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 import uuid
-from unittest.mock import patch, ANY, MagicMock
+from unittest.mock import ANY, MagicMock, Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
+from django.utils.translation import gettext_lazy as _
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
-    FORMATTED_RELATIONSHIPS,
-    dynamic_person_concerned_lowercase,
-    TypeSituationAssimilation,
-    ChoixAssimilation5,
-    LienParente,
     ChoixAffiliationSport,
-    ChoixTypeCompteBancaire,
     ChoixAssimilation1,
     ChoixAssimilation2,
     ChoixAssimilation3,
+    ChoixAssimilation5,
     ChoixAssimilation6,
-    TrainingType,
     ChoixStatutPropositionFormationContinue,
+    ChoixTypeCompteBancaire,
+    FORMATTED_RELATIONSHIPS,
+    LienParente,
+    TrainingType,
+    TypeSituationAssimilation,
+    dynamic_person_concerned_lowercase,
 )
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import ChoixStatutProposition, ChoixStatutPropositionFormationGenerale
 from admission.contrib.forms import PDF_MIME_TYPE
-
 from base.tests.factories.person import PersonFactory
 from reference.services.iban_validator import IBANValidatorException, IBANValidatorRequestException
 
@@ -70,12 +70,12 @@ class DoctorateAccountingViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
-        cls.proposition = MagicMock(
+        cls.proposition = Mock(
             uuid=str(uuid.uuid4()),
             type_admission=AdmissionType.ADMISSION.name,
             reference='22-300001',
             links={'update_accounting': {'url': 'ok'}},
-            doctorat=MagicMock(
+            doctorat=Mock(
                 sigle='CS1',
                 annee=2020,
                 intitule='Doctorate name',
@@ -174,15 +174,17 @@ class DoctorateAccountingViewTestCase(TestCase):
         )
 
         # Check context data
-        self.assertEqual(response.context.get('admission'), self.proposition)
-        self.assertEqual(response.context.get('accounting'), self.accounting)
-        self.assertEqual(response.context.get('formatted_relationships'), FORMATTED_RELATIONSHIPS)
-        self.assertEqual(response.context.get('dynamic_person_concerned_lowercase'), dynamic_person_concerned_lowercase)
+        self.assertEqual(response.context['admission'], self.proposition)
+        self.assertEqual(response.context['accounting'], self.accounting)
+        self.assertEqual(response.context['formatted_relationships'], FORMATTED_RELATIONSHIPS)
+        self.assertEqual(response.context['dynamic_person_concerned_lowercase'], dynamic_person_concerned_lowercase)
 
     def test_display_accounting_form(self):
         response = self.client.get(self.update_url)
 
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<form class="osis-form"')
+        self.assertContains(response, _("Save and continue"))
 
         # Check api calls
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
@@ -469,7 +471,9 @@ class GeneralAccountingViewTestCase(TestCase):
             'carte_a_b': ['carte_a_b.pdf'],
             'decision_protection_subsidiaire': ['decision_protection_subsidiaire.pdf'],
             'decision_protection_temporaire': ['decision_protection_temporaire.pdf'],
-            'sous_type_situation_assimilation_3': ChoixAssimilation3.AUTORISATION_SEJOUR_ET_REVENUS_PROFESSIONNELS.name,
+            'sous_type_situation_assimilation_3': (
+                ChoixAssimilation3.AUTORISATION_SEJOUR_ET_REVENUS_PROFESSIONNELS.name
+            ),
             'titre_sejour_3_mois_professionel': ['titre_sejour_3_mois_professionel.pdf'],
             'fiches_remuneration': ['fiches_remuneration.pdf'],
             'titre_sejour_3_mois_remplacement': ['titre_sejour_3_mois_remplacement.pdf'],
@@ -570,10 +574,10 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         # Check context data
-        self.assertEqual(response.context.get('admission'), self.proposition)
-        self.assertEqual(response.context.get('accounting'), self.accounting)
-        self.assertEqual(response.context.get('formatted_relationships'), FORMATTED_RELATIONSHIPS)
-        self.assertEqual(response.context.get('dynamic_person_concerned_lowercase'), dynamic_person_concerned_lowercase)
+        self.assertEqual(response.context['admission'], self.proposition)
+        self.assertEqual(response.context['accounting'], self.accounting)
+        self.assertEqual(response.context['formatted_relationships'], FORMATTED_RELATIONSHIPS)
+        self.assertEqual(response.context['dynamic_person_concerned_lowercase'], dynamic_person_concerned_lowercase)
 
     def test_display_accounting_form(self):
         response = self.client.get(self.update_url)
@@ -1505,10 +1509,9 @@ class ContinuingAccountingViewTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
 
-        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = self.proposition
-        self.mock_proposition_api.return_value.retrieve_continuing_accounting.return_value.to_dict.return_value = (
-            self.accounting
-        )
+        api_ret = self.mock_proposition_api.return_value
+        api_ret.retrieve_continuing_education_proposition.return_value = self.proposition
+        api_ret.retrieve_continuing_accounting.return_value.to_dict.return_value = self.accounting
 
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -1548,10 +1551,10 @@ class ContinuingAccountingViewTestCase(TestCase):
         )
 
         # Check context data
-        self.assertEqual(response.context.get('admission'), self.proposition)
-        self.assertEqual(response.context.get('accounting'), self.accounting)
-        self.assertEqual(response.context.get('formatted_relationships'), FORMATTED_RELATIONSHIPS)
-        self.assertEqual(response.context.get('dynamic_person_concerned_lowercase'), dynamic_person_concerned_lowercase)
+        self.assertEqual(response.context['admission'], self.proposition)
+        self.assertEqual(response.context['accounting'], self.accounting)
+        self.assertEqual(response.context['formatted_relationships'], FORMATTED_RELATIONSHIPS)
+        self.assertEqual(response.context['dynamic_person_concerned_lowercase'], dynamic_person_concerned_lowercase)
 
     def test_display_accounting_form(self):
         response = self.client.get(self.update_url)

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -164,15 +164,16 @@ class AdmissionTrainingChoiceFormView(
     def get_success_url(self):
         messages.info(self.request, _("Your data has been saved"))
 
+        next_context = NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type)
         tab_to_redirect = (
-            self.get_next_tab_name()
+            self.get_next_tab_name(for_context=next_context)
             # Redirect on next tab in tab list if submit_and_continue
             if '_submit_and_continue' in self.request.POST
             else self.request.resolver_match.url_name
         )
         return resolve_url(
             'admission:{namespace}:update:{tab_name}'.format(
-                namespace=NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type),
+                namespace=next_context,
                 tab_name=tab_to_redirect,
             ),
             pk=self.created_uuid or self.admission_uuid,

@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -193,7 +193,7 @@
               </button>
             {% endblock submit_button %}
             {% block submit_and_continue %}
-              {% if not admission or admission.statut == 'IN_PROGRESS' %}
+              {% if not admission or 'IN_PROGRESS' in admission.statut %}
                 <button
                   type="submit" class="btn btn-primary"
                   name="_submit_and_continue"

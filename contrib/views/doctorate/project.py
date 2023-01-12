@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,11 +24,9 @@
 #
 # ##############################################################################
 
-from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
-from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
@@ -39,15 +37,6 @@ __all__ = ['DoctorateAdmissionProjectDetailView']
 
 class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):
     template_name = 'admission/doctorate/details/project.html'
-
-    def get(self, request, *args, **kwargs):
-        # Always redirect to update form as long as signatures are not sent
-        if (
-            self.admission.statut == ChoixStatutProposition.IN_PROGRESS.name
-            and 'url' in self.admission.links['update_proposition']
-        ):
-            return redirect('admission:doctorate:update:project', **self.kwargs)
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

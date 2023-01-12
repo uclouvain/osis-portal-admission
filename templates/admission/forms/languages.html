@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain
+  * Copyright (C) 2015-2023 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -46,16 +46,16 @@
     {% blocktrans trimmed %}
       Answer according to the European Framework of Reference for Languages (CEFR) classification.
       Detailed explanations of this framework can be found at
-      <a href="https://www.coe.int/en/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale">
+      <a href="https://www.coe.int/en/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale" target="_blank">
         https://www.coe.int/en/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale
       </a>
     {% endblocktrans %}
   </p>
 
-  {% bootstrap_formset_errors form %}
-  {{ form.management_form }}
+  {% bootstrap_formset_errors formset %}
+  {{ formset.management_form }}
 
-  {% for language_form in form %}
+  {% for language_form in formset %}
     <div class="form-container">
       {% firstof languages|get_item:language_form.lang_code _("Add a language") as title %}
       {# Flag mandatory language with additional css class #}
@@ -80,7 +80,7 @@
 
 {% block script %}
   {{ block.super }}
-  {{ form.empty_form.media }}
+  {{ form.media }}
   <script type="text/javascript">
   $(function () {
     $('.form-container').formset({

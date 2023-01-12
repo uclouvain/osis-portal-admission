@@ -1,31 +1,30 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
 import uuid
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
@@ -38,8 +37,8 @@ from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.enums.projet import (
     ChoixStatutProposition,
-    ChoixStatutPropositionFormationGenerale,
     ChoixStatutPropositionFormationContinue,
+    ChoixStatutPropositionFormationGenerale,
 )
 from admission.contrib.enums.proximity_commission import (
     ChoixProximityCommissionCDE,
@@ -95,6 +94,7 @@ class ProjectViewTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            statut=ChoixStatutProposition.IN_PROGRESS.name,
             code_secteur_formation="SSH",
             documents_projet=[],
             graphe_gantt=[],
@@ -198,6 +198,8 @@ class ProjectViewTestCase(TestCase):
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Save and continue"))
+        self.assertContains(response, '<form class="osis-form"')
 
         proposition.doctorat.sigle = 'FOOBARBAZ'
         proposition.to_dict.return_value = {
@@ -288,15 +290,6 @@ class ProjectViewTestCase(TestCase):
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-
-    def test_project_detail_should_redirect_if_not_signing(self):
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.statut = (
-            ChoixStatutProposition.IN_PROGRESS.name
-        )
-        url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        response = self.client.get(url)
-        expected_url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.assertRedirects(response, expected_url, fetch_redirect_response=False)
 
     def test_detail_redirect(self):
         url = resolve_url('admission:doctorate', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
