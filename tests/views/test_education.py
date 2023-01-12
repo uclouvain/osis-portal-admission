@@ -1,31 +1,31 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 import uuid
 from datetime import datetime
-from unittest.mock import Mock, patch, MagicMock, ANY
+from unittest.mock import ANY, Mock, patch
 
 import freezegun
 from django.shortcuts import resolve_url
@@ -36,7 +36,7 @@ from rest_framework import status
 from rest_framework.status import HTTP_302_FOUND
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import TrainingType, ChoixStatutPropositionFormationGenerale
+from admission.contrib.enums import ChoixStatutPropositionFormationGenerale, TrainingType
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
@@ -63,9 +63,9 @@ class BaseEducationTestCase(TestCase):
         cls.proposition_uuid_str = str(cls.proposition_uuid)
         cls.first_question_uuid = str(uuid.uuid4())
 
-        cls.proposition = MagicMock(
+        cls.proposition = Mock(
             uuid=cls.proposition_uuid,
-            formation=MagicMock(
+            formation=Mock(
                 annee=2020,
                 intitule='Formation',
                 campus='Louvain-La-Neuve',
@@ -471,6 +471,8 @@ class EducationTestCase(BaseEducationTestCase):
 
         # Check response status
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Save and continue"))
+        self.assertContains(response, '<form class="osis-form"')
 
         # Check api calls
         self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(

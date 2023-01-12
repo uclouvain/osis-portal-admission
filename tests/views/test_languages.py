@@ -1,26 +1,26 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher languages institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 from unittest.mock import Mock, patch
@@ -131,15 +131,22 @@ class LanguagesTestCase(TestCase):
         self.addCleanup(academic_year_api_patcher.stop)
 
     def test_form_empty(self):
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            erreurs=[],
+            links={},
+        )
         response = self.client.get(self.form_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, '<form class="osis-form"')
+        self.assertContains(response, _("Save and continue"))
         self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
         self.mock_proposition_api.assert_called()
 
         response = self.client.post(self.form_url, {"form-INITIAL_FORMS": 0, "form-TOTAL_FORMS": 0})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
-        self.assertFormsetError(response, "form", None, None, _("Mandatory languages are missing."))
+        self.assertFormsetError(response, "formset", None, None, _("Mandatory languages are missing."))
 
     def test_create(self):
         response = self.client.get(self.create_url)
@@ -167,7 +174,7 @@ class LanguagesTestCase(TestCase):
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
         self.assertFormsetError(
             response,
-            "form",
+            "formset",
             None,
             None,
             _("You cannot fill in a language more than once, please correct the form."),
@@ -189,7 +196,7 @@ class LanguagesTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
-        self.assertFormsetError(response, "form", 0, 'speaking_ability', _("This field is required."))
+        self.assertFormsetError(response, "formset", 0, 'speaking_ability', _("This field is required."))
 
     def test_form_ok(self):
         response = self.client.post(self.form_url, self.data_ok)

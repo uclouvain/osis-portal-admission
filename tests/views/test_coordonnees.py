@@ -1,34 +1,36 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
+from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums import ChoixStatutProposition
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
 
@@ -116,23 +118,29 @@ class CoordonneesTestCase(TestCase):
     def test_form_should_be_all_filled(self):
         url = resolve_url('admission:create:coordonnees')
 
-        response = self.client.post(url, {
-            "residential-country": "FR",
-        })
+        response = self.client.post(
+            url,
+            {
+                "residential-country": "FR",
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('city', response.context['residential'].errors)
 
     def test_form_belgian(self):
         url = resolve_url('admission:create:coordonnees')
 
-        response = self.client.post(url, {
-            "residential-country": "BE",
-            "residential-be_postal_code": "1111",
-            "residential-be_city": "Louvain-La-Neuve",
-            "residential-street": "Rue du Compas",
-            "residential-street_number": "1",
-            "show_contact": False,
-        })
+        response = self.client.post(
+            url,
+            {
+                "residential-country": "BE",
+                "residential-be_postal_code": "1111",
+                "residential-be_city": "Louvain-La-Neuve",
+                "residential-street": "Rue du Compas",
+                "residential-street_number": "1",
+                "show_contact": False,
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['postal_code'], "1111")
@@ -142,33 +150,44 @@ class CoordonneesTestCase(TestCase):
     def test_form_foreign_with_contact_address(self):
         url = resolve_url('admission:create:coordonnees')
 
-        response = self.client.post(url, {
-            "residential-country": "FR",
-            "residential-postal_code": "44000",
-            "residential-city": "Nantes",
-            "residential-street": "Rue du Compas",
-            "residential-street_number": "1",
-            "contact-country": "FR",
-            "contact-postal_code": "44001",
-            "contact-city": "Nantes",
-            "contact-street": "Rue du Compas",
-            "contact-street_number": "2",
-            "show_contact": True,
-        })
+        response = self.client.post(
+            url,
+            {
+                "residential-country": "FR",
+                "residential-postal_code": "44000",
+                "residential-city": "Nantes",
+                "residential-street": "Rue du Compas",
+                "residential-street_number": "1",
+                "contact-country": "FR",
+                "contact-postal_code": "44001",
+                "contact-city": "Nantes",
+                "contact-street": "Rue du Compas",
+                "contact-street_number": "2",
+                "show_contact": True,
+            },
+        )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
-        self.assertEqual(last_call_kwargs["coordonnees"]["contact"], {
-            "country": "FR",
-            "postal_code": "44001",
-            "city": "Nantes",
-            "place": "",
-            "street": "Rue du Compas",
-            "street_number": "2",
-            "postal_box": "",
-        })
+        self.assertEqual(
+            last_call_kwargs["coordonnees"]["contact"],
+            {
+                "country": "FR",
+                "postal_code": "44001",
+                "city": "Nantes",
+                "place": "",
+                "street": "Rue du Compas",
+                "street_number": "2",
+                "postal_box": "",
+            },
+        )
 
     def test_update(self):
         url = resolve_url('admission:doctorate:update:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            links={},
+            erreurs=[],
+        )
 
         self.mock_get.return_value['residential']['country'] = "BE"
         self.mock_get.return_value['contact']['country'] = "BE"
@@ -176,6 +195,8 @@ class CoordonneesTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Save and continue"))
+        self.assertContains(response, '<form class="osis-form"')
         self.assertContains(response, "Belgique")
         self.mock_person_api.return_value.retrieve_coordonnees_admission.assert_called()
         self.mock_proposition_api.assert_called()
