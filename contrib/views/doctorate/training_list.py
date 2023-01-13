@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -56,6 +56,7 @@ class DoctoralTrainingListView(LoadDoctorateViewMixin, WebServiceFormMixin, Form
         config = AdmissionDoctorateTrainingService.get_config(person=self.person, uuid=str(self.kwargs['pk']))
         original_constants = dict(CategorieActivite.choices()).keys()
         context_data['categories'] = list(zip(original_constants, config.category_labels[get_language()]))
+        context_data['activities_form'] = context_data.pop('form')  # Trick template
         return context_data
 
     @cached_property

@@ -217,7 +217,7 @@
   {% endif %}
 
   {% endblock form_content %}
-  {% if form %}</form>{% endif %}
-  {% endblock %}
+  {% if form.visible_fields %}</form>{% endif %}
+  {% endblock tabs_content %}
   {% block extra_content %}{% endblock %}
 {% endblock %}
