@@ -29,6 +29,7 @@ from django import forms
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.utils.translation import get_language, gettext_lazy as _
 
+from admission.contrib.enums import TypeChampSelectionFormulaire
 from admission.contrib.enums.specific_question import (
     TypeItemFormulaire,
     TYPES_ITEMS_LECTURE_SEULE,
@@ -110,6 +111,21 @@ def _get_default_field_params(configuration: dict, current_language: str):
     }
 
 
+# Widget to display depending on selection type
+SELECTION_WIDGET = {
+    TypeChampSelectionFormulaire.CASES_A_COCHER.name: forms.CheckboxSelectMultiple,
+    TypeChampSelectionFormulaire.BOUTONS_RADIOS.name: forms.RadioSelect,
+    TypeChampSelectionFormulaire.LISTE.name: forms.Select,
+}
+
+# Form field to choose depending on selection type
+SELECTION_FIELD = {
+    TypeChampSelectionFormulaire.CASES_A_COCHER.name: forms.MultipleChoiceField,
+    TypeChampSelectionFormulaire.BOUTONS_RADIOS.name: forms.ChoiceField,
+    TypeChampSelectionFormulaire.LISTE.name: forms.ChoiceField,
+}
+
+
 def _get_field_from_configuration(configuration, current_language):
     form_item_type = configuration['type']
     if form_item_type == TypeItemFormulaire.MESSAGE.name:
@@ -148,6 +164,18 @@ def _get_field_from_configuration(configuration, current_language):
                 CleConfigurationItemFormulaire.TYPES_MIME_FICHIER.name,
                 DEFAULT_MIME_TYPES,
             ),
+        )
+
+    elif form_item_type == TypeItemFormulaire.SELECTION.name:
+        type_selection = configuration['configuration'].get(
+            CleConfigurationItemFormulaire.TYPE_SELECTION.name,
+            TypeChampSelectionFormulaire.LISTE.name,
+        )
+
+        field = SELECTION_FIELD[type_selection](
+            **_get_default_field_params(configuration, current_language),
+            choices=tuple((value['key'], value[current_language]) for value in configuration['values']),
+            widget=SELECTION_WIDGET[type_selection](),
         )
 
     else:

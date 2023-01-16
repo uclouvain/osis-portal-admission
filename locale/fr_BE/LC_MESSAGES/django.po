@@ -724,6 +724,9 @@ msgstr "Attestation, avec mention des dates, justifiant la période concernée."
 msgid "Check my previous experience"
 msgstr "Vérifier mon parcours antérieur"
 
+msgid "Checkboxes"
+msgstr "Cases à cocher"
+
 msgid "Chemistry"
 msgstr "Chimie"
 
@@ -1908,6 +1911,9 @@ msgstr "Moins de 65%"
 msgid "Linguistic regime"
 msgstr "Régime linguistique"
 
+msgid "List"
+msgstr "Liste"
+
 msgid "Listening comprehension"
 msgstr "Compréhension à l'audition"
 
@@ -2424,6 +2430,9 @@ msgstr "Refusée"
 msgid "RESIDENCY"
 msgstr "Séjour de perfectionnement de recherche"
 
+msgid "Radio buttons"
+msgstr "Boutons radios"
+
 msgid "Rank in diploma"
 msgstr "Rang dans le diplôme"
 
@@ -2604,8 +2613,14 @@ msgstr "Accéder aux détails de l'expérience"
 msgid "Select for batch action"
 msgstr "Sélectionner pour action en masse"
 
+msgid "Selection"
+msgstr "Sélection"
+
 msgid "Selection committee"
 msgstr "Comité de sélection"
+
+msgid "Selection type"
+msgstr "Type de sélection"
 
 msgctxt "admission"
 msgid "Separate"

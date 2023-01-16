@@ -309,3 +309,12 @@ input:disabled + .osis-slider {
 body, html {
   scroll-behavior: smooth;
 }
+
+.multi-widget ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.multi-widget ul label {
+  font-weight: normal;
+}
