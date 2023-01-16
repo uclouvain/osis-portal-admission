@@ -637,6 +637,9 @@ msgstr ""
 msgid "Check my previous experience"
 msgstr ""
 
+msgid "Checkboxes"
+msgstr ""
+
 msgid "Chemistry"
 msgstr ""
 
@@ -1678,6 +1681,9 @@ msgstr ""
 msgid "Linguistic regime"
 msgstr ""
 
+msgid "List"
+msgstr ""
+
 msgid "Listening comprehension"
 msgstr ""
 
@@ -2171,6 +2177,9 @@ msgstr ""
 msgid "RESIDENCY"
 msgstr ""
 
+msgid "Radio buttons"
+msgstr ""
+
 msgid "Rank in diploma"
 msgstr ""
 
@@ -2350,7 +2359,13 @@ msgstr ""
 msgid "Select for batch action"
 msgstr ""
 
+msgid "Selection"
+msgstr ""
+
 msgid "Selection committee"
+msgstr ""
+
+msgid "Selection type"
 msgstr ""
 
 msgctxt "admission"

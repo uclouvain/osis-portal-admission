@@ -315,6 +315,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 help_text={},
                 configuration={},
                 required=True,
+                values=[],
             ),
             SpecificQuestion._from_openapi_data(
                 uuid=cls.first_question_uuid,
@@ -324,6 +325,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 help_text={'en': 'Write here', 'fr-be': 'Ecrivez-ici'},
                 configuration={},
                 required=True,
+                values=[],
             ),
         ]
 

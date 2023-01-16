@@ -695,6 +695,12 @@ def multiple_field_data(configurations, data, title=_('Specific questions')):
             field['value'] = field.text.get(current_language, '')
         elif field.type == TypeItemFormulaire.DOCUMENT.name:
             field['value'] = [get_uuid_value(token) for token in data.get(field.uuid, [])]
+        elif field.type == TypeItemFormulaire.SELECTION.name:
+            current_value = data.get(field.uuid)
+            selected_options = set(current_value) if isinstance(current_value, list) else {current_value}
+            field['value'] = ', '.join(
+                [value.get(current_language) for value in field['values'] if value.get('key') in selected_options]
+            )
         else:
             field['value'] = data.get(field.uuid)
 
