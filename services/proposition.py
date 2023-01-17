@@ -382,6 +382,7 @@ class PropositionBusinessException(Enum):
     CarteBancaireRemboursementIbanNonCompleteException = "PROPOSITION-47"
     CarteBancaireRemboursementAutreFormatNonCompleteException = "PROPOSITION-48"
     ExperiencesAcademiquesNonCompleteesException = "PROPOSITION-49"
+    TypeCompteBancaireRemboursementNonCompleteException = "PROPOSITION-50"
 
 
 class GlobalPropositionBusinessException(Enum):
@@ -488,6 +489,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.AffiliationsNonCompleteesException,
         PropositionBusinessException.CarteBancaireRemboursementIbanNonCompleteException,
         PropositionBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteException,
+        PropositionBusinessException.TypeCompteBancaireRemboursementNonCompleteException,
     },
     'specific-questions': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesInformationsComplementairesNonCompleteesException,
