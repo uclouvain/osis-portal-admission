@@ -30,6 +30,7 @@ from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests.views.test_training_choice import AdmissionTrainingChoiceFormViewTestCase
@@ -180,7 +181,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_command={
+            modifier_questions_specifiques_formation_generale_command={
                 'specific_question_answers': {self.first_question_uuid: 'My updated answer'},
             },
             **self.default_kwargs,
@@ -373,22 +374,184 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         )
         self.assertEqual(response.context['admission'].uuid, self.continuing_proposition.uuid)
         self.assertEqual(response.context['specific_questions'], self.specific_questions)
+        initial_data = response.context['forms'][0].initial
         self.assertEqual(
-            response.context['forms'][0].initial,
-            {'specific_question_answers': self.continuing_proposition.reponses_questions_specifiques},
+            initial_data.get('reponses_questions_specifiques'),
+            self.continuing_proposition.reponses_questions_specifiques,
+        )
+        self.assertEqual(initial_data.get('inscription_a_titre'), 'PROFESSIONNEL')
+        self.assertEqual(initial_data.get('nom_siege_social'), 'UCL')
+        self.assertEqual(initial_data.get('numero_unique_entreprise'), '1')
+        self.assertEqual(initial_data.get('numero_tva_entreprise'), '1A')
+        self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),
+        self.assertEqual(initial_data.get('type_adresse_facturation'), 'AUTRE')
+        self.assertEqual(initial_data.get('adresse_facturation_destinataire'), 'Mr Doe')
+        self.assertEqual(initial_data.get('street'), 'Rue des Pins')
+        self.assertEqual(initial_data.get('street_number'), '10')
+        self.assertEqual(initial_data.get('place'), 'Dit')
+        self.assertEqual(initial_data.get('postal_box'), 'B1')
+        self.assertEqual(initial_data.get('postal_code'), '1348')
+        self.assertEqual(initial_data.get('city'), 'Louvain-La-Neuve')
+        self.assertEqual(initial_data.get('country'), 'BE')
+
+    def test_get_page_without_billing_address(self):
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.to_dict = (
+            lambda **kwargs: {
+                **self.continuing_proposition_dict,
+                'type_adresse_facturation': 'RESIDENTIEL',
+                'adresse_facturation': None,
+            }
         )
 
-    def test_post_page(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        initial_data = response.context['forms'][0].initial
+        self.assertEqual(
+            initial_data.get('reponses_questions_specifiques'),
+            self.continuing_proposition.reponses_questions_specifiques,
+        )
+        self.assertEqual(initial_data.get('inscription_a_titre'), 'PROFESSIONNEL')
+        self.assertEqual(initial_data.get('nom_siege_social'), 'UCL')
+        self.assertEqual(initial_data.get('numero_unique_entreprise'), '1')
+        self.assertEqual(initial_data.get('numero_tva_entreprise'), '1A')
+        self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),
+        self.assertEqual(initial_data.get('type_adresse_facturation'), 'RESIDENTIEL')
+
+    def test_post_page_enrolment_as_private(self):
         response = self.client.post(
             self.url,
-            data={'specific_questions-specific_question_answers_1': 'My updated answer'},
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+            },
         )
 
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_command={
-                'specific_question_answers': {self.first_question_uuid: 'My updated answer'},
+            modifier_questions_specifiques_formation_continue_command={
+                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                'inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+            },
+            **self.default_kwargs,
+        )
+
+    def test_post_page_enrolment_as_professional(self):
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                'specific_questions-nom_siege_social': 'UCLouvain',
+                'specific_questions-numero_unique_entreprise': '1234',
+                'specific_questions-numero_tva_entreprise': '1234A',
+                'specific_questions-adresse_mail_professionnelle': 'jane.doe@example.be',
+                'specific_questions-type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_continue_command={
+                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                'nom_siege_social': 'UCLouvain',
+                'numero_unique_entreprise': '1234',
+                'numero_tva_entreprise': '1234A',
+                'adresse_mail_professionnelle': 'jane.doe@example.be',
+                'type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
+            },
+            **self.default_kwargs,
+        )
+
+    def test_post_page_enrolment_as_professional_with_custom_foreign_billing_address(self):
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                'specific_questions-nom_siege_social': 'UCLouvain',
+                'specific_questions-numero_unique_entreprise': '1234',
+                'specific_questions-numero_tva_entreprise': '1234A',
+                'specific_questions-adresse_mail_professionnelle': 'jane.doe@example.be',
+                'specific_questions-type_adresse_facturation': ChoixTypeAdresseFacturation.AUTRE.name,
+                'specific_questions-adresse_facturation_destinataire': 'Jane Doe',
+                'specific_questions-street': 'Rue du moulin',
+                'specific_questions-street_number': '1',
+                'specific_questions-postal_code': '44000',
+                'specific_questions-city': 'Nantes',
+                'specific_questions-country': 'FR',
+                'specific_questions-postal_box': 'PB1',
+                'specific_questions-place': 'Avant',
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_continue_command={
+                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                'nom_siege_social': 'UCLouvain',
+                'numero_unique_entreprise': '1234',
+                'numero_tva_entreprise': '1234A',
+                'adresse_mail_professionnelle': 'jane.doe@example.be',
+                'type_adresse_facturation': ChoixTypeAdresseFacturation.AUTRE.name,
+                'adresse_facturation_rue': 'Rue du moulin',
+                'adresse_facturation_numero_rue': '1',
+                'adresse_facturation_code_postal': '44000',
+                'adresse_facturation_ville': 'Nantes',
+                'adresse_facturation_pays': 'FR',
+                'adresse_facturation_destinataire': 'Jane Doe',
+                'adresse_facturation_boite_postale': 'PB1',
+                'adresse_facturation_lieu_dit': 'Avant',
+            },
+            **self.default_kwargs,
+        )
+
+    def test_post_page_enrolment_as_professional_with_custom_belgian_billing_address(self):
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                'specific_questions-nom_siege_social': 'UCLouvain',
+                'specific_questions-numero_unique_entreprise': '1234',
+                'specific_questions-numero_tva_entreprise': '1234A',
+                'specific_questions-adresse_mail_professionnelle': 'jane.doe@example.be',
+                'specific_questions-type_adresse_facturation': ChoixTypeAdresseFacturation.AUTRE.name,
+                'specific_questions-adresse_facturation_destinataire': 'Jane Doe',
+                'specific_questions-street': 'Rue du moulin',
+                'specific_questions-street_number': '1',
+                'specific_questions-be_postal_code': '1348',
+                'specific_questions-be_city': 'Louvain-La-Neuve',
+                'specific_questions-country': 'BE',
+                'specific_questions-postal_box': 'PB1',
+                'specific_questions-place': 'Avant',
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_continue_command={
+                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                'nom_siege_social': 'UCLouvain',
+                'numero_unique_entreprise': '1234',
+                'numero_tva_entreprise': '1234A',
+                'adresse_mail_professionnelle': 'jane.doe@example.be',
+                'type_adresse_facturation': ChoixTypeAdresseFacturation.AUTRE.name,
+                'adresse_facturation_rue': 'Rue du moulin',
+                'adresse_facturation_numero_rue': '1',
+                'adresse_facturation_code_postal': '1348',
+                'adresse_facturation_ville': 'Louvain-La-Neuve',
+                'adresse_facturation_pays': 'BE',
+                'adresse_facturation_destinataire': 'Jane Doe',
+                'adresse_facturation_boite_postale': 'PB1',
+                'adresse_facturation_lieu_dit': 'Avant',
             },
             **self.default_kwargs,
         )
