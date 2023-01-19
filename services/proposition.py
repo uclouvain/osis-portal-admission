@@ -304,7 +304,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_general_specific_question(cls, person: Person, uuid: str, data: dict):
         return APIClient().update_general_specific_question(
             uuid=uuid,
-            modifier_questions_specifiques_command=data,
+            modifier_questions_specifiques_formation_generale_command=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -312,7 +312,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_continuing_specific_question(cls, person: Person, uuid: str, data: dict):
         return APIClient().update_continuing_specific_question(
             uuid=uuid,
-            modifier_questions_specifiques_command=data,
+            modifier_questions_specifiques_formation_continue_command=data,
             **build_mandatory_auth_headers(person),
         )
 

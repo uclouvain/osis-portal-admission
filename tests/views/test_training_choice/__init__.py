@@ -36,6 +36,7 @@ from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
+from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
 from osis_admission_sdk.model.campus import Campus
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
@@ -152,6 +153,22 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         return cls.specific_questions
 
     @classmethod
+    def get_countries(cls, **kwargs):
+        countries = [
+            MockCountry(iso_code="FR", name="France", name_en="France", european_union=True),
+            MockCountry(iso_code="BE", name="Belgique", name_en="Belgium", european_union=True),
+            MockCountry(
+                iso_code="US",
+                name="États-Unis d'Amérique",
+                name_en="United States of America",
+                european_union=False,
+            ),
+        ]
+        if kwargs.get("iso_code"):
+            return Mock(results=[c for c in countries if c.iso_code == kwargs.get("iso_code")])
+        return Mock(results=countries)
+
+    @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
         cls.default_kwargs = {
@@ -257,6 +274,41 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             },
         )
 
+        cls.continuing_proposition_dict = {
+            'uuid': cls.proposition_uuid,
+            'formation': {
+                'annee': 2020,
+                'intitule': 'Formation',
+                'campus': 'Louvain-La-Neuve',
+                'sigle': 'TR2',
+                'type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+            },
+            'matricule_candidat': cls.person.global_id,
+            'prenom_candidat': cls.person.first_name,
+            'nom_candidat': cls.person.last_name,
+            'statut': ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
+            'links': {'update_specific_question': {'url': 'ok'}},
+            'erreurs': {},
+            'reponses_questions_specifiques': {
+                cls.first_question_uuid: 'My answer',
+            },
+            'inscription_a_titre': 'PROFESSIONNEL',
+            'nom_siege_social': 'UCL',
+            'numero_unique_entreprise': '1',
+            'numero_tva_entreprise': '1A',
+            'adresse_mail_professionnelle': 'john.doe@example.be',
+            'type_adresse_facturation': 'AUTRE',
+            'adresse_facturation': {
+                'destinataire': 'Mr Doe',
+                'rue': 'Rue des Pins',
+                'numero_rue': '10',
+                'lieu_dit': 'Dit',
+                'boite_postale': 'B1',
+                'code_postal': '1348',
+                'ville': 'Louvain-La-Neuve',
+                'pays': 'BE',
+            },
+        }
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
             formation={
@@ -275,6 +327,23 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             reponses_questions_specifiques={
                 cls.first_question_uuid: 'My answer',
             },
+            inscription_a_titre='PROFESSIONNEL',
+            nom_siege_social='UCL',
+            numero_unique_entreprise='1',
+            numero_tva_entreprise='1A',
+            adresse_mail_professionnelle='john.doe@example.be',
+            type_adresse_facturation='AUTRE',
+            adresse_facturation=Mock(
+                destinataire='Mr Doe',
+                rue='Rue des Pins',
+                numero_rue='10',
+                lieu_dit='Dit',
+                boite_postale='B1',
+                code_postal='1348',
+                ville='Louvain-La-Neuve',
+                pays='BE',
+            ),
+            to_dict=lambda: cls.continuing_proposition_dict,
         )
 
         cls.doctorate_proposition = Mock(
@@ -421,8 +490,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             self.get_general_education_admission
         )
         self.mock_proposition_api.return_value.retrieve_proposition.side_effect = self.get_doctorate_education_admission
-        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.side_effect = (
-            self.get_continuing_education_admission
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = (
+            self.continuing_proposition
         )
         self.mock_proposition_api.return_value.create_continuing_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.create_general_training_choice.side_effect = self.init_training_choice
@@ -468,5 +537,12 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_campus_api = campus_api_patcher.start()
         self.mock_campus_api.return_value.list_campus.side_effect = self.get_campuses
         self.addCleanup(campus_api_patcher.stop)
+
+        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
+        self.mock_countries_api = countries_api_patcher.start()
+
+        # Mock country sdk api
+        self.mock_countries_api.return_value.countries_list.side_effect = self.get_countries
+        self.addCleanup(countries_api_patcher.stop)
 
         self.client.force_login(self.person.user)

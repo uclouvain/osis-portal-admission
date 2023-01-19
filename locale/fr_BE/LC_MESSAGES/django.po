@@ -387,6 +387,9 @@ msgstr "Un erreur est survenue, veuillez vérifier les valeurs et réessayer."
 msgid "Ancient languages"
 msgstr "Langues anciennes"
 
+msgid "Another address"
+msgstr "Une autre adresse"
+
 msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
 "classification. Detailed explanations of this framework can be found at <a "
@@ -448,6 +451,9 @@ msgid ""
 msgstr ""
 "Êtes-vous actuellement inscrit∙e en première année de bachelier dans une "
 "haute école ou une université de la Communauté française de Belgique ?"
+
+msgid "Are you registering as"
+msgstr "Vous inscrivez-vous à titre"
 
 msgid "Are you sure you want to cancel this request?"
 msgstr "Êtes-vous sûr de vouloir annuler cette demande ?"
@@ -575,6 +581,9 @@ msgstr "Numéro de registre national belge (NISS)"
 
 msgid "Between 65 and 75%"
 msgstr "Entre 65 et 75%"
+
+msgid "Billing address"
+msgstr "Adresse de facturation"
 
 msgid "Biology"
 msgstr "Biologie"
@@ -1409,6 +1418,9 @@ msgstr ""
 "diplôme délivrée par la <a href='http://www.equivalences.cfwb.be/' "
 "target='_blank'>Communauté française</a> de Belgique."
 
+msgid "For the attention of"
+msgstr "A l'attention de"
+
 msgid "Foreign diploma"
 msgstr "Diplôme étranger"
 
@@ -1496,6 +1508,9 @@ msgstr "Avez-vous un numéro de registre national belge (NISS) ?"
 
 msgid "Have you previously been registered at UCLouvain?"
 msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
+
+msgid "Head office name"
+msgstr "Nom du siège social"
 
 msgid "High school diploma"
 msgstr "Diplôme d'études secondaires"
@@ -1618,6 +1633,9 @@ msgid ""
 msgstr ""
 "J’ai une autorisation d’établissement, ou je suis résident de longue durée "
 "en Belgique (assimilation 1)"
+
+msgid "I want the billing address to be"
+msgstr "Je souhaite que l'adresse de facturation soit"
 
 msgid "I will have a high school diploma this year"
 msgstr ""
@@ -1999,6 +2017,9 @@ msgstr "Ma mère"
 msgid "My partner"
 msgstr "Mon conjoint"
 
+msgid "My residential address provided before"
+msgstr "L'adresse de mon domicile légal fournie précédemment"
+
 msgid "N/A"
 msgstr "Sans objet"
 
@@ -2246,6 +2267,9 @@ msgstr "Veuillez corriger les erreurs ci-dessous"
 msgid "Please correct the errors first"
 msgstr "Veuillez d'abord corriger les erreurs"
 
+msgid "Please enter your professional e-mail address"
+msgstr "Veuillez encoder votre adresse e-mail-professionnelle"
+
 msgid ""
 "Please fill in at least the details of your most recent academic training "
 "and your most recent non-academic experience."
@@ -2311,6 +2335,9 @@ msgstr "Privé"
 msgctxt "admission"
 msgid "Private email"
 msgstr "E-mail privé"
+
+msgid "Professional"
+msgstr "Professionnel"
 
 msgid "Professional education"
 msgstr "Enseignement professionnel"
@@ -2818,6 +2845,9 @@ msgstr ""
 "remplit ces conditions, et dans l'affirmative, demande l'attestation qui le "
 "confirme."
 
+msgid "The contact address I provided"
+msgstr "L'adresse de correspondance que j'ai fournie"
+
 #, python-format
 msgid "The experiences prefixed by %(icon)s are incomplete."
 msgstr "Les expériences préfixées par %(icon)s sont incomplètes."
@@ -3063,6 +3093,9 @@ msgstr ""
 "Erreur inattendue, veuillez <a href=\"%(url)s\">contacter le service desk</"
 "a>."
 
+msgid "Unique business number"
+msgstr "Numéro unique d'entreprise"
+
 msgid "Unknown birth date"
 msgstr "Date de naissance exacte inconnue"
 
@@ -3080,6 +3113,9 @@ msgstr "Mettre à jour l'expérience"
 
 msgid "VAE"
 msgstr "Valorisation des acquis de l'expérience"
+
+msgid "VAT number"
+msgstr "Numéro de TVA"
 
 msgid "Validated"
 msgstr "Validé"
@@ -3254,6 +3290,9 @@ msgstr ""
 "Vous vous inscrivez dans un bachelor contingenté, la demande ne peut être "
 "soumise que pendant la période du %(start_date)s au %(end_date)s."
 
+msgid "You are registering as"
+msgstr "Vous vous inscrivez à titre"
+
 msgid "You can specify the location or the postal code in your search."
 msgstr ""
 "Vous pouvez inclure la localité ou le code postal dans votre recherche."
@@ -3347,6 +3386,9 @@ msgstr "Votre participation à l'événement"
 
 msgid "Your previous NOMA (registration id)"
 msgstr "Votre ancien NOMA (numéro de matricule)"
+
+msgid "Your professional e-mail address"
+msgstr "Votre adresse e-mail professionnelle"
 
 msgid ""
 "Your secondary education data can no longer be updated. If you wish to make "

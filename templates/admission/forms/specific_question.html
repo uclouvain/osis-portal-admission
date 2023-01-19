@@ -29,7 +29,63 @@
   {# Specific questions #}
   {% with form=forms.0 %}
     {% bootstrap_form_errors form %}
-    {% if form.specific_question_answers.field.fields %}
+    {% if view.is_continuing %}
+      {% panel _('Specific questions') %}
+        {% bootstrap_field form.inscription_a_titre %}
+          <div id="professional-container">
+          {% bootstrap_field form.nom_siege_social placeholder='' %}
+          <div class="row">
+            <div class="col-md-6">
+              {% bootstrap_field form.numero_unique_entreprise placeholder='' %}
+            </div>
+            <div class="col-md-6">
+              {% bootstrap_field form.numero_tva_entreprise placeholder='' %}
+            </div>
+          </div>
+          {% bootstrap_field form.adresse_mail_professionnelle placeholder='' %}
+          {% bootstrap_field form.type_adresse_facturation %}
+          {% panel _("Billing address") id="billing-address-container" %}
+            {% bootstrap_field form.adresse_facturation_destinataire placeholder='' %}
+            <div class="row">
+                <div class="col-md-4 required_field formatted-field">
+                  {% bootstrap_field_with_tooltip form.street %}
+                </div>
+                <div class="col-md-2 required_field">
+                  {% bootstrap_field form.street_number placeholder="" %}
+                </div>
+                <div class="col-md-2">
+                  {% bootstrap_field form.postal_box placeholder="" %}
+                </div>
+                <div class="col-md-4 formatted-field">
+                  {% bootstrap_field form.place placeholder="" %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 required_field">
+                  {% bootstrap_field form.country %}
+                </div>
+                <div id="not-be-form-address">
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.postal_code placeholder="" %}
+                    </div>
+                    <div class="col-md-4 required_field formatted-field">
+                      {% bootstrap_field_with_tooltip form.city %}
+                    </div>
+                </div>
+                <div id="be-form-address">
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.be_postal_code placeholder="" %}
+                    </div>
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.be_city placeholder="" %}
+                    </div>
+                </div>
+            </div>
+          {% endpanel %}
+        </div>
+        {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
+      {% endpanel %}
+    {% elif form.specific_question_answers.field.fields %} %}
       {% panel _('Specific questions') %}
         {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
       {% endpanel %}
@@ -86,6 +142,37 @@
 
   <script>
   $(function () {
+    {% if view.is_continuing %}
+      $('#professional-container').dependsOn({
+        'input[name="specific_questions-inscription_a_titre"]': { values: ['PROFESSIONNEL'] },
+      });
+      $('#billing-address-container').dependsOn({
+        'input[name="specific_questions-type_adresse_facturation"]': { values: ['AUTRE'] },
+      });
+      const beIsoCode = '{{BE_ISO_CODE}}';
+      $('#be-form-address').dependsOn({
+          '#id_specific_questions-country': { values: [beIsoCode] },
+      });
+      $('#not-be-form-address').dependsOn({
+          '#id_specific_questions-country': { not: [beIsoCode] },
+      });
+
+      // BE city depends on postal code
+      const cityResidentialCheck = $('#id_specific_questions-be_city').dependsOn({
+          '#id_specific_questions-country': { values: [beIsoCode] },
+          '#id_specific_questions-be_postal_code': { not: [''] },
+      }, { valueOnDisable: '', hide: false });
+      $('#id_specific_questions-be_postal_code').on('keydown', function () {
+          cityResidentialCheck.check()
+          $('#id_specific_questions-be_city').val('').trigger('change');
+      });
+
+      // "city" and "postal code" depends on "country"
+      $('#id_specific_questions-city, #id_specific_questions-postal_code').dependsOn({
+          '#id_specific_questions-country': { not: [null] },
+      }, { valueOnDisable: '', hide: false });
+    {% endif %}
+
     const $belgianChildren = $('.belgian-bachelor-children');
     $belgianChildren.length && $belgianChildren.dependsOn({
       'input[name=pool_questions-is_belgian_bachelor]': { values: ['True'] },

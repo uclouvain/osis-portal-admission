@@ -337,6 +337,9 @@ msgstr ""
 msgid "Ancient languages"
 msgstr ""
 
+msgid "Another address"
+msgstr ""
+
 msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
 "classification. Detailed explanations of this framework can be found at <a "
@@ -388,6 +391,9 @@ msgstr ""
 msgid ""
 "Are you currently enrolled in the first year of a bachelor's degree at a "
 "college or university in the French Community of Belgium?"
+msgstr ""
+
+msgid "Are you registering as"
 msgstr ""
 
 msgid "Are you sure you want to cancel this request?"
@@ -502,6 +508,9 @@ msgid "Belgian national registry number (SSIN)"
 msgstr ""
 
 msgid "Between 65 and 75%"
+msgstr ""
+
+msgid "Billing address"
 msgstr ""
 
 msgid "Biology"
@@ -1261,6 +1270,9 @@ msgid ""
 "target='_blank'>French Community</a> of Belgium."
 msgstr ""
 
+msgid "For the attention of"
+msgstr ""
+
 msgid "Foreign diploma"
 msgstr ""
 
@@ -1342,6 +1354,9 @@ msgid "Have you got a Belgian national registry number (SSIN)?"
 msgstr ""
 
 msgid "Have you previously been registered at UCLouvain?"
+msgstr ""
+
+msgid "Head office name"
 msgstr ""
 
 msgid "High school diploma"
@@ -1437,6 +1452,9 @@ msgstr ""
 msgid ""
 "I have a settlement permit or I am a long-term resident in Belgium "
 "(assimilation 1)"
+msgstr ""
+
+msgid "I want the billing address to be"
 msgstr ""
 
 msgid "I will have a high school diploma this year"
@@ -1766,6 +1784,9 @@ msgstr ""
 msgid "My partner"
 msgstr ""
 
+msgid "My residential address provided before"
+msgstr ""
+
 msgid "N/A"
 msgstr ""
 
@@ -2003,6 +2024,9 @@ msgstr ""
 msgid "Please correct the errors first"
 msgstr ""
 
+msgid "Please enter your professional e-mail address"
+msgstr ""
+
 msgid ""
 "Please fill in at least the details of your most recent academic training "
 "and your most recent non-academic experience."
@@ -2061,6 +2085,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Private email"
+msgstr ""
+
+msgid "Professional"
 msgstr ""
 
 msgid "Professional education"
@@ -2542,6 +2569,9 @@ msgid ""
 "conditions and, if so, request the certificate confirming this."
 msgstr ""
 
+msgid "The contact address I provided"
+msgstr ""
+
 #, python-format
 msgid "The experiences prefixed by %(icon)s are incomplete."
 msgstr ""
@@ -2756,6 +2786,9 @@ msgid ""
 "Unexpected error, please <a href=\"%(url)s\">contact the service desk</a>."
 msgstr ""
 
+msgid "Unique business number"
+msgstr ""
+
 msgid "Unknown birth date"
 msgstr ""
 
@@ -2773,6 +2806,11 @@ msgstr ""
 
 msgid "VAE"
 msgstr ""
+
+#, fuzzy
+#| msgid "CA Member"
+msgid "VAT number"
+msgstr "Supervision member"
 
 msgid "Validated"
 msgstr ""
@@ -2924,6 +2962,9 @@ msgid ""
 "submitted in the period from %(start_date)s to %(end_date)s."
 msgstr ""
 
+msgid "You are registering as"
+msgstr ""
+
 msgid "You can specify the location or the postal code in your search."
 msgstr ""
 
@@ -2992,6 +3033,9 @@ msgid "Your participation to the event"
 msgstr ""
 
 msgid "Your previous NOMA (registration id)"
+msgstr ""
+
+msgid "Your professional e-mail address"
 msgstr ""
 
 msgid ""

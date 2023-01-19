@@ -1,5 +1,5 @@
 {% extends base_template %}
-{% load i18n admission %}
+{% load i18n admission enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -26,7 +26,40 @@
 {% endcomment %}
 
 {% block tab_content %}
-  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
+  {% if view.is_continuing %}
+    {% panel _('Specific questions') %}
+      {% field_data _('You are registering as') admission.inscription_a_titre|enum_display:'ChoixInscriptionATitre' %}
+      {% if admission.inscription_a_titre == 'PROFESSIONNEL' %}
+        {% field_data _('Head office name') admission.nom_siege_social %}
+        <div class="row">
+          {% field_data _('Unique business number') admission.numero_unique_entreprise css_class="col-md-6" %}
+          {% field_data _('VAT number') admission.numero_tva_entreprise css_class="col-md-6" %}
+        </div>
+        {% field_data _('Your professional e-mail address') admission.adresse_mail_professionnelle %}
+        {% if admission.type_adresse_facturation == 'AUTRE' and admission.adresse_facturation %}
+          {% panel _("Billing address") %}
+            <div class="row">
+                {% field_data _("Street") admission.adresse_facturation.rue css_class="col-md-4" %}
+                {% field_data _("Number") admission.adresse_facturation.numero_rue css_class="col-md-2" %}
+                {% field_data _("Box") admission.adresse_facturation.boite_postale css_class="col-md-2" %}
+                {% field_data _("Place") admission.adresse_facturation.lieu_dit css_class="col-md-4" %}
+            </div>
+            <div class="row">
+                {% get_country_name admission.adresse_facturation.pays as pays %}
+                {% field_data _("Country") pays css_class="col-md-4" %}
+                {% field_data _("Postal code") admission.adresse_facturation.code_postal css_class="col-md-4" %}
+                {% field_data _("City") admission.adresse_facturation.ville css_class="col-md-4" %}
+            </div>
+          {% endpanel %}
+        {% else %}
+          {% field_data _('Billing address') admission.type_adresse_facturation|enum_display:'ChoixTypeAdresseFacturation' %}
+        {% endif %}
+      {% endif %}
+      {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
+    {% endpanel %}
+  {% else %}
+    {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
+  {% endif %}
 
   {% if "is_non_resident" in pool_questions %}
     {% panel _("Enrollment in a bachelor with quota") %}
