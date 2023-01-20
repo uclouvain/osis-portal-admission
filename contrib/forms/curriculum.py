@@ -25,12 +25,15 @@
 # ##############################################################################
 from datetime import datetime
 from functools import partial
+from typing import List
 
 from dal import autocomplete
 from django import forms
 from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
 from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
+
+from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from osis_document.contrib.widgets import HiddenFileWidget
 
 from admission.constants import (
@@ -188,7 +191,7 @@ def month_choices():
     return [EMPTY_CHOICE[0]] + [(index, month) for index, month in MONTHS_ALT.items()]
 
 
-class DoctorateAdmissionCurriculumProfessionalExperienceForm(forms.Form):
+class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
     start_date_month = forms.ChoiceField(
         choices=month_choices,
         label=_('Month'),
@@ -296,31 +299,95 @@ class DoctorateAdmissionCurriculumProfessionalExperienceForm(forms.Form):
         return cleaned_data
 
 
-SPECIFIC_FIELDS_BY_CONTEXT = {
-    'doctorate': {
-        'expected_graduation_date',
-        'rank_in_diploma',
-        'dissertation_title',
-        'dissertation_score',
-        'dissertation_summary',
-    },
-    'general-education': set(),
-    'continuing-education': set(),
+class ByContextAdmissionForm(forms.Form):
+    """
+    Hide and disable the fields that are not in the current context and disable the fields valuated by other contexts.
+    """
+
+    FIELDS_BY_CONTEXT = {}
+
+    def __init__(self, educational_experience, current_context, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.current_context_fields = self.FIELDS_BY_CONTEXT[current_context]
+
+        self.disable_fields_other_contexts()
+
+        if educational_experience and educational_experience.get('valuated_from_trainings'):
+            self.disable_valuated_fields(educational_experience['valuated_from_trainings'])
+
+    def disable_fields_other_contexts(self):
+        """Disable and hide fields specific to other contexts."""
+        for field in self.fields:
+            if field not in self.current_context_fields:
+                self.fields[field].disabled = True
+                self.fields[field].widget = self.fields[field].hidden_widget()
+
+    def disable_valuated_fields(self, valuated_education_types: List[str]):
+        """Disable valuated fields"""
+        valuated_contexts = set(
+            ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE.get(training) for training in valuated_education_types
+        )
+
+        valuated_fields = set()
+        for context in valuated_contexts:
+            valuated_fields |= self.FIELDS_BY_CONTEXT[context]
+
+        for field in self.current_context_fields & valuated_fields:
+            self.fields[field].disabled = True
+            if isinstance(self.fields[field], FileUploadField):
+                self.fields[field].widget = HiddenFileWidget(display_visualizer=True)
+
+    def add_error(self, field, error):
+        if field and self.fields[field].disabled:
+            return
+        super().add_error(field, error)
+
+
+EDUCATIONAL_EXPERIENCE_BASE_FIELDS = {
+    'start',
+    'end',
+    'country',
+    'other_institute',
+    'institute_name',
+    'institute_address',
+    'institute',
+    'program',
+    'other_program',
+    'education_name',
+    'obtained_diploma',
 }
 
-MANDATORY_FIELDS_BY_CONTEXT = {
-    'doctorate': [
-        'expected_graduation_date',
-        'rank_in_diploma',
-        'dissertation_title',
-        'dissertation_score',
-    ],
-    'general-education': [],
-    'continuing-education': [],
+EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS = {
+    'evaluation_type',
+    'linguistic_regime',
+    'transcript_type',
+    'obtained_grade',
+    'graduate_degree',
+    'graduate_degree_translation',
+    'transcript',
+    'transcript_translation',
+}
+
+EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS = {
+    'expected_graduation_date',
+    'rank_in_diploma',
+    'dissertation_title',
+    'dissertation_score',
+    'dissertation_summary',
+}
+
+EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT = {
+    'doctorate': EDUCATIONAL_EXPERIENCE_BASE_FIELDS
+    | EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS
+    | EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS,
+    'general-education': EDUCATIONAL_EXPERIENCE_BASE_FIELDS | EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS,
+    'continuing-education': EDUCATIONAL_EXPERIENCE_BASE_FIELDS,
 }
 
 
-class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
+class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
+    FIELDS_BY_CONTEXT = EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT
+
     start = forms.ChoiceField(
         label=_('Start'),
         widget=autocomplete.Select2(),
@@ -450,11 +517,10 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
             'jquery.mask.min.js',
         )
 
-    def __init__(self, educational_experience, person, current_context, *args, **kwargs):
+    def __init__(self, educational_experience, person, *args, **kwargs):
         kwargs.setdefault('initial', educational_experience)
 
-        super().__init__(*args, **kwargs)
-        self.current_context = current_context
+        super().__init__(educational_experience, *args, **kwargs)
 
         # Initialize the field with dynamic choices
         academic_years_choices = get_past_academic_years_choices(person)
@@ -491,21 +557,6 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
             self.initial['other_program'] = bool(self.initial.get('education_name'))
             self.initial['other_institute'] = bool(self.initial.get('institute_name'))
 
-        # Disable and hide fields that are specific to other contexts
-        for context in SPECIFIC_FIELDS_BY_CONTEXT:
-            if context != current_context:
-                for field in SPECIFIC_FIELDS_BY_CONTEXT.get(context):
-                    self.fields[field].disabled = True
-                    self.fields[field].widget = self.fields[field].hidden_widget()
-
-        if educational_experience and educational_experience.get('valuated_from_trainings'):
-            # Disable all fields except the ones specific to the current context
-            for f in self.fields:
-                if f not in SPECIFIC_FIELDS_BY_CONTEXT.get(current_context):
-                    self.fields[f].disabled = True
-                    if isinstance(self.fields[f], FileUploadField):
-                        self.fields[f].widget = HiddenFileWidget(display_visualizer=True)
-
     def clean(self):
         cleaned_data = super().clean()
 
@@ -535,14 +586,18 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
         if be_country:
             self.clean_data_be(cleaned_data)
         elif country:
-            self.clean_data_foreign(cleaned_data, global_transcript, obtained_diploma)
+            self.clean_data_foreign(cleaned_data)
 
         return cleaned_data
 
     def clean_data_diploma(self, cleaned_data, obtained_diploma):
         if obtained_diploma:
-            mandatory_fields = ['obtained_grade'] + MANDATORY_FIELDS_BY_CONTEXT.get(self.current_context)
-            for field in mandatory_fields:
+            for field in [
+                'obtained_grade',
+                'expected_graduation_date',
+                'dissertation_title',
+                'dissertation_score',
+            ]:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
         else:
@@ -572,7 +627,7 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
             cleaned_data['institute_address'] = ''
             cleaned_data['institute_name'] = ''
 
-    def clean_data_foreign(self, cleaned_data, global_transcript, obtained_diploma):
+    def clean_data_foreign(self, cleaned_data):
         # Program field
         if not cleaned_data.get('education_name'):
             self.add_error('education_name', FIELD_REQUIRED_MESSAGE)
@@ -605,14 +660,29 @@ class DoctorateAdmissionCurriculumEducationalExperienceForm(forms.Form):
 MINIMUM_CREDIT_NUMBER = 0
 
 
-class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
-    def __init__(self, is_valuated=False, prefix_index_start=0, **kwargs):
-        super().__init__(**kwargs)
-        if is_valuated:
-            for f in self.fields:
-                self.fields[f].disabled = True
-                if isinstance(self.fields[f], FileUploadField):
-                    self.fields[f].widget = HiddenFileWidget(display_visualizer=True)
+EDUCATIONAL_EXPERIENCE_YEAR_CONTINUING_FIELDS = {
+    'academic_year',
+}
+
+EDUCATIONAL_EXPERIENCE_YEAR_FIELDS = {
+    'academic_year',
+    'is_enrolled',
+    'result',
+    'registered_credit_number',
+    'acquired_credit_number',
+    'transcript',
+    'transcript_translation',
+}
+
+EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT = {
+    'doctorate': EDUCATIONAL_EXPERIENCE_YEAR_FIELDS,
+    'general-education': EDUCATIONAL_EXPERIENCE_YEAR_FIELDS,
+    'continuing-education': EDUCATIONAL_EXPERIENCE_YEAR_CONTINUING_FIELDS,
+}
+
+
+class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
+    FIELDS_BY_CONTEXT = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
 
     academic_year = forms.IntegerField(
         initial=FORM_SET_PREFIX,
@@ -650,6 +720,9 @@ class DoctorateAdmissionCurriculumEducationalExperienceYearForm(forms.Form):
         required=False,
     )
 
+    def __init__(self, prefix_index_start=0, **kwargs):
+        super().__init__(**kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
 
@@ -666,8 +739,8 @@ class BaseFormSetWithCustomFormIndex(BaseFormSet):
         )
 
 
-DoctorateAdmissionCurriculumEducationalExperienceYearFormSet = forms.formset_factory(
-    form=DoctorateAdmissionCurriculumEducationalExperienceYearForm,
+AdmissionCurriculumEducationalExperienceYearFormSet = forms.formset_factory(
+    form=AdmissionCurriculumEducationalExperienceYearForm,
     formset=BaseFormSetWithCustomFormIndex,
     extra=0,
 )

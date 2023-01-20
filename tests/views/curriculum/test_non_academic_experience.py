@@ -336,6 +336,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.WORK.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -369,6 +370,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.INTERNSHIP.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -402,6 +404,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.VOLUNTEERING.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -435,6 +438,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.UNEMPLOYMENT.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -468,6 +472,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.UNEMPLOYMENT.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -504,6 +509,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.UNEMPLOYMENT.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -540,6 +546,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.LANGUAGE_TRAVEL.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -573,6 +580,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.OTHER.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -635,6 +643,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             data={
                 **self.all_form_data,
                 'type': ActivityType.OTHER.name,
+                '_submit_and_continue': True,
             },
         )
 
@@ -675,7 +684,10 @@ class CurriculumNonAcademicExperienceDeleteTestCase(MixinTestCase):
                 'admission:doctorate:update:curriculum:professional_delete',
                 pk=self.proposition.uuid,
                 experience_id=self.professional_experience.uuid,
-            )
+            ),
+            data={
+                '_submit_and_continue': True,
+            },
         )
 
         # Check the request

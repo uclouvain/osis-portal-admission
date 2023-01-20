@@ -32,7 +32,6 @@ from django import forms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
-from django.shortcuts import resolve_url
 from django.template import loader
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
@@ -51,9 +50,9 @@ from admission.contrib.forms import (
     OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
 )
 from admission.contrib.forms.curriculum import (
-    DoctorateAdmissionCurriculumEducationalExperienceForm,
-    DoctorateAdmissionCurriculumEducationalExperienceYearFormSet,
-    DoctorateAdmissionCurriculumProfessionalExperienceForm,
+    AdmissionCurriculumEducationalExperienceForm,
+    AdmissionCurriculumEducationalExperienceYearFormSet,
+    AdmissionCurriculumProfessionalExperienceForm,
     MINIMUM_CREDIT_NUMBER,
 )
 from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
@@ -76,9 +75,7 @@ __namespace__ = 'curriculum'
 
 class AdmissionCurriculumFormMixin(WebServiceFormMixin, AdmissionCurriculumMixin, ABC):
     def get_success_url(self):
-        messages.info(self.request, _("Your data has been saved"))
-        url = resolve_url(f"admission:{self.current_context}:update:curriculum", pk=self.admission_uuid)
-        return url + getattr(self, 'url_hash', '')
+        return AdmissionCurriculumMixin.get_success_url(self)
 
 
 class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormMixin, FormView):
@@ -87,7 +84,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
         'professional_create': 'professional/create',
     }
     template_name = 'admission/forms/curriculum_professional_experience.html'
-    form_class = DoctorateAdmissionCurriculumProfessionalExperienceForm
+    form_class = AdmissionCurriculumProfessionalExperienceForm
     url_hash = '#non-academic-activities'
 
     def get_form_kwargs(self):
@@ -191,7 +188,7 @@ class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumForm
         return context
 
 
-class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin, TemplateView):
+class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormMixin, TemplateView):
     urlpatterns = {
         'educational_update': 'educational/<uuid:experience_id>/update',
         'educational_create': 'educational/create',
@@ -222,7 +219,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
             educational_experience['start'] = all_years_config['start']
             educational_experience['end'] = all_years_config['end']
 
-        base_form = DoctorateAdmissionCurriculumEducationalExperienceForm(
+        base_form = AdmissionCurriculumEducationalExperienceForm(
             educational_experience=educational_experience,
             person=self.request.user.person,
             current_context=self.current_context,
@@ -230,7 +227,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
             prefix='base_form',
         )
 
-        year_formset = DoctorateAdmissionCurriculumEducationalExperienceYearFormSet(
+        year_formset = AdmissionCurriculumEducationalExperienceYearFormSet(
             self.request.POST or None,
             initial=all_educational_experience_years,
             prefix='year_formset',
@@ -241,7 +238,8 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
                         base_form.initial['end'] if all_educational_experience_years else 0,
                     )
                 ),
-                'is_valuated': educational_experience and educational_experience['valuated_from_trainings'],
+                'educational_experience': educational_experience,
+                'current_context': self.current_context,
             },
         )
 
@@ -271,10 +269,11 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
 
         return context_data
 
-    def prepare_data(self, base_form, year_formset):
+    def prepare_form_data(self, base_form, year_formset):
         data = base_form.cleaned_data
+
         data['educationalexperienceyear_set'] = [
-            year_data for year_data in year_formset.cleaned_data if year_data.pop('is_enrolled')
+            year_data for year_data in year_formset.cleaned_data if year_data.pop('is_enrolled', None)
         ]
 
         data.pop('other_institute')
@@ -287,9 +286,8 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         base_form.is_valid()
         year_formset.is_valid()
 
-        last_enrolled_year = None
-
         country = base_form.cleaned_data.get('country')
+        last_enrolled_year = base_form.cleaned_data.get('end')
         be_country = country == BE_ISO_CODE
         linguistic_regime = base_form.cleaned_data.get('linguistic_regime')
         credits_are_required = base_form.cleaned_data.get('evaluation_type') in EvaluationSystemsWithCredits
@@ -301,13 +299,12 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
             and linguistic_regime
             and linguistic_regime not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
         )
+        has_enrolled_year = False
 
         # Cross-form check
         for form in year_formset:
             if form.cleaned_data.get('is_enrolled'):
-                if not last_enrolled_year:
-                    last_enrolled_year = form.cleaned_data.get('academic_year')
-
+                has_enrolled_year = True
                 self.clean_experience_year_form(
                     be_country,
                     credits_are_required,
@@ -316,12 +313,13 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
                     transcript_translation_is_required,
                 )
 
-        if not last_enrolled_year:
+        if not has_enrolled_year:
             base_form.add_error(None, _('At least one academic year is required.'))
-        elif be_country:
+
+        if last_enrolled_year and be_country:
             # The evaluation system in Belgium depends on the years
             base_form.cleaned_data['evaluation_type'] = EvaluationSystem[
-                'ECTS_CREDITS' if last_enrolled_year >= FIRST_YEAR_WITH_ECTS_BE else 'NO_CREDIT_SYSTEM'
+                'ECTS_CREDITS' if int(last_enrolled_year) >= FIRST_YEAR_WITH_ECTS_BE else 'NO_CREDIT_SYSTEM'
             ].name
 
         return base_form.is_valid() and year_formset.is_valid()
@@ -389,10 +387,11 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
 
         # Check the forms
         if not self.check_forms(base_form, year_formset):
+            messages.error(self.request, _("Please correct the errors below"))
             return self.render_to_response(context_data)
 
         # Prepare data
-        data = self.prepare_data(base_form, year_formset)
+        data = self.prepare_form_data(base_form, year_formset)
 
         # Make the API request
         if self.experience_id:

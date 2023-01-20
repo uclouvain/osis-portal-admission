@@ -30,7 +30,10 @@ from django.utils.functional import cached_property
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import TemplateView
 
-from admission.contrib.enums import EvaluationSystemsWithCredits, TypeFormation
+from admission.contrib.enums import (
+    EvaluationSystemsWithCredits,
+    ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT,
+)
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
     AdmissionPersonService,
@@ -81,9 +84,14 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
         )
 
     def get_success_url(self):
-        # Redirect to the list of experiences
         messages.info(self.request, _("Your data has been saved"))
-        return self._get_url('curriculum', update=True) + getattr(self, 'url_hash', '')
+        return (
+            # Redirect to the list of experiences
+            self._get_url('curriculum', update=True) + getattr(self, 'url_hash', '')
+            if '_submit_and_continue' in self.request.POST
+            # Redirect to the current page
+            else self.request.get_full_path()
+        )
 
     def get(self, request, *args, **kwargs):
         if not self.admission_uuid:
@@ -197,7 +205,16 @@ def experience_can_be_updated(experience, context):
     return (
         # ... if it is not valuated
         not getattr(experience, 'valuated_from_trainings', [])
-        # ... or, for a doctorate admission, if it is not valuated by another doctorate admission
+        # ... or, for a doctorate admission, if it hasn't been valuated by another doctorate admission
         or context == 'doctorate'
-        and not any(training == TypeFormation.DOCTORAT.name for training in experience.valuated_from_trainings)
+        and not any(
+            training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['doctorate']
+            for training in experience.valuated_from_trainings
+        )
+        # ... or, for a general admission, if the experience has only been valuated by continuing admissions
+        or context == 'general-education'
+        and all(
+            training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
+            for training in experience.valuated_from_trainings
+        )
     )
