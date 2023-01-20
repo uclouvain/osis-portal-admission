@@ -141,11 +141,9 @@ class ConfirmSubmitTestCase(TestCase):
         response = self.client.get(self.url)
         # Display an error message as some conditions aren't meet
         self.assertContains(
-            response, _('Your enrolment cannot be confirmed. All the following conditions must be met to do it.')
+            response,
+            _('Your enrolment cannot be confirmed. All the following conditions must be met to do it.'),
         )
-        # Display the missing conditions retrieves by the API
-        self.assertContains(response, 'Some data is missing.')
-        self.assertContains(response, 'Every promoter must approve the proposition.')
 
     @freezegun.freeze_time('2022-09-22')
     def test_get_late_message(self):

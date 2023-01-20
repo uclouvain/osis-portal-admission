@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from collections import defaultdict
 
 from django.conf import settings
 from django.contrib import messages
@@ -95,14 +96,14 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         # Group the missing conditions by tab if any
         if self.confirmation_conditions['errors']:
             errors_by_tab = {
-                tab.name: {'label': tab.label, 'errors': []}
+                tab.name: {'label': tab.label, 'errors': defaultdict(list)}
                 for child_tabs in TAB_TREES[self.current_context].values()
                 for tab in child_tabs
                 if can_read_tab(self.admission, tab)
             }
             for error in self.confirmation_conditions['errors']:
                 tab_name = TAB_OF_BUSINESS_EXCEPTION[error['status_code']]
-                errors_by_tab[tab_name]['errors'].append((error['status_code'], error['detail']))
+                errors_by_tab[tab_name]['errors'][error['status_code']].append(error['detail'])
             context['missing_confirmation_conditions'] = errors_by_tab
 
         context['access_conditions_url'] = self.confirmation_conditions.get('access_conditions_url')

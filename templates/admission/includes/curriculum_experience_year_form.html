@@ -40,7 +40,7 @@
     <td class="active-year required_field credit-input {% if not year_form.is_enrolled.value %}hidden{% endif %}">
       {% bootstrap_field year_form.acquired_credit_number show_label=False placeholder='' %}
     </td>
-    <td class="active-year required_field result flex-container {% if not year_form.is_enrolled.value %}hidden{% endif %}">
+    <td class="active-year required_field result flex-container align-items-baseline {% if not year_form.is_enrolled.value %}hidden{% endif %}">
       {% bootstrap_field year_form.result show_label=False form_group_class="form-group flex-1" %}
       <button class="btn btn-primary" type="button">
         {% translate "Transcript" context "cv-attachment" %}

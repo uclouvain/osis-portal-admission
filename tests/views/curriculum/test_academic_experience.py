@@ -27,6 +27,7 @@ import datetime
 from unittest.mock import ANY
 
 from django.shortcuts import resolve_url
+from django.test import override_settings
 from django.utils.translation import gettext
 from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 
@@ -40,6 +41,10 @@ from admission.contrib.enums.curriculum import (
     TeachingTypeEnum,
 )
 from admission.contrib.forms import EMPTY_CHOICE
+from admission.contrib.forms.curriculum import (
+    EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS,
+    EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS,
+)
 from admission.tests.views.curriculum.mixin import MixinTestCase
 
 
@@ -108,6 +113,7 @@ class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
         self.assertEqual(len(experience_years), 0)
 
 
+@override_settings(SERVER_NAME=None)
 class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
     def test_with_admission_on_delete_experience_post_form(self):
         response = self.client.post(
@@ -115,7 +121,10 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
                 'admission:doctorate:update:curriculum:educational_delete',
                 pk=self.proposition.uuid,
                 experience_id=self.educational_experience.uuid,
-            )
+            ),
+            data={
+                '_submit_and_continue': True,
+            },
         )
 
         # Check the request
@@ -218,7 +227,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'year_formset-2020-transcript_0': ['f1_2020.pdf'],
             'year_formset-2020-transcript_translation_0': ['f11_2020.pdf'],
             'year_formset-TOTAL_FORMS': '3',
-            'year_formset-INITIAL_FORMS': '0',
+            'year_formset-INITIAL_FORMS': '3',
+            '_submit_and_continue': True,
         }
 
     def setUp(self):
@@ -371,14 +381,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
     def test_with_admission_on_update_experience_form_is_initialized_with_doctorate_and_valuated_by_general(self):
-        doctorate_fields = {
-            'expected_graduation_date',
-            'rank_in_diploma',
-            'dissertation_title',
-            'dissertation_score',
-            'dissertation_summary',
-        }
-
+        editable_fields = EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS
         self.mockapi.retrieve_educational_experience_admission.return_value.valuated_from_trainings = [
             TypeFormation.MASTER.name,
         ]
@@ -393,17 +396,10 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check that the right fields are disabled
         for f in base_form.fields:
-            self.assertEqual(f not in doctorate_fields, base_form.fields[f].disabled)
+            self.assertEqual(f not in editable_fields, base_form.fields[f].disabled)
 
     def test_with_admission_on_update_experience_form_is_initialized_with_doctorate_and_valuated_by_continuing(self):
-        doctorate_fields = {
-            'expected_graduation_date',
-            'rank_in_diploma',
-            'dissertation_title',
-            'dissertation_score',
-            'dissertation_summary',
-        }
-
+        editable_fields = EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS | EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS
         self.mockapi.retrieve_educational_experience_admission.return_value.valuated_from_trainings = [
             TypeFormation.FORMATION_CONTINUE.name,
         ]
@@ -418,7 +414,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check that the right fields are disabled
         for f in base_form.fields:
-            self.assertEqual(f not in doctorate_fields, base_form.fields[f].disabled)
+            self.assertEqual(f not in editable_fields, base_form.fields[f].disabled)
 
     def test_with_admission_on_update_experience_form_is_initialized_with_general_education(self):
         response = self.client.get(self.general_admission_update_url)
@@ -431,20 +427,11 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the context data
         base_form = response.context.get('base_form')
-        self.assertTrue(base_form.fields['expected_graduation_date'].disabled)
-        self.assertTrue(base_form.fields['rank_in_diploma'].disabled)
-        self.assertTrue(base_form.fields['dissertation_title'].disabled)
-        self.assertTrue(base_form.fields['dissertation_score'].disabled)
-        self.assertCountEqual(
-            [f.field for f in base_form.hidden_fields()],
-            [
-                base_form.fields['expected_graduation_date'],
-                base_form.fields['rank_in_diploma'],
-                base_form.fields['dissertation_title'],
-                base_form.fields['dissertation_score'],
-                base_form.fields['dissertation_summary'],
-            ],
-        )
+        non_visible_fields = [base_form.fields[field] for field in EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS]
+        for field in non_visible_fields:
+            self.assertTrue(field.disabled)
+
+        self.assertCountEqual([f.field for f in base_form.hidden_fields()], non_visible_fields)
 
     def test_with_admission_on_update_experience_form_is_forbidden_with_general_and_valuated_by_doctorate(self):
         mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
@@ -468,7 +455,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
-    def test_with_admission_on_update_experience_form_is_forbidden_with_general_and_valuated_by_continuing(self):
+    def test_with_admission_on_update_experience_form_is_initialized_with_general_and_valuated_by_continuing(self):
+        editable_fields = EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS
         mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
         mock_retrieve_experience.return_value.valuated_from_trainings = [
             TypeFormation.FORMATION_CONTINUE.name,
@@ -477,7 +465,14 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         response = self.client.get(self.general_admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the context data
+        base_form = response.context.get('base_form')
+
+        # Check that the right fields are disabled
+        for f in base_form.fields:
+            self.assertEqual(f not in editable_fields, base_form.fields[f].disabled)
 
     def test_with_admission_on_update_experience_form_is_initialized_with_continuing_education(self):
         response = self.client.get(self.continuing_admission_update_url)
@@ -490,20 +485,15 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the context data
         base_form = response.context.get('base_form')
-        self.assertTrue(base_form.fields['expected_graduation_date'].disabled)
-        self.assertTrue(base_form.fields['rank_in_diploma'].disabled)
-        self.assertTrue(base_form.fields['dissertation_title'].disabled)
-        self.assertTrue(base_form.fields['dissertation_score'].disabled)
-        self.assertCountEqual(
-            [f.field for f in base_form.hidden_fields()],
-            [
-                base_form.fields['expected_graduation_date'],
-                base_form.fields['rank_in_diploma'],
-                base_form.fields['dissertation_title'],
-                base_form.fields['dissertation_score'],
-                base_form.fields['dissertation_summary'],
-            ],
-        )
+
+        non_visible_fields = [
+            base_form.fields[field]
+            for field in EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS | EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS
+        ]
+        for field in non_visible_fields:
+            self.assertTrue(field.disabled)
+
+        self.assertCountEqual([f.field for f in base_form.hidden_fields()], non_visible_fields)
 
     def test_with_admission_on_update_experience_form_is_forbidden_with_continuing_and_valuated_by_doctorate(self):
         mock_retrieve_experience = self.mockapi.retrieve_educational_experience_continuing_education_admission
@@ -954,17 +944,17 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
-                        'result': Result.SUCCESS.name,
-                        'registered_credit_number': 150.0,
-                        'acquired_credit_number': 100.0,
+                        'result': 'SUCCESS',
+                        'registered_credit_number': None,
+                        'acquired_credit_number': None,
                         'transcript': [],
                         'transcript_translation': [],
                     },
                     {
                         'academic_year': 2018,
-                        'result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
-                        'registered_credit_number': 150.0,
-                        'acquired_credit_number': 100.0,
+                        'result': 'SUCCESS',
+                        'registered_credit_number': None,
+                        'acquired_credit_number': None,
                         'transcript': [],
                         'transcript_translation': [],
                     },

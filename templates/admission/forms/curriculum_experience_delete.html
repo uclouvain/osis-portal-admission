@@ -50,7 +50,7 @@
       <p>{{ question }}</p>
       <form method="POST">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">
+        <button type="submit" name="_submit_and_continue" class="btn btn-danger">
           {% trans "Confirm" %}
         </button>
         {% if admission %}

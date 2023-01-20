@@ -42,12 +42,19 @@ class TypeFormation(ChoiceEnum):
         return tuple((x.name, x.value) for x in cls if x.name in TYPES_FORMATION_GENERALE)
 
 
-TYPES_FORMATION_GENERALE = {
-    TypeFormation.BACHELIER.name,
-    TypeFormation.MASTER.name,
-    TypeFormation.AGREGATION_CAPES.name,
-    TypeFormation.CERTIFICAT.name,
+ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT = {
+    'general-education': {
+        TypeFormation.BACHELIER.name,
+        TypeFormation.MASTER.name,
+        TypeFormation.AGREGATION_CAPES.name,
+        TypeFormation.CERTIFICAT.name,
+    },
+    'continuing-education': {TypeFormation.FORMATION_CONTINUE.name},
+    'doctorate': {TypeFormation.DOCTORAT.name},
 }
+
+
+TYPES_FORMATION_GENERALE = ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['general-education']
 
 
 class TrainingType(ChoiceEnum):
@@ -114,19 +121,16 @@ OSIS_ADMISSION_EDUCATION_TYPES_MAPPING = {
     ],
 }
 
-GENERAL_EDUCATION_TYPES = set(
-    OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.BACHELIER.name)
-    + OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.MASTER.name)
-    + OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.AGREGATION_CAPES.name)
-    + OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.CERTIFICAT.name)
-)
-
-CONTINUING_EDUCATION_TYPES = set(OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.FORMATION_CONTINUE.name))
-
-DOCTORATE_EDUCATION_TYPES = set(OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.get(TypeFormation.DOCTORAT.name))
 
 ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE = {
     osis_type: admission_type
     for admission_type, osis_types in OSIS_ADMISSION_EDUCATION_TYPES_MAPPING.items()
     for osis_type in osis_types
+}
+
+
+ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE = {
+    admission_type: admission_context
+    for admission_context, admission_types in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT.items()
+    for admission_type in admission_types
 }
