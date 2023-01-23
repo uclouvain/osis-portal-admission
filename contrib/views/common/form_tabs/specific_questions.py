@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
         kwargs['forms'] = self.get_forms()
         kwargs['form'] = kwargs['forms'][0]  # Trick template to display form tag and buttons
         kwargs['BE_ISO_CODE'] = BE_ISO_CODE
-        if self.display_pool_questions_form:
+        if self.display_pool_questions_form and self.pool_questions:
             kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
             kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
         return super().get_context_data(**kwargs)
@@ -98,7 +98,7 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                 prefix='specific_questions',
             )
         ]
-        if self.display_pool_questions_form:
+        if self.display_pool_questions_form and self.pool_questions:
             forms.append(
                 PoolQuestionsForm(
                     self.request.POST or None,

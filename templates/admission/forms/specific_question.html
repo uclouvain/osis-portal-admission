@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -96,8 +96,14 @@
   {% if forms.1 %}
     {% with form=forms.1 %}
 
+      {% if form.is_non_resident %}
+        {% panel _("Enrollment in a bachelor with quota") %}
+          {% bootstrap_field form.is_non_resident form_group_class="form-group required_field" %}
+        {% endpanel %}
+      {% endif %}
+
       {% if form.is_external_modification %}
-        {% panel _("Registration change") %}
+        {% panel _("Registration change") id="panel-modification" %}
           {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
           <div class="belgian-bachelor-children">
             {% bootstrap_field form.is_external_modification form_group_class="form-group required_field" %}
@@ -112,7 +118,7 @@
         {% endpanel %}
 
       {% elif form.is_external_reorientation %}
-        {% panel _("Reorientation") %}
+        {% panel _("Reorientation") id="panel-reorientation" %}
           {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
           <div class="belgian-bachelor-children">
             {% bootstrap_field form.is_external_reorientation form_group_class="form-group required_field" %}
@@ -126,10 +132,6 @@
           </div>
         {% endpanel %}
 
-      {% elif form.is_non_resident %}
-        {% panel _("Enrollment in a bachelor with quota") %}
-          {% bootstrap_field form.is_non_resident form_group_class="form-group required_field" %}
-        {% endpanel %}
       {% endif %}
 
     {% endwith %}
@@ -187,6 +189,17 @@
     $registrationProof.length && $registrationProof.dependsOn({
       'input[name=pool_questions-is_external_reorientation]': { values: ['True'] },
     });
+
+    {% if forms.1 and forms.1.is_non_resident %}
+      {% if forms.1.is_external_modification or forms.1.is_external_reorientation %}
+        {# Whole panel depends on is_non_resident question #}
+        $('#panel-modification, #panel-reorientation').dependsOn({
+          'input[name=pool_questions-is_non_resident]': {
+            values: ['False'],
+          },
+        });
+      {% endif %}
+    {% endif %}
   });
   </script>
 {% endblock %}
