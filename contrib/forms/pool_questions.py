@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ class PoolQuestionsForm(forms.Form):
         required=False,
     )
     registration_change_form = FileUploadField(required=False)
-    is_non_resident = forms.BooleanField(
+    is_non_resident = forms.NullBooleanField(
         label=_("Are you a non-resident (as defined in decree)?"),
         widget=BooleanRadioSelect(),
         required=False,
@@ -111,6 +111,9 @@ class PoolQuestionsForm(forms.Form):
     def clean(self):
         data = super().clean()
 
+        if 'is_non_resident' in self.fields and data['is_non_resident'] is None:
+            self.add_error('is_non_resident', self.fields['is_non_resident'].error_messages['required'])
+
         if data.get('is_belgian_bachelor') is False and self.initial['modification_pool_end_date']:
             # not belgian bachelor, clean modification fields
             data['is_external_modification'] = False
@@ -124,6 +127,7 @@ class PoolQuestionsForm(forms.Form):
         elif (
             'is_belgian_bachelor' in data
             and data['is_belgian_bachelor'] is None
+            and data.get('is_non_resident') is not True
             and (self.initial['modification_pool_end_date'] or self.initial['reorientation_pool_end_date'])
         ):
             # no belgian bachelor, modification asked
