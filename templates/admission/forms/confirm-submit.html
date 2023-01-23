@@ -64,7 +64,12 @@
               {% if tab.errors %}
                 <p class="tab-name">
                   <i class="fa fa-times text-danger"></i>
-                  <a href="{% url base_namespace|add:':update:'|add:tab_name admission.uuid %}">{{ tab.label }}</a>
+                  {% if admission|can_update_tab:tab_name %}
+                    {% url base_namespace|add:':update:'|add:tab_name admission.uuid as url %}
+                  {% else %}
+                    {% url base_namespace|add:':'|add:tab_name admission.uuid as url %}
+                  {% endif %}
+                  <a href="{{ url }}">{{ tab.label }}</a>
                 </p>
                 <ul>
                   {% for error_code, errors in tab.errors.items %}
