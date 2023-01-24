@@ -52,9 +52,9 @@ class PoolQuestionsForm(forms.Form):
         label=format_html(
             _(
                 'Would you like to reorient yourself for this academic year at UCLouvain? '
-                '(<a href="{url}" target=_blank">Informations</a>)'
+                '(<a href="{url}" target="_blank">Informations</a>)'
             ),
-            url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#modificationinscr',
+            url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#r%C3%A9orientation',
         ),
         widget=BooleanRadioSelect(),
         required=False,
@@ -64,7 +64,7 @@ class PoolQuestionsForm(forms.Form):
         label=format_html(
             _(
                 "Would you like to change your registration for this academic year at UCLouvain? "
-                '(<a href="{url}" target=_blank">Informations</a>)'
+                '(<a href="{url}" target="_blank">Informations</a>)'
             ),
             url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#modificationinscr',
         ),

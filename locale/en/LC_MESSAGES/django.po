@@ -2888,7 +2888,7 @@ msgstr ""
 #, python-brace-format
 msgid ""
 "Would you like to change your registration for this academic year at "
-"UCLouvain? (<a href=\"{url}\" target=_blank\">Informations</a>)"
+"UCLouvain? (<a href=\"{url}\" target=\"_blank\">Informations</a>)"
 msgstr ""
 
 msgid ""
@@ -2903,7 +2903,7 @@ msgstr ""
 #, python-brace-format
 msgid ""
 "Would you like to reorient yourself for this academic year at UCLouvain? (<a "
-"href=\"{url}\" target=_blank\">Informations</a>)"
+"href=\"{url}\" target=\"_blank\">Informations</a>)"
 msgstr ""
 
 msgid "Writing ability"
