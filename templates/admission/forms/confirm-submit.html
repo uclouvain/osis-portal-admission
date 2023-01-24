@@ -145,13 +145,13 @@
                           <div class="panel-body">
                             {% blocktrans with url=calendar_url year=admission.annee_calculee|get_academic_year trimmed %}
                               <p>
-                                On the basis of the <a href="{{ url }}">registration calendar</a> and the information
-                                you have provided, your application will be considered for the academic year
-                                <strong>{{ year }}</strong>.
+                                On the basis of the <a href="{{ url }}" target="_blank">registration calendar</a>
+                                and the information you have provided, your application will be considered for the
+                                academic year <strong>{{ year }}</strong>.
                               </p>
                               <p>
-                                Unfortunately, the training you have selected, {{ training_title }}, will not be
-                                organised in {{ year }}.
+                                Unfortunately, the training you have selected, <em>{{ training_title }}</em>, will not
+                                be organised in {{ year }}.
                               </p>
                               <p>We invite you to choose another training.</p>
                             {% endblocktrans %}
