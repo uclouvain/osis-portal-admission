@@ -105,7 +105,6 @@
                             {% display admission.formation.intitule as training_title %}
                           {% endif %}
                           <div class="panel-body">
-                            {# TODO url #}
                             {% blocktrans with url=access_conditions_url training_title=training_title trimmed %}
                               <p>
                                 On the basis of the information you have provided in your previous experience, you do
@@ -120,10 +119,12 @@
                                 <span class="fa fa-person-walking-luggage"></span>
                                 {% trans "Check my previous experience" %}
                               </a>
-                              <a href="{{ training_choice_url }}" class="btn btn-primary">
-                                <span class="fa fa-person-chalkboard"></span>
-                                {% trans "Choose another training" %}
-                              </a>
+                              {% if current_context == 'doctorate' %}
+                                <a href="{{ training_choice_url }}" class="btn btn-primary">
+                                  <span class="fa fa-person-chalkboard"></span>
+                                  {% trans "Choose another training" %}
+                                </a>
+                              {% endif %}
                             </div>
                           </div>
                         </div>
