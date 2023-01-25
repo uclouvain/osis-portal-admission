@@ -383,8 +383,10 @@ class AccountingForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, is_general_admission, **kwargs):
+    def __init__(self, is_general_admission, is_doctorate_admission, with_assimilation, **kwargs):
         self.is_general_admission = is_general_admission
+        self.is_doctorate_admission = is_doctorate_admission
+        self.with_assimilation = with_assimilation
         self.education_site = kwargs.pop('education_site', None)
         self.has_ue_nationality = kwargs.pop('has_ue_nationality', None)
         self.last_french_community_high_education_institutes_attended = kwargs.pop(
@@ -419,8 +421,8 @@ class AccountingForm(forms.Form):
             if self.education_site:
                 self.fields['affiliation_sport'].choices = ChoixAffiliationSport.choices(self.education_site)
 
-            if self.has_ue_nationality is False:
-                self.fields['type_situation_assimilation'].required = True
+        if self.with_assimilation:
+            self.fields['type_situation_assimilation'].required = True
 
     class Media:
         js = (
@@ -608,6 +610,7 @@ class AccountingForm(forms.Form):
             else:
                 cleaned_data['attestation_enfant_personnel'] = []
 
+        if self.is_general_admission or self.is_doctorate_admission:
             # Assimilation
             self.clean_assimilation_fields(cleaned_data)
 

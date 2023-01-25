@@ -57,7 +57,7 @@
     {% endpanel %}
   {% endif %}
 
-  {% if is_general and accounting.a_nationalite_ue == False %}
+  {% if with_assimilation %}
     {% panel _('Assimilation') %}
       {% if accounting.type_situation_assimilation == 'AUCUNE_ASSIMILATION' %}
         {% translate 'You specified that no assimilation proposals applies to you.' %}
@@ -224,7 +224,7 @@
 
   <script type="application/javascript">
       $(function () {
-          {% if is_general %}
+          {% if with_assimilation %}
               const currentRelationShip = "{{ accounting.relation_parente|enum_display:'LienParente' }}";
               if (currentRelationShip) {
                   const formattedCurrentRelationShip = "{{ formatted_relationships|get_item:accounting.relation_parente }}";
