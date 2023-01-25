@@ -36,7 +36,7 @@ from admission.contrib.enums.specific_question import (
     TypeChampTexteFormulaire,
     CleConfigurationItemFormulaire,
 )
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField, DEFAULT_MIME_TYPES
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField, DEFAULT_MIME_TYPES, EMPTY_CHOICE
 from admission.utils import get_uuid_value
 
 
@@ -99,8 +99,9 @@ class ConfigurableFormItemWidget(forms.MultiWidget):
 
 
 def _get_default_field_params(configuration: dict, current_language: str):
+    """Return the default field params based on the field configuration and a specific language."""
     return {
-        'required': False,
+        'required': configuration['required'],
         'label': configuration['title'].get(current_language, ''),
         'help_text': configuration['text'].get(current_language, ''),
         'error_messages': {
@@ -149,13 +150,16 @@ def _get_field_from_configuration(configuration, current_language):
             widget=widget(
                 attrs={
                     'placeholder': configuration['help_text'].get(current_language, ''),
+                    'required': configuration['required'],
                 }
             ),
         )
 
     elif form_item_type == TypeItemFormulaire.DOCUMENT.name:
+        default_field_params = _get_default_field_params(configuration, current_language)
+        default_field_params['required'] = False
         field = FileUploadField(
-            **_get_default_field_params(configuration, current_language),
+            **default_field_params,
             max_files=configuration['configuration'].get(
                 CleConfigurationItemFormulaire.NOMBRE_MAX_DOCUMENTS.name,
                 DEFAULT_MAX_NB_DOCUMENTS,
@@ -172,10 +176,21 @@ def _get_field_from_configuration(configuration, current_language):
             TypeChampSelectionFormulaire.LISTE.name,
         )
 
+        choices = tuple((value['key'], value[current_language]) for value in configuration['values'])
+
+        if type_selection == TypeChampSelectionFormulaire.LISTE.name:
+            choices = EMPTY_CHOICE + choices
+
         field = SELECTION_FIELD[type_selection](
             **_get_default_field_params(configuration, current_language),
-            choices=tuple((value['key'], value[current_language]) for value in configuration['values']),
-            widget=SELECTION_WIDGET[type_selection](),
+            choices=choices,
+            widget=SELECTION_WIDGET[type_selection](
+                attrs={
+                    'required': configuration['required'],
+                }
+                if type_selection != TypeChampSelectionFormulaire.CASES_A_COCHER.name
+                else {}
+            ),
         )
 
     else:
@@ -273,7 +288,7 @@ class ConfigurableFormMixin(forms.Form):
 
         initial_answers = self.initial.get(self.configurable_form_field_name)
 
-        if initial_answers:
+        if initial_answers and self.configurable_form_field_name in cleaned_data:
             # Merge the initial data containing answers of other tabs with the new answers
             for answer_key in initial_answers:
                 cleaned_data[self.configurable_form_field_name].setdefault(answer_key, initial_answers[answer_key])
