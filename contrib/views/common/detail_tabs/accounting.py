@@ -23,10 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView
 
+from admission.contrib.enums import LienParente
 from admission.contrib.enums.accounting import FORMATTED_RELATIONSHIPS, dynamic_person_concerned_lowercase
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.proposition import AdmissionPropositionService
@@ -34,24 +35,35 @@ from admission.services.proposition import AdmissionPropositionService
 __all__ = ['AdmissionAccountingDetailView']
 
 
-class AdmissionAccountingDetailView(LoadDossierViewMixin, TemplateView):
-    template_name = 'admission/details/accounting.html'
-
+class BaseAdmissionAccountingView(LoadDossierViewMixin):
     retrieve_accounting = {
         'doctorate': AdmissionPropositionService.retrieve_doctorate_accounting,
         'general-education': AdmissionPropositionService.retrieve_general_accounting,
         'continuing-education': AdmissionPropositionService.retrieve_continuing_accounting,
     }
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-
-        context_data['accounting'] = self.retrieve_accounting[self.current_context](
+    @cached_property
+    def accounting(self):
+        return self.retrieve_accounting[self.current_context](
             person=self.request.user.person,
             uuid=self.admission_uuid,
         ).to_dict()
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        context_data['relationships'] = {elt.name: elt.value for elt in LienParente}
+        context_data['accounting'] = self.accounting
         context_data['formatted_relationships'] = FORMATTED_RELATIONSHIPS
         context_data['dynamic_person_concerned_lowercase'] = mark_safe(dynamic_person_concerned_lowercase)
+        context_data['with_assimilation'] = self.with_assimilation
 
         return context_data
+
+    @property
+    def with_assimilation(self):
+        return (self.is_general or self.is_doctorate) and self.accounting.get('a_nationalite_ue') is False
+
+
+class AdmissionAccountingDetailView(BaseAdmissionAccountingView, TemplateView):
+    template_name = 'admission/details/accounting.html'

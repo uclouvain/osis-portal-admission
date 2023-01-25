@@ -102,7 +102,47 @@ class DoctorateAccountingViewTestCase(TestCase):
         )
 
         cls.accounting = {
-            'attestation_absence_dette_etablissement': [],
+            'attestation_absence_dette_etablissement': ['attestation_absence_dette_etablissement.pdf'],
+            'type_situation_assimilation': TypeSituationAssimilation.AUCUNE_ASSIMILATION.name,
+            'sous_type_situation_assimilation_1': ChoixAssimilation1.TITULAIRE_CARTE_ETRANGER.name,
+            'carte_resident_longue_duree': ['carte_resident_longue_duree.pdf'],
+            'carte_cire_sejour_illimite_etranger': ['carte_cire_sejour_illimite_etranger.pdf'],
+            'carte_sejour_membre_ue': ['carte_sejour_membre_ue.pdf'],
+            'carte_sejour_permanent_membre_ue': ['carte_sejour_permanent_membre_ue.pdf'],
+            'sous_type_situation_assimilation_2': ChoixAssimilation2.PROTECTION_SUBSIDIAIRE.name,
+            'carte_a_b_refugie': ['carte_a_b_refugie.pdf'],
+            'annexe_25_26_refugies_apatrides': ['annexe_25_26_refugies_apatrides.pdf'],
+            'attestation_immatriculation': ['attestation_immatriculation.pdf'],
+            'carte_a_b': ['carte_a_b.pdf'],
+            'decision_protection_subsidiaire': ['decision_protection_subsidiaire.pdf'],
+            'decision_protection_temporaire': ['decision_protection_temporaire.pdf'],
+            'sous_type_situation_assimilation_3': (
+                ChoixAssimilation3.AUTORISATION_SEJOUR_ET_REVENUS_PROFESSIONNELS.name
+            ),
+            'titre_sejour_3_mois_professionel': ['titre_sejour_3_mois_professionel.pdf'],
+            'fiches_remuneration': ['fiches_remuneration.pdf'],
+            'titre_sejour_3_mois_remplacement': ['titre_sejour_3_mois_remplacement.pdf'],
+            'preuve_allocations_chomage_pension_indemnite': ['preuve_allocations_chomage_pension_indemnite.pdf'],
+            'attestation_cpas': ['attestation_cpas.pdf'],
+            'relation_parente': LienParente.MERE.name,
+            'sous_type_situation_assimilation_5': ChoixAssimilation5.PRIS_EN_CHARGE_OU_DESIGNE_CPAS.name,
+            'composition_menage_acte_naissance': ['composition_menage_acte_naissance.pdf'],
+            'acte_tutelle': ['acte_tutelle.pdf'],
+            'composition_menage_acte_mariage': ['composition_menage_acte_mariage.pdf'],
+            'attestation_cohabitation_legale': ['attestation_cohabitation_legale.pdf'],
+            'carte_identite_parent': ['carte_identite_parent.pdf'],
+            'titre_sejour_longue_duree_parent': ['titre_sejour_longue_duree_parent.pdf'],
+            'annexe_25_26_refugies_apatrides_decision_protection_parent': [
+                'annexe_25_26_refugies_apatrides_decision_protection_parent.pdf'
+            ],
+            'titre_sejour_3_mois_parent': ['titre_sejour_3_mois_parent.pdf'],
+            'fiches_remuneration_parent': ['fiches_remuneration_parent.pdf'],
+            'attestation_cpas_parent': ['attestation_cpas_parent.pdf'],
+            'sous_type_situation_assimilation_6': ChoixAssimilation6.A_BOURSE_COOPERATION_DEVELOPPEMENT.name,
+            'decision_bourse_cfwb': ['decision_bourse_cfwb.pdf'],
+            'attestation_boursier': ['attestation_boursier.pdf'],
+            'titre_identite_sejour_longue_duree_ue': ['titre_identite_sejour_longue_duree_ue.pdf'],
+            'titre_sejour_belgique': ['titre_sejour_belgique.pdf'],
             'etudiant_solidaire': True,
             'type_numero_compte': ChoixTypeCompteBancaire.IBAN.name,
             'numero_compte_iban': 'BE87001431855594',
@@ -115,6 +155,7 @@ class DoctorateAccountingViewTestCase(TestCase):
                 'names': ['Institut de technologie', 'Institut de pharmacologie'],
                 'academic_year': 2021,
             },
+            'a_nationalite_ue': False,
         }
 
         cls.detail_url = resolve_url('admission:doctorate:accounting', pk=cls.proposition.uuid)
@@ -211,6 +252,7 @@ class DoctorateAccountingViewTestCase(TestCase):
             "académique 2021-2022 : Institut de technologie, Institut de pharmacologie.",
         )
         self.assertTrue(form.fields['attestation_absence_dette_etablissement'].required)
+        self.assertTrue(form.fields['type_situation_assimilation'].required)
 
     def test_post_accounting_form_with_valid_data(self):
         data = {
@@ -222,6 +264,8 @@ class DoctorateAccountingViewTestCase(TestCase):
             'code_bic_swift_banque': 'GKCCBEBA',
             'prenom_titulaire_compte': 'Jim',
             'nom_titulaire_compte': 'Foe',
+            'type_situation_assimilation': TypeSituationAssimilation.PRIS_EN_CHARGE_OU_DESIGNE_CPAS.name,
+            'attestation_cpas_0': ['file.pdf'],
         }
 
         response = self.client.post(self.update_url, data=data)
@@ -230,6 +274,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         self.assertRedirects(response, self.update_url)
 
         # Check API calls
+
         self.mock_proposition_api.return_value.update_accounting.assert_called_with(
             uuid=self.proposition.uuid,
             completer_comptabilite_proposition_doctorale_command=ANY,
@@ -249,6 +294,11 @@ class DoctorateAccountingViewTestCase(TestCase):
         self.assertEqual(command_args['prenom_titulaire_compte'], 'Jim')
         self.assertEqual(command_args['nom_titulaire_compte'], 'Foe')
         self.assertEqual(command_args['iban_valide'], True)
+        self.assertEqual(
+            command_args['type_situation_assimilation'],
+            TypeSituationAssimilation.PRIS_EN_CHARGE_OU_DESIGNE_CPAS.name,
+        )
+        self.assertEqual(command_args['attestation_cpas'], ['file.pdf'])
 
         # Valid IBAN
         response = self.client.post(
@@ -332,6 +382,7 @@ class DoctorateAccountingViewTestCase(TestCase):
 
         missing_fields = [
             'attestation_absence_dette_etablissement',
+            'type_situation_assimilation',
             'etudiant_solidaire',
             'type_numero_compte',
         ]
@@ -615,7 +666,7 @@ class GeneralAccountingViewTestCase(TestCase):
         self.assertTrue(form.fields['attestation_absence_dette_etablissement'].required)
         self.assertTrue(form.fields['type_situation_assimilation'].required)
 
-    def test_accounting_form_with_valid_data(self):
+    def test_post_accounting_form_with_valid_data(self):
         data = {
             'attestation_absence_dette_etablissement_0': ['file.pdf'],
             'demande_allocation_d_etudes_communaute_francaise_belgique': False,
