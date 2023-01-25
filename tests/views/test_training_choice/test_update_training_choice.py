@@ -158,6 +158,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
                 'double_degree_scholarship': self.double_degree_scholarship.uuid,
                 'international_scholarship': self.international_scholarship.uuid,
                 'erasmus_mundus_scholarship': self.first_erasmus_mundus_scholarship.uuid,
+                'specific_question_answers_1': 'Answer',
             },
         )
 
@@ -171,7 +172,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
                 'bourse_internationale': self.international_scholarship.uuid,
                 'bourse_erasmus_mundus': self.first_erasmus_mundus_scholarship.uuid,
                 'reponses_questions_specifiques': {
-                    self.first_question_uuid: '',
+                    self.first_question_uuid: 'Answer',
                 },
             },
             **self.default_kwargs,
@@ -237,6 +238,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
             data={
                 'campus': EMPTY_VALUE,
                 'continuing_education_training': 'TR2-2020',
+                'specific_question_answers_1': 'Answer',
             },
         )
 
@@ -247,7 +249,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                 'sigle_formation': 'TR2',
                 'annee_formation': 2020,
                 'reponses_questions_specifiques': {
-                    self.first_question_uuid: '',
+                    self.first_question_uuid: 'Answer',
                 },
             },
             **self.default_kwargs,
@@ -355,6 +357,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
                 'admission_type': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
                 'erasmus_mundus_scholarship': self.first_erasmus_mundus_scholarship.uuid,
+                'specific_question_answers_1': 'Answer',
             },
         )
 
@@ -366,7 +369,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
                 'type_admission': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
                 'reponses_questions_specifiques': {
-                    self.first_question_uuid: '',
+                    self.first_question_uuid: 'Answer',
                 },
             },
             **self.default_kwargs,

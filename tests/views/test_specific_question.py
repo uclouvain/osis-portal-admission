@@ -214,6 +214,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof': [],
+            'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data=data)
         self.assertIn('regular_registration_proof', response.context['forms'][1].errors)
@@ -222,6 +223,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof_0': 'uuid',
+            'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -240,6 +242,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': False,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof_0': 'uuid',
+            'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -257,6 +260,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': False,
             'pool_questions-regular_registration_proof_0': 'uuid',
+            'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -297,6 +301,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_modification': True,
             'pool_questions-registration_change_form': [],
+            'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertIn('registration_change_form', response.context['forms'][1].errors)
@@ -305,6 +310,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_modification': True,
             'pool_questions-registration_change_form_0': 'uuid',
+            'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -322,6 +328,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': False,
             'pool_questions-is_external_modification': True,
             'pool_questions-registration_change_form_0': 'uuid',
+            'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -339,6 +346,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_modification': False,
             'pool_questions-registration_change_form_0': 'uuid',
+            'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
