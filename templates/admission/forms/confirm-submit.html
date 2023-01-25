@@ -117,7 +117,7 @@
                                 <span class="fa fa-person-walking-luggage"></span>
                                 {% trans "Check my previous experience" %}
                               </a>
-                              {% if current_context == 'doctorate' %}
+                              {% if current_context != 'doctorate' %}
                                 <a href="{{ training_choice_url }}" class="btn btn-primary">
                                   <span class="fa fa-person-chalkboard"></span>
                                   {% trans "Choose another training" %}
@@ -228,7 +228,7 @@
           {% endpanel %}
         {% endif %}
 
-        <p class="confirmation-warning">
+        <p class="alert alert-info confirmation-warning">
           {% blocktrans trimmed %}
             Any false declaration or deliberate omission regarding the constitution of the application file
             constitues a fraud on registration. Anyone suspected of fraud will be invited to provide further
@@ -257,7 +257,11 @@
                 <h4 class="modal-title" id="confirmModalLabel">{% trans "Submission confirmation" %}</h4>
               </div>
               <div class="modal-body">
-                <p>{% trans "Your application will be sent to the Enrolment Service of UCLouvain." %}</p>
+                {% if current_context == 'continuing-education' %}
+                  <p>{% trans "Your application will be sent to the University Institute of Continuing Education." %}</p>
+                {% else %}
+                  <p>{% trans "Your application will be sent to the Enrolment Service of UCLouvain." %}</p>
+                {% endif %}
                 <p><strong>{% trans "Do you confirm that you actually want to submit it?" %}</strong></p>
               </div>
               <div class="modal-footer">

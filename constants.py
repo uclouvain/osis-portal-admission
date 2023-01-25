@@ -1,11 +1,12 @@
-# ############################################################################
+# ##############################################################################
+#
 #  OSIS stands for Open Student Information System. It's an application
 #  designed to manage the core business of higher education institutions,
 #  such as universities, faculties, institutes and professional schools.
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -20,7 +21,8 @@
 #  A copy of this license - GNU General Public License - is available
 #  at the root of the source code of this program.  If not,
 #  see http://www.gnu.org/licenses/.
-# ############################################################################
+#
+# ##############################################################################
 
 # Association between a read-only tab name (path name) and an action link key
 from django.utils.translation import gettext_lazy as _
@@ -84,6 +86,9 @@ UPDATE_ACTIONS_BY_TAB = {
     'jury': '',
     'private-defense': '',
     'public-defense': '',
+    'doctoral-training': '',
+    'complementary-training': '',
+    'course-enrollment': '',
     'messages': '',
 }
 
