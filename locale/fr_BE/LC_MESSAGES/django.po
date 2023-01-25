@@ -393,7 +393,7 @@ msgid "Allocated time for the thesis (in %)"
 msgstr "Temps consacré à la thèse (en %)"
 
 msgid "An error has occurred, please check the values and try again."
-msgstr "Un erreur est survenue, veuillez vérifier les valeurs et réessayer."
+msgstr "Une erreur est survenue, veuillez vérifier les valeurs et réessayer."
 
 msgid "Ancient languages"
 msgstr "Langues anciennes"
@@ -3362,6 +3362,13 @@ msgid "Your application will be sent to the Enrolment Service of UCLouvain."
 msgstr ""
 "Votre demande d'inscription va être envoyée au Service des inscriptions de "
 "l'UCLouvain."
+
+msgid ""
+"Your application will be sent to the University Institute of Continuing "
+"Education."
+msgstr ""
+"Votre demande d'inscription va être envoyée à l'Institut Universitaire de "
+"Formation Continue (IUFC)"
 
 msgid "Your data has been saved"
 msgstr "Vos données ont été enregistrées"

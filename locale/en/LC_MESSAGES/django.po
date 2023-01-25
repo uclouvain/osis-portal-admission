@@ -3015,6 +3015,11 @@ msgstr ""
 msgid "Your application will be sent to the Enrolment Service of UCLouvain."
 msgstr ""
 
+msgid ""
+"Your application will be sent to the University Institute of Continuing "
+"Education."
+msgstr ""
+
 msgid "Your data has been saved"
 msgstr ""
 
