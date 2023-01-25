@@ -31,7 +31,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 from django.test.utils import override_settings
 
-from admission.contrib.forms import PDF_MIME_TYPE
+from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
 from osis_document.contrib import FileUploadField
 
 from admission.contrib.forms.specific_question import ConfigurableFormMixin, PlainTextWidget
@@ -124,6 +124,21 @@ class ConfigurableFormItemFieldTestCase(TestCase):
                     {'key': '2', 'fr-be': 'Deux', 'en': 'Two'},
                 ],
             },
+            {
+                'uuid': 'fe254203-17c7-47d6-95e4-3c5c532da558',
+                'type': 'SELECTION',
+                'required': False,
+                'title': {'en': 'List field', 'fr-be': 'Champ liste'},
+                'help_text': cls.default_translated_value,
+                'text': {'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                'configuration': {
+                    'TYPE_SELECTION': 'LISTE',
+                },
+                'values': [
+                    {'key': '1', 'fr-be': 'Un', 'en': 'One'},
+                    {'key': '2', 'fr-be': 'Deux', 'en': 'Two'},
+                ],
+            },
         ]
 
         form = ConfigurableFormMixin(
@@ -135,6 +150,7 @@ class ConfigurableFormItemFieldTestCase(TestCase):
                     'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
                     'fe254203-17c7-47d6-95e4-3c5c532da556': '1',
                     'fe254203-17c7-47d6-95e4-3c5c532da557': ['1', '2'],
+                    'fe254203-17c7-47d6-95e4-3c5c532da558': '1',
                 },
             },
             form_item_configurations=field_configurations,
@@ -172,6 +188,7 @@ class ConfigurableFormItemFieldTestCase(TestCase):
                 ['file:token', self.first_uuid],
                 '1',
                 ['1', '2'],
+                '1',
             ],
         )
 
@@ -195,7 +212,7 @@ class ConfigurableFormItemFieldTestCase(TestCase):
 
         # Check field
         self.assertIsInstance(field, forms.CharField)
-        self.assertFalse(field.required)
+        self.assertTrue(field.required)
         self.assertTrue(getattr(field, 'is_required', None))
         self.assertEqual(field.label, 'Text field 1')
         self.assertEqual(field.help_text, 'Detailed data')
@@ -210,7 +227,7 @@ class ConfigurableFormItemFieldTestCase(TestCase):
 
         # Check field
         self.assertIsInstance(field, forms.CharField)
-        self.assertEqual(field.required, False)
+        self.assertFalse(field.required)
         self.assertEqual(field.label, 'Text field 2')
         self.assertEqual(field.help_text, 'Detailed data')
 
@@ -236,10 +253,11 @@ class ConfigurableFormItemFieldTestCase(TestCase):
 
         # Check field
         self.assertIsInstance(field, forms.ChoiceField)
-        self.assertFalse(field.required)
+        self.assertTrue(field.required)
         self.assertTrue(getattr(field, 'is_required', None))
         self.assertEqual(field.label, 'Unique selection field')
         self.assertEqual(field.help_text, 'Detailed data')
+        self.assertEqual(field.choices, [('1', 'One'), ('2', 'Two')])
 
         # Check widget
         self.assertIsInstance(widget, forms.RadioSelect)
@@ -250,12 +268,27 @@ class ConfigurableFormItemFieldTestCase(TestCase):
 
         # Check field
         self.assertIsInstance(field, forms.MultipleChoiceField)
-        self.assertEqual(field.required, False)
+        self.assertFalse(field.required)
         self.assertEqual(field.label, 'Multiple selection field')
         self.assertEqual(field.help_text, 'Detailed data')
+        self.assertEqual(field.choices, [('1', 'One'), ('2', 'Two')])
 
         # Check widget
         self.assertIsInstance(widget, forms.CheckboxSelectMultiple)
+
+        # List field
+        field = self.fields[6]
+        widget = self.widgets[6]
+
+        # Check field
+        self.assertIsInstance(field, forms.ChoiceField)
+        self.assertFalse(field.required)
+        self.assertEqual(field.label, 'List field')
+        self.assertEqual(field.help_text, 'Detailed data')
+        self.assertEqual(field.choices, [EMPTY_CHOICE[0], ('1', 'One'), ('2', 'Two')])
+
+        # Check widget
+        self.assertIsInstance(widget, forms.Select)
 
     def test_configurable_form_with_unknown_field(self):
         with self.assertRaises(ImproperlyConfigured):
@@ -280,6 +313,7 @@ class ConfigurableFormItemFieldTestCase(TestCase):
                 'specific_question_answers_2': 'My response to the question 2',
                 'specific_question_answers_4': '2',
                 'specific_question_answers_5': ['2'],
+                'specific_question_answers_6': '2',
             },
             form_item_configurations=self.field_configurations,
             initial={
@@ -299,6 +333,7 @@ class ConfigurableFormItemFieldTestCase(TestCase):
                     'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
                     'fe254203-17c7-47d6-95e4-3c5c532da556': '2',
                     'fe254203-17c7-47d6-95e4-3c5c532da557': ['2'],
+                    'fe254203-17c7-47d6-95e4-3c5c532da558': '2',
                 }
             },
         )
