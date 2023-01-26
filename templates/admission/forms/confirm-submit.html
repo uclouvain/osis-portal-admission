@@ -162,8 +162,8 @@
                         </div>
                       </li>
 
-                    {# The required period in the CV is not completed #}
-                    {% elif error_code == 'PROPOSITION-35' %}
+                      {# The required period in the CV is not completed #}
+                      {% elif error_code == 'PROPOSITION-35' %}
                       <li>
                         {% blocktranslate trimmed count nb=errors|length %}
                           The following period must be justified in the curriculum:
@@ -171,9 +171,9 @@
                           The following periods must be justified in the curriculum:
                         {% endblocktranslate %}
                         <ul>
-                        {% for error in errors %}
-                          <li>{{ error }}</li>
-                        {% endfor %}
+                          {% for error in errors %}
+                            <li>{{ error }}</li>
+                          {% endfor %}
                         </ul>
                       </li>
 
@@ -236,17 +236,22 @@
             Reglement general des etudes et des examens de l'UCLouvain).
           {% endblocktrans %}
         </p>
-        <button
-          type="button"
-          class="btn btn-primary pull-right"
-          disabled="disabled"
-          data-toggle="modal"
-          data-target="#confirmModal"
+        <div
+          id="submit-button-wrapper"
+          class="pull-right"
           title="{% trans "Sending the application requires your agreement for all the elements" %}"
         >
-          <i class="fa fa-paper-plane"></i>
-          {% trans "Send" %}
-        </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            disabled="disabled"
+            data-toggle="modal"
+            data-target="#confirmModal"
+          >
+            <i class="fa fa-paper-plane"></i>
+            {% trans "Send" %}
+          </button>
+        </div>
 
         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
           <div class="modal-dialog" role="document">
@@ -300,6 +305,11 @@
     .form-group .help-block {
       color: inherit;
     }
+
+    #submit-button-wrapper .btn[disabled] {
+      /* don't let button block mouse events from reaching wrapper */
+      pointer-events: none;
+    }
   </style>
 {% endblock %}
 
@@ -309,14 +319,18 @@
   <script type="application/javascript">
   $(function () {
     const form = $('#confirmation-form')[0];
+    const $submitWrapper = $('#submit-button-wrapper');
     const formButton = $('button[type="button"]', form).first();
-    formButton.tooltip();
+    $submitWrapper.tooltip();
 
     {% if missing_confirmation_conditions %}
       formButton.prop('disabled', true);
     {% else %}
       $('input[type="checkbox"], input[type="radio"]', form).change(function () {
         formButton.prop('disabled', !form.checkValidity());
+        if (form.checkValidity()) {
+          $submitWrapper.tooltip('hide');
+        }
       })
       formButton.prop('disabled', !form.checkValidity());
     {% endif %}

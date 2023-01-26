@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -30,10 +30,15 @@
 {% block modal_title %}{% trans "Your application has been submitted" %}{% endblock %}
 
 {% block modal_body %}
-  {% blocktrans trimmed %}
+  {% if current_context == 'continuing-education' %}
+    {% trans "by the University Institute of Continuing Education" as by_service %}
+  {% else %}
+    {% trans "by the UCLouvain Registration Service" as by_service %}
+  {% endif %}
+  {% blocktrans trimmed with by_service=by_service %}
     <p><strong>What happens now?</strong></p>
     <ul>
-      <li>Your application will be process by the Enrolment service</li>
+      <li>Your application will be processed {{ by_service }}</li>
       <li>An email confirming your application submission will be sent to the e-mail address you specified</li>
       <li>Your application summary will be available at all time by connecting to this website</li>
     </ul>
