@@ -1261,6 +1261,32 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             **self.api_default_params,
         )
 
+    def test_with_admission_on_create_experience_post_form_for_be_country_and_redirect_to_editing_page(self):
+        self.mockapi.create_educational_experience_admission.return_value = {
+            'uuid': self.educational_experience.uuid,
+        }
+
+        all_form_data = self.all_form_data.copy()
+        all_form_data.pop('_submit_and_continue')
+        response = self.client.post(
+            resolve_url(
+                'admission:doctorate:update:curriculum:educational_create',
+                pk=self.proposition.uuid,
+            ),
+            data=all_form_data,
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:doctorate:update:curriculum:educational_update',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+            + '#curriculum-header',
+        )
+
     def test_without_admission_on_create_experience_form_is_not_initialized(self):
         response = self.client.get(
             resolve_url('admission:create:curriculum:educational_create'),

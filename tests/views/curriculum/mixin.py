@@ -28,6 +28,7 @@ import uuid
 from unittest.mock import ANY, patch, MagicMock
 
 from django.test import TestCase, override_settings
+from osis_admission_sdk.model.action_link import ActionLink
 
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
@@ -234,8 +235,11 @@ class MixinTestCase(TestCase):
         cls.proposition = DoctoratePropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
             type_admission=AdmissionType.ADMISSION.name,
-            reference='22-300001',
-            links=DoctoratePropositionDTOLinks(),
+            reference='M-CDSS20-000.001',
+            links=DoctoratePropositionDTOLinks(
+                retrieve_curriculum=ActionLink(method='GET', url='url'),
+                update_curriculum=ActionLink(method='POST', url='url'),
+            ),
             date_fin_pot=None,
             doctorat=PropositionSearchDoctorat._from_openapi_data(
                 sigle='CS1',
@@ -244,6 +248,7 @@ class MixinTestCase(TestCase):
                 sigle_entite_gestion="CDSS",
                 campus="Mons",
                 type=TrainingType.PHD.name,
+                campus_inscription="Mons",
             ),
             matricule_candidat=cls.person.global_id,
             code_secteur_formation='CS',
@@ -273,12 +278,18 @@ class MixinTestCase(TestCase):
                 sigle='TR1',
                 type=TrainingType.MASTER_M1.name,
                 code_domaine='10C',
+                sigle_entite_gestion="CMG",
+                campus_inscription="Mons",
             ),
+            reference='M-CMG20-000.002',
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
-            links=GeneralEducationPropositionDTOLinks(),
+            links=GeneralEducationPropositionDTOLinks(
+                retrieve_curriculum=ActionLink(method='GET', url='url'),
+                update_curriculum=ActionLink(method='POST', url='url'),
+            ),
             date_fin_pot=None,
             erreurs=[],
             bourse_double_diplome=None,
@@ -296,6 +307,7 @@ class MixinTestCase(TestCase):
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
+            reference='M-CMC20-000.003',
             formation=PropositionSearchFormation._from_openapi_data(
                 annee=2020,
                 intitule='Formation',
@@ -303,13 +315,18 @@ class MixinTestCase(TestCase):
                 sigle='TR2',
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 code_domaine='10C',
+                campus_inscription="Mons",
+                sigle_entite_gestion="CMC",
             ),
             date_fin_pot=None,
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
-            links=GeneralEducationPropositionDTOLinks(),
+            links=GeneralEducationPropositionDTOLinks(
+                retrieve_curriculum=ActionLink(method='GET', url='url'),
+                update_curriculum=ActionLink(method='POST', url='url'),
+            ),
             erreurs=[],
             reponses_questions_specifiques={},
             curriculum=['file1.pdf'],

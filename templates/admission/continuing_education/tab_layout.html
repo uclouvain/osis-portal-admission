@@ -37,7 +37,7 @@
   {% display admission.formation.intitule " " "(" admission.formation.campus ")" as admission_title %}
   <div class="well">
     <div>
-      {% trans "Reference:" %} {{ admission_title }}
+      {% trans "Reference:" %} {{ admission_title }} ({{ admission.reference }})
     </div>
     <div>
       {% trans "Status:" %} {{ admission.statut|enum_display:'ChoixStatutPropositionFormationContinue' }}
