@@ -96,13 +96,15 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         # Group the missing conditions by tab if any
         if self.confirmation_conditions['errors']:
             errors_by_tab = {
-                tab.name: {'label': tab.label, 'errors': defaultdict(list)}
+                tab.name: {'label': tab.label, 'errors': {}}
                 for child_tabs in TAB_TREES[self.current_context].values()
                 for tab in child_tabs
                 if can_read_tab(self.admission, tab)
             }
             for error in self.confirmation_conditions['errors']:
                 tab_name = TAB_OF_BUSINESS_EXCEPTION[error['status_code']]
+                if not error['status_code'] in errors_by_tab[tab_name]['errors']:
+                    errors_by_tab[tab_name]['errors'][error['status_code']] = []
                 errors_by_tab[tab_name]['errors'][error['status_code']].append(error['detail'])
             context['missing_confirmation_conditions'] = errors_by_tab
 
