@@ -125,6 +125,8 @@ class UtilsTestCase(TestCase):
             annee=2020,
             type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
             code_domaine='10C',
+            sigle_entite_gestion='CMC',
+            campus_inscription='Mons',
         )
         self.assertEqual(format_training(formation), 'Certificat en informatique (Mons) - INFO-1')
 
@@ -136,6 +138,8 @@ class UtilsTestCase(TestCase):
             annee=2020,
             type=TrainingType.MASTER_M1.name,
             code_domaine='10C',
+            sigle_entite_gestion='CMG',
+            campus_inscription='Mons',
         )
         self.assertEqual(format_training(formation), 'Master en informatique (Mons) - INFO-1')
 
@@ -147,6 +151,7 @@ class UtilsTestCase(TestCase):
             sigle_entite_gestion="CDE",
             campus="Mons",
             type=TrainingType.PHD.name,
+            campus_inscription='Mons',
         )
         self.assertEqual(format_training_with_year(formation), '2021 - Foobar (Mons) - FOOBAR')
 

@@ -661,6 +661,33 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             **self.api_default_params,
         )
 
+    def test_with_admission_on_create_experience_post_form_for_other_activity_and_redirect_to_editing_page(self):
+        self.mockapi.create_professional_experience_admission.return_value = {
+            'uuid': self.professional_experience.uuid,
+        }
+
+        response = self.client.post(
+            resolve_url(
+                'admission:doctorate:update:curriculum:professional_create',
+                pk=self.proposition.uuid,
+            ),
+            data={
+                **self.all_form_data,
+                'type': ActivityType.OTHER.name,
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:doctorate:update:curriculum:professional_update',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+            + '#curriculum-header',
+        )
+
     def test_without_admission_on_create_experience_form_is_not_initialized(self):
         response = self.client.get(resolve_url('admission:create:curriculum:professional_create'))
 

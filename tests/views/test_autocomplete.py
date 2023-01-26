@@ -74,6 +74,7 @@ class AutocompleteTestCase(TestCase):
                 sigle_entite_gestion="CDE",
                 campus="Louvain-La-Neuve",
                 type=TrainingType.PHD.name,
+                campus_inscription='Mons',
             ),
             DoctoratDTO(
                 sigle='BARBAZ',
@@ -82,6 +83,7 @@ class AutocompleteTestCase(TestCase):
                 sigle_entite_gestion="AZERT",
                 campus="Mons",
                 type=TrainingType.PHD.name,
+                campus_inscription='Mons',
             ),
         ]
         url = reverse('admission:autocomplete:doctorate')
@@ -504,6 +506,8 @@ class AutocompleteTestCase(TestCase):
                 campus="Louvain-La-Neuve",
                 type=TrainingType.MASTER_M1.name,
                 code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMG',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -512,6 +516,8 @@ class AutocompleteTestCase(TestCase):
                 campus="Mons",
                 type=TrainingType.MASTER_M1.name,
                 code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMG',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -540,6 +546,8 @@ class AutocompleteTestCase(TestCase):
                 campus="Louvain-La-Neuve",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMC',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -548,6 +556,8 @@ class AutocompleteTestCase(TestCase):
                 campus="Mons",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMC',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
