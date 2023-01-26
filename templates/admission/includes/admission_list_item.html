@@ -33,7 +33,7 @@
     <span style="display:block;"><small>{{ admission.intitule_secteur_formation }}</small></span>
   {% elif admission.formation %}
     {% display admission.formation.intitule " (" admission.formation.campus ")" as title %}
-    {{ title }}
+    {{ title }} ({{ admission.reference }})
   {% endif %}
   </h3>
   <div>

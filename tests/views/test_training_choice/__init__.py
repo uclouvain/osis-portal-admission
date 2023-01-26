@@ -222,7 +222,10 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR1',
                 'type': TrainingType.MASTER_M1.name,
+                'sigle_entite_gestion': 'CMG',
+                'campus_inscription': 'Mons',
             },
+            reference='M-CMG20-000.001',
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
@@ -259,7 +262,10 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR0',
                 'type': TrainingType.BACHELOR.name,
+                'sigle_entite_gestion': 'CMG',
+                'campus_inscription': 'Mons',
             },
+            reference='M-CMG20-000.002',
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
@@ -276,12 +282,15 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
 
         cls.continuing_proposition_dict = {
             'uuid': cls.proposition_uuid,
+            'reference': 'M-CMC20-000.003',
             'formation': {
                 'annee': 2020,
                 'intitule': 'Formation',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR2',
                 'type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                'sigle_entite_gestion': 'CMC',
+                'campus_inscription': 'Mons',
             },
             'matricule_candidat': cls.person.global_id,
             'prenom_candidat': cls.person.first_name,
@@ -317,7 +326,10 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR2',
                 'type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                'sigle_entite_gestion': 'CMC',
+                'campus_inscription': 'Mons',
             },
+            reference='M-CMC20-000.003',
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
@@ -354,7 +366,10 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR3',
                 'type': TrainingType.PHD.name,
+                'sigle_entite_gestion': 'CDE',
+                'campus_inscription': 'Mons',
             },
+            reference='M-CDE20-000.004',
             code_secteur_formation="SSH",
             documents_projet=[],
             graphe_gantt=[],
@@ -412,6 +427,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 sigle_entite_gestion="CDE",
                 links=[],
                 type=TrainingType.PHD.name,
+                campus_inscription='Mons',
             ),
             Mock(
                 sigle='FOOBARBAZ',
@@ -420,6 +436,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
                 type=TrainingType.PHD.name,
+                campus_inscription='Mons',
             ),
             Mock(
                 sigle='BARBAZ',
@@ -428,6 +445,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 sigle_entite_gestion="AZERT",
                 links=[],
                 type=TrainingType.PHD.name,
+                campus_inscription='Mons',
             ),
             Mock(
                 sigle=SCIENCE_DOCTORATE,
@@ -436,6 +454,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 sigle_entite_gestion="AZERT",
                 links=[],
                 type=TrainingType.PHD.name,
+                campus_inscription='Mons',
             ),
         ]
 
@@ -447,6 +466,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 campus="Louvain-La-Neuve",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 code_domaine='10C',
+                sigle_entite_gestion='CMG',
+                campus_inscription='Mons',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -455,6 +476,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 campus="Mons",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 code_domaine='10C',
+                sigle_entite_gestion='CMG',
+                campus_inscription='Mons',
             ),
         ]
 
@@ -466,6 +489,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 campus="Louvain-La-Neuve",
                 type=TrainingType.MASTER_M1.name,
                 code_domaine='10C',
+                sigle_entite_gestion='CMC',
+                campus_inscription='Mons',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -474,6 +499,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 campus="Mons",
                 type=TrainingType.MASTER_M1.name,
                 code_domaine='10C',
+                sigle_entite_gestion='CMC',
+                campus_inscription='Mons',
             ),
         ]
 

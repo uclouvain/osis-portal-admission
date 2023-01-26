@@ -32,6 +32,7 @@ from django import forms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
+from django.shortcuts import resolve_url
 from django.template import loader
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
@@ -74,11 +75,36 @@ __namespace__ = 'curriculum'
 
 
 class AdmissionCurriculumFormMixin(WebServiceFormMixin, AdmissionCurriculumMixin, ABC):
+    pass
+
+
+class AdmissionCurriculumFormExperienceMixin(AdmissionCurriculumFormMixin, ABC):
+    created_tab_names = {
+        'professional_create': 'professional_update',
+        'educational_create': 'educational_update',
+    }
+
     def get_success_url(self):
-        return AdmissionCurriculumMixin.get_success_url(self)
+        messages.info(self.request, _("Your data has been saved"))
+        if '_submit_and_continue' in self.request.POST:
+            # Redirect to the list of experiences
+            return self._get_url('curriculum', update=True) + getattr(self, 'url_hash', '')
+        elif self.experience_id:
+            # Redirect to the current page as we edit an experience
+            return self.request.get_full_path()
+        else:
+            # Redirect to the editing page as we create an experience
+            url = self.request.resolver_match.view_name.replace(
+                self.request.resolver_match.url_name,
+                self.created_tab_names.get(self.request.resolver_match.url_name),
+            )
+            return (
+                resolve_url(url, pk=self.admission_uuid, experience_id=getattr(self, 'created_experience_id', ''))
+                + '#curriculum-header'
+            )
 
 
-class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormMixin, FormView):
+class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormExperienceMixin, FormView):
     urlpatterns = {
         'professional_update': 'professional/<uuid:experience_id>/update',
         'professional_create': 'professional/create',
@@ -112,11 +138,12 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
                 data=data,
             )
         else:
-            self.service_mapping[self.current_context].create_professional_experience(
+            created_experience = self.service_mapping[self.current_context].create_professional_experience(
                 person=self.person,
                 uuid=self.admission_uuid,
                 data=data,
             )
+            setattr(self, 'created_experience_id', created_experience.get('uuid'))
 
     def get_initial(self):
         if self.experience_id:
@@ -136,7 +163,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
             return experience
 
 
-class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFormMixin, FormView):
+class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFormExperienceMixin, FormView):
     urlpatterns = {'professional_delete': 'professional/<uuid:experience_id>/delete'}
     form_class = forms.Form
     template_name = 'admission/forms/curriculum_experience_delete.html'
@@ -159,7 +186,7 @@ class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFor
         return context
 
 
-class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumFormMixin, FormView):
+class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumFormExperienceMixin, FormView):
     urlpatterns = {'educational_delete': 'educational/<uuid:experience_id>/delete'}
     extra_context = {
         'educational_tab': True,
@@ -188,7 +215,7 @@ class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumForm
         return context
 
 
-class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormMixin, TemplateView):
+class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormExperienceMixin, TemplateView):
     urlpatterns = {
         'educational_update': 'educational/<uuid:experience_id>/update',
         'educational_create': 'educational/create',
@@ -402,10 +429,11 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormMi
                 data=data,
             )
         else:
-            self.service_mapping[self.current_context].create_educational_experience(
+            created_experience = self.service_mapping[self.current_context].create_educational_experience(
                 person=self.request.user.person,
                 uuid=self.admission_uuid,
                 data=data,
             )
+            setattr(self, 'created_experience_id', created_experience.get('uuid'))
 
         return HttpResponseRedirect(self.get_success_url())

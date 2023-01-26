@@ -43,7 +43,7 @@
 
 {% block well %}
   {% if admission.doctorat %}
-    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" as title %}
+    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" " " "(" admission.reference ")"  as title %}
   {% else %}
     {% display doctorate.intitule_formation " " "(" doctorate.reference ")" as title %}
   {% endif %}
