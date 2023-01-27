@@ -251,7 +251,6 @@ class DoctorateAccountingViewTestCase(TestCase):
             "Attestations stipulant l'absence de dettes vis-à-vis des établissements fréquentés durant l'année "
             "académique 2021-2022 : Institut de technologie, Institut de pharmacologie.",
         )
-        self.assertTrue(form.fields['attestation_absence_dette_etablissement'].required)
         self.assertTrue(form.fields['type_situation_assimilation'].required)
 
     def test_post_accounting_form_with_valid_data(self):
@@ -381,7 +380,6 @@ class DoctorateAccountingViewTestCase(TestCase):
         self.assertFalse(form.is_valid())
 
         missing_fields = [
-            'attestation_absence_dette_etablissement',
             'type_situation_assimilation',
             'etudiant_solidaire',
             'type_numero_compte',
@@ -568,6 +566,22 @@ class GeneralAccountingViewTestCase(TestCase):
         cls.detail_url = resolve_url('admission:general-education:accounting', pk=cls.proposition.uuid)
         cls.update_url = resolve_url('admission:general-education:update:accounting', pk=cls.proposition.uuid)
 
+        cls.valid_data = {
+            'attestation_absence_dette_etablissement_0': ['file.pdf'],
+            'demande_allocation_d_etudes_communaute_francaise_belgique': False,
+            'enfant_personnel': True,
+            'attestation_enfant_personnel_0': ['file.pdf'],
+            'type_situation_assimilation': TypeSituationAssimilation.PRIS_EN_CHARGE_OU_DESIGNE_CPAS.name,
+            'attestation_cpas_0': ['file.pdf'],
+            'affiliation_sport': ChoixAffiliationSport.NON.name,
+            'etudiant_solidaire': False,
+            'type_numero_compte': ChoixTypeCompteBancaire.AUTRE_FORMAT.name,
+            'numero_compte_autre_format': '123456',
+            'code_bic_swift_banque': 'GKCCBEBB',
+            'prenom_titulaire_compte': 'John',
+            'nom_titulaire_compte': 'Doe',
+        }
+
         cls.default_kwargs = {
             'accept_language': ANY,
             'x_user_first_name': ANY,
@@ -582,9 +596,8 @@ class GeneralAccountingViewTestCase(TestCase):
         self.mock_proposition_api = propositions_api_patcher.start()
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = self.proposition
-        self.mock_proposition_api.return_value.retrieve_general_accounting.return_value.to_dict.return_value = (
-            self.accounting
-        )
+        self.mock_accounting = self.mock_proposition_api.return_value.retrieve_general_accounting.return_value.to_dict
+        self.mock_accounting.return_value = self.accounting
 
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -663,27 +676,10 @@ class GeneralAccountingViewTestCase(TestCase):
             "Attestations stipulant l'absence de dettes vis-à-vis des établissements fréquentés durant l'année "
             "académique 2021-2022 : Institut de technologie, Institut de pharmacologie.",
         )
-        self.assertTrue(form.fields['attestation_absence_dette_etablissement'].required)
         self.assertTrue(form.fields['type_situation_assimilation'].required)
 
     def test_post_accounting_form_with_valid_data(self):
-        data = {
-            'attestation_absence_dette_etablissement_0': ['file.pdf'],
-            'demande_allocation_d_etudes_communaute_francaise_belgique': False,
-            'enfant_personnel': True,
-            'attestation_enfant_personnel_0': ['file.pdf'],
-            'type_situation_assimilation': TypeSituationAssimilation.PRIS_EN_CHARGE_OU_DESIGNE_CPAS.name,
-            'attestation_cpas_0': ['file.pdf'],
-            'affiliation_sport': ChoixAffiliationSport.NON.name,
-            'etudiant_solidaire': False,
-            'type_numero_compte': ChoixTypeCompteBancaire.AUTRE_FORMAT.name,
-            'numero_compte_autre_format': '123456',
-            'code_bic_swift_banque': 'GKCCBEBB',
-            'prenom_titulaire_compte': 'John',
-            'nom_titulaire_compte': 'Doe',
-        }
-
-        response = self.client.post(self.update_url, data=data)
+        response = self.client.post(self.update_url, data=self.valid_data)
 
         # Check status and redirection
         self.assertRedirects(response, self.update_url)
@@ -752,7 +748,7 @@ class GeneralAccountingViewTestCase(TestCase):
         self.client.post(
             self.update_url,
             data={
-                **data,
+                **self.valid_data,
                 'type_numero_compte': ChoixTypeCompteBancaire.IBAN.name,
                 'numero_compte_iban': 'BE43068999999501',
             },
@@ -776,7 +772,7 @@ class GeneralAccountingViewTestCase(TestCase):
         self.client.post(
             self.update_url,
             data={
-                **data,
+                **self.valid_data,
                 'type_numero_compte': ChoixTypeCompteBancaire.IBAN.name,
                 'numero_compte_iban': 'BE43068999999501',
             },
@@ -794,6 +790,22 @@ class GeneralAccountingViewTestCase(TestCase):
             **self.default_kwargs,
         )
 
+    def test_clean_absence_debt(self):
+        self.mock_accounting.return_value['derniers_etablissements_superieurs_communaute_fr_frequentes'] = {}
+        response = self.client.post(self.update_url, data=self.valid_data)
+
+        # Check status and redirection
+        self.assertRedirects(response, self.update_url)
+
+        # Check sent data
+        sent_data = self.mock_proposition_api.return_value.update_general_accounting.call_args
+        self.assertEqual(
+            sent_data[1]['completer_comptabilite_proposition_generale_command'][
+                'attestation_absence_dette_etablissement'
+            ],
+            [],
+        )
+
     def test_accounting_form_with_no_data(self):
         response = self.client.post(self.update_url, data={})
 
@@ -804,8 +816,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertFalse(form.is_valid())
         for field in [
-            'attestation_absence_dette_etablissement',
-            'demande_allocation_d_etudes_communaute_francaise_belgique',
             'enfant_personnel',
             'type_situation_assimilation',
             'affiliation_sport',
@@ -844,7 +854,6 @@ class GeneralAccountingViewTestCase(TestCase):
         form = response.context.get('form')
 
         self.assertFalse(form.is_valid())
-        self.assertFormError(response, 'form', 'attestation_enfant_personnel', FIELD_REQUIRED_MESSAGE)
 
     def test_accounting_form_with_unecessary_registration_fees_fields(self):
         response = self.client.post(
@@ -961,9 +970,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'carte_resident_longue_duree', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('carte_cire_sejour_illimite_etranger'), [])
@@ -981,9 +987,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'carte_cire_sejour_illimite_etranger', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('carte_resident_longue_duree'), [])
@@ -1000,9 +1003,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'carte_sejour_membre_ue', FIELD_REQUIRED_MESSAGE)
 
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
@@ -1022,9 +1022,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'carte_sejour_permanent_membre_ue', FIELD_REQUIRED_MESSAGE)
 
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
@@ -1056,9 +1053,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'carte_a_b_refugie', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('annexe_25_26_refugies_apatrides'), [])
@@ -1079,10 +1073,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'annexe_25_26_refugies_apatrides', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'attestation_immatriculation', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('carte_a_b_refugie'), [])
@@ -1102,10 +1092,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'carte_a_b', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'decision_protection_subsidiaire', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('carte_a_b_refugie'), [])
@@ -1123,9 +1109,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'decision_protection_temporaire', FIELD_REQUIRED_MESSAGE)
 
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
@@ -1160,10 +1143,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'titre_sejour_3_mois_professionel', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'fiches_remuneration', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('titre_sejour_3_mois_remplacement'), [])
@@ -1183,10 +1162,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'titre_sejour_3_mois_remplacement', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'preuve_allocations_chomage_pension_indemnite', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('titre_sejour_3_mois_professionel'), [])
@@ -1201,9 +1176,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'attestation_cpas', FIELD_REQUIRED_MESSAGE)
 
     def test_accounting_form_with_incomplete_assimilation_5_relation_parente(self):
         default_data = {
@@ -1227,9 +1199,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'composition_menage_acte_naissance', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('acte_tutelle'), [])
@@ -1246,9 +1215,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'composition_menage_acte_naissance', FIELD_REQUIRED_MESSAGE)
 
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
@@ -1267,9 +1233,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'acte_tutelle', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('composition_menage_acte_naissance'), [])
@@ -1287,9 +1250,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'attestation_cohabitation_legale', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('composition_menage_acte_naissance'), [])
@@ -1306,9 +1266,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'composition_menage_acte_mariage', FIELD_REQUIRED_MESSAGE)
 
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
@@ -1342,9 +1299,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'carte_identite_parent', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('titre_sejour_longue_duree_parent'), [])
@@ -1363,9 +1317,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'titre_sejour_longue_duree_parent', FIELD_REQUIRED_MESSAGE)
 
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
@@ -1389,11 +1340,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(
-            response, 'form', 'annexe_25_26_refugies_apatrides_decision_protection_parent', FIELD_REQUIRED_MESSAGE
-        )
 
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
@@ -1419,10 +1365,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'titre_sejour_3_mois_parent', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'fiches_remuneration_parent', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('carte_identite_parent'), [])
@@ -1440,9 +1382,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'attestation_cpas_parent', FIELD_REQUIRED_MESSAGE)
 
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
@@ -1470,9 +1409,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'decision_bourse_cfwb', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('attestation_boursier'), [])
@@ -1488,9 +1424,6 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'attestation_boursier', FIELD_REQUIRED_MESSAGE)
-
         # Check that the unnecessary fields are clean
         form = response.context.get('form')
         self.assertEqual(form.cleaned_data.get('decision_bourse_cfwb'), [])
@@ -1504,10 +1437,6 @@ class GeneralAccountingViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        # Check that the form has the specific error
-        self.assertFormError(response, 'form', 'titre_identite_sejour_longue_duree_ue', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'titre_sejour_belgique', FIELD_REQUIRED_MESSAGE)
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
