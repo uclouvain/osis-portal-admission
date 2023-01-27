@@ -61,7 +61,7 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                 AdmissionPropositionService.update_pool_questions(
                     person=self.person,
                     uuid=self.admission_uuid,
-                    data=forms[1].cleaned_data,
+                    data=forms[1].cleaned_data if self.pool_questions else {},
                 )
             return HttpResponseRedirect(self.get_success_url())
         return self.form_invalid(forms)
@@ -73,7 +73,8 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
     def get_context_data(self, **kwargs):
         kwargs['extra_form_attrs'] = ' autocomplete="off"'
         kwargs['forms'] = self.get_forms()
-        kwargs['form'] = kwargs['forms'][0]  # Trick template to display form tag and buttons
+        # Trick template to display form tag and buttons
+        kwargs['form'] = next((form for form in kwargs['forms'] if form.visible_fields()), kwargs['forms'][0])
         kwargs['BE_ISO_CODE'] = BE_ISO_CODE
         if self.display_pool_questions_form and self.pool_questions:
             kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']

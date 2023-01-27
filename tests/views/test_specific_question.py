@@ -217,8 +217,17 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data=data)
-        self.assertIn('regular_registration_proof', response.context['forms'][1].errors)
+        self.assertRedirects(response, self.url)
 
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': True,
+                'is_external_reorientation': True,
+                'regular_registration_proof': [],
+            },
+            **self.default_kwargs,
+        )
         data = {
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': True,
@@ -304,7 +313,16 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
-        self.assertIn('registration_change_form', response.context['forms'][1].errors)
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': True,
+                'is_external_modification': True,
+                'registration_change_form': [],
+            },
+            **self.default_kwargs,
+        )
 
         data = {
             'pool_questions-is_belgian_bachelor': True,
