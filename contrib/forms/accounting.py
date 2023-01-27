@@ -411,7 +411,6 @@ class AccountingForm(forms.Form):
                 'academic_year': get_academic_year(academic_year),
                 'names': ', '.join(names),
             }
-            self.fields['attestation_absence_dette_etablissement'].required = True
 
         if self.is_general_admission:
             self.fields['demande_allocation_d_etudes_communaute_francaise_belgique'].required = True
@@ -600,14 +599,16 @@ class AccountingForm(forms.Form):
                 pass
         return value
 
+    def clean_attestation_absence_dette_etablissement(self):
+        if not self.last_french_community_high_education_institutes_attended:
+            return []
+        return self.cleaned_data.get('attestation_absence_dette_etablissement')
+
     def clean(self):
         cleaned_data = super().clean()
 
         if self.is_general_admission:
-            if cleaned_data.get('enfant_personnel'):
-                if not cleaned_data.get('attestation_enfant_personnel'):
-                    self.add_error('attestation_enfant_personnel', FIELD_REQUIRED_MESSAGE)
-            else:
+            if not cleaned_data.get('enfant_personnel'):
                 cleaned_data['attestation_enfant_personnel'] = []
 
         if self.is_general_admission or self.is_doctorate_admission:
@@ -632,10 +633,7 @@ class AccountingForm(forms.Form):
                 )
 
         for field in self.ASSIMILATION_FILE_FIELDS:
-            if field in assimilation_required_fields:
-                if not cleaned_data.get(field):
-                    self.add_error(field, FIELD_REQUIRED_MESSAGE)
-            else:
+            if field not in assimilation_required_fields:
                 cleaned_data[field] = []
 
         for field in self.ASSIMILATION_CHOICE_FIELDS:
