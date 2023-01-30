@@ -60,6 +60,14 @@ class PersonViewTestCase(TestCase):
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = person_api_patcher.start()
+        self.mock_person_api.return_value.update_person_identification.return_value = {
+            'first_name': 'Joe',
+            'last_name': 'Doe',
+        }
+        self.mock_person_api.return_value.update_person_identification_admission.return_value = {
+            'first_name': 'Joe',
+            'last_name': 'Doe',
+        }
         self.addCleanup(person_api_patcher.stop)
 
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
