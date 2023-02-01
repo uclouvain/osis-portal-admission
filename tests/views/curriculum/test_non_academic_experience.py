@@ -28,7 +28,7 @@ from unittest.mock import ANY
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext
-from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
+from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN, HTTP_302_FOUND
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.curriculum import ActivityType, ActivitySector
@@ -222,18 +222,10 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTP_302_FOUND)
 
         # Check that the API calls aren't done
-        self.mockapi.update_professional_experience_admission.assert_not_called()
-
-        # Check the context data
-        self.assertEqual(len(response.context['form'].errors), 2)
-        for field in [
-            'sector',
-            'institute_name',
-        ]:
-            self.assertFormError(response, 'form', field, errors=FIELD_REQUIRED_MESSAGE)
+        self.mockapi.update_professional_experience_admission.assert_called()
 
     def test_with_admission_on_update_experience_post_form_missing_fields_for_volunteering(self):
         response = self.client.post(
@@ -245,18 +237,10 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTP_302_FOUND)
 
         # Check that the API calls aren't done
-        self.mockapi.update_professional_experience_admission.assert_not_called()
-
-        # Check the context data
-        self.assertEqual(len(response.context['form'].errors), 2)
-        for field in [
-            'sector',
-            'institute_name',
-        ]:
-            self.assertFormError(response, 'form', field, errors=FIELD_REQUIRED_MESSAGE)
+        self.mockapi.update_professional_experience_admission.assert_called()
 
     def test_with_admission_on_update_experience_post_form_missing_fields_for_other_activity(self):
         response = self.client.post(
@@ -392,8 +376,8 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'role': '',
                 'certificate': ['f1.pdf'],
                 'type': ActivityType.INTERNSHIP.name,
-                'institute_name': 'UCL',
-                'sector': ActivitySector.PUBLIC.name,
+                'institute_name': '',
+                'sector': '',
             },
             **self.api_default_params,
         )
@@ -426,8 +410,8 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'role': '',
                 'certificate': ['f1.pdf'],
                 'type': ActivityType.VOLUNTEERING.name,
-                'institute_name': 'UCL',
-                'sector': ActivitySector.PUBLIC.name,
+                'institute_name': '',
+                'sector': '',
             },
             **self.api_default_params,
         )

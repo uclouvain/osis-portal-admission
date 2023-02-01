@@ -117,7 +117,7 @@ class PersonViewTestCase(TestCase):
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
         self.assertEqual(response.context['form'].initial['unknown_birth_date'], True)
-        self.assertEqual(response.context['form'].initial['has_national_number'], False)
+        self.assertIsNone(response.context['form'].initial.get('has_national_number'))
         self.assertEqual(response.context['form'].initial['identification_type'], '')
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.mock_proposition_api.assert_not_called()
@@ -133,6 +133,8 @@ class PersonViewTestCase(TestCase):
                 'birth_country': 'BE',
                 'birth_place': 'Louvain-la-Neuve',
                 'birth_date': datetime.date(1990, 1, 1),
+                'has_national_number': True,
+                'national_number': '01234567890',
             },
         )
 
@@ -166,6 +168,8 @@ class PersonViewTestCase(TestCase):
                 'birth_place': 'Louvain-la-Neuve',
                 'birth_date': datetime.date(1990, 1, 1),
                 '_submit_and_continue': '',
+                'has_national_number': True,
+                'national_number': '01234567890',
             },
         )
 

@@ -57,6 +57,5 @@ class AdmissionCoordonneesDetailView(LoadDossierViewMixin, TemplateView):
         )
         context_data['coordonnees'] = coordonnees
         # check if there is at least one data into contact
-        if coordonnees['contact']:
-            context_data["show_contact"] = any(v for k, v in coordonnees['contact'].items())
+        context_data["show_contact"] = coordonnees['contact'] is not None
         return context_data

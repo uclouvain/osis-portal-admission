@@ -90,9 +90,11 @@ textarea {
 
 .flex-container-no-wrap {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: 1em;
+}
+
+.flex-container-no-wrap > * {
+  flex: 1;
 }
 
 .flex-container.align-top {

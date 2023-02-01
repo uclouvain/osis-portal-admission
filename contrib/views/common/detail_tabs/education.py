@@ -28,6 +28,7 @@ from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
 from admission.constants import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+from admission.contrib.enums import TrainingType
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
@@ -70,6 +71,10 @@ class AdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
 
         belgian_diploma = high_school_diploma.get('belgian_diploma')
         foreign_diploma = high_school_diploma.get('foreign_diploma')
+
+        context_data['is_bachelor'] = (
+            self.admission.formation.type == TrainingType.BACHELOR.name if self.admission else False
+        )
 
         if belgian_diploma:
             institute_uuid = context_data['belgian_diploma'].get('institute')

@@ -27,7 +27,7 @@
 {% endcomment %}
 
 {% block tab_content %}
-  {% if belgian_diploma %}
+  {% if is_bachelor and belgian_diploma %}
 
     {% panel _('Belgian diploma') %}
 
@@ -96,7 +96,7 @@
       {% endif %}
     {% endpanel %}
 
-  {% elif foreign_diploma %}
+  {% elif is_bachelor and foreign_diploma %}
 
     {% panel _('Foreign diploma') %}
 
@@ -144,7 +144,7 @@
       {% endif %}
     {% endpanel %}
 
-  {% elif high_school_diploma_alternative %}
+  {% elif is_bachelor and high_school_diploma_alternative %}
     {% panel _('Secondary studies') %}
       {% field_data _('Do you have a high school diploma?') _('No') %}
     {% endpanel %}

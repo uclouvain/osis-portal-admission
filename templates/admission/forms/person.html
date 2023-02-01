@@ -88,7 +88,7 @@
   {% endpanel %}
 
   {% panel _("Proof of identity") %}
-    <div id="has_national_number_container">
+    <div id="has_national_number_container" class="required_field">
       {% bootstrap_field form.has_national_number %}
     </div>
 
@@ -131,6 +131,7 @@
           const be_iso_code = "{{ BE_ISO_CODE }}";
           const has_national_number_true_input = $('#id_has_national_number_0');
           const has_national_number_input = $('#has_national_number_container');
+          let belgianCandidate;
 
           const requiredField = {
               toggleClass: 'required_field',
@@ -141,10 +142,13 @@
 
           $('#id_country_of_citizenship').on('change', function() {
               if (resides_in_belgium && this.value === be_iso_code) {
+                  belgianCandidate = true;
                   has_national_number_input.hide();
                   has_national_number_true_input.prop('checked', true).change();
               } else {
                   has_national_number_input.show();
+                  if (belgianCandidate) has_national_number_true_input.prop('checked', false).change();
+                  belgianCandidate = false;
               }
           }).change();
 

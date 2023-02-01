@@ -315,133 +315,6 @@ class EducationTestCase(BaseEducationTestCase):
         # Check template
         self.assertContains(response, 'Non.')
 
-    def test_detail_belgian_diploma(self):
-        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma'] = {
-            "academic_graduation_year": 2020,
-            "other_institute_name": "Special school",
-            "other_institute_address": "Louvain-La-Neuve",
-            "schedule": {
-                "latin": 10,
-                "greek": 10,
-                "chemistry": 10,
-            },
-        }
-
-        response = self.client.get(self.detail_url)
-
-        # Check response status
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Check response context
-        self.assertEqual(
-            response.context['belgian_diploma'],
-            {
-                "academic_graduation_year": 2020,
-                "institute_name": "Special school",
-                "institute_address": "Louvain-La-Neuve",
-                "schedule": {
-                    "latin": 10,
-                    "greek": 10,
-                    "chemistry": 10,
-                },
-            },
-        )
-
-        # Check template
-        self.assertContains(response, "Special school (Louvain-La-Neuve)")
-
-        # With existing institute
-        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma']['institute'] = self.first_high_school_uuid
-
-        response = self.client.get(self.detail_url)
-
-        # Check response status
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Check response context
-        self.assertContains(response, "Diplôme belge")
-        self.assertEqual(response.context['belgian_diploma']['institute_name'], 'HighSchool 1')
-        self.assertEqual(response.context['belgian_diploma']['institute_address'], 'Louvain-La-Neuve')
-
-        # Check template
-        self.assertContains(response, "HighSchool 1 (Louvain-La-Neuve)")
-
-    def test_detail_foreign_diploma(self):
-        self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {
-            "academic_graduation_year": 2019,
-            "result": DiplomaResults.LT_65_RESULT.name,
-            "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-            "linguistic_regime": "EN",
-            "other_linguistic_regime": "",
-            "country": "FR",
-        }
-
-        response = self.client.get(self.detail_url)
-
-        # Check response status
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Check response context
-        self.assertEqual(
-            response.context['foreign_diploma'],
-            {
-                "academic_graduation_year": 2019,
-                "result": DiplomaResults.LT_65_RESULT.name,
-                "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-                "linguistic_regime": "Anglais",
-                "other_linguistic_regime": "",
-                "country": {'european_union': True, 'name': 'France'},
-            },
-        )
-
-        # Check template
-        self.assertContains(response, "Diplôme étranger")
-        self.assertContains(response, "France")
-        self.assertContains(response, "Anglais")
-
-        self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {
-            "academic_graduation_year": 2019,
-            "result": DiplomaResults.LT_65_RESULT.name,
-            "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-            "linguistic_regime": None,
-            "other_linguistic_regime": "Français",
-            "country": "FR",
-        }
-
-        response = self.client.get(self.detail_url)
-
-        # Check response status
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Check template
-        self.assertContains(response, "Diplôme étranger")
-        self.assertContains(response, "Français")
-
-    def test_detail_alternative_diploma(self):
-        self.mock_retrieve_high_school_diploma_for_general['high_school_diploma_alternative'] = {
-            "first_cycle_admission_exam": ["test"],
-        }
-
-        response = self.client.get(self.detail_url)
-
-        # Check response status
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Check response context
-        self.assertEqual(
-            response.context['high_school_diploma_alternative'],
-            {
-                "first_cycle_admission_exam": ["test"],
-            },
-        )
-
-        self.assertContains(
-            response,
-            _("Certificate of successful completion of the admission test for the first cycle of higher education"),
-        )
-        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called()
-        self.assertIn("admission", response.context)
-
     def test_detail_without_country_and_language(self):
         self.mock_retrieve_high_school_diploma_for_general = {
             "foreign_diploma": {
@@ -628,6 +501,133 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
     def setUpTestData(cls):
         super().setUpTestData()
         cls.proposition.formation.type = TrainingType.BACHELOR.name
+
+    def test_detail_belgian_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma'] = {
+            "academic_graduation_year": 2020,
+            "other_institute_name": "Special school",
+            "other_institute_address": "Louvain-La-Neuve",
+            "schedule": {
+                "latin": 10,
+                "greek": 10,
+                "chemistry": 10,
+            },
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertEqual(
+            response.context['belgian_diploma'],
+            {
+                "academic_graduation_year": 2020,
+                "institute_name": "Special school",
+                "institute_address": "Louvain-La-Neuve",
+                "schedule": {
+                    "latin": 10,
+                    "greek": 10,
+                    "chemistry": 10,
+                },
+            },
+        )
+
+        # Check template
+        self.assertContains(response, "Special school (Louvain-La-Neuve)")
+
+        # With existing institute
+        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma']['institute'] = self.first_high_school_uuid
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertContains(response, "Diplôme belge")
+        self.assertEqual(response.context['belgian_diploma']['institute_name'], 'HighSchool 1')
+        self.assertEqual(response.context['belgian_diploma']['institute_address'], 'Louvain-La-Neuve')
+
+        # Check template
+        self.assertContains(response, "HighSchool 1 (Louvain-La-Neuve)")
+
+    def test_detail_foreign_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {
+            "academic_graduation_year": 2019,
+            "result": DiplomaResults.LT_65_RESULT.name,
+            "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
+            "linguistic_regime": "EN",
+            "other_linguistic_regime": "",
+            "country": "FR",
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertEqual(
+            response.context['foreign_diploma'],
+            {
+                "academic_graduation_year": 2019,
+                "result": DiplomaResults.LT_65_RESULT.name,
+                "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
+                "linguistic_regime": "Anglais",
+                "other_linguistic_regime": "",
+                "country": {'european_union': True, 'name': 'France'},
+            },
+        )
+
+        # Check template
+        self.assertContains(response, "Diplôme étranger")
+        self.assertContains(response, "France")
+        self.assertContains(response, "Anglais")
+
+        self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {
+            "academic_graduation_year": 2019,
+            "result": DiplomaResults.LT_65_RESULT.name,
+            "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
+            "linguistic_regime": None,
+            "other_linguistic_regime": "Français",
+            "country": "FR",
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check template
+        self.assertContains(response, "Diplôme étranger")
+        self.assertContains(response, "Français")
+
+    def test_detail_alternative_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['high_school_diploma_alternative'] = {
+            "first_cycle_admission_exam": ["test"],
+        }
+
+        response = self.client.get(self.detail_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check response context
+        self.assertEqual(
+            response.context['high_school_diploma_alternative'],
+            {
+                "first_cycle_admission_exam": ["test"],
+            },
+        )
+
+        self.assertContains(
+            response,
+            _("Certificate of successful completion of the admission test for the first cycle of higher education"),
+        )
+        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called()
+        self.assertIn("admission", response.context)
 
     def test_bachelor_form_initialization(self):
         response = self.client.get(self.form_url)

@@ -117,7 +117,14 @@ class MixinTestCase(TestCase):
         cls.second_diploma = Diploma(uuid=str(uuid.uuid4()), title="Biology")
 
         # Institute
-        cls.institute = SuperiorNonUniversity(uuid=str(uuid.uuid4()), name="Institute of Technology")
+        cls.institute = SuperiorNonUniversity(
+            uuid=str(uuid.uuid4()),
+            name="Institute of Technology",
+            city="Louvain-la-Neuve",
+            zipcode="1348",
+            street="Boulevard de l'Université",
+            street_number="1",
+        )
 
         # Academic years
         cls.academic_year_2018 = AcademicYear(
@@ -193,6 +200,7 @@ class MixinTestCase(TestCase):
             ],
             country=cls.be_country.iso_code,
             valuated_from_trainings=[],
+            obtained_diploma=True,
         )
         cls.foreign_lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
             uuid=cls.educational_experience.uuid,
@@ -207,6 +215,7 @@ class MixinTestCase(TestCase):
             ],
             country=cls.not_ue_country.iso_code,
             valuated_from_trainings=[],
+            obtained_diploma=True,
         )
 
         cls.professional_experience = ProfessionalExperience._from_openapi_data(

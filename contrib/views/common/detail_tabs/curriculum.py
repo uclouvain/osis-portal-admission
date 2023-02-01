@@ -90,11 +90,19 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
 
     @cached_property
     def has_foreign_diploma(self):
-        return any(experience.country != BE_ISO_CODE for experience in self.curriculum.educational_experiences)
+        return any(
+            experience.country != BE_ISO_CODE
+            for experience in self.curriculum.educational_experiences
+            if experience.obtained_diploma
+        )
 
     @cached_property
     def has_belgian_diploma(self):
-        return any(experience.country == BE_ISO_CODE for experience in self.curriculum.educational_experiences)
+        return any(
+            experience.country == BE_ISO_CODE
+            for experience in self.curriculum.educational_experiences
+            if experience.obtained_diploma
+        )
 
     @cached_property
     def has_success_year(self):

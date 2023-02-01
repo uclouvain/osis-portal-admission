@@ -153,7 +153,6 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     has_national_number = RadioBooleanField(
         label=_("Have you got a Belgian national registry number (SSIN)?"),
-        required=False,
     )
     identification_type = forms.ChoiceField(
         label=_("Please provide one of these two identification information:"),
@@ -234,14 +233,17 @@ class DoctorateAdmissionPersonForm(forms.Form):
             person,
         )
 
-        self.initial['has_national_number'] = bool(self.initial.get('national_number'))
-
         if self.initial.get('id_card_number'):
             self.initial['identification_type'] = IdentificationType.ID_CARD_NUMBER.name
         elif self.initial.get('passport_number'):
             self.initial['identification_type'] = IdentificationType.PASSPORT_NUMBER.name
         else:
             self.initial['identification_type'] = ''
+
+        if self.initial.get('national_number'):
+            self.initial['has_national_number'] = True
+        elif self.initial.get('identification_type'):
+            self.initial['has_national_number'] = False
 
     def clean(self):
         data = super().clean()
@@ -272,6 +274,8 @@ class DoctorateAdmissionPersonForm(forms.Form):
         elif data.get('identification_type') == IdentificationType.PASSPORT_NUMBER.name:
             if not data.get('passport_number'):
                 self.add_error('passport_number', FIELD_REQUIRED_MESSAGE)
+        else:
+            self.add_error('identification_type', FIELD_REQUIRED_MESSAGE)
 
         # Lowercase the specified names
         for field in ['first_name', 'last_name', 'middle_name', 'first_name_in_use', 'birth_place']:

@@ -60,15 +60,15 @@
         <div class="col-md-6 required_field">
           {% bootstrap_field form.type %}
         </div>
-        <div class="col-md-6 iufc-fields required_field">
+        <div class="col-md-6 work-fields required_field">
           {% bootstrap_field form.sector %}
         </div>
         <div id="other-activity" class="col-md-6 required_field">
           {% bootstrap_field form.activity placeholder='' %}
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 iufc-fields required_field">
+      <div class="row work-fields">
+        <div class="col-md-6 required_field">
           {% bootstrap_field form.institute_name placeholder='' %}
         </div>
         <div class="col-md-6 required_field">
@@ -86,52 +86,48 @@
   {{ block.super }}
   {{ form.media }}
   <script type="application/javascript">
-  $(function () {
-    const CERTIFICATE_HELP_TEXT = {
-      LANGUAGE_TRAVEL: "{% trans 'Certificate justifying your activity, mentioning this activity, for the specified period.' %}",
-      INTERNSHIP: "{% trans 'Training certificate, with dates, justifying the specified period.' %}",
-      UNEMPLOYMENT: "{% trans 'Unemployment certificate issued by the relevant organisation, justifying the specified period.' %}",
-      VOLUNTEERING: "{% trans 'Certificate, with dates, justifying the specified period.' %}",
-      WORK: "{% trans 'Employment certificate from the employer, with dates, justifying the specified period.' %}",
-    };
+      $(function () {
+          const CERTIFICATE_HELP_TEXT = {
+              LANGUAGE_TRAVEL: "{% trans 'Certificate justifying your activity, mentioning this activity, for the specified period.' %}",
+              INTERNSHIP: "{% trans 'Training certificate, with dates, justifying the specified period.' %}",
+              UNEMPLOYMENT: "{% trans 'Unemployment certificate issued by the relevant organisation, justifying the specified period.' %}",
+              VOLUNTEERING: "{% trans 'Certificate, with dates, justifying the specified period.' %}",
+              WORK: "{% trans 'Employment certificate from the employer, with dates, justifying the specified period.' %}",
+          };
 
-    $('#id_role').dependsOn({
-      '#id_type': { values: ['WORK'] },
-    });
+          $('.work-fields').dependsOn({
+              '#id_type': { values: ['WORK'] },
+          });
 
-    $('.iufc-fields').dependsOn({
-      '#id_type': { values: ['WORK', 'INTERNSHIP', 'VOLUNTEERING'] },
-    })
+          $('#other-activity').dependsOn({
+              '#id_type': { values: ['OTHER'] },
+          })
 
-    $('#other-activity').dependsOn({
-      '#id_type': { values: ['OTHER'] },
-    })
+          $('#certificate').dependsOn({
+              '#id_type': { values: Object.keys(CERTIFICATE_HELP_TEXT) },
+          })
 
-    $('#certificate').dependsOn({
-      '#id_type': { values: Object.keys(CERTIFICATE_HELP_TEXT) },
-    })
+          $('#id_type').change(function () {
+              $('#certificate .popover-buttons').attr('data-content', this.value ? CERTIFICATE_HELP_TEXT[this.value] : '');
+          }).change()
 
-    $('#id_type').change(function () {
-      $('#certificate .popover-buttons').attr('data-content', this.value ? CERTIFICATE_HELP_TEXT[this.value] : '');
-    }).change()
+          {# Display the options of the end date depending on the start date #}
+          const startSelect = $('#id_start_date_year');
+          let startYear = parseInt(startSelect.val());
 
-    {# Display the options of the end date depending on the start date #}
-    const startSelect = $('#id_start_date_year');
-    let startYear = parseInt(startSelect.val());
+          startSelect.on('change', function () {
+              startYear = parseInt(this.value);
+          })
 
-    startSelect.on('change', function () {
-      startYear = parseInt(this.value);
-    })
+          function formatState(result) {
+              return result.id && parseInt(result.id) >= startYear ? result.text : null;
+          }
 
-    function formatState(result) {
-      return result.id && parseInt(result.id) >= startYear ? result.text : null;
-    }
+          $('#id_end_date_year').select2({
+              templateResult: formatState,
+          });
 
-    $('#id_end_date_year').select2({
-      templateResult: formatState,
-    });
-
-    document.dispatchEvent(new Event('refreshFormInitial'));
-  });
+          document.dispatchEvent(new Event('refreshFormInitial'));
+      });
   </script>
 {% endblock %}

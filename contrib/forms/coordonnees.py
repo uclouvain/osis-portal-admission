@@ -59,8 +59,7 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Tick the show contact checkbox only if there is data in contact
-        if self.initial['contact'] and any(v for k, v in self.initial['contact'].items()):
-            self.fields["show_contact"].initial = True
+        self.fields["show_contact"].initial = self.initial['contact'] is not None
 
 
 class DoctorateAdmissionAddressForm(forms.Form):
