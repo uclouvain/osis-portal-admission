@@ -369,6 +369,7 @@ class PropositionBusinessException(Enum):
     CarteBancaireRemboursementAutreFormatNonCompleteException = "PROPOSITION-48"
     ExperiencesAcademiquesNonCompleteesException = "PROPOSITION-49"
     TypeCompteBancaireRemboursementNonCompleteException = "PROPOSITION-50"
+    CoordonneesNonCompleteesException = "PROPOSITION-51"
 
 
 class GlobalPropositionBusinessException(Enum):
@@ -419,6 +420,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'coordonnees': {
         PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,
         PropositionBusinessException.AdresseCorrespondanceNonCompleteeException,
+        PropositionBusinessException.CoordonneesNonCompleteesException,
     },
     'education': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesEtudesSecondairesNonCompleteesException,
