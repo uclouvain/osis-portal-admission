@@ -1,34 +1,38 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
+
 from django.shortcuts import resolve_url
+from django.utils.translation import gettext as _
 from rest_framework.status import HTTP_200_OK
 
 from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
 from admission.contrib.forms.curriculum import REQUIRED_FIELD_CLASS
 from admission.tests.views.curriculum.mixin import MixinTestCase
+from osis_admission_sdk.model.result import Result
 
 
 class CreateGlobalCurriculumTestCase(MixinTestCase):
@@ -42,17 +46,14 @@ class CreateGlobalCurriculumTestCase(MixinTestCase):
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
 
-        # Check that the right API calls are done
-        self.mock_person_api.return_value.retrieve_curriculum_details.assert_called()
+        # Check that the API calls aren't done
+        self.mock_person_api.return_value.retrieve_curriculum_details.assert_not_called()
+        self.mock_proposition_api.assert_not_called()
 
-        # Check the context data
-        self.assertEqual(len(response.context.get('professional_experiences')), 1)
-        self.assertEqual(response.context.get('professional_experiences')[0], self.lite_professional_experience)
-
-        self.assertEqual(len(response.context.get('educational_experiences')), 1)
-        self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
-
-        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+        self.assertContains(
+            response,
+            _("You must choose your training before filling in your previous experience."),
+        )
 
 
 class DoctorateGlobalCurriculumTestCase(MixinTestCase):
@@ -78,13 +79,34 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+        self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
+        self.assertEqual(response.context.get('need_to_complete'), True)
+
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
+
+        self.assertEqual(
+            response.context.get('incomplete_experiences'),
+            {
+                self.educational_experience.uuid: ['Cette expérience académique est incomplète.'],
+            },
+        )
+
+        self.assertRegex(response.rendered_content, r'Les expériences préfixées par .* sont incomplètes.')
 
     def test_with_admission_on_update_curriculum_is_loaded(self):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertNotContains(response, _("Save and continue"))
+        self.assertContains(response, '<form class="osis-form"')
 
         # Check that the right API calls are done
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
@@ -97,7 +119,17 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+        self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
+        self.assertEqual(response.context.get('need_to_complete'), True)
+
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
 
         self.assertEqual(response.context.get('form').initial['curriculum'], self.proposition.curriculum)
 
@@ -163,7 +195,17 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+        self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
+        self.assertEqual(response.context.get('need_to_complete'), True)
+
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
 
     def test_with_admission_on_update_curriculum_is_loaded_with_master(self):
         response = self.client.get(self.admission_update_url)
@@ -182,7 +224,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+        self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
 
         # Check the form
         form = response.context.get('form')
@@ -207,6 +249,13 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
         self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
         self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_reading_curriculum_is_loaded_with_master(self):
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+        self.assertFalse(response.context['display_bachelor_continuation'])
+        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_bachelor(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -241,6 +290,68 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
         self.assertFalse(form.fields['continuation_cycle_bachelier'].disabled)
         self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_reading_curriculum_is_loaded_with_bachelor(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+        self.assertTrue(response.context['display_bachelor_continuation'])
+        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
+
+    def test_with_admission_on_update_curriculum_is_loaded_with_bachelor_without_success(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+        mock_return = self.mock_person_api.return_value
+        xp = mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences[0]
+        xp.educationalexperienceyear_set[0].result = Result(value='WAITING_RESULT')
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the form
+        form = response.context.get('form')
+        self.assertEqual(
+            form.initial['curriculum'],
+            self.general_proposition.curriculum,
+        )
+        self.assertEqual(
+            form.initial['equivalence_diplome'],
+            self.general_proposition.equivalence_diplome,
+        )
+        self.assertEqual(
+            form.initial['continuation_cycle_bachelier'],
+            self.general_proposition.continuation_cycle_bachelier,
+        )
+        self.assertEqual(
+            form.initial['attestation_continuation_cycle_bachelier'],
+            self.general_proposition.attestation_continuation_cycle_bachelier,
+        )
+
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
+        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_reading_curriculum_is_loaded_with_bachelor_without_success(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+        mock_return = self.mock_person_api.return_value
+        xp = mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences[0]
+        xp.educationalexperienceyear_set[0].result = Result(value='WAITING_RESULT')
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+        self.assertFalse(response.context['display_bachelor_continuation'])
+        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_veterinary_bachelor(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -278,6 +389,20 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['continuation_cycle_bachelier'].disabled)
         self.assertFalse(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
+    def test_with_admission_on_reading_curriculum_is_loaded_with_veterinary_bachelor(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.BACHELOR.name
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.sigle = (
+            VETERINARY_BACHELOR_CODE
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+        self.assertTrue(response.context['display_bachelor_continuation'])
+        self.assertTrue(response.context['display_bachelor_continuation_attestation'])
+
     def test_with_admission_on_update_curriculum_is_loaded_with_aggregation_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
             TrainingType.AGGREGATION.name
@@ -301,6 +426,21 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
         self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
+    def test_with_admission_on_reading_curriculum_is_loaded_with_aggregation_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.AGGREGATION.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+        ]
+
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertTrue(response.context['display_equivalence'])
+        self.assertFalse(response.context['display_bachelor_continuation'])
+        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
+
     def test_with_admission_on_update_curriculum_is_loaded_with_aggregation_and_be_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
             TrainingType.AGGREGATION.name
@@ -318,6 +458,17 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
         self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
         self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_reading_curriculum_is_loaded_with_aggregation_and_be_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.AGGREGATION.name
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+        self.assertFalse(response.context['display_bachelor_continuation'])
+        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_capes_and_be_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -342,6 +493,22 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertNotEqual(form.fields['equivalence_diplome'].widget.attrs.get('class'), REQUIRED_FIELD_CLASS)
         self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
         self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
+
+    def test_with_admission_on_reading_curriculum_is_loaded_with_capes_and_be_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
+            TrainingType.CAPAES.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+            self.lite_educational_experience,
+        ]
+
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertTrue(response.context['display_equivalence'])
+        self.assertFalse(response.context['display_bachelor_continuation'])
+        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_post_curriculum_file_with_master(self):
         response = self.client.post(
@@ -611,7 +778,17 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+        self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
+        self.assertEqual(response.context.get('need_to_complete'), True)
+
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
 
     def test_with_admission_on_update_curriculum_is_loaded_with_certificate_of_participation(self):
         response = self.client.get(self.admission_update_url)
@@ -630,7 +807,17 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(len(response.context.get('educational_experiences')), 1)
         self.assertEqual(response.context.get('educational_experiences')[0], self.lite_educational_experience)
 
-        self.assertEqual(response.context.get('minimal_year'), self.academic_year_2020.year)
+        self.assertEqual(response.context.get('minimal_date'), datetime.date(self.academic_year_2020.year, 9, 1))
+        self.assertEqual(response.context.get('need_to_complete'), True)
+
+        self.assertEqual(
+            response.context.get('missing_periods_messages'),
+            [
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+        )
 
         # Check the form
         form = response.context.get('form')
@@ -645,6 +832,11 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
 
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
+    def test_with_admission_on_reading_curriculum_is_loaded_with_certificate_of_participation(self):
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_first_cycle_certificate(self):
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
@@ -670,6 +862,15 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
+    def test_with_admission_on_reading_curriculum_is_loaded_with_first_cycle_certificate(self):
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
+            TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
     def test_with_admission_on_update_curriculum_is_loaded_with_first_cycle_certificate_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
             TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
@@ -689,6 +890,19 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
 
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertFalse(form.fields['equivalence_diplome'].disabled)
+
+    def test_with_admission_on_reading_curriculum_is_loaded_with_first_cycle_certificate_and_foreign_studies(self):
+        self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
+            TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+        )
+        mock_return = self.mock_person_api.return_value
+        mock_return.retrieve_curriculum_details_continuing_education_admission.return_value.educational_experiences = [
+            self.foreign_lite_educational_experience,
+        ]
+
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertTrue(response.context['display_equivalence'])
 
     def test_with_admission_on_update_post_curriculum_file_with_certificate_of_participation(self):
         response = self.client.post(

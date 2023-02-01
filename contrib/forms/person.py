@@ -31,7 +31,7 @@ from django.conf import settings
 from django.core import validators
 from django.utils.translation import gettext_lazy as _
 
-from admission.constants import FIELD_REQUIRED_MESSAGE, BE_ISO_CODE
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.person import CivilState, GenderEnum, SexEnum, IdentificationType
 from admission.contrib.forms import (
     CustomDateInput,
@@ -40,8 +40,8 @@ from admission.contrib.forms import (
     get_example_text,
     get_past_academic_years_choices,
     RadioBooleanField,
+    AdmissionFileUploadField as FileUploadField,
 )
-from osis_document.contrib.forms import FileUploadField
 
 from admission.utils import force_title
 
@@ -262,6 +262,16 @@ class DoctorateAdmissionPersonForm(forms.Form):
         if not data.get('first_name') and not data.get('last_name'):
             self.add_error('first_name', _('This field is required if the last name is missing.'))
             self.add_error('last_name', _('This field is required if the first name is missing.'))
+
+        if data.get('has_national_number'):
+            if not data.get('national_number'):
+                self.add_error('national_number', FIELD_REQUIRED_MESSAGE)
+        elif data.get('identification_type') == IdentificationType.ID_CARD_NUMBER.name:
+            if not data.get('id_card_number'):
+                self.add_error('id_card_number', FIELD_REQUIRED_MESSAGE)
+        elif data.get('identification_type') == IdentificationType.PASSPORT_NUMBER.name:
+            if not data.get('passport_number'):
+                self.add_error('passport_number', FIELD_REQUIRED_MESSAGE)
 
         # Lowercase the specified names
         for field in ['first_name', 'last_name', 'middle_name', 'first_name_in_use', 'birth_place']:

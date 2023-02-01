@@ -29,6 +29,7 @@ from typing import Optional
 from dal import autocomplete, forward
 from django import forms
 from django.conf import settings
+from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _, get_language
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
@@ -312,7 +313,9 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                     ),
                 )
             else:
-                self.fields['has_{}'.format(scholarship_name)].initial = False
+                self.fields['has_{}'.format(scholarship_name)].initial = (
+                    bool(self.initial.get(scholarship_name)) if self.initial else None
+                )
 
         self.fields['sector'].widget.choices = EMPTY_CHOICE + tuple(
             (sector.sigle, f"{sector.sigle} - {sector.intitule}")
@@ -431,15 +434,15 @@ class GeneralUpdateTrainingChoiceForm(TrainingChoiceForm):
         self.clean_master_scholarships(training_type, cleaned_data)
         self.clean_erasmus_scholarship(training_type, cleaned_data)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, admission_uuid, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['training_type'].required = True
         self.fields['training_type'].choices = TypeFormation.general_choices()
         self.fields['training_type'].help_text = _(
             'If you wish to change your choice of training for a Doctorate or Continuing Education '
-            'application, please delete the current application and create a new one.'
-        )
+            'application, please <a href="%(url)s">cancel the current application</a> and create a new one.'
+        ) % {'url': resolve_url('admission:general-education:cancel', pk=admission_uuid)}
 
         for field in [
             'proximity_commission_cde',
@@ -459,14 +462,14 @@ class ContinuingUpdateTrainingChoiceForm(TrainingChoiceForm):
 
         self.clean_continuing_education(training_type, cleaned_data)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, admission_uuid, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['training_type'].help_text = _(
             'If you wish to change your choice of training for a Bachelor, Master, Aggregation, CAPAES, '
-            'Doctorate or Certificate application, please delete the current application '
+            'Doctorate or Certificate application, please <a href="%(url)s">cancel the current application</a> '
             'and create a new one.'
-        )
+        ) % {'url': resolve_url('admission:continuing-education:cancel', pk=admission_uuid)}
 
         for field in [
             'proximity_commission_cde',
@@ -488,14 +491,14 @@ class DoctorateUpdateTrainingChoiceForm(TrainingChoiceForm):
         self.clean_doctorate(training_type, cleaned_data)
         self.clean_erasmus_scholarship(training_type, cleaned_data)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, admission_uuid, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['training_type'].help_text = _(
             'If you wish to change your choice of training for a Bachelor, Master, Aggregation, CAPAES, '
-            'Continuing Education or Certificate application, please delete the current application '
-            'and create a new one.'
-        )
+            'Continuing Education or Certificate application, please <a href="%(url)s">cancel the current '
+            'application</a> and create a new one.'
+        ) % {'url': resolve_url('admission:doctorate:cancel', pk=admission_uuid)}
 
         for field in [
             'proximity_commission_cde',

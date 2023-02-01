@@ -1,5 +1,5 @@
-{% extends form_base_template %}
-{% load bootstrap3 %}
+{% extends base_template %}
+{% load bootstrap3 admission i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,180 @@
 {% endcomment %}
 
 {% block form %}
-  {% bootstrap_form_errors form %}
-  {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+  {# Specific questions #}
+  {% with form=forms.0 %}
+    {% bootstrap_form_errors form %}
+    {% if view.is_continuing %}
+      {% panel _('Specific questions') %}
+        {% bootstrap_field form.inscription_a_titre %}
+          <div id="professional-container">
+          {% bootstrap_field form.nom_siege_social placeholder='' %}
+          <div class="row">
+            <div class="col-md-6">
+              {% bootstrap_field form.numero_unique_entreprise placeholder='' %}
+            </div>
+            <div class="col-md-6">
+              {% bootstrap_field form.numero_tva_entreprise placeholder='' %}
+            </div>
+          </div>
+          {% bootstrap_field form.adresse_mail_professionnelle placeholder='' %}
+          {% bootstrap_field form.type_adresse_facturation %}
+          {% panel _("Billing address") id="billing-address-container" %}
+            {% bootstrap_field form.adresse_facturation_destinataire placeholder='' %}
+            <div class="row">
+                <div class="col-md-4 required_field formatted-field">
+                  {% bootstrap_field_with_tooltip form.street %}
+                </div>
+                <div class="col-md-2 required_field">
+                  {% bootstrap_field form.street_number placeholder="" %}
+                </div>
+                <div class="col-md-2">
+                  {% bootstrap_field form.postal_box placeholder="" %}
+                </div>
+                <div class="col-md-4 formatted-field">
+                  {% bootstrap_field form.place placeholder="" %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 required_field">
+                  {% bootstrap_field form.country %}
+                </div>
+                <div id="not-be-form-address">
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.postal_code placeholder="" %}
+                    </div>
+                    <div class="col-md-4 required_field formatted-field">
+                      {% bootstrap_field_with_tooltip form.city %}
+                    </div>
+                </div>
+                <div id="be-form-address">
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.be_postal_code placeholder="" %}
+                    </div>
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.be_city placeholder="" %}
+                    </div>
+                </div>
+            </div>
+          {% endpanel %}
+        </div>
+        {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
+      {% endpanel %}
+    {% elif form.specific_question_answers.field.fields %}
+      {% panel _('Specific questions') %}
+        {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+      {% endpanel %}
+    {% endif %}
+  {% endwith %}
+
+  {# Pool questions #}
+  {% if forms.1 %}
+    {% with form=forms.1 %}
+
+      {% if form.is_non_resident %}
+        {% panel _("Enrollment in a bachelor with quota") %}
+          {% bootstrap_field form.is_non_resident form_group_class="form-group required_field" %}
+        {% endpanel %}
+      {% endif %}
+
+      {% if form.is_external_modification %}
+        {% panel _("Registration change") id="panel-modification" %}
+          {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
+          <div class="belgian-bachelor-children">
+            {% bootstrap_field form.is_external_modification form_group_class="form-group required_field" %}
+
+            <div class="registration-change-form">
+              <p>{% blocktrans trimmed with date=modification_pool_end_date|date:'d/m/Y H:i' %}
+                In the case of an external registration change, you must confirm your request before {{ date }}.
+              {% endblocktrans %}</p>
+              {% bootstrap_field form.registration_change_form form_group_class="form-group required_field" %}
+            </div>
+          </div>
+        {% endpanel %}
+
+      {% elif form.is_external_reorientation %}
+        {% panel _("Reorientation") id="panel-reorientation" %}
+          {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
+          <div class="belgian-bachelor-children">
+            {% bootstrap_field form.is_external_reorientation form_group_class="form-group required_field" %}
+
+            <div class="regular-registration-proof">
+              <p>{% blocktrans trimmed with date=reorientation_pool_end_date|date:'d/m/Y H:i' %}
+                In the case of an external reorientation, you must confirm your request before {{ date }}.
+              {% endblocktrans %}</p>
+              {% bootstrap_field form.regular_registration_proof form_group_class="form-group required_field" %}
+            </div>
+          </div>
+        {% endpanel %}
+
+      {% endif %}
+
+    {% endwith %}
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {% for form in forms %}{{ form.media }}{% endfor %}
+
+  <script>
+  $(function () {
+    {% if view.is_continuing %}
+      $('#professional-container').dependsOn({
+        'input[name="specific_questions-inscription_a_titre"]': { values: ['PROFESSIONNEL'] },
+      });
+      $('#billing-address-container').dependsOn({
+        'input[name="specific_questions-type_adresse_facturation"]': { values: ['AUTRE'] },
+      });
+      const beIsoCode = '{{BE_ISO_CODE}}';
+      $('#be-form-address').dependsOn({
+          '#id_specific_questions-country': { values: [beIsoCode] },
+      });
+      $('#not-be-form-address').dependsOn({
+          '#id_specific_questions-country': { not: [beIsoCode] },
+      });
+
+      // BE city depends on postal code
+      const cityResidentialCheck = $('#id_specific_questions-be_city').dependsOn({
+          '#id_specific_questions-country': { values: [beIsoCode] },
+          '#id_specific_questions-be_postal_code': { not: [''] },
+      }, { valueOnDisable: '', hide: false });
+      $('#id_specific_questions-be_postal_code').on('keydown', function () {
+          cityResidentialCheck.check()
+          $('#id_specific_questions-be_city').val('').trigger('change');
+      });
+
+      // "city" and "postal code" depends on "country"
+      $('#id_specific_questions-city, #id_specific_questions-postal_code').dependsOn({
+          '#id_specific_questions-country': { not: [null] },
+      }, { valueOnDisable: '', hide: false });
+    {% endif %}
+
+    const $belgianChildren = $('.belgian-bachelor-children');
+    $belgianChildren.length && $belgianChildren.dependsOn({
+      'input[name=pool_questions-is_belgian_bachelor]': { values: ['True'] },
+    });
+
+    const $registrationForm = $('.registration-change-form');
+    $registrationForm.length && $registrationForm.dependsOn({
+      'input[name=pool_questions-is_external_modification]': { values: ['True'] },
+    });
+
+    const $registrationProof = $('.regular-registration-proof');
+    $registrationProof.length && $registrationProof.dependsOn({
+      'input[name=pool_questions-is_external_reorientation]': { values: ['True'] },
+    });
+
+    {% if forms.1 and forms.1.is_non_resident %}
+      {% if forms.1.is_external_modification or forms.1.is_external_reorientation %}
+        {# Whole panel depends on is_non_resident question #}
+        $('#panel-modification, #panel-reorientation').dependsOn({
+          'input[name=pool_questions-is_non_resident]': {
+            values: ['False'],
+          },
+        });
+      {% endif %}
+    {% endif %}
+  });
+  </script>
 {% endblock %}

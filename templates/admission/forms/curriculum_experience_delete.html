@@ -1,0 +1,67 @@
+{% extends base_template %}
+{% load bootstrap3 i18n admission enums %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block tab_content %}
+  <div class="panel panel-default">
+    {% if educational_tab %}
+      {% translate "Deletion of an academic training" as header_title %}
+      {% blocktranslate with name=experience.education_name asvar question trimmed %}
+        Are you sure you want to delete the training "{{ name }}"?
+      {% endblocktranslate %}
+    {% else %}
+      {% translate "Deletion of a non-academic activity" as header_title %}
+      {% if experience.start_date.year != experience.end_date.year or experience.start_date.month != experience.end_date.month %}
+        {% blocktranslate with type=experience.type|enum_display:'ActivityType' start=experience.start_date|date:"YEAR_MONTH_FORMAT"|capfirst end=experience.end_date|date:"YEAR_MONTH_FORMAT"|capfirst asvar question trimmed %}
+          Are you sure you want to delete the activity "{{ type }}" that took place from {{ start }} to {{ end }}?
+        {% endblocktranslate %}
+      {% else %}
+        {% blocktranslate with type=experience.type|enum_display:'ActivityType' date=experience.start_date|date:"YEAR_MONTH_FORMAT"|capfirst asvar question trimmed %}
+          Are you sure you want to delete the activity "{{ type }}" that took place in {{ date }}?
+        {% endblocktranslate %}
+      {% endif %}
+    {% endif %}
+    {% include 'admission/includes/curriculum_experience_header.html' with educational_tab=educational_tab title=header_title %}
+    <div class="panel-body">
+      {% bootstrap_form_errors form %}
+      <p>{{ question }}</p>
+      <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="_submit_and_continue" class="btn btn-danger">
+          {% trans "Confirm" %}
+        </button>
+        {% if admission %}
+          {% url base_namespace|add:':update:curriculum' view.kwargs.pk as experience_delete_url %}
+        {% else %}
+          {% url 'admission:create:curriculum' as experience_delete_url %}
+        {% endif %}
+        <a href="{{ experience_delete_url }}{% if educational_tab %}#academic-activities{% else %}#non-academic-activities{% endif %}">
+          {% trans "Cancel" %}
+        </a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

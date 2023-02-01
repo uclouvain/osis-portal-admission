@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@
 # ##############################################################################
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.template import Context, Template
-from django.urls import reverse_lazy
 from django.utils.translation import get_language
 from django.views.generic import FormView
 
@@ -41,9 +41,15 @@ __all__ = ['AdmissionLanguagesFormView']
 
 
 class AdmissionLanguagesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
-    template_name = "admission/doctorate/forms/languages.html"
-    success_url = reverse_lazy("admission:list")
+    template_name = "admission/forms/languages.html"
     form_class = DoctorateAdmissionLanguagesKnowledgeFormSet
+
+    def get(self, request, *args, **kwargs):
+        if not self.admission_uuid:
+            # Trick template to not display form and buttons
+            context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
+            return render(request, 'admission/forms/need_training_choice.html', context)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -68,6 +74,10 @@ class AdmissionLanguagesFormView(LoadDossierViewMixin, WebServiceFormMixin, Form
             lang.code: lang.name if get_language() == settings.LANGUAGE_CODE else lang.name_en
             for lang in LanguageService.get_languages(person=self.request.user.person)
         }
+
+        # Trick template to display the form tag
+        context_data["formset"] = context_data["form"]
+        context_data["form"] = context_data["form"].empty_form
         return context_data
 
     def get_initial(self):

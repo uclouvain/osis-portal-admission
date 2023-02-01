@@ -1,51 +1,81 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import resolve_url
+from django.template.loader import select_template
+from django.utils.datetime_safe import date
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
 from admission.services.doctorate import AdmissionDoctorateService
 from admission.services.proposition import AdmissionPropositionService
 
+LATE_MESSAGE_POOLS = [
+    'ADMISSION_POOL_HUE_UCL_PATHWAY_CHANGE',
+    'ADMISSION_POOL_UE5_BELGIAN',
+]
+LATE_MESSAGE_DAYS_THRESHOLD = 30
+
 
 class LoadViewMixin(LoginRequiredMixin, ContextMixin):
-    detail_base_template = ''
-    form_base_template = ''
-
     @property
     def current_context(self):
         return self.request.resolver_match.namespaces[1]
 
+    @cached_property
+    def formatted_current_context(self):
+        return self.current_context.replace('-', '_')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        namespace = 'doctorate' if self.current_context == 'create' else self.current_context.replace('-', '_')
-        context['detail_base_template'] = f'admission/{namespace}/details/tab_layout.html'
-        context['form_base_template'] = f'admission/{namespace}/forms/tab_layout.html'
+        templates = [
+            f'admission/{self.formatted_current_context}/tab_layout.html',
+            'admission/tab_layout.html',
+        ]
+        context['base_template'] = select_template(templates)
         context['base_namespace'] = self.base_namespace
+        context['current_context'] = self.current_context
+        context['is_general'] = self.is_general
+        context['is_continuing'] = self.is_continuing
+        context['is_doctorate'] = self.is_doctorate
         return context
+
+    @property
+    def is_general(self):
+        return self.current_context == 'general-education'
+
+    @property
+    def is_continuing(self):
+        return self.current_context == 'continuing-education'
+
+    @property
+    def is_doctorate(self):
+        return self.current_context == 'doctorate'
 
     @cached_property
     def base_namespace(self):
@@ -55,12 +85,25 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
     def admission_uuid(self):
         return str(self.kwargs.get('pk', ''))
 
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
+    def _get_url(self, tab_name, update=False):
+        """Return the URL for the given tab."""
+        mapping = {
+            'base_namespace': self.base_namespace,
+            'tab_name': tab_name,
+            'update': ':update' if update and self.kwargs.get('pk', None) else '',
+        }
+        pattern = '{base_namespace}{update}:{tab_name}'.format(**mapping)
+        if self.kwargs.get('pk', None):
+            return resolve_url(pattern, pk=self.admission_uuid)
+        return resolve_url(pattern)
+
 
 class LoadDossierViewMixin(LoadViewMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
-
-    detail_base_template = 'admission/doctorate/detail_tab_layout.html'
-    form_base_template = 'admission/doctorate/form_tab_layout.html'
 
     @cached_property
     def admission(self):
@@ -96,23 +139,28 @@ class LoadDossierViewMixin(LoadViewMixin):
             if hasattr(self, 'tab_of_specific_questions'):
                 context['specific_questions'] = self.specific_questions
 
+        # Late message
+        if (
+            self.admission_uuid
+            and getattr(self.admission, 'date_fin_pot', None)
+            and self.admission.pot_calcule in LATE_MESSAGE_POOLS
+            and (self.admission.date_fin_pot - date.today()).days < LATE_MESSAGE_DAYS_THRESHOLD
+        ):
+            messages.warning(
+                self.request,
+                _("Late enrollment! Enroll before %(date)s") % {'date': self.admission.date_fin_pot},
+            )
         return context
 
 
 class LoadDoctorateViewMixin(LoadViewMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
 
-    detail_base_template = 'admission/doctorate/detail_tab_layout.html'
-    form_base_template = 'admission/doctorate/form_tab_layout.html'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['admission'] = self.doctorate
         context['doctorate'] = self.doctorate
-        # We display the information related to the doctorate instead of the admission
-        context['detail_base_template'] = 'admission/doctorate/details/doctorate_tab_layout.html'
-
         return context
 
     @cached_property

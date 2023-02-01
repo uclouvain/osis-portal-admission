@@ -1,0 +1,59 @@
+{% extends "admission/modal/modal.html" %}
+{% load i18n %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block modal_id %}just-submitted{% endblock %}
+
+{% block modal_title %}{% trans "Your application has been submitted" %}{% endblock %}
+
+{% block modal_body %}
+  {% if current_context == 'continuing-education' %}
+    {% trans "by the University Institute of Continuing Education" as by_service %}
+  {% else %}
+    {% trans "by the UCLouvain Registration Service" as by_service %}
+  {% endif %}
+  {% blocktrans trimmed with by_service=by_service %}
+    <p><strong>What happens now?</strong></p>
+    <ul>
+      <li>Your application will be processed {{ by_service }}</li>
+      <li>An email confirming your application submission will be sent to the e-mail address you specified</li>
+      <li>Your application summary will be available at all time by connecting to this website</li>
+    </ul>
+    <p>We thank you for choosing UCLouvain and wish you a successful training!</p>
+  {% endblocktrans %}
+{% endblock %}
+
+{% block modal_footer %}
+  <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Finish" %}</button>
+{% endblock %}
+
+{% block extra %}
+  <script>
+  $(function () {
+    $('#just-submitted').modal('show')
+  })
+  </script>
+{% endblock %}

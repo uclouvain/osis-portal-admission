@@ -33,6 +33,7 @@ from rest_framework import status
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
+from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 from osis_admission_sdk import ApiException
@@ -75,6 +76,7 @@ class SupervisionTestCase(TestCase):
                 'request_signatures': {'error': 'nope'},
                 'add_member': {'error': 'nope'},
             },
+            erreurs=[],
         )
 
         self.mock_api.return_value.retrieve_supervision.return_value.to_dict.return_value = dict(
@@ -143,12 +145,12 @@ class SupervisionTestCase(TestCase):
 
         response = self.client.post(self.update_url, {'type': ActorType.CA_MEMBER.name, 'tutor': "0123456978"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('person', response.context['form'].errors)
+        self.assertIn('person', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
 
         response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name, 'person': "0123456978"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('tutor', response.context['form'].errors)
+        self.assertIn('tutor', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
 
         response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name, 'tutor': "0123456978"})
@@ -235,7 +237,7 @@ class SupervisionTestCase(TestCase):
         self.client.force_login(PersonFactory(global_id='0123456978').user)
         response = self.client.post(self.detail_url, {'decision': DecisionApprovalEnum.APPROVED.name})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "form", 'institut_these', _('This field is required.'))
+        self.assertFormError(response, "approval_form", 'institut_these', _('This field is required.'))
 
     def test_should_reject_proposition(self):
         # All data is provided and the proposition is rejected
@@ -275,7 +277,7 @@ class SupervisionTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('decision', response.context['form'].errors)
+        self.assertIn('decision', response.context['approval_form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
         self.mock_api.return_value.approve_proposition.assert_not_called()
@@ -290,7 +292,7 @@ class SupervisionTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('motif_refus', response.context['form'].errors)
+        self.assertIn('motif_refus', response.context['approval_form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
         self.mock_api.return_value.approve_proposition.assert_not_called()
@@ -345,7 +347,7 @@ class SupervisionTestCase(TestCase):
 
     @patch(
         'osis_document.api.utils.get_remote_metadata',
-        return_value={'name': 'myfile', 'mimetype': 'application/pdf'},
+        return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
     )
     def test_should_approval_by_pdf_redirect_without_errors(self, *args):
         url = resolve_url("admission:doctorate:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

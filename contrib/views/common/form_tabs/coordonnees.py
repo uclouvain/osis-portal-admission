@@ -40,7 +40,7 @@ __all__ = ['AdmissionCoordonneesFormView']
 
 
 class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
-    template_name = 'admission/doctorate/forms/coordonnees.html'
+    template_name = 'admission/forms/coordonnees.html'
     form_class = DoctorateAdmissionCoordonneesForm
     forms = None
     service_mapping = {

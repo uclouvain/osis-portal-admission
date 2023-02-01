@@ -77,6 +77,7 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
         context = super().get_context_data(**kwargs)
         context['supervision'] = self.supervision
         context['approve_by_pdf_form'] = DoctorateAdmissionApprovalByPdfForm()
+        context['approval_form'] = context.pop('form')  # Trick template to remove save button
         return context
 
     def get_initial(self):
@@ -174,27 +175,31 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
         AdmissionSupervisionService.remove_member(person=self.person, uuid=self.admission_uuid, **data)
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate:supervision', pk=self.admission_uuid)
+        return self._get_url("supervision")
 
 
-class DoctorateAdmissionSetReferencePromoterView(LoadDossierViewMixin, WebServiceFormMixin, BaseFormView):
+class DoctorateAdmissionSetReferencePromoterView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
     urlpatterns = {'set-reference-promoter': 'set-reference-promoter/<matricule>'}
     form_class = forms.Form
 
     def prepare_data(self, data):
         return {
-            'uuid_proposition': self.admission_uuid,
+            'uuid_proposition': str(self.kwargs['pk']),
             'matricule': self.kwargs['matricule'],
         }
 
     def call_webservice(self, data):
-        AdmissionSupervisionService.set_reference_promoter(person=self.person, uuid=self.admission_uuid, **data)
+        AdmissionSupervisionService.set_reference_promoter(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+            **data,
+        )
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate:supervision', pk=self.admission_uuid)
+        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
     def form_invalid(self, form):
-        return redirect('admission:doctorate:supervision', pk=self.admission_uuid)
+        return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
 class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):

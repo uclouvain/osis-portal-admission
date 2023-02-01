@@ -25,12 +25,15 @@
 # ##############################################################################
 from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import resolve_url
+from django.shortcuts import render, resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import TemplateView
 
-from admission.contrib.enums import EvaluationSystemsWithCredits
+from admission.contrib.enums import (
+    EvaluationSystemsWithCredits,
+    ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT,
+)
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
     AdmissionPersonService,
@@ -43,6 +46,7 @@ from osis_admission_sdk.model.professional_experience import ProfessionalExperie
 
 __all__ = [
     'initialize_field_texts',
+    'experience_can_be_updated',
     'get_educational_experience_year_set_with_lost_years',
     'AdmissionCurriculumMixin',
     'AdmissionCurriculumProfessionalExperienceDetailView',
@@ -79,19 +83,17 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
             uuid=self.admission_uuid,
         )
 
-    def get_success_url(self):
-        # Redirect to the list of experiences
-        messages.info(self.request, _("Your data has been saved"))
-        return (
-            resolve_url(self.base_namespace + ':update:curriculum', pk=self.admission_uuid)
-            if self.admission_uuid
-            else resolve_url('admission:create:curriculum')
-        )
+    def get(self, request, *args, **kwargs):
+        if not self.admission_uuid:
+            # Trick template to not display form and buttons
+            context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
+            return render(request, 'admission/forms/need_training_choice.html', context)
+        return super().get(request, *args, **kwargs)
 
 
 class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMixin, TemplateView):
     urlpatterns = {'professional_read': 'professional/<uuid:experience_id>/'}
-    template_name = 'admission/doctorate/details/curriculum_professional_experience.html'
+    template_name = 'admission/details/curriculum_professional_experience.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -101,7 +103,7 @@ class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMix
 
 class AdmissionCurriculumEducationalExperienceDetailView(AdmissionCurriculumMixin, TemplateView):
     urlpatterns = {'educational_read': 'educational/<uuid:experience_id>/'}
-    template_name = 'admission/doctorate/details/curriculum_educational_experience.html'
+    template_name = 'admission/details/curriculum_educational_experience.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -117,7 +119,7 @@ class AdmissionCurriculumEducationalExperienceDetailView(AdmissionCurriculumMixi
         context['experience'].evaluation_system_with_credits = (
             self.educational_experience.evaluation_type.value in EvaluationSystemsWithCredits
         )
-        initialize_field_texts(self.request.user.person, [self.educational_experience])
+        initialize_field_texts(self.request.user.person, [self.educational_experience], self.current_context)
         return context
 
 
@@ -150,7 +152,7 @@ def get_educational_experience_year_set_with_lost_years(educational_experience_y
     }
 
 
-def initialize_field_texts(person, curriculum_experiences):
+def initialize_field_texts(person, curriculum_experiences, context):
     """
     Add into each experience, the names of the country and the linguistic regime.
     """
@@ -183,3 +185,26 @@ def initialize_field_texts(person, curriculum_experiences):
                 person=person,
             )
             experience.institute_name = institute.name
+
+        experience.can_be_updated = experience_can_be_updated(experience, context)
+
+
+def experience_can_be_updated(experience, context):
+    """Return if the educational experience can be updated in the specific context."""
+    # An experience can be updated...
+    return (
+        # ... if it is not valuated
+        not getattr(experience, 'valuated_from_trainings', [])
+        # ... or, for a doctorate admission, if it hasn't been valuated by another doctorate admission
+        or context == 'doctorate'
+        and not any(
+            training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['doctorate']
+            for training in experience.valuated_from_trainings
+        )
+        # ... or, for a general admission, if the experience has only been valuated by continuing admissions
+        or context == 'general-education'
+        and all(
+            training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
+            for training in experience.valuated_from_trainings
+        )
+    )

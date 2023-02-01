@@ -1,26 +1,26 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher languages institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 from unittest.mock import Mock, patch
@@ -30,6 +30,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums import ChoixStatutProposition
 from admission.tests.utils import MockLanguage
 from base.tests.factories.person import PersonFactory
 
@@ -40,9 +41,22 @@ class LanguagesTestCase(TestCase):
     def setUpTestData(cls):
         cls.person = PersonFactory()
         cls.detail_url = resolve_url('admission:doctorate:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        cls.form_url = resolve_url('admission:create:languages')
+        cls.form_url = resolve_url('admission:doctorate:update:languages', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        cls.create_url = resolve_url('admission:create:languages')
 
     def setUp(self):
+        self.data_ok = {
+            "form-0-language": 'FR',
+            "form-0-listening_comprehension": "1",
+            "form-0-speaking_ability": "1",
+            "form-0-writing_ability": "3",
+            "form-1-language": 'EN',
+            "form-1-listening_comprehension": "5",
+            "form-1-speaking_ability": "6",
+            "form-1-writing_ability": "1",
+            "form-INITIAL_FORMS": 0,
+            "form-TOTAL_FORMS": 2,
+        }
         self.client.force_login(self.person.user)
 
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -117,41 +131,50 @@ class LanguagesTestCase(TestCase):
         self.addCleanup(academic_year_api_patcher.stop)
 
     def test_form_empty(self):
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            erreurs=[],
+            links={},
+        )
         response = self.client.get(self.form_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.list_language_knowledges.assert_called()
-        self.mock_proposition_api.assert_not_called()
+        self.assertContains(response, '<form class="osis-form"')
+        self.assertContains(response, _("Save and continue"))
+        self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
+        self.mock_proposition_api.assert_called()
 
         response = self.client.post(self.form_url, {"form-INITIAL_FORMS": 0, "form-TOTAL_FORMS": 0})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
-        self.assertFormsetError(response, "form", None, None, _("Mandatory languages are missing."))
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
+        self.assertFormsetError(response, "formset", None, None, _("Mandatory languages are missing."))
+
+    def test_create(self):
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mock_person_api.return_value.list_language_knowledges.assert_not_called()
+        self.mock_proposition_api.assert_not_called()
+        self.assertContains(
+            response,
+            _("You must choose your training before filling in your previous experience."),
+        )
 
     def test_form_language_duplicate(self):
         response = self.client.post(
             self.form_url,
             {
-                "form-0-language": 'FR',
-                "form-0-listening_comprehension": "1",
-                "form-0-speaking_ability": "1",
-                "form-0-writing_ability": "3",
-                "form-1-language": 'EN',
-                "form-1-listening_comprehension": "4",
-                "form-1-speaking_ability": "5",
-                "form-1-writing_ability": "1",
+                **self.data_ok,
                 "form-2-language": 'EN',
                 "form-2-listening_comprehension": "4",
                 "form-2-speaking_ability": "5",
                 "form-2-writing_ability": "1",
-                "form-INITIAL_FORMS": 0,
                 "form-TOTAL_FORMS": 3,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
         self.assertFormsetError(
             response,
-            "form",
+            "formset",
             None,
             None,
             _("You cannot fill in a language more than once, please correct the form."),
@@ -172,28 +195,14 @@ class LanguagesTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.mock_person_api.return_value.create_language_knowledge.assert_not_called()
-        self.assertFormsetError(response, "form", 0, 'speaking_ability', _("This field is required."))
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
+        self.assertFormsetError(response, "formset", 0, 'speaking_ability', _("This field is required."))
 
     def test_form_ok(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "form-0-language": 'FR',
-                "form-0-listening_comprehension": "1",
-                "form-0-speaking_ability": "1",
-                "form-0-writing_ability": "3",
-                "form-1-language": 'EN',
-                "form-1-listening_comprehension": "5",
-                "form-1-speaking_ability": "6",
-                "form-1-writing_ability": "1",
-                "form-INITIAL_FORMS": 0,
-                "form-TOTAL_FORMS": 2,
-            },
-        )
+        response = self.client.post(self.form_url, self.data_ok)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.create_language_knowledge.assert_called()
-        sent = self.mock_person_api.return_value.create_language_knowledge.call_args[1]["language_knowledge"]
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_called()
+        sent = self.mock_person_api.return_value.create_language_knowledge_admission.call_args[1]["language_knowledge"]
         self.assertEqual(
             sent,
             [
@@ -213,6 +222,17 @@ class LanguagesTestCase(TestCase):
                 },
             ],
         )
+
+    def test_form_ok_redirects_on_continue(self):
+        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+            matricule_candidat=self.person.global_id,
+            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            links={'update_accounting': {'url': 'ok'}},
+        )
+        response = self.client.post(self.form_url, {**self.data_ok, '_submit_and_continue': ''})
+        self.mock_person_api.return_value.create_language_knowledge_admission.assert_called()
+        redirect_url = resolve_url('admission:doctorate:update:accounting', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        self.assertRedirects(response, redirect_url)
 
     def test_update_admission_in_context(self):
         url = resolve_url('admission:doctorate:update:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

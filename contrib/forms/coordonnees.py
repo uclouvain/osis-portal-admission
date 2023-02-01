@@ -110,6 +110,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
 
     def __init__(self, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.address_can_be_empty = True
         self.fields['country'].widget.choices = get_country_initial_choices(
             self.data.get(self.add_prefix("country"), self.initial.get("country")),
             person,
@@ -139,7 +140,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
 
         all_fields = mandatory_address_fields + ["street", "postal_box", "place"]
 
-        if any(cleaned_data.get(f) for f in all_fields):
+        if not self.address_can_be_empty or any(cleaned_data.get(f) for f in all_fields):
             for field in mandatory_address_fields:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)

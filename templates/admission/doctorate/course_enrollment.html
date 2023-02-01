@@ -1,4 +1,4 @@
-{% extends "admission/doctorate/details/doctorate_tab_layout.html" %}
+{% extends base_template %}
 {% load i18n static admission enums bootstrap3 %}
 
 {% comment "License" %}
@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -59,9 +59,9 @@
     </div>
 
     {# Special error handling #}
-    {% if form.non_field_errors %}
+    {% if activities_form.non_field_errors %}
       <div class="alert alert-danger alert-dismissable alert-link">
-        {{ form.non_field_errors.0 }}
+        {{ activities_form.non_field_errors.0 }}
       </div>
     {% endif %}
 

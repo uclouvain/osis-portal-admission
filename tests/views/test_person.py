@@ -1,26 +1,26 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 import datetime
@@ -33,7 +33,9 @@ from rest_framework import status
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.person import CivilState
+from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.person import YES, NO
+from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
 
@@ -81,20 +83,19 @@ class PersonViewTestCase(TestCase):
         patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+        patcher = patch(
+            'osis_document.api.utils.get_remote_metadata',
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        def get_academic_years(**kwargs):
-            years = [
-                Mock(year=self.current_year - 2),
-                Mock(year=self.current_year + 2),
-            ]
-            return Mock(results=years)
-
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
-        self.mock_academic_year_api.return_value.get_academic_years.side_effect = get_academic_years
+        self.mock_academic_year_api.return_value.get_academic_years.return_value = get_paginated_years(
+            self.current_year - 2,
+            self.current_year + 2,
+        )
 
         self.addCleanup(academic_year_api_patcher.stop)
 
@@ -113,6 +114,8 @@ class PersonViewTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, _("Save and continue"))
+        self.assertContains(response, '<form class="osis-form"')
         self.assertEqual(response.context['form'].initial['unknown_birth_date'], True)
         self.assertEqual(response.context['form'].initial['has_national_number'], False)
         self.assertEqual(response.context['form'].initial['identification_type'], '')
@@ -135,6 +138,38 @@ class PersonViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_person_api.return_value.update_person_identification.assert_called()
+
+    def test_form_redirect_with_continue(self):
+        self.client.force_login(self.person.user)
+
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name="John",
+            last_name="Doe",
+            id_card=[],
+            passport=[],
+            id_photo=[],
+            birth_year="1990",
+        )
+        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
+        self.mock_countries_api = countries_api_patcher.start()
+        self.addCleanup(countries_api_patcher.stop)
+
+        response = self.client.post(
+            resolve_url('admission:create:person'),
+            {
+                'first_name': "Joe",
+                'last_name': "Doe",
+                'sex': 'M',
+                'gender': 'X',
+                'civil_state': CivilState.MARRIED.name,
+                'birth_country': 'BE',
+                'birth_place': 'Louvain-la-Neuve',
+                'birth_date': datetime.date(1990, 1, 1),
+                '_submit_and_continue': '',
+            },
+        )
+
+        self.assertRedirects(response, resolve_url('admission:create:coordonnees'))
 
     def test_update(self):
         url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

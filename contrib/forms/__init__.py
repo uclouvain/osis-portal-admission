@@ -42,7 +42,7 @@ from admission.services.reference import (
 )
 from admission.services.scholarship import AdmissionScholarshipService
 from admission.utils import format_entity_title, format_high_school_title, format_scholarship
-from base.tests.factories.academic_year import get_current_year
+from osis_document.contrib import FileUploadField
 
 EMPTY_CHOICE = (('', ' - '),)
 EMPTY_VALUE = '__all__'
@@ -51,6 +51,9 @@ FOLLOWING_FORM_SET_PREFIX = '__prefix_1__'
 OSIS_DOCUMENT_UPLOADER_CLASS = 'document-uploader'
 OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX = '__{}__'.format(OSIS_DOCUMENT_UPLOADER_CLASS)
 PDF_MIME_TYPE = 'application/pdf'
+JPEG_MIME_TYPE = 'image/jpeg'
+PNG_MIME_TYPE = 'image/png'
+DEFAULT_MIME_TYPES = [PDF_MIME_TYPE, JPEG_MIME_TYPE, PNG_MIME_TYPE]
 
 
 def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):
@@ -127,15 +130,22 @@ def get_scholarship_choices(uuid, person):
     return EMPTY_CHOICE + ((uuid, format_scholarship(scholarship)),)
 
 
-def get_past_academic_years_choices(person, exclude_current=False):
+def get_past_academic_years_choices(person, exclude_current=False, current_year=None, academic_years=None):
     """Return a list of choices of past academic years."""
-    current_year = get_current_year()
+    if academic_years is None:
+        academic_years = AcademicYearService.get_academic_years(person)
+
+    if current_year is None:
+        current_year = AcademicYearService.get_current_academic_year(person, academic_years)
+
     if exclude_current:
         current_year -= 1
+
     lower_year = current_year - 100
+
     return EMPTY_CHOICE + tuple(
         (academic_year.year, f"{academic_year.year}-{academic_year.year + 1}")
-        for academic_year in AcademicYearService.get_academic_years(person)
+        for academic_year in academic_years
         if current_year >= academic_year.year >= lower_year
     )
 
@@ -171,6 +181,12 @@ RadioBooleanField = partial(
 )
 
 
+class AdmissionFileUploadField(FileUploadField):
+    def __init__(self, **kwargs):
+        kwargs.setdefault('mimetypes', DEFAULT_MIME_TYPES)
+        super().__init__(**kwargs)
+
+
 def get_example_text(example: str):
     return _("e.g.: %(example)s") % {'example': example}
 
@@ -178,7 +194,7 @@ def get_example_text(example: str):
 class SelectOrOtherWidget(forms.MultiWidget):
     """Form widget to handle a configurable (from CDDConfiguration) list of choices, or other"""
 
-    template_name = 'admission/doctorate/forms/select_or_other_widget.html'
+    template_name = 'admission/widgets/select_or_other_widget.html'
     media = forms.Media(
         js=[
             'js/dependsOn.min.js',

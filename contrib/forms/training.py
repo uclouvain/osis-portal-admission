@@ -40,16 +40,13 @@ from admission.contrib.enums.training import (
 from admission.contrib.forms import (
     BooleanRadioSelect,
     CustomDateInput,
-    EMPTY_CHOICE,
     SelectOrOtherField,
     get_academic_years_choices,
     get_country_initial_choices,
+    AdmissionFileUploadField as FileUploadField,
 )
-from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.reference import AcademicYearService
-from learning_unit.services.learning_unit import LearningUnitService
 from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-from osis_document.contrib import FileUploadField
 
 __all__ = [
     "BatchActivityForm",

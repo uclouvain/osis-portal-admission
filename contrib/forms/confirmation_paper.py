@@ -25,9 +25,8 @@
 # ##############################################################################
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from osis_document.contrib import FileUploadField
 
-from admission.contrib.forms import CustomDateInput
+from admission.contrib.forms import CustomDateInput, AdmissionFileUploadField as FileUploadField
 
 
 class PromoterConfirmationPaperForm(forms.Form):

@@ -29,6 +29,8 @@ from abc import ABC
 from decimal import Decimal
 
 from django import forms
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 from django.template import loader
@@ -49,15 +51,16 @@ from admission.contrib.forms import (
     OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
 )
 from admission.contrib.forms.curriculum import (
-    DoctorateAdmissionCurriculumEducationalExperienceForm,
-    DoctorateAdmissionCurriculumEducationalExperienceYearFormSet,
-    DoctorateAdmissionCurriculumProfessionalExperienceForm,
+    AdmissionCurriculumEducationalExperienceForm,
+    AdmissionCurriculumEducationalExperienceYearFormSet,
+    AdmissionCurriculumProfessionalExperienceForm,
     MINIMUM_CREDIT_NUMBER,
 )
 from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
     AdmissionCurriculumMixin,
     get_educational_experience_year_set_with_lost_years,
     initialize_field_texts,
+    experience_can_be_updated,
 )
 from admission.services.mixins import WebServiceFormMixin
 
@@ -72,19 +75,48 @@ __namespace__ = 'curriculum'
 
 
 class AdmissionCurriculumFormMixin(WebServiceFormMixin, AdmissionCurriculumMixin, ABC):
+    pass
+
+
+class AdmissionCurriculumFormExperienceMixin(AdmissionCurriculumFormMixin, ABC):
+    created_tab_names = {
+        'professional_create': 'professional_update',
+        'educational_create': 'educational_update',
+    }
+
     def get_success_url(self):
-        if self.current_context == 'create':
-            return resolve_url("admission:create:curriculum")
-        return resolve_url(f"admission:{self.current_context}:update:curriculum", pk=self.admission_uuid)
+        messages.info(self.request, _("Your data has been saved"))
+        if '_submit_and_continue' in self.request.POST:
+            # Redirect to the list of experiences
+            return self._get_url('curriculum', update=True) + getattr(self, 'url_hash', '')
+        elif self.experience_id:
+            # Redirect to the current page as we edit an experience
+            return self.request.get_full_path()
+        else:
+            # Redirect to the editing page as we create an experience
+            url = self.request.resolver_match.view_name.replace(
+                self.request.resolver_match.url_name,
+                self.created_tab_names.get(self.request.resolver_match.url_name),
+            )
+            return (
+                resolve_url(url, pk=self.admission_uuid, experience_id=getattr(self, 'created_experience_id', ''))
+                + '#curriculum-header'
+            )
 
 
-class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormMixin, FormView):
+class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormExperienceMixin, FormView):
     urlpatterns = {
         'professional_update': 'professional/<uuid:experience_id>/update',
         'professional_create': 'professional/create',
     }
-    template_name = 'admission/doctorate/forms/curriculum_professional_experience.html'
-    form_class = DoctorateAdmissionCurriculumProfessionalExperienceForm
+    template_name = 'admission/forms/curriculum_professional_experience.html'
+    form_class = AdmissionCurriculumProfessionalExperienceForm
+    url_hash = '#non-academic-activities'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['is_continuing'] = self.is_continuing
+        return kwargs
 
     def prepare_data(self, data):
         # The start date is the first day of the specified month
@@ -106,15 +138,20 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
                 data=data,
             )
         else:
-            self.service_mapping[self.current_context].create_professional_experience(
+            created_experience = self.service_mapping[self.current_context].create_professional_experience(
                 person=self.person,
                 uuid=self.admission_uuid,
                 data=data,
             )
+            setattr(self, 'created_experience_id', created_experience.get('uuid'))
 
     def get_initial(self):
         if self.experience_id:
             experience = self.professional_experience.to_dict()
+
+            if self.professional_experience.valuated_from_trainings:
+                raise PermissionDenied
+
             start_date = experience.pop('start_date')
             end_date = experience.pop('end_date')
             if start_date:
@@ -125,17 +162,12 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormM
                 experience['end_date_year'] = end_date.year
             return experience
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        initialize_field_texts(self.person, [self.professional_experience])
-        context['experience'] = self.professional_experience
-        return context
 
-
-class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFormMixin, FormView):
+class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFormExperienceMixin, FormView):
     urlpatterns = {'professional_delete': 'professional/<uuid:experience_id>/delete'}
     form_class = forms.Form
-    template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
+    template_name = 'admission/forms/curriculum_experience_delete.html'
+    url_hash = '#non-academic-activities'
 
     def call_webservice(self, _):
         self.service_mapping[self.current_context].delete_professional_experience(
@@ -146,18 +178,22 @@ class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFor
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        initialize_field_texts(self.person, [self.professional_experience])
         context['experience'] = self.professional_experience
+
+        if self.professional_experience.valuated_from_trainings:
+            raise PermissionDenied
+
         return context
 
 
-class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumFormMixin, FormView):
+class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumFormExperienceMixin, FormView):
     urlpatterns = {'educational_delete': 'educational/<uuid:experience_id>/delete'}
     extra_context = {
         'educational_tab': True,
     }
     form_class = forms.Form
-    template_name = 'admission/doctorate/forms/curriculum_experience_delete.html'
+    template_name = 'admission/forms/curriculum_experience_delete.html'
+    url_hash = '#academic-activities'
 
     def call_webservice(self, _):
         self.service_mapping[self.current_context].delete_educational_experience(
@@ -168,17 +204,24 @@ class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        initialize_field_texts(self.person, [self.educational_experience])
+
+        initialize_field_texts(self.person, [self.educational_experience], self.current_context)
+
+        if self.educational_experience.valuated_from_trainings:
+            raise PermissionDenied
+
         context['experience'] = self.educational_experience
+
         return context
 
 
-class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin, TemplateView):
+class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormExperienceMixin, TemplateView):
     urlpatterns = {
         'educational_update': 'educational/<uuid:experience_id>/update',
         'educational_create': 'educational/create',
     }
-    template_name = 'admission/doctorate/forms/curriculum_educational_experience.html'
+    template_name = 'admission/forms/curriculum_educational_experience.html'
+    url_hash = '#academic-activities'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -186,8 +229,16 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         educational_experience = None
         all_educational_experience_years = None
 
-        if self.experience_id and self.request.method == 'GET':
+        if self.experience_id:
             educational_experience = self.educational_experience.to_dict()
+            educational_experience['can_be_updated'] = experience_can_be_updated(
+                self.educational_experience,
+                self.current_context,
+            )
+
+            if not educational_experience['can_be_updated']:
+                raise PermissionDenied
+
             all_years_config = get_educational_experience_year_set_with_lost_years(
                 educational_experience.pop('educationalexperienceyear_set')
             )
@@ -195,14 +246,15 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
             educational_experience['start'] = all_years_config['start']
             educational_experience['end'] = all_years_config['end']
 
-        base_form = DoctorateAdmissionCurriculumEducationalExperienceForm(
+        base_form = AdmissionCurriculumEducationalExperienceForm(
+            educational_experience=educational_experience,
             person=self.request.user.person,
+            current_context=self.current_context,
             data=self.request.POST or None,
-            initial=educational_experience,
             prefix='base_form',
         )
 
-        year_formset = DoctorateAdmissionCurriculumEducationalExperienceYearFormSet(
+        year_formset = AdmissionCurriculumEducationalExperienceYearFormSet(
             self.request.POST or None,
             initial=all_educational_experience_years,
             prefix='year_formset',
@@ -213,6 +265,8 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
                         base_form.initial['end'] if all_educational_experience_years else 0,
                     )
                 ),
+                'educational_experience': educational_experience,
+                'current_context': self.current_context,
             },
         )
 
@@ -221,13 +275,14 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         # in the default form and will be reset in the duplicated form, allowing osis-document to detect the file
         # fields in this new form, and set up the appropriate VueJS components.
         context_data["empty_form"] = loader.render_to_string(
-            template_name='admission/doctorate/includes/curriculum_experience_year_form.html',
+            template_name='admission/includes/curriculum_experience_year_form.html',
             context={
                 'year_form': year_formset.empty_form,
                 'next_year': FOLLOWING_FORM_SET_PREFIX,
             },
         ).replace(OSIS_DOCUMENT_UPLOADER_CLASS, OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX)
 
+        context_data['form'] = base_form  # Trick template to display form tag
         context_data['base_form'] = base_form
         context_data['year_formset'] = year_formset
         context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
@@ -237,13 +292,15 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         context_data['FOLLOWING_FORM_SET_PREFIX'] = FOLLOWING_FORM_SET_PREFIX
         context_data['OSIS_DOCUMENT_UPLOADER_CLASS'] = OSIS_DOCUMENT_UPLOADER_CLASS
         context_data['OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX'] = OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX
+        context_data['educational_experience'] = educational_experience
 
         return context_data
 
-    def prepare_data(self, base_form, year_formset):
+    def prepare_form_data(self, base_form, year_formset):
         data = base_form.cleaned_data
+
         data['educationalexperienceyear_set'] = [
-            year_data for year_data in year_formset.cleaned_data if year_data.pop('is_enrolled')
+            year_data for year_data in year_formset.cleaned_data if year_data.pop('is_enrolled', None)
         ]
 
         data.pop('other_institute')
@@ -256,9 +313,8 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
         base_form.is_valid()
         year_formset.is_valid()
 
-        last_enrolled_year = None
-
         country = base_form.cleaned_data.get('country')
+        last_enrolled_year = base_form.cleaned_data.get('end')
         be_country = country == BE_ISO_CODE
         linguistic_regime = base_form.cleaned_data.get('linguistic_regime')
         credits_are_required = base_form.cleaned_data.get('evaluation_type') in EvaluationSystemsWithCredits
@@ -270,13 +326,12 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
             and linguistic_regime
             and linguistic_regime not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
         )
+        has_enrolled_year = False
 
         # Cross-form check
         for form in year_formset:
             if form.cleaned_data.get('is_enrolled'):
-                if not last_enrolled_year:
-                    last_enrolled_year = form.cleaned_data.get('academic_year')
-
+                has_enrolled_year = True
                 self.clean_experience_year_form(
                     be_country,
                     credits_are_required,
@@ -285,12 +340,13 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
                     transcript_translation_is_required,
                 )
 
-        if not last_enrolled_year:
+        if not has_enrolled_year:
             base_form.add_error(None, _('At least one academic year is required.'))
-        elif be_country:
+
+        if last_enrolled_year and be_country:
             # The evaluation system in Belgium depends on the years
             base_form.cleaned_data['evaluation_type'] = EvaluationSystem[
-                'ECTS_CREDITS' if last_enrolled_year >= FIRST_YEAR_WITH_ECTS_BE else 'NO_CREDIT_SYSTEM'
+                'ECTS_CREDITS' if int(last_enrolled_year) >= FIRST_YEAR_WITH_ECTS_BE else 'NO_CREDIT_SYSTEM'
             ].name
 
         return base_form.is_valid() and year_formset.is_valid()
@@ -345,15 +401,9 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
             cleaned_data['registered_credit_number'] = None
 
         # Transcript fields
-        if transcript_is_required:
-            if not cleaned_data.get('transcript'):
-                form.add_error('transcript', FIELD_REQUIRED_MESSAGE)
-        else:
+        if not transcript_is_required:
             cleaned_data['transcript'] = []
-        if transcript_translation_is_required:
-            if not cleaned_data.get('transcript_translation'):
-                form.add_error('transcript_translation', FIELD_REQUIRED_MESSAGE)
-        else:
+        if not transcript_translation_is_required:
             cleaned_data['transcript_translation'] = []
 
     def post(self, request, *args, **kwargs):
@@ -364,10 +414,11 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
 
         # Check the forms
         if not self.check_forms(base_form, year_formset):
+            messages.error(self.request, _("Please correct the errors below"))
             return self.render_to_response(context_data)
 
         # Prepare data
-        data = self.prepare_data(base_form, year_formset)
+        data = self.prepare_form_data(base_form, year_formset)
 
         # Make the API request
         if self.experience_id:
@@ -378,10 +429,11 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumMixin,
                 data=data,
             )
         else:
-            self.service_mapping[self.current_context].create_educational_experience(
+            created_experience = self.service_mapping[self.current_context].create_educational_experience(
                 person=self.request.user.person,
                 uuid=self.admission_uuid,
                 data=data,
             )
+            setattr(self, 'created_experience_id', created_experience.get('uuid'))
 
         return HttpResponseRedirect(self.get_success_url())

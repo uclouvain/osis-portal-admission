@@ -16,6 +16,9 @@ from .languages_knowledge import *
 from .person import *
 from .projet import *
 from .proximity_commission import *
+from .scholarship import *
 from .secondary_studies import *
+from .specific_question import *
 from .supervision import *
 from .training import *
+from .training_choice import *

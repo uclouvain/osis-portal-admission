@@ -23,7 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from functools import lru_cache
+from typing import List
 
 from osis_reference_sdk import ApiClient, ApiException
 from osis_reference_sdk.api import (
@@ -35,6 +37,7 @@ from osis_reference_sdk.api import (
     high_schools_api,
     superior_non_universities_api,
 )
+from osis_reference_sdk.model.academic_year import AcademicYear
 
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
@@ -110,7 +113,8 @@ class AcademicYearService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
     @classmethod
-    def get_academic_years(cls, person):
+    def get_academic_years(cls, person) -> List[AcademicYear]:
+        """Returns the academic years"""
         return (
             AcademicYearAPIClient()
             .get_academic_years(
@@ -118,6 +122,22 @@ class AcademicYearService(metaclass=ServiceMeta):
                 **build_mandatory_auth_headers(person),
             )
             .results
+        )
+
+    @classmethod
+    def get_current_academic_year(cls, person, academic_years=None):
+        """Returns the current academic year"""
+        if not academic_years:
+            academic_years = cls.get_academic_years(person)
+
+        today_date = datetime.date.today()
+        return next(
+            (
+                academic_year.year
+                for academic_year in reversed(academic_years)
+                if academic_year.start_date <= today_date <= academic_year.end_date
+            ),
+            None,
         )
 
 

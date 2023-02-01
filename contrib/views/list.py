@@ -27,7 +27,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from admission.services.proposition import AdmissionPropositionService
-from admission.templatetags.admission import TAB_TREES
+from admission.templatetags.admission import TAB_TREES, can_make_action
 
 __all__ = [
     "AdmissionListView",
@@ -38,20 +38,17 @@ __namespace__ = False
 
 class AdmissionListView(LoginRequiredMixin, TemplateView):
     urlpatterns = {'list': ''}
-    template_name = "admission/doctorate/admission_list.html"
+    template_name = "admission/admission_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         result = AdmissionPropositionService().get_propositions(self.request.user.person)
-        context["doctorate_propositions"] = result['doctorate_propositions']
-        context["continuing_education_propositions"] = result['continuing_education_propositions']
-        context["general_education_propositions"] = result['general_education_propositions']
-        context["global_links"] = result['links']
-        context["can_create_proposition"] = (
-            'url' in result['links']['create_doctorate_proposition']
-            or 'url' in result['links']['create_general_proposition']
-            or 'url' in result['links']['create_continuing_proposition']
-        )
+        context["doctorate_propositions"] = result.doctorate_propositions
+        context["continuing_education_propositions"] = result.continuing_education_propositions
+        context["general_education_propositions"] = result.general_education_propositions
+        context["global_links"] = result.links
+        context["can_create_proposition"] = can_make_action(result, 'create_training_choice')
+        context["creation_error_message"] = result.links['create_training_choice'].get('error', '')
         context["doctorate_tab_tree"] = TAB_TREES['doctorate']
         context["continuing_education_tab_tree"] = TAB_TREES['continuing-education']
         context["general_education_tab_tree"] = TAB_TREES['general-education']

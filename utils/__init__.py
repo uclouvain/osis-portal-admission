@@ -10,6 +10,8 @@ from .utils import (
     format_training_with_year,
     get_uuid_value,
     to_snake_case,
+    is_med_dent_training,
+    format_academic_year,
 )
 
 __all__ = [
@@ -24,4 +26,6 @@ __all__ = [
     'format_training_with_year',
     'get_uuid_value',
     'to_snake_case',
+    'is_med_dent_training',
+    'format_academic_year',
 ]

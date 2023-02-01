@@ -28,21 +28,28 @@ import re
 from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
+from typing import Union
 
+from bootstrap3.forms import render_field
+from bootstrap3.renderers import FieldRenderer
+from bootstrap3.utils import add_css_class
 from django import template
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.core.validators import EMPTY_VALUES
 from django.shortcuts import resolve_url
+from django.test import override_settings
 from django.utils.safestring import SafeString
 from django.utils.translation import get_language, gettext_lazy as _, pgettext
 
-
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
+from admission.contrib.enums import ChoixStatutProposition
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
+from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from admission.services.reference import CountriesService
-from admission.utils import to_snake_case, get_uuid_value
+from admission.utils import get_uuid_value, to_snake_case, format_academic_year
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 
 register = template.Library()
@@ -102,6 +109,9 @@ class Tab:
         # Only hash the name, as lazy strings have different memory addresses
         return hash(self.name)
 
+    def __str__(self):
+        return self.name
+
 
 TAB_TREES = {
     'create': {
@@ -123,19 +133,23 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
+        Tab('training-choice', _('Training choice'), 'person-chalkboard'): [
+            Tab('training-choice', _('Training choice')),
+        ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('curriculum', _('Curriculum')),
             Tab('languages', _('Languages knowledge')),
         ],
+        Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
+            Tab('accounting', _('Accounting')),
+        ],
         Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'person-chalkboard'): [
-            Tab('training-choice', _('Training choice')),
             Tab('project', pgettext('tab name', 'Research project')),
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Supervision')),
         ],
         # TODO specifics
         Tab('confirm-submit', _('Completion'), 'flag'): [
-            Tab('accounting', _('Accounting')),
             Tab('confirm-submit', _('Confirmation and submission')),
         ],
         Tab('confirmation-paper', _('Confirmation'), 'list-check'): [
@@ -160,7 +174,7 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('general-education', _('General education'), 'person-chalkboard'): [
+        Tab('general-education', _('Training choice'), 'person-chalkboard'): [
             Tab('training-choice', _('Training choice')),
         ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
@@ -169,6 +183,7 @@ TAB_TREES = {
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('specific-questions', _('Specific questions')),
+            Tab('accounting', _('Accounting')),
         ],
         Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
@@ -179,7 +194,7 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('continuing-education', _('Continuing education'), 'person-chalkboard'): [
+        Tab('continuing-education', _('Training choice'), 'person-chalkboard'): [
             Tab('training-choice', _('Training choice')),
         ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
@@ -188,6 +203,7 @@ TAB_TREES = {
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('specific-questions', _('Specific questions')),
+            Tab('accounting', _('Accounting')),
         ],
         Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
@@ -255,8 +271,9 @@ def get_current_tab_name(context):
     return match.url_name
 
 
-@register.inclusion_tag('admission/doctorate_tabs_bar.html', takes_context=True)
-def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
+@register.inclusion_tag('admission/tags/admission_tabs_bar.html', takes_context=True)
+def admission_tabs(context, admission=None, with_submit=False):
+    """Display current tabs given context (if with_submit=True, display the submit button within tabs)"""
     current_tab_name = get_current_tab_name(context)
 
     # Create a new tab tree based on the default one but depending on the permissions links
@@ -268,7 +285,11 @@ def doctorate_tabs(context, admission=None, with_submit=False, no_status=False):
         'admission': admission,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'with_submit': with_submit,
-        'no_status': no_status,
+        'no_status': (
+            admission
+            and admission.statut
+            not in [ChoixStatutProposition.IN_PROGRESS.name, ChoixStatutProposition.SIGNING_IN_PROGRESS.name]
+        ),
         **context.flatten(),
     }
 
@@ -296,16 +317,19 @@ def get_current_tab(context):
     )
 
 
-@register.inclusion_tag('admission/doctorate_subtabs_bar.html', takes_context=True)
-def doctorate_subtabs(context, admission=None, no_status=False):
+@register.inclusion_tag('admission/tags/admission_subtabs_bar.html', takes_context=True)
+def admission_subtabs(context, admission=None, tabs=None):
+    """Display current subtabs given context (if tabs is specified, display provided tabs)"""
     current_tab_name = get_current_tab_name(context)
-    current_tab_tree = get_current_tab_tree(context)
-    valid_tab_tree = context.get('valid_tab_tree', get_valid_tab_tree(current_tab_tree, admission))
     return {
-        'subtabs': valid_tab_tree.get(_get_active_parent(current_tab_tree, current_tab_name), []),
+        'subtabs': tabs or current_subtabs(context),
         'admission': admission,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
-        'no_status': no_status,
+        'no_status': (
+            admission
+            and admission.statut
+            not in [ChoixStatutProposition.IN_PROGRESS.name, ChoixStatutProposition.SIGNING_IN_PROGRESS.name]
+        ),
         'active_tab': current_tab_name,
         **context.flatten(),
     }
@@ -323,7 +347,7 @@ def get_detail_url(context, tab_name, pk, base_namespace=''):
     return resolve_url('{}:{}'.format(base_namespace, tab_name), pk=pk)
 
 
-@register.inclusion_tag('admission/field_data.html')
+@register.inclusion_tag('admission/tags/field_data.html')
 def field_data(
     name,
     data=None,
@@ -338,6 +362,9 @@ def field_data(
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
+
+    elif type(data) == bool:
+        data = _('Yes') if data else _('No')
     elif translate_data is True:
         data = _(data)
 
@@ -354,7 +381,7 @@ def field_data(
     }
 
 
-@register_panel('panel.html', takes_context=True)
+@register_panel('admission/tags/panel.html', takes_context=True)
 def panel(context, title='', title_level=4, additional_class='', **kwargs):
     """
     Template tag for panel
@@ -385,6 +412,11 @@ def get_item(dictionary, key):
 
 
 @register.filter
+def split(string: str, delimiter=','):
+    return string.split(delimiter)
+
+
+@register.filter
 def strip(value):
     if isinstance(value, str):
         return value.strip()
@@ -394,13 +426,13 @@ def strip(value):
 @register.filter
 def can_read_tab(admission, tab):
     """Return true if the specified tab can be opened in reading mode for this admission, otherwise return False"""
-    return _can_access_tab(admission, tab.name, READ_ACTIONS_BY_TAB)
+    return _can_access_tab(admission, str(tab), READ_ACTIONS_BY_TAB)
 
 
 @register.filter
 def can_update_tab(admission, tab):
     """Return true if the specified tab can be opened in writing mode for this admission, otherwise return False"""
-    return _can_access_tab(admission, tab.name, UPDATE_ACTIONS_BY_TAB)
+    return _can_access_tab(admission, str(tab), UPDATE_ACTIONS_BY_TAB)
 
 
 @register.filter
@@ -417,9 +449,7 @@ def has_error_in_tab(context, admission, tab):
     if tab not in BUSINESS_EXCEPTIONS_BY_TAB:
         children = get_current_tab_tree(context).get(tab)
         if children is None:
-            raise ImproperlyConfigured(
-                f"{tab} has no children and is not in BUSINESS_EXCEPTIONS_BY_TAB, use no_status=1 or correct name"
-            )
+            raise ImproperlyConfigured(f"{tab} has no children and is not in BUSINESS_EXCEPTIONS_BY_TAB, correct name")
         return any(
             erreur['status_code'] in [e.value for e in BUSINESS_EXCEPTIONS_BY_TAB[subtab]]
             for subtab in children
@@ -430,13 +460,40 @@ def has_error_in_tab(context, admission, tab):
     )
 
 
-@register.inclusion_tag('admission/bootstrap_field_with_tooltip.html')
+@register.inclusion_tag('admission/tags/bootstrap_field_with_tooltip.html')
 def bootstrap_field_with_tooltip(field, classes='', show_help=False):
     return {
         'field': field,
         'classes': classes,
         'show_help': show_help,
     }
+
+
+class NoPostWidgetRenderFieldRenderer(FieldRenderer):
+    def post_widget_render(self, html):
+        # Override rendering to prevent replacing <ul><li> with <div> in value
+        classes = add_css_class('checkbox', self.get_size_class())
+        mapping = [
+            (rf'<ul id="id_{self.field.name}">\s*<li>', '<div><div class="{klass}">'.format(klass=classes)),
+            (r"</label>\s*</li>\s*</ul>", "</label></div></div>"),
+        ]
+        for k, v in mapping:
+            html = re.sub(k, v, html)
+        return html
+
+
+@register.simple_tag
+def bootstrap_field_no_post_widget_render(field, **kwargs):
+    # Override rendering to prevent bootstrap3 replacing <ul><li> with <div> in value
+    with override_settings(
+        BOOTSTRAP3={
+            "field_renderers": {
+                'default': '',
+                'custom': 'admission.templatetags.admission.NoPostWidgetRenderFieldRenderer',
+            }
+        }
+    ):
+        return render_field(field, layout='custom', **kwargs)
 
 
 @register.filter
@@ -580,7 +637,7 @@ def training_categories(activities):
             categories[_("Scientific residencies")][index] += activity.ects
         elif category == CategorieActivite.VAE.name:
             categories[_("VAE")][index] += activity.ects
-        elif activity.category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
+        elif category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
             categories[_("Courses and training")][index] += activity.ects
         elif category == CategorieActivite.PAPER.name and activity.type == ChoixTypeEpreuve.CONFIRMATION_PAPER.name:
             categories[_("Confirmation paper")][index] += activity.ects
@@ -605,9 +662,9 @@ def status_list(admission):
 
 
 @register.filter
-def get_academic_year(year: int):
+def get_academic_year(year: Union[int, str]):
     """Return the academic year related to a specific year."""
-    return f'{year}-{year + 1}'
+    return format_academic_year(year)
 
 
 @register.filter
@@ -625,8 +682,9 @@ def get_country_name(context, iso_code: str):
     return getattr(result, translated_field, '')
 
 
-@register.inclusion_tag('admission/config/multiple_field_data.html')
-def multiple_field_data(configurations, data, title=''):
+@register.inclusion_tag('admission/tags/multiple_field_data.html')
+def multiple_field_data(configurations, data, title=_('Specific questions')):
+    """Display the answers of the specific questions based on a list of configurations and a data dictionary"""
     current_language = get_language()
 
     if not data:
@@ -637,6 +695,12 @@ def multiple_field_data(configurations, data, title=''):
             field['value'] = field.text.get(current_language, '')
         elif field.type == TypeItemFormulaire.DOCUMENT.name:
             field['value'] = [get_uuid_value(token) for token in data.get(field.uuid, [])]
+        elif field.type == TypeItemFormulaire.SELECTION.name:
+            current_value = data.get(field.uuid)
+            selected_options = set(current_value) if isinstance(current_value, list) else {current_value}
+            field['value'] = ', '.join(
+                [value.get(current_language) for value in field['values'] if value.get('key') in selected_options]
+            )
         else:
             field['value'] = data.get(field.uuid)
 
@@ -646,3 +710,14 @@ def multiple_field_data(configurations, data, title=''):
         'fields': configurations,
         'title': title,
     }
+
+
+@register.filter
+def admission_training_type(osis_training_type: str):
+    return ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(osis_training_type)
+
+
+@register.filter(is_safe=False)
+def default_if_none_or_empty(value, arg):
+    """If value is None or empty, use given default."""
+    return value if value not in EMPTY_VALUES else arg

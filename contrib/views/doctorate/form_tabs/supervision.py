@@ -51,6 +51,7 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
+        context['add_form'] = context.pop('form')  # Trick template to not add button
         return context
 
     def get(self, request, *args, **kwargs):

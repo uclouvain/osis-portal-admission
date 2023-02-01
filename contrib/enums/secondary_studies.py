@@ -23,25 +23,26 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import gettext_lazy as _, gettext
-from django.utils.functional import lazy
+from django.utils.translation import gettext_lazy as _
 
+from admission.utils import format_academic_year
 from base.models.utils.utils import ChoiceEnum
-from base.tests.factories.academic_year import get_current_year
-
-
-def get_formatted_current_year():
-    current_year = get_current_year()
-    return '{}-{}'.format(current_year, current_year + 1)
 
 
 class GotDiploma(ChoiceEnum):
     YES = _("Yes")
-    THIS_YEAR = lazy(
-        lambda: gettext("I will have a high school diploma this year %s") % get_formatted_current_year(),
-        str,
-    )()
+    THIS_YEAR = _("I will have a high school diploma this year")
     NO = _("No")
+
+    @classmethod
+    def choices_with_dynamic_year(cls, current_year):
+        """Return the choices with a dynamic value for the choice THIS_YEAR."""
+        return tuple(
+            (x.name, x.value)
+            if x.name != cls.THIS_YEAR.name
+            else (x.name, _("I will have a high school diploma this year %s") % format_academic_year(current_year))
+            for x in cls
+        )
 
 
 HAS_DIPLOMA_CHOICES = {GotDiploma.YES.name, GotDiploma.THIS_YEAR.name}

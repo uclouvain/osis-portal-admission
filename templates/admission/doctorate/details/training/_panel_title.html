@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -85,7 +85,9 @@
                 >
                   <a
                     href="#"
+                    {% if activity.can_be_submitted %}
                     onclick="$('[name=activity_ids]').val(['{{ activity.uuid }}']);$('form#activities').submit();return false;"
+                    {% endif %}
                   >
                     {% trans "Submit" %}
                   </a>
@@ -124,18 +126,22 @@
           </ul>
         </div>
         {% if not remove_batch_action and activity.status|safe == "NON_SOUMISE" %}
-          <label class="input-group-addon">
-            <input
+          <label
+            class="input-group-addon"
+            {% if not activity.can_be_submitted %}
+            data-toggle="tooltip"
+            data-container="body"
+              {% if activity.category == 'SEMINAR' %}
+            title="{{ not_complete_sub }}"
+              {% else %}
+            title="{{ not_complete }}"
+              {% endif %}
+            {% endif %}
+          >
+          <input
               type="checkbox" name="activity_ids" value="{{ activity.uuid }}"
               {% if not activity.can_be_submitted %}
               disabled="disabled"
-              data-toggle="tooltip"
-              data-container="body"
-                {% if activity.category|safe == 'SEMINAR' %}
-              title="{{ not_complete_sub }}"
-                {% else %}
-              title="{{ not_complete }}"
-                {% endif %}
               {% else %}
               aria-label="{% trans "Select for batch action" %}"
               {% endif %}

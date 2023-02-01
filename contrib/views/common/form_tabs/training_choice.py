@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -73,12 +73,14 @@ class AdmissionTrainingChoiceFormView(
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.uuid: Optional[str] = None
+        self.created_uuid: Optional[str] = None
         self.training_type: Optional[TypeFormation] = None
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
+        if self.admission_uuid:
+            kwargs['admission_uuid'] = self.admission_uuid
         return kwargs
 
     def get_form_class(self):
@@ -146,7 +148,7 @@ class AdmissionTrainingChoiceFormView(
             namespace = NAMESPACE_KEY_BY_ADMISSION_TYPE[self.training_type].replace('-', '_')
             method = getattr(AdmissionPropositionService, f"create_{namespace}_proposition")
             response = method(person=self.person, data=data)
-            self.uuid = response.get('uuid')
+            self.created_uuid = response.get('uuid')
         else:
             # Update the choice
             {
@@ -161,9 +163,20 @@ class AdmissionTrainingChoiceFormView(
 
     def get_success_url(self):
         messages.info(self.request, _("Your data has been saved"))
+
+        next_context = NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type)
+        tab_to_redirect = (
+            self.get_next_tab_name(for_context=next_context)
+            # Redirect on next tab in tab list if submit_and_continue
+            if '_submit_and_continue' in self.request.POST
+            else self.request.resolver_match.url_name
+        )
         return resolve_url(
-            'admission:{}:training-choice'.format(NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type)),
-            pk=self.uuid or self.admission_uuid,
+            'admission:{namespace}:update:{tab_name}'.format(
+                namespace=next_context,
+                tab_name=tab_to_redirect,
+            ),
+            pk=self.created_uuid or self.admission_uuid,
         )
 
     def get_initial(self):

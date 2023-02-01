@@ -26,6 +26,12 @@
 from enum import Enum
 from typing import List
 
+from osis_admission_sdk.model.general_education_accounting_dto import GeneralEducationAccountingDTO
+
+from osis_admission_sdk.model.continuing_education_accounting_dto import ContinuingEducationAccountingDTO
+
+from osis_admission_sdk.model.doctorate_education_accounting_dto import DoctorateEducationAccountingDTO
+
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 from admission.services.mixins import ServiceMeta
@@ -34,7 +40,6 @@ from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
-from osis_admission_sdk.model.accounting_conditions import AccountingConditions
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
@@ -46,6 +51,7 @@ __all__ = [
     "AdmissionCotutelleService",
     "AdmissionSupervisionService",
     "TAB_OF_BUSINESS_EXCEPTION",
+    "BUSINESS_EXCEPTIONS_BY_TAB",
     "PropositionBusinessException",
 ]
 
@@ -65,7 +71,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
 
     @classmethod
     def create_doctorate_proposition(cls, person: Person, data):
-        return APIClient().create_proposition(
+        return APIClient().create_doctorate_training_choice(
             initier_proposition_command=data,
             **build_mandatory_auth_headers(person),
         )
@@ -185,10 +191,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_proposition(cls, person: Person, uuid):
+    def submit_proposition(cls, person: Person, uuid, **kwargs):
         return APIClient().submit_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
+            submit_proposition=kwargs,
         )
 
     @classmethod
@@ -199,10 +206,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_general_proposition(cls, person: Person, uuid):
+    def submit_general_proposition(cls, person: Person, uuid, **kwargs):
         return APIClient().submit_general_education_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
+            submit_proposition=kwargs,
         )
 
     @classmethod
@@ -213,25 +221,58 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_continuing_proposition(cls, person: Person, uuid):
+    def submit_continuing_proposition(cls, person: Person, uuid, **kwargs):
         return APIClient().submit_continuing_education_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
+            submit_proposition=kwargs,
         )
 
     @classmethod
-    def retrieve_accounting_conditions(cls, person: Person, uuid: str) -> AccountingConditions:
+    def retrieve_doctorate_accounting(cls, person: Person, uuid: str) -> DoctorateEducationAccountingDTO:
         return APIClient().retrieve_accounting(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def update_accounting(cls, person: Person, uuid: str, data: dict):
+    def retrieve_continuing_accounting(cls, person: Person, uuid: str) -> ContinuingEducationAccountingDTO:
+        return APIClient().retrieve_continuing_accounting(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_general_accounting(cls, person: Person, uuid: str) -> GeneralEducationAccountingDTO:
+        return APIClient().retrieve_general_accounting(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_doctorate_accounting(cls, person: Person, uuid: str, data: dict):
         data['uuid_proposition'] = uuid
         return APIClient().update_accounting(
             uuid=uuid,
-            completer_comptabilite_proposition_command=data,
+            completer_comptabilite_proposition_doctorale_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_general_accounting(cls, person: Person, uuid: str, data: dict):
+        data['uuid_proposition'] = uuid
+        return APIClient().update_general_accounting(
+            uuid=uuid,
+            completer_comptabilite_proposition_generale_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_continuing_accounting(cls, person: Person, uuid: str, data: dict):
+        data['uuid_proposition'] = uuid
+        return APIClient().update_continuing_accounting(
+            uuid=uuid,
+            completer_comptabilite_proposition_continue_command=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -263,7 +304,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_general_specific_question(cls, person: Person, uuid: str, data: dict):
         return APIClient().update_general_specific_question(
             uuid=uuid,
-            modifier_questions_specifiques_command=data,
+            modifier_questions_specifiques_formation_generale_command=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -271,7 +312,22 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_continuing_specific_question(cls, person: Person, uuid: str, data: dict):
         return APIClient().update_continuing_specific_question(
             uuid=uuid,
-            modifier_questions_specifiques_command=data,
+            modifier_questions_specifiques_formation_continue_command=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_pool_questions(cls, person: Person, uuid: str):
+        return APIClient().retrieve_pool_questions(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_pool_questions(cls, person: Person, uuid: str, data: dict):
+        return APIClient().update_pool_questions(
+            uuid=uuid,
+            pool_questions=data,
             **build_mandatory_auth_headers(person),
         )
 
@@ -325,6 +381,8 @@ class PropositionBusinessException(Enum):
     AffiliationsNonCompleteesException = "PROPOSITION-46"
     CarteBancaireRemboursementIbanNonCompleteException = "PROPOSITION-47"
     CarteBancaireRemboursementAutreFormatNonCompleteException = "PROPOSITION-48"
+    ExperiencesAcademiquesNonCompleteesException = "PROPOSITION-49"
+    TypeCompteBancaireRemboursementNonCompleteException = "PROPOSITION-50"
 
 
 class GlobalPropositionBusinessException(Enum):
@@ -340,12 +398,26 @@ class GlobalPropositionBusinessException(Enum):
     PoolNonResidentContingenteNonOuvertException = "ADMISSION-10"
     ResidenceAuSensDuDecretNonRenseigneeException = "ADMISSION-11"
     AucunPoolCorrespondantException = "ADMISSION-12"
+    PoolOuAnneeDifferentException = "ADMISSION-13"
+    ElementsConfirmationNonConcordants = "ADMISSION-14"
+    NombrePropositionsSoumisesDepasseException = "ADMISSION-15"
 
 
 class FormationGeneraleBusinessException(Enum):
     FormationNonTrouveeException = "FORMATION-GENERALE-1"
     PropositionNonTrouveeException = "FORMATION-GENERALE-2"
     EtudesSecondairesNonCompleteesException = "FORMATION-GENERALE-3"
+    FichierCurriculumNonRenseigneException = "FORMATION-GENERALE-4"
+    EquivalenceNonRenseigneeException = "FORMATION-GENERALE-5"
+    ContinuationBachelierNonRenseigneeException = "FORMATION-GENERALE-6"
+    AttestationContinuationBachelierNonRenseigneeException = "FORMATION-GENERALE-7"
+    EtudesSecondairesNonCompleteesPourDiplomeBelgeException = "FORMATION-GENERALE-8"
+    EtudesSecondairesNonCompleteesPourDiplomeEtrangerException = "FORMATION-GENERALE-9"
+    EtudesSecondairesNonCompleteesPourAlternativeException = "FORMATION-GENERALE-10"
+
+
+class FormationContinueBusinessException(Enum):
+    ExperiencesCurriculumNonRenseigneesException = "FORMATION-CONTINUE-3"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -366,11 +438,21 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'education': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesEtudesSecondairesNonCompleteesException,
         FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesException,
+        FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourDiplomeBelgeException,
+        FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourDiplomeEtrangerException,
+        FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourAlternativeException,
     },
     'curriculum': {
         PropositionBusinessException.FichierCurriculumNonRenseigneException,
         PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
+        PropositionBusinessException.ExperiencesAcademiquesNonCompleteesException,
         GlobalPropositionBusinessException.QuestionsSpecifiquesCurriculumNonCompleteesException,
+        FormationGeneraleBusinessException.FichierCurriculumNonRenseigneException,
+        FormationGeneraleBusinessException.FormationNonTrouveeException,
+        FormationGeneraleBusinessException.EquivalenceNonRenseigneeException,
+        FormationGeneraleBusinessException.ContinuationBachelierNonRenseigneeException,
+        FormationGeneraleBusinessException.AttestationContinuationBachelierNonRenseigneeException,
+        FormationContinueBusinessException.ExperiencesCurriculumNonRenseigneesException,
     },
     'languages': {
         PropositionBusinessException.LanguesConnuesNonSpecifieesException,
@@ -390,11 +472,15 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.ProcedureDemandeSignatureNonLanceeException,
         PropositionBusinessException.PropositionNonApprouveeParPromoteurException,
         PropositionBusinessException.PropositionNonApprouveeParMembresCAException,
+        PropositionBusinessException.PromoteurManquantException,
+        PropositionBusinessException.PromoteurDeReferenceManquantException,
+        PropositionBusinessException.MembreCAManquantException,
     },
     'confirm-submit': {
         GlobalPropositionBusinessException.ConditionsAccessNonRempliesException,
         GlobalPropositionBusinessException.PoolNonResidentContingenteNonOuvertException,
         GlobalPropositionBusinessException.AucunPoolCorrespondantException,
+        GlobalPropositionBusinessException.NombrePropositionsSoumisesDepasseException,
     },
     'confirmation-paper': set(),
     'extension-request': set(),
@@ -408,6 +494,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.AffiliationsNonCompleteesException,
         PropositionBusinessException.CarteBancaireRemboursementIbanNonCompleteException,
         PropositionBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteException,
+        PropositionBusinessException.TypeCompteBancaireRemboursementNonCompleteException,
     },
     'specific-questions': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesInformationsComplementairesNonCompleteesException,

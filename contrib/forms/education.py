@@ -27,7 +27,8 @@ from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from admission.constants import FIELD_REQUIRED_MESSAGE, LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.contrib.enums import HAS_DIPLOMA_CHOICES
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
@@ -43,19 +44,29 @@ from admission.contrib.forms import (
     get_language_initial_choices,
     get_past_academic_years_choices,
     EMPTY_CHOICE,
+    AdmissionFileUploadField as FileUploadField,
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
-from admission.services.reference import CountriesService
-from base.tests.factories.academic_year import get_current_year
-from osis_document.contrib import FileUploadField
+from admission.services.reference import CountriesService, AcademicYearService
+from osis_document.contrib.widgets import HiddenFileWidget
 
 
-class DoctorateAdmissionEducationForm(ConfigurableFormMixin):
-    got_diploma = forms.ChoiceField(
+def disable_fields_if_valuated(is_valuated, fields, fields_to_keep_enabled_names=None):
+    if fields_to_keep_enabled_names is None:
+        fields_to_keep_enabled_names = set()
+
+    if is_valuated:
+        for field in fields:
+            if field not in fields_to_keep_enabled_names:
+                fields[field].disabled = True
+                if isinstance(fields[field], FileUploadField):
+                    fields[field].widget = HiddenFileWidget(display_visualizer=True)
+
+
+class BaseAdmissionEducationForm(ConfigurableFormMixin):
+    graduated_from_high_school = forms.ChoiceField(
         label=_("Do you have a high school diploma?"),
-        choices=GotDiploma.choices(),
         widget=forms.RadioSelect,
-        required=False,
         help_text='{}<br><br>{}'.format(
             _(
                 "High school in Belgium is the level of education between the end of primary school and the "
@@ -67,11 +78,46 @@ class DoctorateAdmissionEducationForm(ConfigurableFormMixin):
             ),
         ),
     )
-    academic_graduation_year = forms.IntegerField(
-        label=_("Please mention the academic graduation year"),
+    graduated_from_high_school_year = forms.IntegerField(
+        label=_('Please mention the academic graduation year'),
         widget=autocomplete.ListSelect2,
         required=False,
     )
+
+    def __init__(self, person, is_valuated, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        academic_years = AcademicYearService.get_academic_years(person)
+        self.current_year = AcademicYearService.get_current_academic_year(person, academic_years)
+        self.fields["graduated_from_high_school_year"].widget.choices = get_past_academic_years_choices(
+            person,
+            exclude_current=True,
+            current_year=self.current_year,
+            academic_years=academic_years,
+        )
+        self.fields["graduated_from_high_school"].choices = GotDiploma.choices_with_dynamic_year(self.current_year)
+        disable_fields_if_valuated(is_valuated, self.fields, {self.configurable_form_field_name})
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get('graduated_from_high_school') == GotDiploma.YES.name:
+
+            if not cleaned_data.get('graduated_from_high_school_year'):
+                self.add_error('graduated_from_high_school_year', FIELD_REQUIRED_MESSAGE)
+
+        elif cleaned_data.get('graduated_from_high_school') == GotDiploma.THIS_YEAR.name:
+            cleaned_data["graduated_from_high_school_year"] = self.current_year
+
+        else:
+            cleaned_data['graduated_from_high_school_year'] = None
+
+        return cleaned_data
+
+    class Media:
+        js = ('js/dependsOn.min.js',)
+
+
+class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
     diploma_type = forms.ChoiceField(
         label=_("This is a diploma from"),
         choices=DiplomaTypes.choices(),
@@ -97,70 +143,38 @@ class DoctorateAdmissionEducationForm(ConfigurableFormMixin):
     class Media:
         js = ("js/dependsOn.min.js",)
 
-    def __init__(self, person=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["academic_graduation_year"].widget.choices = get_past_academic_years_choices(
-            person,
-            exclude_current=True,
-        )
 
         belgian_diploma = self.initial.get("belgian_diploma")
         foreign_diploma = self.initial.get("foreign_diploma")
         high_school_diploma_alternative = self.initial.get("high_school_diploma_alternative")
 
         diploma = belgian_diploma or foreign_diploma
-        # Tick the got_diploma checkbox only if there is a saved diploma
-        # and select the correct related type
+        # Select the correct diploma type if one has been saved
         if diploma:
-            self.fields["got_diploma"].initial = GotDiploma.YES.name
-            if diploma.get("academic_graduation_year") == get_current_year():
-                self.fields["got_diploma"].initial = GotDiploma.THIS_YEAR.name
             self.fields["diploma_type"].initial = (
                 DiplomaTypes.BELGIAN.name if belgian_diploma else DiplomaTypes.FOREIGN.name
             )
-            self.fields["academic_graduation_year"].initial = diploma.get("academic_graduation_year")
             self.fields['high_school_diploma'].initial = diploma.get("high_school_diploma")
             self.fields['enrolment_certificate'].initial = diploma.get("enrolment_certificate")
-        else:
-            self.fields["got_diploma"].initial = GotDiploma.NO.name
-            if high_school_diploma_alternative:
-                self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
-                    "first_cycle_admission_exam"
-                )
+        elif high_school_diploma_alternative:
+            self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
+                "first_cycle_admission_exam"
+            )
 
     def clean(self):
         cleaned_data = super().clean()
 
-        got_diploma = cleaned_data.get("got_diploma")
-
-        if got_diploma in [GotDiploma.THIS_YEAR.name, GotDiploma.YES.name]:
-            diploma_type = cleaned_data.get("diploma_type")
-            if got_diploma == GotDiploma.YES.name:
-                if not cleaned_data.get("academic_graduation_year"):
-                    self.add_error('academic_graduation_year', FIELD_REQUIRED_MESSAGE)
-                if not cleaned_data.get('high_school_diploma'):
-                    self.add_error("high_school_diploma", FIELD_REQUIRED_MESSAGE)
-
-            else:
-                if diploma_type == DiplomaTypes.BELGIAN.name:
-                    if not cleaned_data.get("high_school_diploma") and not cleaned_data.get("enrolment_certificate"):
-                        self.add_error(
-                            'high_school_diploma',
-                            _('Please specify either your high school diploma or your enrolment certificate'),
-                        )
-                        self.add_error("enrolment_certificate", "")
-
-            if not diploma_type:
-                self.add_error('diploma_type', FIELD_REQUIRED_MESSAGE)
-
-        elif got_diploma == GotDiploma.NO.name:
-            if not cleaned_data.get('first_cycle_admission_exam'):
-                self.add_error('first_cycle_admission_exam', FIELD_REQUIRED_MESSAGE)
+        if cleaned_data.get("graduated_from_high_school") in HAS_DIPLOMA_CHOICES and not cleaned_data.get(
+            "diploma_type"
+        ):
+            self.add_error('diploma_type', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data
 
 
-class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
+class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
     community = forms.ChoiceField(
         label=_("Educational community"),
         choices=EMPTY_CHOICE + BelgianCommunitiesOfEducation.choices(),
@@ -186,6 +200,7 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
                 'data-minimum-input-length': 3,
                 'data-html': True,
             },
+            forward=['community'],
         ),
     )
     other_institute = forms.BooleanField(
@@ -206,13 +221,15 @@ class DoctorateAdmissionEducationBelgianDiplomaForm(forms.Form):
         widget=forms.RadioSelect,
     )
 
-    def __init__(self, person, *args, **kwargs):
+    def __init__(self, person, is_valuated, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['other_institute'] = bool(self.initial.get('other_institute_name'))
         self.fields['institute'].widget.choices = get_high_school_initial_choices(
             self.data.get(self.add_prefix("institute"), self.initial.get("institute")),
             person,
         )
+
+        disable_fields_if_valuated(is_valuated, self.fields)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -251,7 +268,7 @@ class HourField(forms.IntegerField):
         return attrs
 
 
-class DoctorateAdmissionEducationScheduleForm(forms.Form):
+class BachelorAdmissionEducationScheduleForm(forms.Form):
     # ancient language
     latin = HourField(label=_("Latin"))
     greek = HourField(label=_("Greek"))
@@ -291,6 +308,10 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
     )
 
+    def __init__(self, is_valuated, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        disable_fields_if_valuated(is_valuated, self.fields)
+
     def get_initial_for_field(self, field, field_name):
         # Set all hours fields to None if initial is 0, so that nothing is displayed in field
         if isinstance(field, HourField) and not self.initial.get(field_name):
@@ -325,7 +346,7 @@ class DoctorateAdmissionEducationScheduleForm(forms.Form):
         return cleaned_data
 
 
-class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
+class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     foreign_diploma_type = forms.ChoiceField(
         label=_("What diploma did you get (or will you get)?"),
         choices=ForeignDiplomaTypes.choices(),
@@ -364,6 +385,7 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
     high_school_transcript = FileUploadField(
         label=_("A transcript or your last year at high school"),
         max_files=1,
+        required=False,
     )
     high_school_transcript_translation = FileUploadField(
         label=_(
@@ -422,8 +444,10 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, person=None, *args, **kwargs):
+    def __init__(self, is_med_dent_training, person, is_valuated, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.is_med_dent_training = is_med_dent_training
 
         iso_code = self.data.get(self.add_prefix("country"), self.initial.get("country"))
         country = CountriesService.get_country(iso_code=iso_code, person=person) if iso_code else None
@@ -440,11 +464,7 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
             person,
         )
 
-        self.fields[
-            'final_equivalence_decision_ue'
-            if self.fields['country'].is_ue_country
-            else 'final_equivalence_decision_not_ue'
-        ].initial = self.initial.get('final_equivalence_decision')
+        disable_fields_if_valuated(is_valuated, self.fields)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -452,24 +472,11 @@ class DoctorateAdmissionEducationForeignDiplomaForm(forms.Form):
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
             self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))
 
-        if (
-            cleaned_data.get("linguistic_regime") not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
-            # Translation of transcript required depending on linguistic regime
-            and not cleaned_data.get('high_school_transcript_translation')
-        ):
-            self.add_error("high_school_transcript_translation", FIELD_REQUIRED_MESSAGE)
-
         if cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name:
             # Equivalence
-            if self.fields['country'].is_ue_country:
-                equivalence = cleaned_data.get('equivalence')
-                if not equivalence:
-                    self.add_error('equivalence', FIELD_REQUIRED_MESSAGE)
-                elif equivalence == Equivalence.YES.name and not cleaned_data.get('final_equivalence_decision_ue'):
-                    self.add_error('final_equivalence_decision_ue', FIELD_REQUIRED_MESSAGE)
-                elif equivalence == Equivalence.PENDING.name and not cleaned_data.get('equivalence_decision_proof'):
-                    self.add_error('equivalence_decision_proof', FIELD_REQUIRED_MESSAGE)
-            elif not cleaned_data.get('final_equivalence_decision_not_ue'):
-                self.add_error('final_equivalence_decision_not_ue', FIELD_REQUIRED_MESSAGE)
+            if (self.fields['country'].is_ue_country or self.is_med_dent_training) and not cleaned_data.get(
+                'equivalence'
+            ):
+                self.add_error('equivalence', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data

@@ -1,4 +1,4 @@
-{% extends detail_base_template %}
+{% extends base_template %}
 
 {% load i18n admission waffle_tags %}
 
@@ -35,15 +35,15 @@
     {% endswitch %}
   {% endpanel %}
 
-  {% if admission.bourse_erasmus_mundus %}
-    {% panel _('Student profile') %}
-      {% if admission.bourse_erasmus_mundus %}
-        {% with admission.bourse_erasmus_mundus.nom_court as short_name %}
-          {% field_data _('Erasmus mundus scholarship') admission.bourse_erasmus_mundus.nom_long|default:short_name %}
-        {% endwith %}
-      {% endif %}
-    {% endpanel %}
-  {% endif %}
+  {% panel _('Student profile') %}
+    {% with admission.bourse_erasmus_mundus.nom_court as short_name %}
+      {% field_data _('Erasmus mundus scholarship') admission.bourse_erasmus_mundus.nom_long|default:short_name %}
+    {% endwith %}
+  {% endpanel %}
 
   {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
+
+  {% if just_submitted %}
+    {% include "admission/modal/just_submitted_modal.html" %}
+  {% endif %}
 {% endblock %}

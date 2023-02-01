@@ -84,3 +84,19 @@ def get_uuid_value(value: str) -> Union[uuid.UUID, str]:
         return uuid.UUID(hex=value)
     except ValueError:
         return value
+
+
+def format_academic_year(year: Union[int, str]):
+    """Return the academic year related to a specific year."""
+    if not year:
+        return ''
+    if isinstance(year, str):
+        year = int(year)
+    return f'{year}-{year + 1}'
+
+
+PREFIXES_DOMAINES_FORMATIONS_DENT_MED = {'11', '13'}
+
+
+def is_med_dent_training(training) -> bool:
+    return training.code_domaine[:2] in PREFIXES_DOMAINES_FORMATIONS_DENT_MED

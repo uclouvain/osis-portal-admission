@@ -124,6 +124,9 @@ class UtilsTestCase(TestCase):
             intitule='Certificat en informatique',
             annee=2020,
             type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+            code_domaine='10C',
+            sigle_entite_gestion='CMC',
+            campus_inscription='Mons',
         )
         self.assertEqual(format_training(formation), 'Certificat en informatique (Mons) - INFO-1')
 
@@ -134,6 +137,9 @@ class UtilsTestCase(TestCase):
             intitule='Master en informatique',
             annee=2020,
             type=TrainingType.MASTER_M1.name,
+            code_domaine='10C',
+            sigle_entite_gestion='CMG',
+            campus_inscription='Mons',
         )
         self.assertEqual(format_training(formation), 'Master en informatique (Mons) - INFO-1')
 
@@ -145,6 +151,7 @@ class UtilsTestCase(TestCase):
             sigle_entite_gestion="CDE",
             campus="Mons",
             type=TrainingType.PHD.name,
+            campus_inscription='Mons',
         )
         self.assertEqual(format_training_with_year(formation), '2021 - Foobar (Mons) - FOOBAR')
 
@@ -193,3 +200,15 @@ class UtilsTestCase(TestCase):
     def test_get_uuid_returns_input_value_if_not_uuid(self):
         other_value = 'abcdef'
         self.assertEqual(get_uuid_value(other_value), other_value)
+
+    def test_format_academic_year_with_empty_string(self):
+        """Check that the format_academic_year returns an empty string if the input is empty."""
+        self.assertEqual(format_academic_year(''), '')
+
+    def test_format_academic_year_with_string_year(self):
+        """Check that the format_academic_year returns a valid string if the input is a string."""
+        self.assertEqual(format_academic_year('2018'), '2018-2019')
+
+    def test_format_academic_year_with_int_year(self):
+        """Check that the format_academic_year returns a valid string if the input is an integer."""
+        self.assertEqual(format_academic_year(2018), '2018-2019')

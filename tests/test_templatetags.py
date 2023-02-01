@@ -34,9 +34,11 @@ from django.urls import resolve
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
+from admission.contrib.enums import TypeChampSelectionFormulaire, CleConfigurationItemFormulaire
 from admission.contrib.enums.specific_question import TypeItemFormulaire
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 
+from admission.contrib.forms import PDF_MIME_TYPE
 from admission.templatetags.admission import (
     TAB_TREES,
     Tab,
@@ -112,7 +114,7 @@ class TemplateTagsTestCase(TestCase):
                 return Mock(kwargs={}, spec=cls)
 
         person_tab_url = '/admission/create/person'
-        template = Template("{% load admission %}{% doctorate_tabs %}")
+        template = Template("{% load admission %}{% admission_tabs %}")
 
         request = RequestFactory().get(person_tab_url)
         request.resolver_match = resolve(person_tab_url)
@@ -161,7 +163,7 @@ class TemplateTagsTestCase(TestCase):
         self.assertIn(str(_('Personal data')), rendered)
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile'})
+    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
     def test_field_data_with_list(self, *args):
         template = Template("{% load admission %}{% field_data 'title' data %}")
         rendered = template.render(Context({'data': ['55375049-9d61-4c11-9f41-7460463a5ae3']}))
@@ -350,6 +352,7 @@ class MultipleFieldDataTestCase(TestCase):
                 text={'en': 'The very short message.', 'fr-be': 'Le très court message.'},
                 help_text=self.default_translated_value,
                 configuration={},
+                values=[],
             ),
             SpecificQuestion._from_openapi_data(
                 uuid='fe254203-17c7-47d6-95e4-3c5c532da552',
@@ -359,6 +362,7 @@ class MultipleFieldDataTestCase(TestCase):
                 text={'en': 'Write here', 'fr-be': 'Ecrivez ici'},
                 help_text={'en': 'Detailed data', 'fr-be': 'Données détaillées'},
                 configuration={},
+                values=[],
             ),
             SpecificQuestion._from_openapi_data(
                 uuid='fe254203-17c7-47d6-95e4-3c5c532da553',
@@ -368,6 +372,37 @@ class MultipleFieldDataTestCase(TestCase):
                 text=self.default_translated_value,
                 help_text={'en': 'Detailed data', 'fr-be': 'Données détaillées'},
                 configuration={},
+                values=[],
+            ),
+            SpecificQuestion._from_openapi_data(
+                uuid='fe254203-17c7-47d6-95e4-3c5c532da554',
+                type=TypeItemFormulaire.SELECTION.name,
+                required=False,
+                title={'en': 'Unique selection field', 'fr-be': 'Champ sélection unique'},
+                text=self.default_translated_value,
+                help_text={'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                configuration={
+                    'TYPE_SELECTION': 'BOUTONS_RADIOS',
+                },
+                values=[
+                    {'key': '1', 'fr-be': 'Un', 'en': 'One'},
+                    {'key': '2', 'fr-be': 'Deux', 'en': 'Two'},
+                ],
+            ),
+            SpecificQuestion._from_openapi_data(
+                uuid='fe254203-17c7-47d6-95e4-3c5c532da555',
+                type=TypeItemFormulaire.SELECTION.name,
+                required=False,
+                title={'en': 'Multiple selection field', 'fr-be': 'Champ sélection multiple'},
+                text=self.default_translated_value,
+                help_text={'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                configuration={
+                    'TYPE_SELECTION': 'CASES_A_COCHER',
+                },
+                values=[
+                    {'key': '1', 'fr-be': 'Un', 'en': 'One'},
+                    {'key': '2', 'fr-be': 'Deux', 'en': 'Two'},
+                ],
             ),
         ]
 
@@ -378,11 +413,15 @@ class MultipleFieldDataTestCase(TestCase):
             data={
                 'fe254203-17c7-47d6-95e4-3c5c532da552': 'My response',
                 'fe254203-17c7-47d6-95e4-3c5c532da553': [str(first_uuid), 'other-token'],
+                'fe254203-17c7-47d6-95e4-3c5c532da554': '1',
+                'fe254203-17c7-47d6-95e4-3c5c532da555': ['1', '2'],
             },
         )
         self.assertEqual(result['fields'][0].value, 'The very short message.')
         self.assertEqual(result['fields'][1].value, 'My response')
         self.assertEqual(result['fields'][2].value, [first_uuid, 'other-token'])
+        self.assertEqual(result['fields'][3].value, 'One')
+        self.assertEqual(result['fields'][4].value, 'One, Two')
 
     def test_multiple_field_data_return_right_values_with_empty_data(self):
         result = multiple_field_data(

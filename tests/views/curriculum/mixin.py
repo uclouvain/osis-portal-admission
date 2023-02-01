@@ -28,20 +28,20 @@ import uuid
 from unittest.mock import ANY, patch, MagicMock
 
 from django.test import TestCase, override_settings
+from osis_admission_sdk.model.action_link import ActionLink
 
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
+from admission.tests import get_paginated_years
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
 from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 
-from admission.tests.factories import PropositionDTOComptabiliteFactory
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
 from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
 
 from osis_admission_sdk.model.proposition_search_doctorat import PropositionSearchDoctorat
-from osis_reference_sdk.model.paginated_academic_years import PaginatedAcademicYears
 
 from osis_admission_sdk.model.educational_experience_educationalexperienceyear_set import (
     EducationalExperienceEducationalexperienceyearSet,
@@ -106,6 +106,7 @@ class MixinTestCase(TestCase):
             european_union=False,
         )
         cls.first_question_uuid = str(uuid.uuid4())
+        cls.document_uuid = str(uuid.uuid4())
 
         # Languages
         cls.language_without_translation = Language(code='FR', name='Français', name_en='French')
@@ -119,9 +120,21 @@ class MixinTestCase(TestCase):
         cls.institute = SuperiorNonUniversity(uuid=str(uuid.uuid4()), name="Institute of Technology")
 
         # Academic years
-        cls.academic_year_2018 = AcademicYear(year=2018)
-        cls.academic_year_2019 = AcademicYear(year=2019)
-        cls.academic_year_2020 = AcademicYear(year=2020)
+        cls.academic_year_2018 = AcademicYear(
+            year=2018,
+            start_date=datetime.date(2018, 9, 15),
+            end_date=datetime.date(2019, 7, 5),
+        )
+        cls.academic_year_2019 = AcademicYear(
+            year=2019,
+            start_date=datetime.date(2019, 9, 15),
+            end_date=datetime.date(2020, 7, 5),
+        )
+        cls.academic_year_2020 = AcademicYear(
+            year=2020,
+            start_date=datetime.date(2020, 9, 15),
+            end_date=datetime.date(2021, 7, 5),
+        )
 
         cls.educational_experience = EducationalExperience._from_openapi_data(
             country=cls.be_country.iso_code,
@@ -144,7 +157,7 @@ class MixinTestCase(TestCase):
             expected_graduation_date=datetime.date(2022, 8, 30),
             dissertation_title='Title',
             dissertation_score='15/20',
-            dissertation_summary=['f4.pdf'],
+            dissertation_summary=[cls.document_uuid],
             uuid=str(uuid.uuid4()),
             educationalexperienceyear_set=[
                 EducationalExperienceEducationalexperienceyearSet(
@@ -160,6 +173,7 @@ class MixinTestCase(TestCase):
                     graduate_degree_translation=['f11_2018.pdf'],
                 ),
             ],
+            valuated_from_trainings=[],
         )
 
         cls.lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
@@ -168,10 +182,17 @@ class MixinTestCase(TestCase):
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
             educationalexperienceyear_set=[
-                CurriculumDetailsEducationalexperienceyearSet(academic_year=cls.academic_year_2020.year),
-                CurriculumDetailsEducationalexperienceyearSet(academic_year=cls.academic_year_2018.year),
+                CurriculumDetailsEducationalexperienceyearSet(
+                    academic_year=cls.academic_year_2020.year,
+                    result=Result(value='SUCCESS'),
+                ),
+                CurriculumDetailsEducationalexperienceyearSet(
+                    academic_year=cls.academic_year_2018.year,
+                    result=Result(value='WAITING_RESULT'),
+                ),
             ],
             country=cls.be_country.iso_code,
+            valuated_from_trainings=[],
         )
         cls.foreign_lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
             uuid=cls.educational_experience.uuid,
@@ -179,9 +200,13 @@ class MixinTestCase(TestCase):
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
             educationalexperienceyear_set=[
-                CurriculumDetailsEducationalexperienceyearSet(academic_year=cls.academic_year_2020.year),
+                CurriculumDetailsEducationalexperienceyearSet(
+                    academic_year=cls.academic_year_2020.year,
+                    result=Result(value='SUCCESS'),
+                ),
             ],
             country=cls.not_ue_country.iso_code,
+            valuated_from_trainings=[],
         )
 
         cls.professional_experience = ProfessionalExperience._from_openapi_data(
@@ -193,7 +218,8 @@ class MixinTestCase(TestCase):
             sector=ActivitySector(value='PUBLIC'),
             activity='Work - activity',
             uuid=str(uuid.uuid4()),
-            certificate=[],
+            certificate=[cls.document_uuid],
+            valuated_from_trainings=[],
         )
 
         cls.lite_professional_experience = CurriculumDetailsProfessionalExperiences._from_openapi_data(
@@ -202,14 +228,19 @@ class MixinTestCase(TestCase):
             type=cls.professional_experience.type,
             start_date=cls.professional_experience.start_date,
             end_date=cls.professional_experience.start_date,
+            valuated_from_trainings=[],
         )
 
         # Proposition
         cls.proposition = DoctoratePropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
             type_admission=AdmissionType.ADMISSION.name,
-            reference='22-300001',
-            links=DoctoratePropositionDTOLinks(),
+            reference='M-CDSS20-000.001',
+            links=DoctoratePropositionDTOLinks(
+                retrieve_curriculum=ActionLink(method='GET', url='url'),
+                update_curriculum=ActionLink(method='POST', url='url'),
+            ),
+            date_fin_pot=None,
             doctorat=PropositionSearchDoctorat._from_openapi_data(
                 sigle='CS1',
                 annee=cls.academic_year_2020.year,
@@ -217,6 +248,7 @@ class MixinTestCase(TestCase):
                 sigle_entite_gestion="CDSS",
                 campus="Mons",
                 type=TrainingType.PHD.name,
+                campus_inscription="Mons",
             ),
             matricule_candidat=cls.person.global_id,
             code_secteur_formation='CS',
@@ -233,7 +265,6 @@ class MixinTestCase(TestCase):
             fiche_archive_signatures_envoyees=[],
             statut=ChoixStatutProposition.IN_PROGRESS.name,
             erreurs=[],
-            comptabilite=PropositionDTOComptabiliteFactory(),
             reponses_questions_specifiques={},
             curriculum=['file1.pdf'],
         )
@@ -246,12 +277,20 @@ class MixinTestCase(TestCase):
                 campus='Louvain-La-Neuve',
                 sigle='TR1',
                 type=TrainingType.MASTER_M1.name,
+                code_domaine='10C',
+                sigle_entite_gestion="CMG",
+                campus_inscription="Mons",
             ),
+            reference='M-CMG20-000.002',
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
-            links=GeneralEducationPropositionDTOLinks(),
+            links=GeneralEducationPropositionDTOLinks(
+                retrieve_curriculum=ActionLink(method='GET', url='url'),
+                update_curriculum=ActionLink(method='POST', url='url'),
+            ),
+            date_fin_pot=None,
             erreurs=[],
             bourse_double_diplome=None,
             bourse_internationale=None,
@@ -268,18 +307,26 @@ class MixinTestCase(TestCase):
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
+            reference='M-CMC20-000.003',
             formation=PropositionSearchFormation._from_openapi_data(
                 annee=2020,
                 intitule='Formation',
                 campus='Louvain-La-Neuve',
                 sigle='TR2',
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                code_domaine='10C',
+                campus_inscription="Mons",
+                sigle_entite_gestion="CMC",
             ),
+            date_fin_pot=None,
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
-            links=GeneralEducationPropositionDTOLinks(),
+            links=GeneralEducationPropositionDTOLinks(
+                retrieve_curriculum=ActionLink(method='GET', url='url'),
+                update_curriculum=ActionLink(method='POST', url='url'),
+            ),
             erreurs=[],
             reponses_questions_specifiques={},
             curriculum=['file1.pdf'],
@@ -330,13 +377,7 @@ class MixinTestCase(TestCase):
         academic_years_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_years_api = academic_years_api_patcher.start()
 
-        self.mock_academic_years_api.return_value.get_academic_years.return_value = PaginatedAcademicYears(
-            results=[
-                self.academic_year_2018,
-                self.academic_year_2019,
-                self.academic_year_2020,
-            ]
-        )
+        self.mock_academic_years_api.return_value.get_academic_years.return_value = get_paginated_years(2018, 2025)
         self.addCleanup(academic_years_api_patcher.stop)
 
     def mock_languages_api(self):
@@ -411,7 +452,16 @@ class MixinTestCase(TestCase):
         curriculum_data = MagicMock(
             educational_experiences=[self.lite_educational_experience],
             professional_experiences=[self.lite_professional_experience],
-            minimal_year=self.academic_year_2020.year,
+            minimal_date=datetime.date(self.academic_year_2020.year, 9, 1),
+            maximal_date=datetime.date(2022, 11, 1),
+            incomplete_periods=[
+                'De Septembre 2020 à Janvier 2021',
+                'De Septembre 2021 à Janvier 2022',
+                'De Septembre 2022 à Octobre 2022',
+            ],
+            incomplete_experiences={
+                self.educational_experience.uuid: ['Cette expérience académique est incomplète.'],
+            },
         )
         person_api_return = self.mock_person_api.return_value
 

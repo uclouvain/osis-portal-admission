@@ -97,6 +97,47 @@ msgid ""
 "\"%(add_url)s\">add a course</a>"
 msgstr ""
 
+#, python-brace-format
+msgid ""
+"<a href=\"{url}\" target=_blank\">Registration modification form</a>, duly "
+"completed and accompanied by the annexes mentioned"
+msgstr ""
+
+msgid ""
+"<p> Before sending your application, please review the data you have entered "
+"to ensure that you have not made any errors or omissions. </p> <p>If "
+"everything looks good, you can then submit your application below.</p>"
+msgstr ""
+
+#, python-format
+msgid ""
+"<p> On the basis of the <a href=\"%(url)s\" target=\"_blank\">registration "
+"calendar</a> and the information you have provided, your application will be "
+"considered for the academic year <strong>%(year)s</strong>. </p> <p> "
+"Unfortunately, the training you have selected, <em>%(training_title)s</em>, "
+"will not be organised in %(year)s. </p> <p>We invite you to choose another "
+"training.</p>"
+msgstr ""
+
+#, python-format
+msgid ""
+"<p> On the basis of the information you have provided in your previous "
+"experience, you do not appear to meet the <a href=\"%(url)s\" target=\"_blank"
+"\">access conditions for the training</a> <em>%(training_title)s</em>. </p> "
+"<p>We invite you to check your previous course data or to choose another "
+"course.</p>"
+msgstr ""
+
+#, python-format
+msgid ""
+"<p><strong>What happens now?</strong></p> <ul> <li>Your application will be "
+"processed %(by_service)s</li> <li>An email confirming your application "
+"submission will be sent to the e-mail address you specified</li> <li>Your "
+"application summary will be available at all time by connecting to this "
+"website</li> </ul> <p>We thank you for choosing UCLouvain and wish you a "
+"successful training!</p>"
+msgstr ""
+
 msgid ""
 "A certified translation of your certificate of enrolment or school attendance"
 msgstr ""
@@ -174,6 +215,9 @@ msgid "Academic year"
 msgstr ""
 
 msgid "Accepted"
+msgstr ""
+
+msgid "Access conditions"
 msgstr ""
 
 msgid "Access my doctoral students' requests"
@@ -260,6 +304,12 @@ msgstr ""
 msgid "Add an activity"
 msgstr ""
 
+msgid "Adding a non-academic activity"
+msgstr ""
+
+msgid "Adding an academic training"
+msgstr ""
+
 msgid "Additional information"
 msgstr ""
 
@@ -289,16 +339,22 @@ msgstr ""
 msgid "Allocated time for the thesis (in %)"
 msgstr ""
 
+msgid "An error has occurred, please check the values and try again."
+msgstr ""
+
 msgid "Ancient languages"
+msgstr ""
+
+msgid "Another address"
 msgstr ""
 
 msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
 "classification. Detailed explanations of this framework can be found at <a "
 "href=\"https://www.coe.int/en/web/common-european-framework-reference-"
-"languages/table-1-cefr-3.3-common-reference-levels-global-scale\"> https://"
-"www.coe.int/en/web/common-european-framework-reference-languages/table-1-"
-"cefr-3.3-common-reference-levels-global-scale </a>"
+"languages/table-1-cefr-3.3-common-reference-levels-global-scale\" target="
+"\"_blank\"> https://www.coe.int/en/web/common-european-framework-reference-"
+"languages/table-1-cefr-3.3-common-reference-levels-global-scale </a>"
 msgstr ""
 
 msgid ""
@@ -317,6 +373,9 @@ msgstr ""
 msgid "Approval"
 msgstr ""
 
+msgid "Approvals"
+msgstr ""
+
 msgid "Approve by PDF"
 msgstr ""
 
@@ -331,7 +390,18 @@ msgstr ""
 msgid "Are you a double degree student?"
 msgstr ""
 
+msgid "Are you a non-resident (as defined in decree)?"
+msgstr ""
+
 msgid "Are you an erasmus mundus student?"
+msgstr ""
+
+msgid ""
+"Are you currently enrolled in the first year of a bachelor's degree at a "
+"college or university in the French Community of Belgium?"
+msgstr ""
+
+msgid "Are you registering as"
 msgstr ""
 
 msgid "Are you sure you want to cancel this request?"
@@ -345,6 +415,12 @@ msgstr ""
 msgid ""
 "Are you sure you want to delete the activity \"%(type)s\" that took place "
 "from %(start)s to %(end)s?"
+msgstr ""
+
+#, python-format
+msgid ""
+"Are you sure you want to delete the activity \"%(type)s\" that took place in "
+"%(date)s?"
 msgstr ""
 
 #, python-format
@@ -403,15 +479,6 @@ msgstr ""
 msgid "B2"
 msgstr ""
 
-msgid ""
-"BEFORE proceeding to confirmation here below, please read again the data you "
-"entered in the previous tabs in order to be sure you did not enter any "
-"errors or forgot to complete certain fields. It are indeed these same data "
-"that will be used during the complete period of your university studies. If "
-"all data seem correct according to you, please proceed to the confirmation "
-"of your enrolment request here below."
-msgstr ""
-
 msgid "BIC/SWIFT code identifying the bank from which the account was opened"
 msgstr ""
 
@@ -440,6 +507,9 @@ msgid "Belgian national registry number (SSIN)"
 msgstr ""
 
 msgid "Between 65 and 75%"
+msgstr ""
+
+msgid "Billing address"
 msgstr ""
 
 msgid "Biology"
@@ -539,6 +609,16 @@ msgstr ""
 msgid "Certificate of participation in the presentation"
 msgstr ""
 
+msgid "Certificate of regular enrolment"
+msgstr ""
+
+#, python-format
+msgid ""
+"Certificate of regular enrolment for the academic year %(year)s from the "
+"institution in which you are currently enrolled (dated no earlier than 1st "
+"of November)"
+msgstr ""
+
 msgid ""
 "Certificate of successful completion of the admission test for the first "
 "cycle of higher education"
@@ -562,10 +642,19 @@ msgstr[1] ""
 msgid "Certificate, with dates, justifying the specified period."
 msgstr ""
 
+msgid "Check my previous experience"
+msgstr ""
+
+msgid "Checkboxes"
+msgstr ""
+
 msgid "Chemistry"
 msgstr ""
 
 msgid "Choose among the following proposals"
+msgstr ""
+
+msgid "Choose another training"
 msgstr ""
 
 msgid "Chosen assimilation"
@@ -578,6 +667,9 @@ msgid "Civil status"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "Coming implementation."
 msgstr ""
 
 msgid "Comment"
@@ -607,13 +699,13 @@ msgstr ""
 msgid "Complementary training proposition"
 msgstr ""
 
+msgid "Complete"
+msgstr ""
+
 msgid "Completion"
 msgstr ""
 
 msgid "Confirm"
-msgstr ""
-
-msgid "Confirm my request for application"
 msgstr ""
 
 msgid "Confirmation"
@@ -628,7 +720,7 @@ msgstr ""
 msgid "Consultation of a non-academic activity"
 msgstr ""
 
-msgid "Consultation of an academic activity"
+msgid "Consultation of an academic training"
 msgstr ""
 
 msgid "Contact"
@@ -809,17 +901,8 @@ msgstr ""
 msgid "Create new admission"
 msgstr ""
 
-msgid "Create new doctorate admission"
-msgstr ""
-
 msgctxt "an admission"
 msgid "Created at:"
-msgstr ""
-
-msgid "Creation of a non-academic activity"
-msgstr ""
-
-msgid "Creation of an academic activity"
 msgstr ""
 
 msgid "Curriculum"
@@ -872,7 +955,7 @@ msgstr ""
 msgid "Deletion of a non-academic activity"
 msgstr ""
 
-msgid "Deletion of an academic activity"
+msgid "Deletion of an academic training"
 msgstr ""
 
 msgid ""
@@ -898,6 +981,12 @@ msgstr ""
 msgid "Detailed curriculum vitae"
 msgstr ""
 
+msgid "Determined academic year"
+msgstr ""
+
+msgid "Determined pool"
+msgstr ""
+
 msgid "Did you graduate from this training?"
 msgstr ""
 
@@ -915,6 +1004,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Divorced"
+msgstr ""
+
+msgid "Do you confirm that you actually want to submit it?"
 msgstr ""
 
 msgid "Do you have a high school diploma?"
@@ -1052,6 +1144,9 @@ msgstr ""
 msgid "Enrolled"
 msgstr ""
 
+msgid "Enrollment in a bachelor with quota"
+msgstr ""
+
 msgid "Erasmus Mundus"
 msgstr ""
 
@@ -1073,7 +1168,7 @@ msgstr ""
 msgid "Event website"
 msgstr ""
 
-msgid "Exit"
+msgid "Exit without saving"
 msgstr ""
 
 msgid "Expected date of graduation (signed document)"
@@ -1143,6 +1238,9 @@ msgstr ""
 msgid "Financing type"
 msgstr ""
 
+msgid "Finish"
+msgstr ""
+
 msgid "First name"
 msgstr ""
 
@@ -1166,6 +1264,9 @@ msgid ""
 "admission request <strong>must contain the equivalence</strong> of your "
 "diploma delivered by the <a href='http://www.equivalences.cfwb.be/' "
 "target='_blank'>French Community</a> of Belgium."
+msgstr ""
+
+msgid "For the attention of"
 msgstr ""
 
 msgid "Foreign diploma"
@@ -1251,6 +1352,9 @@ msgstr ""
 msgid "Have you previously been registered at UCLouvain?"
 msgstr ""
 
+msgid "Head office name"
+msgstr ""
+
 msgid "High school diploma"
 msgstr ""
 
@@ -1291,11 +1395,6 @@ msgstr ""
 msgid ""
 "I am supported by the CPAS, or by a CPAS rest home or designated by the CPAS "
 "(assimilation 4)"
-msgstr ""
-
-msgid ""
-"I authorize the UCLouvain to transmit to the secondary school in which I "
-"obtained my CESS, the information on the success."
 msgstr ""
 
 msgid "I benefit from a Development Cooperation grant"
@@ -1349,6 +1448,12 @@ msgstr ""
 msgid ""
 "I have a settlement permit or I am a long-term resident in Belgium "
 "(assimilation 1)"
+msgstr ""
+
+msgid "I want the billing address to be"
+msgstr ""
+
+msgid "I will have a high school diploma this year"
 msgstr ""
 
 #, python-format
@@ -1448,55 +1553,49 @@ msgid ""
 "seminar, nor the different activities within it."
 msgstr ""
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Bachelor, Master, "
 "Aggregation, CAPAES, Continuing Education or Certificate application, please "
-"delete the current application and create a new one."
+"<a href=\"%(url)s\">cancel the current application</a> and create a new one."
 msgstr ""
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Bachelor, Master, "
-"Aggregation, CAPAES, Doctorate or Certificate application, please delete the "
-"current application and create a new one."
+"Aggregation, CAPAES, Doctorate or Certificate application, please <a href="
+"\"%(url)s\">cancel the current application</a> and create a new one."
 msgstr ""
 
+#, python-format
 msgid ""
 "If you wish to change your choice of training for a Doctorate or Continuing "
-"Education application, please delete the current application and create a "
-"new one."
+"Education application, please <a href=\"%(url)s\">cancel the current "
+"application</a> and create a new one."
 msgstr ""
 
 msgid "Important information:"
-msgstr ""
-
-msgid ""
-"In accordance with the information on the <a href='https://uclouvain.be/en/"
-"study/inscriptions/acces-aux-professions-reglementees.html' "
-"target='blank'>Access to regulated professions</a> page, should it apply to "
-"me, I declare that I have received the information relating to the admission "
-"and graduation requirements and to the particular rules and restrictions of "
-"accreditation and professional establishment to which the professional or "
-"teacher training title is subject and I accept the terms."
-msgstr ""
-
-msgid ""
-"In accordance with the information on the <a href='https://uclouvain.be/en/"
-"study/inscriptions/reglementations.html' target='blank'>Reglementations</a> "
-"page, I declare that I have read and accept the terms of the university "
-"regulations."
-msgstr ""
-
-msgid ""
-"In accordance with the information on the <a href='https://uclouvain.be/en/"
-"study/inscriptions/vie-privee.html' target='blank'>Data protection policy</"
-"a> page, I declare that I have read and accept the terms of the data "
-"protection policy of the University of Louvain."
 msgstr ""
 
 msgid "In person"
 msgstr ""
 
 msgid "In review"
+msgstr ""
+
+#, python-format
+msgid ""
+"In the case of an external registration change, you must confirm your "
+"request before %(date)s."
+msgstr ""
+
+#, python-format
+msgid ""
+"In the case of an external reorientation, you must confirm your request "
+"before %(date)s."
+msgstr ""
+
+msgid "Incomplete"
 msgstr ""
 
 msgid ""
@@ -1573,6 +1672,10 @@ msgstr ""
 msgid "Last registration year"
 msgstr ""
 
+#, python-format
+msgid "Late enrollment! Enroll before %(date)s"
+msgstr ""
+
 msgid "Latin"
 msgstr ""
 
@@ -1590,6 +1693,9 @@ msgid "Less than 65%"
 msgstr ""
 
 msgid "Linguistic regime"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Listening comprehension"
@@ -1674,6 +1780,9 @@ msgstr ""
 msgid "My partner"
 msgstr ""
 
+msgid "My residential address provided before"
+msgstr ""
+
 msgid "N/A"
 msgstr ""
 
@@ -1740,16 +1849,19 @@ msgstr ""
 msgid "No reference yet - Go to 'Training choice' tab"
 msgstr ""
 
-msgid "No secondary studies provided."
+msgid "No year has been added."
 msgstr ""
 
-msgid "No year has been added."
+msgid "No."
 msgstr ""
 
 msgid "Non-European credits"
 msgstr ""
 
 msgid "Non-academic activities"
+msgstr ""
+
+msgid "Non-organised training"
 msgstr ""
 
 msgid "None of these proposals are relevant to me"
@@ -1771,6 +1883,11 @@ msgid "Number of days participating"
 msgstr ""
 
 msgid "Obtained grade"
+msgstr ""
+
+msgid ""
+"On the basis of the data you have filled in, it is not necessary to complete "
+"your academic trainings and non-academic activities below."
 msgstr ""
 
 msgid "Ongoing request"
@@ -1807,9 +1924,6 @@ msgid "Other institute address"
 msgstr ""
 
 msgid "Other institute name"
-msgstr ""
-
-msgid "Other linguistic regime"
 msgstr ""
 
 msgid "Other names"
@@ -1906,8 +2020,18 @@ msgstr ""
 msgid "Please correct the errors first"
 msgstr ""
 
+msgid "Please enter your professional e-mail address"
+msgstr ""
+
+msgid ""
+"Please fill in at least the details of your most recent academic training "
+"and your most recent non-academic experience."
+msgstr ""
+
 #, python-format
-msgid "Please fill in what you have achieved since year %(year)s."
+msgid ""
+"Please fill in the academic trainings and non-academic activities you have "
+"completed since %(date)s."
 msgstr ""
 
 msgid "Please mention the academic graduation year"
@@ -1937,10 +2061,6 @@ msgstr ""
 msgid "Please specify a value for the following field: {}"
 msgstr ""
 
-msgid ""
-"Please specify either your high school diploma or your enrolment certificate"
-msgstr ""
-
 msgid "Postal code"
 msgstr ""
 
@@ -1961,6 +2081,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Private email"
+msgstr ""
+
+msgid "Professional"
 msgstr ""
 
 msgid "Professional education"
@@ -2077,6 +2200,9 @@ msgstr ""
 msgid "RESIDENCY"
 msgstr ""
 
+msgid "Radio buttons"
+msgstr ""
+
 msgid "Rank in diploma"
 msgstr ""
 
@@ -2105,6 +2231,12 @@ msgstr ""
 msgid "Registered credits"
 msgstr ""
 
+msgid "Registration change"
+msgstr ""
+
+msgid "Registration modification form"
+msgstr ""
+
 msgctxt "admission decision"
 msgid "Rejected"
 msgstr ""
@@ -2116,6 +2248,9 @@ msgid "Remove"
 msgstr ""
 
 msgid "Remove the experience"
+msgstr ""
+
+msgid "Reorientation"
 msgstr ""
 
 msgid "Report of the supervisory panel"
@@ -2195,6 +2330,13 @@ msgstr "Satisfaction"
 msgid "Save"
 msgstr ""
 
+msgctxt "admission"
+msgid "Save"
+msgstr ""
+
+msgid "Save and continue"
+msgstr ""
+
 msgid "Scholarship"
 msgstr ""
 
@@ -2240,7 +2382,19 @@ msgstr ""
 msgid "Select for batch action"
 msgstr ""
 
+msgid "Selection"
+msgstr ""
+
 msgid "Selection committee"
+msgstr ""
+
+msgid "Selection type"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "Sending the application requires your agreement for all the elements"
 msgstr ""
 
 msgctxt "admission"
@@ -2314,6 +2468,9 @@ msgstr ""
 msgid "Study system"
 msgstr ""
 
+msgid "Submission confirmation"
+msgstr ""
+
 msgid "Submit"
 msgstr ""
 
@@ -2385,13 +2542,6 @@ msgid "The CV doesn't yet contain any non-academic experience."
 msgstr ""
 
 msgid ""
-"The Enrolment Department reserves the right to ask you for any additional "
-"supporting documents it deems useful. This must <strong>imperatively reach "
-"us within 15 calendar days</strong>. Otherwise, your enrolment request will "
-"be closed."
-msgstr ""
-
-msgid ""
 "The IBAN consists of up to 34 alphanumeric characters, corresponding to:"
 "<ul><li>the country code (two letters)</li><li>the check digits (two "
 "digits)</li><li>the Basic Bank Account Number (BBAN) (up to 30 alphanumeric "
@@ -2420,6 +2570,18 @@ msgid ""
 "Administration of his or her employer to check whether he or she meets these "
 "conditions and, if so, request the certificate confirming this."
 msgstr ""
+
+msgid "The contact address I provided"
+msgstr ""
+
+#, python-format
+msgid "The experiences prefixed by %(icon)s are incomplete."
+msgstr ""
+
+msgid "The following period must be justified in the curriculum:"
+msgid_plural "The following periods must be justified in the curriculum:"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid ""
 "The format of the documents to be uploaded below as well as the deadlines "
@@ -2491,7 +2653,8 @@ msgstr ""
 msgid "This comment will only be visible to the administrators."
 msgstr ""
 
-msgid "This experience has been valuated so cannot be updated."
+msgid ""
+"This experience has been partially valuated so only few fields are editable."
 msgstr ""
 
 msgid "This field is required if the first name is missing."
@@ -2600,13 +2763,16 @@ msgstr ""
 msgid "Type of publication"
 msgstr ""
 
-msgid "UCLOUVAIN_ASSISTANT"
-msgstr "Uclouvain assistant"
+msgid "UCLOUVAIN_SCIENTIFIC_STAFF"
+msgstr "UCLouvain scientific staff"
 
 msgid "UCL_COURSE"
 msgstr "UCL Course"
 
 msgid "Undecided"
+msgstr ""
+
+msgid "Undertake and declaration"
 msgstr ""
 
 msgid "Unemployment"
@@ -2615,6 +2781,14 @@ msgstr ""
 msgid ""
 "Unemployment certificate issued by the relevant organisation, justifying the "
 "specified period."
+msgstr ""
+
+#, python-format
+msgid ""
+"Unexpected error, please <a href=\"%(url)s\">contact the service desk</a>."
+msgstr ""
+
+msgid "Unique business number"
 msgstr ""
 
 msgid "Unknown birth date"
@@ -2626,7 +2800,7 @@ msgstr ""
 msgid "Update of a non-academic activity"
 msgstr ""
 
-msgid "Update of an academic activity"
+msgid "Update of an academic training"
 msgstr ""
 
 msgid "Update the experience"
@@ -2634,6 +2808,11 @@ msgstr ""
 
 msgid "VAE"
 msgstr ""
+
+#, fuzzy
+#| msgid "CA Member"
+msgid "VAT number"
+msgstr "Supervision member"
 
 msgid "Validated"
 msgstr ""
@@ -2702,8 +2881,29 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Would you like to change your registration for this academic year at "
+"UCLouvain?"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Would you like to change your registration for this academic year at "
+"UCLouvain? (<a href=\"{url}\" target=\"_blank\">Informations</a>)"
+msgstr ""
+
+msgid ""
 "Would you like to enter an account number so that we can process a refund if "
 "necessary?"
+msgstr ""
+
+msgid ""
+"Would you like to reorient yourself for this academic year at UCLouvain?"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Would you like to reorient yourself for this academic year at UCLouvain? (<a "
+"href=\"{url}\" target=\"_blank\">Informations</a>)"
 msgstr ""
 
 msgid "Writing ability"
@@ -2727,6 +2927,10 @@ msgstr ""
 msgid "Yes, an account number in another format"
 msgstr ""
 
+#, python-format
+msgid "Yes, in %(year)s."
+msgstr ""
+
 msgid "Yes, in Louvain-la-Neuve and/or Woluwe-Saint-Lambert (50 EUR)"
 msgstr "Yes, in Louvain-la-Neuve and/or Woluwé-Saint-Lambert (50 EUR)"
 
@@ -2748,7 +2952,19 @@ msgstr ""
 msgid "Yes, only in Tournai (10 EUR)"
 msgstr ""
 
+msgid "Yes, submit"
+msgstr ""
+
 msgid "Yes,No,"
+msgstr ""
+
+#, python-format
+msgid ""
+"You are enrolling in a bachelor with quota, the application can only be "
+"submitted in the period from %(start_date)s to %(end_date)s."
+msgstr ""
+
+msgid "You are registering as"
 msgstr ""
 
 msgid "You can specify the location or the postal code in your search."
@@ -2757,10 +2973,15 @@ msgstr ""
 msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
 
+#, python-format
+msgid "You have indicated that you will receive one in %(year)s."
+msgstr ""
+
 msgid "You have now reached the confirmation tab of your enrolment request."
 msgstr ""
 
-msgid "You indicated that you don't have a high school diploma."
+msgid ""
+"You must choose your training before filling in your previous experience."
 msgstr ""
 
 msgid ""
@@ -2776,6 +2997,27 @@ msgstr ""
 msgid ""
 "You will receive a monthly newsletter with all the benefits and activities "
 "related to this program."
+msgstr ""
+
+msgid ""
+"Your application cannot be confirmed. The conditions of access do not seem "
+"to be fulfilled."
+msgstr ""
+
+msgid ""
+"Your application cannot be confirmed. The requested training is not "
+"organised."
+msgstr ""
+
+msgid "Your application has been submitted"
+msgstr ""
+
+msgid "Your application will be sent to the Enrolment Service of UCLouvain."
+msgstr ""
+
+msgid ""
+"Your application will be sent to the University Institute of Continuing "
+"Education."
 msgstr ""
 
 msgid "Your data has been saved"
@@ -2800,10 +3042,21 @@ msgstr ""
 msgid "Your previous NOMA (registration id)"
 msgstr ""
 
-msgid "Your proposition has been confirmed."
+msgid "Your professional e-mail address"
+msgstr ""
+
+msgid ""
+"Your secondary education data can no longer be updated. If you wish to make "
+"any changes, please contact the Enrolment service."
 msgstr ""
 
 msgid "belgian"
+msgstr ""
+
+msgid "by the UCLouvain Registration Service"
+msgstr ""
+
+msgid "by the University Institute of Continuing Education"
 msgstr ""
 
 msgid "dd/mm/yyyy"

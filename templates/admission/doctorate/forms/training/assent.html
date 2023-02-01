@@ -1,4 +1,5 @@
-{% extends "admission/doctorate/forms/doctorate_tab_layout.html" %}{% load i18n static admission bootstrap3 %}
+{% extends base_template %}
+{% load i18n static admission bootstrap3 %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -27,10 +28,10 @@
 
 {% block form_content %}
   {% url request.resolver_match.namespace pk=view.kwargs.pk as back_url %}
-  {% doctorate_tabs doctorate no_status=True %}
+  {% admission_tabs doctorate %}
   <div class="row">
     <div class="col-md-2 visible-md visible-lg">
-      {% doctorate_subtabs doctorate no_status=True %}
+      {% admission_subtabs doctorate %}
     </div>
     <div class="col-md-10 quitting-context-excluded">
       <h3>

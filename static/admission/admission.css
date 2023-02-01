@@ -84,6 +84,17 @@ textarea {
   gap: 1em;
 }
 
+.align-items-baseline {
+  align-items: baseline;
+}
+
+.flex-container-no-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+}
+
 .flex-container.align-top {
   align-items: start;
 }
@@ -268,6 +279,11 @@ input:checked + .osis-slider:before {
   transform: translateX(13px);
 }
 
+input:disabled + .osis-slider {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
 /* Rounded sliders */
 .osis-slider.round {
   border-radius: 17px;
@@ -296,4 +312,13 @@ input:checked + .osis-slider:before {
 
 body, html {
   scroll-behavior: smooth;
+}
+
+.multi-widget ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.multi-widget ul label {
+  font-weight: normal;
 }

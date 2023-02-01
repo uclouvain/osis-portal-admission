@@ -36,7 +36,10 @@ from osis_reference_sdk.model.diploma import Diploma
 from osis_reference_sdk.model.high_school import HighSchool
 from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
+from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
+from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 
+from admission.contrib.enums import BelgianCommunitiesOfEducation
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TypeFormation, TrainingType
 from admission.contrib.forms import EMPTY_VALUE
@@ -71,6 +74,7 @@ class AutocompleteTestCase(TestCase):
                 sigle_entite_gestion="CDE",
                 campus="Louvain-La-Neuve",
                 type=TrainingType.PHD.name,
+                campus_inscription='Mons',
             ),
             DoctoratDTO(
                 sigle='BARBAZ',
@@ -79,6 +83,7 @@ class AutocompleteTestCase(TestCase):
                 sigle_entite_gestion="AZERT",
                 campus="Mons",
                 type=TrainingType.PHD.name,
+                campus_inscription='Mons',
             ),
         ]
         url = reverse('admission:autocomplete:doctorate')
@@ -374,6 +379,14 @@ class AutocompleteTestCase(TestCase):
         )
         url = reverse('admission:autocomplete:high-school')
         response = self.client.get(url, {'q': 'HighSchool'})
+
+        api.return_value.high_schools_list.assert_called_with(
+            limit=100,
+            search='HighSchool',
+            active=True,
+            **DEFAULT_API_PARAMS,
+        )
+
         expected = [
             {
                 'id': self.first_high_school_uuid,
@@ -386,6 +399,25 @@ class AutocompleteTestCase(TestCase):
                 '</span>',
             },
         ]
+        self.assertEqual(response.json(), {'results': expected})
+
+        # With speaking community filter
+        response = self.client.get(
+            url,
+            {
+                'q': 'HighSchool',
+                'forward': json.dumps({'community': BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name}),
+            },
+        )
+
+        api.return_value.high_schools_list.assert_called_with(
+            limit=100,
+            search='HighSchool',
+            active=True,
+            linguistic_regime=BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
+            **DEFAULT_API_PARAMS,
+        )
+
         self.assertEqual(response.json(), {'results': expected})
 
     @patch('osis_reference_sdk.api.diplomas_api.DiplomasApi')
@@ -473,6 +505,9 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.MASTER_M1.name,
+                code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMG',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -480,6 +515,9 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.MASTER_M1.name,
+                code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMG',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -507,6 +545,9 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMC',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -514,6 +555,9 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMC',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -529,3 +573,74 @@ class AutocompleteTestCase(TestCase):
             },
         ]
         self.assertEqual(response.json(), {'results': results})
+
+    @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
+    def test_autocomplete_superior_list(self, api):
+        self.first_superior_school_uuid = str(uuid.uuid4())
+        self.second_superior_school_uuid = str(uuid.uuid4())
+
+        mock_schools = [
+            SuperiorNonUniversity(
+                url='',
+                uuid=self.first_superior_school_uuid,
+                name="Superior 1",
+                acronym="S1",
+                city="Louvain-La-Neuve",
+                zipcode="1348",
+                street="Place de l'Université",
+                street_number="1",
+            ),
+            SuperiorNonUniversity(
+                url='',
+                uuid=self.second_superior_school_uuid,
+                name="Superior 2",
+                acronym="S1",
+                city="Bruxelles",
+                zipcode="1000",
+                street="Boulevard du Triomphe",
+                street_number="1",
+            ),
+        ]
+        api.return_value.superior_non_universities_list.return_value = PaginatedSuperiorNonUniversity(
+            results=mock_schools,
+        )
+        url = reverse('admission:autocomplete:superior-non-university')
+        response = self.client.get(url, {'q': 'Superior'})
+
+        api.return_value.superior_non_universities_list.assert_called_with(
+            limit=100,
+            search='Superior',
+            active=True,
+            **DEFAULT_API_PARAMS,
+        )
+
+        expected = [
+            {
+                'id': self.first_superior_school_uuid,
+                'text': 'Superior 1',
+            },
+            {
+                'id': self.second_superior_school_uuid,
+                'text': 'Superior 2',
+            },
+        ]
+        self.assertEqual(response.json(), {'results': expected})
+
+        # With speaking community filter
+        response = self.client.get(
+            url,
+            {
+                'q': 'Superior',
+                'forward': json.dumps({'country': 'FR'}),
+            },
+        )
+
+        api.return_value.superior_non_universities_list.assert_called_with(
+            limit=100,
+            search='Superior',
+            active=True,
+            country_iso_code='FR',
+            **DEFAULT_API_PARAMS,
+        )
+
+        self.assertEqual(response.json(), {'results': expected})

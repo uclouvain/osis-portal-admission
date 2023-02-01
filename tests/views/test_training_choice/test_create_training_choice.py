@@ -121,8 +121,8 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:continuing-education:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:continuing-education:update:training-choice', pk=self.proposition_uuid),
         )
 
     def test_general_education_form_submitting_without_required_fields(self):
@@ -203,8 +203,8 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:general-education:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:general-education:update:training-choice', pk=self.proposition_uuid),
         )
 
     def test_doctorate_education_form_submitting_without_required_fields(self):
@@ -312,7 +312,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             },
         )
 
-        self.mock_proposition_api.return_value.create_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
                 'type_admission': AdmissionType.PRE_ADMISSION.name,
                 'sigle_formation': 'SC3DP',
@@ -326,8 +326,8 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:doctorate:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:doctorate:update:training-choice', pk=self.proposition_uuid),
         )
 
     def test_doctorate_education_form_submitting_cde(self):
@@ -348,7 +348,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             },
         )
 
-        self.mock_proposition_api.return_value.create_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
                 'type_admission': AdmissionType.ADMISSION.name,
                 'sigle_formation': 'TR3',
@@ -362,8 +362,8 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:doctorate:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:doctorate:update:training-choice', pk=self.proposition_uuid),
         )
 
     def test_doctorate_education_form_submitting_cdss(self):
@@ -384,7 +384,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             },
         )
 
-        self.mock_proposition_api.return_value.create_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
                 'type_admission': AdmissionType.ADMISSION.name,
                 'sigle_formation': 'TR4',
@@ -398,6 +398,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
         self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:doctorate:training-choice', pk=self.proposition_uuid),
+            response,
+            resolve_url('admission:doctorate:update:training-choice', pk=self.proposition_uuid),
         )
