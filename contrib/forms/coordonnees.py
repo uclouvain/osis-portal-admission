@@ -37,10 +37,9 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
         required=False,
         label=_("Is your contact address different from your residential address?"),
     )
-
-    email = forms.EmailField(
-        disabled=True,
+    private_email = forms.EmailField(
         label=__("admission", "Private email"),
+        disabled=True,
     )
     phone_mobile = forms.CharField(
         required=False,
