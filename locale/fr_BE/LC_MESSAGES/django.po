@@ -1264,6 +1264,9 @@ msgstr ""
 "Le type d'enseignement doit obligatoirement être renseigné avec cette "
 "communauté d'enseignement"
 
+msgid "Employer"
+msgstr "Employeur"
+
 msgid ""
 "Employment certificate from the employer, with dates, justifying the "
 "specified period."

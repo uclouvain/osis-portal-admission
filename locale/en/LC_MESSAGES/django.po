@@ -1124,6 +1124,9 @@ msgstr ""
 msgid "Educational type is required with this community of education"
 msgstr ""
 
+msgid "Employer"
+msgstr ""
+
 msgid ""
 "Employment certificate from the employer, with dates, justifying the "
 "specified period."

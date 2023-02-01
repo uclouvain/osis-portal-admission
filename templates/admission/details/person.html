@@ -50,16 +50,21 @@
           {% get_country_name person.country_of_citizenship as country_of_citizenship %}
           {% field_data _("Country of citizenship") country_of_citizenship "col-md-4" %}
         </div>
-        {% field_data _("Identity picture") person.id_photo hide_empty=True %}
+        {% field_data _("Identity picture") person.id_photo %}
         {% field_data _("Contact language") contact_language %}
     {% endpanel %}
 
     {% panel _("Proof of identity") %}
-        {% field_data _("Belgian national registry number (SSIN)") person.national_number hide_empty=True %}
-        {% field_data _("Identity card number") person.id_card_number hide_empty=True %}
-        {% field_data _("Identity card (both sides)") person.id_card hide_empty=True %}
-        {% field_data _("Passport number") person.passport_number hide_empty=True %}
-        {% field_data _("Passport") person.passport hide_empty=True %}
+        {% if person.national_number or person.id_card_number %}
+            {% field_data _("Belgian national registry number (SSIN)") person.national_number hide_empty=True %}
+            {% field_data _("Identity card number") person.id_card_number hide_empty=True %}
+            {% field_data _("Identity card (both sides)") person.id_card %}
+        {% elif person.passport_number %}
+            {% field_data _("Passport number") person.passport_number %}
+            {% field_data _("Passport") person.passport %}
+        {% else %}
+            {% translate 'Not specified' %}
+        {% endif %}
     {% endpanel %}
 
     {% panel _("Have you previously been registered at UCLouvain?") %}
@@ -67,7 +72,7 @@
             <p>{% trans "Yes" %}</p>
             <div class="row">
               {% field_data _("Last registration year") person.last_registration_year "col-md-6" %}
-              {% field_data _("Your previous NOMA (registration id)") person.last_registration_id "col-md-6" hide_empty=True %}
+              {% field_data _("Your previous NOMA (registration id)") person.last_registration_id "col-md-6" %}
             </div>
         {% else %}
             {% trans "No" %}

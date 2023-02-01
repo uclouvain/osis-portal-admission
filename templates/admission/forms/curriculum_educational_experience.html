@@ -396,9 +396,11 @@
           {# Display / hide the fields depending on the values of other fields #}
 
           {# Institute fields #}
-          $('#id_base_form-institute').dependsOn({
-              '#id_base_form-other_institute': { checked: false },
-          }, { hide: false, });
+          {% if not base_form.institute.field.disabled %}
+            $('#id_base_form-institute').dependsOn({
+                '#id_base_form-other_institute': { checked: false },
+            }, { hide: false, });
+          {% endif %}
 
           $('#other-institute').dependsOn({
               '#id_base_form-other_institute': { checked: true },
@@ -409,9 +411,11 @@
               '#id_base_form-country': { values: [beIsoCode] },
           });
 
-          $('#id_base_form-program').dependsOn({
-              '#id_base_form-other_program': { checked: false },
-          }, { hide: false, });
+          {% if not base_form.program.field.disabled %}
+            $('#id_base_form-program').dependsOn({
+                '#id_base_form-other_program': { checked: false },
+            }, { hide: false, });
+          {% endif %}
 
           $('#other-program').dependsOn({
               '#id_base_form-country': { values: [beIsoCode] },

@@ -43,23 +43,30 @@
         <div class="col-md-6">
           {% field_data _('Type') experience.type.value|enum_display:'ActivityType' %}
         </div>
-        <div class="col-md-6">
-          {% field_data _('Sector') experience.sector.value|enum_display:'ActivitySector' hide_empty=True %}
-        </div>
-        <div class="col-md-6">
-          {% field_data _('Activity') experience.activity hide_empty=True %}
-        </div>
+        {% if experience.type.value == 'WORK' %}
+          <div class="col-md-6">
+            {% field_data _('Sector') experience.sector.value|enum_display:'ActivitySector' %}
+          </div>
+        {% elif experience.type.value == 'OTHER' %}
+          <div class="col-md-6">
+            {% field_data _('Activity') experience.activity %}
+          </div>
+        {% endif %}
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          {% field_data _('Institute') experience.institute_name hide_empty=True %}
+      {% if experience.type.value == 'WORK' %}
+        <div class="row">
+          <div class="col-md-6">
+            {% field_data _('Employer') experience.institute_name %}
+          </div>
+          <div class="col-md-6">
+            {% trans "Role" context "curriculum" as role_label %}
+            {% field_data role_label experience.role %}
+          </div>
         </div>
-        <div class="col-md-6">
-          {% trans "Role" context "curriculum" as role_label %}
-          {% field_data role_label experience.role hide_empty=True %}
-        </div>
-      </div>
-      {% field_data _('Certificate') experience.certificate hide_empty=True %}
+      {% endif %}
+      {% if experience.type.value != 'OTHER' and not view.is_continuing %}
+        {% field_data _('Certificate') experience.certificate %}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

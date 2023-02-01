@@ -24,12 +24,12 @@
 #
 # ##############################################################################
 from django.conf import settings
-from django.contrib import messages
-from django.shortcuts import render, resolve_url
+from django.shortcuts import render
 from django.utils.functional import cached_property
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
+from admission.constants import BE_ISO_CODE, LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
 from admission.contrib.enums import (
     EvaluationSystemsWithCredits,
     ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT,
@@ -41,6 +41,7 @@ from admission.services.person import (
     GeneralEducationAdmissionPersonService,
 )
 from admission.services.reference import DiplomaService, LanguageService, SuperiorNonUniversityService
+from admission.utils import format_address
 from osis_admission_sdk.model.educational_experience import EducationalExperience
 from osis_admission_sdk.model.professional_experience import ProfessionalExperience
 
@@ -119,6 +120,14 @@ class AdmissionCurriculumEducationalExperienceDetailView(AdmissionCurriculumMixi
         context['experience'].evaluation_system_with_credits = (
             self.educational_experience.evaluation_type.value in EvaluationSystemsWithCredits
         )
+
+        context['is_foreign_experience'] = self.educational_experience.country != BE_ISO_CODE
+        context['is_belgian_experience'] = self.educational_experience.country == BE_ISO_CODE
+        context['translation_required'] = (
+            self.educational_experience.linguistic_regime
+            and self.educational_experience.linguistic_regime not in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+        )
+
         initialize_field_texts(self.request.user.person, [self.educational_experience], self.current_context)
         return context
 
@@ -185,6 +194,12 @@ def initialize_field_texts(person, curriculum_experiences, context):
                 person=person,
             )
             experience.institute_name = institute.name
+            experience.institute_address = format_address(
+                street_number=institute.street_number,
+                street=institute.street,
+                postal_code=institute.zipcode,
+                city=institute.city,
+            )
 
         experience.can_be_updated = experience_can_be_updated(experience, context)
 

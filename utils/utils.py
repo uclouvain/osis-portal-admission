@@ -19,14 +19,19 @@ def format_entity_title(entity: Entite):
     return '{title} ({acronym})'.format_map(entity)
 
 
-def format_entity_address(address: Address):
-    """Return the concatenation of the street, street number, postal code, city and state of an address."""
+def format_address(street='', street_number='', postal_code='', city='', country=''):
+    """Return the concatenation of the specified street, street number, postal code, city and country."""
     address_parts = [
-        '{street} {street_number}'.format_map(address),
-        '{postal_code} {city}'.format_map(address),
-        address.state,
+        f'{street} {street_number}',
+        f'{postal_code} {city}',
+        country,
     ]
     return ', '.join(filter(lambda part: part and len(part) > 1, address_parts))
+
+
+def format_entity_address(address: Address):
+    """Return the concatenation of the street, street number, postal code, city and state of an address."""
+    return format_address(address.street, address.street_number, address.postal_code, address.city, address.state)
 
 
 def format_high_school_title(high_school: HighSchool):
@@ -86,11 +91,11 @@ def get_uuid_value(value: str) -> Union[uuid.UUID, str]:
         return value
 
 
-def format_academic_year(year: Union[int, str]):
+def format_academic_year(year: Union[int, str, float]):
     """Return the academic year related to a specific year."""
     if not year:
         return ''
-    if isinstance(year, str):
+    if isinstance(year, (str, float)):
         year = int(year)
     return f'{year}-{year + 1}'
 
