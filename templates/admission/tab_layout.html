@@ -28,7 +28,8 @@
 {% comment "Usage" %}
   `tab_layout.html` gère le layout des formulaires et des détails, ceci implique
   - si la variable `form` est présente, le {% block form %} est affiché
-  - si dans `form` il y a des `visible_fields`, la balise <form> est ajoutée
+  - si dans `form` il y a des `visible_fields`, labalise
+  <form> est ajoutée
   ainsi que les boutons de soumission dans les onglets et en bas de page
 {% endcomment %}
 
@@ -93,10 +94,12 @@
         {% trans "Create new admission" %}
       {% endif %}
     </span>
-    <a href="{{ list_url }}" class="pull-right h5 text-primary">
-      <span class="fa fa-stream"></span>
-      {% trans "Back to requests" %}
-    </a>
+    {% if user.is_authenticated %}
+      <a href="{{ list_url }}" class="pull-right h5 text-primary">
+        <span class="fa fa-stream"></span>
+        {% trans "Back to requests" %}
+      </a>
+    {% endif %}
   </div>
 
   {# Well #}
@@ -145,7 +148,7 @@
   {% current_subtabs as subtabs %}
 
   {% block tabs_content %}
-    {% if form.visible_fields %}
+    {% if form.visible_fields or force_form %}
       {# Display the form if needed #}
       <form class="osis-form" method="post" action="">
       {% csrf_token %}

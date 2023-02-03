@@ -1,4 +1,5 @@
-{% extends base_template %}
+{% extends "admission/doctorate/tab_layout.html" %}
+
 {% load bootstrap3 i18n static admission osis_document %}
 
 {% comment "License" %}
@@ -27,7 +28,7 @@
 
 {% block submit_button_affix %}{% endblock %}
 
-{% block tab_content %}
+{% block form_content %}
   {% if admission.statut != "IN_PROGRESS" %}
     {% panel _("Summary of the proposition") %}
       {% if admission.fiche_archive_signatures_envoyees %}
@@ -42,7 +43,7 @@
     {% endpanel %}
   {% endif %}
 
-  {% if admission|can_make_action:'add_approval' and approval_form and approval_form.decision %}
+  {% if approval_form and approval_form.decision %}
     {% include "admission/modal/prevent_quitting_modal.html" %}
     {% panel _("Proposition approval") %}
       {% bootstrap_form_errors approval_form %}
@@ -83,78 +84,12 @@
       {% trans "No one invited" %}
     {% endfor %}
   {% endpanel %}
-
-  {% if admission|can_make_action:'add_member' and add_form and add_form.type %}
-    <form class="osis-form" method="post" action="">
-      {% csrf_token %}
-      {% bootstrap_form_errors add_form %}
-      {% panel _("Add a promoter or a CA member") %}
-        <div class="row">
-          <div class="col-md-12">
-            {% bootstrap_field add_form.type %}
-          </div>
-          <div class="col-md-6">
-            <div id="person">
-              {% bootstrap_field add_form.person %}
-              <p><a data-toggle="collapse" href="#external-person">{% trans "or add an external person" %}</a></p>
-            </div>
-            <div id="tutor">
-              {% bootstrap_field add_form.tutor %}
-              <p><a data-toggle="collapse" href="#external-person">{% trans "or add an external person" %}</a></p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="panel panel-default collapse{% if add_form.is_bound %} in{% endif %}" id="external-person">
-              <div class="panel-body">
-                {% bootstrap_field add_form.prenom %}
-                {% bootstrap_field add_form.nom %}
-                {% bootstrap_field add_form.email %}
-                {% bootstrap_field add_form.est_docteur %}
-                {% bootstrap_field add_form.institution %}
-                {% bootstrap_field add_form.ville %}
-                {% bootstrap_field add_form.pays %}
-                {% bootstrap_field add_form.langue %}
-              </div>
-            </div>
-          </div>
-        </div>
-        <button
-          type="submit" class="btn btn-primary"
-          name="add_member_submit"
-        >{% trans "Add" %}</button>
-      {% endpanel %}
-    </form>
-  {% endif %}
-
-  {% if admission|can_make_action:'request_signatures' %}
-    <div class="text-center">
-      <button
-        type="button"
-        class="btn btn-success btn-lg"
-        data-toggle="modal"
-        data-target="#request-signatures-modal"
-      >
-        {% trans "Request signatures" %}
-      </button>
-    </div>
-
-    {% include "admission/doctorate/includes/request_signature_modal.html" %}
-  {% endif %}
-{% endblock tab_content %}
+{% endblock form_content %}
 
 {% block script %}
-  {{ add_form.media }}
   {{ approval_form.media }}
-  {{ approve_by_pdf_form.media }}
   <script type="application/javascript">
   $(function () {
-    // Display autocompletion based on member type
-    $('#person').length && $('#person').dependsOn({
-      'input[name=type]': { values: ['CA_MEMBER'] },
-    }, { duration: 0 });
-    $('#tutor').length && $('#tutor').dependsOn({
-      'input[name=type]': { values: ['MAIN_PROMOTER', 'PROMOTER'] },
-    }, { duration: 0 });
     // Hide the reason input if the promoter approves the proposition
     $('#id_motif_refus').length && $('#id_motif_refus').dependsOn({
       'input[name="decision"]': {
@@ -163,9 +98,6 @@
     }, {
       duration: 0,
     });
-    $('#institut_these').length && $('#institut_these').dependsOn({
-      'input[name="decision"]': { not: ['DECLINED'] },
-    }, { duration: 0 });
 
     document.dispatchEvent(new Event('refreshFormInitial'));
   });
