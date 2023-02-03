@@ -169,6 +169,10 @@ msgstr ""
 msgid "A field of the schedule must at least be set."
 msgstr ""
 
+msgid ""
+"A person cannot be referenced at the same time an external person is filled."
+msgstr ""
+
 msgid "A transcript for all years"
 msgstr ""
 
@@ -1060,6 +1064,9 @@ msgstr ""
 msgid "Download as PDF"
 msgstr ""
 
+msgid "Dr."
+msgstr ""
+
 msgid "Dutch"
 msgstr ""
 
@@ -1123,6 +1130,9 @@ msgid "Educational community"
 msgstr ""
 
 msgid "Educational type is required with this community of education"
+msgstr ""
+
+msgid "Email"
 msgstr ""
 
 msgid "Employer"
@@ -1370,6 +1380,9 @@ msgstr ""
 msgid ""
 "High school in Belgium is the level of education between the end of primary "
 "school and the beginning of higher education."
+msgstr ""
+
+msgid "Holder of a doctorate with thesis"
 msgstr ""
 
 msgid ""
@@ -2992,6 +3005,9 @@ msgid ""
 "You must correct your proposition before being able to request signatures."
 msgstr ""
 
+msgid "You must reference a person in UCLouvain or create an external one."
+msgstr ""
+
 msgid "You seem to have unsaved modifications, they will be lost."
 msgstr ""
 
@@ -3090,6 +3106,9 @@ msgid "hours are required"
 msgstr ""
 
 msgid "label is required"
+msgstr ""
+
+msgid "or add an external person"
 msgstr ""
 
 msgid "the person concerned"

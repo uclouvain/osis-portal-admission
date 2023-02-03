@@ -1,31 +1,35 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 from enum import Enum
 from typing import List
 
+from django.conf import settings
+from django.utils.translation import get_language
+
+import osis_admission_sdk
 from osis_admission_sdk.model.general_education_accounting_dto import GeneralEducationAccountingDTO
 
 from osis_admission_sdk.model.continuing_education_accounting_dto import ContinuingEducationAccountingDTO
@@ -57,8 +61,8 @@ __all__ = [
 
 
 class APIClient:
-    def __new__(cls):
-        api_config = admission_sdk.build_configuration()
+    def __new__(cls, api_config=None):
+        api_config = api_config or admission_sdk.build_configuration()
         return propositions_api.PropositionsApi(ApiClient(configuration=api_config))
 
 
@@ -346,8 +350,8 @@ class PropositionBusinessException(Enum):
     SignataireNonTrouveException = "PROPOSITION-11"
     SignataireDejaInviteException = "PROPOSITION-12"
     SignatairePasInviteException = "PROPOSITION-13"
-    DejaPromoteurException = "PROPOSITION-14"
-    DejaMembreCAException = "PROPOSITION-15"
+    MembreSoitInterneSoitExterneException = "PROPOSITION-14"
+    DejaMembreException = "PROPOSITION-15"
     JustificationRequiseException = "PROPOSITION-16"
     DetailProjetNonCompleteException = "PROPOSITION-17"
     CotutelleNonCompleteException = "PROPOSITION-18"
@@ -534,8 +538,30 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
     @classmethod
+    def build_config(cls):
+        return osis_admission_sdk.Configuration(
+            host=settings.OSIS_ADMISSION_SDK_HOST,
+            api_key_prefix={'Token': 'Token'},
+            api_key={'Token': settings.ADMISSION_TOKEN_EXTERNAL},
+        )
+
+    @staticmethod
+    def build_mandatory_external_headers():
+        return {
+            'accept_language': get_language(),
+        }
+
+    @classmethod
     def get_supervision(cls, person, uuid) -> SupervisionDTO:
         return APIClient().retrieve_supervision(uuid=uuid, **build_mandatory_auth_headers(person))
+
+    @classmethod
+    def get_external_supervision(cls, uuid, token):
+        return APIClient(api_config=cls.build_config()).get_external_proposition(
+            uuid=uuid,
+            token=token,
+            **cls.build_mandatory_external_headers(),
+        )
 
     @classmethod
     def get_signature_conditions(cls, person, uuid) -> SupervisionDTO:
@@ -548,7 +574,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def add_member(cls, person, uuid, **kwargs):
         return APIClient().add_member(
             uuid=uuid,
-            supervision_actor=kwargs,
+            identifier_supervision_actor=kwargs,
             **build_mandatory_auth_headers(person),
         )
 
@@ -556,7 +582,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def remove_member(cls, person, uuid, **kwargs):
         return APIClient().remove_member(
             uuid=uuid,
-            supervision_actor=kwargs,
+            supervision_actor_reference=kwargs,
             **build_mandatory_auth_headers(person),
         )
 
@@ -582,6 +608,24 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
             uuid=uuid,
             refuser_proposition_command=kwargs,
             **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def approve_external_proposition(cls, uuid, token, **kwargs):
+        return APIClient(api_config=cls.build_config()).approve_external_proposition(
+            uuid=uuid,
+            token=token,
+            approuver_proposition_command=kwargs,
+            **cls.build_mandatory_external_headers(),
+        )
+
+    @classmethod
+    def reject_external_proposition(cls, uuid, token, **kwargs):
+        return APIClient(api_config=cls.build_config()).reject_external_proposition(
+            uuid=uuid,
+            token=token,
+            refuser_proposition_command=kwargs,
+            **cls.build_mandatory_external_headers(),
         )
 
     @classmethod

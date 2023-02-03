@@ -223,6 +223,12 @@ msgstr ""
 msgid "A field of the schedule must at least be set."
 msgstr "Au moins un champ de la grille horaire doit être complété."
 
+msgid ""
+"A person cannot be referenced at the same time an external person is filled."
+msgstr ""
+"Une personne ne peut pas être référencée en même temps qu'une personne "
+"externe."
+
 msgid "A transcript for all years"
 msgstr "Un relevé de notes couvrant l'ensemble des années"
 
@@ -1198,6 +1204,9 @@ msgstr "Double ou triple diplomation"
 msgid "Download as PDF"
 msgstr "Télécharger en tant que PDF"
 
+msgid "Dr."
+msgstr "Dr."
+
 msgid "Dutch"
 msgstr "Néerlandais"
 
@@ -1264,6 +1273,9 @@ msgid "Educational type is required with this community of education"
 msgstr ""
 "Le type d'enseignement doit obligatoirement être renseigné avec cette "
 "communauté d'enseignement"
+
+msgid "Email"
+msgstr "E-mail"
 
 msgid "Employer"
 msgstr "Employeur"
@@ -1527,6 +1539,9 @@ msgid ""
 msgstr ""
 "L'enseignement secondaire en Belgique est le niveau d’enseignement situé "
 "entre la fin de l’école primaire et le début de l’enseignement supérieur."
+
+msgid "Holder of a doctorate with thesis"
+msgstr "Titulaire d'un doctorat avec thèse"
 
 msgid ""
 "Household composition or marriage certificate authenticated by the Belgian "
@@ -3329,6 +3344,10 @@ msgstr ""
 "Vous devez corriger votre demande d'admission avant de pouvoir réaliser la "
 "demande de signatures."
 
+msgid "You must reference a person in UCLouvain or create an external one."
+msgstr ""
+"Vous devez référencer une personne de l'UCLouvain ou en créer une externe."
+
 msgid "You seem to have unsaved modifications, they will be lost."
 msgstr ""
 "Vous semblez avoir des modifications non enregistrées, celles-ci seront "
@@ -3448,6 +3467,9 @@ msgstr "les heures sont requises"
 
 msgid "label is required"
 msgstr "un label est requis"
+
+msgid "or add an external person"
+msgstr "ou ajouter une personne externe"
 
 msgid "the person concerned"
 msgstr "la personne concernée"

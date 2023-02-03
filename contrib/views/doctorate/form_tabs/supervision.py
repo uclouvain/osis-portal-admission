@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -54,6 +54,11 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
         context['add_form'] = context.pop('form')  # Trick template to not add button
         return context
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['person'] = self.request.user.person
+        return kwargs
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
         if 'url' not in context['admission'].links['request_signatures']:
@@ -61,9 +66,12 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
         return self.render_to_response(context)
 
     def prepare_data(self, data):
+        promoter = data.pop('tutor')
+        ca_member = data.pop('person')
         return {
             'type': data['type'],
-            'member': data['person' if data['type'] == ActorType.CA_MEMBER.name else 'tutor'],
+            'matricule': ca_member if data['type'] == ActorType.CA_MEMBER.name else promoter,
+            **data,
         }
 
     def call_webservice(self, data):

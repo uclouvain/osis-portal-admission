@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,13 +25,13 @@
 # ##############################################################################
 from django import forms
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import redirect, resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 from django.views.generic.edit import BaseFormView
 
 from admission.contrib.enums import ActorType, ChoixStatutProposition, DecisionApprovalEnum
@@ -46,6 +46,8 @@ __all__ = [
     'DoctorateAdmissionRemoveActorView',
     'DoctorateAdmissionSetReferencePromoterView',
     'DoctorateAdmissionApprovalByPdfView',
+    'DoctorateAdmissionExternalApprovalView',
+    'DoctorateAdmissionExternalConfirmView',
 ]
 __namespace__ = False
 
@@ -89,20 +91,36 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
         kwargs['include_institut_these'] = (
-            # User is a promoter
-            self.person.global_id
-            in [signature['promoteur']['matricule'] for signature in self.supervision['signatures_promoteurs']]
+            # User is the reference promoter
+            self.get_current_member_uuid() == self.supervision['promoteur_reference']
             # institut_these is not yet set
             and not self.admission.institut_these
         )
         return kwargs
 
     def prepare_data(self, data):
-        data["matricule"] = self.person.global_id
+        data["uuid_membre"] = self.get_current_member_uuid()
         if data.get('decision') == DecisionApprovalEnum.APPROVED.name:
             # The reason is useful only if the admission is not approved
             data.pop('motif_refus')
         return data
+
+    def get_current_member_uuid(self):
+        return next(
+            iter(
+                [
+                    signature['promoteur']['uuid']
+                    for signature in self.supervision['signatures_promoteurs']
+                    if self.person.global_id == signature['promoteur']['matricule']
+                ]
+                + [
+                    signature['membre_ca']['uuid']
+                    for signature in self.supervision['signatures_membres_ca']
+                    if self.person.global_id == signature['membre_ca']['matricule']
+                ]
+            ),
+            None,
+        )
 
     def call_webservice(self, data):
         decision = data.pop('decision')
@@ -137,7 +155,7 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
 
 
 class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
-    urlpatterns = {'remove-actor': 'remove-member/<type>/<matricule>'}
+    urlpatterns = {'remove-actor': 'remove-member/<type>/<uuid>'}
     form_class = forms.Form
     template_name = 'admission/doctorate/forms/remove_actor.html'
     actor_type_mapping = {
@@ -155,20 +173,21 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
             context['member'] = self.get_member(supervision)
         except (ApiException, AttributeError, KeyError):
             raise Http404(_('Member not found'))
+        context['force_form'] = True
         return context
 
     def get_member(self, supervision):
         collection_name, attr_name = self.actor_type_mapping[self.kwargs['type']]
         for signature in supervision[collection_name]:
-            person = signature[attr_name]
-            if person['matricule'] == self.kwargs['matricule']:
-                return person
+            member = signature[attr_name]
+            if member['uuid'] == self.kwargs['uuid']:
+                return member
         raise KeyError
 
     def prepare_data(self, data):
         return {
             'type': self.kwargs['type'],
-            'member': self.kwargs['matricule'],
+            'uuid_membre': self.kwargs['uuid'],
         }
 
     def call_webservice(self, data):
@@ -179,13 +198,13 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
 
 
 class DoctorateAdmissionSetReferencePromoterView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
-    urlpatterns = {'set-reference-promoter': 'set-reference-promoter/<matricule>'}
+    urlpatterns = {'set-reference-promoter': 'set-reference-promoter/<uuid>'}
     form_class = forms.Form
 
     def prepare_data(self, data):
         return {
             'uuid_proposition': str(self.kwargs['pk']),
-            'matricule': self.kwargs['matricule'],
+            'uuid_promoteur': self.kwargs['uuid'],
         }
 
     def call_webservice(self, data):
@@ -218,3 +237,60 @@ class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixi
 
     def form_invalid(self, form):
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
+
+
+class DoctorateAdmissionExternalApprovalView(UserPassesTestMixin, WebServiceFormMixin, FormView):
+    urlpatterns = {'external-approval': 'external-approval/<token>'}
+    form_class = DoctorateAdmissionApprovalForm
+    template_name = 'admission/doctorate/forms/external_approval.html'
+
+    def test_func(self):
+        return self.request.user.is_anonymous
+
+    @property
+    def admission_uuid(self):
+        return str(self.kwargs['pk'])
+
+    @cached_property
+    def data(self):
+        return AdmissionSupervisionService.get_external_supervision(
+            uuid=self.admission_uuid,
+            token=self.kwargs['token'],
+        ).to_dict()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['admission'] = self.data['proposition']
+        context['supervision'] = self.data['supervision']
+        context['approval_form'] = context.pop('form')  # Trick template to remove save button
+        return context
+
+    def prepare_data(self, data):
+        data["uuid_membre"] = self.kwargs.get('token')  # This is not actually used on the other side of API
+        if data.get('decision') == DecisionApprovalEnum.APPROVED.name:
+            # The reason is useful only if the admission is not approved
+            data.pop('motif_refus')
+        return data
+
+    def call_webservice(self, data):
+        decision = data.pop('decision')
+        if decision == DecisionApprovalEnum.APPROVED.name:
+            return AdmissionSupervisionService.approve_external_proposition(
+                uuid=self.admission_uuid,
+                token=self.kwargs['token'],
+                **data,
+            )
+        return AdmissionSupervisionService.reject_external_proposition(
+            uuid=self.admission_uuid,
+            token=self.kwargs['token'],
+            **data,
+        )
+
+    def get_success_url(self):
+        messages.info(self.request, _("Your decision has been saved."))
+        return resolve_url('admission:doctorate:external-confirm', pk=self.kwargs['pk'])
+
+
+class DoctorateAdmissionExternalConfirmView(TemplateView):
+    urlpatterns = 'external-confirm'
+    template_name = 'admission/doctorate/forms/external_confirm.html'
