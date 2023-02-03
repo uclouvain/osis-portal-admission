@@ -342,6 +342,7 @@ class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         return DiplomaService.get_diplomas(
             person=self.request.user.person,
             search=self.q,
+            active=True,
         )
 
     def results(self, results):

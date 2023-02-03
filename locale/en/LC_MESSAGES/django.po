@@ -93,8 +93,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(enrollment_url)s\">Go to course enrollment</a> or <a href="
-"\"%(add_url)s\">add a course</a>"
+"<a href=\"%(enrollment_url)s\">Go to course enrollment</a> or <a "
+"href=\"%(add_url)s\">add a course</a>"
 msgstr ""
 
 #, python-brace-format
@@ -122,10 +122,10 @@ msgstr ""
 #, python-format
 msgid ""
 "<p> On the basis of the information you have provided in your previous "
-"experience, you do not appear to meet the <a href=\"%(url)s\" target=\"_blank"
-"\">access conditions for the training</a> <em>%(training_title)s</em>. </p> "
-"<p>We invite you to check your previous course data or to choose another "
-"course.</p>"
+"experience, you do not appear to meet the <a href=\"%(url)s\" "
+"target=\"_blank\">access conditions for the training</a> "
+"<em>%(training_title)s</em>. </p> <p>We invite you to check your previous "
+"course data or to choose another course.</p>"
 msgstr ""
 
 #, python-format
@@ -352,9 +352,10 @@ msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
 "classification. Detailed explanations of this framework can be found at <a "
 "href=\"https://www.coe.int/en/web/common-european-framework-reference-"
-"languages/table-1-cefr-3.3-common-reference-levels-global-scale\" target="
-"\"_blank\"> https://www.coe.int/en/web/common-european-framework-reference-"
-"languages/table-1-cefr-3.3-common-reference-levels-global-scale </a>"
+"languages/table-1-cefr-3.3-common-reference-levels-global-scale\" "
+"target=\"_blank\"> https://www.coe.int/en/web/common-european-framework-"
+"reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale </"
+"a>"
 msgstr ""
 
 msgid ""
@@ -1563,8 +1564,8 @@ msgstr ""
 #, python-format
 msgid ""
 "If you wish to change your choice of training for a Bachelor, Master, "
-"Aggregation, CAPAES, Doctorate or Certificate application, please <a href="
-"\"%(url)s\">cancel the current application</a> and create a new one."
+"Aggregation, CAPAES, Doctorate or Certificate application, please <a "
+"href=\"%(url)s\">cancel the current application</a> and create a new one."
 msgstr ""
 
 #, python-format
