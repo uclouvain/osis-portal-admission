@@ -1,26 +1,26 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and educational schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 import datetime
@@ -60,6 +60,7 @@ class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
 
         # Check that the right API calls are done
         self.mock_person_api.return_value.retrieve_educational_experience_admission.assert_called()
@@ -260,6 +261,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertContains(response, "dependsOn.min.js", count=1)
 
         # Check that the right API calls are done
         self.mockapi.retrieve_educational_experience_admission.assert_called()

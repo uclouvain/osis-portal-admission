@@ -74,10 +74,13 @@ class CotutelleTestCase(TestCase):
     def test_cotutelle_get(self):
         url = resolve_url("admission:doctorate:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
         self.assertContains(response, "Foobar")
 
     def test_cotutelle_get_form(self):
         response = self.client.get(self.url)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "dependsOn.min.js", count=1)
         self.assertContains(response, "Foobar")
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')

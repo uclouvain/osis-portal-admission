@@ -38,8 +38,9 @@
   <link href="{% static "admission/admission.css" %}" rel="stylesheet" />
   {% if form %}
     {{ form.media.css }}
+  {% else %}
+    <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
   {% endif %}
-  <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
 {% endblock %}
 
 {% block script %}
@@ -47,8 +48,9 @@
   {{ block.super }}
   {% if form %}
     {{ form.media.js }}
+  {% else %}
+    <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
   {% endif %}
-  <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
   <script src="{% static 'admission/admission.js' %}"></script>
   <script src="{% static 'admission/popover.js' %}"></script>
 {% endblock %}
