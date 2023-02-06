@@ -114,6 +114,8 @@ class PersonViewTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "dependsOn.min.js", count=1)
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
         self.assertEqual(response.context['form'].initial['unknown_birth_date'], True)
@@ -436,6 +438,7 @@ class PersonViewTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
         self.assertContains(response, "Joe")
         self.mock_person_api.return_value.retrieve_person_identification_admission.assert_called()
         self.assertIn('admission', response.context)

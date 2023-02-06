@@ -214,6 +214,8 @@ class ProjectViewTestCase(TestCase):
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "dependsOn.min.js", count=1)
 
         proposition.doctorat.sigle = SCIENCE_DOCTORATE
         proposition.to_dict.return_value["commission_proximite"] = ChoixSousDomaineSciences.CHEMISTRY.name
@@ -311,6 +313,7 @@ class ProjectViewTestCase(TestCase):
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
         self.assertContains(response, "Something")
         self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
         self.assertContains(response, _("ECONOMY"))
