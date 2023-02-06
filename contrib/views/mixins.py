@@ -32,6 +32,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
+from admission.contrib.enums import ChoixStatutProposition
 from admission.services.doctorate import AdmissionDoctorateService
 from admission.services.proposition import AdmissionPropositionService
 
@@ -138,6 +139,13 @@ class LoadDossierViewMixin(LoadViewMixin):
 
             if hasattr(self, 'tab_of_specific_questions'):
                 context['specific_questions'] = self.specific_questions
+
+            # Add info about doctorate if needed (this concerns the project/cotutelle/supervision tabs)
+            if context['admission'].statut == ChoixStatutProposition.ENROLLED.name:
+                context['doctorate'] = AdmissionDoctorateService.get_doctorate(
+                    person=self.request.user.person,
+                    uuid=self.admission_uuid,
+                )
 
         # Late message
         if (

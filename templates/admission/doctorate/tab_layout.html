@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -26,26 +26,26 @@
 {% endcomment %}
 
 {% block breadcrumb_title %}
-  {% if admission.doctorat %}
-    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" %}
-  {% else %}
+  {% if doctorate %}
     {{ doctorate.intitule_formation }} ({{ doctorate.reference }})
+  {% else %}
+    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" %}
   {% endif %}
 {% endblock %}
 
 {% block header_title %}
-  {% if admission.doctorat %}
-    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" %}
-  {% else %}
+  {% if doctorate %}
     {{ doctorate.intitule_formation }} ({{ doctorate.reference }})
+  {% else %}
+    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" %}
   {% endif %}
 {% endblock %}
 
 {% block well %}
-  {% if admission.doctorat %}
-    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" " " "(" admission.reference ")"  as title %}
-  {% else %}
+  {% if doctorate %}
     {% display doctorate.intitule_formation " " "(" doctorate.reference ")" as title %}
+  {% else %}
+    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" " " "(" admission.reference ")"  as title %}
   {% endif %}
   <div class="well">
     <div>
@@ -53,10 +53,10 @@
     </div>
     <div>
       {% trans "Status:" %}
-      {% if admission.doctorat %}
-        {{ admission.statut|enum_display:'ChoixStatutProposition' }}
+      {% if doctorate %}
+        {{ doctorate.statut|enum_display:'ChoixStatutDoctorat' }}
       {% else %}
-        {{ admission.statut|enum_display:'ChoixStatutDoctorat' }}
+        {{ admission.statut|enum_display:'ChoixStatutProposition' }}
       {% endif %}
     </div>
   </div>
