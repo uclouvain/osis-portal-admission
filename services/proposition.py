@@ -479,6 +479,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.PromoteurManquantException,
         PropositionBusinessException.PromoteurDeReferenceManquantException,
         PropositionBusinessException.MembreCAManquantException,
+        PropositionBusinessException.CotutelleDoitAvoirAuMoinsUnPromoteurExterneException,
     },
     'confirm-submit': {
         GlobalPropositionBusinessException.ConditionsAccessNonRempliesException,
