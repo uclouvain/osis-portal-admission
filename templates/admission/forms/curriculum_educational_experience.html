@@ -184,6 +184,11 @@
   </div>
 {% endblock %}
 
+{% block submit_and_continue_content %}
+  <i class="fa-solid fa-backward-step"></i>
+  {% trans "Save and come back" %}
+{% endblock %}
+
 {% block extra_content %}
   <table id="empty_form" class="hidden">
     {{ empty_form|safe }}

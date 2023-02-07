@@ -2606,6 +2606,9 @@ msgctxt "admission"
 msgid "Save"
 msgstr "Enregistrer"
 
+msgid "Save and come back"
+msgstr "Enregistrer et revenir"
+
 msgid "Save and continue"
 msgstr "Enregistrer et continuer"
 

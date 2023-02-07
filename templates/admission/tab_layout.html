@@ -204,8 +204,10 @@
                   disabled
                   {% endif %}
                 >
-                  <i class="fa-solid fa-forward-step"></i>
-                  {% trans "Save and continue" %}
+                  {% block submit_and_continue_content %}
+                    <i class="fa-solid fa-forward-step"></i>
+                    {% trans "Save and continue" %}
+                  {% endblock %}
                 </button>
               {% endif %}
             {% endblock %}
