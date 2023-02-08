@@ -596,6 +596,14 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def resend_invite(cls, person, uuid, **kwargs):
+        return APIClient().update_signatures(
+            uuid=uuid,
+            renvoyer_invitation_signature_externe=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def approve_proposition(cls, person, uuid, **kwargs):
         return APIClient().approve_proposition(
             uuid=uuid,
