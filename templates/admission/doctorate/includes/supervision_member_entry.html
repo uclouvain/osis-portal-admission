@@ -75,12 +75,12 @@
     <button
       class="btn btn-default pull-right"
       data-toggle="collapse"
-      data-target="#approve-by-pdf-{{ member.matricule }}"
+      data-target="#approve-by-pdf-{{ member.uuid }}"
     >
-      <i class="glyphicon glyphicon-check"></i>
+      <i class="fas fa-file-circle-check"></i>
       {% trans "Approve by PDF" %}
     </button>
-    <div id="approve-by-pdf-{{ member.matricule }}" class="col-md-12 collapse">
+    <div id="approve-by-pdf-{{ member.uuid }}" class="col-md-12 collapse">
       <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
         {% csrf_token %}
         {{ approve_by_pdf_form.pdf }}
@@ -89,6 +89,26 @@
           {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
             Approve on behalf of {{ first_name }} {{ last_name }}
           {% endblocktrans %}
+        </button>
+      </form>
+    </div>
+  {% endif %}
+
+  {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
+    <button
+      class="btn btn-default pull-right"
+      data-toggle="collapse"
+      data-target="#resend-invite-{{ member.uuid }}"
+    >
+      <i class="fas fa-envelope-open-text"></i>
+      {% trans "Resend invitation" %}
+    </button>
+    <div id="resend-invite-{{ member.uuid }}" class="col-md-12 collapse">
+      <form action="{% url 'admission:doctorate:resend-invite' pk=admission.uuid uuid=member.uuid %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
+        <button type="submit" class="btn btn-primary pull-right">
+          {% trans "Confirm" %}
         </button>
       </form>
     </div>

@@ -434,6 +434,24 @@ class SupervisionTestCase(TestCase):
         response = self.client.post(url, {})
         self.assertRedirects(response, self.detail_url)
 
+    def test_should_resend_invite(self):
+        url = resolve_url(
+            "admission:doctorate:resend-invite",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            uuid="uuid-9876543210",
+        )
+        response = self.client.post(url, {}, follow=True)
+        self.assertRedirects(response, self.detail_url)
+        self.assertContains(response, _("An invitation has been sent again."))
+        self.assertTrue(self.mock_api.return_value.update_signatures.called)
+
+        self.mock_api.return_value.update_signatures.side_effect = MultipleApiBusinessException(
+            exceptions={ApiBusinessException(42, "Something went wrong")}
+        )
+        response = self.client.post(url, {}, follow=True)
+        self.assertRedirects(response, self.detail_url)
+        self.assertNotContains(response, _("An invitation has been sent again."))
+
     def test_should_external_promoter_access_info(self):
         self.client.logout()
         response = self.client.get(self.external_url)

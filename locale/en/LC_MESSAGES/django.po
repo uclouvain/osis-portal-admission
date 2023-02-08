@@ -346,6 +346,9 @@ msgstr ""
 msgid "An error has occurred, please check the values and try again."
 msgstr ""
 
+msgid "An invitation has been sent again."
+msgstr ""
+
 msgid "Ancient languages"
 msgstr ""
 
@@ -2296,6 +2299,9 @@ msgid "Research report"
 msgstr ""
 
 msgid "Research seminar"
+msgstr ""
+
+msgid "Resend invitation"
 msgstr ""
 
 msgid "Residential address"

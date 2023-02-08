@@ -402,6 +402,9 @@ msgstr "Temps consacré à la thèse (en %)"
 msgid "An error has occurred, please check the values and try again."
 msgstr "Une erreur est survenue, veuillez vérifier les valeurs et réessayer."
 
+msgid "An invitation has been sent again."
+msgstr "Une invitation a été envoyée de nouveau."
+
 msgid "Ancient languages"
 msgstr "Langues anciennes"
 
@@ -2552,6 +2555,9 @@ msgstr "Rapport de recherche"
 
 msgid "Research seminar"
 msgstr "Séminaire de recherche"
+
+msgid "Resend invitation"
+msgstr "Renvoyer une invitation"
 
 msgid "Residential address"
 msgstr "Domicile légal"

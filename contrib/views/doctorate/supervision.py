@@ -48,6 +48,7 @@ __all__ = [
     'DoctorateAdmissionApprovalByPdfView',
     'DoctorateAdmissionExternalApprovalView',
     'DoctorateAdmissionExternalConfirmView',
+    'DoctorateAdmissionExternalResendView',
 ]
 __namespace__ = False
 
@@ -294,3 +295,29 @@ class DoctorateAdmissionExternalApprovalView(UserPassesTestMixin, WebServiceForm
 class DoctorateAdmissionExternalConfirmView(TemplateView):
     urlpatterns = 'external-confirm'
     template_name = 'admission/doctorate/forms/external_confirm.html'
+
+
+class DoctorateAdmissionExternalResendView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+    urlpatterns = {'resend-invite': 'resend-invite/<uuid>'}
+    template_name = 'admission/doctorate/forms/external_confirm.html'
+    form_class = forms.Form
+
+    def prepare_data(self, data):
+        return {
+            'uuid_proposition': str(self.kwargs['pk']),
+            'uuid_membre': self.kwargs['uuid'],
+        }
+
+    def call_webservice(self, data):
+        AdmissionSupervisionService.resend_invite(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+            **data,
+        )
+
+    def get_success_url(self):
+        messages.info(self.request, _("An invitation has been sent again."))
+        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
+
+    def form_invalid(self, form):
+        return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
