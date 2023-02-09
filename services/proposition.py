@@ -32,8 +32,6 @@ from django.utils.translation import get_language
 import osis_admission_sdk
 from osis_admission_sdk.model.general_education_accounting_dto import GeneralEducationAccountingDTO
 
-from osis_admission_sdk.model.continuing_education_accounting_dto import ContinuingEducationAccountingDTO
-
 from osis_admission_sdk.model.doctorate_education_accounting_dto import DoctorateEducationAccountingDTO
 
 from osis_admission_sdk.model.specific_question import SpecificQuestion
@@ -240,13 +238,6 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def retrieve_continuing_accounting(cls, person: Person, uuid: str) -> ContinuingEducationAccountingDTO:
-        return APIClient().retrieve_continuing_accounting(
-            uuid=uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
     def retrieve_general_accounting(cls, person: Person, uuid: str) -> GeneralEducationAccountingDTO:
         return APIClient().retrieve_general_accounting(
             uuid=uuid,
@@ -268,15 +259,6 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         return APIClient().update_general_accounting(
             uuid=uuid,
             completer_comptabilite_proposition_generale_command=data,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def update_continuing_accounting(cls, person: Person, uuid: str, data: dict):
-        data['uuid_proposition'] = uuid
-        return APIClient().update_continuing_accounting(
-            uuid=uuid,
-            completer_comptabilite_proposition_continue_command=data,
             **build_mandatory_auth_headers(person),
         )
 
