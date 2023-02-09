@@ -31,8 +31,18 @@
     {% bootstrap_form_errors form %}
     {% if view.is_continuing %}
       {% panel _('Specificities') %}
+        {% if admission.pays_nationalite_ue == False %}
+          <p class="alert alert-info text-justify">
+            {% blocktranslate trimmed %}
+              The certification and short programs (continuing education) do not allow you to obtain a visa and a
+              residence permit in Belgium. More information:
+              <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
+            {% endblocktranslate %}
+          </p>
+          {% bootstrap_field form.copie_titre_sejour %}
+        {% endif %}
         {% bootstrap_field form.inscription_a_titre %}
-          <div id="professional-container">
+        <div id="professional-container">
           {% bootstrap_field form.nom_siege_social placeholder='' %}
           <div class="row">
             <div class="col-md-6">

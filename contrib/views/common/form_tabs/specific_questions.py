@@ -132,6 +132,9 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
             continuing_value = {
                 'inscription_a_titre': value.get('inscription_a_titre'),
                 'reponses_questions_specifiques': value.get('reponses_questions_specifiques'),
+                'copie_titre_sejour': value.get('copie_titre_sejour')
+                if self.admission.pays_nationalite_ue is False
+                else [],
             }
 
             if value.get('inscription_a_titre') == ChoixInscriptionATitre.PROFESSIONNEL.name:
