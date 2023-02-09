@@ -329,6 +329,9 @@ class MixinTestCase(TestCase):
             curriculum=['file1.pdf'],
             creee_le=datetime.datetime(2022, 12, 1),
             equivalence_diplome=['file2.pdf'],
+            pays_nationalite='FR',
+            pays_nationalite_ue=True,
+            copie_titre_sejour=[],
         )
 
         cls.api_default_params = {

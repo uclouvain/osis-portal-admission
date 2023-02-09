@@ -852,6 +852,11 @@ msgstr ""
 msgid "Copy of the registration certificate \"orange card\""
 msgstr ""
 
+msgid ""
+"Copy of the residence permit covering the entire course, including the "
+"evaluation test (except for courses organised online)."
+msgstr ""
+
 msgid "Copy of the tutorship act authenticated by the Belgian authorities"
 msgstr ""
 
@@ -2057,6 +2062,11 @@ msgstr ""
 msgid "Please mention the academic graduation year"
 msgstr ""
 
+msgid ""
+"Please provide a copy of the residence permit covering the entire course, "
+"including the evaluation test (except for courses organised online)."
+msgstr ""
+
 msgid "Please provide one of these two identification information:"
 msgstr ""
 
@@ -2590,6 +2600,13 @@ msgstr ""
 msgid ""
 "The certificate of achievement of the confirmation paper in PDF format is "
 "being generated, please come back later to get it."
+msgstr ""
+
+msgid ""
+"The certification and short programs (continuing education) do not allow you "
+"to obtain a visa and a residence permit in Belgium. More information: <a "
+"target=\"_blank\" href=\"https://uclouvain.be/en/study/iufc\">https://"
+"uclouvain.be/en/study/iufc</a>."
 msgstr ""
 
 msgid ""
