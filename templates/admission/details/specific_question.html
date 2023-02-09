@@ -28,6 +28,16 @@
 {% block tab_content %}
   {% if view.is_continuing %}
     {% panel _('Specificities') %}
+      {% if admission.pays_nationalite_ue == False %}
+        <p class="alert alert-info text-justify">
+          {% blocktranslate trimmed %}
+            The certification and short programs (continuing education) do not allow you to obtain a visa and a
+            residence permit in Belgium. More information:
+            <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
+          {% endblocktranslate %}
+        </p>
+        {% field_data _('Copy of the residence permit covering the entire course, including the evaluation test (except for courses organised online).') admission.copie_titre_sejour %}
+      {% endif %}
       {% field_data _('You are registering as') admission.inscription_a_titre|enum_display:'ChoixInscriptionATitre' %}
       {% if admission.inscription_a_titre == 'PROFESSIONNEL' %}
         {% field_data _('Head office name') admission.nom_siege_social %}
@@ -39,16 +49,16 @@
         {% if admission.type_adresse_facturation == 'AUTRE' and admission.adresse_facturation %}
           {% panel _("Billing address") %}
             <div class="row">
-                {% field_data _("Street") admission.adresse_facturation.rue css_class="col-md-4" %}
-                {% field_data _("Number") admission.adresse_facturation.numero_rue css_class="col-md-2" %}
-                {% field_data _("Box") admission.adresse_facturation.boite_postale css_class="col-md-2" hide_empty=True %}
-                {% field_data _("Place") admission.adresse_facturation.lieu_dit css_class="col-md-4" hide_empty=True %}
+              {% field_data _("Street") admission.adresse_facturation.rue css_class="col-md-4" %}
+              {% field_data _("Number") admission.adresse_facturation.numero_rue css_class="col-md-2" %}
+              {% field_data _("Box") admission.adresse_facturation.boite_postale css_class="col-md-2" hide_empty=True %}
+              {% field_data _("Place") admission.adresse_facturation.lieu_dit css_class="col-md-4" hide_empty=True %}
             </div>
             <div class="row">
-                {% get_country_name admission.adresse_facturation.pays as pays %}
-                {% field_data _("Country") pays css_class="col-md-4" %}
-                {% field_data _("Postal code") admission.adresse_facturation.code_postal css_class="col-md-4" %}
-                {% field_data _("City") admission.adresse_facturation.ville css_class="col-md-4" %}
+              {% get_country_name admission.adresse_facturation.pays as pays %}
+              {% field_data _("Country") pays css_class="col-md-4" %}
+              {% field_data _("Postal code") admission.adresse_facturation.code_postal css_class="col-md-4" %}
+              {% field_data _("City") admission.adresse_facturation.ville css_class="col-md-4" %}
             </div>
           {% endpanel %}
         {% else %}
