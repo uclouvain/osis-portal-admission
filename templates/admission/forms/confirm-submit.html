@@ -329,7 +329,9 @@
       $('input[type="checkbox"], input[type="radio"]', form).change(function () {
         formButton.prop('disabled', !form.checkValidity());
         if (form.checkValidity()) {
-          $submitWrapper.tooltip('hide');
+          $submitWrapper.tooltip('destroy');
+        } else {
+          $submitWrapper.tooltip();
         }
       })
       formButton.prop('disabled', !form.checkValidity());
