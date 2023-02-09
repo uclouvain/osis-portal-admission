@@ -383,9 +383,8 @@ class AccountingForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, is_general_admission, is_doctorate_admission, with_assimilation, **kwargs):
+    def __init__(self, is_general_admission, with_assimilation, **kwargs):
         self.is_general_admission = is_general_admission
-        self.is_doctorate_admission = is_doctorate_admission
         self.with_assimilation = with_assimilation
         self.education_site = kwargs.pop('education_site', None)
         self.has_ue_nationality = kwargs.pop('has_ue_nationality', None)
@@ -611,9 +610,8 @@ class AccountingForm(forms.Form):
             if not cleaned_data.get('enfant_personnel'):
                 cleaned_data['attestation_enfant_personnel'] = []
 
-        if self.is_general_admission or self.is_doctorate_admission:
-            # Assimilation
-            self.clean_assimilation_fields(cleaned_data)
+        # Assimilation
+        self.clean_assimilation_fields(cleaned_data)
 
         # Bank account
         self.clean_bank_fields(cleaned_data)
