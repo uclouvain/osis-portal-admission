@@ -27,6 +27,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 
@@ -34,6 +35,14 @@ from admission.contrib.forms.specific_question import ConfigurableFormMixin
 class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAddressForm):
     configurable_form_field_name = 'reponses_questions_specifiques'
 
+    copie_titre_sejour = FileUploadField(
+        label=_(
+            "Please provide a copy of the residence permit covering the entire course, including the evaluation "
+            "test (except for courses organised online)."
+        ),
+        max_files=1,
+        required=False,
+    )
     inscription_a_titre = forms.ChoiceField(
         choices=ChoixInscriptionATitre.choices(),
         label=_('Are you registering as'),

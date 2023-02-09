@@ -24,7 +24,8 @@
 #
 # ##############################################################################
 from datetime import datetime
-from unittest.mock import patch
+from unittest import mock
+from unittest.mock import patch, ANY
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
@@ -444,6 +445,50 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),
         self.assertEqual(initial_data.get('type_adresse_facturation'), 'RESIDENTIEL')
 
+    def test_post_page_enrolment_with_residence_permit(self):
+        mock_retrieve_proposition = self.mock_proposition_api.return_value.retrieve_continuing_education_proposition
+        mock_retrieve_proposition.return_value.pays_nationalite_ue = True
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+                'specific_questions-copie_titre_sejour_0': ['file-token'],
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_continue_command={
+                'reponses_questions_specifiques': ANY,
+                'inscription_a_titre': ANY,
+                'copie_titre_sejour': [],
+            },
+            **self.default_kwargs,
+        )
+
+        mock_retrieve_proposition.return_value.pays_nationalite_ue = False
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+                'specific_questions-copie_titre_sejour_0': ['file-token'],
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_continue_command={
+                'reponses_questions_specifiques': ANY,
+                'inscription_a_titre': ANY,
+                'copie_titre_sejour': ['file-token'],
+            },
+            **self.default_kwargs,
+        )
+
     def test_post_page_enrolment_as_private(self):
         response = self.client.post(
             self.url,
@@ -459,6 +504,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
             modifier_questions_specifiques_formation_continue_command={
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+                'copie_titre_sejour': [],
             },
             **self.default_kwargs,
         )
@@ -488,6 +534,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'numero_tva_entreprise': '1234A',
                 'adresse_mail_professionnelle': 'jane.doe@example.be',
                 'type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
+                'copie_titre_sejour': [],
             },
             **self.default_kwargs,
         )
@@ -533,6 +580,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_facturation_destinataire': 'Jane Doe',
                 'adresse_facturation_boite_postale': 'PB1',
                 'adresse_facturation_lieu_dit': 'Avant',
+                'copie_titre_sejour': [],
             },
             **self.default_kwargs,
         )
@@ -578,6 +626,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_facturation_destinataire': 'Jane Doe',
                 'adresse_facturation_boite_postale': 'PB1',
                 'adresse_facturation_lieu_dit': 'Avant',
+                'copie_titre_sejour': [],
             },
             **self.default_kwargs,
         )
