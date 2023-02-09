@@ -203,7 +203,6 @@ TAB_TREES = {
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('specific-questions', _('Specific questions')),
-            Tab('accounting', _('Accounting')),
         ],
         Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
