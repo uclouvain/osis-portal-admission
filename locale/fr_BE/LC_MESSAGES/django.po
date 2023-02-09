@@ -2723,6 +2723,9 @@ msgstr "Parler"
 msgid "Specific questions"
 msgstr "Questions spécifiques"
 
+msgid "Specificities"
+msgstr "Spécificités"
+
 msgid "Specify the employer and your function"
 msgstr "Indiquer l'employeur et votre fonction"
 

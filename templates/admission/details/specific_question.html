@@ -27,7 +27,7 @@
 
 {% block tab_content %}
   {% if view.is_continuing %}
-    {% panel _('Specific questions') %}
+    {% panel _('Specificities') %}
       {% field_data _('You are registering as') admission.inscription_a_titre|enum_display:'ChoixInscriptionATitre' %}
       {% if admission.inscription_a_titre == 'PROFESSIONNEL' %}
         {% field_data _('Head office name') admission.nom_siege_social %}

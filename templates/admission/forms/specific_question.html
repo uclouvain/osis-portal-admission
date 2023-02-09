@@ -30,7 +30,7 @@
   {% with form=forms.0 %}
     {% bootstrap_form_errors form %}
     {% if view.is_continuing %}
-      {% panel _('Specific questions') %}
+      {% panel _('Specificities') %}
         {% bootstrap_field form.inscription_a_titre %}
           <div id="professional-container">
           {% bootstrap_field form.nom_siege_social placeholder='' %}
@@ -86,7 +86,7 @@
         {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
       {% endpanel %}
     {% elif form.specific_question_answers.field.fields %}
-      {% panel _('Specific questions') %}
+      {% panel _('Specificities') %}
         {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
       {% endpanel %}
     {% endif %}

@@ -2467,6 +2467,9 @@ msgstr ""
 msgid "Specific questions"
 msgstr ""
 
+msgid "Specificities"
+msgstr ""
+
 msgid "Specify the employer and your function"
 msgstr ""
 
