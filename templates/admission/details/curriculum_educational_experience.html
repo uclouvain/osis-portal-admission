@@ -66,6 +66,11 @@
             {% field_data _('Did you graduate from this training?') experience.obtained_diploma|yesno:_("Yes,No,") %}
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-6">
+            {% field_data _('Graduate degree') experience.graduate_degree %}
+          </div>
+        </div>
       {% else %}
 
         {% if is_foreign_experience %}

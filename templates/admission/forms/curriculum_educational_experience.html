@@ -173,7 +173,7 @@
       </div>
 
       <div class="flex-container align-top diploma-year-field">
-        <div class="flex-1 required_field">
+        <div class="flex-1{% if not view.is_continuing %} required_field{% endif %}">
           {% bootstrap_field base_form.graduate_degree %}
         </div>
         <div class="flex-1 required_field translated-fields">

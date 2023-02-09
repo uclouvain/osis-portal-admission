@@ -350,6 +350,7 @@ EDUCATIONAL_EXPERIENCE_BASE_FIELDS = {
     'other_program',
     'education_name',
     'obtained_diploma',
+    'graduate_degree',
 }
 
 EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS = {
@@ -357,7 +358,6 @@ EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS = {
     'linguistic_regime',
     'transcript_type',
     'obtained_grade',
-    'graduate_degree',
     'graduate_degree_translation',
     'transcript',
     'transcript_translation',
