@@ -39,7 +39,6 @@ class BaseAdmissionAccountingView(LoadDossierViewMixin):
     retrieve_accounting = {
         'doctorate': AdmissionPropositionService.retrieve_doctorate_accounting,
         'general-education': AdmissionPropositionService.retrieve_general_accounting,
-        'continuing-education': AdmissionPropositionService.retrieve_continuing_accounting,
     }
 
     @cached_property
@@ -62,7 +61,7 @@ class BaseAdmissionAccountingView(LoadDossierViewMixin):
 
     @property
     def with_assimilation(self):
-        return (self.is_general or self.is_doctorate) and self.accounting.get('a_nationalite_ue') is False
+        return self.accounting.get('a_nationalite_ue') is False
 
 
 class AdmissionAccountingDetailView(BaseAdmissionAccountingView, TemplateView):
