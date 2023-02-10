@@ -1335,6 +1335,9 @@ msgstr "Quitter sans enregistrer"
 msgid "Expected date of graduation (signed document)"
 msgstr "Date (prévue) de délivrance du diplôme (document signé)"
 
+msgid "External"
+msgstr "Externe"
+
 msgid ""
 "Extract from the Doctoral Regulations (Article 2.1):<br /> \"Pre-admission "
 "is an optional stage of the doctoral programme. It aims to allow the "
@@ -1862,6 +1865,9 @@ msgstr "Nom de l'établissement"
 
 msgid "Institution"
 msgstr "Institution"
+
+msgid "Internal"
+msgstr "Interne"
 
 msgid "Internal comment"
 msgstr "Commentaire interne"
@@ -3476,9 +3482,6 @@ msgstr "les heures sont requises"
 
 msgid "label is required"
 msgstr "un label est requis"
-
-msgid "or add an external person"
-msgstr "ou ajouter une personne externe"
 
 msgid "the person concerned"
 msgstr "la personne concernée"
