@@ -93,18 +93,17 @@
           <div class="col-md-12">
             {% bootstrap_field add_form.type %}
           </div>
-          <div class="col-md-6">
-            <div id="person">
-              {% bootstrap_field add_form.person %}
-              <p><a data-toggle="collapse" href="#external-person">{% trans "or add an external person" %}</a></p>
-            </div>
-            <div id="tutor">
-              {% bootstrap_field add_form.tutor %}
-              <p><a data-toggle="collapse" href="#external-person">{% trans "or add an external person" %}</a></p>
-            </div>
+          <div class="col-md-12">
+            {% bootstrap_field add_form.internal_external %}
           </div>
-          <div class="col-md-6">
-            <div class="panel panel-default collapse{% if add_form.is_bound %} in{% endif %}" id="external-person">
+          <div id="tutor" class="col-md-6">
+            {% bootstrap_field add_form.tutor %}
+          </div>
+          <div id="person" class="col-md-6">
+            {% bootstrap_field add_form.person %}
+          </div>
+          <div class="col-md-6" id="external-person">
+            <div class="panel panel-default">
               <div class="panel-body">
                 {% bootstrap_field add_form.prenom %}
                 {% bootstrap_field add_form.nom %}
@@ -151,10 +150,17 @@
     // Display autocompletion based on member type
     $('#person').length && $('#person').dependsOn({
       'input[name=type]': { values: ['CA_MEMBER'] },
+      'input[name=internal_external]': { values: ['INTERNAL'] },
     }, { duration: 0 });
     $('#tutor').length && $('#tutor').dependsOn({
       'input[name=type]': { values: ['MAIN_PROMOTER', 'PROMOTER'] },
+      'input[name=internal_external]': { values: ['INTERNAL'] },
     }, { duration: 0 });
+
+    $('#external-person').length && $('#external-person').dependsOn({
+      'input[name=internal_external]': { values: ['EXTERNAL'] },
+    }, { duration: 0 });
+
     // Hide the reason input if the promoter approves the proposition
     $('#id_motif_refus').length && $('#id_motif_refus').dependsOn({
       'input[name="decision"]': {

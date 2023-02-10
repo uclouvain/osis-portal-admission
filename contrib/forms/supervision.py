@@ -54,6 +54,14 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
         choices=ActorType.choices(),
         widget=forms.RadioSelect(),
     )
+    internal_external = forms.ChoiceField(
+        label="",
+        choices=(
+            ("INTERNAL", _("Internal")),
+            ("EXTERNAL", _("External")),
+        ),
+        widget=forms.RadioSelect(),
+    )
     tutor = forms.CharField(
         label=_("Search a tutor by name"),
         widget=autocomplete.ListSelect2(url="admission:autocomplete:tutor"),

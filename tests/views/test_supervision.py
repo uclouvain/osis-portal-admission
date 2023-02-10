@@ -178,6 +178,7 @@ class SupervisionTestCase(TestCase):
 
         data = {
             'type': ActorType.CA_MEMBER.name,
+            'internal_external': "INTERNAL",
             'person': "0123456978",
             'email': "test@test.fr",
         }
@@ -193,6 +194,7 @@ class SupervisionTestCase(TestCase):
 
         data = {
             'type': ActorType.PROMOTER.name,
+            'internal_external': "INTERNAL",
             'tutor': "0123456978",
             'email': "test@test.fr",
         }
@@ -203,6 +205,7 @@ class SupervisionTestCase(TestCase):
 
         data = {
             'type': ActorType.PROMOTER.name,
+            'internal_external': "INTERNAL",
             'email': "test@test.fr",
         }
         response = self.client.post(self.update_url, data)
@@ -211,7 +214,12 @@ class SupervisionTestCase(TestCase):
         self.assertIn('prenom', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
 
-        response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name, 'tutor': "0123456978"})
+        data = {
+            'type': ActorType.PROMOTER.name,
+            'internal_external': "INTERNAL",
+            'tutor': "0123456978",
+        }
+        response = self.client.post(self.update_url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_api.return_value.add_member.assert_called()
 

@@ -1191,6 +1191,9 @@ msgstr ""
 msgid "Expected date of graduation (signed document)"
 msgstr ""
 
+msgid "External"
+msgstr ""
+
 msgid ""
 "Extract from the Doctoral Regulations (Article 2.1):<br /> \"Pre-admission "
 "is an optional stage of the doctoral programme. It aims to allow the "
@@ -1633,6 +1636,9 @@ msgid "Institute name"
 msgstr ""
 
 msgid "Institution"
+msgstr ""
+
+msgid "Internal"
 msgstr ""
 
 msgid "Internal comment"
@@ -3115,9 +3121,6 @@ msgid "hours are required"
 msgstr ""
 
 msgid "label is required"
-msgstr ""
-
-msgid "or add an external person"
 msgstr ""
 
 msgid "the person concerned"
