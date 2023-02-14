@@ -319,7 +319,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'pays': 'BE',
             },
             'pays_nationalite': 'FR',
-            'pays_nationalite_ue': True,
+            'pays_nationalite_ue_candidat': True,
             'copie_titre_sejour': [],
         }
         cls.continuing_proposition = Mock(
@@ -361,7 +361,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             ),
             to_dict=lambda: cls.continuing_proposition_dict,
             pays_nationalite='FR',
-            pays_nationalite_ue=True,
+            pays_nationalite_ue_candidat=True,
             copie_titre_sejour=[],
         )
 

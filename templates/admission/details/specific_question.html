@@ -28,7 +28,7 @@
 {% block tab_content %}
   {% if view.is_continuing %}
     {% panel _('Specificities') %}
-      {% if admission.pays_nationalite_ue == False %}
+      {% if admission.pays_nationalite_ue_candidat == False %}
         <p class="alert alert-info text-justify">
           {% blocktranslate trimmed %}
             The certification and short programs (continuing education) do not allow you to obtain a visa and a
@@ -68,7 +68,7 @@
       {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
     {% endpanel %}
   {% else %}
-    {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
+    {% multiple_field_data specific_questions admission.reponses_questions_specifiques title=_('Specificities') %}
   {% endif %}
 
   {% if "is_non_resident" in pool_questions %}

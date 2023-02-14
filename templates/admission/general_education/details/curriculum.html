@@ -37,7 +37,7 @@
       {% if display_bachelor_continuation %}
         {% field_data _('Do you want, on the basis of this training, to realize a cycle continuation for the bachelor you are registering for?') admission.continuation_cycle_bachelier|yesno:_('Yes,No,') %}
       {% endif %}
-      {% if display_bachelor_continuation_attestation and admission.continuation_cycle_bachelier %}
+      {% if display_bachelor_continuation_attestation %}
         {% field_data _("Certificate allowing the continuation of studies for a bachelor's degree in veterinary medicine") admission.attestation_continuation_cycle_bachelier %}
       {% endif %}
       {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
