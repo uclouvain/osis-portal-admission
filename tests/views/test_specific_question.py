@@ -447,7 +447,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
 
     def test_post_page_enrolment_with_residence_permit(self):
         mock_retrieve_proposition = self.mock_proposition_api.return_value.retrieve_continuing_education_proposition
-        mock_retrieve_proposition.return_value.pays_nationalite_ue = True
+        mock_retrieve_proposition.return_value.pays_nationalite_ue_candidat = True
         response = self.client.post(
             self.url,
             data={
@@ -468,7 +468,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
             **self.default_kwargs,
         )
 
-        mock_retrieve_proposition.return_value.pays_nationalite_ue = False
+        mock_retrieve_proposition.return_value.pays_nationalite_ue_candidat = False
         response = self.client.post(
             self.url,
             data={

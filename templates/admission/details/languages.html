@@ -33,9 +33,7 @@
         {% field_data _("Listening comprehension") language_knowledge.listening_comprehension %}
         {% field_data _("Speaking ability") language_knowledge.speaking_ability %}
         {% field_data _("Writing ability") language_knowledge.writing_ability %}
-        {% if language_knowledge.certificate %}
-          {% field_data _("Certificate of language knowledge") language_knowledge.certificate %}
-        {% endif %}
+        {% field_data _("Certificate of language knowledge") language_knowledge.certificate %}
       {% endpanel %}
     {% endfor %}
   {% else %}
