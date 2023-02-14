@@ -24,12 +24,6 @@
 #
 # ##############################################################################
 
-__all__ = [
-    'DoctorateAdmissionExternalConfirmView',
-    'DoctorateAdmissionExternalApprovalView',
-]
-__namespace__ = {'doctorate': 'public/doctorate/<uuid:pk>'}
-
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import resolve_url
@@ -41,6 +35,12 @@ from admission.contrib.enums import DecisionApprovalEnum
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionSupervisionService
+
+__all__ = [
+    'DoctorateAdmissionExternalConfirmView',
+    'DoctorateAdmissionExternalApprovalView',
+]
+__namespace__ = {'public-doctorate': 'public/doctorate/<uuid:pk>'}
 
 
 class DoctorateAdmissionExternalApprovalView(UserPassesTestMixin, WebServiceFormMixin, FormView):
@@ -92,7 +92,7 @@ class DoctorateAdmissionExternalApprovalView(UserPassesTestMixin, WebServiceForm
 
     def get_success_url(self):
         messages.info(self.request, _("Your decision has been saved."))
-        return resolve_url('admission:doctorate:external-confirm', pk=self.kwargs['pk'])
+        return resolve_url('admission:public-doctorate:external-confirm', pk=self.kwargs['pk'])
 
 
 class DoctorateAdmissionExternalConfirmView(TemplateView):

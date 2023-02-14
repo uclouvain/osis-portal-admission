@@ -146,10 +146,10 @@
 
   {% url base_namespace|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
   {% url base_namespace|add:":update:"|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
-  {% get_current_tab as current_tab %}
-  {% current_subtabs as subtabs %}
 
   {% block tabs_content %}
+    {% get_current_tab as current_tab %}
+
     {% if form.visible_fields or force_form %}
       {# Display the form if needed #}
       <form class="osis-form" method="post" action="">
@@ -165,6 +165,7 @@
     {% endif %}
 
   {% block form_content %}
+    {% current_subtabs as subtabs %}
 
     {% admission_tabs admission with_submit=form.visible_fields %}
 
