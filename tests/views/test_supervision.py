@@ -53,7 +53,11 @@ class SupervisionTestCase(TestCase):
         self.client.force_login(self.person.user)
         self.update_url = resolve_url("admission:doctorate:update:supervision", pk=self.pk)
         self.detail_url = resolve_url("admission:doctorate:supervision", pk=self.pk)
-        self.external_url = resolve_url("admission:doctorate:external-approval", pk=self.pk, token="promoter-token")
+        self.external_url = resolve_url(
+            "admission:public-doctorate:external-approval",
+            pk=self.pk,
+            token="promoter-token",
+        )
         self.default_kwargs = {
             'accept_language': ANY,
             'x_user_first_name': ANY,

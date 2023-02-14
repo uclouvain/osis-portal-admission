@@ -92,7 +92,8 @@ class WebServiceFormMixin:
                 # We are on an admission in progress, as candidate
                 hasattr(self, 'admission')
                 and self.admission.matricule_candidat == self.request.user.person.global_id
-                and self.admission.statut == ChoixStatutProposition.IN_PROGRESS.name
+                and self.admission.statut
+                in [ChoixStatutProposition.IN_PROGRESS.name, ChoixStatutProposition.SIGNING_IN_PROGRESS.name]
             )
         ):
             tab_to_redirect = tab_mapping[
