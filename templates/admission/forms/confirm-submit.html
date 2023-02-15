@@ -214,7 +214,7 @@
 
         {% panel _("Approvals") %}
           {% for field in confirmation_form %}
-            {% if field.name != 'hors_delai' and field.name != 'justificatifs' and field.name != 'declaration_sur_lhonneur' %}
+            {% if field.name not in special_fields %}
               {% bootstrap_field field %}
             {% endif %}
           {% endfor %}
@@ -225,6 +225,9 @@
           {% panel _("Undertake and declaration") %}
             {% bootstrap_field confirmation_form.justificatifs %}
             {% bootstrap_field_no_post_widget_render confirmation_form.declaration_sur_lhonneur %}
+            {% if confirmation_form.droits_inscription_iufc %}
+              {% bootstrap_field confirmation_form.droits_inscription_iufc %}
+            {% endif %}
           {% endpanel %}
         {% endif %}
 
