@@ -43,7 +43,6 @@ from admission.contrib.enums import (
     LienParente,
     TrainingType,
     TypeSituationAssimilation,
-    dynamic_person_concerned_lowercase,
 )
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import ChoixStatutProposition, ChoixStatutPropositionFormationGenerale
@@ -217,8 +216,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         # Check context data
         self.assertEqual(response.context['admission'], self.proposition)
         self.assertEqual(response.context['accounting'], self.accounting)
-        self.assertEqual(response.context['formatted_relationships'], FORMATTED_RELATIONSHIPS)
-        self.assertEqual(response.context['dynamic_person_concerned_lowercase'], dynamic_person_concerned_lowercase)
+        self.assertEqual(response.context['formatted_relationship'], 'votre mère')
 
     def test_display_accounting_form(self):
         response = self.client.get(self.update_url)
@@ -642,8 +640,7 @@ class GeneralAccountingViewTestCase(TestCase):
         # Check context data
         self.assertEqual(response.context['admission'], self.proposition)
         self.assertEqual(response.context['accounting'], self.accounting)
-        self.assertEqual(response.context['formatted_relationships'], FORMATTED_RELATIONSHIPS)
-        self.assertEqual(response.context['dynamic_person_concerned_lowercase'], dynamic_person_concerned_lowercase)
+        self.assertEqual(response.context['formatted_relationship'], 'votre mère')
 
     def test_display_accounting_form(self):
         response = self.client.get(self.update_url)

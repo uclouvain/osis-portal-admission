@@ -84,3 +84,15 @@ SuccessfulResults = {
     Result.SUCCESS.name,
     Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
 }
+
+CURRICULUM_ACTIVITY_LABEL = {
+    ActivityType.LANGUAGE_TRAVEL.name: _(
+        'Certificate justifying your activity, mentioning this activity, for the specified period'
+    ),
+    ActivityType.INTERNSHIP.name: _('Training certificate, with dates, justifying the specified period'),
+    ActivityType.UNEMPLOYMENT.name: _(
+        'Unemployment certificate issued by the relevant organisation, justifying the specified period'
+    ),
+    ActivityType.VOLUNTEERING.name: _('Certificate, with dates, justifying the specified period'),
+    ActivityType.WORK.name: _('Employment certificate from the employer, with dates, justifying the specified period'),
+}

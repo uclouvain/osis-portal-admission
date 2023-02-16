@@ -103,12 +103,6 @@ msgid ""
 "completed and accompanied by the annexes mentioned"
 msgstr ""
 
-msgid ""
-"<p> Before sending your application, please review the data you have entered "
-"to ensure that you have not made any errors or omissions. </p> <p>If "
-"everything looks good, you can then submit your application below.</p>"
-msgstr ""
-
 #, python-format
 msgid ""
 "<p> On the basis of the <a href=\"%(url)s\" target=\"_blank\">registration "
@@ -501,6 +495,11 @@ msgstr ""
 msgid "Bank account"
 msgstr ""
 
+msgid ""
+"Before sending your application, please review the data you have entered to "
+"ensure that you have not made any errors or omissions."
+msgstr ""
+
 msgid "Begin date"
 msgstr ""
 
@@ -590,7 +589,7 @@ msgstr ""
 
 msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
-"specified period."
+"specified period"
 msgstr ""
 
 msgid "Certificate of achievement"
@@ -638,7 +637,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Certificate, with dates, justifying the specified period."
+msgid "Certificate, with dates, justifying the specified period"
 msgstr ""
 
 msgid "Check my previous experience"
@@ -799,7 +798,7 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Copy of both sides of your residence permit valid for more than 3 months of "
+"Copy of both sides of the residence permit valid for more than 3 months of "
 "%(person_concerned)s"
 msgstr ""
 
@@ -1138,7 +1137,7 @@ msgstr ""
 
 msgid ""
 "Employment certificate from the employer, with dates, justifying the "
-"specified period."
+"specified period"
 msgstr ""
 
 msgid "End"
@@ -1512,6 +1511,9 @@ msgid ""
 "required by the specific provisions of your doctoral field commission"
 msgstr ""
 
+msgid "If everything looks good, you can then submit your application below."
+msgstr ""
+
 msgid ""
 "If known, indicate here the name of the laboratory, clinical service or "
 "research centre where the thesis will be conducted"
@@ -1569,6 +1571,12 @@ msgstr ""
 msgid ""
 "If you submit the activity, you will no longer be able to modify the "
 "seminar, nor the different activities within it."
+msgstr ""
+
+#, python-format
+msgid ""
+"If you want, you can download a summary of your application <a "
+"href=\"%(pdf_url)s\" target=\"_blank\">here</a>."
 msgstr ""
 
 #, python-format
@@ -1966,6 +1974,9 @@ msgid "PASSED_CONFIRMATION"
 msgstr "Passed confirmation"
 
 msgid "PDF file"
+msgstr ""
+
+msgid "PDF summary"
 msgstr ""
 
 msgid "PHYSICS"
@@ -2759,7 +2770,7 @@ msgstr ""
 msgid "Training"
 msgstr ""
 
-msgid "Training certificate, with dates, justifying the specified period."
+msgid "Training certificate, with dates, justifying the specified period"
 msgstr ""
 
 msgid "Training choice"
@@ -2822,7 +2833,7 @@ msgstr ""
 
 msgid ""
 "Unemployment certificate issued by the relevant organisation, justifying the "
-"specified period."
+"specified period"
 msgstr ""
 
 #, python-format

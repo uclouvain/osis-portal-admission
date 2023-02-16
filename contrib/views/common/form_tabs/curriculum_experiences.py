@@ -43,7 +43,12 @@ from admission.constants import (
     FIRST_YEAR_WITH_ECTS_BE,
     LINGUISTIC_REGIMES_WITHOUT_TRANSLATION,
 )
-from admission.contrib.enums import EvaluationSystem, EvaluationSystemsWithCredits, TranscriptType
+from admission.contrib.enums import (
+    EvaluationSystem,
+    EvaluationSystemsWithCredits,
+    TranscriptType,
+    CURRICULUM_ACTIVITY_LABEL,
+)
 from admission.contrib.forms import (
     FOLLOWING_FORM_SET_PREFIX,
     FORM_SET_PREFIX,
@@ -112,6 +117,11 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
     template_name = 'admission/forms/curriculum_professional_experience.html'
     form_class = AdmissionCurriculumProfessionalExperienceForm
     url_hash = '#non-academic-activities'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['CURRICULUM_ACTIVITY_LABEL'] = CURRICULUM_ACTIVITY_LABEL
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

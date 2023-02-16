@@ -264,6 +264,7 @@ class MixinTestCase(TestCase):
             erreurs=[],
             reponses_questions_specifiques={},
             curriculum=['file1.pdf'],
+            pdf_recapitulatif=[],
         )
 
         cls.general_proposition = GeneralEducationPropositionDTO._from_openapi_data(
@@ -298,6 +299,7 @@ class MixinTestCase(TestCase):
             curriculum=['file1.pdf'],
             creee_le=datetime.datetime(2022, 12, 1),
             equivalence_diplome=['file2.pdf'],
+            pdf_recapitulatif=[],
         )
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(
@@ -330,6 +332,7 @@ class MixinTestCase(TestCase):
             pays_nationalite_candidat='FR',
             pays_nationalite_ue_candidat=True,
             copie_titre_sejour=[],
+            pdf_recapitulatif=[],
         )
 
         cls.api_default_params = {

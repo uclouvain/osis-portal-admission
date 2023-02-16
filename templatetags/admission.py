@@ -437,7 +437,7 @@ def can_update_tab(admission, tab):
 @register.filter
 def add_str(arg1, arg2):
     """Return the concatenation of two arguments."""
-    return str(arg1) + str(arg2)
+    return f'{arg1}{arg2}'
 
 
 @register.simple_tag(takes_context=True)
@@ -720,3 +720,9 @@ def admission_training_type(osis_training_type: str):
 def default_if_none_or_empty(value, arg):
     """If value is None or empty, use given default."""
     return value if value not in EMPTY_VALUES else arg
+
+
+@register.simple_tag
+def interpolate(string, **kwargs):
+    """Interpolate variables inside a string"""
+    return string % kwargs
