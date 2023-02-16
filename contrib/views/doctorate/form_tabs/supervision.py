@@ -66,6 +66,7 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
         return self.render_to_response(context)
 
     def prepare_data(self, data):
+        data.pop('internal_external')
         promoter = data.pop('tutor')
         ca_member = data.pop('person')
         return {

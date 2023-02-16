@@ -225,7 +225,16 @@ class SupervisionTestCase(TestCase):
         }
         response = self.client.post(self.update_url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_api.return_value.add_member.assert_called()
+        self.mock_api.return_value.add_member.assert_called_with(
+            uuid=self.pk,
+            identifier_supervision_actor={
+                'type': ActorType.PROMOTER.name,
+                'matricule': "0123456978",
+                'est_docteur': False,
+                **{field: ANY for field in EXTERNAL_FIELDS},
+            },
+            **self.default_kwargs,
+        )
 
     def test_should_remove_supervision_member(self):
         url = resolve_url(
