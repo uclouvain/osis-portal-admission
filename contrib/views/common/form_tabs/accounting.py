@@ -25,6 +25,7 @@
 # ##############################################################################
 from django.views.generic import FormView
 
+from admission.contrib.enums import LienParente, FORMATTED_RELATIONSHIPS
 from admission.contrib.forms.accounting import AccountingForm
 from admission.contrib.views.common.detail_tabs.accounting import BaseAdmissionAccountingView
 from admission.services.mixins import WebServiceFormMixin
@@ -41,6 +42,12 @@ class DoctorateAdmissionAccountingFormView(BaseAdmissionAccountingView, WebServi
         'doctorate': AdmissionPropositionService.update_doctorate_accounting,
         'general-education': AdmissionPropositionService.update_general_accounting,
     }
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['relationships'] = {elt.name: elt.value for elt in LienParente}
+        context_data['formatted_relationships'] = FORMATTED_RELATIONSHIPS
+        return context_data
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

@@ -71,6 +71,12 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
+        {% if admission.pdf_recapitulatif %}
+          {% url base_namespace|add_str:':pdf-recap' admission.uuid as pdf_url %}
+          <li role="presentation">
+            <a href="{{ pdf_url }}" target="_blank">{% translate 'PDF summary' %}</a>
+          </li>
+        {% endif %}
         {% for parent, subtabs in tab_tree.items %}
           {% for subtab in subtabs %}
             {% include 'admission/admission_tab_entry.html' with admission_uuid=admission.uuid tab=subtab no_status=True %}

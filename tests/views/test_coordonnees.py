@@ -113,9 +113,8 @@ class CoordonneesTestCase(TestCase):
         url = resolve_url('admission:create:coordonnees')
 
         response = self.client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, 'form', 'private_email', FIELD_REQUIRED_MESSAGE)
-        self.mock_person_api.return_value.update_coordonnees.assert_not_called()
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_coordonnees.assert_called()
 
     def test_form_should_be_all_filled(self):
         url = resolve_url('admission:create:coordonnees')
@@ -148,7 +147,7 @@ class CoordonneesTestCase(TestCase):
         last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['postal_code'], "1111")
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['city'], "Louvain-La-Neuve")
-        self.assertEqual(last_call_kwargs['coordonnees']['private_email'], "john@example.org")
+        self.assertEqual(last_call_kwargs['coordonnees']['private_email'], "")
         self.assertIsNone(last_call_kwargs['coordonnees']['contact'])
 
     def test_form_foreign_with_contact_address(self):

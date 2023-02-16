@@ -32,6 +32,7 @@ from django.utils.translation import gettext_lazy as _, ngettext
 from localflavor.generic.forms import BICFormField, IBAN_MIN_LENGTH
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.contrib.enums import dynamic_person_concerned
 from admission.contrib.enums.accounting import (
     TypeSituationAssimilation,
     ChoixAssimilation1,
@@ -53,8 +54,6 @@ from reference.services.iban_validator import (
 
 
 class AccountingForm(forms.Form):
-    dynamic_person_concerned = '<span class="relationship">the person concerned</span>'
-
     # Absence of debt
     attestation_absence_dette_etablissement = FileUploadField(
         label=_('Certificate stating the absence of debts towards the institution attended during the academic year'),
@@ -194,7 +193,7 @@ class AccountingForm(forms.Form):
         widget=forms.RadioSelect,
     )
     sous_type_situation_assimilation_5 = forms.ChoiceField(
-        choices=ChoixAssimilation5.choices(),
+        choices=ChoixAssimilation5.choices_with_interpolation({'person_concerned': dynamic_person_concerned}),
         label=_('Choose among the following proposals'),
         required=False,
         widget=forms.RadioSelect,
@@ -244,7 +243,7 @@ class AccountingForm(forms.Form):
     )
     titre_sejour_3_mois_parent = FileUploadField(
         label=mark_safe(
-            _('Copy of both sides of your residence permit valid for more than 3 months of %(person_concerned)s')
+            _('Copy of both sides of the residence permit valid for more than 3 months of %(person_concerned)s')
             % {'person_concerned': dynamic_person_concerned}
         ),
         required=False,

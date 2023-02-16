@@ -65,7 +65,7 @@
         </div>
       {% endif %}
       {% if experience.type.value != 'OTHER' and not view.is_continuing %}
-        {% field_data _('Certificate') experience.certificate %}
+        {% field_data CURRICULUM_ACTIVITY_LABEL|get_item:experience.type.value experience.certificate %}
       {% endif %}
     </div>
   </div>

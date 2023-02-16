@@ -40,6 +40,7 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
     private_email = forms.EmailField(
         label=__("admission", "Private email"),
         disabled=True,
+        required=False,
     )
     phone_mobile = forms.CharField(
         required=False,

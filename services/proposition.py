@@ -317,6 +317,27 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def retrieve_general_education_pdf_recap(cls, person: Person, uuid):
+        return APIClient().retrieve_general_education_proposition_pdf_recap(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_continuing_education_pdf_recap(cls, person: Person, uuid):
+        return APIClient().retrieve_continuing_education_proposition_pdf_recap(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_doctorate_education_pdf_recap(cls, person: Person, uuid):
+        return APIClient().retrieve_doctorate_education_proposition_pdf_recap(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
