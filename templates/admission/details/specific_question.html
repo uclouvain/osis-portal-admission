@@ -80,7 +80,7 @@
       {% panel _("Registration change") %}
         {% field_data _("Are you currently enrolled in the first year of a bachelor's degree at a college or university in the French Community of Belgium?") pool_questions.is_belgian_bachelor|yesno:_("Yes,No,") %}
         {% if pool_questions.is_belgian_bachelor %}
-          {% field_data _('Would you like to reorient yourself for this academic year at UCLouvain?') pool_questions.is_external_modification|yesno:_("Yes,No,") %}
+          {% field_data _('Would you like to change your registration for this academic year at UCLouvain?') pool_questions.is_external_modification|yesno:_("Yes,No,") %}
           {% if pool_questions.is_external_modification %}
             <p>{% blocktrans trimmed with date=pool_questions.modification_pool_end_date|date:'d/m/Y H:i' %}
               In the case of an external registration change, you must confirm your request before {{ date }}.
@@ -95,7 +95,7 @@
       {% panel _("Reorientation") %}
         {% field_data _("Are you currently enrolled in the first year of a bachelor's degree at a college or university in the French Community of Belgium?") pool_questions.is_belgian_bachelor|yesno:_("Yes,No,") %}
         {% if pool_questions.is_belgian_bachelor %}
-          {% field_data _('Would you like to change your registration for this academic year at UCLouvain?') pool_questions.is_external_reorientation|yesno:_("Yes,No,") %}
+          {% field_data _('Would you like to reorient yourself for this academic year at UCLouvain?') pool_questions.is_external_reorientation|yesno:_("Yes,No,") %}
           {% if pool_questions.is_external_reorientation %}
             <p>{% blocktrans trimmed with date=pool_questions.reorientation_pool_end_date|date:'d/m/Y H:i' %}
               In the case of an external reorientation, you must confirm your request before {{ date }}.

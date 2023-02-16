@@ -61,6 +61,14 @@
       </a>
     {% endif %}
 
+    {% if admission.pdf_recapitulatif %}
+      {% url base_namespace|add_str:':pdf-recap' admission.uuid as pdf_url %}
+      <a class="btn btn-default" href="{{ pdf_url }}" target="_blank">
+        <span class="fas fa-file-pdf"></span>
+        {% trans "PDF summary" %}
+      </a>
+    {% endif %}
+
     {% if admission|can_make_action:'destroy_proposition' %}
       <a class="btn btn-danger" href="{% url base_namespace|add:':cancel' admission.uuid %}">
         {% trans "Cancel" %}

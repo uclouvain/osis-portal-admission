@@ -123,16 +123,6 @@ msgstr ""
 "<a href=\"{url}\" target=_blank\">Formulaire de modification d'inscription</"
 "a>, dûment complété et accompagné des annexes mentionnées"
 
-msgid ""
-"<p> Before sending your application, please review the data you have entered "
-"to ensure that you have not made any errors or omissions. </p> <p>If "
-"everything looks good, you can then submit your application below.</p>"
-msgstr ""
-"<p>Avant d'envoyer votre demande, relisez les données que vous avez "
-"introduites afin de vous assurer de ne pas avoir fait d'erreur ou d'omission."
-"</p> <p>Si tout vous paraît correct, vous pourrez alors envoyer votre "
-"demande d'inscription ci-dessous.</p>"
-
 #, python-format
 msgid ""
 "<p> On the basis of the <a href=\"%(url)s\" target=\"_blank\">registration "
@@ -572,6 +562,13 @@ msgstr "Retour à la liste"
 msgid "Bank account"
 msgstr "Compte bancaire"
 
+msgid ""
+"Before sending your application, please review the data you have entered to "
+"ensure that you have not made any errors or omissions."
+msgstr ""
+"Avant d'envoyer votre demande, relisez les données que vous avez introduites "
+"afin de vous assurer de ne pas avoir fait d'erreur ou d'omission."
+
 msgid "Begin date"
 msgstr "Date de début"
 
@@ -657,14 +654,14 @@ msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Certificate"
-msgstr "Certificat"
+msgstr "Attestation"
 
 msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
-"specified period."
+"specified period"
 msgstr ""
 "Attestation justifiant votre activité, mentionnant cette activité, pour la "
-"période concernée."
+"période concernée"
 
 msgid "Certificate of achievement"
 msgstr "Attestation de réussite"
@@ -722,8 +719,8 @@ msgstr[1] ""
 "Attestations stipulant l'absence de dettes vis-à-vis des établissements "
 "fréquentés durant l'année académique %(academic_year)s : %(names)s."
 
-msgid "Certificate, with dates, justifying the specified period."
-msgstr "Attestation, avec mention des dates, justifiant la période concernée."
+msgid "Certificate, with dates, justifying the specified period"
+msgstr "Attestation, avec mention des dates, justifiant la période concernée"
 
 msgid "Check my previous experience"
 msgstr "Vérifier mon parcours antérieur"
@@ -901,7 +898,7 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Copy of both sides of your residence permit valid for more than 3 months of "
+"Copy of both sides of the residence permit valid for more than 3 months of "
 "%(person_concerned)s"
 msgstr ""
 "Copie recto-verso du titre de séjour d’une validité supérieure à 3 mois de "
@@ -1276,10 +1273,10 @@ msgstr "Employeur"
 
 msgid ""
 "Employment certificate from the employer, with dates, justifying the "
-"specified period."
+"specified period"
 msgstr ""
 "Attestation de travail émanant de l'employeur, avec mention des dates, "
-"justifiant la période concernée."
+"justifiant la période concernée"
 
 msgid "End"
 msgstr "Fin"
@@ -1698,6 +1695,11 @@ msgstr ""
 "format exigé par les dispositions particulières de votre commission "
 "doctorale de domaine"
 
+msgid "If everything looks good, you can then submit your application below."
+msgstr ""
+"Si tout vous paraît correct, vous pourrez alors envoyer votre demande "
+"d'inscription ci-dessous"
+
 msgid ""
 "If known, indicate here the name of the laboratory, clinical service or "
 "research centre where the thesis will be conducted"
@@ -1778,6 +1780,14 @@ msgid ""
 msgstr ""
 "Si vous soumettez l'activité, vous ne pourrez plus modifier le séminaire, ni "
 "les différentes activités en faisant partie."
+
+#, python-format
+msgid ""
+"If you want, you can download a summary of your application <a "
+"href=\"%(pdf_url)s\" target=\"_blank\">here</a>."
+msgstr ""
+"Si vous le souhaitez, vous pouvez récupérer un résumé de votre demande <a "
+"href=\"%(pdf_url)s\" target=\"_blank\">ici</a>."
 
 #, python-format
 msgid ""
@@ -2200,6 +2210,9 @@ msgstr "Épreuve de confirmation réussie"
 
 msgid "PDF file"
 msgstr "Fichier PDF"
+
+msgid "PDF summary"
+msgstr "Résumé PDF"
 
 msgid "PHYSICS"
 msgstr "Physique"
@@ -3066,10 +3079,9 @@ msgstr "Volume horaire total"
 msgid "Training"
 msgstr "Formation"
 
-msgid "Training certificate, with dates, justifying the specified period."
+msgid "Training certificate, with dates, justifying the specified period"
 msgstr ""
-"Attestation de stage, avec mention des dates, justifiant la période "
-"concernée."
+"Attestation de stage, avec mention des dates, justifiant la période concernée"
 
 msgid "Training choice"
 msgstr "Choix de formation"
@@ -3131,10 +3143,10 @@ msgstr "Chômage"
 
 msgid ""
 "Unemployment certificate issued by the relevant organisation, justifying the "
-"specified period."
+"specified period"
 msgstr ""
 "Attestation de chômage émise par l'organisme concerné, justifiant la période "
-"concernée."
+"concernée"
 
 #, python-format
 msgid ""

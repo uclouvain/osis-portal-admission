@@ -50,6 +50,7 @@ from admission.templatetags.admission import (
     has_error_in_tab,
     strip,
     multiple_field_data,
+    interpolate,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
@@ -431,3 +432,9 @@ class MultipleFieldDataTestCase(TestCase):
         self.assertEqual(result['fields'][0].value, 'The very short message.')
         self.assertEqual(result['fields'][1].value, None)
         self.assertEqual(result['fields'][2].value, [])
+
+    def test_interpolate_a_string(self):
+        self.assertEqual(
+            interpolate('my-str-with-value: %(value)s', value=1),
+            'my-str-with-value: 1',
+        )

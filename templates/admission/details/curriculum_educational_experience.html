@@ -125,10 +125,10 @@
                     </td>
                     {% if experience.evaluation_system_with_credits %}
                       <td>
-                        {{ experience_year.registered_credit_number }}
+                        {{ experience_year.registered_credit_number|default:_('Not specified') }}
                       </td>
                       <td>
-                        {{ experience_year.acquired_credit_number }}
+                        {{ experience_year.acquired_credit_number|default:_('Not specified') }}
                       </td>
                     {% endif %}
                     <td>

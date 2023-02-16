@@ -23,40 +23,40 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.functional import cached_property
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView
+from osis_document.api.utils import get_remote_token
 
-from admission.contrib.enums.accounting import FORMATTED_RELATIONSHIPS
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.proposition import AdmissionPropositionService
+from osis_document.utils import get_file_url
 
-__all__ = ['AdmissionAccountingDetailView']
+__all__ = [
+    'AdmissionPDFRecapExportView',
+]
+__namespace__ = False
 
 
-class BaseAdmissionAccountingView(LoadDossierViewMixin):
-    retrieve_accounting = {
-        'doctorate': AdmissionPropositionService.retrieve_doctorate_accounting,
-        'general-education': AdmissionPropositionService.retrieve_general_accounting,
+class AdmissionPDFRecapExportView(LoadDossierViewMixin, RedirectView):
+    urlpatterns = 'pdf-recap'
+
+    service_mapping = {
+        'doctorate': AdmissionPropositionService.retrieve_doctorate_education_pdf_recap,
+        'general-education': AdmissionPropositionService.retrieve_general_education_pdf_recap,
+        'continuing-education': AdmissionPropositionService.retrieve_continuing_education_pdf_recap,
     }
 
-    @cached_property
-    def accounting(self):
-        return self.retrieve_accounting[self.current_context](
-            person=self.request.user.person,
-            uuid=self.admission_uuid,
-        ).to_dict()
+    def get(self, request, *args, **kwargs):
+        reading_token = (
+            # use the saved pdf if there is one
+            get_remote_token(self.admission.pdf_recapitulatif[0])
+            if self.admission.pdf_recapitulatif
+            # otherwise generate a new pdf
+            else self.service_mapping[self.current_context](
+                person=self.request.user.person,
+                uuid=self.admission_uuid,
+            ).token
+        )
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['accounting'] = self.accounting
-        context_data['formatted_relationship'] = FORMATTED_RELATIONSHIPS.get(self.accounting['relation_parente'])
-        context_data['with_assimilation'] = self.with_assimilation
-        return context_data
+        self.url = get_file_url(reading_token)
 
-    @property
-    def with_assimilation(self):
-        return self.accounting.get('a_nationalite_ue') is False
-
-
-class AdmissionAccountingDetailView(BaseAdmissionAccountingView, TemplateView):
-    template_name = 'admission/details/accounting.html'
+        return super().get(request, *args, **kwargs)
