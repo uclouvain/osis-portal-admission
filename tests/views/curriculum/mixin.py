@@ -29,28 +29,42 @@ from unittest.mock import ANY, patch, MagicMock
 
 from django.test import TestCase, override_settings
 from osis_admission_sdk.model.action_link import ActionLink
-
-from admission.contrib.enums.training_choice import TrainingType
-from admission.contrib.forms import PDF_MIME_TYPE
-from admission.tests import get_paginated_years
+from osis_admission_sdk.model.activity_sector import ActivitySector
+from osis_admission_sdk.model.activity_type import ActivityType
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
-from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
-from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
-from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
-
-from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
-from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
-
-from osis_admission_sdk.model.proposition_search_doctorat import PropositionSearchDoctorat
-
-from osis_admission_sdk.model.educational_experience_educationalexperienceyear_set import (
-    EducationalExperienceEducationalexperienceyearSet,
-)
-
+from osis_admission_sdk.model.continuing_education_proposition_dto_links import ContinuingEducationPropositionDTOLinks
+from osis_admission_sdk.model.curriculum_details_educational_experiences import CurriculumDetailsEducationalExperiences
 from osis_admission_sdk.model.curriculum_details_educationalexperienceyear_set import (
     CurriculumDetailsEducationalexperienceyearSet,
 )
+from osis_admission_sdk.model.curriculum_details_professional_experiences import (
+    CurriculumDetailsProfessionalExperiences,
+)
+from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
+from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
+from osis_admission_sdk.model.educational_experience import EducationalExperience
+from osis_admission_sdk.model.educational_experience_educationalexperienceyear_set import (
+    EducationalExperienceEducationalexperienceyearSet,
+)
+from osis_admission_sdk.model.evaluation_system import EvaluationSystem
+from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
+from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
+from osis_admission_sdk.model.grade import Grade
+from osis_admission_sdk.model.professional_experience import ProfessionalExperience
+from osis_admission_sdk.model.proposition_search_doctorat import PropositionSearchDoctorat
+from osis_admission_sdk.model.proposition_search_formation import PropositionSearchFormation
+from osis_admission_sdk.model.result import Result
+from osis_admission_sdk.model.teaching_type_enum import TeachingTypeEnum
+from osis_admission_sdk.model.transcript_type import TranscriptType
+from osis_reference_sdk.model.academic_year import AcademicYear
+from osis_reference_sdk.model.country import Country
+from osis_reference_sdk.model.diploma import Diploma
+from osis_reference_sdk.model.language import Language
+from osis_reference_sdk.model.paginated_country import PaginatedCountry
 from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
+from osis_reference_sdk.model.paginated_language import PaginatedLanguage
+from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
+from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import (
@@ -58,36 +72,10 @@ from admission.contrib.enums.projet import (
     ChoixStatutPropositionFormationGenerale,
     ChoixStatutPropositionFormationContinue,
 )
-from osis_admission_sdk.model.activity_sector import ActivitySector
-
-from osis_admission_sdk.model.activity_type import ActivityType
-
-from osis_admission_sdk.model.evaluation_system import EvaluationSystem
-from osis_admission_sdk.model.grade import Grade
-from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-from osis_admission_sdk.model.proposition_search_formation import PropositionSearchFormation
-from osis_admission_sdk.model.result import Result
-from osis_admission_sdk.model.teaching_type_enum import TeachingTypeEnum
-
-from osis_admission_sdk.model.transcript_type import TranscriptType
-from osis_reference_sdk.model.country import Country
-from osis_reference_sdk.model.language import Language
-
-from osis_admission_sdk.model.curriculum_details_professional_experiences import (
-    CurriculumDetailsProfessionalExperiences,
-)
-
-from osis_admission_sdk.model.curriculum_details_educational_experiences import CurriculumDetailsEducationalExperiences
-from osis_reference_sdk.model.academic_year import AcademicYear
-from osis_reference_sdk.model.paginated_country import PaginatedCountry
-from osis_reference_sdk.model.paginated_language import PaginatedLanguage
-
-from osis_admission_sdk.model.professional_experience import ProfessionalExperience
-from osis_reference_sdk.model.diploma import Diploma
-
+from admission.contrib.enums.training_choice import TrainingType
+from admission.contrib.forms import PDF_MIME_TYPE
+from admission.tests import get_paginated_years
 from base.tests.factories.person import PersonFactory
-
-from osis_admission_sdk.model.educational_experience import EducationalExperience
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -117,7 +105,14 @@ class MixinTestCase(TestCase):
         cls.second_diploma = Diploma(uuid=str(uuid.uuid4()), title="Biology")
 
         # Institute
-        cls.institute = SuperiorNonUniversity(uuid=str(uuid.uuid4()), name="Institute of Technology")
+        cls.institute = SuperiorNonUniversity(
+            uuid=str(uuid.uuid4()),
+            name="Institute of Technology",
+            city="Louvain-la-Neuve",
+            zipcode="1348",
+            street="Boulevard de l'Université",
+            street_number="1",
+        )
 
         # Academic years
         cls.academic_year_2018 = AcademicYear(
@@ -193,6 +188,7 @@ class MixinTestCase(TestCase):
             ],
             country=cls.be_country.iso_code,
             valuated_from_trainings=[],
+            obtained_diploma=True,
         )
         cls.foreign_lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
             uuid=cls.educational_experience.uuid,
@@ -207,6 +203,7 @@ class MixinTestCase(TestCase):
             ],
             country=cls.not_ue_country.iso_code,
             valuated_from_trainings=[],
+            obtained_diploma=True,
         )
 
         cls.professional_experience = ProfessionalExperience._from_openapi_data(
@@ -323,7 +320,7 @@ class MixinTestCase(TestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
-            links=GeneralEducationPropositionDTOLinks(
+            links=ContinuingEducationPropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
             ),
@@ -332,6 +329,9 @@ class MixinTestCase(TestCase):
             curriculum=['file1.pdf'],
             creee_le=datetime.datetime(2022, 12, 1),
             equivalence_diplome=['file2.pdf'],
+            pays_nationalite_candidat='FR',
+            pays_nationalite_ue_candidat=True,
+            copie_titre_sejour=[],
         )
 
         cls.api_default_params = {

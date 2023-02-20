@@ -116,6 +116,12 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
             if get_language() == settings.LANGUAGE_CODE
             else "https://uclouvain.be/en/study/inscriptions/calendrier-inscriptions.html"
         )
+        context['special_fields'] = [
+            "hors_delai",
+            "justificatifs",
+            "declaration_sur_lhonneur",
+            "droits_inscription_iufc",
+        ]
 
         return context
 

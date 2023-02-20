@@ -143,11 +143,6 @@ class PoolQuestionsForm(forms.Form):
                     'is_external_modification',
                     self.fields['is_external_modification'].error_messages['required'],
                 )
-            elif data['is_external_modification'] and not data.get('registration_change_form'):
-                self.add_error(
-                    'registration_change_form',
-                    self.fields['registration_change_form'].error_messages['min_files'],
-                )
             elif not data['is_external_modification']:
                 data['registration_change_form'] = []
 
@@ -157,11 +152,6 @@ class PoolQuestionsForm(forms.Form):
                 self.add_error(
                     'is_external_reorientation',
                     self.fields['is_external_reorientation'].error_messages['required'],
-                )
-            elif data['is_external_reorientation'] and not data.get('regular_registration_proof'):
-                self.add_error(
-                    'regular_registration_proof',
-                    self.fields['regular_registration_proof'].error_messages['min_files'],
                 )
             elif not data['is_external_reorientation']:
                 data['regular_registration_proof'] = []

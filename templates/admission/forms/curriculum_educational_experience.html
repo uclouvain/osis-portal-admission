@@ -2,27 +2,27 @@
 {% load bootstrap3 i18n static admission %}
 
 {% comment "License" %}
-* OSIS stands for Open Student Information System. It's an application
-* designed to manage the core business of higher education institutions,
-* such as universities, faculties, institutes and professional schools.
-* The core business involves the administration of students, teachers,
-* courses, programs and so on.
-*
-* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* A copy of this license - GNU General Public License - is available
-* at the root of the source code of this program.  If not,
-* see http://www.gnu.org/licenses/.
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block form %}
@@ -173,7 +173,7 @@
       </div>
 
       <div class="flex-container align-top diploma-year-field">
-        <div class="flex-1 required_field">
+        <div class="flex-1{% if not view.is_continuing %} required_field{% endif %}">
           {% bootstrap_field base_form.graduate_degree %}
         </div>
         <div class="flex-1 required_field translated-fields">
@@ -182,6 +182,11 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block submit_and_continue_content %}
+  <i class="fa-solid fa-backward-step"></i>
+  {% trans "Save and come back" %}
 {% endblock %}
 
 {% block extra_content %}
@@ -236,7 +241,7 @@
 {% endblock %}
 
 {% block script %}
-  {{ base_form.media }}
+  {# {{ base_form.media }} Already displayed by form.media, which is the same as base_form #}
   <script type="application/javascript">
       $(function () {
           const startSelect = $('#id_base_form-start');
@@ -396,9 +401,11 @@
           {# Display / hide the fields depending on the values of other fields #}
 
           {# Institute fields #}
-          $('#id_base_form-institute').dependsOn({
-              '#id_base_form-other_institute': { checked: false },
-          }, { hide: false, });
+          {% if not base_form.institute.field.disabled %}
+            $('#id_base_form-institute').dependsOn({
+                '#id_base_form-other_institute': { checked: false },
+            }, { hide: false, });
+          {% endif %}
 
           $('#other-institute').dependsOn({
               '#id_base_form-other_institute': { checked: true },
@@ -409,9 +416,11 @@
               '#id_base_form-country': { values: [beIsoCode] },
           });
 
-          $('#id_base_form-program').dependsOn({
-              '#id_base_form-other_program': { checked: false },
-          }, { hide: false, });
+          {% if not base_form.program.field.disabled %}
+            $('#id_base_form-program').dependsOn({
+                '#id_base_form-other_program': { checked: false },
+            }, { hide: false, });
+          {% endif %}
 
           $('#other-program').dependsOn({
               '#id_base_form-country': { values: [beIsoCode] },

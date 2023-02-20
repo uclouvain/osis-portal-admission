@@ -40,13 +40,11 @@ class DoctorateAdmissionAccountingFormView(BaseAdmissionAccountingView, WebServi
     update_accounting = {
         'doctorate': AdmissionPropositionService.update_doctorate_accounting,
         'general-education': AdmissionPropositionService.update_general_accounting,
-        'continuing-education': AdmissionPropositionService.update_continuing_accounting,
     }
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['is_general_admission'] = self.is_general
-        kwargs['is_doctorate_admission'] = self.is_doctorate
         kwargs['with_assimilation'] = self.with_assimilation
         if self.is_general:
             kwargs['education_site'] = self.admission.formation.campus

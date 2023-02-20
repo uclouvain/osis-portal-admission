@@ -28,7 +28,8 @@
 {% comment "Usage" %}
   `tab_layout.html` gère le layout des formulaires et des détails, ceci implique
   - si la variable `form` est présente, le {% block form %} est affiché
-  - si dans `form` il y a des `visible_fields`, la balise <form> est ajoutée
+  - si dans `form` il y a des `visible_fields`, labalise
+  <form> est ajoutée
   ainsi que les boutons de soumission dans les onglets et en bas de page
 {% endcomment %}
 
@@ -38,8 +39,9 @@
   <link href="{% static "admission/admission.css" %}" rel="stylesheet" />
   {% if form %}
     {{ form.media.css }}
+  {% else %}
+    <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
   {% endif %}
-  <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
 {% endblock %}
 
 {% block script %}
@@ -47,8 +49,9 @@
   {{ block.super }}
   {% if form %}
     {{ form.media.js }}
+  {% else %}
+    <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
   {% endif %}
-  <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
   <script src="{% static 'admission/admission.js' %}"></script>
   <script src="{% static 'admission/popover.js' %}"></script>
 {% endblock %}
@@ -93,10 +96,12 @@
         {% trans "Create new admission" %}
       {% endif %}
     </span>
-    <a href="{{ list_url }}" class="pull-right h5 text-primary">
-      <span class="fa fa-stream"></span>
-      {% trans "Back to requests" %}
-    </a>
+    {% if user.is_authenticated %}
+      <a href="{{ list_url }}" class="pull-right h5 text-primary">
+        <span class="fa fa-stream"></span>
+        {% trans "Back to requests" %}
+      </a>
+    {% endif %}
   </div>
 
   {# Well #}
@@ -141,11 +146,11 @@
 
   {% url base_namespace|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
   {% url base_namespace|add:":update:"|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
-  {% get_current_tab as current_tab %}
-  {% current_subtabs as subtabs %}
 
   {% block tabs_content %}
-    {% if form.visible_fields %}
+    {% get_current_tab as current_tab %}
+
+    {% if form.visible_fields or force_form %}
       {# Display the form if needed #}
       <form class="osis-form" method="post" action="">
       {% csrf_token %}
@@ -160,6 +165,7 @@
     {% endif %}
 
   {% block form_content %}
+    {% current_subtabs as subtabs %}
 
     {% admission_tabs admission with_submit=form.visible_fields %}
 
@@ -199,8 +205,10 @@
                   disabled
                   {% endif %}
                 >
-                  <i class="fa-solid fa-forward-step"></i>
-                  {% trans "Save and continue" %}
+                  {% block submit_and_continue_content %}
+                    <i class="fa-solid fa-forward-step"></i>
+                    {% trans "Save and continue" %}
+                  {% endblock %}
                 </button>
               {% endif %}
             {% endblock %}

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ __all__ = [
     'DoctorateAdmissionRemoveActorView',
     'DoctorateAdmissionSetReferencePromoterView',
     'DoctorateAdmissionApprovalByPdfView',
+    'DoctorateAdmissionExternalResendView',
 ]
 __namespace__ = False
 
@@ -89,20 +90,36 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
         kwargs['include_institut_these'] = (
-            # User is a promoter
-            self.person.global_id
-            in [signature['promoteur']['matricule'] for signature in self.supervision['signatures_promoteurs']]
+            # User is the reference promoter
+            self.get_current_member_uuid() == self.supervision['promoteur_reference']
             # institut_these is not yet set
             and not self.admission.institut_these
         )
         return kwargs
 
     def prepare_data(self, data):
-        data["matricule"] = self.person.global_id
+        data["uuid_membre"] = self.get_current_member_uuid()
         if data.get('decision') == DecisionApprovalEnum.APPROVED.name:
             # The reason is useful only if the admission is not approved
             data.pop('motif_refus')
         return data
+
+    def get_current_member_uuid(self):
+        return next(
+            iter(
+                [
+                    signature['promoteur']['uuid']
+                    for signature in self.supervision['signatures_promoteurs']
+                    if self.person.global_id == signature['promoteur']['matricule']
+                ]
+                + [
+                    signature['membre_ca']['uuid']
+                    for signature in self.supervision['signatures_membres_ca']
+                    if self.person.global_id == signature['membre_ca']['matricule']
+                ]
+            ),
+            None,
+        )
 
     def call_webservice(self, data):
         decision = data.pop('decision')
@@ -137,7 +154,7 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
 
 
 class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
-    urlpatterns = {'remove-actor': 'remove-member/<type>/<matricule>'}
+    urlpatterns = {'remove-actor': 'remove-member/<type>/<uuid>'}
     form_class = forms.Form
     template_name = 'admission/doctorate/forms/remove_actor.html'
     actor_type_mapping = {
@@ -155,20 +172,21 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
             context['member'] = self.get_member(supervision)
         except (ApiException, AttributeError, KeyError):
             raise Http404(_('Member not found'))
+        context['force_form'] = True
         return context
 
     def get_member(self, supervision):
         collection_name, attr_name = self.actor_type_mapping[self.kwargs['type']]
         for signature in supervision[collection_name]:
-            person = signature[attr_name]
-            if person['matricule'] == self.kwargs['matricule']:
-                return person
+            member = signature[attr_name]
+            if member['uuid'] == self.kwargs['uuid']:
+                return member
         raise KeyError
 
     def prepare_data(self, data):
         return {
             'type': self.kwargs['type'],
-            'member': self.kwargs['matricule'],
+            'uuid_membre': self.kwargs['uuid'],
         }
 
     def call_webservice(self, data):
@@ -179,13 +197,13 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
 
 
 class DoctorateAdmissionSetReferencePromoterView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
-    urlpatterns = {'set-reference-promoter': 'set-reference-promoter/<matricule>'}
+    urlpatterns = {'set-reference-promoter': 'set-reference-promoter/<uuid>'}
     form_class = forms.Form
 
     def prepare_data(self, data):
         return {
             'uuid_proposition': str(self.kwargs['pk']),
-            'matricule': self.kwargs['matricule'],
+            'uuid_promoteur': self.kwargs['uuid'],
         }
 
     def call_webservice(self, data):
@@ -214,6 +232,32 @@ class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixi
         )
 
     def get_success_url(self):
+        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
+
+    def form_invalid(self, form):
+        return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
+
+
+class DoctorateAdmissionExternalResendView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+    urlpatterns = {'resend-invite': 'resend-invite/<uuid>'}
+    template_name = 'admission/doctorate/forms/external_confirm.html'
+    form_class = forms.Form
+
+    def prepare_data(self, data):
+        return {
+            'uuid_proposition': str(self.kwargs['pk']),
+            'uuid_membre': self.kwargs['uuid'],
+        }
+
+    def call_webservice(self, data):
+        AdmissionSupervisionService.resend_invite(
+            person=self.person,
+            uuid=str(self.kwargs['pk']),
+            **data,
+        )
+
+    def get_success_url(self):
+        messages.info(self.request, _("An invitation has been sent again."))
         return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
     def form_invalid(self, form):

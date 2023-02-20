@@ -1,30 +1,31 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 from datetime import datetime
-from unittest.mock import patch
+from unittest import mock
+from unittest.mock import patch, ANY
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
@@ -33,7 +34,7 @@ from rest_framework import status
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms import PDF_MIME_TYPE
-from admission.tests.views.test_training_choice import AdmissionTrainingChoiceFormViewTestCase
+from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
 
 
 class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -217,8 +218,17 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data=data)
-        self.assertIn('regular_registration_proof', response.context['forms'][1].errors)
+        self.assertRedirects(response, self.url)
 
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': True,
+                'is_external_reorientation': True,
+                'regular_registration_proof': [],
+            },
+            **self.default_kwargs,
+        )
         data = {
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': True,
@@ -304,7 +314,16 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'specific_questions-specific_question_answers_1': 'Answer',
         }
         response = self.client.post(self.url, data)
-        self.assertIn('registration_change_form', response.context['forms'][1].errors)
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_pool_questions.assert_called_with(
+            uuid=self.proposition_uuid,
+            pool_questions={
+                'is_belgian_bachelor': True,
+                'is_external_modification': True,
+                'registration_change_form': [],
+            },
+            **self.default_kwargs,
+        )
 
         data = {
             'pool_questions-is_belgian_bachelor': True,
@@ -426,6 +445,50 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),
         self.assertEqual(initial_data.get('type_adresse_facturation'), 'RESIDENTIEL')
 
+    def test_post_page_enrolment_with_residence_permit(self):
+        mock_retrieve_proposition = self.mock_proposition_api.return_value.retrieve_continuing_education_proposition
+        mock_retrieve_proposition.return_value.pays_nationalite_ue_candidat = True
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+                'specific_questions-copie_titre_sejour_0': ['file-token'],
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_continue_command={
+                'reponses_questions_specifiques': ANY,
+                'inscription_a_titre': ANY,
+                'copie_titre_sejour': [],
+            },
+            **self.default_kwargs,
+        )
+
+        mock_retrieve_proposition.return_value.pays_nationalite_ue_candidat = False
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+                'specific_questions-copie_titre_sejour_0': ['file-token'],
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+        self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_continue_command={
+                'reponses_questions_specifiques': ANY,
+                'inscription_a_titre': ANY,
+                'copie_titre_sejour': ['file-token'],
+            },
+            **self.default_kwargs,
+        )
+
     def test_post_page_enrolment_as_private(self):
         response = self.client.post(
             self.url,
@@ -441,6 +504,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
             modifier_questions_specifiques_formation_continue_command={
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+                'copie_titre_sejour': [],
             },
             **self.default_kwargs,
         )
@@ -470,6 +534,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'numero_tva_entreprise': '1234A',
                 'adresse_mail_professionnelle': 'jane.doe@example.be',
                 'type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
+                'copie_titre_sejour': [],
             },
             **self.default_kwargs,
         )
@@ -515,6 +580,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_facturation_destinataire': 'Jane Doe',
                 'adresse_facturation_boite_postale': 'PB1',
                 'adresse_facturation_lieu_dit': 'Avant',
+                'copie_titre_sejour': [],
             },
             **self.default_kwargs,
         )
@@ -560,6 +626,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_facturation_destinataire': 'Jane Doe',
                 'adresse_facturation_boite_postale': 'PB1',
                 'adresse_facturation_lieu_dit': 'Avant',
+                'copie_titre_sejour': [],
             },
             **self.default_kwargs,
         )

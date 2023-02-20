@@ -1,26 +1,26 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and educational schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 import datetime
@@ -60,6 +60,7 @@ class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
 
         # Check that the right API calls are done
         self.mock_person_api.return_value.retrieve_educational_experience_admission.assert_called()
@@ -196,7 +197,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'base_form-transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
             'base_form-obtained_diploma': True,
             'base_form-obtained_grade': Grade.GREAT_DISTINCTION.name,
-            'base_form-graduate_degree_0': ['f1.pdf'],
+            'base_form-graduate_degree_0': ['f1_new.pdf'],
             'base_form-graduate_degree_translation_0': ['f11.pdf'],
             'base_form-transcript_0': ['f2.pdf'],
             'base_form-transcript_translation_0': ['f22.pdf'],
@@ -260,6 +261,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertContains(response, "dependsOn.min.js", count=1)
 
         # Check that the right API calls are done
         self.mockapi.retrieve_educational_experience_admission.assert_called()
@@ -805,7 +807,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,
-                'graduate_degree': ['f1.pdf'],
+                'graduate_degree': ['f1_new.pdf'],
                 'graduate_degree_translation': [],
                 'transcript': ['f2.pdf'],
                 'transcript_translation': [],
@@ -867,7 +869,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,
-                'graduate_degree': ['f1.pdf'],
+                'graduate_degree': ['f1_new.pdf'],
                 'graduate_degree_translation': [],
                 'transcript': ['f2.pdf'],
                 'transcript_translation': [],
@@ -932,7 +934,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,
-                'graduate_degree': ['f1.pdf'],
+                'graduate_degree': ['f1_new.pdf'],
                 'graduate_degree_translation': [],
                 'transcript': ['f2.pdf'],
                 'transcript_translation': [],
@@ -998,7 +1000,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,
-                'graduate_degree': ['f1.pdf'],
+                'graduate_degree': ['f1_new.pdf'],
                 'graduate_degree_translation': [],
                 'transcript': ['f2.pdf'],
                 'transcript_translation': [],
@@ -1206,7 +1208,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,
-                'graduate_degree': ['f1.pdf'],
+                'graduate_degree': ['f1_new.pdf'],
                 'graduate_degree_translation': ['f11.pdf'],
                 'transcript': ['f2.pdf'],
                 'transcript_translation': ['f22.pdf'],

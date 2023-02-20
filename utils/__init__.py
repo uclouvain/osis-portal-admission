@@ -12,6 +12,7 @@ from .utils import (
     to_snake_case,
     is_med_dent_training,
     format_academic_year,
+    format_address,
 )
 
 __all__ = [
@@ -28,4 +29,5 @@ __all__ = [
     'to_snake_case',
     'is_med_dent_training',
     'format_academic_year',
+    'format_address',
 ]

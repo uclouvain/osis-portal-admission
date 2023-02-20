@@ -169,6 +169,7 @@ class TrainingTestCase(TestCase):
         ]
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
         self.assertContains(response, "Informatique")
         self.assertContains(response, "45")
 
@@ -201,6 +202,7 @@ class TrainingTestCase(TestCase):
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
         self.assertContains(response, _("Add a conference"))
 
         data = {
@@ -420,6 +422,7 @@ class TrainingTestCase(TestCase):
         self.mock_api.return_value.retrieve_training.return_value = Mock(**activity_data)
         self.mock_api.return_value.retrieve_training.return_value.to_dict.return_value = activity_data
         response = self.client.get(url)
+        self.assertContains(response, "dependsOn.min.js", count=1)
         self.assertContains(response, "Foo bar")
         data = {
             'approbation': True,

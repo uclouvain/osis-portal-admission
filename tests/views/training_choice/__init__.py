@@ -35,6 +35,7 @@ from admission.contrib.enums import (
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
 from admission.contrib.enums.training_choice import TrainingType
+from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
@@ -317,6 +318,9 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'ville': 'Louvain-La-Neuve',
                 'pays': 'BE',
             },
+            'pays_nationalite': 'FR',
+            'pays_nationalite_ue_candidat': True,
+            'copie_titre_sejour': [],
         }
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -356,6 +360,9 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 pays='BE',
             ),
             to_dict=lambda: cls.continuing_proposition_dict,
+            pays_nationalite='FR',
+            pays_nationalite_ue_candidat=True,
+            copie_titre_sejour=[],
         )
 
         cls.doctorate_proposition = Mock(
@@ -571,5 +578,16 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         # Mock country sdk api
         self.mock_countries_api.return_value.countries_list.side_effect = self.get_countries
         self.addCleanup(countries_api_patcher.stop)
+
+        # Mock document api
+        patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch(
+            'osis_document.api.utils.get_remote_metadata',
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
         self.client.force_login(self.person.user)

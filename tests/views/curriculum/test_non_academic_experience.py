@@ -1,26 +1,26 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
 import datetime
@@ -28,7 +28,7 @@ from unittest.mock import ANY
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext
-from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
+from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN, HTTP_302_FOUND
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.curriculum import ActivityType, ActivitySector
@@ -47,6 +47,7 @@ class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
 
         # Check that the right API calls are done
         self.mock_person_api.return_value.retrieve_professional_experience_admission.assert_called()
@@ -106,6 +107,8 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "dependsOn.min.js", count=1)
 
         # Check that the right API calls are done
         self.mockapi.retrieve_professional_experience_admission.assert_called()
@@ -222,18 +225,10 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTP_302_FOUND)
 
         # Check that the API calls aren't done
-        self.mockapi.update_professional_experience_admission.assert_not_called()
-
-        # Check the context data
-        self.assertEqual(len(response.context['form'].errors), 2)
-        for field in [
-            'sector',
-            'institute_name',
-        ]:
-            self.assertFormError(response, 'form', field, errors=FIELD_REQUIRED_MESSAGE)
+        self.mockapi.update_professional_experience_admission.assert_called()
 
     def test_with_admission_on_update_experience_post_form_missing_fields_for_volunteering(self):
         response = self.client.post(
@@ -245,18 +240,10 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTP_302_FOUND)
 
         # Check that the API calls aren't done
-        self.mockapi.update_professional_experience_admission.assert_not_called()
-
-        # Check the context data
-        self.assertEqual(len(response.context['form'].errors), 2)
-        for field in [
-            'sector',
-            'institute_name',
-        ]:
-            self.assertFormError(response, 'form', field, errors=FIELD_REQUIRED_MESSAGE)
+        self.mockapi.update_professional_experience_admission.assert_called()
 
     def test_with_admission_on_update_experience_post_form_missing_fields_for_other_activity(self):
         response = self.client.post(
@@ -392,8 +379,8 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'role': '',
                 'certificate': ['f1.pdf'],
                 'type': ActivityType.INTERNSHIP.name,
-                'institute_name': 'UCL',
-                'sector': ActivitySector.PUBLIC.name,
+                'institute_name': '',
+                'sector': '',
             },
             **self.api_default_params,
         )
@@ -426,8 +413,8 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'role': '',
                 'certificate': ['f1.pdf'],
                 'type': ActivityType.VOLUNTEERING.name,
-                'institute_name': 'UCL',
-                'sector': ActivitySector.PUBLIC.name,
+                'institute_name': '',
+                'sector': '',
             },
             **self.api_default_params,
         )

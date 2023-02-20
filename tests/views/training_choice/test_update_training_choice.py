@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
 import json
 
 from django.shortcuts import resolve_url
@@ -33,7 +34,7 @@ from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import AdmissionType
 from admission.contrib.enums.training_choice import TypeFormation
 from admission.contrib.forms import EMPTY_VALUE
-from admission.tests.views.test_training_choice import AdmissionTrainingChoiceFormViewTestCase
+from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
 
 
 class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -47,6 +48,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         form = response.context['form']
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "dependsOn.min.js", count=1)
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(

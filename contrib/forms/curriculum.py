@@ -231,7 +231,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
         required=False,
     )
     institute_name = forms.CharField(
-        label=_('Institute name'),
+        label=_('Employer'),
         required=False,
     )
     certificate = FileUploadField(
@@ -274,20 +274,15 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
 
         activity_type = cleaned_data.get('type')
 
-        if activity_type == ActivityType.WORK.name:
-            if not cleaned_data.get('role'):
-                self.add_error('role', FIELD_REQUIRED_MESSAGE)
-        else:
-            cleaned_data['role'] = ''
+        work_fields = ['role', 'sector', 'institute_name']
 
-        if activity_type in [ActivityType.WORK.name, ActivityType.INTERNSHIP.name, ActivityType.VOLUNTEERING.name]:
-            if not cleaned_data.get('sector'):
-                self.add_error('sector', FIELD_REQUIRED_MESSAGE)
-            if not cleaned_data.get('institute_name'):
-                self.add_error('institute_name', FIELD_REQUIRED_MESSAGE)
+        if activity_type == ActivityType.WORK.name:
+            for field in work_fields:
+                if not cleaned_data.get(field):
+                    self.add_error(field, FIELD_REQUIRED_MESSAGE)
         else:
-            cleaned_data['sector'] = ''
-            cleaned_data['institute_name'] = ''
+            for field in work_fields:
+                cleaned_data[field] = ''
 
         if activity_type == ActivityType.OTHER.name:
             cleaned_data['certificate'] = []
@@ -355,6 +350,7 @@ EDUCATIONAL_EXPERIENCE_BASE_FIELDS = {
     'other_program',
     'education_name',
     'obtained_diploma',
+    'graduate_degree',
 }
 
 EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS = {
@@ -362,7 +358,6 @@ EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS = {
     'linguistic_regime',
     'transcript_type',
     'obtained_grade',
-    'graduate_degree',
     'graduate_degree_translation',
     'transcript',
     'transcript_translation',
