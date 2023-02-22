@@ -418,6 +418,22 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         for f in base_form.fields:
             self.assertEqual(f not in editable_fields, base_form.fields[f].disabled)
 
+        # Specific case of the graduate_degree field -> can be defined if it is not yet defined
+        self.mockapi.retrieve_educational_experience_admission.return_value.graduate_degree = []
+        editable_fields.add('graduate_degree')
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the context data
+        base_form = response.context.get('base_form')
+
+        # Check that the right fields are disabled
+        for f in base_form.fields:
+            self.assertEqual(f not in editable_fields, base_form.fields[f].disabled)
+
     def test_with_admission_on_update_experience_form_is_initialized_with_general_education(self):
         response = self.client.get(self.general_admission_update_url)
 
@@ -463,6 +479,22 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         mock_retrieve_experience.return_value.valuated_from_trainings = [
             TypeFormation.FORMATION_CONTINUE.name,
         ]
+
+        response = self.client.get(self.general_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check the context data
+        base_form = response.context.get('base_form')
+
+        # Check that the right fields are disabled
+        for f in base_form.fields:
+            self.assertEqual(f not in editable_fields, base_form.fields[f].disabled)
+
+        # Specific case of the graduate_degree field -> can be defined if it is not yet defined
+        mock_retrieve_experience.return_value.graduate_degree = []
+        editable_fields.add('graduate_degree')
 
         response = self.client.get(self.general_admission_update_url)
 
