@@ -81,7 +81,7 @@
     {% include "admission/modal/prevent_quitting_modal.html" %}
   {% endif %}
 
-  {% if admission and admission.matricule_candidat != user.person.global_id %}
+  {% if admission and admission.matricule_candidat != user.person.global_id and admission.matricule_doctorant != user.person.global_id %}
     {% url 'admission:supervised-list' as list_url %}
   {% else %}
     {% url 'admission:list' as list_url %}
