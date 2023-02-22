@@ -23,6 +23,7 @@
 #     see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from copy import deepcopy
 from datetime import datetime
 from functools import partial
 from typing import List
@@ -299,11 +300,10 @@ class ByContextAdmissionForm(forms.Form):
     Hide and disable the fields that are not in the current context and disable the fields valuated by other contexts.
     """
 
-    FIELDS_BY_CONTEXT = {}
-
-    def __init__(self, educational_experience, current_context, *args, **kwargs):
+    def __init__(self, educational_experience, current_context, fields_by_context, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.current_context_fields = self.FIELDS_BY_CONTEXT[current_context]
+        self.fields_by_context = fields_by_context
+        self.current_context_fields = self.fields_by_context[current_context]
 
         self.disable_fields_other_contexts()
 
@@ -325,7 +325,7 @@ class ByContextAdmissionForm(forms.Form):
 
         valuated_fields = set()
         for context in valuated_contexts:
-            valuated_fields |= self.FIELDS_BY_CONTEXT[context]
+            valuated_fields |= self.fields_by_context[context]
 
         for field in self.current_context_fields & valuated_fields:
             self.fields[field].disabled = True
@@ -381,8 +381,6 @@ EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT = {
 
 
 class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
-    FIELDS_BY_CONTEXT = EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT
-
     start = forms.ChoiceField(
         label=_('Start'),
         widget=autocomplete.Select2(),
@@ -514,6 +512,17 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
 
     def __init__(self, educational_experience, person, *args, **kwargs):
         kwargs.setdefault('initial', educational_experience)
+
+        kwargs['fields_by_context'] = deepcopy(EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT)
+
+        if (
+            educational_experience
+            and educational_experience['valuated_from_trainings']
+            and not educational_experience['graduate_degree']
+        ):
+            # If the experience has been valuated from a continuing admission and the graduate degree hasn't been set,
+            # it is possible to set it once.
+            kwargs['fields_by_context']['continuing-education'].remove('graduate_degree')
 
         super().__init__(educational_experience, *args, **kwargs)
 
@@ -677,8 +686,6 @@ EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT = {
 
 
 class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
-    FIELDS_BY_CONTEXT = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
-
     academic_year = forms.IntegerField(
         initial=FORM_SET_PREFIX,
         label=_('Academic year'),
@@ -716,6 +723,7 @@ class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
     )
 
     def __init__(self, prefix_index_start=0, **kwargs):
+        kwargs['fields_by_context'] = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
         super().__init__(**kwargs)
 
     def clean(self):
