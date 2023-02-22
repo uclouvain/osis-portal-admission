@@ -1109,6 +1109,10 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgctxt "edit"
+msgid "Edit"
+msgstr ""
+
 #, python-format
 msgid "Edit activity of type <em>%(category)s</em>"
 msgstr ""

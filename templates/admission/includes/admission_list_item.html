@@ -27,14 +27,14 @@
 
 {% panel additional_class="admission-item" cy_state=admission.statut %}
   <h3 style="margin-top: 0">
-  {% if admission.doctorat %}
-    {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
-    {{ doctorate_title }} ({{ admission.reference }})
-    <span style="display:block;"><small>{{ admission.intitule_secteur_formation }}</small></span>
-  {% elif admission.formation %}
-    {% display admission.formation.intitule " (" admission.formation.campus ")" as title %}
-    {{ title }} ({{ admission.reference }})
-  {% endif %}
+    {% if admission.doctorat %}
+      {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+      {{ doctorate_title }} ({{ admission.reference }})
+      <span style="display:block;"><small>{{ admission.intitule_secteur_formation }}</small></span>
+    {% elif admission.formation %}
+      {% display admission.formation.intitule " (" admission.formation.campus ")" as title %}
+      {{ title }} ({{ admission.reference }})
+    {% endif %}
   </h3>
   <div>
     <em>{% trans "Created at:" context "an admission" %} {{ admission.creee_le }}</em>
@@ -47,36 +47,25 @@
   </div>
 
   {% footer %}
-
   {% if admission.statut != 'CANCELLED' %}
+
+    {% if admission|can_make_action:'retrieve_person' %}
+      {% url base_namespace|add:':person' admission.uuid as edit_url %}
+    {% elif admission|can_make_action:'retrieve_proposition' %}
+      {% url base_namespace admission.uuid as edit_url %}
+    {% endif %}
+    {% if edit_url %}
+      <a class="btn btn-default pull-right" href="{{ edit_url }}">
+        <span class="fas fa-pencil"></span>
+        {% trans "Edit" context 'edit' %}
+      </a>
+    {% endif %}
+
     {% if admission|can_make_action:'destroy_proposition' %}
-      <a
-        class="btn btn-danger"
-        href="{% url base_namespace|add:':cancel' admission.uuid %}"
-      >
+      <a class="btn btn-danger" href="{% url base_namespace|add:':cancel' admission.uuid %}">
         {% trans "Cancel" %}
       </a>
     {% endif %}
 
-    <div class="dropdown pull-right">
-      <button
-        type="button"
-        class="btn btn-default dropdown-toggle"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-        <span class="glyphicon glyphicon-eye-open"></span>
-        {% trans "View" %}
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        {% for parent, subtabs in tab_tree.items %}
-          {% for subtab in subtabs %}
-            {% include 'admission/admission_tab_entry.html' with admission_uuid=admission.uuid tab=subtab no_status=True %}
-          {% endfor %}
-        {% endfor %}
-      </ul>
-    </div>
   {% endif %}
 {% endpanel %}

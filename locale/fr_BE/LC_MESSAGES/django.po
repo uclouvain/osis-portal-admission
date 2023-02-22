@@ -1251,6 +1251,10 @@ msgstr "Sciences économiques"
 msgid "Edit"
 msgstr "Modifier"
 
+msgctxt "edit"
+msgid "Edit"
+msgstr "Éditer"
+
 #, python-format
 msgid "Edit activity of type <em>%(category)s</em>"
 msgstr "Modifier l'activité de type <em>%(category)s</em>"
