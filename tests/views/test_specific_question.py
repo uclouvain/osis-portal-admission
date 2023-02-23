@@ -24,13 +24,14 @@
 #
 # ##############################################################################
 from datetime import datetime
-from unittest import mock
 from unittest.mock import patch, ANY
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
+from rest_framework.status import HTTP_200_OK
 
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms import PDF_MIME_TYPE
@@ -495,6 +496,12 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
             data={
                 'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
                 'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+                # Excess fields that will be ignored
+                'specific_questions-nom_siege_social': 'UCLouvain',
+                'specific_questions-numero_unique_entreprise': '1234',
+                'specific_questions-numero_tva_entreprise': '1234A',
+                'specific_questions-adresse_mail_professionnelle': 'jane.doe@example.be',
+                'specific_questions-type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
             },
         )
 
@@ -538,6 +545,28 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
             },
             **self.default_kwargs,
         )
+
+    def test_post_page_enrolment_as_professional_with_missing_fields(self):
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+            },
+        )
+
+        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.mock_proposition_api.return_value.update_continuing_specific_question.assert_not_called()
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+        for field in [
+            'nom_siege_social',
+            'numero_unique_entreprise',
+            'numero_tva_entreprise',
+            'adresse_mail_professionnelle',
+            'type_adresse_facturation',
+        ]:
+            self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get(field, []))
 
     def test_post_page_enrolment_as_professional_with_custom_foreign_billing_address(self):
         response = self.client.post(

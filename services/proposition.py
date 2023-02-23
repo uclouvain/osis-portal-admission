@@ -402,6 +402,7 @@ class FormationGeneraleBusinessException(Enum):
 
 class FormationContinueBusinessException(Enum):
     ExperiencesCurriculumNonRenseigneesException = "FORMATION-CONTINUE-3"
+    InformationsComplementairesNonRenseigneesException = "FORMATION-CONTINUE-4"
 
 
 BUSINESS_EXCEPTIONS_BY_TAB = {
@@ -484,6 +485,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.ReorientationInscriptionExterneNonConfirmeeException,
         GlobalPropositionBusinessException.ModificationInscriptionExterneNonConfirmeeException,
         GlobalPropositionBusinessException.ResidenceAuSensDuDecretNonRenseigneeException,
+        FormationContinueBusinessException.InformationsComplementairesNonRenseigneesException,
     },
 }
 
