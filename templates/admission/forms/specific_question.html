@@ -41,19 +41,19 @@
           </p>
           {% bootstrap_field form.copie_titre_sejour %}
         {% endif %}
-        {% bootstrap_field form.inscription_a_titre %}
+        {% bootstrap_field form.inscription_a_titre form_group_class='form-group required_field' %}
         <div id="professional-container">
-          {% bootstrap_field form.nom_siege_social placeholder='' %}
+          {% bootstrap_field form.nom_siege_social placeholder='' form_group_class='form-group required_field' %}
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 required_field">
               {% bootstrap_field form.numero_unique_entreprise placeholder='' %}
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 required_field">
               {% bootstrap_field form.numero_tva_entreprise placeholder='' %}
             </div>
           </div>
-          {% bootstrap_field form.adresse_mail_professionnelle placeholder='' %}
-          {% bootstrap_field form.type_adresse_facturation %}
+          {% bootstrap_field form.adresse_mail_professionnelle placeholder='' form_group_class='form-group required_field' %}
+          {% bootstrap_field form.type_adresse_facturation form_group_class='form-group required_field' %}
           {% panel _("Billing address") id="billing-address-container" %}
             {% bootstrap_field form.adresse_facturation_destinataire placeholder='' %}
             <div class="row">

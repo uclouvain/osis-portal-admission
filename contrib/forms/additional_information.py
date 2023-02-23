@@ -26,6 +26,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
 from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm
@@ -46,7 +47,6 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
     inscription_a_titre = forms.ChoiceField(
         choices=ChoixInscriptionATitre.choices(),
         label=_('Are you registering as'),
-        required=False,
         widget=forms.RadioSelect,
     )
     nom_siege_social = forms.CharField(
@@ -90,3 +90,26 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
             self.data.get(self.add_prefix('inscription_a_titre')) == ChoixInscriptionATitre.PROFESSIONNEL.name
             and self.data.get(self.add_prefix('type_adresse_facturation')) == ChoixTypeAdresseFacturation.AUTRE.name
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        enrollment_as = cleaned_data.get('inscription_a_titre')
+
+        professional_fields = [
+            'nom_siege_social',
+            'numero_unique_entreprise',
+            'numero_tva_entreprise',
+            'adresse_mail_professionnelle',
+            'type_adresse_facturation',
+        ]
+
+        if enrollment_as == ChoixInscriptionATitre.PROFESSIONNEL.name:
+            for field in professional_fields:
+                if not cleaned_data.get(field):
+                    self.add_error(field, FIELD_REQUIRED_MESSAGE)
+        else:
+            for field in professional_fields:
+                cleaned_data[field] = ''
+
+        return cleaned_data
