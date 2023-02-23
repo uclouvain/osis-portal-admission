@@ -80,8 +80,6 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
         context_data['incomplete_experiences'] = curriculum.incomplete_experiences
         context_data['display_curriculum'] = self.display_curriculum
         context_data['display_equivalence'] = self.display_equivalence
-        context_data['display_bachelor_continuation'] = self.display_bachelor_continuation
-        context_data['display_bachelor_continuation_attestation'] = self.display_bachelor_continuation_attestation
         context_data['BE_ISO_CODE'] = BE_ISO_CODE
 
         initialize_field_texts(self.request.user.person, context_data['educational_experiences'], self.current_context)
@@ -128,13 +126,3 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
                 and self.has_foreign_diploma
             )
         return False
-
-    @cached_property
-    def display_bachelor_continuation(self):
-        if self.current_context == 'general-education':
-            return self.admission.formation['type'] == TrainingType.BACHELOR.name and self.has_success_year
-        return False
-
-    @cached_property
-    def display_bachelor_continuation_attestation(self):
-        return self.display_bachelor_continuation and self.admission.formation['sigle'] == VETERINARY_BACHELOR_CODE

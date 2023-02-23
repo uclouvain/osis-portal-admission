@@ -589,11 +589,6 @@ msgid "Certificate"
 msgstr ""
 
 msgid ""
-"Certificate allowing the continuation of studies for a bachelor's degree in "
-"veterinary medicine"
-msgstr ""
-
-msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
 "specified period."
 msgstr ""
@@ -1022,11 +1017,6 @@ msgid "Do you have a high school diploma?"
 msgstr ""
 
 msgid "Do you have an international scholarship?"
-msgstr ""
-
-msgid ""
-"Do you want, on the basis of this training, to realize a cycle continuation "
-"for the bachelor you are registering for?"
 msgstr ""
 
 msgid ""

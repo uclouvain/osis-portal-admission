@@ -100,24 +100,11 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
 
     curriculum = CurriculumField()
     equivalence_diplome = DiplomaEquivalenceField()
-    continuation_cycle_bachelier = RadioBooleanField(
-        label=_(
-            'Do you want, on the basis of this training, to realize a cycle '
-            'continuation for the bachelor you are registering for?'
-        ),
-        required=False,
-    )
-    attestation_continuation_cycle_bachelier = FileUploadField(
-        label=_("Certificate allowing the continuation of studies for a bachelor's degree in veterinary medicine"),
-        required=False,
-    )
 
     def __init__(
         self,
         display_equivalence: bool,
         display_curriculum: bool,
-        display_bachelor_continuation: bool,
-        display_bachelor_continuation_attestation: bool,
         has_belgian_diploma: bool,
         *args,
         **kwargs,
@@ -135,26 +122,12 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
             self.fields['curriculum'].disabled = True
             self.fields['curriculum'].widget = NoInput()
 
-        if not display_bachelor_continuation:
-            self.fields['continuation_cycle_bachelier'].disabled = True
-            self.fields['continuation_cycle_bachelier'].widget = NoInput()
-
-        if not display_bachelor_continuation_attestation:
-            self.fields['attestation_continuation_cycle_bachelier'].disabled = True
-            self.fields['attestation_continuation_cycle_bachelier'].widget = NoInput()
-
     def clean(self):
         cleaned_data = super().clean()
 
-        if not cleaned_data['continuation_cycle_bachelier']:
-            cleaned_data['attestation_continuation_cycle_bachelier'] = []
-
-        for f in ['curriculum', 'equivalence_diplome', 'attestation_continuation_cycle_bachelier']:
-            if self.fields[f].disabled:
-                cleaned_data[f] = []
-
-        if self.fields['continuation_cycle_bachelier'].disabled:
-            cleaned_data['continuation_cycle_bachelier'] = None
+        for field in ['curriculum', 'equivalence_diplome']:
+            if self.fields[field].disabled:
+                cleaned_data[field] = []
 
         return cleaned_data
 

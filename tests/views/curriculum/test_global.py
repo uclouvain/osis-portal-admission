@@ -174,8 +174,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.post_data = {
             'curriculum_0': ['new_file1.pdf'],
             'equivalence_diplome_0': ['new_file2.pdf'],
-            'continuation_cycle_bachelier': True,
-            'attestation_continuation_cycle_bachelier_0': ['new_file3.pdf'],
         }
 
     def test_with_admission_on_reading_curriculum_is_loaded(self):
@@ -239,26 +237,14 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
             form.initial['equivalence_diplome'],
             self.general_proposition.equivalence_diplome,
         )
-        self.assertEqual(
-            form.initial['continuation_cycle_bachelier'],
-            self.general_proposition.continuation_cycle_bachelier,
-        )
-        self.assertEqual(
-            form.initial['attestation_continuation_cycle_bachelier'],
-            self.general_proposition.attestation_continuation_cycle_bachelier,
-        )
 
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
-        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
-        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
     def test_with_admission_on_reading_curriculum_is_loaded_with_master(self):
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
-        self.assertFalse(response.context['display_bachelor_continuation'])
-        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_bachelor(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -280,19 +266,9 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
             form.initial['equivalence_diplome'],
             self.general_proposition.equivalence_diplome,
         )
-        self.assertEqual(
-            form.initial['continuation_cycle_bachelier'],
-            self.general_proposition.continuation_cycle_bachelier,
-        )
-        self.assertEqual(
-            form.initial['attestation_continuation_cycle_bachelier'],
-            self.general_proposition.attestation_continuation_cycle_bachelier,
-        )
 
         self.assertTrue(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
-        self.assertFalse(form.fields['continuation_cycle_bachelier'].disabled)
-        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
     def test_with_admission_on_reading_curriculum_is_loaded_with_bachelor(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -302,8 +278,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
         self.assertFalse(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
-        self.assertTrue(response.context['display_bachelor_continuation'])
-        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_bachelor_without_success(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -328,19 +302,9 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
             form.initial['equivalence_diplome'],
             self.general_proposition.equivalence_diplome,
         )
-        self.assertEqual(
-            form.initial['continuation_cycle_bachelier'],
-            self.general_proposition.continuation_cycle_bachelier,
-        )
-        self.assertEqual(
-            form.initial['attestation_continuation_cycle_bachelier'],
-            self.general_proposition.attestation_continuation_cycle_bachelier,
-        )
 
         self.assertTrue(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
-        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
-        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
     def test_with_admission_on_reading_curriculum_is_loaded_with_bachelor_without_success(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -353,8 +317,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
         self.assertFalse(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
-        self.assertFalse(response.context['display_bachelor_continuation'])
-        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_veterinary_bachelor(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -378,19 +340,9 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
             form.initial['equivalence_diplome'],
             self.general_proposition.equivalence_diplome,
         )
-        self.assertEqual(
-            form.initial['continuation_cycle_bachelier'],
-            self.general_proposition.continuation_cycle_bachelier,
-        )
-        self.assertEqual(
-            form.initial['attestation_continuation_cycle_bachelier'],
-            self.general_proposition.attestation_continuation_cycle_bachelier,
-        )
 
         self.assertTrue(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
-        self.assertFalse(form.fields['continuation_cycle_bachelier'].disabled)
-        self.assertFalse(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
     def test_with_admission_on_reading_curriculum_is_loaded_with_veterinary_bachelor(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -403,8 +355,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
         self.assertFalse(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
-        self.assertTrue(response.context['display_bachelor_continuation'])
-        self.assertTrue(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_aggregation_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -426,8 +376,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertFalse(form.fields['equivalence_diplome'].disabled)
         self.assertEqual(form.fields['equivalence_diplome'].widget.attrs.get('class'), REQUIRED_FIELD_CLASS)
-        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
-        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
     def test_with_admission_on_reading_curriculum_is_loaded_with_aggregation_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -441,8 +389,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
         self.assertTrue(response.context['display_equivalence'])
-        self.assertFalse(response.context['display_bachelor_continuation'])
-        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_aggregation_and_be_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -459,8 +405,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
 
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
-        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
-        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
     def test_with_admission_on_reading_curriculum_is_loaded_with_aggregation_and_be_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -470,8 +414,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
-        self.assertFalse(response.context['display_bachelor_continuation'])
-        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_capes_and_be_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -494,8 +436,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertFalse(form.fields['equivalence_diplome'].disabled)
         self.assertNotEqual(form.fields['equivalence_diplome'].widget.attrs.get('class'), REQUIRED_FIELD_CLASS)
-        self.assertTrue(form.fields['continuation_cycle_bachelier'].disabled)
-        self.assertTrue(form.fields['attestation_continuation_cycle_bachelier'].disabled)
 
     def test_with_admission_on_reading_curriculum_is_loaded_with_capes_and_be_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -510,8 +450,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
         self.assertTrue(response.context['display_equivalence'])
-        self.assertFalse(response.context['display_bachelor_continuation'])
-        self.assertFalse(response.context['display_bachelor_continuation_attestation'])
 
     def test_with_admission_on_update_post_curriculum_file_with_master(self):
         response = self.client.post(
@@ -536,72 +474,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
                 'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
                 'uuid_proposition': self.general_proposition.uuid,
                 'equivalence_diplome': [],
-                'continuation_cycle_bachelier': None,
-                'attestation_continuation_cycle_bachelier': [],
-            },
-            **self.api_default_params,
-        )
-
-    def test_with_admission_on_update_post_curriculum_with_veterinary_bachelor(self):
-        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
-            TrainingType.BACHELOR.name
-        )
-        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.sigle = (
-            VETERINARY_BACHELOR_CODE
-        )
-
-        response = self.client.post(
-            self.admission_update_url,
-            data=self.post_data,
-        )
-
-        # Check the request
-        self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
-        )
-
-        # Check that the right API calls are done
-        update_method = (
-            self.mock_person_api.return_value.update_general_education_completer_curriculum_command_admission
-        )
-        update_method.assert_called_once_with(
-            uuid=self.general_proposition.uuid,
-            general_education_completer_curriculum_command={
-                'curriculum': [],
-                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
-                'uuid_proposition': self.general_proposition.uuid,
-                'equivalence_diplome': [],
-                'continuation_cycle_bachelier': True,
-                'attestation_continuation_cycle_bachelier': ['new_file3.pdf'],
-            },
-            **self.api_default_params,
-        )
-
-        response = self.client.post(
-            self.admission_update_url,
-            data={
-                'continuation_cycle_bachelier': False,
-                'attestation_continuation_cycle_bachelier_0': ['new_file3.pdf'],
-            },
-        )
-
-        # Check the request
-        self.assertRedirects(
-            response=response,
-            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
-        )
-
-        # Check that the right API calls are done
-        update_method.assert_called_with(
-            uuid=self.general_proposition.uuid,
-            general_education_completer_curriculum_command={
-                'curriculum': [],
-                'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
-                'uuid_proposition': self.general_proposition.uuid,
-                'equivalence_diplome': [],
-                'continuation_cycle_bachelier': False,
-                'attestation_continuation_cycle_bachelier': [],
             },
             **self.api_default_params,
         )
@@ -633,8 +505,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
                 'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
                 'uuid_proposition': self.general_proposition.uuid,
                 'equivalence_diplome': [],
-                'continuation_cycle_bachelier': True,
-                'attestation_continuation_cycle_bachelier': [],
             },
             **self.api_default_params,
         )
@@ -670,8 +540,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
                 'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
                 'uuid_proposition': self.general_proposition.uuid,
                 'equivalence_diplome': ['new_file2.pdf'],
-                'continuation_cycle_bachelier': None,
-                'attestation_continuation_cycle_bachelier': [],
             },
             **self.api_default_params,
         )
@@ -703,8 +571,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
                 'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
                 'uuid_proposition': self.general_proposition.uuid,
                 'equivalence_diplome': [],
-                'continuation_cycle_bachelier': None,
-                'attestation_continuation_cycle_bachelier': [],
             },
             **self.api_default_params,
         )
@@ -741,8 +607,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
                 'reponses_questions_specifiques': self.general_proposition.reponses_questions_specifiques,
                 'uuid_proposition': self.general_proposition.uuid,
                 'equivalence_diplome': ['new_file2.pdf'],
-                'continuation_cycle_bachelier': None,
-                'attestation_continuation_cycle_bachelier': [],
             },
             **self.api_default_params,
         )

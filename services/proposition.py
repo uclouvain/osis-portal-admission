@@ -395,8 +395,6 @@ class FormationGeneraleBusinessException(Enum):
     EtudesSecondairesNonCompleteesException = "FORMATION-GENERALE-3"
     FichierCurriculumNonRenseigneException = "FORMATION-GENERALE-4"
     EquivalenceNonRenseigneeException = "FORMATION-GENERALE-5"
-    ContinuationBachelierNonRenseigneeException = "FORMATION-GENERALE-6"
-    AttestationContinuationBachelierNonRenseigneeException = "FORMATION-GENERALE-7"
     EtudesSecondairesNonCompleteesPourDiplomeBelgeException = "FORMATION-GENERALE-8"
     EtudesSecondairesNonCompleteesPourDiplomeEtrangerException = "FORMATION-GENERALE-9"
     EtudesSecondairesNonCompleteesPourAlternativeException = "FORMATION-GENERALE-10"
@@ -436,8 +434,6 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationGeneraleBusinessException.FichierCurriculumNonRenseigneException,
         FormationGeneraleBusinessException.FormationNonTrouveeException,
         FormationGeneraleBusinessException.EquivalenceNonRenseigneeException,
-        FormationGeneraleBusinessException.ContinuationBachelierNonRenseigneeException,
-        FormationGeneraleBusinessException.AttestationContinuationBachelierNonRenseigneeException,
         FormationContinueBusinessException.ExperiencesCurriculumNonRenseigneesException,
     },
     'languages': {
