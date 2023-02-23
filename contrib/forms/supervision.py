@@ -28,6 +28,7 @@ from django import forms
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms import (
@@ -36,6 +37,8 @@ from admission.contrib.forms import (
     get_country_initial_choices,
     get_thesis_institute_initial_choices,
 )
+
+ACTOR_EXTERNAL = "EXTERNAL"
 
 EXTERNAL_FIELDS = [
     'prenom',
@@ -53,13 +56,15 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
         label="",
         choices=ActorType.choices(),
         widget=forms.RadioSelect(),
+        initial=ActorType.PROMOTER.name,
     )
     internal_external = forms.ChoiceField(
         label="",
         choices=(
             ("INTERNAL", _("Internal")),
-            ("EXTERNAL", _("External")),
+            (ACTOR_EXTERNAL, _("External")),
         ),
+        initial="INTERNAL",
         widget=forms.RadioSelect(),
     )
     tutor = forms.CharField(
@@ -82,15 +87,16 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
         required=False,
     )
     email = forms.EmailField(
-        label=_("Email"),
+        label=_("E-mail"),
         required=False,
     )
     est_docteur = forms.BooleanField(
         label=_("Holder of a doctorate with thesis"),
         required=False,
+        initial=True,
     )
     institution = forms.CharField(
-        label=_("Institute"),
+        label=_("Institution"),
         required=False,
     )
     ville = forms.CharField(
@@ -101,38 +107,34 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
         label=_("Country"),
         required=False,
         widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+        initial=BE_ISO_CODE,
     )
     langue = forms.ChoiceField(
         label=_("Contact language"),
         required=False,
         choices=EMPTY_CHOICE + tuple(settings.LANGUAGES),
+        initial=settings.LANGUAGE_CODE,
     )
 
     def __init__(self, person, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['pays'].widget.choices = get_country_initial_choices(
-            self.data.get(self.add_prefix("pays"), self.initial.get("pays")),
+            self.data.get(self.add_prefix("pays"), self.initial.get("pays", self.fields['pays'].initial)),
             person,
         )
 
     def clean(self):
         data = super().clean()
-        some_external_fields_filled = any(data.get(field) for field in EXTERNAL_FIELDS)
+        is_external = data.get('internal_external') == ACTOR_EXTERNAL
         all_external_fields_filled = all(data.get(field) for field in EXTERNAL_FIELDS)
-        if (
+        if not is_external and (
             data.get('type') == ActorType.CA_MEMBER.name
-            and not some_external_fields_filled
             and not data.get('person')
             or data.get('type') == ActorType.PROMOTER.name
-            and not some_external_fields_filled
             and not data.get('tutor')
         ):
-            self.add_error(None, _("You must reference a person in UCLouvain or create an external one."))
-        elif data.get('type') == ActorType.PROMOTER.name and some_external_fields_filled and data.get('tutor'):
-            self.add_error('tutor', _("A person cannot be referenced at the same time an external person is filled."))
-        elif data.get('type') == ActorType.CA_MEMBER.name and some_external_fields_filled and data.get('person'):
-            self.add_error('person', _("A person cannot be referenced at the same time an external person is filled."))
-        elif some_external_fields_filled and not all_external_fields_filled:
+            self.add_error(None, _("You must reference a person in UCLouvain."))
+        elif is_external and not all_external_fields_filled:
             for field in EXTERNAL_FIELDS:
                 if not data.get(field):
                     self.add_error(field, _("This field is required."))
