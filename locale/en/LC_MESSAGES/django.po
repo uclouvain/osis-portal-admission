@@ -169,10 +169,6 @@ msgstr ""
 msgid "A field of the schedule must at least be set."
 msgstr ""
 
-msgid ""
-"A person cannot be referenced at the same time an external person is filled."
-msgstr ""
-
 msgid "A transcript for all years"
 msgstr ""
 
@@ -1078,6 +1074,9 @@ msgstr ""
 msgid "Dutch"
 msgstr ""
 
+msgid "E-mail"
+msgstr ""
+
 msgid "ECONOMY"
 msgstr "Economy"
 
@@ -1142,9 +1141,6 @@ msgid "Educational community"
 msgstr ""
 
 msgid "Educational type is required with this community of education"
-msgstr ""
-
-msgid "Email"
 msgstr ""
 
 msgid "Employer"
@@ -3044,7 +3040,7 @@ msgid ""
 "You must correct your proposition before being able to request signatures."
 msgstr ""
 
-msgid "You must reference a person in UCLouvain or create an external one."
+msgid "You must reference a person in UCLouvain."
 msgstr ""
 
 msgid "You seem to have unsaved modifications, they will be lost."

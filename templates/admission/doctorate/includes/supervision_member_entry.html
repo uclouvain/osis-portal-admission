@@ -27,7 +27,12 @@
 {% url 'admission:doctorate:remove-actor' view.kwargs.pk type member.uuid as remove_url %}
 {% url 'admission:doctorate:set-reference-promoter' view.kwargs.pk member.uuid as set_reference_promoter_url %}
 
-<div class="signature-item flex-container" cy-matricule="{{ member.matricule }}" cy-state="{{ signature.statut }}">
+<div
+  class="signature-item flex-container"
+  style="flex-wrap: wrap"
+  cy-matricule="{{ member.matricule }}"
+  cy-state="{{ signature.statut }}"
+>
   <div style="flex: 1;">
     <div>
       <strong>
@@ -70,7 +75,7 @@
     </a>
   {% endif %}
 
-
+  {# Action buttons #}
   {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
     <button
       class="btn btn-default pull-right"
@@ -80,18 +85,6 @@
       <i class="fas fa-file-circle-check"></i>
       {% trans "Approve by PDF" %}
     </button>
-    <div id="approve-by-pdf-{{ member.uuid }}" class="col-md-12 collapse">
-      <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
-        {% csrf_token %}
-        {{ approve_by_pdf_form.pdf }}
-        <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
-        <button type="submit" class="btn btn-primary pull-right">
-          {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
-            Approve on behalf of {{ first_name }} {{ last_name }}
-          {% endblocktrans %}
-        </button>
-      </form>
-    </div>
   {% endif %}
 
   {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
@@ -103,31 +96,52 @@
       <i class="fas fa-envelope-open-text"></i>
       {% trans "Resend invitation" %}
     </button>
-    <div id="resend-invite-{{ member.uuid }}" class="col-md-12 collapse">
-      <form action="{% url 'admission:doctorate:resend-invite' pk=admission.uuid uuid=member.uuid %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
-        <button type="submit" class="btn btn-primary pull-right">
-          {% trans "Confirm" %}
-        </button>
-      </form>
-    </div>
   {% endif %}
 
-  {% if signature.motif_refus and signature.statut == 'DECLINED' %}
-    <blockquote><strong>{% trans "Rejection reason" %}</strong>
-      {{ signature.motif_refus|linebreaks }}</blockquote>
-  {% endif %}
 
-  {% if signature.commentaire_externe %}
-    <blockquote><strong>{% trans "Comment to the candidate:" %}</strong>
-      {{ signature.commentaire_externe|linebreaks }}</blockquote>
-  {% endif %}
+  {# Action buttons #}
+  <div class="panel-group" style="flex-basis: 100%;">
+    {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
+      {% panel _("Approve by PDF") id="approve-by-pdf-"|add:member.uuid additional_class="collapse" %}
+        <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
+          {% csrf_token %}
+          {{ approve_by_pdf_form.pdf }}
+          <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
+          <button type="submit" class="btn btn-primary pull-right">
+            {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
+              Approve on behalf of {{ first_name }} {{ last_name }}
+            {% endblocktrans %}
+          </button>
+        </form>
+      {% endpanel %}
+    {% endif %}
+    {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
+      {% panel _("Resend invitation") id="resend-invite-"|add:member.uuid additional_class="collapse" %}
+        <form action="{% url 'admission:doctorate:resend-invite' pk=admission.uuid uuid=member.uuid %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
+          <button type="submit" class="btn btn-primary pull-right">
+            {% trans "Confirm" %}
+          </button>
+        </form>
+      {% endpanel %}
+    {% endif %}
 
-  {% if member.matricule == user.person.global_id and signature.commentaire_interne %}
-    <blockquote><strong>{% trans "Internal comment:" %}</strong>
-      {{ signature.commentaire_interne|linebreaks }}</blockquote>
-  {% endif %}
+    {% if signature.motif_refus and signature.statut == 'DECLINED' %}
+      <blockquote><strong>{% trans "Rejection reason" %}</strong>
+        {{ signature.motif_refus|linebreaks }}</blockquote>
+    {% endif %}
+
+    {% if signature.commentaire_externe %}
+      <blockquote><strong>{% trans "Comment to the candidate:" %}</strong>
+        {{ signature.commentaire_externe|linebreaks }}</blockquote>
+    {% endif %}
+
+    {% if member.matricule == user.person.global_id and signature.commentaire_interne %}
+      <blockquote><strong>{% trans "Internal comment:" %}</strong>
+        {{ signature.commentaire_interne|linebreaks }}</blockquote>
+    {% endif %}
+  </div>
 </div>
 
 {% if signature.pdf and signature.statut == 'APPROVED' %}
