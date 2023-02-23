@@ -298,8 +298,6 @@ class MixinTestCase(TestCase):
             curriculum=['file1.pdf'],
             creee_le=datetime.datetime(2022, 12, 1),
             equivalence_diplome=['file2.pdf'],
-            attestation_continuation_cycle_bachelier=['file3.pdf'],
-            continuation_cycle_bachelier=True,
         )
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(

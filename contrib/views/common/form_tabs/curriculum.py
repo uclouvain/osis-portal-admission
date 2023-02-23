@@ -81,7 +81,5 @@ class AdmissionCurriculumFormView(
         kwargs['display_equivalence'] = self.display_equivalence
         if self.current_context == 'general-education':
             kwargs['display_curriculum'] = self.display_curriculum
-            kwargs['display_bachelor_continuation'] = self.display_bachelor_continuation
-            kwargs['display_bachelor_continuation_attestation'] = self.display_bachelor_continuation_attestation
             kwargs['has_belgian_diploma'] = self.has_belgian_diploma
         return kwargs

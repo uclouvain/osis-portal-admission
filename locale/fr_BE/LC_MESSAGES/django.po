@@ -660,13 +660,6 @@ msgid "Certificate"
 msgstr "Certificat"
 
 msgid ""
-"Certificate allowing the continuation of studies for a bachelor's degree in "
-"veterinary medicine"
-msgstr ""
-"Attestation autorisant à poursuivre les études de bachelier en médecine "
-"vétérinaire"
-
-msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
 "specified period."
 msgstr ""
@@ -1155,13 +1148,6 @@ msgstr "Avez-vous obtenu un diplôme de fin d'études secondaires ?"
 
 msgid "Do you have an international scholarship?"
 msgstr "Bénéficiez-vous d'une bourse internationale ?"
-
-msgid ""
-"Do you want, on the basis of this training, to realize a cycle continuation "
-"for the bachelor you are registering for?"
-msgstr ""
-"Demandez-vous, sur base de cette formation, à réaliser une poursuite de "
-"cycle pour le bachelier auquel vous vous inscrivez ?"
 
 msgid ""
 "Do you wish to join the <a href='https://uclouvain.be/fr/etudier/sport/le-"

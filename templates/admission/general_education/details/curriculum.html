@@ -26,19 +26,13 @@
 {% endcomment %}
 
 {% block specific_question_answers %}
-  {% if display_equivalence or display_curriculum or display_bachelor_continuation or display_bachelor_continuation_attestation or specific_questions %}
+  {% if display_equivalence or display_curriculum or specific_questions %}
     {% panel _('Specific questions') %}
       {% if display_equivalence %}
         {% field_data _('Decision of equivalence for your diploma(s) giving access to the training, if this(these) has(have) been obtained outside Belgium') admission.equivalence_diplome %}
       {% endif %}
       {% if display_curriculum %}
         {% field_data _('Curriculum') admission.curriculum %}
-      {% endif %}
-      {% if display_bachelor_continuation %}
-        {% field_data _('Do you want, on the basis of this training, to realize a cycle continuation for the bachelor you are registering for?') admission.continuation_cycle_bachelier|yesno:_('Yes,No,') %}
-      {% endif %}
-      {% if display_bachelor_continuation_attestation %}
-        {% field_data _("Certificate allowing the continuation of studies for a bachelor's degree in veterinary medicine") admission.attestation_continuation_cycle_bachelier %}
       {% endif %}
       {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
     {% endpanel %}
