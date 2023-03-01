@@ -27,7 +27,7 @@ from django.shortcuts import redirect
 from django.views.generic import FormView
 
 from admission.contrib.enums.actor import ActorType
-from admission.contrib.forms.supervision import DoctorateAdmissionSupervisionForm
+from admission.contrib.forms.supervision import ACTOR_EXTERNAL, DoctorateAdmissionSupervisionForm, EXTERNAL_FIELDS
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionSupervisionService
@@ -66,12 +66,16 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
         return self.render_to_response(context)
 
     def prepare_data(self, data):
-        data.pop('internal_external')
+        is_external = data.pop('internal_external') == ACTOR_EXTERNAL
         promoter = data.pop('tutor')
         ca_member = data.pop('person')
+        matricule = (ca_member if data['type'] == ActorType.CA_MEMBER.name else promoter) if not is_external else ""
+        if not is_external:
+            # Remove data about external actor
+            data = {**data, **{f: '' for f in EXTERNAL_FIELDS}}
         return {
             'type': data['type'],
-            'matricule': ca_member if data['type'] == ActorType.CA_MEMBER.name else promoter,
+            'matricule': matricule,
             **data,
         }
 

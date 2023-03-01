@@ -169,10 +169,6 @@ msgstr ""
 msgid "A field of the schedule must at least be set."
 msgstr ""
 
-msgid ""
-"A person cannot be referenced at the same time an external person is filled."
-msgstr ""
-
 msgid "A transcript for all years"
 msgstr ""
 
@@ -590,11 +586,6 @@ msgid "Cancel"
 msgstr ""
 
 msgid "Certificate"
-msgstr ""
-
-msgid ""
-"Certificate allowing the continuation of studies for a bachelor's degree in "
-"veterinary medicine"
 msgstr ""
 
 msgid ""
@@ -1029,11 +1020,6 @@ msgid "Do you have an international scholarship?"
 msgstr ""
 
 msgid ""
-"Do you want, on the basis of this training, to realize a cycle continuation "
-"for the bachelor you are registering for?"
-msgstr ""
-
-msgid ""
 "Do you wish to join the <a href='https://uclouvain.be/fr/etudier/sport/le-"
 "sport-uclouvain.html' target='_blank'>sports activities</a>? If so, the cost "
 "of this membership will be added to your registration fee."
@@ -1078,6 +1064,9 @@ msgstr ""
 msgid "Dutch"
 msgstr ""
 
+msgid "E-mail"
+msgstr ""
+
 msgid "ECONOMY"
 msgstr "Economy"
 
@@ -1106,6 +1095,10 @@ msgstr ""
 msgid "Economic sciences"
 msgstr ""
 
+msgid "Edit"
+msgstr ""
+
+msgctxt "edit"
 msgid "Edit"
 msgstr ""
 
@@ -1138,9 +1131,6 @@ msgid "Educational community"
 msgstr ""
 
 msgid "Educational type is required with this community of education"
-msgstr ""
-
-msgid "Email"
 msgstr ""
 
 msgid "Employer"
@@ -3040,7 +3030,7 @@ msgid ""
 "You must correct your proposition before being able to request signatures."
 msgstr ""
 
-msgid "You must reference a person in UCLouvain or create an external one."
+msgid "You must reference a person in UCLouvain."
 msgstr ""
 
 msgid "You seem to have unsaved modifications, they will be lost."

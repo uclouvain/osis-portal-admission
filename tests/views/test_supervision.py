@@ -34,7 +34,7 @@ from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from admission.contrib.enums.projet import ChoixStatutProposition
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms import PDF_MIME_TYPE
-from admission.contrib.forms.supervision import EXTERNAL_FIELDS
+from admission.contrib.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 from osis_admission_sdk import ApiException
@@ -144,6 +144,14 @@ class SupervisionTestCase(TestCase):
             'supervision': self.mock_api.return_value.retrieve_supervision.return_value.to_dict.return_value,
         }
 
+        countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
+        self.mock_countries_api = countries_api_patcher.start()
+
+        self.mock_countries_api.return_value.countries_list.return_value = Mock(
+            results=[Mock(iso_code='BE', name='Belgique', name_en='Belgium', european_union=True)]
+        )
+        self.addCleanup(countries_api_patcher.stop)
+
     def test_should_detail_redirect_to_form_when_not_signing(self):
         self.mock_api.return_value.retrieve_proposition.return_value.links.update(
             {
@@ -187,9 +195,18 @@ class SupervisionTestCase(TestCase):
             'email': "test@test.fr",
         }
         response = self.client.post(self.update_url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('person', response.context['add_form'].errors)
-        self.mock_api.return_value.add_member.assert_not_called()
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_api.return_value.add_member.assert_called_with(
+            uuid=self.pk,
+            identifier_supervision_actor={
+                'type': ActorType.CA_MEMBER.name,
+                'matricule': "0123456978",
+                'est_docteur': False,
+                **{field: "" for field in EXTERNAL_FIELDS},
+            },
+            **self.default_kwargs,
+        )
+        self.mock_api.return_value.add_member.reset_mock()
 
         response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name, 'person': "0123456978"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -203,13 +220,22 @@ class SupervisionTestCase(TestCase):
             'email': "test@test.fr",
         }
         response = self.client.post(self.update_url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('tutor', response.context['add_form'].errors)
-        self.mock_api.return_value.add_member.assert_not_called()
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_api.return_value.add_member.assert_called_with(
+            uuid=self.pk,
+            identifier_supervision_actor={
+                'type': ActorType.PROMOTER.name,
+                'matricule': "0123456978",
+                'est_docteur': False,
+                **{field: "" for field in EXTERNAL_FIELDS},
+            },
+            **self.default_kwargs,
+        )
+        self.mock_api.return_value.add_member.reset_mock()
 
         data = {
             'type': ActorType.PROMOTER.name,
-            'internal_external': "INTERNAL",
+            'internal_external': ACTOR_EXTERNAL,
             'email': "test@test.fr",
         }
         response = self.client.post(self.update_url, data)
@@ -218,10 +244,21 @@ class SupervisionTestCase(TestCase):
         self.assertIn('prenom', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
 
+        external_data = {
+            'prenom': 'John',
+            'nom': 'Doe',
+            'email': 'john@example.org',
+            'est_docteur': True,
+            'institution': 'ins',
+            'ville': 'mons',
+            'pays': 'BE',
+            'langue': 'fr-be',
+        }
         data = {
             'type': ActorType.PROMOTER.name,
-            'internal_external': "INTERNAL",
+            'internal_external': ACTOR_EXTERNAL,
             'tutor': "0123456978",
+            **external_data,
         }
         response = self.client.post(self.update_url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -229,9 +266,8 @@ class SupervisionTestCase(TestCase):
             uuid=self.pk,
             identifier_supervision_actor={
                 'type': ActorType.PROMOTER.name,
-                'matricule': "0123456978",
-                'est_docteur': False,
-                **{field: ANY for field in EXTERNAL_FIELDS},
+                'matricule': "",
+                **external_data,
             },
             **self.default_kwargs,
         )

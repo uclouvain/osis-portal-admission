@@ -23,6 +23,7 @@
 #     see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from copy import deepcopy
 from datetime import datetime
 from functools import partial
 from typing import List
@@ -99,24 +100,11 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
 
     curriculum = CurriculumField()
     equivalence_diplome = DiplomaEquivalenceField()
-    continuation_cycle_bachelier = RadioBooleanField(
-        label=_(
-            'Do you want, on the basis of this training, to realize a cycle '
-            'continuation for the bachelor you are registering for?'
-        ),
-        required=False,
-    )
-    attestation_continuation_cycle_bachelier = FileUploadField(
-        label=_("Certificate allowing the continuation of studies for a bachelor's degree in veterinary medicine"),
-        required=False,
-    )
 
     def __init__(
         self,
         display_equivalence: bool,
         display_curriculum: bool,
-        display_bachelor_continuation: bool,
-        display_bachelor_continuation_attestation: bool,
         has_belgian_diploma: bool,
         *args,
         **kwargs,
@@ -134,26 +122,12 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
             self.fields['curriculum'].disabled = True
             self.fields['curriculum'].widget = NoInput()
 
-        if not display_bachelor_continuation:
-            self.fields['continuation_cycle_bachelier'].disabled = True
-            self.fields['continuation_cycle_bachelier'].widget = NoInput()
-
-        if not display_bachelor_continuation_attestation:
-            self.fields['attestation_continuation_cycle_bachelier'].disabled = True
-            self.fields['attestation_continuation_cycle_bachelier'].widget = NoInput()
-
     def clean(self):
         cleaned_data = super().clean()
 
-        if not cleaned_data['continuation_cycle_bachelier']:
-            cleaned_data['attestation_continuation_cycle_bachelier'] = []
-
-        for f in ['curriculum', 'equivalence_diplome', 'attestation_continuation_cycle_bachelier']:
-            if self.fields[f].disabled:
-                cleaned_data[f] = []
-
-        if self.fields['continuation_cycle_bachelier'].disabled:
-            cleaned_data['continuation_cycle_bachelier'] = None
+        for field in ['curriculum', 'equivalence_diplome']:
+            if self.fields[field].disabled:
+                cleaned_data[field] = []
 
         return cleaned_data
 
@@ -299,11 +273,10 @@ class ByContextAdmissionForm(forms.Form):
     Hide and disable the fields that are not in the current context and disable the fields valuated by other contexts.
     """
 
-    FIELDS_BY_CONTEXT = {}
-
-    def __init__(self, educational_experience, current_context, *args, **kwargs):
+    def __init__(self, educational_experience, current_context, fields_by_context, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.current_context_fields = self.FIELDS_BY_CONTEXT[current_context]
+        self.fields_by_context = fields_by_context
+        self.current_context_fields = self.fields_by_context[current_context]
 
         self.disable_fields_other_contexts()
 
@@ -325,7 +298,7 @@ class ByContextAdmissionForm(forms.Form):
 
         valuated_fields = set()
         for context in valuated_contexts:
-            valuated_fields |= self.FIELDS_BY_CONTEXT[context]
+            valuated_fields |= self.fields_by_context[context]
 
         for field in self.current_context_fields & valuated_fields:
             self.fields[field].disabled = True
@@ -381,8 +354,6 @@ EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT = {
 
 
 class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
-    FIELDS_BY_CONTEXT = EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT
-
     start = forms.ChoiceField(
         label=_('Start'),
         widget=autocomplete.Select2(),
@@ -514,6 +485,17 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
 
     def __init__(self, educational_experience, person, *args, **kwargs):
         kwargs.setdefault('initial', educational_experience)
+
+        kwargs['fields_by_context'] = deepcopy(EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT)
+
+        if (
+            educational_experience
+            and educational_experience['valuated_from_trainings']
+            and not educational_experience['graduate_degree']
+        ):
+            # If the experience has been valuated from a continuing admission and the graduate degree hasn't been set,
+            # it is possible to set it once.
+            kwargs['fields_by_context']['continuing-education'].remove('graduate_degree')
 
         super().__init__(educational_experience, *args, **kwargs)
 
@@ -677,8 +659,6 @@ EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT = {
 
 
 class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
-    FIELDS_BY_CONTEXT = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
-
     academic_year = forms.IntegerField(
         initial=FORM_SET_PREFIX,
         label=_('Academic year'),
@@ -716,6 +696,7 @@ class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
     )
 
     def __init__(self, prefix_index_start=0, **kwargs):
+        kwargs['fields_by_context'] = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
         super().__init__(**kwargs)
 
     def clean(self):
