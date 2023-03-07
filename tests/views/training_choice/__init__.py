@@ -28,9 +28,9 @@ from django.test import TestCase
 from unittest.mock import Mock, ANY, patch
 
 from admission.contrib.enums import (
-    ChoixStatutProposition,
-    ChoixStatutPropositionFormationContinue,
-    ChoixStatutPropositionFormationGenerale,
+    ChoixStatutPropositionDoctorale,
+    ChoixStatutPropositionContinue,
+    ChoixStatutPropositionGenerale,
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
@@ -230,7 +230,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=Mock(
@@ -270,7 +270,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=None,
@@ -296,7 +296,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             'matricule_candidat': cls.person.global_id,
             'prenom_candidat': cls.person.first_name,
             'nom_candidat': cls.person.last_name,
-            'statut': ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
+            'statut': ChoixStatutPropositionContinue.EN_BROUILLON.name,
             'links': {'update_specific_question': {'url': 'ok'}},
             'erreurs': {},
             'reponses_questions_specifiques': {
@@ -337,7 +337,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionContinue.EN_BROUILLON.name,
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             reponses_questions_specifiques={
@@ -385,7 +385,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             lettres_recommandation=[],
             links={'update_proposition': {'url': 'ok'}},
             commission_proximite='MANAGEMENT',
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             bourse_erasmus_mundus=Mock(
                 uuid=cls.first_erasmus_mundus_scholarship.uuid,
                 nom_court=cls.first_erasmus_mundus_scholarship.short_name,

@@ -35,7 +35,7 @@
   </div>
 
   {% for admission in admissions %}
-    {% if admission.statut != 'CANCELLED' %}
+    {% if admission.statut != 'ANNULEE' %}
       {% panel additional_class="admission-item" cy_matricule=admission.matricule_candidat cy_type="doctorat" cy_state=admission.statut %}
         <h3 style="margin-top: 0">
           {{ admission.prenom_candidat }} {{ admission.nom_candidat }}
@@ -50,7 +50,7 @@
         <div>
           <em>
             {% trans "Status:" %}
-            {{ admission.statut|enum_display:'ChoixStatutProposition' }}
+            {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
           </em>
         </div>
 

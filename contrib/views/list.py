@@ -26,6 +26,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from admission.contrib.enums import CANCELLED_STATUSES
 from admission.services.proposition import AdmissionPropositionService
 from admission.templatetags.admission import TAB_TREES, can_make_action
 
@@ -52,6 +53,7 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
         context["doctorate_tab_tree"] = TAB_TREES['doctorate']
         context["continuing_education_tab_tree"] = TAB_TREES['continuing-education']
         context["general_education_tab_tree"] = TAB_TREES['general-education']
+        context['CANCELLED_STATUSES'] = CANCELLED_STATUSES
         return context
 
 

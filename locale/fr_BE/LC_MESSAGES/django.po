@@ -617,9 +617,6 @@ msgstr "Membre du comité d'accompagnement"
 msgid "CA members"
 msgstr "Membres du comité d'accompagnement"
 
-msgid "CANCELLED"
-msgstr "Annulé"
-
 msgid "CHEMISTRY"
 msgstr "Chimie"
 
@@ -652,6 +649,9 @@ msgstr "Campus"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Cancelled application"
+msgstr "Demande annulée"
 
 msgid "Certificate"
 msgstr "Attestation"
@@ -749,6 +749,9 @@ msgstr "État civil"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Closed"
+msgstr "Clôturée"
+
 msgid "Coming implementation."
 msgstr "Développement à venir."
 
@@ -782,6 +785,9 @@ msgstr "Proposition de formation complémentaire"
 msgid "Complete"
 msgstr "Complet"
 
+msgid "Completed application"
+msgstr "Demande complétée"
+
 msgid "Completion"
 msgstr "Finalisation"
 
@@ -796,6 +802,9 @@ msgstr "Confirmation et soumission"
 
 msgid "Confirmation paper"
 msgstr "Épreuve de confirmation"
+
+msgid "Confirmed application (by student)"
+msgstr "Demande confirmée (par étudiant)"
 
 msgid "Consultation of a non-academic activity"
 msgstr "Consultation d'une activité non-académique"
@@ -1219,9 +1228,6 @@ msgstr "ECTS pour la participation"
 msgid "ECTS for the participation"
 msgstr "ECTS pour la participation"
 
-msgid "ENROLLED"
-msgstr "Inscrit"
-
 msgid "ERC - European Research Council"
 msgstr "ERC - European Research Council"
 
@@ -1292,6 +1298,12 @@ msgstr "S'inscrire à un cours"
 
 msgid "Enrolled"
 msgstr "Inscrit"
+
+msgid "Enrollment allowed"
+msgstr "Inscription autorisée"
+
+msgid "Enrollment denied"
+msgstr "Inscription refusée"
 
 msgid "Enrollment in a bachelor with quota"
 msgstr "Inscription à un bachelier contingenté"
@@ -1662,9 +1674,6 @@ msgstr "Numéro de compte IBAN"
 msgid "INVITED"
 msgstr "Invité"
 
-msgid "IN_PROGRESS"
-msgstr "En cours"
-
 msgid "IT"
 msgstr "Informatique"
 
@@ -1814,6 +1823,9 @@ msgstr ""
 
 msgid "Important information:"
 msgstr "Informations importantes :"
+
+msgid "In draft"
+msgstr "En brouillon"
 
 msgid "In person"
 msgstr "En présentiel"
@@ -2236,6 +2248,9 @@ msgstr "Numéro de passeport"
 msgid "Past confirmation papers"
 msgstr "Épreuves de confirmation passées"
 
+msgid "Pending validation from management"
+msgstr "En attente de validation de la direction"
+
 msgid "Period"
 msgstr "Période"
 
@@ -2362,6 +2377,12 @@ msgstr "Privé"
 msgctxt "admission"
 msgid "Private email"
 msgstr "E-mail privé"
+
+msgid "Processing by Fac/CDD"
+msgstr "Traitement en Fac/CDD"
+
+msgid "Processing by SIC"
+msgstr "Traitement en SIC"
 
 msgid "Professional"
 msgstr "Professionnel"
@@ -2597,17 +2618,11 @@ msgstr "Séminaire"
 msgid "SERVICE"
 msgstr "Service institutionnel, didactique et d'expertise scientifique"
 
-msgid "SIGNING_IN_PROGRESS"
-msgstr "Signatures en cours"
-
 msgid "SOUMISE"
 msgstr "Soumise"
 
 msgid "STATISTICS"
 msgstr "Statistiques"
-
-msgid "SUBMITTED"
-msgstr "Soumis"
 
 msgid "SUBMITTED_CONFIRMATION"
 msgstr "Confirmation soumise"
@@ -3057,6 +3072,12 @@ msgstr "Titre du mémoire"
 msgid "Title of the publication"
 msgstr "Intitulé de la publication"
 
+msgid "To be completed (by student) for FAC/CDD"
+msgstr "A compléter (par étudiant) pour Fac/CDD"
+
+msgid "To be completed (by student) for SIC"
+msgstr "A compléter (par étudiant) pour SIC"
+
 msgid ""
 "To be uploaded if you have a F.R.S.-FNRS (including Televie), FRIA or FRESH "
 "grant. The canvas for this opinion is provided by your research fund."
@@ -3127,6 +3148,9 @@ msgstr "Cours UCL"
 msgid "Undecided"
 msgstr "Non décidé"
 
+msgid "Under appeal"
+msgstr "En recours"
+
 msgid "Undertake and declaration"
 msgstr "Engagement et déclaration"
 
@@ -3191,6 +3215,9 @@ msgstr "Contrat de travail"
 
 msgid "Waiting for a result"
 msgstr "En attente de résultat"
+
+msgid "Waiting for signature"
+msgstr "En attente de signature"
 
 msgid "Website"
 msgstr "Site web"

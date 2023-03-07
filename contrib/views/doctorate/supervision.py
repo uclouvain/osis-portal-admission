@@ -34,7 +34,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
 
-from admission.contrib.enums import ActorType, ChoixStatutProposition, DecisionApprovalEnum
+from admission.contrib.enums import ActorType, ChoixStatutPropositionDoctorale, DecisionApprovalEnum
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalByPdfForm, DoctorateAdmissionApprovalForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
@@ -61,7 +61,7 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
         context = self.get_context_data(**kwargs)
         # If not signing in progress and ability to update supervision, redirect on update page
         if (
-            self.admission.statut != ChoixStatutProposition.SIGNING_IN_PROGRESS.name
+            self.admission.statut != ChoixStatutPropositionDoctorale.EN_ATTENTE_DE_SIGNATURE.name
             and 'url' in self.admission.links['request_signatures']
         ):
             return redirect('admission:doctorate:update:supervision', **self.kwargs)

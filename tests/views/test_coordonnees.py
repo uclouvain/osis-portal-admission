@@ -31,7 +31,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import ChoixStatutProposition
+from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
 
@@ -188,7 +188,7 @@ class CoordonneesTestCase(TestCase):
     def test_update(self):
         url = resolve_url('admission:doctorate:update:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             links={},
             erreurs=[],
         )

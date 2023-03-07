@@ -43,7 +43,13 @@ from django.utils.safestring import SafeString
 from django.utils.translation import get_language, gettext_lazy as _, pgettext
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
-from admission.contrib.enums import ChoixStatutProposition
+from admission.contrib.enums import (
+    ChoixStatutPropositionDoctorale,
+    IN_PROGRESS_STATUSES,
+    ChoixStatutPropositionGenerale,
+    ChoixStatutPropositionContinue,
+    ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE,
+)
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
 from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
@@ -284,11 +290,7 @@ def admission_tabs(context, admission=None, with_submit=False):
         'admission': admission,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
         'with_submit': with_submit,
-        'no_status': (
-            admission
-            and admission.statut
-            not in [ChoixStatutProposition.IN_PROGRESS.name, ChoixStatutProposition.SIGNING_IN_PROGRESS.name]
-        ),
+        'no_status': admission and admission.statut not in IN_PROGRESS_STATUSES,
         **context.flatten(),
     }
 
@@ -324,11 +326,7 @@ def admission_subtabs(context, admission=None, tabs=None):
         'subtabs': tabs or current_subtabs(context),
         'admission': admission,
         'admission_uuid': context['view'].kwargs.get('pk', ''),
-        'no_status': (
-            admission
-            and admission.statut
-            not in [ChoixStatutProposition.IN_PROGRESS.name, ChoixStatutProposition.SIGNING_IN_PROGRESS.name]
-        ),
+        'no_status': admission and admission.statut not in IN_PROGRESS_STATUSES,
         'active_tab': current_tab_name,
         **context.flatten(),
     }
@@ -726,3 +724,15 @@ def default_if_none_or_empty(value, arg):
 def interpolate(string, **kwargs):
     """Interpolate variables inside a string"""
     return string % kwargs
+
+
+@register.simple_tag
+def admission_status(status: str, osis_education_type: str):
+    """Get the status of a specific admission"""
+    admission_context = ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE.get(osis_education_type)
+    status_enum = {
+        'general-education': ChoixStatutPropositionGenerale,
+        'continuing-education': ChoixStatutPropositionContinue,
+        'doctorate': ChoixStatutPropositionDoctorale,
+    }.get(admission_context)
+    return status_enum.get_value(status)

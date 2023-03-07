@@ -40,7 +40,7 @@
       {% trans "Reference:" %} {{ admission_title }} ({{ admission.reference }})
     </div>
     <div>
-      {% trans "Status:" %} {{ admission.statut|enum_display:'ChoixStatutPropositionFormationContinue' }}
+      {% trans "Status:" %} {{ admission.statut|enum_display:'ChoixStatutPropositionContinue' }}
     </div>
   </div>
 {% endblock well %}

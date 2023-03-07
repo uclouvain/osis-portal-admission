@@ -29,9 +29,11 @@
   <h3 style="margin-top: 0">
     {% if admission.doctorat %}
       {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+      {% admission_status admission.statut admission.doctorat.type as admission_status %}
       {{ doctorate_title }} ({{ admission.reference }})
       <span style="display:block;"><small>{{ admission.intitule_secteur_formation }}</small></span>
     {% elif admission.formation %}
+      {% admission_status admission.statut admission.formation.type as admission_status %}
       {% display admission.formation.intitule " (" admission.formation.campus ")" as title %}
       {{ title }} ({{ admission.reference }})
     {% endif %}
@@ -42,12 +44,12 @@
   <div>
     <em>
       {% trans "Status:" %}
-      {{ admission.statut|enum_display:'ChoixStatutProposition' }}
+      {{ admission_status }}
     </em>
   </div>
 
   {% footer %}
-  {% if admission.statut != 'CANCELLED' %}
+  {% if admission.statut not in CANCELLED_STATUSES %}
 
     {% if admission|can_make_action:'retrieve_person' %}
       {% url base_namespace|add:':person' admission.uuid as edit_url %}

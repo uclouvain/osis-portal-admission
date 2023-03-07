@@ -134,3 +134,11 @@ ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE = {
     for admission_context, admission_types in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT.items()
     for admission_type in admission_types
 }
+
+
+ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE = {
+    osis_type: context
+    for context, admission_types in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT.items()
+    for admission_type in admission_types
+    for osis_type in OSIS_ADMISSION_EDUCATION_TYPES_MAPPING[admission_type]
+}
