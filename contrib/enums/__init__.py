@@ -1,5 +1,5 @@
 """
-ChoixStatutProposition
+ChoixStatutPropositionDoctorale
     > Enrolled: The student/doctoral researcher has paid his minerval.
 
 ChoixStatutDoctorat

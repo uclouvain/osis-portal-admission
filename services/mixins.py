@@ -29,7 +29,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext_lazy as _
 
-from admission.contrib.enums import ChoixStatutProposition
+from admission.contrib.enums import IN_PROGRESS_STATUSES
 from base.models.person import Person
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException, api_exception_handler
 
@@ -92,8 +92,7 @@ class WebServiceFormMixin:
                 # We are on an admission in progress, as candidate
                 hasattr(self, 'admission')
                 and self.admission.matricule_candidat == self.request.user.person.global_id
-                and self.admission.statut
-                in [ChoixStatutProposition.IN_PROGRESS.name, ChoixStatutProposition.SIGNING_IN_PROGRESS.name]
+                and self.admission.statut in IN_PROGRESS_STATUSES
             )
         ):
             tab_to_redirect = tab_mapping[

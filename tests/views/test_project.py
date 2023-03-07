@@ -36,9 +36,9 @@ from rest_framework import status
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import ChoixTypeContratTravail, ChoixTypeFinancement
 from admission.contrib.enums.projet import (
-    ChoixStatutProposition,
-    ChoixStatutPropositionFormationContinue,
-    ChoixStatutPropositionFormationGenerale,
+    ChoixStatutPropositionDoctorale,
+    ChoixStatutPropositionContinue,
+    ChoixStatutPropositionGenerale,
 )
 from admission.contrib.enums.proximity_commission import (
     ChoixProximityCommissionCDE,
@@ -94,7 +94,7 @@ class ProjectViewTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             code_secteur_formation="SSH",
             documents_projet=[],
             graphe_gantt=[],
@@ -333,12 +333,12 @@ class ProjectViewTestCase(TestCase):
     def test_cancel(self):
         url = resolve_url('admission:doctorate:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             links={},
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, ChoixStatutProposition.IN_PROGRESS.value)
+        self.assertContains(response, ChoixStatutPropositionDoctorale.EN_BROUILLON.value)
         self.mock_proposition_api.return_value.destroy_proposition.assert_not_called()
         response = self.client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -347,13 +347,13 @@ class ProjectViewTestCase(TestCase):
     def test_cancel_general_education_proposition(self):
         url = resolve_url('admission:general-education:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = Mock(
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={'destroy_proposition': {'url': 'ok'}},
         )
         response = self.client.get(url)
         self.mock_proposition_api.return_value.destroy_general_education_proposition.assert_not_called()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, ChoixStatutPropositionFormationGenerale.IN_PROGRESS.value)
+        self.assertContains(response, ChoixStatutPropositionGenerale.EN_BROUILLON.value)
         response = self.client.post(url, {})
         self.assertRedirects(response, expected_url=resolve_url('admission:list'))
         self.mock_proposition_api.return_value.destroy_general_education_proposition.assert_called()
@@ -361,13 +361,13 @@ class ProjectViewTestCase(TestCase):
     def test_cancel_continuing_education_proposition(self):
         url = resolve_url('admission:continuing-education:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = Mock(
-            statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionContinue.EN_BROUILLON.name,
             links={'destroy_proposition': {'url': 'ok'}},
         )
         response = self.client.get(url)
         self.mock_proposition_api.return_value.destroy_continuing_education_proposition.assert_not_called()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, ChoixStatutPropositionFormationContinue.IN_PROGRESS.value)
+        self.assertContains(response, ChoixStatutPropositionContinue.EN_BROUILLON.value)
         response = self.client.post(url, {})
         self.assertRedirects(response, expected_url=resolve_url('admission:list'))
         self.mock_proposition_api.return_value.destroy_continuing_education_proposition.assert_called()

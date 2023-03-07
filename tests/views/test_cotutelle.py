@@ -30,7 +30,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
-from admission.contrib.enums import ChoixStatutProposition
+from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
 
@@ -50,7 +50,7 @@ class CotutelleTestCase(TestCase):
         self.addCleanup(api_patcher.stop)
 
         self.mock_api.return_value.retrieve_proposition.return_value = Mock(
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             links={'update_cotutelle': {'url': 'ok'}},
             erreurs=[],
         )

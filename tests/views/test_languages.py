@@ -30,7 +30,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
-from admission.contrib.enums import ChoixStatutProposition
+from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.tests.utils import MockLanguage
 from base.tests.factories.person import PersonFactory
 
@@ -132,7 +132,7 @@ class LanguagesTestCase(TestCase):
 
     def test_form_empty(self):
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             erreurs=[],
             links={},
         )
@@ -227,7 +227,7 @@ class LanguagesTestCase(TestCase):
     def test_form_ok_redirects_on_continue(self):
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
             matricule_candidat=self.person.global_id,
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             links={'update_accounting': {'url': 'ok'}},
         )
         response = self.client.post(self.form_url, {**self.data_ok, '_submit_and_continue': ''})

@@ -35,27 +35,48 @@ class ChoixLangueRedactionThese(ChoiceEnum):
     UNDECIDED = _('Undecided')
 
 
-class ChoixStatutProposition(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
-    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
-    ENROLLED = _('ENROLLED')
+class ChoixStatutPropositionDoctorale(ChoiceEnum):
+    ANNULEE = _('Cancelled application')
+    EN_BROUILLON = _('In draft')
+    CONFIRMEE = _('Confirmed application (by student)')
+    EN_ATTENTE_DE_SIGNATURE = _('Waiting for signature')
+    INSCRIPTION_AUTORISEE = _('Enrollment allowed')
 
 
-class ChoixStatutPropositionFormationGenerale(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
+class ChoixStatutPropositionGenerale(ChoiceEnum):
+    EN_BROUILLON = _('In draft')
+    CONFIRMEE = _('Confirmed application (by student)')
+    COMPLETEE = _('Completed application')
+    ANNULEE = _('Cancelled application')
+    A_COMPLETER_POUR_SIC = _('To be completed (by student) for SIC')
+    A_COMPLETER_POUR_FAC_CDD = _('To be completed (by student) for FAC/CDD')
+    TRAITEMENT_SIC = _('Processing by SIC')
+    TRAITEMENT_FAC_CDD = _('Processing by Fac/CDD')
+    ATTENTE_VALIDATION_DIRECTION = _('Pending validation from management')
+    INSCRIPTION_AUTORISEE = _('Enrollment allowed')
+    INSCRIPTION_REFUSEE = _('Enrollment denied')
+    CLOTUREE = _('Closed')
+    EN_RECOURS = _('Under appeal')
+
+
+class ChoixStatutPropositionContinue(ChoiceEnum):
+    ANNULEE = _('Cancelled application')
     # During the enrolment step
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
+    EN_BROUILLON = _('In draft')
+    CONFIRMEE = _('Confirmed application (by student)')
     # After the enrolment step
-    ENROLLED = _('ENROLLED')
+    INSCRIPTION_AUTORISEE = _('Enrollment allowed')
 
 
-class ChoixStatutPropositionFormationContinue(ChoiceEnum):
-    CANCELLED = _('CANCELLED')
-    # During the enrolment step
-    IN_PROGRESS = _('IN_PROGRESS')
-    SUBMITTED = _('SUBMITTED')
-    # After the enrolment step
-    ENROLLED = _('ENROLLED')
+IN_PROGRESS_STATUSES = {
+    ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
+    ChoixStatutPropositionDoctorale.EN_ATTENTE_DE_SIGNATURE.name,
+    ChoixStatutPropositionGenerale.EN_BROUILLON.name,
+    ChoixStatutPropositionContinue.EN_BROUILLON.name,
+}
+
+CANCELLED_STATUSES = {
+    ChoixStatutPropositionDoctorale.ANNULEE.name,
+    ChoixStatutPropositionGenerale.ANNULEE.name,
+    ChoixStatutPropositionContinue.ANNULEE.name,
+}

@@ -68,9 +68,9 @@ from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversi
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import (
-    ChoixStatutProposition,
-    ChoixStatutPropositionFormationGenerale,
-    ChoixStatutPropositionFormationContinue,
+    ChoixStatutPropositionDoctorale,
+    ChoixStatutPropositionGenerale,
+    ChoixStatutPropositionContinue,
 )
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
@@ -260,7 +260,7 @@ class MixinTestCase(TestCase):
             domaine_these='',
             doctorat_deja_realise='',
             fiche_archive_signatures_envoyees=[],
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             erreurs=[],
             reponses_questions_specifiques={},
             curriculum=['file1.pdf'],
@@ -283,7 +283,7 @@ class MixinTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links=GeneralEducationPropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
@@ -319,7 +319,7 @@ class MixinTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionContinue.EN_BROUILLON.name,
             links=ContinuingEducationPropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),

@@ -32,7 +32,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
-from admission.contrib.enums import ChoixStatutProposition
+from admission.contrib.enums import ChoixStatutPropositionDoctorale, IN_PROGRESS_STATUSES, CANCELLED_STATUSES
 from admission.services.doctorate import AdmissionDoctorateService
 from admission.services.proposition import AdmissionPropositionService
 
@@ -64,6 +64,8 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         context['is_general'] = self.is_general
         context['is_continuing'] = self.is_continuing
         context['is_doctorate'] = self.is_doctorate
+        context['IN_PROGRESS_STATUSES'] = IN_PROGRESS_STATUSES
+        context['CANCELLED_STATUSES'] = CANCELLED_STATUSES
         return context
 
     @property
@@ -141,7 +143,7 @@ class LoadDossierViewMixin(LoadViewMixin):
                 context['specific_questions'] = self.specific_questions
 
             # Add info about doctorate if needed (this concerns the project/cotutelle/supervision tabs)
-            if context['admission'].statut == ChoixStatutProposition.ENROLLED.name:
+            if context['admission'].statut == ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name:
                 context['doctorate'] = AdmissionDoctorateService.get_doctorate(
                     person=self.request.user.person,
                     uuid=self.admission_uuid,

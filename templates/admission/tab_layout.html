@@ -120,13 +120,13 @@
         {% if not admission %}
           {% trans "Not submitted" %}
         {% else %}
-          {{ admission.statut|enum_display:'ChoixStatutProposition' }}
+          {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
         {% endif %}
       </div>
     </div>
   {% endblock well %}
 
-  {% if not admission or admission.status == 'IN_PROGRESS' %}
+  {% if not admission or admission.status in IN_PROGRESS_STATUSES %}
     <p><em>
       {% blocktrans trimmed %}
         The online enrolment request procedure is split up into several
@@ -197,7 +197,7 @@
               </button>
             {% endblock submit_button %}
             {% block submit_and_continue %}
-              {% if not admission or 'IN_PROGRESS' in admission.statut %}
+              {% if not admission or admission.statut in IN_PROGRESS_STATUSES %}
                 <button
                   type="submit" class="btn btn-primary"
                   name="_submit_and_continue"

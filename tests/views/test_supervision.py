@@ -31,7 +31,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
-from admission.contrib.enums.projet import ChoixStatutProposition
+from admission.contrib.enums.projet import ChoixStatutPropositionDoctorale
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
@@ -84,7 +84,7 @@ class SupervisionTestCase(TestCase):
             projet_formation_complementaire=[],
             lettres_recommandation=[],
             fiche_archive_signatures_envoyees=[],
-            statut=ChoixStatutProposition.SIGNING_IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_ATTENTE_DE_SIGNATURE.name,
             links={
                 'add_approval': {'error': 'nope'},
                 'request_signatures': {'error': 'nope'},
@@ -159,7 +159,9 @@ class SupervisionTestCase(TestCase):
                 'add_member': {'url': 'ok'},
             }
         )
-        self.mock_api.return_value.retrieve_proposition.return_value.statut = ChoixStatutProposition.IN_PROGRESS.name
+        self.mock_api.return_value.retrieve_proposition.return_value.statut = (
+            ChoixStatutPropositionDoctorale.EN_BROUILLON.name
+        )
         response = self.client.get(self.detail_url)
         # Display the signatures
         self.assertRedirects(response, self.update_url)

@@ -548,9 +548,6 @@ msgstr "Supervision member"
 msgid "CA members"
 msgstr "Supervision members"
 
-msgid "CANCELLED"
-msgstr "Cancelled"
-
 msgid "CHEMISTRY"
 msgstr "Chemistry"
 
@@ -582,6 +579,9 @@ msgid "Campus"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Cancelled application"
 msgstr ""
 
 msgid "Certificate"
@@ -667,6 +667,9 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Closed"
+msgstr ""
+
 msgid "Coming implementation."
 msgstr ""
 
@@ -700,6 +703,9 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
+msgid "Completed application"
+msgstr ""
+
 msgid "Completion"
 msgstr ""
 
@@ -713,6 +719,9 @@ msgid "Confirmation and submission"
 msgstr ""
 
 msgid "Confirmation paper"
+msgstr ""
+
+msgid "Confirmed application (by student)"
 msgstr ""
 
 msgid "Consultation of a non-academic activity"
@@ -1085,9 +1094,6 @@ msgstr ""
 msgid "ECTS for the participation"
 msgstr ""
 
-msgid "ENROLLED"
-msgstr "Enrolled"
-
 msgid "ERC - European Research Council"
 msgstr ""
 
@@ -1153,6 +1159,12 @@ msgid "Enroll in a course"
 msgstr ""
 
 msgid "Enrolled"
+msgstr ""
+
+msgid "Enrollment allowed"
+msgstr ""
+
+msgid "Enrollment denied"
 msgstr ""
 
 msgid "Enrollment in a bachelor with quota"
@@ -1483,9 +1495,6 @@ msgstr ""
 msgid "INVITED"
 msgstr "Invited to sign"
 
-msgid "IN_PROGRESS"
-msgstr "In progress"
-
 msgid "IT"
 msgstr ""
 
@@ -1601,6 +1610,9 @@ msgid ""
 msgstr ""
 
 msgid "Important information:"
+msgstr ""
+
+msgid "In draft"
 msgstr ""
 
 msgid "In person"
@@ -2009,6 +2021,9 @@ msgstr ""
 msgid "Past confirmation papers"
 msgstr ""
 
+msgid "Pending validation from management"
+msgstr ""
+
 msgid "Period"
 msgstr ""
 
@@ -2118,6 +2133,12 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Private email"
+msgstr ""
+
+msgid "Processing by Fac/CDD"
+msgstr ""
+
+msgid "Processing by SIC"
 msgstr ""
 
 msgid "Professional"
@@ -2349,17 +2370,11 @@ msgstr ""
 msgid "SERVICE"
 msgstr ""
 
-msgid "SIGNING_IN_PROGRESS"
-msgstr "Signing in progress"
-
 msgid "SOUMISE"
 msgstr ""
 
 msgid "STATISTICS"
 msgstr "Statistics"
-
-msgid "SUBMITTED"
-msgstr "Submitted"
 
 msgid "SUBMITTED_CONFIRMATION"
 msgstr "Submitted confirmation"
@@ -2757,6 +2772,12 @@ msgstr ""
 msgid "Title of the publication"
 msgstr ""
 
+msgid "To be completed (by student) for FAC/CDD"
+msgstr ""
+
+msgid "To be completed (by student) for SIC"
+msgstr ""
+
 msgid ""
 "To be uploaded if you have a F.R.S.-FNRS (including Televie), FRIA or FRESH "
 "grant. The canvas for this opinion is provided by your research fund."
@@ -2825,6 +2846,9 @@ msgstr "UCL Course"
 msgid "Undecided"
 msgstr ""
 
+msgid "Under appeal"
+msgstr ""
+
 msgid "Undertake and declaration"
 msgstr ""
 
@@ -2883,6 +2907,9 @@ msgid "WORK_CONTRACT"
 msgstr "Work contract"
 
 msgid "Waiting for a result"
+msgstr ""
+
+msgid "Waiting for signature"
 msgstr ""
 
 msgid "Website"

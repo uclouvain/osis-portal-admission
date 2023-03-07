@@ -28,7 +28,7 @@
 {% block submit_button_affix %}{% endblock %}
 
 {% block tab_content %}
-  {% if admission.statut != "IN_PROGRESS" %}
+  {% if admission.statut != "EN_BROUILLON" %}
     {% panel _("Summary of the proposition") %}
       {% if admission.fiche_archive_signatures_envoyees %}
         {% get_file_url admission.fiche_archive_signatures_envoyees.0 as file_url %}

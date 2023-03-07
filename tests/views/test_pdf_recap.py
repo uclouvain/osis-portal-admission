@@ -33,7 +33,7 @@ from admission.contrib.enums import (
     TrainingType,
 )
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.projet import ChoixStatutProposition
+from admission.contrib.enums.projet import ChoixStatutPropositionDoctorale
 from base.tests.factories.person import PersonFactory
 
 
@@ -68,7 +68,7 @@ class PDFRecapViewTestCase(TestCase):
             domaine_these='',
             doctorat_deja_realise='',
             fiche_archive_signatures_envoyees=[],
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             erreurs=[],
             curriculum=[],
             pdf_recapitulatif=['saved-pdf-recap-token'],
