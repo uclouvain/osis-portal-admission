@@ -1575,12 +1575,6 @@ msgstr ""
 
 #, python-format
 msgid ""
-"If you want, you can download a summary of your application <a "
-"href=\"%(pdf_url)s\" target=\"_blank\">here</a>."
-msgstr ""
-
-#, python-format
-msgid ""
 "If you wish to change your choice of training for a Bachelor, Master, "
 "Aggregation, CAPAES, Continuing Education or Certificate application, please "
 "<a href=\"%(url)s\">cancel the current application</a> and create a new one."
@@ -2871,6 +2865,9 @@ msgid "Validated"
 msgstr ""
 
 msgid "View"
+msgstr ""
+
+msgid "Visualize the summary"
 msgstr ""
 
 msgid "Volunteering"

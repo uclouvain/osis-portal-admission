@@ -38,10 +38,14 @@
 
       {% url base_namespace|add_str:':pdf-recap' admission.uuid as pdf_url %}
       <p>
-        {% blocktranslate trimmed %}
-          If you want, you can download a summary of your application
-          <a href="{{ pdf_url }}" target="_blank">here</a>.
-        {% endblocktranslate %}
+        <a
+            class="btn btn-primary"
+            href="{{ pdf_url }}"
+            target="_blank"
+        >
+          {% translate "Visualize the summary" %}
+          <i class="fa-solid fa-file-pdf"></i>
+        </a>
       </p>
       <p>
         {% translate "If everything looks good, you can then submit your application below." %}
