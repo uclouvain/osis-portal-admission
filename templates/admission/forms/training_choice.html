@@ -48,8 +48,8 @@
         {% bootstrap_field form.general_education_training %}
       </div>
 
-      <div id="continuing-education-training-container" class="required_field">
-        {% bootstrap_field form.continuing_education_training %}
+      <div id="mixed-training-container" class="required_field">
+        {% bootstrap_field form.mixed_training %}
       </div>
 
       <div id="doctorate-training-container">
@@ -149,7 +149,7 @@
 
           // Clean fields when updating the training type or campus
           $('#id_training_type, #id_campus').on('change', function() {
-              $('#id_general_education_training, #id_sector, #id_continuing_education_training').val('').change();
+              $('#id_general_education_training, #id_sector, #id_mixed_training').val('').change();
           });
 
           // General education
@@ -160,8 +160,8 @@
 
           // Continuing education
 
-          $('#continuing-education-training-container').dependsOn({
-              '#id_training_type': { values: ['FORMATION_CONTINUE'] },
+          $('#mixed-training-container').dependsOn({
+              '#id_training_type': { values: ['CERTIFICAT_ATTESTATION'] },
           }, defaultOptions);
 
           // Doctorate education

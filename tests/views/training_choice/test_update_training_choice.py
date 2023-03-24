@@ -31,8 +31,7 @@ from django.utils.translation import gettext as _
 from rest_framework import status
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import AdmissionType
-from admission.contrib.enums.training_choice import TypeFormation
+from admission.contrib.enums import AdmissionType, TypeFormationChoisissable
 from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
 
@@ -62,7 +61,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         self.assertEqual(form.initial['erasmus_mundus_scholarship'], self.first_erasmus_mundus_scholarship.uuid)
         self.assertEqual(form.initial['general_education_training'], 'TR1-2020')
         self.assertEqual(form.fields['campus'].initial, EMPTY_VALUE)
-        self.assertEqual(form.fields['training_type'].initial, TypeFormation.MASTER.name)
+        self.assertEqual(form.fields['training_type'].initial, TypeFormationChoisissable.MASTER.name)
         self.assertTrue(form.fields['has_erasmus_mundus_scholarship'].initial)
         self.assertTrue(form.fields['has_international_scholarship'].initial)
         self.assertTrue(form.fields['has_double_degree_scholarship'].initial)
@@ -99,7 +98,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
             self.url,
             data={
                 'campus': EMPTY_VALUE,
-                'training_type': TypeFormation.MASTER.name,
+                'training_type': TypeFormationChoisissable.MASTER.name,
             },
         )
 
@@ -124,7 +123,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
             self.url,
             data={
                 'campus': EMPTY_VALUE,
-                'training_type': TypeFormation.MASTER.name,
+                'training_type': TypeFormationChoisissable.MASTER.name,
                 'has_double_degree_scholarship': True,
                 'has_international_scholarship': True,
                 'has_erasmus_mundus_scholarship': True,
@@ -147,12 +146,32 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         self.assertTrue('erasmus_mundus_scholarship' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['erasmus_mundus_scholarship'])
 
+    def test_form_submitting_other_context(self):
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR2-2020',
+        }
+        response = self.client.post(self.url, data=data)
+        form = response.context['form']
+
+        self.assertFalse(form.is_valid())
+        self.assertTrue('__all__' in form.errors)
+        self.assertIn(
+            _(
+                'If you wish to change your choice for this training, please '
+                '<a href="%(url)s">cancel the current application</a> and create a new one.'
+            )
+            % {'url': resolve_url(f'admission:general-education:cancel', pk=self.proposition_uuid)},
+            form.errors['__all__'][0],
+        )
+
     def test_form_submitting_valid_data(self):
         response = self.client.post(
             self.url,
             data={
                 'campus': EMPTY_VALUE,
-                'training_type': TypeFormation.MASTER.name,
+                'training_type': TypeFormationChoisissable.MASTER.name,
                 'general_education_training': 'TR1-2020',
                 'has_double_degree_scholarship': True,
                 'has_international_scholarship': True,
@@ -200,9 +219,9 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         )
 
         # Initial values
-        self.assertEqual(form.initial['continuing_education_training'], 'TR2-2020')
+        self.assertEqual(form.initial['mixed_training'], 'TR2-2020')
         self.assertEqual(form.fields['campus'].initial, EMPTY_VALUE)
-        self.assertEqual(form.fields['training_type'].initial, TypeFormation.FORMATION_CONTINUE.name)
+        self.assertEqual(form.fields['training_type'].initial, TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name)
 
         # Initial choices
         self.assertEqual(
@@ -215,34 +234,52 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         )
 
         self.assertEqual(
-            form.fields['continuing_education_training'].widget.choices,
+            form.fields['mixed_training'].widget.choices,
             [
                 ('TR2-2020', 'Formation 2 (Louvain-La-Neuve) - TR2'),
             ],
         )
 
-        # Disabled fields
-        self.assertTrue(form.fields['training_type'].disabled)
-
     def test_form_submitting_missing_fields(self):
-        response = self.client.post(self.url, data={'campus': EMPTY_VALUE})
-
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+        }
+        response = self.client.post(self.url, data=data)
         form = response.context['form']
 
         self.assertFalse(form.is_valid())
+        self.assertTrue('mixed_training' in form.errors)
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['mixed_training'])
 
-        self.assertTrue('continuing_education_training' in form.errors)
-        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['continuing_education_training'])
+    def test_form_submitting_other_context(self):
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR5-2020',
+        }
+        response = self.client.post(self.url, data=data)
+        form = response.context['form']
+
+        self.assertFalse(form.is_valid())
+        self.assertTrue('__all__' in form.errors)
+        self.assertIn(
+            _(
+                'If you wish to change your choice for this training, please '
+                '<a href="%(url)s">cancel the current application</a> and create a new one.'
+            )
+            % {'url': resolve_url(f'admission:continuing-education:cancel', pk=self.proposition_uuid)},
+            form.errors['__all__'][0],
+        )
 
     def test_form_submitting_valid_data(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'campus': EMPTY_VALUE,
-                'continuing_education_training': 'TR2-2020',
-                'specific_question_answers_1': 'Answer',
-            },
-        )
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR2-2020',
+            'specific_question_answers_1': 'Answer',
+        }
+        response = self.client.post(self.url, data=data)
 
         self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
@@ -280,7 +317,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         self.assertEqual(form.initial['erasmus_mundus_scholarship'], self.first_erasmus_mundus_scholarship.uuid)
         self.assertEqual(form.initial['doctorate_training'], 'TR3-2020')
         self.assertEqual(form.fields['campus'].initial, EMPTY_VALUE)
-        self.assertEqual(form.fields['training_type'].initial, TypeFormation.DOCTORAT.name)
+        self.assertEqual(form.fields['training_type'].initial, TypeFormationChoisissable.DOCTORAT.name)
         self.assertTrue(form.fields['has_erasmus_mundus_scholarship'].initial)
         self.assertEqual(form.initial['proximity_commission'], 'MANAGEMENT')
         self.assertEqual(form.fields['proximity_commission_cde'].initial, 'MANAGEMENT')
@@ -305,24 +342,16 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         ]
         self.assertEqual(form.fields['doctorate_training'].widget.attrs['data-data'], json.dumps(expected))
 
-        # Disabled fields
-        self.assertTrue(form.fields['training_type'].disabled)
-        self.assertTrue(form.fields['proximity_commission_cde'].disabled)
-        self.assertTrue(form.fields['proximity_commission_cdss'].disabled)
-        self.assertTrue(form.fields['science_sub_domain'].disabled)
-        self.assertTrue(form.fields['sector'].disabled)
-        self.assertTrue(form.fields['doctorate_training'].disabled)
-        self.assertTrue(form.fields['campus'].disabled)
+    def test_form_submitting_missing_training_type_field(self):
+        response = self.client.post(self.url)
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+        self.assertTrue('training_type' in form.errors)
 
     def test_form_submitting_missing_fields(self):
-        response = self.client.post(
-            self.url,
-        )
-
+        response = self.client.post(self.url, {'training_type': TypeFormationChoisissable.DOCTORAT.name})
         form = response.context['form']
-
         self.assertFalse(form.is_valid())
-
         self.assertTrue('has_erasmus_mundus_scholarship' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['has_erasmus_mundus_scholarship'])
 
@@ -330,7 +359,11 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['admission_type'])
 
     def test_form_submitting_missing_scholarship_fields(self):
-        response = self.client.post(self.url, data={'has_erasmus_mundus_scholarship': True})
+        data = {
+            'training_type': TypeFormationChoisissable.DOCTORAT.name,
+            'has_erasmus_mundus_scholarship': True,
+        }
+        response = self.client.post(self.url, data=data)
 
         form = response.context['form']
 
@@ -340,7 +373,11 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['erasmus_mundus_scholarship'])
 
     def test_form_submitting_missing_pre_admission_comment_field(self):
-        response = self.client.post(self.url, data={'admission_type': AdmissionType.PRE_ADMISSION.name})
+        data = {
+            'training_type': TypeFormationChoisissable.DOCTORAT.name,
+            'admission_type': AdmissionType.PRE_ADMISSION.name,
+        }
+        response = self.client.post(self.url, data=data)
 
         form = response.context['form']
 
@@ -353,8 +390,11 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         response = self.client.post(
             self.url,
             data={
+                'training_type': TypeFormationChoisissable.DOCTORAT.name,
                 'campus': EMPTY_VALUE,
+                'sector': 'SSH',
                 'doctorate_training': 'TR3-2020',
+                'proximity_commission_cde': 'ECONOMY',
                 'has_erasmus_mundus_scholarship': True,
                 'admission_type': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
