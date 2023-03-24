@@ -102,6 +102,19 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'management_entity': 'CDSS',
                 },
             ),
+            'TR5': Mock(
+                to_dict=lambda: {
+                    'acronym': 'TR5',
+                    'academic_year': year,
+                    'title': 'Formation 5',
+                    'title_en': 'Training 5',
+                    'main_teaching_campus': {
+                        'name': 'Louvain-La-Neuve',
+                    },
+                    'education_group_type': 'CERTIFICATE',
+                    'management_entity': 'ME1',
+                },
+            ),
             'SC3DP': Mock(
                 to_dict=lambda: {
                     'acronym': 'SC3DP',
@@ -465,7 +478,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             ),
         ]
 
-        cls.general_trainings = [
+        cls.continuing_trainings = [
             FormationContinueDTO(
                 sigle='FOOBAR',
                 intitule='Foobar',
@@ -488,7 +501,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             ),
         ]
 
-        cls.continuing_trainings = [
+        cls.general_trainings = [
             FormationGeneraleDTO(
                 sigle='FOOBAR',
                 intitule='Foobar',
@@ -547,7 +560,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_autocomplete_api = autocomplete_api_patcher.start()
         self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = self.sectors
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = self.doctorate_trainings
-        self.mock_autocomplete_api.return_value.list_formation_generale_dtos.return_value = self.continuing_trainings
+        self.mock_autocomplete_api.return_value.list_formation_continue_dtos.return_value = self.continuing_trainings
         self.mock_autocomplete_api.return_value.list_formation_generale_dtos.return_value = self.general_trainings
         self.mock_autocomplete_api.return_value.list_scholarships.return_value = {
             'results': self.mock_scholarships,

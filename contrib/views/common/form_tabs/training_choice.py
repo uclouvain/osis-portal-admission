@@ -33,12 +33,7 @@ from django.views.generic import FormView
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TYPES_FORMATION_GENERALE, TypeFormation
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
-from admission.contrib.forms.training_choice import (
-    ContinuingUpdateTrainingChoiceForm,
-    CreateTrainingChoiceForm,
-    DoctorateUpdateTrainingChoiceForm,
-    GeneralUpdateTrainingChoiceForm,
-)
+from admission.contrib.forms.training_choice import TrainingChoiceForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
@@ -64,6 +59,7 @@ class AdmissionTrainingChoiceFormView(
 ):
     template_name = 'admission/forms/training_choice.html'
     tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+    form_class = TrainingChoiceForm
     extra_context = {
         'GENERAL_EDUCATION_TYPES': list(TYPES_FORMATION_GENERALE),
         'COMMISSIONS_CDE_CLSM': COMMISSIONS_CDE_CLSM,
@@ -79,17 +75,10 @@ class AdmissionTrainingChoiceFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
+        kwargs['current_context'] = self.current_context
         if self.admission_uuid:
             kwargs['admission_uuid'] = self.admission_uuid
         return kwargs
-
-    def get_form_class(self):
-        return {
-            'create': CreateTrainingChoiceForm,
-            'doctorate': DoctorateUpdateTrainingChoiceForm,
-            'general-education': GeneralUpdateTrainingChoiceForm,
-            'continuing-education': ContinuingUpdateTrainingChoiceForm,
-        }[self.current_context]
 
     def prepare_data(self, data):
         new_data = {}
@@ -136,7 +125,7 @@ class AdmissionTrainingChoiceFormView(
         }
 
     def prepare_data_for_continuing_education(self, data):
-        [training_acronym, training_year] = split_training_id(data.get('continuing_education_training'))
+        [training_acronym, training_year] = split_training_id(data.get('mixed_training'))
         return {
             'sigle_formation': training_acronym,
             'annee_formation': int(training_year),
@@ -208,6 +197,6 @@ class AdmissionTrainingChoiceFormView(
             }
         elif self.current_context == 'continuing-education':
             return {
-                'continuing_education_training': get_training_id(self.admission.formation),
+                'mixed_training': get_training_id(self.admission.formation),
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
             }

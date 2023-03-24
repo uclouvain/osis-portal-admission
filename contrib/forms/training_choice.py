@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
 import json
 from typing import Optional
 
@@ -30,7 +31,8 @@ from dal import autocomplete, forward
 from django import forms
 from django.conf import settings
 from django.shortcuts import resolve_url
-from django.utils.translation import gettext_lazy as _, get_language
+from django.utils.safestring import mark_safe
+from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
@@ -41,11 +43,13 @@ from admission.contrib.enums import (
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import (
-    TypeFormation,
-    TYPES_FORMATION_GENERALE,
+    ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE,
     ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE,
+    TYPES_FORMATION_GENERALE,
+    TypeFormation,
+    TypeFormationChoisissable,
 )
-from admission.contrib.forms import get_campus_choices, EMPTY_CHOICE, RadioBooleanField, EMPTY_VALUE
+from admission.contrib.forms import EMPTY_CHOICE, EMPTY_VALUE, RadioBooleanField, get_campus_choices
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -77,9 +81,9 @@ def get_training_choices(training):
 
 class TrainingChoiceForm(ConfigurableFormMixin):
     training_type = forms.ChoiceField(
-        choices=EMPTY_CHOICE + TypeFormation.choices(),
+        choices=EMPTY_CHOICE + TypeFormationChoisissable.choices(),
         label=_('Training type'),
-        required=False,
+        required=True,
     )
 
     campus = forms.ChoiceField(
@@ -101,13 +105,13 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         ),
     )
 
-    # Continuing education
-    continuing_education_training = forms.CharField(
+    # A mix of continuing education and general certificate
+    mixed_training = forms.CharField(
         label=_('Training'),
         required=False,
         widget=autocomplete.ListSelect2(
-            url='admission:autocomplete:continuing-education',
-            forward=['campus'],
+            url='admission:autocomplete:mixed-training',
+            forward=['training_type', 'campus'],
             attrs={
                 'data-minimum-input-length': 3,
             },
@@ -208,8 +212,10 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         ),
     )
 
-    def __init__(self, person, *args, **kwargs):
+    def __init__(self, person, current_context, *args, **kwargs):
         self.person = person
+        self.current_context = current_context
+        self.admission_uuid = kwargs.pop('admission_uuid', None)
 
         super().__init__(*args, **kwargs)
 
@@ -217,9 +223,9 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             self.add_prefix('general_education_training'),
             self.initial.get('general_education_training'),
         )
-        continuing_education_training = self.data.get(
-            self.add_prefix('continuing_education_training'),
-            self.initial.get('continuing_education_training'),
+        mixed_training = self.data.get(
+            self.add_prefix('mixed_training'),
+            self.initial.get('mixed_training'),
         )
         doctorate_training = self.data.get(
             self.add_prefix('doctorate_training'),
@@ -259,17 +265,18 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             self.fields['training_type'].initial = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(
                 self.general_education_training_obj.get('education_group_type')
             )
-        elif continuing_education_training:
-            self.continuing_education_training_obj = get_training(
-                person=self.person,
-                training=continuing_education_training,
+        elif mixed_training:
+            training = get_training(person=self.person, training=mixed_training)
+            self.fields['mixed_training'].widget.choices = get_training_choices(
+                training=training,
             )
-            self.fields['continuing_education_training'].widget.choices = get_training_choices(
-                training=self.continuing_education_training_obj,
-            )
-            self.fields['training_type'].initial = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(
-                self.continuing_education_training_obj.get('education_group_type')
-            )
+            self.fields['training_type'].initial = TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name
+            # Determine real type
+            training_type = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE[training['education_group_type']]
+            if training_type == TypeFormation.FORMATION_CONTINUE.name:
+                self.continuing_education_training_obj = training
+            else:
+                self.general_education_training_obj = training
         elif doctorate_training:
             self.doctorate_training_obj = get_training(person=self.person, training=doctorate_training)
             doctorate_choices = get_training_choices(training=self.doctorate_training_obj)
@@ -322,6 +329,47 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             for sector in AdmissionAutocompleteService.get_sectors(person)
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        if not cleaned_data.get('training_type'):
+            return
+
+        # If changing context after creation, raise an error
+        if self.current_context != 'create':
+            training = (
+                cleaned_data.get('general_education_training')
+                or cleaned_data.get('mixed_training')
+                or cleaned_data.get('doctorate_training')
+            )
+            if training:
+                training = get_training(person=self.person, training=training)
+                if self.current_context != ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE[training['education_group_type']]:
+                    msg = _(
+                        'If you wish to change your choice for this training, please '
+                        '<a href="%(url)s">cancel the current application</a> and create a new one.'
+                    )
+                    url = resolve_url(f'admission:{self.current_context}:cancel', pk=self.admission_uuid)
+                    raise forms.ValidationError(mark_safe(msg % {'url': url}))
+
+        # Determine real training type
+        if cleaned_data.get('training_type') == TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name:
+            training = get_training(person=self.person, training=cleaned_data['mixed_training'])
+            if training:
+                cleaned_data['training_type'] = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(
+                    training['education_group_type']
+                )
+                cleaned_data['general_education_training'] = cleaned_data['mixed_training']
+            else:
+                self.add_error('mixed_training', FIELD_REQUIRED_MESSAGE)
+
+        training_type = cleaned_data.get('training_type')
+
+        self.clean_doctorate(training_type, cleaned_data)
+        self.clean_continuing_education(training_type, cleaned_data)
+        self.clean_general_education(training_type, cleaned_data)
+        self.clean_master_scholarships(training_type, cleaned_data)
+        self.clean_erasmus_scholarship(training_type, cleaned_data)
+
     def clean_master_scholarships(self, training_type, cleaned_data):
         if training_type == TypeFormation.MASTER.name:
             if cleaned_data.get('has_double_degree_scholarship'):
@@ -365,8 +413,8 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     def clean_continuing_education(self, training_type, cleaned_data):
         if training_type == TypeFormation.FORMATION_CONTINUE.name:
-            if not cleaned_data.get('continuing_education_training'):
-                self.add_error('continuing_education_training', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get('mixed_training'):
+                self.add_error('mixed_training', FIELD_REQUIRED_MESSAGE)
 
     def clean_doctorate(self, training_type, cleaned_data):
         if training_type == TypeFormation.DOCTORAT.name:
@@ -405,108 +453,3 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     class Media:
         js = ('js/dependsOn.min.js',)
-
-
-class CreateTrainingChoiceForm(TrainingChoiceForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['training_type'].required = True
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        training_type = cleaned_data.get('training_type')
-
-        self.clean_doctorate(training_type, cleaned_data)
-        self.clean_continuing_education(training_type, cleaned_data)
-        self.clean_general_education(training_type, cleaned_data)
-        self.clean_master_scholarships(training_type, cleaned_data)
-        self.clean_erasmus_scholarship(training_type, cleaned_data)
-
-
-class GeneralUpdateTrainingChoiceForm(TrainingChoiceForm):
-    def clean(self):
-        cleaned_data = super().clean()
-
-        training_type = cleaned_data.get('training_type')
-
-        self.clean_general_education(training_type, cleaned_data)
-        self.clean_master_scholarships(training_type, cleaned_data)
-        self.clean_erasmus_scholarship(training_type, cleaned_data)
-
-    def __init__(self, admission_uuid, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['training_type'].required = True
-        self.fields['training_type'].choices = TypeFormation.general_choices()
-        self.fields['training_type'].help_text = _(
-            'If you wish to change your choice of training for a Doctorate or Continuing Education '
-            'application, please <a href="%(url)s">cancel the current application</a> and create a new one.'
-        ) % {'url': resolve_url('admission:general-education:cancel', pk=admission_uuid)}
-
-        for field in [
-            'proximity_commission_cde',
-            'proximity_commission_cdss',
-            'science_sub_domain',
-            'sector',
-            'doctorate_training',
-        ]:
-            self.fields[field].disabled = True
-
-
-class ContinuingUpdateTrainingChoiceForm(TrainingChoiceForm):
-    def clean(self):
-        cleaned_data = super().clean()
-
-        training_type = TypeFormation.FORMATION_CONTINUE.name
-
-        self.clean_continuing_education(training_type, cleaned_data)
-
-    def __init__(self, admission_uuid, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['training_type'].help_text = _(
-            'If you wish to change your choice of training for a Bachelor, Master, Aggregation, CAPAES, '
-            'Doctorate or Certificate application, please <a href="%(url)s">cancel the current application</a> '
-            'and create a new one.'
-        ) % {'url': resolve_url('admission:continuing-education:cancel', pk=admission_uuid)}
-
-        for field in [
-            'proximity_commission_cde',
-            'proximity_commission_cdss',
-            'science_sub_domain',
-            'sector',
-            'doctorate_training',
-            'training_type',
-        ]:
-            self.fields[field].disabled = True
-
-
-class DoctorateUpdateTrainingChoiceForm(TrainingChoiceForm):
-    def clean(self):
-        cleaned_data = super().clean()
-
-        training_type = TypeFormation.DOCTORAT.name
-
-        self.clean_doctorate(training_type, cleaned_data)
-        self.clean_erasmus_scholarship(training_type, cleaned_data)
-
-    def __init__(self, admission_uuid, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['training_type'].help_text = _(
-            'If you wish to change your choice of training for a Bachelor, Master, Aggregation, CAPAES, '
-            'Continuing Education or Certificate application, please <a href="%(url)s">cancel the current '
-            'application</a> and create a new one.'
-        ) % {'url': resolve_url('admission:doctorate:cancel', pk=admission_uuid)}
-
-        for field in [
-            'proximity_commission_cde',
-            'proximity_commission_cdss',
-            'science_sub_domain',
-            'sector',
-            'doctorate_training',
-            'campus',
-            'training_type',
-        ]:
-            self.fields[field].disabled = True

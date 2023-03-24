@@ -587,6 +587,9 @@ msgstr ""
 msgid "Certificate"
 msgstr ""
 
+msgid "Certificate and attestation"
+msgstr ""
+
 msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
 "specified period"
@@ -1584,23 +1587,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"If you wish to change your choice of training for a Bachelor, Master, "
-"Aggregation, CAPAES, Continuing Education or Certificate application, please "
-"<a href=\"%(url)s\">cancel the current application</a> and create a new one."
-msgstr ""
-
-#, python-format
-msgid ""
-"If you wish to change your choice of training for a Bachelor, Master, "
-"Aggregation, CAPAES, Doctorate or Certificate application, please <a "
+"If you wish to change your choice for this training, please <a "
 "href=\"%(url)s\">cancel the current application</a> and create a new one."
-msgstr ""
-
-#, python-format
-msgid ""
-"If you wish to change your choice of training for a Doctorate or Continuing "
-"Education application, please <a href=\"%(url)s\">cancel the current "
-"application</a> and create a new one."
 msgstr ""
 
 msgid "Important information:"
