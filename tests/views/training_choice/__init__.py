@@ -488,6 +488,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
+                code='FOOBAR',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -498,6 +499,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
+                code='BARBAZ',
             ),
         ]
 
@@ -511,6 +513,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
+                code='FOOBAR',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -521,6 +524,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
+                code='BARBAZ',
             ),
         ]
 

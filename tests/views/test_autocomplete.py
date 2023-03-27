@@ -507,6 +507,7 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
+                code='FOOBAR',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -517,6 +518,7 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
+                code='BARBAZ',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -547,6 +549,7 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMC',
+                code='CONFOOBAR',
             ),
             FormationContinueDTO(
                 sigle='CONBARBAZ',
@@ -557,6 +560,7 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMC',
+                code='CONBARBAZ',
             ),
         ]
         api.return_value.list_formation_generale_dtos.return_value = [
@@ -569,6 +573,7 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
+                code='GENFOOBAR',
             ),
             FormationGeneraleDTO(
                 sigle='GENBARBAZ',
@@ -579,6 +584,7 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
+                code='GENBARBAZ',
             ),
         ]
         url = reverse('admission:autocomplete:mixed-training')
