@@ -1,28 +1,29 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
 import functools
 import re
 from contextlib import suppress
@@ -53,10 +54,13 @@ from admission.contrib.enums import (
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
 from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
+from admission.contrib.forms.supervision import DoctorateAdmissionMemberSupervisionForm
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
 from admission.services.reference import CountriesService
 from admission.utils import get_uuid_value, to_snake_case, format_academic_year
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
+from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
+from osis_admission_sdk.model.supervision_dto_signatures_membres_ca import SupervisionDTOSignaturesMembresCA
 
 register = template.Library()
 
@@ -251,7 +255,7 @@ def get_valid_tab_tree(tab_tree, admission):
         valid_tab_tree = {}
 
         # Loop over the tabs of the original tab tree
-        for (parent_tab, sub_tabs) in tab_tree.items():
+        for parent_tab, sub_tabs in tab_tree.items():
             # Get the accessible sub tabs depending on the user permissions
             valid_sub_tabs = [tab for tab in sub_tabs if _can_access_tab(admission, tab.name, READ_ACTIONS_BY_TAB)]
             # Only add the parent tab if at least one sub tab is allowed
@@ -736,3 +740,15 @@ def admission_status(status: str, osis_education_type: str):
         'doctorate': ChoixStatutPropositionDoctorale,
     }.get(admission_context)
     return status_enum.get_value(status)
+
+
+@register.simple_tag(takes_context=True)
+def edit_external_member_form(context, membre: 'SupervisionDTOPromoteur'):
+    """Get an edit form"""
+    initial = membre.to_dict()
+    initial['pays'] = initial['code_pays']
+    return DoctorateAdmissionMemberSupervisionForm(
+        prefix=f"member-{membre.uuid}",
+        person=context['user'].person,
+        initial=initial,
+    )

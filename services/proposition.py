@@ -583,6 +583,14 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def edit_external_member(cls, person, uuid, **kwargs):
+        return APIClient().edit_external_member(
+            uuid=uuid,
+            modifier_membre_supervision_externe_command=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def remove_member(cls, person, uuid, **kwargs):
         return APIClient().remove_member(
             uuid=uuid,

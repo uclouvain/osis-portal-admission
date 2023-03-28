@@ -38,6 +38,7 @@ from admission.contrib.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 from osis_admission_sdk import ApiException
+from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
 
 
 @override_settings(ADMISSION_TOKEN_EXTERNAL='api-token-external')
@@ -89,6 +90,7 @@ class SupervisionTestCase(TestCase):
                 'add_approval': {'error': 'nope'},
                 'request_signatures': {'error': 'nope'},
                 'add_member': {'error': 'nope'},
+                'edit_external_member': {'url': 'ok'},
             },
             erreurs=[],
         )
@@ -116,11 +118,18 @@ class SupervisionTestCase(TestCase):
                     commentaire_externe="A public comment to display",
                 ),
                 dict(
-                    promoteur=dict(
+                    promoteur=SupervisionDTOPromoteur(
                         uuid="uuid-externe",
                         matricule="",
                         prenom="Marcel",
                         nom="Troufignon",
+                        est_docteur=True,
+                        email="marcel@example.org",
+                        institution="isntitution",
+                        ville="ville",
+                        code_pays="FR",
+                        pays="France",
+                        est_externe=True,
                     ),
                     statut=ChoixEtatSignature.APPROVED.name,
                 ),
@@ -288,6 +297,36 @@ class SupervisionTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.mock_api.return_value.remove_member.assert_called()
 
+    def test_should_edit_external_supervision_member(self):
+        url = resolve_url(
+            "admission:doctorate:edit-external-member",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            uuid="uuid-0123456978",
+        )
+        external_data = {
+            f'member-uuid-0123456978-{k}': v
+            for k, v in {
+                'prenom': '',
+                'nom': 'Doe',
+                'email': 'john@example.org',
+                'est_docteur': True,
+                'institution': 'ins',
+                'ville': 'mons',
+                'pays': 'BE',
+                'langue': 'fr-be',
+            }.items()
+        }
+        response = self.client.post(url, external_data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, self.detail_url)
+        self.mock_api.return_value.edit_external_member.assert_not_called()
+
+        external_data['member-uuid-0123456978-prenom'] = 'John'
+        response = self.client.post(url, external_data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, self.detail_url)
+        self.mock_api.return_value.edit_external_member.assert_called()
+
     def test_should_not_remove_supervision_member_if_not_found(self):
         url = resolve_url(
             "admission:doctorate:remove-actor",
@@ -335,7 +374,7 @@ class SupervisionTestCase(TestCase):
             **self.default_kwargs,
         )
 
-    def test_should_error_when_refrence_promoter_and_no_institute(self):
+    def test_should_error_when_reference_promoter_and_no_institute(self):
         self.mock_api.return_value.retrieve_supervision.return_value.to_dict.return_value = dict(
             signatures_promoteurs=[
                 dict(
