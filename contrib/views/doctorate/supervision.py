@@ -35,7 +35,11 @@ from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
 
 from admission.contrib.enums import ActorType, ChoixStatutPropositionDoctorale, DecisionApprovalEnum
-from admission.contrib.forms.supervision import DoctorateAdmissionApprovalByPdfForm, DoctorateAdmissionApprovalForm
+from admission.contrib.forms.supervision import (
+    DoctorateAdmissionApprovalByPdfForm,
+    DoctorateAdmissionApprovalForm,
+    DoctorateAdmissionMemberSupervisionForm,
+)
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
@@ -47,6 +51,7 @@ __all__ = [
     'DoctorateAdmissionSetReferencePromoterView',
     'DoctorateAdmissionApprovalByPdfView',
     'DoctorateAdmissionExternalResendView',
+    'DoctorateAdmissionEditExternalMemberView',
 ]
 __namespace__ = False
 
@@ -194,6 +199,31 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
 
     def get_success_url(self):
         return self._get_url("supervision")
+
+
+class DoctorateAdmissionEditExternalMemberView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
+    urlpatterns = {'edit-external-member': 'edit-external-member/<uuid>'}
+    form_class = DoctorateAdmissionMemberSupervisionForm
+
+    def prepare_data(self, data):
+        return {'uuid_proposition': self.admission_uuid, 'uuid_membre': self.kwargs['uuid'], **data}
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['person'] = self.request.user.person
+        kwargs['prefix'] = f"member-{self.kwargs['uuid']}"
+        return kwargs
+
+    def call_webservice(self, data):
+        AdmissionSupervisionService.edit_external_member(person=self.person, uuid=self.admission_uuid, **data)
+
+    def get_success_url(self):
+        return self._get_url("supervision")
+
+    def form_invalid(self, form):
+        messages.error(self.request, _("Please correct the errors below"))
+        messages.error(self.request, str(form.errors))
+        return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
 class DoctorateAdmissionSetReferencePromoterView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
