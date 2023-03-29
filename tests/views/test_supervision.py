@@ -325,7 +325,22 @@ class SupervisionTestCase(TestCase):
         response = self.client.post(url, external_data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, self.detail_url)
-        self.mock_api.return_value.edit_external_member.assert_called()
+        self.mock_api.return_value.edit_external_member.assert_called_with(
+            uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
+            modifier_membre_supervision_externe={
+                'uuid_proposition': '3c5cdc60-2537-4a12-a396-64d2e9e34876',
+                'uuid_membre': 'uuid-0123456978',
+                'prenom': 'John',
+                'nom': 'Doe',
+                'email': 'john@example.org',
+                'est_docteur': True,
+                'institution': 'ins',
+                'ville': 'mons',
+                'pays': 'BE',
+                'langue': 'fr-be',
+            },
+            **self.default_kwargs,
+        )
 
     def test_should_not_remove_supervision_member_if_not_found(self):
         url = resolve_url(
