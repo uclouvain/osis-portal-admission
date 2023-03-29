@@ -586,7 +586,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def edit_external_member(cls, person, uuid, **kwargs):
         return APIClient().edit_external_member(
             uuid=uuid,
-            modifier_membre_supervision_externe_command=kwargs,
+            modifier_membre_supervision_externe=kwargs,
             **build_mandatory_auth_headers(person),
         )
 
