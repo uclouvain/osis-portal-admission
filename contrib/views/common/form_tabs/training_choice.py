@@ -31,9 +31,13 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.contrib.enums.specific_question import Onglets
-from admission.contrib.enums.training_choice import TYPES_FORMATION_GENERALE, TypeFormation
+from admission.contrib.enums.training_choice import (
+    OSIS_ADMISSION_EDUCATION_TYPES_MAPPING,
+    TYPES_FORMATION_GENERALE,
+    TypeFormation,
+)
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
-from admission.contrib.forms.training_choice import TrainingChoiceForm
+from admission.contrib.forms.training_choice import TrainingChoiceForm, get_training
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
@@ -182,8 +186,16 @@ class AdmissionTrainingChoiceFormView(
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
             }
         elif self.current_context == 'general-education':
+            training_id = get_training_id(self.admission.formation)
+            training = get_training(person=self.person, training=training_id)
+            training_key = (
+                'mixed_training'
+                if training['education_group_type']
+                in OSIS_ADMISSION_EDUCATION_TYPES_MAPPING[TypeFormation.CERTIFICAT.name]
+                else 'general_education_training'
+            )
             return {
-                'general_education_training': get_training_id(self.admission.formation),
+                training_key: training_id,
                 'double_degree_scholarship': (
                     self.admission.bourse_double_diplome and self.admission.bourse_double_diplome.uuid
                 ),

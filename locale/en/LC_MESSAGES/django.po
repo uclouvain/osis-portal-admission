@@ -1585,12 +1585,6 @@ msgid ""
 "seminar, nor the different activities within it."
 msgstr ""
 
-#, python-format
-msgid ""
-"If you wish to change your choice for this training, please <a "
-"href=\"%(url)s\">cancel the current application</a> and create a new one."
-msgstr ""
-
 msgid "Important information:"
 msgstr ""
 
@@ -2766,6 +2760,12 @@ msgid ""
 msgstr ""
 "To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH "
 "grant. The canvas for this opinion is provided by your research fund."
+
+#, python-format
+msgid ""
+"To choose this training, you need to <a href=\"%(url)s\">cancel</a> the "
+"current application and create a new one."
+msgstr ""
 
 msgid "Total hourly volume"
 msgstr ""
