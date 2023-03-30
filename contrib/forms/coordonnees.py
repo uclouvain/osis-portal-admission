@@ -79,7 +79,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
     postal_code = forms.CharField(
         required=False,
         label=_("Postal code"),
-        help_text=_("(e.g.: 1234)"),
+        help_text=get_example_text("1234"),
     )
     city = forms.CharField(
         required=False,
@@ -97,7 +97,11 @@ class DoctorateAdmissionAddressForm(forms.Form):
         widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
     )
     # Enable autocompletion only for Belgium postal codes
-    be_postal_code = forms.CharField(required=False, label=_("Postal code"))
+    be_postal_code = forms.CharField(
+        required=False,
+        label=_("Postal code"),
+        help_text=get_example_text("1234"),
+    )
     be_city = forms.CharField(
         required=False,
         label=_("City"),

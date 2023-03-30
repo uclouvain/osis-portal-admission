@@ -40,8 +40,9 @@
             <div class="col-md-4">{% field_data _("City") coordonnees.residential.city %}</div>
         </div>
     {% endpanel %}
-    {% if show_contact %}
-        {% panel _("Contact address") %}
+    {% if coordonnees.contact %}
+        {% translate 'Contact address' context 'admission' as contact_panel_title %}
+        {% panel contact_panel_title %}
             <div class="row">
                 <div class="col-md-4">{% field_data _("Street") coordonnees.contact.street %}</div>
                 <div class="col-md-2">{% field_data _("Number") coordonnees.contact.street_number %}</div>
