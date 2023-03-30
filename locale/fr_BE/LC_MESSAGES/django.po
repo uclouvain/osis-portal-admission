@@ -1793,14 +1793,6 @@ msgstr ""
 "Si vous soumettez l'activité, vous ne pourrez plus modifier le séminaire, ni "
 "les différentes activités en faisant partie."
 
-#, python-format
-msgid ""
-"If you wish to change your choice for this training, please <a "
-"href=\"%(url)s\">cancel the current application</a> and create a new one."
-msgstr ""
-"Si vous souhaitez modifier votre choix de formation, merci d'<a "
-"href=\"%(url)s\">annuler la présente demande</a> et d’en créer une nouvelle."
-
 msgid "Important information:"
 msgstr "Informations importantes :"
 
@@ -3065,6 +3057,14 @@ msgstr ""
 "A téléverser obligatoirement si vous êtes boursier.ère du F.R.S.-FNRS (y "
 "compris Télévie), du FRIA ou du FRESH. Le canevas de cet avis est fourni par "
 "votre fonds de recherche."
+
+#, python-format
+msgid ""
+"To choose this training, you need to <a href=\"%(url)s\">cancel</a> the "
+"current application and create a new one."
+msgstr ""
+"Pour pouvoir choisir cette formation, il est nécessaire d'<a "
+"href=\"%(url)s\">annuler</a> votre demande et d'en créer une nouvelle."
 
 msgid "Total hourly volume"
 msgstr "Volume horaire total"

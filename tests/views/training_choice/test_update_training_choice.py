@@ -159,8 +159,8 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         self.assertTrue('__all__' in form.errors)
         self.assertIn(
             _(
-                'If you wish to change your choice for this training, please '
-                '<a href="%(url)s">cancel the current application</a> and create a new one.'
+                'To choose this training, you need to <a href="%(url)s">cancel</a> '
+                'the current application and create a new one.'
             )
             % {'url': resolve_url(f'admission:general-education:cancel', pk=self.proposition_uuid)},
             form.errors['__all__'][0],
@@ -265,8 +265,8 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         self.assertTrue('__all__' in form.errors)
         self.assertIn(
             _(
-                'If you wish to change your choice for this training, please '
-                '<a href="%(url)s">cancel the current application</a> and create a new one.'
+                'To choose this training, you need to <a href="%(url)s">cancel</a> '
+                'the current application and create a new one.'
             )
             % {'url': resolve_url(f'admission:continuing-education:cancel', pk=self.proposition_uuid)},
             form.errors['__all__'][0],

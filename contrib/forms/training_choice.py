@@ -221,15 +221,15 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
         general_education_training = self.data.get(
             self.add_prefix('general_education_training'),
-            self.initial.get('general_education_training'),
+            self.initial.get('general_education_training') if not self.is_bound else '',
         )
         mixed_training = self.data.get(
             self.add_prefix('mixed_training'),
-            self.initial.get('mixed_training'),
+            self.initial.get('mixed_training') if not self.is_bound else '',
         )
         doctorate_training = self.data.get(
             self.add_prefix('doctorate_training'),
-            self.initial.get('doctorate_training'),
+            self.initial.get('doctorate_training') if not self.is_bound else '',
         )
 
         scholarships = {
@@ -345,8 +345,8 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                 training = get_training(person=self.person, training=training)
                 if self.current_context != ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE[training['education_group_type']]:
                     msg = _(
-                        'If you wish to change your choice for this training, please '
-                        '<a href="%(url)s">cancel the current application</a> and create a new one.'
+                        'To choose this training, you need to <a href="%(url)s">cancel</a> '
+                        'the current application and create a new one.'
                     )
                     url = resolve_url(f'admission:{self.current_context}:cancel', pk=self.admission_uuid)
                     raise forms.ValidationError(mark_safe(msg % {'url': url}))
