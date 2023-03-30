@@ -191,14 +191,8 @@ class DoctorateAdmissionPersonForm(forms.Form):
         required=False,
         label=_("What was your last year of UCLouvain enrollment?"),
     )
-    already_registered = forms.BooleanField(
+    already_registered = RadioBooleanField(
         required=False,
-        widget=forms.RadioSelect(
-            choices=[
-                (NO, _("No")),
-                (YES, _("Yes")),
-            ],
-        ),
         label="",
     )
     last_registration_id = forms.CharField(
@@ -225,7 +219,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields['last_registration_year'].choices = get_past_academic_years_choices(person)
-        self.initial['already_registered'] = YES if self.initial.get('last_registration_year') else NO
+        self.initial['already_registered'] = True if self.initial.get('last_registration_year') else False
 
         if self.initial.get('birth_year'):
             self.initial['unknown_birth_date'] = True

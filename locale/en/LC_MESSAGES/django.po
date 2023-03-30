@@ -88,9 +88,6 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr ""
 
-msgid "(e.g.: 1234)"
-msgstr ""
-
 #, python-format
 msgid ""
 "<a href=\"%(enrollment_url)s\">Go to course enrollment</a> or <a "
@@ -736,6 +733,10 @@ msgstr ""
 msgid "Contact"
 msgstr ""
 
+msgid "Contact address"
+msgstr ""
+
+msgctxt "admission"
 msgid "Contact address"
 msgstr ""
 
