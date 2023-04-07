@@ -73,7 +73,7 @@
       type="button"
       class="btn btn-default pull-right"
       data-toggle="collapse"
-      data-target="#edit_external_member_form"
+      data-target="#edit_external_member_form-{{ member.uuid }}"
     >
       <i class="fas fa-pencil"></i>
       {% trans "Edit" %}
@@ -141,7 +141,7 @@
 
     {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
       {% url 'admission:doctorate:edit-external-member' pk=admission.uuid uuid=member.uuid as edit_external_member_url %}
-      <form method="post" action="{{ edit_external_member_url }}" id="edit_external_member_form" class="collapse">
+      <form method="post" action="{{ edit_external_member_url }}" id="edit_external_member_form-{{ member.uuid }}" class="collapse">
         {% csrf_token %}
         {% edit_external_member_form member as edit_external_member_form %}
         <div class="">
