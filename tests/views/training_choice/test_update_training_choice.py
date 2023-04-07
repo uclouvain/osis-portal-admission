@@ -407,6 +407,9 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
             uuid=self.proposition_uuid,
             modifier_type_admission_doctorale_command={
                 'uuid_proposition': self.proposition_uuid,
+                'sigle_formation': 'TR3',
+                'annee_formation': 2020,
+                'commission_proximite': 'ECONOMY',
                 'bourse_erasmus_mundus': self.first_erasmus_mundus_scholarship.uuid,
                 'type_admission': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',

@@ -101,22 +101,20 @@ class AdmissionTrainingChoiceFormView(
         return new_data
 
     def prepare_data_for_doctorate(self, data):
-        new_data = {
+        [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
+        return {
             'type_admission': data.get('admission_type'),
             'justification': data.get('justification'),
             'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
-        }
-        if not self.admission_uuid:
-            [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
-            new_data['sigle_formation'] = training_acronym
-            new_data['annee_formation'] = int(training_year)
-            new_data['commission_proximite'] = (
+            'sigle_formation': training_acronym,
+            'annee_formation': int(training_year),
+            'commission_proximite': (
                 data.get('proximity_commission_cde')
                 or data.get('proximity_commission_cdss')
                 or data.get('science_sub_domain')
                 or ''
-            )
-        return new_data
+            ),
+        }
 
     def prepare_data_for_general_education(self, data):
         [training_acronym, training_year] = split_training_id(data.get('general_education_training'))
