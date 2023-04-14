@@ -220,6 +220,28 @@ class TrainingTestCase(TestCase):
         response = self.client.post(url, data, follow=True)
         self.assertRedirects(response, f'{self.url}#uuid-created')
 
+    def test_create_wrong_dates(self):
+        url = resolve_url(
+            "admission:doctorate:doctoral-training:add",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            category=CategorieActivite.CONFERENCE.name,
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, _("Add a conference"))
+
+        data = {
+            'type': 'A great conference',
+            'start_date': '13/04/2023',
+            'end_date': '12/04/2023',
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(
+            response, "form", 'start_date', _("The start date must be equal or lower than the end date.")
+        )
+
     def test_create_with_parent(self):
         url = resolve_url(
             "admission:doctorate:doctoral-training:add",

@@ -168,6 +168,12 @@ class ActivityFormMixin(forms.Form):
                 person,
             )
 
+    def clean(self):
+        data = super().clean()
+        if data.get('start_date') and data.get('end_date') and data.get('start_date') > data.get('end_date'):
+            self.add_error('start_date', _("The start date must be equal or lower than the end date."))
+        return data
+
     class Media:
         js = ('js/dependsOn.min.js',)
 
