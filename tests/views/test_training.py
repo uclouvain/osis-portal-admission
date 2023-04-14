@@ -360,35 +360,6 @@ class TrainingTestCase(TestCase):
             self.client.post(self.url, data)
 
     @patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
-    def test_create_course_dates(self, acad_api):
-        acad_api.return_value.get_academic_years.return_value = Mock(
-            results=[
-                Mock(
-                    start_date=datetime.date(2021, 9, 2),
-                    end_date=datetime.date(2022, 9, 1),
-                    year=2021,
-                )
-            ]
-        )
-
-        url = resolve_url(
-            "admission:doctorate:doctoral-training:add",
-            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-            category=CategorieActivite.COURSE.name,
-        )
-        data = {
-            'type': 'A Course',
-            'organizing_institution': INSTITUTION_UCL,
-            'academic_year': '2021',
-        }
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        call_data = self.mock_api.return_value.create_doctoral_training.call_args[1]['doctoral_training_activity']
-        self.assertNotIn('academic_year', call_data)
-        self.assertEqual(call_data['start_date'].year, 2021)
-        self.assertEqual(call_data['end_date'].year, 2022)
-
-    @patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
     @patch('osis_learning_unit_sdk.api.learning_units_api.LearningUnitsApi')
     def test_update_course_enrollment(self, learning_unit_api, acad_api):
         learning_unit_api.return_value.learningunitstitle_read.return_value = {'title': "dumb text"}

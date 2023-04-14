@@ -70,17 +70,3 @@
     </div>
   </div>
 {% endblock %}
-
-{% block script %}
-  {{ block.super }}
-  <script>
-  $(function () {
-    $('.academic-year').dependsOn({
-      '#id_organizing_institution_0': { values: ['UCLouvain'] },
-    });
-    $('.dates').dependsOn({
-      '#id_organizing_institution_0': { values: ['other'] },
-    });
-  });
-  </script>
-{% endblock %}

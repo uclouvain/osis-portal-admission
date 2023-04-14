@@ -54,11 +54,8 @@
   <script>
   $(function () {
     {# Scripts cannot be inside form includes as dependsOn is included in form.media #}
-    $('.academic-year').length && $('.academic-year').dependsOn({
+    $('#container_start_date a.popover-buttons').length && $('#container_start_date a.popover-buttons').dependsOn({
       '#id_organizing_institution_0': { values: ['UCLouvain'] },
-    });
-    $('.dates').length && $('.dates').dependsOn({
-      '#id_organizing_institution_0': { values: ['other'] },
     });
     $('#id_academic_year').change(function () {
       $('#id_learning_unit_year').val(null).trigger('change');

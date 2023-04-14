@@ -1443,6 +1443,13 @@ msgstr ""
 "target='_blank'>Communauté française</a> de Belgique."
 
 msgid ""
+"For courses in the UCLouvain catalogue, the academic year begins on 14 "
+"September and ends on 13 September of the following year."
+msgstr ""
+"Pour les cours du catalogue UCLouvain, l'année académique commence le 14 "
+"septembre et se termine le 13 septembre de l'année qui suit."
+
+msgid ""
 "For example, a contract, a letter from a promoter or any other document "
 "indicating that you have been awarded the scholarship on the dates indicated."
 msgstr ""
