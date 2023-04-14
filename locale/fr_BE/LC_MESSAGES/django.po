@@ -1294,6 +1294,9 @@ msgstr "Fin"
 msgid "End date"
 msgstr "Date de fin"
 
+msgid "End date of the grant before any renewal."
+msgstr "Date de fin de la bourse avant tout renouvellement éventuel."
+
 msgid "English"
 msgstr "Anglais"
 
@@ -1438,6 +1441,13 @@ msgstr ""
 "la demande d’admission <strong>doit contenir l'équivalence</strong> de votre "
 "diplôme délivrée par la <a href='http://www.equivalences.cfwb.be/' "
 "target='_blank'>Communauté française</a> de Belgique."
+
+msgid ""
+"For example, a contract, a letter from a promoter or any other document "
+"indicating that you have been awarded the scholarship on the dates indicated."
+msgstr ""
+"Par exemple, un contrat, une lettre d'un•e promoteur•trice ou tout autre "
+"document indiquant que la bourse vous est octroyée aux dates indiquées."
 
 msgid "For the attention of"
 msgstr "A l'attention de"
@@ -2385,7 +2395,7 @@ msgid "Promoter"
 msgstr "Promoteur"
 
 msgid "Promoters"
-msgstr "Promoteurs"
+msgstr "Promotion"
 
 msgid "Proof"
 msgstr "Preuve"

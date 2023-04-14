@@ -1156,6 +1156,9 @@ msgstr ""
 msgid "End date"
 msgstr ""
 
+msgid "End date of the grant before any renewal."
+msgstr ""
+
 msgid "English"
 msgstr ""
 
@@ -1294,6 +1297,11 @@ msgid ""
 "admission request <strong>must contain the equivalence</strong> of your "
 "diploma delivered by the <a href='http://www.equivalences.cfwb.be/' "
 "target='_blank'>French Community</a> of Belgium."
+msgstr ""
+
+msgid ""
+"For example, a contract, a letter from a promoter or any other document "
+"indicating that you have been awarded the scholarship on the dates indicated."
 msgstr ""
 
 msgid "For the attention of"

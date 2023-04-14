@@ -106,10 +106,10 @@
         </div>
       </div>
       <div class="row">
-        {% bootstrap_field form.bourse_date_debut form_group_class="form-group col-md-4 required_field" %}
-        {% bootstrap_field form.bourse_date_fin form_group_class="form-group col-md-4 required_field" %}
+        {% bootstrap_field_with_tooltip form.bourse_date_debut classes="form-group col-md-5 required_field" %}
+        {% bootstrap_field form.bourse_date_fin form_group_class="form-group col-md-3 required_field" %}
       </div>
-      {% bootstrap_field form.bourse_preuve form_group_class="form-group required_field" %}
+      {% bootstrap_field_with_tooltip form.bourse_preuve classes="form-group required_field" %}
     </div>
     <div id="financing-details" class="row">
       <div class="col-md-6">
