@@ -33,8 +33,10 @@
     <div class="col-md-2 visible-md visible-lg">
       {% admission_subtabs doctorate %}
     </div>
-    <div class="col-md-10 quitting-context-excluded">
-      {% include form.template_name %}
+    <div class="col-md-10">
+      <div class="quitting-context-excluded">
+        {% include form.template_name %}
+      </div>
       <div class="text-right form-group">
         <a href="{{ back_url }}" class="text-danger">
           {% trans "Cancel" %}
@@ -42,7 +44,6 @@
         <button type="submit" class="btn btn-primary">
           {% trans "Save" %}
         </button>
-
       </div>
     </div>
   </div>
