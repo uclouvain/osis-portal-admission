@@ -2662,7 +2662,7 @@ msgid ""
 "of a doctoral thesis (art. 2.3.1. of the doctoral regulations)."
 msgstr ""
 
-msgid "The start date must be equals or lower than the end date."
+msgid "The start date must be equal or lower than the end date."
 msgstr ""
 
 msgid ""

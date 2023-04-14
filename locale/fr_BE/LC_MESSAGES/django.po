@@ -2952,7 +2952,7 @@ msgstr ""
 "nature à aboutir à la présentation d'une thèse de doctorat (art. 2.3.1. du "
 "règlement doctoral)."
 
-msgid "The start date must be equals or lower than the end date."
+msgid "The start date must be equal or lower than the end date."
 msgstr "La date de début doit être antérieure ou égale à la date de fin."
 
 msgid ""
