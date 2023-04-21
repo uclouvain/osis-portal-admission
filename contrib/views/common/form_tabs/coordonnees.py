@@ -94,7 +94,6 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
             self.prepare_be_city(data['contact'])
         else:
             data['contact'] = None
-        data.pop('email')
         return data
 
     def call_webservice(self, data):

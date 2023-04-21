@@ -28,9 +28,9 @@ from django.test import TestCase
 from unittest.mock import Mock, ANY, patch
 
 from admission.contrib.enums import (
-    ChoixStatutProposition,
-    ChoixStatutPropositionFormationContinue,
-    ChoixStatutPropositionFormationGenerale,
+    ChoixStatutPropositionDoctorale,
+    ChoixStatutPropositionContinue,
+    ChoixStatutPropositionGenerale,
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
@@ -100,6 +100,19 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     },
                     'education_group_type': 'PHD',
                     'management_entity': 'CDSS',
+                },
+            ),
+            'TR5': Mock(
+                to_dict=lambda: {
+                    'acronym': 'TR5',
+                    'academic_year': year,
+                    'title': 'Formation 5',
+                    'title_en': 'Training 5',
+                    'main_teaching_campus': {
+                        'name': 'Louvain-La-Neuve',
+                    },
+                    'education_group_type': 'CERTIFICATE',
+                    'management_entity': 'ME1',
                 },
             ),
             'SC3DP': Mock(
@@ -230,7 +243,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=Mock(
@@ -270,7 +283,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=None,
@@ -296,7 +309,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             'matricule_candidat': cls.person.global_id,
             'prenom_candidat': cls.person.first_name,
             'nom_candidat': cls.person.last_name,
-            'statut': ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
+            'statut': ChoixStatutPropositionContinue.EN_BROUILLON.name,
             'links': {'update_specific_question': {'url': 'ok'}},
             'erreurs': {},
             'reponses_questions_specifiques': {
@@ -337,7 +350,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionContinue.EN_BROUILLON.name,
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             reponses_questions_specifiques={
@@ -385,7 +398,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             lettres_recommandation=[],
             links={'update_proposition': {'url': 'ok'}},
             commission_proximite='MANAGEMENT',
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             bourse_erasmus_mundus=Mock(
                 uuid=cls.first_erasmus_mundus_scholarship.uuid,
                 nom_court=cls.first_erasmus_mundus_scholarship.short_name,
@@ -465,7 +478,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             ),
         ]
 
-        cls.general_trainings = [
+        cls.continuing_trainings = [
             FormationContinueDTO(
                 sigle='FOOBAR',
                 intitule='Foobar',
@@ -475,6 +488,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
+                code='FOOBAR',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -485,10 +499,11 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
+                code='BARBAZ',
             ),
         ]
 
-        cls.continuing_trainings = [
+        cls.general_trainings = [
             FormationGeneraleDTO(
                 sigle='FOOBAR',
                 intitule='Foobar',
@@ -498,6 +513,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
+                code='FOOBAR',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -508,6 +524,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
+                code='BARBAZ',
             ),
         ]
 
@@ -547,7 +564,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_autocomplete_api = autocomplete_api_patcher.start()
         self.mock_autocomplete_api.return_value.list_sector_dtos.return_value = self.sectors
         self.mock_autocomplete_api.return_value.list_doctorat_dtos.return_value = self.doctorate_trainings
-        self.mock_autocomplete_api.return_value.list_formation_generale_dtos.return_value = self.continuing_trainings
+        self.mock_autocomplete_api.return_value.list_formation_continue_dtos.return_value = self.continuing_trainings
         self.mock_autocomplete_api.return_value.list_formation_generale_dtos.return_value = self.general_trainings
         self.mock_autocomplete_api.return_value.list_scholarships.return_value = {
             'results': self.mock_scholarships,

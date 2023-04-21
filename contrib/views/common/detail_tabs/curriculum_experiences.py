@@ -33,6 +33,7 @@ from admission.constants import BE_ISO_CODE, LINGUISTIC_REGIMES_WITHOUT_TRANSLAT
 from admission.contrib.enums import (
     EvaluationSystemsWithCredits,
     ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT,
+    CURRICULUM_ACTIVITY_LABEL,
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
@@ -99,6 +100,7 @@ class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMix
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['experience'] = self.professional_experience
+        context['CURRICULUM_ACTIVITY_LABEL'] = CURRICULUM_ACTIVITY_LABEL
         return context
 
 

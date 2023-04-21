@@ -29,6 +29,7 @@ from django.shortcuts import resolve_url
 from django.test import TestCase
 from django.urls import reverse
 
+from admission.contrib.enums import ChoixStatutPropositionDoctorale, TrainingType
 from base.tests.factories.person import PersonFactory
 
 
@@ -58,12 +59,20 @@ class ListTestCase(TestCase):
                 Mock(
                     uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                     links={'retrieve_proposition': {'url': 'access granted'}},
+                    statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
                     erreurs=[],
+                    doctorat=Mock(
+                        type=TrainingType.PHD.name,
+                    ),
                 ),
                 Mock(
                     uuid='b3729603-c991-489f-8d8d-1d3a11b64dad',
                     links={},
                     erreurs=[],
+                    statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
+                    doctorat=Mock(
+                        type=TrainingType.PHD.name,
+                    ),
                 ),
             ],
             continuing_education_propositions=[
@@ -71,6 +80,11 @@ class ListTestCase(TestCase):
                     uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                     links={'retrieve_training_choice': {'url': 'access granted'}},
                     erreurs=[],
+                    statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
+                    doctorat=None,
+                    formation=Mock(
+                        type=TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name,
+                    ),
                 ),
             ],
             general_education_propositions=[
@@ -78,6 +92,11 @@ class ListTestCase(TestCase):
                     uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
                     links={'retrieve_training_choice': {'url': 'access granted'}},
                     erreurs=[],
+                    statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
+                    formation=Mock(
+                        type=TrainingType.BACHELOR.name,
+                    ),
+                    doctorat=None,
                 ),
             ],
             links={

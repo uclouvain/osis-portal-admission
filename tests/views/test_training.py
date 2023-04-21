@@ -220,6 +220,28 @@ class TrainingTestCase(TestCase):
         response = self.client.post(url, data, follow=True)
         self.assertRedirects(response, f'{self.url}#uuid-created')
 
+    def test_create_wrong_dates(self):
+        url = resolve_url(
+            "admission:doctorate:doctoral-training:add",
+            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
+            category=CategorieActivite.CONFERENCE.name,
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, _("Add a conference"))
+
+        data = {
+            'type': 'A great conference',
+            'start_date': '13/04/2023',
+            'end_date': '12/04/2023',
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(
+            response, "form", 'start_date', _("The start date must be equal or lower than the end date.")
+        )
+
     def test_create_with_parent(self):
         url = resolve_url(
             "admission:doctorate:doctoral-training:add",
@@ -336,35 +358,6 @@ class TrainingTestCase(TestCase):
         )
         with self.assertRaises(ApiException):
             self.client.post(self.url, data)
-
-    @patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
-    def test_create_course_dates(self, acad_api):
-        acad_api.return_value.get_academic_years.return_value = Mock(
-            results=[
-                Mock(
-                    start_date=datetime.date(2021, 9, 2),
-                    end_date=datetime.date(2022, 9, 1),
-                    year=2021,
-                )
-            ]
-        )
-
-        url = resolve_url(
-            "admission:doctorate:doctoral-training:add",
-            pk="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-            category=CategorieActivite.COURSE.name,
-        )
-        data = {
-            'type': 'A Course',
-            'organizing_institution': INSTITUTION_UCL,
-            'academic_year': '2021',
-        }
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        call_data = self.mock_api.return_value.create_doctoral_training.call_args[1]['doctoral_training_activity']
-        self.assertNotIn('academic_year', call_data)
-        self.assertEqual(call_data['start_date'].year, 2021)
-        self.assertEqual(call_data['end_date'].year, 2022)
 
     @patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
     @patch('osis_learning_unit_sdk.api.learning_units_api.LearningUnitsApi')

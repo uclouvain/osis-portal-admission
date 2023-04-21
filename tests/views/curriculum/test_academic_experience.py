@@ -618,7 +618,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             response,
             'base_form',
             None,
-            errors=gettext("The start date must be equals or lower than the end date."),
+            errors=gettext("The start date must be equal or lower than the end date."),
         )
 
     def test_with_admission_on_update_experience_post_form_missing_other_institute(self):

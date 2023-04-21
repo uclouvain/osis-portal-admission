@@ -43,10 +43,9 @@ from admission.contrib.enums import (
     LienParente,
     TrainingType,
     TypeSituationAssimilation,
-    dynamic_person_concerned_lowercase,
 )
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.projet import ChoixStatutProposition, ChoixStatutPropositionFormationGenerale
+from admission.contrib.enums.projet import ChoixStatutPropositionDoctorale, ChoixStatutPropositionGenerale
 from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
 from reference.services.iban_validator import IBANValidatorException, IBANValidatorRequestException
@@ -95,7 +94,7 @@ class DoctorateAccountingViewTestCase(TestCase):
             domaine_these='',
             doctorat_deja_realise='',
             fiche_archive_signatures_envoyees=[],
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             erreurs=[],
             curriculum=[],
         )
@@ -217,8 +216,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         # Check context data
         self.assertEqual(response.context['admission'], self.proposition)
         self.assertEqual(response.context['accounting'], self.accounting)
-        self.assertEqual(response.context['formatted_relationships'], FORMATTED_RELATIONSHIPS)
-        self.assertEqual(response.context['dynamic_person_concerned_lowercase'], dynamic_person_concerned_lowercase)
+        self.assertEqual(response.context['formatted_relationship'], 'votre mère')
 
     def test_display_accounting_form(self):
         response = self.client.get(self.update_url)
@@ -495,7 +493,7 @@ class GeneralAccountingViewTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={'update_accounting': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=None,
@@ -642,8 +640,7 @@ class GeneralAccountingViewTestCase(TestCase):
         # Check context data
         self.assertEqual(response.context['admission'], self.proposition)
         self.assertEqual(response.context['accounting'], self.accounting)
-        self.assertEqual(response.context['formatted_relationships'], FORMATTED_RELATIONSHIPS)
-        self.assertEqual(response.context['dynamic_person_concerned_lowercase'], dynamic_person_concerned_lowercase)
+        self.assertEqual(response.context['formatted_relationship'], 'votre mère')
 
     def test_display_accounting_form(self):
         response = self.client.get(self.update_url)

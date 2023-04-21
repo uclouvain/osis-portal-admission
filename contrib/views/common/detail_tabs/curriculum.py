@@ -31,7 +31,7 @@ from admission.constants import BE_ISO_CODE
 # Do not remove the following import as it is used by enum_display templatetag
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.specific_question import Onglets
-from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
+from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.curriculum import TRAINING_TYPES_WITH_EQUIVALENCE
 from admission.contrib.views.common.detail_tabs.curriculum_experiences import initialize_field_texts
 from admission.contrib.views.mixins import LoadDossierViewMixin

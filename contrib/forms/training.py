@@ -168,6 +168,12 @@ class ActivityFormMixin(forms.Form):
                 person,
             )
 
+    def clean(self):
+        data = super().clean()
+        if data.get('start_date') and data.get('end_date') and data.get('start_date') > data.get('end_date'):
+            self.add_error('start_date', _("The start date must be equal or lower than the end date."))
+        return data
+
     class Media:
         js = ('js/dependsOn.min.js',)
 
@@ -519,45 +525,21 @@ class CourseForm(ActivityFormMixin, forms.Form):
         max_length=200,
         required=False,
     )
-    organizing_institution = SelectOrOtherField(choices=[INSTITUTION_UCL], label=_("Institution"), required=True)
-    academic_year = forms.ChoiceField(
-        label=_("Academic year"),
-        widget=autocomplete.ListSelect2(),
+    start_date = forms.DateField(
+        label=_("Begin date"),
+        widget=CustomDateInput(),
+        help_text=_(
+            "For courses in the UCLouvain catalogue, the academic year "
+            "begins on 14 September and ends on 13 September of the following year."
+        ),
     )
+    organizing_institution = SelectOrOtherField(choices=[INSTITUTION_UCL], label=_("Institution"), required=True)
     is_online = forms.BooleanField(
         label=_("Course with evaluation"),  # Yes, its another meaning, but we spare a db field
         initial=False,
         required=False,
         widget=BooleanRadioSelect(choices=((False, _("No")), (True, _("Yes")))),
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Convert from dates to year if UCLouvain
-        if self.data.get("organizing_institution", self.initial.get('organizing_institution')) == INSTITUTION_UCL:
-            self.fields['academic_year'].initial = self.get_academic_year()
-        self.fields['academic_year'].choices = get_academic_years_choices(self.person)
-
-    def get_academic_year(self):
-        start_date = self.data.get("start_date", self.initial.get('start_date'))
-        end_date = self.data.get("end_date", self.initial.get('end_date'))
-        for academic_year in AcademicYearService.get_academic_years(self.person):
-            if academic_year.start_date == start_date and academic_year.end_date == end_date:
-                return academic_year.year
-
-    def get_academic_year_dates(self, year):
-        for academic_year in AcademicYearService.get_academic_years(self.person):
-            if academic_year.year == year:
-                return academic_year.start_date, academic_year.end_date
-
-    def clean(self):
-        cleaned_data = super().clean()
-        # Convert from academic year to dates if UCLouvain
-        if cleaned_data.get('organizing_institution') == INSTITUTION_UCL and cleaned_data.get('academic_year'):
-            year = self.get_academic_year_dates(int(cleaned_data['academic_year']))
-            cleaned_data['start_date'], cleaned_data['end_date'] = year or (None, None)
-        cleaned_data.pop('academic_year', None)
-        return cleaned_data
 
     class Meta:
         fields = [

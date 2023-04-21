@@ -88,9 +88,6 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr ""
 
-msgid "(e.g.: 1234)"
-msgstr ""
-
 #, python-format
 msgid ""
 "<a href=\"%(enrollment_url)s\">Go to course enrollment</a> or <a "
@@ -101,12 +98,6 @@ msgstr ""
 msgid ""
 "<a href=\"{url}\" target=_blank\">Registration modification form</a>, duly "
 "completed and accompanied by the annexes mentioned"
-msgstr ""
-
-msgid ""
-"<p> Before sending your application, please review the data you have entered "
-"to ensure that you have not made any errors or omissions. </p> <p>If "
-"everything looks good, you can then submit your application below.</p>"
 msgstr ""
 
 #, python-format
@@ -501,6 +492,11 @@ msgstr ""
 msgid "Bank account"
 msgstr ""
 
+msgid ""
+"Before sending your application, please review the data you have entered to "
+"ensure that you have not made any errors or omissions."
+msgstr ""
+
 msgid "Begin date"
 msgstr ""
 
@@ -549,9 +545,6 @@ msgstr "Supervision member"
 msgid "CA members"
 msgstr "Supervision members"
 
-msgid "CANCELLED"
-msgstr "Cancelled"
-
 msgid "CHEMISTRY"
 msgstr "Chemistry"
 
@@ -585,12 +578,18 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Cancelled application"
+msgstr ""
+
 msgid "Certificate"
+msgstr ""
+
+msgid "Certificate and attestation"
 msgstr ""
 
 msgid ""
 "Certificate justifying your activity, mentioning this activity, for the "
-"specified period."
+"specified period"
 msgstr ""
 
 msgid "Certificate of achievement"
@@ -638,7 +637,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Certificate, with dates, justifying the specified period."
+msgid "Certificate, with dates, justifying the specified period"
 msgstr ""
 
 msgid "Check my previous experience"
@@ -666,6 +665,9 @@ msgid "Civil status"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "Closed"
 msgstr ""
 
 msgid "Coming implementation."
@@ -701,6 +703,9 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
+msgid "Completed application"
+msgstr ""
+
 msgid "Completion"
 msgstr ""
 
@@ -716,6 +721,9 @@ msgstr ""
 msgid "Confirmation paper"
 msgstr ""
 
+msgid "Confirmed application (by student)"
+msgstr ""
+
 msgid "Consultation of a non-academic activity"
 msgstr ""
 
@@ -725,6 +733,10 @@ msgstr ""
 msgid "Contact"
 msgstr ""
 
+msgid "Contact address"
+msgstr ""
+
+msgctxt "admission"
 msgid "Contact address"
 msgstr ""
 
@@ -799,7 +811,7 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Copy of both sides of your residence permit valid for more than 3 months of "
+"Copy of both sides of the residence permit valid for more than 3 months of "
 "%(person_concerned)s"
 msgstr ""
 
@@ -1086,9 +1098,6 @@ msgstr ""
 msgid "ECTS for the participation"
 msgstr ""
 
-msgid "ENROLLED"
-msgstr "Enrolled"
-
 msgid "ERC - European Research Council"
 msgstr ""
 
@@ -1138,13 +1147,16 @@ msgstr ""
 
 msgid ""
 "Employment certificate from the employer, with dates, justifying the "
-"specified period."
+"specified period"
 msgstr ""
 
 msgid "End"
 msgstr ""
 
 msgid "End date"
+msgstr ""
+
+msgid "End date of the grant before any renewal."
 msgstr ""
 
 msgid "English"
@@ -1154,6 +1166,12 @@ msgid "Enroll in a course"
 msgstr ""
 
 msgid "Enrolled"
+msgstr ""
+
+msgid "Enrollment allowed"
+msgstr ""
+
+msgid "Enrollment denied"
 msgstr ""
 
 msgid "Enrollment in a bachelor with quota"
@@ -1279,6 +1297,16 @@ msgid ""
 "admission request <strong>must contain the equivalence</strong> of your "
 "diploma delivered by the <a href='http://www.equivalences.cfwb.be/' "
 "target='_blank'>French Community</a> of Belgium."
+msgstr ""
+
+msgid ""
+"For courses in the UCLouvain catalogue, the academic year begins on 14 "
+"September and ends on 13 September of the following year."
+msgstr ""
+
+msgid ""
+"For example, a contract, a letter from a promoter or any other document "
+"indicating that you have been awarded the scholarship on the dates indicated."
 msgstr ""
 
 msgid "For the attention of"
@@ -1484,9 +1512,6 @@ msgstr ""
 msgid "INVITED"
 msgstr "Invited to sign"
 
-msgid "IN_PROGRESS"
-msgstr "In progress"
-
 msgid "IT"
 msgstr ""
 
@@ -1510,6 +1535,9 @@ msgstr ""
 msgid ""
 "If applicable, upload an attestation of language proficiency in the format "
 "required by the specific provisions of your doctoral field commission"
+msgstr ""
+
+msgid "If everything looks good, you can then submit your application below."
 msgstr ""
 
 msgid ""
@@ -1571,28 +1599,10 @@ msgid ""
 "seminar, nor the different activities within it."
 msgstr ""
 
-#, python-format
-msgid ""
-"If you wish to change your choice of training for a Bachelor, Master, "
-"Aggregation, CAPAES, Continuing Education or Certificate application, please "
-"<a href=\"%(url)s\">cancel the current application</a> and create a new one."
-msgstr ""
-
-#, python-format
-msgid ""
-"If you wish to change your choice of training for a Bachelor, Master, "
-"Aggregation, CAPAES, Doctorate or Certificate application, please <a "
-"href=\"%(url)s\">cancel the current application</a> and create a new one."
-msgstr ""
-
-#, python-format
-msgid ""
-"If you wish to change your choice of training for a Doctorate or Continuing "
-"Education application, please <a href=\"%(url)s\">cancel the current "
-"application</a> and create a new one."
-msgstr ""
-
 msgid "Important information:"
+msgstr ""
+
+msgid "In draft"
 msgstr ""
 
 msgid "In person"
@@ -1968,6 +1978,9 @@ msgstr "Passed confirmation"
 msgid "PDF file"
 msgstr ""
 
+msgid "PDF summary"
+msgstr ""
+
 msgid "PHYSICS"
 msgstr "Physics"
 
@@ -1996,6 +2009,9 @@ msgid "Passport number"
 msgstr ""
 
 msgid "Past confirmation papers"
+msgstr ""
+
+msgid "Pending validation from management"
 msgstr ""
 
 msgid "Period"
@@ -2107,6 +2123,12 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Private email"
+msgstr ""
+
+msgid "Processing by Fac/CDD"
+msgstr ""
+
+msgid "Processing by SIC"
 msgstr ""
 
 msgid "Professional"
@@ -2338,17 +2360,11 @@ msgstr ""
 msgid "SERVICE"
 msgstr ""
 
-msgid "SIGNING_IN_PROGRESS"
-msgstr "Signing in progress"
-
 msgid "SOUMISE"
 msgstr ""
 
 msgid "STATISTICS"
 msgstr "Statistics"
-
-msgid "SUBMITTED"
-msgstr "Submitted"
 
 msgid "SUBMITTED_CONFIRMATION"
 msgstr "Submitted confirmation"
@@ -2659,7 +2675,7 @@ msgid ""
 "of a doctoral thesis (art. 2.3.1. of the doctoral regulations)."
 msgstr ""
 
-msgid "The start date must be equals or lower than the end date."
+msgid "The start date must be equal or lower than the end date."
 msgstr ""
 
 msgid ""
@@ -2746,6 +2762,12 @@ msgstr ""
 msgid "Title of the publication"
 msgstr ""
 
+msgid "To be completed (by student) for FAC/CDD"
+msgstr ""
+
+msgid "To be completed (by student) for SIC"
+msgstr ""
+
 msgid ""
 "To be uploaded if you have a F.R.S.-FNRS (including Televie), FRIA or FRESH "
 "grant. The canvas for this opinion is provided by your research fund."
@@ -2753,13 +2775,19 @@ msgstr ""
 "To be uploaded if you have a F.R.S.-FNRS (including Télévie), FRIA or FRESH "
 "grant. The canvas for this opinion is provided by your research fund."
 
+#, python-format
+msgid ""
+"To choose this training, you need to <a href=\"%(url)s\">cancel</a> the "
+"current application and create a new one."
+msgstr ""
+
 msgid "Total hourly volume"
 msgstr ""
 
 msgid "Training"
 msgstr ""
 
-msgid "Training certificate, with dates, justifying the specified period."
+msgid "Training certificate, with dates, justifying the specified period"
 msgstr ""
 
 msgid "Training choice"
@@ -2814,6 +2842,9 @@ msgstr "UCL Course"
 msgid "Undecided"
 msgstr ""
 
+msgid "Under appeal"
+msgstr ""
+
 msgid "Undertake and declaration"
 msgstr ""
 
@@ -2822,7 +2853,7 @@ msgstr ""
 
 msgid ""
 "Unemployment certificate issued by the relevant organisation, justifying the "
-"specified period."
+"specified period"
 msgstr ""
 
 #, python-format
@@ -2862,6 +2893,9 @@ msgstr ""
 msgid "View"
 msgstr ""
 
+msgid "Visualize the summary"
+msgstr ""
+
 msgid "Volunteering"
 msgstr ""
 
@@ -2872,6 +2906,9 @@ msgid "WORK_CONTRACT"
 msgstr "Work contract"
 
 msgid "Waiting for a result"
+msgstr ""
+
+msgid "Waiting for signature"
 msgstr ""
 
 msgid "Website"

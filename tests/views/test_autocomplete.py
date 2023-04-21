@@ -1,31 +1,32 @@
 # ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
+#  OSIS stands for Open Student Information System. It's an application
+#  designed to manage the core business of higher education institutions,
+#  such as universities, faculties, institutes and professional schools.
+#  The core business involves the administration of students, teachers,
+#  courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-#    A copy of this license - GNU General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
+#  A copy of this license - GNU General Public License - is available
+#  at the root of the source code of this program.  If not,
+#  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
 import json
 import uuid
-from unittest.mock import Mock, patch, ANY
+from unittest.mock import ANY, Mock, patch
 
 from django.test import TestCase
 from django.urls import reverse
@@ -39,17 +40,15 @@ from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
 from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 
-from admission.contrib.enums import BelgianCommunitiesOfEducation
+from admission.contrib.enums import BelgianCommunitiesOfEducation, TypeFormationChoisissable
 from admission.contrib.enums.scholarship import TypeBourse
-from admission.contrib.enums.training_choice import TypeFormation, TrainingType
-from admission.contrib.forms import EMPTY_VALUE
+from admission.contrib.enums.training_choice import TrainingType, TypeFormation
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.scholarship import Scholarship
-
 
 DEFAULT_API_PARAMS = {
     'accept_language': ANY,
@@ -508,6 +507,7 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
+                code='FOOBAR',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -518,6 +518,7 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
+                code='BARBAZ',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -537,10 +538,10 @@ class AutocompleteTestCase(TestCase):
         self.assertEqual(response.json(), {'results': results})
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
-    def test_autocomplete_continuing_education_training(self, api):
-        api.return_value.list_formation_generale_dtos.return_value = [
+    def test_autocomplete_mixed_education_training(self, api):
+        api.return_value.list_formation_continue_dtos.return_value = [
             FormationContinueDTO(
-                sigle='FOOBAR',
+                sigle='CONFOOBAR',
                 intitule='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
@@ -548,9 +549,10 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMC',
+                code='CONFOOBAR',
             ),
             FormationContinueDTO(
-                sigle='BARBAZ',
+                sigle='CONBARBAZ',
                 intitule='Barbaz',
                 annee=2021,
                 campus="Mons",
@@ -558,19 +560,44 @@ class AutocompleteTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMC',
+                code='CONBARBAZ',
             ),
         ]
-        url = reverse('admission:autocomplete:general-education')
-        response = self.client.get(url, {'forward': json.dumps({'campus': EMPTY_VALUE}), 'q': 'ar'})
+        api.return_value.list_formation_generale_dtos.return_value = [
+            FormationGeneraleDTO(
+                sigle='GENFOOBAR',
+                intitule='Foobar',
+                annee=2021,
+                campus="Louvain-La-Neuve",
+                type=TrainingType.CERTIFICATE.name,
+                code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMG',
+                code='GENFOOBAR',
+            ),
+            FormationGeneraleDTO(
+                sigle='GENBARBAZ',
+                intitule='Barbaz',
+                annee=2021,
+                campus="Mons",
+                type=TrainingType.CERTIFICATE.name,
+                code_domaine='10C',
+                campus_inscription='Mons',
+                sigle_entite_gestion='CMG',
+                code='GENBARBAZ',
+            ),
+        ]
+        url = reverse('admission:autocomplete:mixed-training')
+        data = {
+            'forward': json.dumps({'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name}),
+            'q': 'ar',
+        }
+        response = self.client.get(url, data)
         results = [
-            {
-                'id': 'FOOBAR-2021',
-                'text': 'Foobar (Louvain-La-Neuve) - FOOBAR',
-            },
-            {
-                'id': 'BARBAZ-2021',
-                'text': 'Barbaz (Mons) - BARBAZ',
-            },
+            {'id': 'CONFOOBAR-2021', 'text': 'Foobar (Louvain-La-Neuve) - CONFOOBAR'},
+            {'id': 'CONBARBAZ-2021', 'text': 'Barbaz (Mons) - CONBARBAZ'},
+            {'id': 'GENFOOBAR-2021', 'text': 'Foobar (Louvain-La-Neuve) - GENFOOBAR'},
+            {'id': 'GENBARBAZ-2021', 'text': 'Barbaz (Mons) - GENBARBAZ'},
         ]
         self.assertEqual(response.json(), {'results': results})
 

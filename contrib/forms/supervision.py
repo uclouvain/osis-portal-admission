@@ -51,33 +51,7 @@ EXTERNAL_FIELDS = [
 ]
 
 
-class DoctorateAdmissionSupervisionForm(forms.Form):
-    type = forms.ChoiceField(
-        label="",
-        choices=ActorType.choices(),
-        widget=forms.RadioSelect(),
-        initial=ActorType.PROMOTER.name,
-    )
-    internal_external = forms.ChoiceField(
-        label="",
-        choices=(
-            ("INTERNAL", _("Internal")),
-            (ACTOR_EXTERNAL, _("External")),
-        ),
-        initial="INTERNAL",
-        widget=forms.RadioSelect(),
-    )
-    tutor = forms.CharField(
-        label=_("Search a tutor by name"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:tutor"),
-        required=False,
-    )
-    person = forms.CharField(
-        label=_("Search a person by name"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:person"),
-        required=False,
-    )
-
+class DoctorateAdmissionMemberSupervisionForm(forms.Form):
     prenom = forms.CharField(
         label=_("First name"),
         required=False,
@@ -125,8 +99,47 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
 
     def clean(self):
         data = super().clean()
-        is_external = data.get('internal_external') == ACTOR_EXTERNAL
+        self.clean_external_fields(data)
+        return data
+
+    def clean_external_fields(self, data):
         all_external_fields_filled = all(data.get(field) for field in EXTERNAL_FIELDS)
+        if not all_external_fields_filled:
+            for field in EXTERNAL_FIELDS:
+                if not data.get(field):
+                    self.add_error(field, _("This field is required."))
+
+
+class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm):
+    type = forms.ChoiceField(
+        label="",
+        choices=ActorType.choices(),
+        widget=forms.RadioSelect(),
+        initial=ActorType.PROMOTER.name,
+    )
+    internal_external = forms.ChoiceField(
+        label="",
+        choices=(
+            ("INTERNAL", _("Internal")),
+            (ACTOR_EXTERNAL, _("External")),
+        ),
+        initial="INTERNAL",
+        widget=forms.RadioSelect(),
+    )
+    tutor = forms.CharField(
+        label=_("Search a tutor by name"),
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:tutor"),
+        required=False,
+    )
+    person = forms.CharField(
+        label=_("Search a person by name"),
+        widget=autocomplete.ListSelect2(url="admission:autocomplete:person"),
+        required=False,
+    )
+
+    def clean(self):
+        data = self.cleaned_data
+        is_external = data.get('internal_external') == ACTOR_EXTERNAL
         if not is_external and (
             data.get('type') == ActorType.CA_MEMBER.name
             and not data.get('person')
@@ -134,10 +147,8 @@ class DoctorateAdmissionSupervisionForm(forms.Form):
             and not data.get('tutor')
         ):
             self.add_error(None, _("You must reference a person in UCLouvain."))
-        elif is_external and not all_external_fields_filled:
-            for field in EXTERNAL_FIELDS:
-                if not data.get(field):
-                    self.add_error(field, _("This field is required."))
+        elif is_external:
+            self.clean_external_fields(data)
         return data
 
     class Media:

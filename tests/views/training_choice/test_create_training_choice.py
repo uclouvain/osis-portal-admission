@@ -29,7 +29,7 @@ from django.utils.translation import gettext as _
 from rest_framework import status
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import AdmissionType
+from admission.contrib.enums import AdmissionType, TypeFormationChoisissable
 from admission.contrib.enums.training_choice import TypeFormation
 from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
@@ -88,30 +88,26 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['training_type'])
 
     def test_continuing_education_form_submitting_without_training(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'training_type': TypeFormation.FORMATION_CONTINUE.name,
-                'campus': EMPTY_VALUE,
-            },
-        )
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+        }
+        response = self.client.post(self.url, data=data)
 
         form = response.context['form']
 
         self.assertFalse(form.is_valid())
 
-        self.assertTrue('continuing_education_training' in form.errors)
-        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['continuing_education_training'])
+        self.assertTrue('mixed_training' in form.errors)
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['mixed_training'])
 
     def test_continuing_education_form_submitting(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'training_type': TypeFormation.FORMATION_CONTINUE.name,
-                'campus': EMPTY_VALUE,
-                'continuing_education_training': 'TR2-2020',
-            },
-        )
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR2-2020',
+        }
+        response = self.client.post(self.url, data=data)
 
         self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
             initier_proposition_continue_command={
@@ -209,6 +205,31 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             resolve_url('admission:general-education:update:training-choice', pk=self.proposition_uuid),
         )
 
+    def test_general_education_form_submitting_mixed_training(self):
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR5-2020',
+        }
+        response = self.client.post(self.url, data=data)
+
+        self.mock_proposition_api.return_value.create_general_training_choice.assert_called_with(
+            initier_proposition_generale_command={
+                'sigle_formation': 'TR5',
+                'annee_formation': 2020,
+                'matricule_candidat': self.person.global_id,
+                'bourse_erasmus_mundus': '',
+                'bourse_double_diplome': '',
+                'bourse_internationale': '',
+            },
+            **self.default_kwargs,
+        )
+
+        self.assertRedirects(
+            response,
+            resolve_url('admission:general-education:update:training-choice', pk=self.proposition_uuid),
+        )
+
     def test_doctorate_education_form_submitting_without_required_fields(self):
         response = self.client.post(
             self.url,
@@ -235,14 +256,12 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['has_erasmus_mundus_scholarship'])
 
     def test_doctorate_education_form_submitting_without_required_pre_admission_fields(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'training_type': TypeFormation.DOCTORAT.name,
-                'campus': EMPTY_VALUE,
-                'admission_type': AdmissionType.PRE_ADMISSION.name,
-            },
-        )
+        data = {
+            'training_type': TypeFormation.DOCTORAT.name,
+            'campus': EMPTY_VALUE,
+            'admission_type': AdmissionType.PRE_ADMISSION.name,
+        }
+        response = self.client.post(self.url, data=data)
 
         form = response.context['form']
 
@@ -251,14 +270,12 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
     def test_doctorate_education_form_submitting_without_required_fields_cde(self):
         # Some doctorates require a CDE proximity commission
-        response = self.client.post(
-            self.url,
-            data={
-                'training_type': TypeFormation.DOCTORAT.name,
-                'campus': EMPTY_VALUE,
-                'doctorate_training': 'TR3-2020',
-            },
-        )
+        data = {
+            'training_type': TypeFormation.DOCTORAT.name,
+            'campus': EMPTY_VALUE,
+            'doctorate_training': 'TR3-2020',
+        }
+        response = self.client.post(self.url, data=data)
 
         form = response.context['form']
 
@@ -266,14 +283,12 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['proximity_commission_cde'])
 
     def test_doctorate_education_form_submitting_without_required_fields_cdss(self):
-        response = self.client.post(
-            self.url,
-            data={
-                'training_type': TypeFormation.DOCTORAT.name,
-                'campus': EMPTY_VALUE,
-                'doctorate_training': 'TR4-2020',
-            },
-        )
+        data = {
+            'training_type': TypeFormation.DOCTORAT.name,
+            'campus': EMPTY_VALUE,
+            'doctorate_training': 'TR4-2020',
+        }
+        response = self.client.post(self.url, data=data)
 
         form = response.context['form']
 
@@ -282,14 +297,12 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
     def test_doctorate_education_form_submitting_without_required_fields_science_sub_domain(self):
         # Some doctorates require a science sub domain
-        response = self.client.post(
-            self.url,
-            data={
-                'training_type': TypeFormation.DOCTORAT.name,
-                'campus': EMPTY_VALUE,
-                'doctorate_training': 'SC3DP-2020',
-            },
-        )
+        data = {
+            'training_type': TypeFormation.DOCTORAT.name,
+            'campus': EMPTY_VALUE,
+            'doctorate_training': 'SC3DP-2020',
+        }
+        response = self.client.post(self.url, data=data)
 
         form = response.context['form']
 

@@ -36,7 +36,7 @@ from rest_framework import status
 from rest_framework.status import HTTP_302_FOUND
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import ChoixStatutPropositionFormationGenerale, TrainingType
+from admission.contrib.enums import ChoixStatutPropositionGenerale, TrainingType
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaResults,
@@ -77,7 +77,7 @@ class BaseEducationTestCase(TestCase):
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={},
             erreurs={},
             bourse_double_diplome=None,

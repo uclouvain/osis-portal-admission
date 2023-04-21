@@ -34,7 +34,6 @@ from rest_framework import status
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.person import CivilState
 from admission.contrib.forms import PDF_MIME_TYPE
-from admission.contrib.forms.person import YES, NO
 from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
@@ -207,7 +206,7 @@ class PersonViewTestCase(TestCase):
             {
                 'unknown_birth_date': True,
                 'country_of_citizenship': "BE",
-                'already_registered': YES,
+                'already_registered': True,
                 'civil_state': CivilState.MARRIED.name,
                 'birth_country': 'BE',
                 'birth_place': 'Louvain-la-Neuve',
@@ -292,7 +291,7 @@ class PersonViewTestCase(TestCase):
             {
                 **data,
                 'unknown_birth_date': True,
-                'already_registered': NO,
+                'already_registered': False,
                 'has_national_number': True,
                 'identification_type': 'PASSPORT_NUMBER',
                 'passport_number': '0123456789',
@@ -326,7 +325,7 @@ class PersonViewTestCase(TestCase):
             {
                 **data,
                 'unknown_birth_date': False,
-                'already_registered': YES,
+                'already_registered': True,
                 'identification_type': 'ID_CARD_NUMBER',
                 'passport_number': '0123456789',
                 'passport_0': 'test',
@@ -357,7 +356,7 @@ class PersonViewTestCase(TestCase):
             {
                 **data,
                 'unknown_birth_date': True,
-                'already_registered': NO,
+                'already_registered': False,
                 'has_national_number': False,
                 'identification_type': 'PASSPORT_NUMBER',
                 'passport_number': '0123456789',
@@ -394,7 +393,7 @@ class PersonViewTestCase(TestCase):
                 **data,
                 'country_of_citizenship': BE_ISO_CODE,
                 'unknown_birth_date': True,
-                'already_registered': NO,
+                'already_registered': False,
                 'has_national_number': False,
                 'identification_type': 'PASSPORT_NUMBER',
                 'passport_number': '0123456789',

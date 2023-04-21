@@ -41,6 +41,7 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     RadioBooleanField,
     AdmissionFileUploadField as FileUploadField,
+    IMAGE_MIME_TYPES,
 )
 
 from admission.utils import force_title
@@ -178,21 +179,20 @@ class DoctorateAdmissionPersonForm(forms.Form):
     )
     id_card_number = forms.CharField(required=False, label=_("Identity card number"))
     passport_number = forms.CharField(required=False, label=_("Passport number"))
-    id_photo = FileUploadField(required=False, label=_("Identity picture"), max_files=1)
+    id_photo = FileUploadField(
+        required=False,
+        label=_("Identity picture"),
+        max_files=1,
+        mimetypes=IMAGE_MIME_TYPES,
+    )
 
     # Already registered
     last_registration_year = forms.ChoiceField(
         required=False,
         label=_("What was your last year of UCLouvain enrollment?"),
     )
-    already_registered = forms.BooleanField(
+    already_registered = RadioBooleanField(
         required=False,
-        widget=forms.RadioSelect(
-            choices=[
-                (NO, _("No")),
-                (YES, _("Yes")),
-            ],
-        ),
         label="",
     )
     last_registration_id = forms.CharField(
@@ -219,7 +219,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields['last_registration_year'].choices = get_past_academic_years_choices(person)
-        self.initial['already_registered'] = YES if self.initial.get('last_registration_year') else NO
+        self.initial['already_registered'] = True if self.initial.get('last_registration_year') else False
 
         if self.initial.get('birth_year'):
             self.initial['unknown_birth_date'] = True

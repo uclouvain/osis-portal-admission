@@ -31,14 +31,13 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.contrib.enums.specific_question import Onglets
-from admission.contrib.enums.training_choice import TYPES_FORMATION_GENERALE, TypeFormation
-from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
-from admission.contrib.forms.training_choice import (
-    ContinuingUpdateTrainingChoiceForm,
-    CreateTrainingChoiceForm,
-    DoctorateUpdateTrainingChoiceForm,
-    GeneralUpdateTrainingChoiceForm,
+from admission.contrib.enums.training_choice import (
+    OSIS_ADMISSION_EDUCATION_TYPES_MAPPING,
+    TYPES_FORMATION_GENERALE,
+    TypeFormation,
 )
+from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
+from admission.contrib.forms.training_choice import TrainingChoiceForm, get_training
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
@@ -64,6 +63,7 @@ class AdmissionTrainingChoiceFormView(
 ):
     template_name = 'admission/forms/training_choice.html'
     tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
+    form_class = TrainingChoiceForm
     extra_context = {
         'GENERAL_EDUCATION_TYPES': list(TYPES_FORMATION_GENERALE),
         'COMMISSIONS_CDE_CLSM': COMMISSIONS_CDE_CLSM,
@@ -79,17 +79,10 @@ class AdmissionTrainingChoiceFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
+        kwargs['current_context'] = self.current_context
         if self.admission_uuid:
             kwargs['admission_uuid'] = self.admission_uuid
         return kwargs
-
-    def get_form_class(self):
-        return {
-            'create': CreateTrainingChoiceForm,
-            'doctorate': DoctorateUpdateTrainingChoiceForm,
-            'general-education': GeneralUpdateTrainingChoiceForm,
-            'continuing-education': ContinuingUpdateTrainingChoiceForm,
-        }[self.current_context]
 
     def prepare_data(self, data):
         new_data = {}
@@ -108,22 +101,20 @@ class AdmissionTrainingChoiceFormView(
         return new_data
 
     def prepare_data_for_doctorate(self, data):
-        new_data = {
+        [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
+        return {
             'type_admission': data.get('admission_type'),
             'justification': data.get('justification'),
             'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
-        }
-        if not self.admission_uuid:
-            [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
-            new_data['sigle_formation'] = training_acronym
-            new_data['annee_formation'] = int(training_year)
-            new_data['commission_proximite'] = (
+            'sigle_formation': training_acronym,
+            'annee_formation': int(training_year),
+            'commission_proximite': (
                 data.get('proximity_commission_cde')
                 or data.get('proximity_commission_cdss')
                 or data.get('science_sub_domain')
                 or ''
-            )
-        return new_data
+            ),
+        }
 
     def prepare_data_for_general_education(self, data):
         [training_acronym, training_year] = split_training_id(data.get('general_education_training'))
@@ -136,7 +127,7 @@ class AdmissionTrainingChoiceFormView(
         }
 
     def prepare_data_for_continuing_education(self, data):
-        [training_acronym, training_year] = split_training_id(data.get('continuing_education_training'))
+        [training_acronym, training_year] = split_training_id(data.get('mixed_training'))
         return {
             'sigle_formation': training_acronym,
             'annee_formation': int(training_year),
@@ -193,8 +184,16 @@ class AdmissionTrainingChoiceFormView(
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
             }
         elif self.current_context == 'general-education':
+            training_id = get_training_id(self.admission.formation)
+            training = get_training(person=self.person, training=training_id)
+            training_key = (
+                'mixed_training'
+                if training['education_group_type']
+                in OSIS_ADMISSION_EDUCATION_TYPES_MAPPING[TypeFormation.CERTIFICAT.name]
+                else 'general_education_training'
+            )
             return {
-                'general_education_training': get_training_id(self.admission.formation),
+                training_key: training_id,
                 'double_degree_scholarship': (
                     self.admission.bourse_double_diplome and self.admission.bourse_double_diplome.uuid
                 ),
@@ -208,6 +207,6 @@ class AdmissionTrainingChoiceFormView(
             }
         elif self.current_context == 'continuing-education':
             return {
-                'continuing_education_training': get_training_id(self.admission.formation),
+                'mixed_training': get_training_id(self.admission.formation),
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
             }

@@ -317,6 +317,27 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def retrieve_general_education_pdf_recap(cls, person: Person, uuid):
+        return APIClient().retrieve_general_education_proposition_pdf_recap(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_continuing_education_pdf_recap(cls, person: Person, uuid):
+        return APIClient().retrieve_continuing_education_proposition_pdf_recap(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_doctorate_education_pdf_recap(cls, person: Person, uuid):
+        return APIClient().retrieve_doctorate_education_proposition_pdf_recap(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
@@ -369,6 +390,7 @@ class PropositionBusinessException(Enum):
     CarteBancaireRemboursementAutreFormatNonCompleteException = "PROPOSITION-48"
     ExperiencesAcademiquesNonCompleteesException = "PROPOSITION-49"
     TypeCompteBancaireRemboursementNonCompleteException = "PROPOSITION-50"
+    CoordonneesNonCompleteesException = "PROPOSITION-51"
 
 
 class GlobalPropositionBusinessException(Enum):
@@ -419,6 +441,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
     'coordonnees': {
         PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,
         PropositionBusinessException.AdresseCorrespondanceNonCompleteeException,
+        PropositionBusinessException.CoordonneesNonCompleteesException,
     },
     'education': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesEtudesSecondairesNonCompleteesException,
@@ -556,6 +579,14 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         return APIClient().add_member(
             uuid=uuid,
             identifier_supervision_actor=kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def edit_external_member(cls, person, uuid, **kwargs):
+        return APIClient().edit_external_member(
+            uuid=uuid,
+            modifier_membre_supervision_externe=kwargs,
             **build_mandatory_auth_headers(person),
         )
 

@@ -27,16 +27,28 @@
 
 {% block tab_content %}
   <div>
-    <div class="alert alert-info confirmation-header">
+    <div class="alert alert-info confirmation-header text-justify">
       <p>{% trans "You have now reached the confirmation tab of your enrolment request." %}</p>
-      <p class="text-justify">
-        {% blocktrans trimmed %}
-          <p>
-            Before sending your application, please review the data you have entered to ensure that you have not made
-            any errors or omissions.
-          </p>
-          <p>If everything looks good, you can then submit your application below.</p>
-        {% endblocktrans %}
+      <p>
+        {% blocktranslate trimmed %}
+          Before sending your application, please review the data you have entered to ensure that you have not made
+          any errors or omissions.
+        {% endblocktranslate %}
+      </p>
+
+      {% url base_namespace|add_str:':pdf-recap' admission.uuid as pdf_url %}
+      <p>
+        <a
+            class="btn btn-primary"
+            href="{{ pdf_url }}"
+            target="_blank"
+        >
+          {% translate "Visualize the summary" %}
+          <i class="fa-solid fa-file-pdf"></i>
+        </a>
+      </p>
+      <p>
+        {% translate "If everything looks good, you can then submit your application below." %}
       </p>
     </div>
 
@@ -129,7 +141,7 @@
                       </li>
 
                       {# Formation non organisée #}
-                      {% elif error_code == 'ADMISSION-7' %}
+                    {% elif error_code == 'ADMISSION-7' %}
                       <li>
                         <p>{% trans "Your application cannot be confirmed. The requested training is not organised." %}</p>
                         <div class="panel panel-default">
@@ -163,7 +175,7 @@
                       </li>
 
                       {# The required period in the CV is not completed #}
-                      {% elif error_code == 'PROPOSITION-35' %}
+                    {% elif error_code == 'PROPOSITION-35' %}
                       <li>
                         {% blocktranslate trimmed count nb=errors|length %}
                           The following period must be justified in the curriculum:
@@ -240,16 +252,16 @@
           {% endblocktrans %}
         </p>
         <div
-          id="submit-button-wrapper"
-          class="pull-right"
-          title="{% trans "Sending the application requires your agreement for all the elements" %}"
+            id="submit-button-wrapper"
+            class="pull-right"
+            title="{% trans "Sending the application requires your agreement for all the elements" %}"
         >
           <button
-            type="button"
-            class="btn btn-primary"
-            disabled="disabled"
-            data-toggle="modal"
-            data-target="#confirmModal"
+              type="button"
+              class="btn btn-primary"
+              disabled="disabled"
+              data-toggle="modal"
+              data-target="#confirmModal"
           >
             <i class="fa fa-paper-plane"></i>
             {% trans "Send" %}
@@ -320,25 +332,25 @@
   {{ block.super }}
 
   <script type="application/javascript">
-  $(function () {
-    const form = $('#confirmation-form')[0];
-    const $submitWrapper = $('#submit-button-wrapper');
-    const formButton = $('button[type="button"]', form).first();
-    $submitWrapper.tooltip();
-
-    {% if missing_confirmation_conditions %}
-      formButton.prop('disabled', true);
-    {% else %}
-      $('input[type="checkbox"], input[type="radio"]', form).change(function () {
-        formButton.prop('disabled', !form.checkValidity());
-        if (form.checkValidity()) {
-          $submitWrapper.tooltip('destroy');
-        } else {
+      $(function () {
+          const form = $('#confirmation-form')[0];
+          const $submitWrapper = $('#submit-button-wrapper');
+          const formButton = $('button[type="button"]', form).first();
           $submitWrapper.tooltip();
-        }
+
+          {% if missing_confirmation_conditions %}
+              formButton.prop('disabled', true);
+          {% else %}
+              $('input[type="checkbox"], input[type="radio"]', form).change(function () {
+                  formButton.prop('disabled', !form.checkValidity());
+                  if (form.checkValidity()) {
+                      $submitWrapper.tooltip('destroy');
+                  } else {
+                      $submitWrapper.tooltip();
+                  }
+              })
+              formButton.prop('disabled', !form.checkValidity());
+          {% endif %}
       })
-      formButton.prop('disabled', !form.checkValidity());
-    {% endif %}
-  })
   </script>
 {% endblock %}

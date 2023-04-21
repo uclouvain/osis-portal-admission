@@ -30,7 +30,8 @@ from django.test import TestCase
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
-from admission.contrib.enums import ChoixStatutProposition
+from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
 
@@ -139,12 +140,14 @@ class CoordonneesTestCase(TestCase):
                 "residential-street": "Rue du Compas",
                 "residential-street_number": "1",
                 "show_contact": False,
+                "private_email": "john@example.org",
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['postal_code'], "1111")
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['city'], "Louvain-La-Neuve")
+        self.assertEqual(last_call_kwargs['coordonnees']['private_email'], "")
         self.assertIsNone(last_call_kwargs['coordonnees']['contact'])
 
     def test_form_foreign_with_contact_address(self):
@@ -164,6 +167,7 @@ class CoordonneesTestCase(TestCase):
                 "contact-street": "Rue du Compas",
                 "contact-street_number": "2",
                 "show_contact": True,
+                "private_email": "john@example.org",
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -184,7 +188,7 @@ class CoordonneesTestCase(TestCase):
     def test_update(self):
         url = resolve_url('admission:doctorate:update:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             links={},
             erreurs=[],
         )
@@ -202,7 +206,7 @@ class CoordonneesTestCase(TestCase):
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
 
-        response = self.client.post(url, {})
+        response = self.client.post(url, {'private_email': 'john@example.org'})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):

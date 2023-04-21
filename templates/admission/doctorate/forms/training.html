@@ -33,8 +33,10 @@
     <div class="col-md-2 visible-md visible-lg">
       {% admission_subtabs doctorate %}
     </div>
-    <div class="col-md-10 quitting-context-excluded">
-      {% include form.template_name %}
+    <div class="col-md-10">
+      <div class="quitting-context-excluded">
+        {% include form.template_name %}
+      </div>
       <div class="text-right form-group">
         <a href="{{ back_url }}" class="text-danger">
           {% trans "Cancel" %}
@@ -42,7 +44,6 @@
         <button type="submit" class="btn btn-primary">
           {% trans "Save" %}
         </button>
-
       </div>
     </div>
   </div>
@@ -53,11 +54,8 @@
   <script>
   $(function () {
     {# Scripts cannot be inside form includes as dependsOn is included in form.media #}
-    $('.academic-year').length && $('.academic-year').dependsOn({
+    $('#container_start_date a.popover-buttons').length && $('#container_start_date a.popover-buttons').dependsOn({
       '#id_organizing_institution_0': { values: ['UCLouvain'] },
-    });
-    $('.dates').length && $('.dates').dependsOn({
-      '#id_organizing_institution_0': { values: ['other'] },
     });
     $('#id_academic_year').change(function () {
       $('#id_learning_unit_year').val(null).trigger('change');

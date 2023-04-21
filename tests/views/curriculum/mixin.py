@@ -68,9 +68,9 @@ from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversi
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import (
-    ChoixStatutProposition,
-    ChoixStatutPropositionFormationGenerale,
-    ChoixStatutPropositionFormationContinue,
+    ChoixStatutPropositionDoctorale,
+    ChoixStatutPropositionGenerale,
+    ChoixStatutPropositionContinue,
 )
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
@@ -260,10 +260,11 @@ class MixinTestCase(TestCase):
             domaine_these='',
             doctorat_deja_realise='',
             fiche_archive_signatures_envoyees=[],
-            statut=ChoixStatutProposition.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             erreurs=[],
             reponses_questions_specifiques={},
             curriculum=['file1.pdf'],
+            pdf_recapitulatif=[],
         )
 
         cls.general_proposition = GeneralEducationPropositionDTO._from_openapi_data(
@@ -277,12 +278,13 @@ class MixinTestCase(TestCase):
                 code_domaine='10C',
                 sigle_entite_gestion="CMG",
                 campus_inscription="Mons",
+                code='TR1',
             ),
             reference='M-CMG20-000.002',
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationGenerale.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links=GeneralEducationPropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
@@ -298,6 +300,7 @@ class MixinTestCase(TestCase):
             curriculum=['file1.pdf'],
             creee_le=datetime.datetime(2022, 12, 1),
             equivalence_diplome=['file2.pdf'],
+            pdf_recapitulatif=[],
         )
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(
@@ -312,12 +315,13 @@ class MixinTestCase(TestCase):
                 code_domaine='10C',
                 campus_inscription="Mons",
                 sigle_entite_gestion="CMC",
+                code='TR2',
             ),
             date_fin_pot=None,
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
-            statut=ChoixStatutPropositionFormationContinue.IN_PROGRESS.name,
+            statut=ChoixStatutPropositionContinue.EN_BROUILLON.name,
             links=ContinuingEducationPropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
@@ -330,6 +334,7 @@ class MixinTestCase(TestCase):
             pays_nationalite_candidat='FR',
             pays_nationalite_ue_candidat=True,
             copie_titre_sejour=[],
+            pdf_recapitulatif=[],
         )
 
         cls.api_default_params = {

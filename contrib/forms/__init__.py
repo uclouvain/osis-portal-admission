@@ -53,7 +53,8 @@ OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX = '__{}__'.format(OSIS_DOCUMENT_UPLOADER_CLA
 PDF_MIME_TYPE = 'application/pdf'
 JPEG_MIME_TYPE = 'image/jpeg'
 PNG_MIME_TYPE = 'image/png'
-DEFAULT_MIME_TYPES = [PDF_MIME_TYPE, JPEG_MIME_TYPE, PNG_MIME_TYPE]
+IMAGE_MIME_TYPES = [JPEG_MIME_TYPE, PNG_MIME_TYPE]
+DEFAULT_MIME_TYPES = [PDF_MIME_TYPE] + IMAGE_MIME_TYPES
 
 
 def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):

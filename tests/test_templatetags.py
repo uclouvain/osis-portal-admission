@@ -34,7 +34,14 @@ from django.urls import resolve
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
-from admission.contrib.enums import TypeChampSelectionFormulaire, CleConfigurationItemFormulaire
+from admission.contrib.enums import (
+    TypeChampSelectionFormulaire,
+    CleConfigurationItemFormulaire,
+    ChoixStatutPropositionDoctorale,
+    ChoixStatutPropositionGenerale,
+    ChoixStatutPropositionContinue,
+    TrainingType,
+)
 from admission.contrib.enums.specific_question import TypeItemFormulaire
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 
@@ -50,6 +57,8 @@ from admission.templatetags.admission import (
     has_error_in_tab,
     strip,
     multiple_field_data,
+    interpolate,
+    admission_status,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
@@ -431,3 +440,47 @@ class MultipleFieldDataTestCase(TestCase):
         self.assertEqual(result['fields'][0].value, 'The very short message.')
         self.assertEqual(result['fields'][1].value, None)
         self.assertEqual(result['fields'][2].value, [])
+
+    def test_interpolate_a_string(self):
+        self.assertEqual(
+            interpolate('my-str-with-value: %(value)s', value=1),
+            'my-str-with-value: 1',
+        )
+
+
+class DisplayStatusTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.doctorate_training_type = TrainingType.PHD.name
+        cls.general_training_type = TrainingType.BACHELOR.name
+        cls.continuing_training_type = TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+
+    def test_admission_status_for_a_doctorate(self):
+        status = ChoixStatutPropositionDoctorale.EN_ATTENTE_DE_SIGNATURE
+        self.assertEqual(
+            admission_status(
+                status=status.name,
+                osis_education_type=self.doctorate_training_type,
+            ),
+            status.value,
+        )
+
+    def test_admission_status_for_a_general_training(self):
+        status = ChoixStatutPropositionGenerale.TRAITEMENT_SIC
+        self.assertEqual(
+            admission_status(
+                status=status.name,
+                osis_education_type=self.general_training_type,
+            ),
+            status.value,
+        )
+
+    def test_admission_status_for_a_continuing_education(self):
+        status = ChoixStatutPropositionContinue.EN_BROUILLON
+        self.assertEqual(
+            admission_status(
+                status=status.name,
+                osis_education_type=self.continuing_training_type,
+            ),
+            status.value,
+        )

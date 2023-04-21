@@ -91,13 +91,7 @@
   {{ block.super }}
   <script type="application/javascript">
       $(function () {
-          const CERTIFICATE_HELP_TEXT = {
-              LANGUAGE_TRAVEL: "{% trans 'Certificate justifying your activity, mentioning this activity, for the specified period.' %}",
-              INTERNSHIP: "{% trans 'Training certificate, with dates, justifying the specified period.' %}",
-              UNEMPLOYMENT: "{% trans 'Unemployment certificate issued by the relevant organisation, justifying the specified period.' %}",
-              VOLUNTEERING: "{% trans 'Certificate, with dates, justifying the specified period.' %}",
-              WORK: "{% trans 'Employment certificate from the employer, with dates, justifying the specified period.' %}",
-          };
+          const CERTIFICATE_HELP_TEXT = {{ CURRICULUM_ACTIVITY_LABEL|safe }};
 
           $('.work-fields').dependsOn({
               '#id_type': { values: ['WORK'] },
