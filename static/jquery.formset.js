@@ -29,7 +29,7 @@
       updateElementIndex = function (elem, prefix, ndx) {
         var idRegex = new RegExp(prefix + '-(\\d+|__prefix__)-'),
             replacement = prefix + '-' + ndx + '-';
-        elem[0].attributes.forEach(function (attr) {
+        Array.from(elem[0].attributes).forEach(function (attr) {
           elem.attr(attr.name, attr.value.replace(idRegex, replacement));
         });
       },
