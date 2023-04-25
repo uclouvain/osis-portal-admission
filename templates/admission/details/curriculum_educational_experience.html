@@ -137,7 +137,7 @@
                   </tr>
                   {% if experience.transcript_type.value == 'ONE_A_YEAR' %}
                     <tr>
-                      <td colspan="3">
+                      <td {% if experience.evaluation_system_with_credits %}colspan="3"{% endif %}>
                         <div class="flex-container-no-wrap">
                           {% field_data _('Transcript') experience_year.transcript %}
                           {% if translation_required %}

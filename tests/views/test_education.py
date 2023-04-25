@@ -300,7 +300,7 @@ class EducationTestCase(BaseEducationTestCase):
         self.assertEqual(response.context['graduated_from_high_school'], GotDiploma.THIS_YEAR.name)
 
         # Check template
-        self.assertContains(response, 'Vous avez indiqué que vous alliez en recevoir un en 2020-21.')
+        self.assertContains(response, "Vous avez indiqué que vous alliez l\'obtenir en 2020-21.", html=True)
 
     def test_detail_without_graduation_from_high_school_this_year(self):
         self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school'] = GotDiploma.NO.name
@@ -549,12 +549,13 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check response context
+        institute_address = "Place de l'Université 1, 1348 Louvain-La-Neuve"
         self.assertContains(response, "Diplôme belge")
         self.assertEqual(response.context['belgian_diploma']['institute_name'], 'HighSchool 1')
-        self.assertEqual(response.context['belgian_diploma']['institute_address'], 'Louvain-La-Neuve')
+        self.assertEqual(response.context['belgian_diploma']['institute_address'], institute_address)
 
         # Check template
-        self.assertContains(response, "HighSchool 1 (Louvain-La-Neuve)")
+        self.assertContains(response, f"HighSchool 1 ({institute_address})")
 
     def test_detail_foreign_diploma(self):
         self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {

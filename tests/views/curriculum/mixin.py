@@ -249,6 +249,7 @@ class MixinTestCase(TestCase):
             ),
             matricule_candidat=cls.person.global_id,
             code_secteur_formation='CS',
+            intitule_secteur_formation='Computer science',
             bourse_preuve=[],
             documents_projet=[],
             graphe_gantt=[],
@@ -265,6 +266,8 @@ class MixinTestCase(TestCase):
             reponses_questions_specifiques={},
             curriculum=['file1.pdf'],
             pdf_recapitulatif=[],
+            nom_institut_these='',
+            acronyme_institut_these='',
         )
 
         cls.general_proposition = GeneralEducationPropositionDTO._from_openapi_data(

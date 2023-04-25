@@ -160,7 +160,7 @@
         {% endblocktranslate %}
       {% elif graduated_from_high_school == 'THIS_YEAR' %}
         {% blocktranslate trimmed with year=graduated_from_high_school_year|display_as_academic_year asvar graduation_text %}
-          You have indicated that you will receive one in {{ year }}.
+          You have indicated that you will get it in {{ year }}.
         {% endblocktranslate %}
       {% elif graduated_from_high_school == 'NO' %}
         {% blocktranslate asvar graduation_text %}No.{% endblocktranslate %}
