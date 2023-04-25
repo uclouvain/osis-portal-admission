@@ -83,7 +83,6 @@ class EducationalType(ChoiceEnum):
     QUALIFICATION_METHOD = _("Qualification method")
     ARTISTIC_QUALIFICATION = _("Artistic qualification")
     PROFESSIONAL_EDUCATION = _("Professional education")
-    PROFESSIONAL_EDUCATION_AND_MATURITY_EXAM = _("Professional education + Maturity exam")
 
 
 class ForeignDiplomaTypes(ChoiceEnum):

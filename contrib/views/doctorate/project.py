@@ -28,9 +28,6 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
 from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.autocomplete import AdmissionAutocompleteService
-from admission.services.organisation import EntitiesService
-from admission.utils import format_entity_title
 
 __all__ = ['DoctorateAdmissionProjectDetailView']
 
@@ -47,21 +44,6 @@ class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):
         context_data['fte_label'] = _("Full-time equivalent (as %)")
         # xgettext:no-python-format
         context_data['allocated_time_label'] = _("Allocated time for the thesis (in %)")
-
-        # Lookup sector label from API
-        context_data['sector_label'] = [
-            s.intitule
-            for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
-            if s.sigle == context_data['admission'].code_secteur_formation
-        ][0]
-
-        # Replace the institute uuid with the formatted name
-        if context_data['admission'].institut_these:
-            institute = EntitiesService.get_ucl_entity(
-                person=self.request.user.person,
-                uuid=context_data['admission'].institut_these,
-            )
-            context_data['admission'].institut_these = format_entity_title(institute)
 
         if 'submitted' in self.request.session:
             del self.request.session['submitted']

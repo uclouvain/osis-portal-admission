@@ -73,7 +73,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
             },
         ),
     )
-    street_number = forms.CharField(required=False, label=_("Number"))
+    street_number = forms.CharField(required=False, label=__("address", "Number"))
     place = forms.CharField(required=False, label=_("Place (optional)"))
     postal_box = forms.CharField(required=False, label=_("Box"))
     postal_code = forms.CharField(
