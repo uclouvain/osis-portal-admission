@@ -2139,6 +2139,9 @@ msgstr ""
 msgid "Professional education"
 msgstr ""
 
+msgid "Professional education + Maturity exam"
+msgstr ""
+
 msgid "Program"
 msgstr ""
 

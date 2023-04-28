@@ -113,8 +113,9 @@ class CoordonneesTestCase(TestCase):
         url = resolve_url('admission:create:coordonnees')
 
         response = self.client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_coordonnees.assert_called()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('city', response.context['residential'].errors)
+        self.mock_person_api.return_value.update_coordonnees.assert_not_called()
 
     def test_form_should_be_all_filled(self):
         url = resolve_url('admission:create:coordonnees')
@@ -139,7 +140,6 @@ class CoordonneesTestCase(TestCase):
                 "residential-be_city": "Louvain-La-Neuve",
                 "residential-street": "Rue du Compas",
                 "residential-street_number": "1",
-                "show_contact": False,
                 "private_email": "john@example.org",
             },
         )
@@ -206,7 +206,14 @@ class CoordonneesTestCase(TestCase):
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
 
-        response = self.client.post(url, {'private_email': 'john@example.org'})
+        response = self.client.post(url, {
+            "residential-country": "BE",
+            "residential-be_postal_code": "1111",
+            "residential-be_city": "Louvain-La-Neuve",
+            "residential-street": "Rue du Compas",
+            "residential-street_number": "1",
+            'private_email': 'john@example.org',
+        })
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):

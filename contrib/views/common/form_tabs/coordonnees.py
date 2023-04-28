@@ -114,6 +114,7 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
                     person=self.person,
                     prefix='contact',
                     initial=initial['contact'],
+                    check_coordinates_fields=bool(kwargs.get('data') and kwargs['data'].get('show_contact')),
                     **kwargs,
                 ),
                 'residential': DoctorateAdmissionAddressForm(
