@@ -2382,6 +2382,9 @@ msgstr "Professionnel"
 msgid "Professional education"
 msgstr "Enseignement professionnel"
 
+msgid "Professional education + Maturity exam"
+msgstr "Enseignement professionnel + Examen de maturité"
+
 msgid "Program"
 msgstr "Formation"
 

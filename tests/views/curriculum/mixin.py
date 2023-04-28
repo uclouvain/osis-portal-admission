@@ -267,7 +267,7 @@ class MixinTestCase(TestCase):
             curriculum=['file1.pdf'],
             pdf_recapitulatif=[],
             nom_institut_these='',
-            acronyme_institut_these='',
+            sigle_institut_these='',
         )
 
         cls.general_proposition = GeneralEducationPropositionDTO._from_openapi_data(

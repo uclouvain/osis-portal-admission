@@ -54,7 +54,10 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
     )
 
     class Media:
-        js = ('js/dependsOn.min.js',)
+        js = (
+            'js/dependsOn.min.js',
+            'admission/formatter.js',
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -111,9 +114,9 @@ class DoctorateAdmissionAddressForm(forms.Form):
         ),
     )
 
-    def __init__(self, person=None, *args, **kwargs):
+    def __init__(self, person=None, check_coordinates_fields=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.address_can_be_empty = True
+        self.check_coordinates_fields = check_coordinates_fields
         self.fields['country'].widget.choices = get_country_initial_choices(
             self.data.get(self.add_prefix("country"), self.initial.get("country")),
             person,
@@ -141,9 +144,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
         else:
             mandatory_address_fields.extend(["postal_code", "city"])
 
-        all_fields = mandatory_address_fields + ["street", "postal_box", "place"]
-
-        if not self.address_can_be_empty or any(cleaned_data.get(f) for f in all_fields):
+        if self.check_coordinates_fields:
             for field in mandatory_address_fields:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)

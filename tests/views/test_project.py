@@ -309,7 +309,7 @@ class ProjectViewTestCase(TestCase):
             commission_proximite="ECONOMY",
             institut_these=self.mock_entities[0].uuid,
             nom_institut_these=self.mock_entities[0].title,
-            acronyme_institut_these=self.mock_entities[0].acronym,
+            sigle_institut_these=self.mock_entities[0].acronym,
             links={},
             erreurs=[],
         )
