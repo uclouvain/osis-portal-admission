@@ -1,6 +1,6 @@
 {% extends base_template %}
 
-{% load i18n admission waffle_tags %}
+{% load i18n admission waffle_tags enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -28,8 +28,16 @@
 
 {% block tab_content %}
   {% panel _('Education you are applying for') %}
+    {% field_data _("Admission type") admission.type_admission|enum_display:'AdmissionType' %}
+    {% if admission.justification %}
+      {% field_data _("Brief justification") admission.justification|linebreaks %}
+    {% endif %}
+    {% field_data _("Sector") admission.intitule_secteur_formation %}
     {% field_data _('Education name') admission.doctorat.intitule %}
     {% field_data _('Campus') admission.doctorat.campus %}
+    {% if admission.commission_proximite %}
+      {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
+    {% endif %}
     {% switch 'debug' %}
       {% field_data _('Academic year') admission.doctorat.annee|get_academic_year css_class='debug-content' %}
     {% endswitch %}

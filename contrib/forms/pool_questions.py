@@ -59,7 +59,7 @@ class PoolQuestionsForm(forms.Form):
         widget=BooleanRadioSelect(),
         required=False,
     )
-    regular_registration_proof = FileUploadField(required=False)
+    regular_registration_proof = FileUploadField(max_files=1, required=False)
     is_external_modification = forms.NullBooleanField(
         label=format_html(
             _(
@@ -71,7 +71,7 @@ class PoolQuestionsForm(forms.Form):
         widget=BooleanRadioSelect(),
         required=False,
     )
-    registration_change_form = FileUploadField(required=False)
+    registration_change_form = FileUploadField(max_files=1, required=False)
     is_non_resident = forms.NullBooleanField(
         label=_("Are you a non-resident (as defined in decree)?"),
         widget=BooleanRadioSelect(),

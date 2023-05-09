@@ -1907,6 +1907,7 @@ msgstr ""
 msgid "Not submitted"
 msgstr ""
 
+msgctxt "address"
 msgid "Number"
 msgstr ""
 
@@ -2023,6 +2024,7 @@ msgstr ""
 msgid "Physic"
 msgstr ""
 
+msgctxt "address"
 msgid "Place"
 msgstr ""
 
@@ -2383,9 +2385,6 @@ msgid "Save and come back"
 msgstr ""
 
 msgid "Save and continue"
-msgstr ""
-
-msgid "Scholarship"
 msgstr ""
 
 msgid "Scholarship end date"
@@ -3053,7 +3052,7 @@ msgid "You cannot fill in a language more than once, please correct the form."
 msgstr ""
 
 #, python-format
-msgid "You have indicated that you will receive one in %(year)s."
+msgid "You have indicated that you will get it in %(year)s."
 msgstr ""
 
 msgid "You have now reached the confirmation tab of your enrolment request."

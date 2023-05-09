@@ -213,6 +213,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
         js = (
             'js/dependsOn.min.js',
             'jquery.mask.min.js',
+            'admission/formatter.js',
         )
 
     def __init__(self, person=None, *args, **kwargs):

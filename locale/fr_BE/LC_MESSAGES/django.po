@@ -2131,6 +2131,7 @@ msgstr "Non renseigné(e)"
 msgid "Not submitted"
 msgstr "Non soumis"
 
+msgctxt "address"
 msgid "Number"
 msgstr "Numéro"
 
@@ -2250,6 +2251,7 @@ msgstr "Données personnelles"
 msgid "Physic"
 msgstr "Physique"
 
+msgctxt "address"
 msgid "Place"
 msgstr "Lieu-dit"
 
@@ -2632,9 +2634,6 @@ msgstr "Enregistrer et revenir"
 
 msgid "Save and continue"
 msgstr "Enregistrer et continuer"
-
-msgid "Scholarship"
-msgstr "Boursier"
 
 msgid "Scholarship end date"
 msgstr "Date de fin de la bourse"
@@ -3385,8 +3384,8 @@ msgstr ""
 "formulaire."
 
 #, python-format
-msgid "You have indicated that you will receive one in %(year)s."
-msgstr "Vous avez indiqué que vous alliez en recevoir un en %(year)s."
+msgid "You have indicated that you will get it in %(year)s."
+msgstr "Vous avez indiqué que vous alliez l'obtenir en %(year)s."
 
 msgid "You have now reached the confirmation tab of your enrolment request."
 msgstr ""

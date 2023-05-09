@@ -37,8 +37,7 @@ from admission.services.person import (
     GeneralEducationAdmissionPersonService,
 )
 from admission.services.reference import HighSchoolService, LanguageService, CountriesService
-from admission.utils import is_med_dent_training
-
+from admission.utils import is_med_dent_training, format_address
 
 __all__ = ['AdmissionEducationDetailView']
 
@@ -84,7 +83,12 @@ class AdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
                     person=self.request.user.person,
                 )
                 context_data['belgian_diploma']['institute_name'] = institute['name']
-                context_data['belgian_diploma']['institute_address'] = institute['city']
+                context_data['belgian_diploma']['institute_address'] = format_address(
+                    street=institute['street'],
+                    street_number=institute['street_number'],
+                    postal_code=institute['zipcode'],
+                    city=institute['city'],
+                )
             else:
                 context_data['belgian_diploma']['institute_name'] = context_data['belgian_diploma'].pop(
                     'other_institute_name'

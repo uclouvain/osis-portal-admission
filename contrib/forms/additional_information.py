@@ -82,11 +82,12 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
         js = (
             'js/dependsOn.min.js',
             'jquery.mask.min.js',
+            'admission/formatter.js',
         )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.address_can_be_empty = not (
+        self.check_coordinates_fields = (
             self.data.get(self.add_prefix('inscription_a_titre')) == ChoixInscriptionATitre.PROFESSIONNEL.name
             and self.data.get(self.add_prefix('type_adresse_facturation')) == ChoixTypeAdresseFacturation.AUTRE.name
         )

@@ -27,17 +27,15 @@
 
 {% block tab_content %}
     {% panel _("Course choice") %}
-        <div class="row">
-            {% field_data _("Admission type") admission.type_admission|enum_display:'AdmissionType' "col-md-4" %}
-            {% field_data _("Sector") sector_label "col-md-4" %}
-            {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
-            {% field_data _("Doctorate") doctorate_title "col-md-4" %}
-        </div>
-        {% if admission.commission_proximite %}
-            {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
-        {% endif %}
+        {% field_data _("Admission type") admission.type_admission|enum_display:'AdmissionType' %}
         {% if admission.justification %}
             {% field_data _("Brief justification") admission.justification|linebreaks %}
+        {% endif %}
+        {% field_data _("Sector") admission.intitule_secteur_formation %}
+        {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+        {% field_data _("Doctorate") doctorate_title %}
+        {% if admission.commission_proximite %}
+            {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
         {% endif %}
     {% endpanel %}
 
@@ -53,7 +51,7 @@
                 {% else %}
                   {% display admission.autre_bourse_recherche as nom_bourse %}
                 {% endif %}
-                {% field_data _("Scholarship") nom_bourse %}
+                {% field_data _("Scholarship grant") nom_bourse %}
                 {% field_data _("Scholarship start date") admission.bourse_date_debut %}
                 {% field_data _("Scholarship end date") admission.bourse_date_fin %}
                 {% field_data _("Scholarship proof") admission.bourse_preuve %}
@@ -67,7 +65,10 @@
         {% field_data _("Project title") admission.titre_projet %}
         {% field_data _("Project resume") admission.resume_projet|linebreaks %}
         {% field_data _("Thesis redacting language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
-        {% field_data _("Research institute") admission.institut_these|default_if_none:'' %}
+        {% if admission.institut_these %}
+          {% display admission.nom_institut_these ' ' '(' admission.sigle_institut_these ')' as institut_these %}
+        {% endif %}
+        {% field_data _("Research institute") institut_these|default_if_none:'' %}
         {% field_data _("Thesis location") admission.lieu_these %}
 
         {% field_data _("Research project") admission.documents_projet %}
