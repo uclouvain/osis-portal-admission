@@ -1,5 +1,5 @@
 {% extends "admission/details/curriculum.html" %}
-{% load bootstrap3 %}
+{% load bootstrap3 admission %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -26,6 +26,6 @@
 {% endcomment %}
 
 {% block attachments_fields %}
-  {% bootstrap_field form.equivalence_diplome %}
+  {% bootstrap_field_with_tooltip form.equivalence_diplome %}
   {% bootstrap_field form.curriculum %}
 {% endblock %}

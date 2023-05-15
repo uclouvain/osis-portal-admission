@@ -36,8 +36,8 @@ from admission.contrib.enums.financement import (
 )
 from admission.contrib.enums.projet import ChoixLangueRedactionThese
 from admission.contrib.enums.proximity_commission import (
-    ChoixProximityCommissionCDE,
-    ChoixProximityCommissionCDSS,
+    ChoixCommissionProximiteCDEouCLSM,
+    ChoixCommissionProximiteCDSS,
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
@@ -77,12 +77,12 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     commission_proximite_cde = forms.ChoiceField(
         label=_("Proximity commission / Subdomain"),
-        choices=EMPTY_CHOICE + ChoixProximityCommissionCDE.choices(),
+        choices=EMPTY_CHOICE + ChoixCommissionProximiteCDEouCLSM.choices(),
         required=False,
     )
     commission_proximite_cdss = forms.ChoiceField(
         label=_("Proximity commission / Subdomain"),
-        choices=EMPTY_CHOICE + ChoixProximityCommissionCDSS.choices(),
+        choices=EMPTY_CHOICE + ChoixCommissionProximiteCDSS.choices(),
         required=False,
     )
     sous_domaine = forms.ChoiceField(

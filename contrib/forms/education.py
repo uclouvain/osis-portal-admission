@@ -25,6 +25,7 @@
 # ##############################################################################
 from dal import autocomplete, forward
 from django import forms
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
@@ -204,7 +205,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         ),
     )
     other_institute = forms.BooleanField(
-        label=_("If you don't find your institute in the list, please specify"),
+        label=_("I don't find my institute in this list"),
         required=False,
     )
     other_institute_name = forms.CharField(
@@ -351,6 +352,10 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         label=_("What diploma did you get (or will you get)?"),
         choices=ForeignDiplomaTypes.choices(),
         widget=forms.RadioSelect,
+        help_text=mark_safe(
+            "- <a href='https://www.eursc.eu/fr' target='_blank'>Schola Europae</a><br>"
+            "- <a href='https://www.ibo.org/fr/programmes/find-an-ib-school' target='_blank'>IBO</a>"
+        ),
     )
     equivalence = forms.ChoiceField(
         label=_(
@@ -408,7 +413,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         label=_(
             "A double-sided copy of the final equivalence decision issued by the Ministry "
             "of the French Community of Belgium (possibly with the DAES or the admission test for the "
-            "first cycle of higher education in case of restrictive equivalence)"
+            "first cycle of higher education if your equivalence doesn't give access to the desired programme)"
         ),
         help_text=_(
             "For any high-school diploma from a country outside the European Union, the admission request "
