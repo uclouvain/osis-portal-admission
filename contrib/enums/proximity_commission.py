@@ -29,12 +29,12 @@ from django.utils.translation import gettext_lazy as _
 from base.models.utils.utils import ChoiceEnum
 
 
-class ChoixProximityCommissionCDE(ChoiceEnum):
+class ChoixCommissionProximiteCDEouCLSM(ChoiceEnum):
     ECONOMY = _("ECONOMY")
     MANAGEMENT = _("MANAGEMENT")
 
 
-class ChoixProximityCommissionCDSS(ChoiceEnum):
+class ChoixCommissionProximiteCDSS(ChoiceEnum):
     ECLI = _("Proximity commission for experimental and clinical research (ECLI)")
     GIM = _("Proximity Commission for Genetics and Immunology (GIM)")
     NRSC = _("Proximity Commission for Neuroscience (NRSC)")

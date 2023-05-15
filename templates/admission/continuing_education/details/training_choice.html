@@ -27,7 +27,7 @@
 {% endcomment %}
 
 {% block tab_content %}
-  {% panel _('Education you are applying for') %}
+  {% panel _('Desired training') %}
     {% field_data _('Education name') admission.formation.intitule %}
     {% field_data _('Campus') admission.formation.campus %}
     {% switch 'debug' %}

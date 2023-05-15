@@ -43,7 +43,7 @@
         {% endblocktranslate %}
       {% elif need_to_complete %}
         {% blocktranslate trimmed with date=minimal_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
-          Please fill in the academic trainings and non-academic activities you have completed since {{ date }}.
+          Please fill in all your academic trainings. For the non-academic activities, please fill in all those carried out since {{ date }}.
         {% endblocktranslate %}
       {% else %}
         {% translate "On the basis of the data you have filled in, it is not necessary to complete your academic trainings and non-academic activities below." %}
@@ -258,7 +258,7 @@
   </div>
   {% if form %}
     {% if form.visible_fields %}
-      {% panel _('Specific questions') %}
+      {% panel _('Specificities') %}
         <form method="post">
           {% csrf_token %}
           {% bootstrap_form_errors form %}

@@ -31,7 +31,7 @@
 
     {% panel _('Belgian diploma') %}
 
-      {% field_data _('Academic graduation year') belgian_diploma.academic_graduation_year|display_as_academic_year %}
+      {% field_data _('Year of graduation from secondary school') belgian_diploma.academic_graduation_year|display_as_academic_year %}
 
       {% field_data _('Community of education') belgian_diploma.community|enum_display:'BelgianCommunitiesOfEducation' %}
 
@@ -100,7 +100,7 @@
 
     {% panel _('Foreign diploma') %}
 
-      {% field_data _('Academic graduation year') foreign_diploma.academic_graduation_year|display_as_academic_year %}
+      {% field_data _('Year of graduation from secondary school') foreign_diploma.academic_graduation_year|display_as_academic_year %}
 
       {% field_data _('What diploma did you get (or will you get)?') foreign_diploma.foreign_diploma_type|enum_display:'ForeignDiplomaTypes' %}
 
@@ -111,12 +111,12 @@
         {% if foreign_diploma.country.european_union %}
           {% field_data _('Has this diploma been subject to a decision of equivalence provided by the French-speaking community of Belgium?') foreign_diploma.equivalence|enum_display:'Equivalence' %}
           {% if foreign_diploma.equivalence == 'YES' %}
-            {% field_data _('A double-sided copy of the final equivalence decision') foreign_diploma.final_equivalence_decision_ue %}
+            {% field_data _("A double-sided copy of the final equivalence decision (possibly with the DAES or the admission test for the first cycle of higher education in case of restrictive equivalence)") foreign_diploma.final_equivalence_decision_ue %}
           {% elif foreign_diploma.equivalence == 'PENDING' %}
             {% field_data _('Proof of the final equivalence decision') foreign_diploma.equivalence_decision_proof %}
           {% endif %}
         {% else %}
-          {% field_data _('A double-sided copy of the final equivalence decision') foreign_diploma.final_equivalence_decision_not_ue %}
+          {% field_data _("A double-sided copy of the final equivalence decision issued by the Ministry of the French Community of Belgium (possibly with the DAES or the admission test for the first cycle of higher education if your equivalence doesn't give access to the desired programme)") foreign_diploma.final_equivalence_decision_not_ue %}
         {% endif %}
       {% endif %}
 

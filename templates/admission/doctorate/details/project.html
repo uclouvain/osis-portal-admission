@@ -35,7 +35,7 @@
         {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
         {% field_data _("Doctorate") doctorate_title %}
         {% if admission.commission_proximite %}
-            {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixProximityCommissionCDE'|enum_display:'ChoixProximityCommissionCDSS'|enum_display:'ChoixSousDomaineSciences' %}
+            {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixCommissionProximiteCDEouCLSM'|enum_display:'ChoixCommissionProximiteCDSS'|enum_display:'ChoixSousDomaineSciences' %}
         {% endif %}
     {% endpanel %}
 

@@ -192,7 +192,7 @@ TAB_TREES = {
             Tab('curriculum', _('Curriculum')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
-            Tab('specific-questions', _('Specific questions')),
+            Tab('specific-questions', _('Specificities')),
             Tab('accounting', _('Accounting')),
         ],
         Tab('confirm-submit', _('Completion'), 'flag'): [
@@ -212,7 +212,7 @@ TAB_TREES = {
             Tab('curriculum', _('Curriculum')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
-            Tab('specific-questions', _('Specific questions')),
+            Tab('specific-questions', _('Specificities')),
         ],
         Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
@@ -684,7 +684,7 @@ def get_country_name(context, iso_code: str):
 
 
 @register.inclusion_tag('admission/tags/multiple_field_data.html')
-def multiple_field_data(configurations, data, title=_('Specific questions')):
+def multiple_field_data(configurations, data, title=_('Specificities')):
     """Display the answers of the specific questions based on a list of configurations and a data dictionary"""
     current_language = get_language()
 

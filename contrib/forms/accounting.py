@@ -97,13 +97,13 @@ class AccountingForm(forms.Form):
         widget=forms.RadioSelect,
     )
     carte_resident_longue_duree = FileUploadField(
-        label=_('Copy of both sides of the EC long-term resident card (D card)'),
+        label=_('Copy of both sides of the EC long-term resident card (D or L card)'),
         required=False,
     )
     carte_cire_sejour_illimite_etranger = FileUploadField(
         label=_(
             "Copy of both sides of the Certificate of Registration in the Register of Foreigners CIRE - unlimited stay "
-            "(B card) or copy of the foreigner's card - unlimited stay (C card)"
+            "(B card) or copy of the foreigner's card - unlimited stay (C or K card)"
         ),
         required=False,
     )
@@ -169,6 +169,11 @@ class AccountingForm(forms.Form):
     fiches_remuneration = FileUploadField(
         label=_('Copy of 6 salary slips issued in the 12 months preceding the application'),
         required=False,
+        help_text=_(
+            'You must have worked in Belgium and your monthly salary must be at least half of the average monthly'
+            'minimum guaranteed remuneration set by the National Labour Council. As an indication, this corresponded '
+            'to 903€ in 2023.'
+        ),
     )
     titre_sejour_3_mois_remplacement = FileUploadField(
         label=_('Copy of both sides of the residence permit valid for more than 3 months'),
@@ -225,7 +230,7 @@ class AccountingForm(forms.Form):
         label=mark_safe(
             _(
                 'Copy of both sides of the long-term residence permit in Belgium of %(person_concerned)s (B, C, D, F, '
-                'F+ or M cards)'
+                'F+, K, L or M cards)'
             )
             % {'person_concerned': dynamic_person_concerned}
         ),
@@ -235,7 +240,9 @@ class AccountingForm(forms.Form):
         label=mark_safe(
             _(
                 "Copy of the Annex 25 or 26 or the A/B card mentioning the refugee status or copy of the decision of "
-                "the Foreigners' Office confirming the temporary/subsidiary protection of %(person_concerned)s"
+                "the Foreigners' Office confirming the temporary/subsidiary protection of %(person_concerned)s "
+                "or copy of the official document from the municipality or the Foreigners' Office proving the "
+                "stateless status of %(person_concerned)s",
             )
             % {'person_concerned': dynamic_person_concerned}
         ),
@@ -258,6 +265,11 @@ class AccountingForm(forms.Form):
             % {'person_concerned': dynamic_person_concerned}
         ),
         required=False,
+        help_text=_(
+            'You must have worked in Belgium and your monthly salary must be at least half of the average monthly'
+            'minimum guaranteed remuneration set by the National Labour Council. As an indication, this corresponded '
+            'to 903€ in 2023.'
+        ),
     )
     attestation_cpas_parent = FileUploadField(
         label=mark_safe(
@@ -420,6 +432,49 @@ class AccountingForm(forms.Form):
 
         if self.with_assimilation:
             self.fields['type_situation_assimilation'].required = True
+
+        setattr(
+            self.fields['sous_type_situation_assimilation_2'],
+            'tooltips',
+            {
+                ChoixAssimilation2.PROTECTION_SUBSIDIAIRE.name: _(
+                    'Subsidiary protection status is given to a foreigner who does not qualify as a refugee but in'
+                    ' respect of whom there are substantial reasons for believing that, if returned to his or her '
+                    'country of origin, he or she would face a real risk of suffering serious harm'
+                ),
+                ChoixAssimilation2.PROTECTION_TEMPORAIRE.name: _(
+                    'Temporary protection is given for a period of one year, which can be extended. '
+                    'This protection is given in the context of mass arrivals of refugees.'
+                ),
+            },
+        )
+
+        setattr(
+            self.fields['relation_parente'],
+            'tooltips',
+            {
+                LienParente.TUTEUR_LEGAL.name: _(
+                    'A legal tutor has the prerogatives of parental authority over the child in case of the parents '
+                    'death or incapacity to exercise their parental authority as a result of a court decision. '
+                    'A student of legal age cannot have a tutor. A guarantor is in no way a legal tutor.'
+                ),
+            },
+        )
+
+        setattr(
+            self.fields['type_situation_assimilation'],
+            'tooltips',
+            {
+                TypeSituationAssimilation.AUTORISATION_ETABLISSEMENT_OU_RESIDENT_LONGUE_DUREE.name: _(
+                    'You are considered a long-term resident if you are in possession of a residence permit valid for '
+                    'at least 5 years.'
+                ),
+                TypeSituationAssimilation.RESIDENT_LONGUE_DUREE_UE_HORS_BELGIQUE.name: _(
+                    'To claim this assimilation, you must reside in Belgium during your studies and therefore '
+                    'obtain a residence permit in Belgium.'
+                ),
+            },
+        )
 
     class Media:
         js = (
