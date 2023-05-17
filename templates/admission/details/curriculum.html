@@ -39,11 +39,12 @@
       {% if view.is_continuing %}
         {% blocktranslate trimmed %}
           Please fill in at least the details of your most recent academic training and your most recent non-academic
-          experience.
+          activity.
         {% endblocktranslate %}
       {% elif need_to_complete %}
         {% blocktranslate trimmed with date=minimal_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
-          Please fill in all your academic trainings. For the non-academic activities, please fill in all those carried out since {{ date }}.
+          Please fill in all the academic training you have done. For the non-academic activities, please fill in
+          all those that have occurred since {{ date }}.
         {% endblocktranslate %}
       {% else %}
         {% translate "On the basis of the data you have filled in, it is not necessary to complete your academic trainings and non-academic activities below." %}
@@ -210,7 +211,7 @@
                   {{ start_date }}
                   {% if start_date != end_date %}
                     {% translate 'to' context 'admission-date' %}
-                    {{ end_date }}
+                    <br>{{ end_date }}
                   {% endif %}
                 {% endwith %}
               </td>

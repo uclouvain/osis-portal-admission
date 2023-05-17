@@ -2093,13 +2093,13 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Please fill in all your academic trainings. For the non-academic activities, "
-"please fill in all those carried out since %(date)s."
+"Please fill in all the academic training you have done. For the non-academic "
+"activities, please fill in all those that have occurred since %(date)s."
 msgstr ""
 
 msgid ""
 "Please fill in at least the details of your most recent academic training "
-"and your most recent non-academic experience."
+"and your most recent non-academic activity."
 msgstr ""
 
 msgid ""
