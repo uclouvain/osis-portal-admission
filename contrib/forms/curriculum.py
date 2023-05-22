@@ -76,8 +76,12 @@ CurriculumField = partial(
 DiplomaEquivalenceField = partial(
     FileUploadField,
     label=_(
-        'Decision of equivalence for your diploma(s) giving access to the training, '
-        'if this(these) has(have) been obtained outside Belgium'
+        'Copy of the equivalence decision delivered by the French Community of Belgium making your 2nd cycle diploma '
+        '(bac+5) equivalent to the academic grade of a corresponding master.'
+    ),
+    help_text=_(
+        'You can find more information on the page of the French Community '
+        '<a href="https://equisup.cfwb.be/" target="_blank">https://equisup.cfwb.be/</a>'
     ),
     required=False,
 )
@@ -421,7 +425,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     obtained_grade = forms.ChoiceField(
         choices=EMPTY_CHOICE + Grade.choices(),
-        label=_('Obtained grade'),
+        label=_('Obtained mention'),
         required=False,
     )
     graduate_degree = FileUploadField(

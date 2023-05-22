@@ -37,8 +37,8 @@ from django.utils.translation import get_language, gettext_lazy as _
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
     AdmissionType,
-    ChoixProximityCommissionCDE,
-    ChoixProximityCommissionCDSS,
+    ChoixCommissionProximiteCDEouCLSM,
+    ChoixCommissionProximiteCDSS,
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
@@ -88,7 +88,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     campus = forms.ChoiceField(
         initial=EMPTY_VALUE,
-        label=_('Campus'),
+        label=_('Campus (optional)'),
         widget=autocomplete.Select2,
     )
 
@@ -155,13 +155,13 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     proximity_commission_cde = forms.ChoiceField(
         label=_("Proximity commission / Subdomain"),
-        choices=EMPTY_CHOICE + ChoixProximityCommissionCDE.choices(),
+        choices=EMPTY_CHOICE + ChoixCommissionProximiteCDEouCLSM.choices(),
         required=False,
     )
 
     proximity_commission_cdss = forms.ChoiceField(
         label=_("Proximity commission / Subdomain"),
-        choices=EMPTY_CHOICE + ChoixProximityCommissionCDSS.choices(),
+        choices=EMPTY_CHOICE + ChoixCommissionProximiteCDSS.choices(),
         required=False,
     )
 
@@ -176,6 +176,10 @@ class TrainingChoiceForm(ConfigurableFormMixin):
     has_double_degree_scholarship = RadioBooleanField(
         label=_('Are you a double degree student?'),
         required=False,
+        help_text=_(
+            'Double degree refers to joint training between two or more universities, '
+            'which will lead to the granting of two separate degrees provided by each signatory university.'
+        ),
     )
 
     double_degree_scholarship = forms.CharField(
@@ -189,6 +193,10 @@ class TrainingChoiceForm(ConfigurableFormMixin):
     has_international_scholarship = RadioBooleanField(
         label=_('Do you have an international scholarship?'),
         required=False,
+        help_text=_(
+            'An international scholarship can be granted to students as part of a project. These international '
+            'scholarships are granted by the ARES organisation and a scholarship certificate must be provided.'
+        ),
     )
 
     international_scholarship = forms.CharField(
@@ -202,6 +210,10 @@ class TrainingChoiceForm(ConfigurableFormMixin):
     has_erasmus_mundus_scholarship = RadioBooleanField(
         label=_('Are you an erasmus mundus student?'),
         required=False,
+        help_text=_(
+            'Erasmus Mundus is a study abroad programme designed by an international partnership of higher education '
+            'institutions. Scholarships are granted to students and proof of funding is therefore required.'
+        ),
     )
 
     erasmus_mundus_scholarship = forms.CharField(

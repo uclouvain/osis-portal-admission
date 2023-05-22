@@ -44,7 +44,7 @@ class TypeFormation(ChoiceEnum):
 
 class TypeFormationChoisissable(ChoiceEnum):
     BACHELIER = _('Bachelor')
-    MASTER = _('Master')
+    MASTER = _('Master and master of specialist')
     DOCTORAT = _('Doctorate')
     AGREGATION_CAPES = _('Aggregation and CAPAES')
     CERTIFICAT_ATTESTATION = _("Certificate and attestation")

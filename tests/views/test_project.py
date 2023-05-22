@@ -41,8 +41,8 @@ from admission.contrib.enums.projet import (
     ChoixStatutPropositionGenerale,
 )
 from admission.contrib.enums.proximity_commission import (
-    ChoixProximityCommissionCDE,
-    ChoixProximityCommissionCDSS,
+    ChoixCommissionProximiteCDEouCLSM,
+    ChoixCommissionProximiteCDSS,
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
@@ -192,7 +192,7 @@ class ProjectViewTestCase(TestCase):
         proposition.to_dict.return_value = {
             'code_secteur_formation': "SSH",
             'type_contrat_travail': "Something",
-            "commission_proximite": ChoixProximityCommissionCDE.ECONOMY.name,
+            "commission_proximite": ChoixCommissionProximiteCDEouCLSM.ECONOMY.name,
             "raison_non_soutenue": "A very good reason",
             'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
         }
@@ -210,7 +210,7 @@ class ProjectViewTestCase(TestCase):
                 'type': TrainingType.PHD.name,
             },
             'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
-            "commission_proximite": ChoixProximityCommissionCDSS.ECLI.name,
+            "commission_proximite": ChoixCommissionProximiteCDSS.ECLI.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

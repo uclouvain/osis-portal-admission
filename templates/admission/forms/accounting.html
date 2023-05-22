@@ -50,7 +50,24 @@
 
   {% if with_assimilation %}
     {% panel _('Assimilation') %}
-      {% bootstrap_field form.type_situation_assimilation form_group_class="form-group required_field" %}
+      {% with field=form.type_situation_assimilation %}
+        <div class="form-group required_field {% if field.errors %}has-error{% elif form.is_bound %}has-success{% endif %}">
+          {% bootstrap_label field.label label_for=form.type_situation_assimilation.0.id_for_label label_class='control-label' %}
+          {% for radio in form.type_situation_assimilation %}
+            <div class="radio">
+              {{ radio }}
+              {% if radio.data.value in form.fields.type_situation_assimilation.tooltips %}
+                <a
+                    tabindex="0"
+                    class="fa fa-info-circle popover-buttons"
+                    data-content="<p>{{ form.fields.type_situation_assimilation.tooltips|get_item:radio.data.value }}</p>"
+                    role="button"
+                ></a>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endwith %}
 
       <div id="assimilation1-container">
         <hr>
@@ -71,7 +88,24 @@
 
       <div id="assimilation2-container">
         <hr>
-        {% bootstrap_field form.sous_type_situation_assimilation_2 form_group_class="form-group required_field" %}
+        {% with field=form.sous_type_situation_assimilation_2 %}
+          <div class="form-group required_field {% if field.errors %}has-error{% elif form.is_bound %}has-success{% endif %}">
+            {% bootstrap_label field.label label_for=form.sous_type_situation_assimilation_2.0.id_for_label label_class='control-label' %}
+            {% for radio in form.sous_type_situation_assimilation_2 %}
+              <div class="radio">
+                {{ radio }}
+                {% if radio.data.value in form.fields.sous_type_situation_assimilation_2.tooltips %}
+                  <a
+                      tabindex="0"
+                      class="fa fa-info-circle popover-buttons"
+                      data-content="<p>{{ form.fields.sous_type_situation_assimilation_2.tooltips|get_item:radio.data.value }}</p>"
+                      role="button"
+                  ></a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endwith %}
         <div id="assimilation2-refugee-container">
           {% bootstrap_field form.carte_a_b_refugie form_group_class="form-group required_field" %}
         </div>
@@ -93,7 +127,7 @@
         {% bootstrap_field form.sous_type_situation_assimilation_3 form_group_class="form-group required_field" %}
         <div id="assimilation3-professional-container">
           {% bootstrap_field form.titre_sejour_3_mois_professionel form_group_class="form-group required_field" %}
-          {% bootstrap_field form.fiches_remuneration form_group_class="form-group required_field" %}
+          {% bootstrap_field_with_tooltip form.fiches_remuneration classes="required_field" %}
         </div>
         <div id="assimilation3-replacement-container">
           {% bootstrap_field form.titre_sejour_3_mois_remplacement form_group_class="form-group required_field" %}
@@ -108,7 +142,24 @@
       <div id="assimilation5-container">
         <hr>
         <div id="assimilation5-relationship-container">
-          {% bootstrap_field form.relation_parente form_group_class="form-group required_field" %}
+          {% with field=form.relation_parente %}
+            <div class="form-group required_field {% if field.errors %}has-error{% elif form.is_bound %}has-success{% endif %}">
+              {% bootstrap_label field.label label_for=form.relation_parente.0.id_for_label label_class='control-label' %}
+              {% for radio in form.relation_parente %}
+                <div class="radio">
+                  {{ radio }}
+                  {% if radio.data.value in form.fields.relation_parente.tooltips %}
+                    <a
+                        tabindex="0"
+                        class="fa fa-info-circle popover-buttons"
+                        data-content="<p>{{ form.fields.relation_parente.tooltips|get_item:radio.data.value }}</p>"
+                        role="button"
+                    ></a>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endwith %}
           <div id="assimilation5-relationship-parent-container">
             {% bootstrap_field form.composition_menage_acte_naissance form_group_class="form-group required_field" %}
           </div>
@@ -136,7 +187,7 @@
           </div>
           <div id="assimilation5-proof-residence-permit-container" class="assimilation5-proof-field">
             {% bootstrap_field form.titre_sejour_3_mois_parent form_group_class="form-group required_field" %}
-            {% bootstrap_field form.fiches_remuneration_parent form_group_class="form-group required_field" %}
+            {% bootstrap_field_with_tooltip form.fiches_remuneration_parent classes="required_field" %}
           </div>
           <div id="assimilation5-proof-cpas-container" class="assimilation5-proof-field">
             {% bootstrap_field form.attestation_cpas_parent form_group_class="form-group required_field" %}
@@ -207,10 +258,10 @@
           const assimilation5RadioLabelsToUpdate = $('#id_sous_type_situation_assimilation_5 label .relationship');
 
           {% if is_general %}
-            {# Reduced registration fees #}
-            $('#staff-child-container').dependsOn({
-                'input[name=enfant_personnel]': { values: ["True"] },
-            });
+              {# Reduced registration fees #}
+              $('#staff-child-container').dependsOn({
+                  'input[name=enfant_personnel]': { values: ["True"] },
+              });
           {% endif %}
 
           {# Assimilation #}
