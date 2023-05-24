@@ -448,6 +448,15 @@ msgstr ""
 msgid "Artistic transition"
 msgstr ""
 
+msgid ""
+"As part of your application, one document must be uploaded to continue the "
+"enrolment process."
+msgid_plural ""
+"As part of your application, several documents must be uploaded to continue "
+"the enrolment process."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Assent"
 msgstr ""
 
@@ -711,6 +720,9 @@ msgid "Complementary training proposition"
 msgstr ""
 
 msgid "Complete"
+msgstr ""
+
+msgid "Complete the proposition"
 msgstr ""
 
 msgid "Completed application"
@@ -1070,6 +1082,12 @@ msgid "Doctorate"
 msgstr ""
 
 msgid "Document"
+msgstr ""
+
+msgid "Documents"
+msgstr ""
+
+msgid "Documents to complete"
 msgstr ""
 
 msgid ""
@@ -2610,6 +2628,11 @@ msgid "Text"
 msgstr ""
 
 msgid "Text size"
+msgstr ""
+
+msgid ""
+"Thank you for completing your application. The managers will examine the new "
+"documents that have been added."
 msgstr ""
 
 msgid ""

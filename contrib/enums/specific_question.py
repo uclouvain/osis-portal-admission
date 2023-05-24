@@ -33,6 +33,7 @@ class Onglets(ChoiceEnum):
     CURRICULUM = _('Curriculum')
     CHOIX_FORMATION = _('Training choice')
     INFORMATIONS_ADDITIONNELLES = _('Additional information')
+    DOCUMENTS = _('Documents')
 
 
 class TypeItemFormulaire(ChoiceEnum):

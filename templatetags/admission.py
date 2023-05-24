@@ -198,6 +198,9 @@ TAB_TREES = {
         Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
         ],
+        Tab('documents', _('Documents'), 'folder-open'): [
+            Tab('documents', _('Documents')),
+        ],
     },
     'continuing-education': {
         Tab('personal', _('Personal data'), 'id-card'): [

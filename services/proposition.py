@@ -338,6 +338,21 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def retrieve_general_education_documents(cls, person: Person, uuid):
+        return APIClient().list_general_documents(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_general_education_documents(cls, person: Person, data, uuid):
+        return APIClient().create_general_documents(
+            completer_emplacements_documents_par_candidat_command=data,
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"

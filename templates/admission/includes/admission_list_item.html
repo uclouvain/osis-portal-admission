@@ -51,6 +51,13 @@
   {% footer %}
   {% if admission.statut not in CANCELLED_STATUSES %}
 
+    {% if admission|can_update_tab:'documents' %}
+      <a class="btn btn-default pull-right" href="{% url base_namespace|add:':update:documents' admission.uuid %}">
+        <span class="fas fa-pencil"></span>
+        {% translate "Complete the proposition" %}
+      </a>
+    {% endif %}
+
     {% if admission|can_make_action:'retrieve_person' %}
       {% url base_namespace|add:':person' admission.uuid as edit_url %}
     {% elif admission|can_make_action:'retrieve_proposition' %}

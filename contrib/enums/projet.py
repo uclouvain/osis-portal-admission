@@ -80,3 +80,9 @@ CANCELLED_STATUSES = {
     ChoixStatutPropositionGenerale.ANNULEE.name,
     ChoixStatutPropositionContinue.ANNULEE.name,
 }
+
+
+TO_COMPLETE_STATUSES = {
+    ChoixStatutPropositionGenerale.A_COMPLETER_POUR_SIC.name,
+    ChoixStatutPropositionGenerale.A_COMPLETER_POUR_FAC_CDD.name,
+}

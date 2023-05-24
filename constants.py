@@ -49,6 +49,8 @@ READ_ACTIONS_BY_TAB = {
     'extension-request': 'update_confirmation_extension',
     # Additional information
     'specific-questions': 'retrieve_specific_question',
+    # Documents
+    'documents': 'retrieve_documents',
     # Others
     'doctoral-training': 'retrieve_doctoral_training',
     'complementary-training': 'retrieve_complementary_training',
@@ -82,6 +84,8 @@ UPDATE_ACTIONS_BY_TAB = {
     'extension-request': 'update_confirmation_extension',
     # Additional information
     'specific-questions': 'update_specific_question',
+    # Documents
+    'documents': 'update_documents',
     # Others
     'jury': '',
     'private-defense': '',
