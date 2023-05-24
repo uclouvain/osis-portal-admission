@@ -522,6 +522,19 @@ msgstr "Artistique de qualification"
 msgid "Artistic transition"
 msgstr "Artistique de transition"
 
+msgid ""
+"As part of your application, one document must be uploaded to continue the "
+"enrolment process."
+msgid_plural ""
+"As part of your application, several documents must be uploaded to continue "
+"the enrolment process."
+msgstr[0] ""
+"Dans le cadre de votre demande, un document doit être téléversé pour "
+"poursuivre le processus d'inscription."
+msgstr[1] ""
+"Dans le cadre de votre demande, plusieurs documents doivent être téléversés "
+"pour poursuivre le processus d'inscription."
+
 msgid "Assent"
 msgstr "Approbation"
 
@@ -801,6 +814,9 @@ msgstr "Proposition de formation complémentaire"
 
 msgid "Complete"
 msgstr "Complet"
+
+msgid "Complete the proposition"
+msgstr "Compléter la proposition"
 
 msgid "Completed application"
 msgstr "Demande complétée"
@@ -1213,6 +1229,12 @@ msgstr "Doctorat"
 
 msgid "Document"
 msgstr "Document"
+
+msgid "Documents"
+msgstr "Documents"
+
+msgid "Documents to complete"
+msgstr "Documents à compléter"
 
 msgid ""
 "Double degree refers to joint training between two or more universities, "
@@ -2885,6 +2907,13 @@ msgstr "Texte"
 
 msgid "Text size"
 msgstr "Taille du texte"
+
+msgid ""
+"Thank you for completing your application. The managers will examine the new "
+"documents that have been added."
+msgstr ""
+"Merci d'avoir complété votre demande. Les gestionnaires vont analyser les "
+"nouveaux documents qui ont été ajoutés."
 
 msgid ""
 "The \"doctoral training\" must be updated before the confirmation paper and "

@@ -25,6 +25,13 @@
   {% if fields|length %}
     <div class="multi-widget">
       {% for widget, field in fields %}
+        {% if group_fields_by_tab %}
+          {% ifchanged field.tab %}
+            {% if not forloop.first %}</fieldset>{% endif %}
+            <fieldset>
+              <legend>{{ field.tab_name }}</legend>
+          {% endifchanged %}
+        {% endif %}
         <div class="form-group
         {% if field.errors %} has-error{% elif is_bound %} has-success{% endif %}
         {% if field.is_required %} required_field{% endif %}"
@@ -38,7 +45,7 @@
                 <a
                     tabindex="0"
                     class="fa fa-info-circle popover-buttons"
-                    data-content="<p>{{ field.help_text }}</p>"
+                    data-content="{{ field.help_text|linebreaks }}"
                     data-html="true"
                     data-placement="auto top"
                     data-toggle="popover"
@@ -53,6 +60,9 @@
             <div class="help-block">{{ error.message }}</div>
           {% endfor %}
         </div>
+        {% if group_fields_by_tab and forloop.last %}
+          </fieldset>
+        {% endif %}
       {% endfor %}
     </div>
   {% endif %}

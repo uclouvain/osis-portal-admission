@@ -71,13 +71,23 @@ class ConfigurableFormItemWidget(forms.MultiWidget):
         context['fields'] = list(zip(context['widget']['subwidgets'], self.fields))
         context['current_language'] = self.current_language
         context['is_bound'] = self.is_bound
+        context['group_fields_by_tab'] = self.group_fields_by_tab
         return context
 
-    def __init__(self, field_configurations: List[dict], fields: List[forms.Field], is_bound=False, **kwargs):
+    def __init__(
+        self,
+        field_configurations: List[dict],
+        fields: List[forms.Field],
+        is_bound=False,
+        group_fields_by_tab=False,
+        **kwargs,
+    ):
         self.field_configurations = field_configurations
         self.fields = fields
         self.current_language = get_language()
         self.is_bound = is_bound
+        self.group_fields_by_tab = group_fields_by_tab
+
         super().__init__(**kwargs)
 
     def decompress(self, value):
@@ -127,7 +137,7 @@ SELECTION_FIELD = {
 }
 
 
-def _get_field_from_configuration(configuration, current_language):
+def _get_field_from_configuration(configuration, current_language, required_documents_on_form_submit=False):
     form_item_type = configuration['type']
     if form_item_type == TypeItemFormulaire.MESSAGE.name:
         field = forms.Field(
@@ -157,7 +167,7 @@ def _get_field_from_configuration(configuration, current_language):
 
     elif form_item_type == TypeItemFormulaire.DOCUMENT.name:
         default_field_params = _get_default_field_params(configuration, current_language)
-        default_field_params['required'] = False
+        default_field_params['required'] = required_documents_on_form_submit
         field = FileUploadField(
             **default_field_params,
             max_files=configuration['configuration'].get(
@@ -201,7 +211,13 @@ def _get_field_from_configuration(configuration, current_language):
 
 
 class ConfigurableFormItemField(forms.MultiValueField):
-    def __init__(self, configurations: List[dict], **kwargs):
+    def __init__(
+        self,
+        configurations: List[dict],
+        required_documents_on_form_submit=False,
+        group_fields_by_tab=False,
+        **kwargs,
+    ):
         self.field_configurations = configurations
         current_language = get_language()
 
@@ -210,8 +226,10 @@ class ConfigurableFormItemField(forms.MultiValueField):
 
         # Create the lists of fields and widgets based on the input configurations
         for configuration in configurations:
-            field = _get_field_from_configuration(configuration, current_language)
+            field = _get_field_from_configuration(configuration, current_language, required_documents_on_form_submit)
             setattr(field, 'is_required', configuration['required'])
+            setattr(field, 'tab', configuration.get('tab'))
+            setattr(field, 'tab_name', configuration.get('tab_name'))
             fields.append(field)
             widgets.append(field.widget)
 
@@ -222,6 +240,7 @@ class ConfigurableFormItemField(forms.MultiValueField):
                 field_configurations=self.field_configurations,
                 fields=fields,
                 is_bound=kwargs.pop('is_bound'),
+                group_fields_by_tab=group_fields_by_tab,
             ),
             require_all_fields=False,
             required=False,
@@ -274,12 +293,16 @@ class ConfigurableFormMixin(forms.Form):
     """Form whose some fields will be automatically created on the basis of a configuration."""
 
     configurable_form_field_name = 'specific_question_answers'  # Name of the form field containing several values
+    required_documents_on_form_submit = False
+    group_fields_by_tab = False
 
     def __init__(self, *args, form_item_configurations, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields[self.configurable_form_field_name] = ConfigurableFormItemField(
             configurations=form_item_configurations,
+            required_documents_on_form_submit=self.required_documents_on_form_submit,
+            group_fields_by_tab=self.group_fields_by_tab,
             is_bound=self.is_bound,
         )
 
