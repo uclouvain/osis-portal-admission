@@ -55,7 +55,8 @@ READ_ACTIONS_BY_TAB = {
     'doctoral-training': 'retrieve_doctoral_training',
     'complementary-training': 'retrieve_complementary_training',
     'course-enrollment': 'retrieve_course_enrollment',
-    'jury': '',
+    'jury-preparation': 'retrieve_jury_preparation',
+    'jury': 'list_jury_members',
     'private-defense': '',
     'public-defense': '',
     'messages': '',
@@ -87,6 +88,7 @@ UPDATE_ACTIONS_BY_TAB = {
     # Documents
     'documents': 'update_documents',
     # Others
+    'jury-preparation': 'update_jury_preparation',
     'jury': '',
     'private-defense': '',
     'public-defense': '',

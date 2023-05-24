@@ -323,6 +323,9 @@ msgstr "Ajouter une langue"
 msgid "Add a new academic experience"
 msgstr "Ajouter une nouvelle expérience académique"
 
+msgid "Add a new member"
+msgstr "Ajouter un nouveau membre"
+
 msgid "Add a new non-academic experience"
 msgstr "Ajouter une nouvelle expérience non-académique"
 
@@ -498,6 +501,10 @@ msgstr ""
 #, python-format
 msgid "Are you sure you want to delete the training \"%(name)s\"?"
 msgstr "Êtes-vous sûr de vouloir supprimer la formation \"%(name)s\" ?"
+
+#, python-format
+msgid "Are you sure you want to remove \"%(prenom)s %(nom)s\" from the jury?"
+msgstr "Êtes-vous sûr de vouloir retirer \"%(prenom)s %(nom)s\" du jury ?"
 
 #, python-format
 msgid ""
@@ -1042,6 +1049,9 @@ msgstr "Motivation de la cotutelle"
 msgid "Cotutelle opening request"
 msgstr "Demande d'ouverture de cotutelle"
 
+msgid "Cotutelle thesis"
+msgstr "Thèse en cotutelle"
+
 msgid "Country"
 msgstr "Pays"
 
@@ -1115,8 +1125,25 @@ msgstr "Date limite pour la confirmation"
 msgid "Decision"
 msgstr "Décision"
 
+msgctxt "doctorate tab"
+msgid "Defense"
+msgstr "Défense"
+
 msgid "Defense date"
 msgstr "Date de soutenance"
+
+msgid "Defense indicative date"
+msgstr "Date de soutenance indicative"
+
+msgid "Defense language"
+msgstr "Langue de la soutenance"
+
+msgid "Defense method"
+msgstr "Formule de défense"
+
+msgctxt "admission tab"
+msgid "Defense method"
+msgstr "Modalités de défense"
 
 msgid "Definitive admission date"
 msgstr "Date de l'admission définitive"
@@ -1211,6 +1238,9 @@ msgstr ""
 "Désirez-vous l'affiliation aux activités sportives ? Dans l'affirmative, le "
 "coût de cette affiliation sera ajouté à vos droits d'inscription."
 
+msgid "Doctor"
+msgstr "Docteur"
+
 msgid "Doctoral program proposition"
 msgstr "Projet de formation doctorale"
 
@@ -1235,6 +1265,9 @@ msgstr "Documents"
 
 msgid "Documents to complete"
 msgstr "Documents à compléter"
+
+msgid "Does not have a doctor title"
+msgstr "N'est pas porteur du titre de docteur"
 
 msgid ""
 "Double degree refers to joint training between two or more universities, "
@@ -1324,6 +1357,9 @@ msgid "Educational type is required with this community of education"
 msgstr ""
 "Le type d'enseignement doit obligatoirement être renseigné avec cette "
 "communauté d'enseignement"
+
+msgid "Email"
+msgstr "E-mail"
 
 msgid "Employer"
 msgstr "Employeur"
@@ -1804,6 +1840,14 @@ msgstr ""
 "Si connu, indiquez ici le nom du laboratoire, du service clinique ou du "
 "centre de recherche où sera réalisée la thèse"
 
+msgid ""
+"If necessary, please finish inputting doctoral activities and complete the "
+"defense preparation below before submitting the jury proposition."
+msgstr ""
+"Le cas échéant, veuillez terminer l’encodage des activités de formation "
+"doctorale et compléter les modalités de défenses ci-dessous avant de "
+"soumettre la proposition de jury"
+
 msgid "If other education type, please specify"
 msgstr "Si autre type d'enseignement, précisez"
 
@@ -1913,6 +1957,13 @@ msgstr ""
 "Indiquez ici un éventuel parcours doctoral précédent, abouti ou interrompu, "
 "dans lequel vous n’êtes plus inscrit à ce jour."
 
+msgid ""
+"Information about a potential cotutelle are to be inputted in the \"Doctoral "
+"project\" part."
+msgstr ""
+"Les informations concernant une éventuelle cotutelle sont à indiquer dans la "
+"partie « Projet doctoral »."
+
 msgid "Institute"
 msgstr "Établissement"
 
@@ -1956,8 +2007,29 @@ msgid "Is your thesis joint with another secondary institute?"
 msgstr ""
 "Souhaitez-vous réaliser votre thèse en cotutelle avec une autre institution ?"
 
+msgid "JURY_APPROUVE_ADRE"
+msgstr "Jury approuvé par ADRE"
+
+msgid "JURY_APPROUVE_CA"
+msgstr "Jury approuvé par CA"
+
+msgid "JURY_APPROUVE_CDD"
+msgstr "Jury approuvé par CDD"
+
+msgid "JURY_REFUSE_ADRE"
+msgstr "Jury refusé par ADRE"
+
+msgid "JURY_REFUSE_CDD"
+msgstr "Jury refusé par CDD"
+
+msgid "JURY_SOUMIS"
+msgstr "Jury soumis"
+
 msgid "Journal"
 msgstr "Nom de la revue ou de la maison d'édition"
+
+msgid "Jury composition"
+msgstr "Composition du jury"
 
 msgid "Justification letter"
 msgstr "Lettre de justification"
@@ -1976,6 +2048,9 @@ msgstr "Connaissance des langues"
 
 msgid "Last name"
 msgstr "Nom"
+
+msgid "Last name / First name / Global id"
+msgstr "Nom / Prénom / ID Global"
 
 msgid "Last name of the account holder"
 msgstr "Nom du titulaire du compte"
@@ -2015,11 +2090,20 @@ msgstr "Compréhension à l'audition"
 msgid "Long"
 msgstr "Long"
 
+msgid "Lookup somebody"
+msgstr "Rechercher quelqu'un"
+
 msgid "MANAGEMENT"
 msgstr "Gestion"
 
 msgid "MATHEMATICS"
 msgstr "Mathématiques"
+
+msgid "MEMBRE"
+msgstr "Membre"
+
+msgid "Main institute"
+msgstr "Institution principale"
 
 msgid "Male"
 msgstr "Masculin"
@@ -2053,8 +2137,25 @@ msgstr "Nombre maximum de documents"
 msgid "Member not found"
 msgstr "Membre non trouvé"
 
+msgid "Members"
+msgstr "Membres"
+
 msgid "Message"
 msgstr "Message"
+
+msgid ""
+"Method 1 (the private defense and the public defense are separated by at "
+"least a month"
+msgstr ""
+"Formule 1 (la défense privée et la soutenance publique sont séparées d’au "
+"moins un mois) "
+
+msgid ""
+"Method 2 (The private defense and the public defense are organised the same "
+"day, and subjected to an admissibility condition)"
+msgstr ""
+"Formule 2 (La défense et la soutenance sont organisées le même jour, et "
+"soumises à une condition de recevabilité)"
 
 msgid "Modern languages"
 msgstr "Langues modernes"
@@ -2240,6 +2341,9 @@ msgstr "Autres prénoms"
 msgid "Other institute"
 msgstr "Autre établissement"
 
+msgid "Other institute (if necessary)"
+msgstr "Autre institution (le cas échéant)"
+
 msgid "Other institute address"
 msgstr "Adresse autre établissement"
 
@@ -2272,6 +2376,9 @@ msgstr "Résumé PDF"
 
 msgid "PHYSICS"
 msgstr "Physique"
+
+msgid "PRESIDENT"
+msgstr "Président"
 
 msgid "PRIVATE_DEFENSE"
 msgstr "Défense privée"
@@ -2386,6 +2493,10 @@ msgstr ""
 "document d'identité. Si aucun autre prénom n'est mentionné sur votre "
 "document d'identité, vous ne devez rien indiquer."
 
+msgid "Please justify why the member does not have a doctor title"
+msgstr ""
+"Merci de justifier pourquoi le membre n'est pas porteur du titre de docteur"
+
 msgid "Please mention the academic graduation year"
 msgstr "Veuillez indiquer l'année académique d'obtention"
 
@@ -2432,6 +2543,9 @@ msgstr "Poster"
 msgid "Pre-Admission"
 msgstr "Pré-admission"
 
+msgid "President"
+msgstr "Président"
+
 msgid "Previous experience"
 msgstr "Parcours antérieur"
 
@@ -2459,6 +2573,9 @@ msgstr "Enseignement professionnel"
 
 msgid "Professional education + Maturity exam"
 msgstr "Enseignement professionnel + Examen de maturité"
+
+msgid "Professor"
+msgstr "Professeur"
 
 msgid "Program"
 msgstr "Formation"
@@ -2517,6 +2634,9 @@ msgstr "Preuve de la demande d'équivalence"
 
 msgid "Proposed new deadline"
 msgstr "Nouvelle échéance proposée"
+
+msgid "Proposed thesis title"
+msgstr "Titre proposé pour la thèse"
 
 msgid "Proposition approval"
 msgstr "Approbation de la proposition"
@@ -2592,6 +2712,13 @@ msgstr "Lettres de recommandation"
 msgid "Reduced registration fees"
 msgstr "Réduction des droits d’inscription"
 
+msgid ""
+"Refer to the specific measures of your doctoral commission to know if one of "
+"these method is mandatory to you."
+msgstr ""
+"Référez-vous aux dispositions particulières de votre commission doctorale "
+"afin de savoir si l'une de ces formules vous est imposée"
+
 msgid "Reference DIAL.Pr"
 msgstr "Référence DIAL.Pr"
 
@@ -2620,8 +2747,16 @@ msgstr "Motif de refus"
 msgid "Remove"
 msgstr "Retirer"
 
+msgctxt "jury member"
+msgid "Remove"
+msgstr "Retirer"
+
 msgid "Remove the experience"
 msgstr "Retirer l'expérience"
+
+msgctxt "jury member"
+msgid "Remove?"
+msgstr "Retirer ?"
 
 msgid "Reorientation"
 msgstr "Réorientation"
@@ -2675,6 +2810,9 @@ msgstr "Fonction"
 
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Bourse de recherche"
+
+msgid "SECRETAIRE"
+msgstr "Secrétaire"
 
 msgid "SELF_FUNDING"
 msgstr "Fonds propres"
@@ -2740,6 +2878,9 @@ msgstr "Rechercher un code UE (hors UE du formulaire)"
 msgid "Secondary studies"
 msgstr "Études secondaires"
 
+msgid "Secretary"
+msgstr "Secrétaire"
+
 msgid "Sector"
 msgstr "Secteur"
 
@@ -2772,8 +2913,17 @@ msgstr "Séparé·e"
 msgid "Services"
 msgstr "Services"
 
+msgid "Set as member"
+msgstr "Désigner comme membre"
+
+msgid "Set as president"
+msgstr "Désigner comme président"
+
 msgid "Set as reference promoter"
 msgstr "Désigner comme promoteur de référence"
+
+msgid "Set as secretary"
+msgstr "Désigner comme secrétaire"
 
 msgid "Sex"
 msgstr "Sexe"
@@ -2811,6 +2961,9 @@ msgstr "Profil particulier"
 
 msgid "Specificities"
 msgstr "Spécificités"
+
+msgid "Specify if other"
+msgstr "Si autre, précisez"
 
 msgid "Specify the employer and your function"
 msgstr "Indiquer l'employeur et votre fonction"
@@ -2914,6 +3067,13 @@ msgid ""
 msgstr ""
 "Merci d'avoir complété votre demande. Les gestionnaires vont analyser les "
 "nouveaux documents qui ont été ajoutés."
+
+msgid ""
+"The \"doctoral training\" must be completed before submitting the defense "
+"preparation and the jury proposition."
+msgstr ""
+"La formation doctorale doit être complétée avant de soumettre les modalités "
+"de défense et la proposition de jury"
 
 msgid ""
 "The \"doctoral training\" must be updated before the confirmation paper and "
@@ -3144,6 +3304,13 @@ msgstr "Ce champ est obligatoire."
 msgid "This is a diploma from"
 msgstr "Il s'agit d'un diplôme"
 
+msgid ""
+"This is a temporary title and it will be modifiable later depending on the "
+"jury analysis."
+msgstr ""
+"Ce titre est provisoire et pourra être modifié ultérieurement en fonction de "
+"l’analyse du jury."
+
 msgid "This language is set more than once."
 msgstr "Cette langue est définie plusieurs fois."
 
@@ -3167,6 +3334,10 @@ msgstr "Cocher le lien de parenté"
 msgid "Timetable"
 msgstr "Grille horaire"
 
+msgid "Title"
+msgstr "Titre"
+
+msgctxt "jury"
 msgid "Title"
 msgstr "Titre"
 
@@ -3267,6 +3438,9 @@ msgstr "Personnel scientifique UCLouvain"
 msgid "UCL_COURSE"
 msgstr "Cours UCL"
 
+msgid "UCLouvain"
+msgstr "UCLouvain"
+
 msgid "Undecided"
 msgstr "Non décidé"
 
@@ -3301,6 +3475,12 @@ msgstr "Date de naissance exacte inconnue"
 
 msgid "Unsubmitted"
 msgstr "Non soumis"
+
+msgid "Update"
+msgstr "Modifier"
+
+msgid "Update member"
+msgstr "Modifier le membre"
 
 msgid "Update of a non-academic activity"
 msgstr "Modification d'une activité non-académique"
@@ -3560,6 +3740,12 @@ msgstr ""
 
 msgid "You must reference a person in UCLouvain."
 msgstr "Vous devez référencer une personne de l'UCLouvain."
+
+msgid "You need to set a member as president."
+msgstr "Vous devez désigner un membre comme président"
+
+msgid "You need to set a member as secretary."
+msgstr "Vous devez désigner un membre comme secrétaire"
 
 msgid "You seem to have unsaved modifications, they will be lost."
 msgstr ""
