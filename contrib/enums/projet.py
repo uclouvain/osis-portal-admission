@@ -45,6 +45,7 @@ class ChoixStatutPropositionDoctorale(ChoiceEnum):
 
 class ChoixStatutPropositionGenerale(ChoiceEnum):
     EN_BROUILLON = _('In draft')
+    FRAIS_DOSSIER_EN_ATTENTE = _('Pending application fees')
     CONFIRMEE = _('Confirmed application (by student)')
     COMPLETEE = _('Completed application')
     ANNULEE = _('Cancelled application')

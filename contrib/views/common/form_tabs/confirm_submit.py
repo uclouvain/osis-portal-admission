@@ -30,6 +30,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import get_language, gettext as _
 from django.views.generic import FormView
 
+from admission.contrib.enums import ChoixStatutPropositionGenerale
 from admission.contrib.forms.confirm_submit import AdmissionConfirmSubmitForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
@@ -61,6 +62,10 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         ),
     }
     form_class = AdmissionConfirmSubmitForm
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.submit_proposition_result = {}
 
     def get_initial(self):
         return {
@@ -129,6 +134,8 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         return kwargs
 
     def get_success_url(self):
+        if self.submit_proposition_result.get('status') == ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name:
+            return resolve_url(f'admission:{self.current_context}:payment', pk=self.admission_uuid)
         self.request.session['submitted'] = True
         return resolve_url(f'admission:{self.current_context}', pk=self.admission_uuid)
 
@@ -140,8 +147,8 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         }
 
     def call_webservice(self, data):
-        self.service_mapping[self.current_context][1](
+        self.submit_proposition_result = self.service_mapping[self.current_context][1](
             person=self.person,
             uuid=self.admission_uuid,
             **data,
-        )
+        ).to_dict()

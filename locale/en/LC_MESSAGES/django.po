@@ -320,6 +320,11 @@ msgstr ""
 msgid "Affiliations"
 msgstr ""
 
+msgid ""
+"After payment, your application will be sent to the Enrolment Service of "
+"UCLouvain."
+msgstr ""
+
 msgid "Aggregation and CAPAES"
 msgstr ""
 
@@ -337,6 +342,9 @@ msgstr ""
 msgid "An error has occurred, please check the values and try again."
 msgstr ""
 
+msgid "An error occurred during your payment."
+msgstr ""
+
 msgid ""
 "An international scholarship can be granted to students as part of a "
 "project. These international scholarships are granted by the ARES "
@@ -344,6 +352,11 @@ msgid ""
 msgstr ""
 
 msgid "An invitation has been sent again."
+msgstr ""
+
+msgid ""
+"An user can pay either after submitting its application or after a request "
+"from a manager."
 msgstr ""
 
 msgid "Ancient languages"
@@ -2158,6 +2171,24 @@ msgstr ""
 msgid "Past confirmation papers"
 msgstr ""
 
+msgid "Pay later"
+msgstr ""
+
+msgid "Pay now (invalid payment)"
+msgstr ""
+
+msgid "Pay now (valid payment)"
+msgstr ""
+
+msgid "Pay the application fees"
+msgstr ""
+
+msgid "Payment of the application fees"
+msgstr ""
+
+msgid "Pending application fees"
+msgstr ""
+
 msgid "Pending validation from management"
 msgstr ""
 
@@ -2901,6 +2932,9 @@ msgid ""
 "enrolment request which you can interrupt and resume at any moment."
 msgstr ""
 
+msgid "The payment has been processed."
+msgstr ""
+
 msgid "The person concerned"
 msgstr ""
 
@@ -3033,6 +3067,11 @@ msgstr ""
 msgid ""
 "To claim this assimilation, you must reside in Belgium during your studies "
 "and therefore obtain a residence permit in Belgium."
+msgstr ""
+
+msgid ""
+"To finalize the submission of your application, you have to pay the "
+"application fees."
 msgstr ""
 
 msgid "Total hourly volume"
@@ -3208,17 +3247,26 @@ msgstr ""
 msgid ""
 "Would you like to be a <a href='https://uclouvain.be/fr/decouvrir/carte-"
 "solidaire.html' target='_blank'>solidarity student</a>, a program proposed "
-"by Louvain Coopération, the NGO of UCLouvain? This affiliation will give you "
+"by Louvain Cooperation, the NGO of UCLouvain? This affiliation will give you "
 "access to a fund for your solidarity projects. If so, the cost of this "
 "affiliation, which is 12 EUR, will be added to your registration fees."
 msgstr ""
+"Would you like to be a <a href='https://uclouvain.be/fr/decouvrir/carte-"
+"solidaire.html' target='_blank'>solidarity student</a>, a program proposed "
+"by Louvain Coopération, the NGO of UCLouvain? This affiliation will give you "
+"access to a fund for your solidarity projects. If so, the cost of this "
+"affiliation, which is 12 EUR, will be added to your registration fees."
 
 msgid ""
+"Would you like to be a solidarity student, a program proposed by Louvain "
+"Cooperation, the NGO of UCLouvain? This affiliation will give you access to "
+"a fund for your solidarity projects. If so, the cost of this affiliation, "
+"which is 12 EUR, will be added to your registration fees."
+msgstr ""
 "Would you like to be a solidarity student, a program proposed by Louvain "
 "Coopération, the NGO of UCLouvain? This affiliation will give you access to "
 "a fund for your solidarity projects. If so, the cost of this affiliation, "
 "which is 12 EUR, will be added to your registration fees."
-msgstr ""
 
 msgid ""
 "Would you like to change your registration for this academic year at "
@@ -3316,6 +3364,12 @@ msgid "You are registering as"
 msgstr ""
 
 msgid ""
+"You can either pay them now, by using our payment system, or pay them with a "
+"delay by bank transfer. Please note that your application will not be "
+"considered until we have received the proof of payment."
+msgstr ""
+
+msgid ""
 "You can find more information on the page of the French Community <a "
 "href=\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/"
 "</a>"
@@ -3344,8 +3398,9 @@ msgstr ""
 
 msgid ""
 "You must have worked in Belgium and your monthly salary must be at least "
-"half of the average monthlyminimum guaranteed remuneration set by the "
-"National Labour Council. As an indication, this corresponded to 903€ in 2023."
+"half of the average monthly minimum guaranteed remuneration set by the "
+"National Labour Council. As an indication, this corresponded to &euro;903 in "
+"2023."
 msgstr ""
 
 msgid "You must reference a person in UCLouvain."
