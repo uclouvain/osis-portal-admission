@@ -525,6 +525,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.ResidenceAuSensDuDecretNonRenseigneeException,
         FormationContinueBusinessException.InformationsComplementairesNonRenseigneesException,
     },
+    'documents': set(),
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}
