@@ -1,4 +1,6 @@
-{% load admission %}
+{% extends base_template %}
+{% load i18n admission enums bootstrap3 %}
+
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -23,26 +25,43 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% if not hide_empty or data %}
-{% if css_class %}<div class="{{ css_class }}">{% endif %}
-<dl>
-  <dt>
-    {{ name|safe }}
-    {% if tooltip %}<a
-        tabindex="0"
-        class="fa fa-info-circle popover-buttons"
-        data-content="<p>{{ tooltip|force_escape }}</p>"
-        role="button"
-    ></a>{% endif %}
-  </dt>
-  {% with data|default_if_none_or_empty:empty_value as data_to_display %}
-  <dd>
-    {% if html_tag and data %}<{{ html_tag }}>{{ data_to_display }}</{{ html_tag }}>
-    {% else %}
-    {{ data_to_display }}
-    {% endif %}
-  </dd>
-  {% endwith %}
-</dl>
-{% if css_class %}</div>{% endif %}
-{% endif %}
+{% block actions-group %}
+{% endblock %}
+
+{% block tab_content %}
+  <h3>{% trans "Jury composition" %}</h3>
+
+  {% panel _("Update member") %}
+    {% trans "Update" as submit_label %}
+    {% include "admission/doctorate/forms/jury/includes/member_form.html" with cancel=True %}
+  {% endpanel %}
+
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+
+  <script>
+    $(function () {
+      $('#id_justification_non_docteur').closest('.form-group').dependsOn({
+        '#id_titre': { values: ['NON_DOCTEUR'] },
+      }, { duration: 0, valueOnDisable: '', });
+      $('.ucl_show').dependsOn({
+        'input[name=institution_principale]': { values: ['UCL'] },
+      }, { duration: 0, valueOnDisable: '', });
+      $('.ucl_hide').dependsOn({
+        'input[name=institution_principale]': { values: ['OTHER'] },
+      }, { duration: 0, valueOnDisable: '', });
+    });
+  </script>
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+  .radio {
+    display: inline;
+    margin-right: 20px;
+  }
+  </style>
+{% endblock %}

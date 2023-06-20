@@ -23,26 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from django.utils.translation import gettext_lazy as _
+
 
 from base.models.utils.utils import ChoiceEnum
 
 
-class ChoixStatutDoctorat(ChoiceEnum):
-    # Before enrolment
-    ADMISSION_IN_PROGRESS = _('ADMISSION_IN_PROGRESS')
-    # After enrolment
-    ADMITTED = _('ADMITTED')
-    # Confirmation paper
-    SUBMITTED_CONFIRMATION = _('SUBMITTED_CONFIRMATION')
-    PASSED_CONFIRMATION = _('PASSED_CONFIRMATION')
-    NOT_ALLOWED_TO_CONTINUE = _('NOT_ALLOWED_TO_CONTINUE')
-    CONFIRMATION_TO_BE_REPEATED = _('CONFIRMATION_TO_BE_REPEATED')
-    # Jury
-    JURY_SOUMIS = _('JURY_SOUMIS')
-    JURY_APPROUVE_CA = _('JURY_APPROUVE_CA')
-    JURY_APPROUVE_CDD = _('JURY_APPROUVE_CDD')
-    JURY_REFUSE_CDD = _('JURY_REFUSE_CDD')
-    JURY_APPROUVE_ADRE = _('JURY_APPROUVE_ADRE')
-    JURY_REFUSE_ADRE = _('JURY_REFUSE_ADRE')
+class FormuleDefense(ChoiceEnum):
+    FORMULE_1 = _('Method 1 (the private defense and the public defense are separated by at least a month')
+    FORMULE_2 = _(
+        'Method 2 (The private defense and the public defense are organised the same day, and subjected to '
+        'an admissibility condition)'
+    )
+
+
+class RoleJury(ChoiceEnum):
+    PRESIDENT = _('PRESIDENT')
+    SECRETAIRE = _('SECRETAIRE')
+    MEMBRE = _('MEMBRE')
+
+
+class TitreMembre(ChoiceEnum):
+    DOCTEUR = _('Doctor')
+    PROFESSEUR = _('Professor')
+    NON_DOCTEUR = _('Does not have a doctor title')
+
+
+class GenreMembre(ChoiceEnum):
+    FEMININ = _('Female')
+    MASCULIN = _('Male')
+    AUTRE = _('Other')
