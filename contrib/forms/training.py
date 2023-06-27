@@ -28,6 +28,7 @@ from functools import partial
 
 from dal import autocomplete
 from django import forms
+from django.core import validators
 from django.utils.translation import get_language, gettext_lazy as _, pgettext_lazy
 
 from admission.contrib.enums import AdmissionType
@@ -132,8 +133,14 @@ class ActivityFormMixin(forms.Form):
     hour_volume = forms.CharField(max_length=100, label=_("Total hourly volume"))
     ects = forms.DecimalField(
         label=_("ECTS credits"),
+        help_text=_(
+            'Consult the credits grid released by your domain doctoral commission.'
+            ' Refer to the website of your commission for more details.'
+        ),
         max_digits=4,
-        decimal_places=2,
+        decimal_places=1,
+        widget=forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
+        validators=[validators.MinValueValidator(0)],
     )
     comment = forms.CharField(label=_("Comment"), widget=forms.Textarea())
     context = forms.ChoiceField(label=_("Context"), choices=ContexteFormation.choices())

@@ -846,6 +846,14 @@ msgstr "Épreuve de confirmation"
 msgid "Confirmed application (by student)"
 msgstr "Demande confirmée (par étudiant)"
 
+msgid ""
+"Consult the credits grid released by your domain doctoral commission. Refer "
+"to the website of your commission for more details."
+msgstr ""
+"Référez-vous à la grille de crédits communiquées par votre commission "
+"doctorale de domaine. Consultez le site web de votre commission pour plus de "
+"détails."
+
 msgid "Consultation of a non-academic activity"
 msgstr "Consultation d'une activité non-académique"
 
@@ -2520,6 +2528,13 @@ msgstr "Évaluez votre capacité orale"
 msgid "Please rate your writing ability"
 msgstr "Évaluez votre capacité d'écriture"
 
+msgid ""
+"Please refer to the specifics disposition of your domain doctoral commission "
+"for your activities choice."
+msgstr ""
+"Veuillez consulter les dispositions particulières de votre commission "
+"doctorale de domaine pour le choix des activités."
+
 msgid "Please select the first assimilation situation that applies to you"
 msgstr ""
 "Veuillez sélectionner la première situation d’assimilation qui vous "
@@ -3004,8 +3019,8 @@ msgstr "Soumettre ma décision"
 msgid "Submit my new deadline"
 msgstr "Soumettre ma nouvelle échéance"
 
-msgid "Submit these activities"
-msgstr "Soumettre ces activités"
+msgid "Submit selected activities"
+msgstr "Soumettre les activités sélectionnées"
 
 msgid "Submitted"
 msgstr "Soumise"
@@ -3177,6 +3192,16 @@ msgstr ""
 
 msgid "The contact address I provided"
 msgstr "L'adresse de correspondance que j'ai fournie"
+
+msgid ""
+"The declaration of you doctoral training activities must be consistent with "
+"the specifics disposition of your domain. Please refer to those on the "
+"website of your Domain Doctoral Commission for more information."
+msgstr ""
+"La déclaration de vos activités de formation doctorale doit être conforme "
+"aux dispositions particulières de votre domaine. Veuillez consulter ces "
+"dispositions sur la page web de votre Commission Doctorale de Domaine (CDD) "
+"pour plus d’informations."
 
 #, python-format
 msgid "The experiences prefixed by %(icon)s are incomplete."
