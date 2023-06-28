@@ -269,6 +269,9 @@ msgstr ""
 msgid "Add a new academic experience"
 msgstr ""
 
+msgid "Add a new member"
+msgstr ""
+
 msgid "Add a new non-academic experience"
 msgstr ""
 
@@ -430,6 +433,10 @@ msgid "Are you sure you want to delete the training \"%(name)s\"?"
 msgstr ""
 
 #, python-format
+msgid "Are you sure you want to remove \"%(prenom)s %(nom)s\" from the jury?"
+msgstr ""
+
+#, python-format
 msgid ""
 "Are you sure you want to remove %(first_name)s %(last_name)s as %(role)s?"
 msgstr ""
@@ -447,6 +454,15 @@ msgstr ""
 
 msgid "Artistic transition"
 msgstr ""
+
+msgid ""
+"As part of your application, one document must be uploaded to continue the "
+"enrolment process."
+msgid_plural ""
+"As part of your application, several documents must be uploaded to continue "
+"the enrolment process."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Assent"
 msgstr ""
@@ -713,6 +729,9 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
+msgid "Complete the proposition"
+msgstr ""
+
 msgid "Completed application"
 msgstr ""
 
@@ -894,6 +913,9 @@ msgstr ""
 msgid "Cotutelle opening request"
 msgstr ""
 
+msgid "Cotutelle thesis"
+msgstr ""
+
 msgid "Country"
 msgstr ""
 
@@ -967,7 +989,24 @@ msgstr ""
 msgid "Decision"
 msgstr ""
 
+msgctxt "doctorate tab"
+msgid "Defense"
+msgstr ""
+
 msgid "Defense date"
+msgstr ""
+
+msgid "Defense indicative date"
+msgstr ""
+
+msgid "Defense language"
+msgstr ""
+
+msgid "Defense method"
+msgstr ""
+
+msgctxt "admission tab"
+msgid "Defense method"
 msgstr ""
 
 msgid "Definitive admission date"
@@ -1053,6 +1092,9 @@ msgid ""
 "membership will be added to your registration fee."
 msgstr ""
 
+msgid "Doctor"
+msgstr ""
+
 msgid "Doctoral program proposition"
 msgstr ""
 
@@ -1070,6 +1112,15 @@ msgid "Doctorate"
 msgstr ""
 
 msgid "Document"
+msgstr ""
+
+msgid "Documents"
+msgstr ""
+
+msgid "Documents to complete"
+msgstr ""
+
+msgid "Does not have a doctor title"
 msgstr ""
 
 msgid ""
@@ -1154,6 +1205,9 @@ msgid "Educational community"
 msgstr ""
 
 msgid "Educational type is required with this community of education"
+msgstr ""
+
+msgid "Email"
 msgstr ""
 
 msgid "Employer"
@@ -1574,6 +1628,11 @@ msgid ""
 "research centre where the thesis will be conducted"
 msgstr ""
 
+msgid ""
+"If necessary, please finish inputting doctoral activities and complete the "
+"defense preparation below before submitting the jury proposition."
+msgstr ""
+
 msgid "If other education type, please specify"
 msgstr ""
 
@@ -1657,6 +1716,11 @@ msgid ""
 "which you are no longer registered."
 msgstr ""
 
+msgid ""
+"Information about a potential cotutelle are to be inputted in the \"Doctoral "
+"project\" part."
+msgstr ""
+
 msgid "Institute"
 msgstr ""
 
@@ -1699,7 +1763,28 @@ msgstr ""
 msgid "Is your thesis joint with another secondary institute?"
 msgstr ""
 
+msgid "JURY_APPROUVE_ADRE"
+msgstr "Jury approved by ADRE"
+
+msgid "JURY_APPROUVE_CA"
+msgstr "Jury approved by CA"
+
+msgid "JURY_APPROUVE_CDD"
+msgstr "Jury approved by CDD"
+
+msgid "JURY_REFUSE_ADRE"
+msgstr "Jury declined by ADRE"
+
+msgid "JURY_REFUSE_CDD"
+msgstr "Jury declined by CDD"
+
+msgid "JURY_SOUMIS"
+msgstr "Jury submitted"
+
 msgid "Journal"
+msgstr ""
+
+msgid "Jury composition"
 msgstr ""
 
 msgid "Justification letter"
@@ -1718,6 +1803,9 @@ msgid "Languages knowledge"
 msgstr ""
 
 msgid "Last name"
+msgstr ""
+
+msgid "Last name / First name / Global id"
 msgstr ""
 
 msgid "Last name of the account holder"
@@ -1758,11 +1846,20 @@ msgstr ""
 msgid "Long"
 msgstr ""
 
+msgid "Lookup somebody"
+msgstr ""
+
 msgid "MANAGEMENT"
 msgstr "Management"
 
 msgid "MATHEMATICS"
 msgstr "Mathematics"
+
+msgid "MEMBRE"
+msgstr ""
+
+msgid "Main institute"
+msgstr ""
 
 msgid "Male"
 msgstr ""
@@ -1796,7 +1893,20 @@ msgstr ""
 msgid "Member not found"
 msgstr ""
 
+msgid "Members"
+msgstr ""
+
 msgid "Message"
+msgstr ""
+
+msgid ""
+"Method 1 (the private defense and the public defense are separated by at "
+"least a month"
+msgstr ""
+
+msgid ""
+"Method 2 (The private defense and the public defense are organised the same "
+"day, and subjected to an admissibility condition)"
 msgstr ""
 
 msgid "Modern languages"
@@ -1977,6 +2087,9 @@ msgstr ""
 msgid "Other institute"
 msgstr ""
 
+msgid "Other institute (if necessary)"
+msgstr ""
+
 msgid "Other institute address"
 msgstr ""
 
@@ -2009,6 +2122,9 @@ msgstr ""
 
 msgid "PHYSICS"
 msgstr "Physics"
+
+msgid "PRESIDENT"
+msgstr ""
 
 msgid "PRIVATE_DEFENSE"
 msgstr "Private defense"
@@ -2108,6 +2224,9 @@ msgid ""
 "don't need to indicate anything."
 msgstr ""
 
+msgid "Please justify why the member does not have a doctor title"
+msgstr ""
+
 msgid "Please mention the academic graduation year"
 msgstr ""
 
@@ -2149,6 +2268,9 @@ msgstr ""
 msgid "Pre-Admission"
 msgstr ""
 
+msgid "President"
+msgstr ""
+
 msgid "Previous experience"
 msgstr ""
 
@@ -2175,6 +2297,9 @@ msgid "Professional education"
 msgstr ""
 
 msgid "Professional education + Maturity exam"
+msgstr ""
+
+msgid "Professor"
 msgstr ""
 
 msgid "Program"
@@ -2231,6 +2356,9 @@ msgid "Proof of the final equivalence decision"
 msgstr ""
 
 msgid "Proposed new deadline"
+msgstr ""
+
+msgid "Proposed thesis title"
 msgstr ""
 
 msgid "Proposition approval"
@@ -2304,6 +2432,11 @@ msgstr ""
 msgid "Reduced registration fees"
 msgstr ""
 
+msgid ""
+"Refer to the specific measures of your doctoral commission to know if one of "
+"these method is mandatory to you."
+msgstr ""
+
 msgid "Reference DIAL.Pr"
 msgstr "Référence DIAL.Pr"
 
@@ -2332,7 +2465,15 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
+msgctxt "jury member"
+msgid "Remove"
+msgstr ""
+
 msgid "Remove the experience"
+msgstr ""
+
+msgctxt "jury member"
+msgid "Remove?"
 msgstr ""
 
 msgid "Reorientation"
@@ -2387,6 +2528,9 @@ msgstr ""
 
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Research scholarship"
+
+msgid "SECRETAIRE"
+msgstr ""
 
 msgid "SELF_FUNDING"
 msgstr "Self-funding"
@@ -2452,6 +2596,9 @@ msgstr ""
 msgid "Secondary studies"
 msgstr ""
 
+msgid "Secretary"
+msgstr ""
+
 msgid "Sector"
 msgstr ""
 
@@ -2483,7 +2630,16 @@ msgstr ""
 msgid "Services"
 msgstr ""
 
+msgid "Set as member"
+msgstr ""
+
+msgid "Set as president"
+msgstr ""
+
 msgid "Set as reference promoter"
+msgstr ""
+
+msgid "Set as secretary"
 msgstr ""
 
 msgid "Sex"
@@ -2521,6 +2677,9 @@ msgid "Specific profile"
 msgstr ""
 
 msgid "Specificities"
+msgstr ""
+
+msgid "Specify if other"
 msgstr ""
 
 msgid "Specify the employer and your function"
@@ -2610,6 +2769,16 @@ msgid "Text"
 msgstr ""
 
 msgid "Text size"
+msgstr ""
+
+msgid ""
+"Thank you for completing your application. The managers will examine the new "
+"documents that have been added."
+msgstr ""
+
+msgid ""
+"The \"doctoral training\" must be completed before submitting the defense "
+"preparation and the jury proposition."
 msgstr ""
 
 msgid ""
@@ -2782,6 +2951,11 @@ msgstr ""
 msgid "This is a diploma from"
 msgstr ""
 
+msgid ""
+"This is a temporary title and it will be modifiable later depending on the "
+"jury analysis."
+msgstr ""
+
 msgid "This language is set more than once."
 msgstr ""
 
@@ -2805,6 +2979,10 @@ msgstr ""
 msgid "Timetable"
 msgstr ""
 
+msgid "Title"
+msgstr ""
+
+msgctxt "jury"
 msgid "Title"
 msgstr ""
 
@@ -2899,6 +3077,9 @@ msgstr "UCLouvain scientific staff"
 msgid "UCL_COURSE"
 msgstr "UCL Course"
 
+msgid "UCLouvain"
+msgstr ""
+
 msgid "Undecided"
 msgstr ""
 
@@ -2930,6 +3111,12 @@ msgstr ""
 msgid "Unsubmitted"
 msgstr ""
 
+msgid "Update"
+msgstr ""
+
+msgid "Update member"
+msgstr ""
+
 msgid "Update of a non-academic activity"
 msgstr ""
 
@@ -2943,7 +3130,7 @@ msgid "VAE"
 msgstr ""
 
 msgid "VAT number"
-msgstr "Supervision member"
+msgstr ""
 
 msgid "Validated"
 msgstr ""
@@ -3146,6 +3333,12 @@ msgid ""
 msgstr ""
 
 msgid "You must reference a person in UCLouvain."
+msgstr ""
+
+msgid "You need to set a member as president."
+msgstr ""
+
+msgid "You need to set a member as secretary."
 msgstr ""
 
 msgid "You seem to have unsaved modifications, they will be lost."

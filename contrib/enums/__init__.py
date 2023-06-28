@@ -12,6 +12,7 @@ from .curriculum import *
 from .doctorat import *
 from .experience_precedente import *
 from .financement import *
+from .jury import *
 from .languages_knowledge import *
 from .person import *
 from .projet import *

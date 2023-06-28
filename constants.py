@@ -49,11 +49,14 @@ READ_ACTIONS_BY_TAB = {
     'extension-request': 'update_confirmation_extension',
     # Additional information
     'specific-questions': 'retrieve_specific_question',
+    # Documents
+    'documents': 'retrieve_documents',
     # Others
     'doctoral-training': 'retrieve_doctoral_training',
     'complementary-training': 'retrieve_complementary_training',
     'course-enrollment': 'retrieve_course_enrollment',
-    'jury': '',
+    'jury-preparation': 'retrieve_jury_preparation',
+    'jury': 'list_jury_members',
     'private-defense': '',
     'public-defense': '',
     'messages': '',
@@ -82,7 +85,10 @@ UPDATE_ACTIONS_BY_TAB = {
     'extension-request': 'update_confirmation_extension',
     # Additional information
     'specific-questions': 'update_specific_question',
+    # Documents
+    'documents': 'update_documents',
     # Others
+    'jury-preparation': 'update_jury_preparation',
     'jury': '',
     'private-defense': '',
     'public-defense': '',

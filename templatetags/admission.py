@@ -171,12 +171,13 @@ TAB_TREES = {
             Tab('complementary-training', _('Complementary training')),
             Tab('course-enrollment', _('Course enrollment')),
         ],
-        # Tab('defense', _('Defense'), 'person-chalkboard'): [
-        #     Tab('jury', _('Jury')),
-        #     Tab('jury-supervision', _('Jury supervision')),
-        #     Tab('private-defense', _('Private defense')),
-        #     Tab('public-defense', _('Public defense')),
-        # ],
+        Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
+            Tab('jury-preparation', pgettext('admission tab', 'Defense method')),
+            Tab('jury', _('Jury composition')),
+            # Tab('jury-supervision', _('Jury supervision')),
+            # Tab('private-defense', _('Private defense')),
+            # Tab('public-defense', _('Public defense')),
+        ],
         # TODO documents
     },
     'general-education': {
@@ -197,6 +198,9 @@ TAB_TREES = {
         ],
         Tab('confirm-submit', _('Completion'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
+        ],
+        Tab('documents', _('Documents'), 'folder-open'): [
+            Tab('documents', _('Documents')),
         ],
     },
     'continuing-education': {
@@ -358,6 +362,7 @@ def field_data(
     inline=False,
     html_tag='',
     empty_value=_('Not specified'),
+    tooltip=None,
 ):
     if isinstance(data, list):
         template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
@@ -379,6 +384,7 @@ def field_data(
         'hide_empty': hide_empty,
         'html_tag': html_tag,
         'empty_value': empty_value,
+        'tooltip': tooltip,
     }
 
 

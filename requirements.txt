@@ -1,2 +1,2 @@
-git+https://github.com/uclouvain/osis-admission-sdk.git@build-1.0.74
+git+https://github.com/uclouvain/osis-admission-sdk.git@build-1.0.77
 freezegun==1.2.2
