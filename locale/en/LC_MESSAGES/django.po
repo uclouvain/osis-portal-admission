@@ -753,6 +753,11 @@ msgstr ""
 msgid "Confirmed application (by student)"
 msgstr ""
 
+msgid ""
+"Consult the credits grid released by your domain doctoral commission. Refer "
+"to the website of your commission for more details."
+msgstr ""
+
 msgid "Consultation of a non-academic activity"
 msgstr ""
 
@@ -2247,6 +2252,11 @@ msgstr ""
 msgid "Please rate your writing ability"
 msgstr ""
 
+msgid ""
+"Please refer to the specifics disposition of your domain doctoral commission "
+"for your activities choice."
+msgstr ""
+
 msgid "Please select the first assimilation situation that applies to you"
 msgstr ""
 
@@ -2721,7 +2731,7 @@ msgstr ""
 msgid "Submit my new deadline"
 msgstr ""
 
-msgid "Submit these activities"
+msgid "Submit selected activities"
 msgstr ""
 
 msgid "Submitted"
@@ -2849,6 +2859,12 @@ msgid ""
 msgstr ""
 
 msgid "The contact address I provided"
+msgstr ""
+
+msgid ""
+"The declaration of you doctoral training activities must be consistent with "
+"the specifics disposition of your domain. Please refer to those on the "
+"website of your Domain Doctoral Commission for more information."
 msgstr ""
 
 #, python-format
