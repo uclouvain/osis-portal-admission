@@ -545,6 +545,8 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationContinueBusinessException.InformationsComplementairesNonRenseigneesException,
     },
     'documents': set(),
+    'jury-preparation': set(),
+    'jury': set(),
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}
