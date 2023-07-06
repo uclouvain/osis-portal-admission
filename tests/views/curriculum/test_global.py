@@ -25,6 +25,7 @@
 # ##############################################################################
 import datetime
 
+import freezegun
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
 from rest_framework.status import HTTP_200_OK
@@ -35,6 +36,7 @@ from admission.tests.views.curriculum.mixin import MixinTestCase
 from osis_admission_sdk.model.result import Result
 
 
+@freezegun.freeze_time('2023-01-01')
 class CreateGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()
@@ -56,6 +58,7 @@ class CreateGlobalCurriculumTestCase(MixinTestCase):
         )
 
 
+@freezegun.freeze_time('2023-01-01')
 class DoctorateGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()
@@ -160,6 +163,7 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         )
 
 
+@freezegun.freeze_time('2023-01-01')
 class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()
@@ -612,6 +616,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         )
 
 
+@freezegun.freeze_time('2023-01-01')
 class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()

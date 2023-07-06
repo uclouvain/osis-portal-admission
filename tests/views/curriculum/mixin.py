@@ -383,7 +383,12 @@ class MixinTestCase(TestCase):
         academic_years_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_years_api = academic_years_api_patcher.start()
 
-        self.mock_academic_years_api.return_value.get_academic_years.return_value = get_paginated_years(2018, 2025)
+        current_year = datetime.date.today().year
+
+        self.mock_academic_years_api.return_value.get_academic_years.return_value = get_paginated_years(
+            current_year - 5,
+            current_year + 2,
+        )
         self.addCleanup(academic_years_api_patcher.stop)
 
     def mock_languages_api(self):

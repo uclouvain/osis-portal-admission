@@ -233,13 +233,15 @@ class BaseEducationTestCase(TestCase):
 
         academic_year_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_year_api = academic_year_api_patcher.start()
+        year = datetime.today().year
         self.mock_academic_year_api.return_value.get_academic_years.return_value = get_paginated_years(
-            2018,
-            2022,
+            year - 2,
+            year + 2,
         )
         self.addCleanup(academic_year_api_patcher.stop)
 
 
+@freezegun.freeze_time('2022-01-01')
 class EducationTestCase(BaseEducationTestCase):
     def test_detail_without_specified_graduation(self):
         response = self.client.get(self.detail_url)
@@ -499,6 +501,7 @@ class EducationTestCase(BaseEducationTestCase):
         )
 
 
+@freezegun.freeze_time('2022-01-01')
 class BachelorFormEducationTestCase(BaseEducationTestCase):
     @classmethod
     def setUpTestData(cls):

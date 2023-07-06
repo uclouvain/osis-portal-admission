@@ -26,6 +26,7 @@
 import datetime
 from unittest.mock import ANY
 
+import freezegun
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.translation import gettext
@@ -48,6 +49,7 @@ from admission.contrib.forms.curriculum import (
 from admission.tests.views.curriculum.mixin import MixinTestCase
 
 
+@freezegun.freeze_time('2023-01-01')
 class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
     def test_with_admission_on_reading_experience_is_loaded(self):
         response = self.client.get(
@@ -115,6 +117,7 @@ class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
 
 
 @override_settings(SERVER_NAME=None)
+@freezegun.freeze_time('2023-01-01')
 class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
     def test_with_admission_on_delete_experience_post_form(self):
         response = self.client.post(
@@ -177,6 +180,7 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
         )
 
 
+@freezegun.freeze_time('2023-01-01')
 class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
     @classmethod
     def setUpTestData(cls):
