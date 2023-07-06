@@ -26,6 +26,7 @@
 import datetime
 from unittest.mock import Mock, patch, ANY
 
+import freezegun
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
@@ -40,6 +41,7 @@ from base.tests.factories.person import PersonFactory
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
+@freezegun.freeze_time('2023-01-01')
 class PersonViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
