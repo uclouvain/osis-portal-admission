@@ -42,6 +42,8 @@ from admission.services.proposition import AdmissionJuryService, AdmissionCotute
 
 
 class LoadJuryViewMixin(LoadDoctorateViewMixin):
+    """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
+
     @cached_property
     def jury(self):
         return AdmissionJuryService.retrieve_jury(

@@ -54,7 +54,8 @@ class DoctoralTrainingListView(LoadDoctorateViewMixin, WebServiceFormMixin, Form
         context_data['activities'] = self.activities
         context_data['statuses'] = StatutActivite.choices()
         config = AdmissionDoctorateTrainingService.get_config(person=self.person, uuid=str(self.kwargs['pk']))
-        original_constants = dict(CategorieActivite.choices()).keys()
+        original_constants = list(dict(CategorieActivite.choices()).keys())
+        original_constants.remove(CategorieActivite.UCL_COURSE.name)
         context_data['categories'] = list(zip(original_constants, config.category_labels[get_language()]))
         context_data['activities_form'] = context_data.pop('form')  # Trick template
         return context_data

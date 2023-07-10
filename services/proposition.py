@@ -355,6 +355,20 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def pay_application_fees_after_submission(cls, person: Person, uuid):
+        return APIClient().pay_application_fees_after_submission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def pay_application_fees_after_request(cls, person: Person, uuid):
+        return APIClient().pay_application_fees_after_request(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
 
 class PropositionBusinessException(Enum):
     MaximumPropositionsAtteintException = "PROPOSITION-1"
@@ -545,6 +559,9 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationContinueBusinessException.InformationsComplementairesNonRenseigneesException,
     },
     'documents': set(),
+    'jury-preparation': set(),
+    'jury': set(),
+    'payment': set(),
 }
 
 TAB_OF_BUSINESS_EXCEPTION = {}

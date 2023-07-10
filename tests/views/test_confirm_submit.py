@@ -32,6 +32,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from admission.contrib.enums import ChoixStatutPropositionGenerale
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
 
@@ -105,7 +106,7 @@ class ConfirmSubmitTestCase(TestCase):
                 },
             ],
         }
-        api.submit_proposition.return_value.to_dict.return_value = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
+        api.submit_proposition.return_value.to_dict.return_value = {"uuid": "3c5cdc60-2537-4a12-a396-64d2e9e34876"}
         self.addCleanup(propositions_api_patcher.stop)
 
     def test_redirect(self):
@@ -250,3 +251,63 @@ class ConfirmSubmitTestCase(TestCase):
             **self.default_kwargs,
         )
         self.assertContains(response, _("Your application has been submitted"))
+
+    def test_post_general_with_complete_form(self):
+        api = self.mock_proposition_api.return_value
+        verification = api.verify_general_education_proposition.return_value.to_dict
+        verification.return_value = api.verify_proposition.return_value.to_dict.return_value
+        uuid = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
+        url = resolve_url('admission:general-education:update:confirm-submit', pk=uuid)
+        data = {**self.data_ok, 'pool': 'GENERAL_EDUCATION_ENROLLMENT'}
+        api.submit_general_education_proposition.return_value.to_dict.return_value = {
+            'status': ChoixStatutPropositionGenerale.CONFIRMEE.name,
+            'uuid': uuid,
+        }
+
+        response = self.client.post(url, data=data, follow=True)
+        url = resolve_url('admission:general-education:training-choice', pk=uuid)
+        self.assertRedirects(response, url)
+        api.submit_general_education_proposition.assert_called_with(
+            uuid=uuid,
+            submit_proposition={
+                'pool': 'GENERAL_EDUCATION_ENROLLMENT',
+                'annee': 2020,
+                'elements_confirmation': {
+                    'foo': "I allow Test",
+                    'bar': "I do not authorize Test to do something with my data",
+                    'declaration_sur_lhonneur': "<ul><li>Element1</li></ul>",
+                    'justificatifs': 'I understand',
+                },
+            },
+            **self.default_kwargs,
+        )
+        self.assertContains(response, _("Your application has been submitted"))
+
+    def test_post_general_with_complete_form_and_require_application_fees_payment(self):
+        api = self.mock_proposition_api.return_value
+        verification = api.verify_general_education_proposition.return_value.to_dict
+        verification.return_value = api.verify_proposition.return_value.to_dict.return_value
+        uuid = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
+        url = resolve_url('admission:general-education:update:confirm-submit', pk=uuid)
+        data = {**self.data_ok, 'pool': 'GENERAL_EDUCATION_ENROLLMENT'}
+        api.submit_general_education_proposition.return_value.to_dict.return_value = {
+            'status': ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name,
+            'uuid': uuid,
+        }
+        response = self.client.post(url, data=data)
+        url = resolve_url('admission:general-education:payment', pk=uuid)
+        self.assertRedirects(response, url, fetch_redirect_response=False)
+        api.submit_general_education_proposition.assert_called_with(
+            uuid=uuid,
+            submit_proposition={
+                'pool': 'GENERAL_EDUCATION_ENROLLMENT',
+                'annee': 2020,
+                'elements_confirmation': {
+                    'foo': "I allow Test",
+                    'bar': "I do not authorize Test to do something with my data",
+                    'declaration_sur_lhonneur': "<ul><li>Element1</li></ul>",
+                    'justificatifs': 'I understand',
+                },
+            },
+            **self.default_kwargs,
+        )

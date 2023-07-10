@@ -170,9 +170,9 @@ class AccountingForm(forms.Form):
         label=_('Copy of 6 salary slips issued in the 12 months preceding the application'),
         required=False,
         help_text=_(
-            'You must have worked in Belgium and your monthly salary must be at least half of the average monthly'
+            'You must have worked in Belgium and your monthly salary must be at least half of the average monthly '
             'minimum guaranteed remuneration set by the National Labour Council. As an indication, this corresponded '
-            'to 903€ in 2023.'
+            'to &euro;903 in 2023.'
         ),
     )
     titre_sejour_3_mois_remplacement = FileUploadField(
@@ -266,9 +266,9 @@ class AccountingForm(forms.Form):
         ),
         required=False,
         help_text=_(
-            'You must have worked in Belgium and your monthly salary must be at least half of the average monthly'
+            'You must have worked in Belgium and your monthly salary must be at least half of the average monthly '
             'minimum guaranteed remuneration set by the National Labour Council. As an indication, this corresponded '
-            'to 903€ in 2023.'
+            'to &euro;903 in 2023.'
         ),
     )
     attestation_cpas_parent = FileUploadField(
@@ -327,7 +327,7 @@ class AccountingForm(forms.Form):
         label=mark_safe(
             _(
                 "Would you like to be a <a href='https://uclouvain.be/fr/decouvrir/carte-solidaire.html' "
-                "target='_blank'>solidarity student</a>, a program proposed by Louvain Coopération, the NGO of "
+                "target='_blank'>solidarity student</a>, a program proposed by Louvain Cooperation, the NGO of "
                 "UCLouvain? This affiliation will give you access to a fund for your solidarity projects. If so, the "
                 "cost of this affiliation, which is 12 EUR, will be added to your registration fees."
             )

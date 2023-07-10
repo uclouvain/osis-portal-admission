@@ -51,6 +51,13 @@
   {% footer %}
   {% if admission.statut not in CANCELLED_STATUSES %}
 
+    {% if admission|can_make_action:'pay_after_submission' or admission|can_make_action:'pay_after_request' %}
+      <a class="btn btn-default pull-right" href="{% url base_namespace|add:':payment' admission.uuid %}">
+        <span class="fas fa-credit-card"></span>
+        {% translate "Pay the application fees" %}
+      </a>
+    {% endif %}
+
     {% if admission|can_update_tab:'documents' %}
       <a class="btn btn-default pull-right" href="{% url base_namespace|add:':update:documents' admission.uuid %}">
         <span class="fas fa-pencil"></span>
