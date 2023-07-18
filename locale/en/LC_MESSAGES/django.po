@@ -745,7 +745,10 @@ msgstr ""
 msgid "Complete the proposition"
 msgstr ""
 
-msgid "Completed application"
+msgid "Completed (by student) for FAC"
+msgstr ""
+
+msgid "Completed (by student) for SIC"
 msgstr ""
 
 msgid "Completion"
@@ -1346,6 +1349,9 @@ msgstr "FSR - Fonds Spéciaux de Recherche"
 
 msgid "Failure"
 msgstr "Échec"
+
+msgid "Feedback from FAC"
+msgstr ""
 
 msgid "Female"
 msgstr ""
@@ -2328,9 +2334,6 @@ msgstr ""
 msgid "Processing by Fac/CDD"
 msgstr ""
 
-msgid "Processing by SIC"
-msgstr ""
-
 msgid "Professional"
 msgstr ""
 
@@ -3045,7 +3048,7 @@ msgstr ""
 msgid "Title of the publication"
 msgstr ""
 
-msgid "To be completed (by student) for FAC/CDD"
+msgid "To be completed (by student) for FAC"
 msgstr ""
 
 msgid "To be completed (by student) for SIC"
@@ -3136,9 +3139,6 @@ msgid "UCLouvain"
 msgstr ""
 
 msgid "Undecided"
-msgstr ""
-
-msgid "Under appeal"
 msgstr ""
 
 msgid "Undertake and declaration"
