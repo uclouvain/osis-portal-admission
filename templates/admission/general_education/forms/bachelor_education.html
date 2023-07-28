@@ -35,7 +35,7 @@
   {% if is_valuated %}
     <div class="alert alert-warning">
       {% blocktranslate trimmed %}
-        Your secondary education data can no longer be updated. If you wish to make any changes, please contact the Enrolment service.
+        Your secondary education data can no longer be updated. To make changes, please contact the Enrolment Office.
       {% endblocktranslate %}
     </div>
   {% endif %}
@@ -117,10 +117,10 @@
             {% bootstrap_field_with_tooltip foreign_diploma_form.equivalence_decision_proof classes="required_field" %}
           </div>
           <p id="equivalence_info">
-            {% blocktranslate %}
-              If you do not have an equivalence decision, you will have to submit a request for equivalence in
-              strict compliance with the instructions given by the
-              <a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium.
+            {% blocktranslate trimmed %}
+              If you do not have an equivalency certificate, you must apply for one in strict accordance with the
+              instructions of the <a href='http://www.equivalences.cfwb.be' target='_blank'>
+              French Community of Belgium.</a>.
             {% endblocktranslate %}
           </p>
         </div>
@@ -256,7 +256,7 @@
 
     {% panel _("Attachments") id="attachments" %}
       <p class="enrolment-certificate required_text">
-        {% translate 'High school diploma or, if not available, a certificate of enrolment or school attendance.' %}
+        {% translate 'Secondary school diploma or, if not available, a certificate of enrolment or school attendance.' %}
         <span class="translated-field">{% translate 'A translation is required for each uploaded document.' %}</span>
       </p>
       <div id="high-school-diploma" class="row">
@@ -294,7 +294,7 @@
   </div>
 
   {% if main_form.specific_question_answers.field.fields %}
-    {% panel _('Specificities') %}
+    {% panel _('Specific aspects') %}
       {% bootstrap_field main_form.specific_question_answers show_label=False error_css_class='' %}
     {% endpanel %}
   {% endif %}

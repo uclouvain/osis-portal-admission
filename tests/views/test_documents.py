@@ -106,7 +106,7 @@ class DocumentsFormViewTestCase(TestCase):
                 },
                 values=[],
                 tab='CHOIX_FORMATION',
-                tab_name='Training choice',
+                tab_name='Course choice',
                 required=True,
             ),
         ]

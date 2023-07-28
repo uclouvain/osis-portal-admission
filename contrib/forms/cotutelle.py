@@ -32,7 +32,7 @@ from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 
 class DoctorateAdmissionCotutelleForm(forms.Form):
     cotutelle = forms.ChoiceField(
-        label=_("Is your thesis joint with another secondary institute?"),
+        label=_("Would you like to carry out your thesis under joint supervision with another institution?"),
         choices=[
             ('YES', _("Yes")),
             ('NO', _("No")),
@@ -40,12 +40,12 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         widget=forms.RadioSelect,
     )
     motivation = forms.CharField(
-        label=_("Cotutelle motivation"),
+        label=_("Motivation for joint supervision"),
         required=False,
         widget=forms.Textarea(attrs={'rows': 2}),
     )
     institution_fwb = forms.NullBooleanField(
-        label=_("Is it an institution of the Wallonia-Brussels Federation?"),
+        label=_("Is it a Wallonia-Brussels Federation institution?"),
         required=False,
         widget=forms.RadioSelect(
             choices=(
@@ -55,22 +55,22 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         ),
     )
     institution = forms.CharField(
-        label=_("Cotutelle institution"),
+        label=_("Partner institution"),
         required=False,
     )
     demande_ouverture = FileUploadField(
-        label=_("Cotutelle opening request"),
+        label=_("Joint supervision request"),
         required=False,
         max_files=1,
         help_text=_("Please complete the \"Application for a cotutelle\" form (available here) and upload it here."),
     )
     convention = FileUploadField(
-        label=_("Cotutelle convention"),
+        label=_("Joint supervision agreement"),
         required=False,
         max_files=1,
     )
     autres_documents = FileUploadField(
-        label=_("Other documents concerning cotutelle"),
+        label=_("Other documents relating to joint supervision"),
         required=False,
     )
 

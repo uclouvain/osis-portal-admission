@@ -30,23 +30,23 @@ from base.models.utils.utils import ChoiceEnum
 
 
 class TeachingTypeEnum(ChoiceEnum):
-    SOCIAL_PROMOTION = _("Social promotion")
+    SOCIAL_PROMOTION = _("\"Promotion sociale\"")
     FULL_TIME = _("Full-time")
 
 
 class Result(ChoiceEnum):
-    SUCCESS = _("Success")
-    SUCCESS_WITH_RESIDUAL_CREDITS = _('Success with residual credits')
-    FAILURE = _('Failure')
+    SUCCESS = _("Passed")
+    SUCCESS_WITH_RESIDUAL_CREDITS = _('Passed with residual credits')
+    FAILURE = _('Failed')
     WAITING_RESULT = _('Waiting for a result')
 
 
 class Grade(ChoiceEnum):
-    GREATER_DISTINCTION = _('Greater distinction')
-    GREAT_DISTINCTION = _('Great distinction')
-    DISTINCTION = _('Distinction')
-    SATISFACTION = _('Satisfaction')
-    SUCCESS_WITHOUT_DISTINCTION = _('Success without distinction')
+    GREATER_DISTINCTION = _('With highest honours (90-100%)')
+    GREAT_DISTINCTION = _('With high honours (80-89%)')
+    DISTINCTION = _('With honours (70-79%)')
+    SATISFACTION = _('Satisfactory (60-69%)')
+    SUCCESS_WITHOUT_DISTINCTION = _('Passed (50-59%)')
 
 
 class EvaluationSystem(ChoiceEnum):
@@ -65,14 +65,14 @@ class ActivityType(ChoiceEnum):
     INTERNSHIP = _('Internship')
     VOLUNTEERING = _('Volunteering')
     UNEMPLOYMENT = _('Unemployment')
-    LANGUAGE_TRAVEL = _('Language travel')
+    LANGUAGE_TRAVEL = _('Language study abroad')
     OTHER = _('Other')
 
 
 class ActivitySector(ChoiceEnum):
     PRIVATE = _('Private')
     PUBLIC = _('Public')
-    ASSOCIATIVE = _('Associative')
+    ASSOCIATIVE = _('Non-profit')
 
 
 EvaluationSystemsWithCredits = {
@@ -87,12 +87,12 @@ SuccessfulResults = {
 
 CURRICULUM_ACTIVITY_LABEL = {
     ActivityType.LANGUAGE_TRAVEL.name: _(
-        'Certificate justifying your activity, mentioning this activity, for the specified period'
+        'Certificate justifying and mentioning your activity for the period concerned'
     ),
-    ActivityType.INTERNSHIP.name: _('Training certificate, with dates, justifying the specified period'),
+    ActivityType.INTERNSHIP.name: _('Training certificate, with dates, justifying the period concerned'),
     ActivityType.UNEMPLOYMENT.name: _(
-        'Unemployment certificate issued by the relevant organisation, justifying the specified period'
+        'Unemployment certificate issued by the relevant body, justifying the period concerned'
     ),
-    ActivityType.VOLUNTEERING.name: _('Certificate, with dates, justifying the specified period'),
-    ActivityType.WORK.name: _('Employment certificate from the employer, with dates, justifying the specified period'),
+    ActivityType.VOLUNTEERING.name: _('Certificate, with dates, justifying the period concerned'),
+    ActivityType.WORK.name: _('Proof of employment from the employer, with dates, justifying the period in question'),
 }

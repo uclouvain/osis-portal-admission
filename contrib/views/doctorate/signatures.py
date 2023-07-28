@@ -42,13 +42,13 @@ __all__ = ['DoctorateAdmissionRequestSignaturesView']
 class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, SuccessMessageMixin, WebServiceFormMixin, FormView):
     urlpatterns = 'request-signatures'
     form_class = Form
-    success_message = _("Signatures requests sent")
+    success_message = _("Signature requests sent")
 
     def call_webservice(self, data):
         AdmissionPropositionService.request_signatures(person=self.person, uuid=str(self.kwargs.get('pk')))
 
     def form_invalid(self, form):
-        messages.error(self.request, _("Please correct the errors first"))
+        messages.error(self.request, _("Please first correct the erros"))
         return HttpResponseRedirect(resolve_url("admission:doctorate:update:supervision", pk=self.kwargs.get('pk')))
 
     def get_success_url(self):

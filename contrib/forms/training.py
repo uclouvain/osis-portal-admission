@@ -101,7 +101,7 @@ class ActivityFormMixin(forms.Form):
     type = ConfigurableActivityTypeField(label=_("Activity type"))
     title = forms.CharField(label=_("Title"), max_length=200)
     participating_proof = FileUploadField(label=_("Participation certification"), max_files=1)
-    start_date = forms.DateField(label=_("Begin date"), widget=CustomDateInput())
+    start_date = forms.DateField(label=_("Start date"), widget=CustomDateInput())
     end_date = forms.DateField(label=_("End date"), widget=CustomDateInput())
     participating_days = forms.DecimalField(
         label=_("Number of days participating"),
@@ -115,7 +115,7 @@ class ActivityFormMixin(forms.Form):
         widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
     )
     city = forms.CharField(label=_("City"), max_length=100)
-    organizing_institution = forms.CharField(label=_("Organizing institution"), max_length=100)
+    organizing_institution = forms.CharField(label=_("Organising institution"), max_length=100)
     website = forms.URLField(label=_("Website"))
     committee = forms.ChoiceField(
         choices=ChoixComiteSelection.choices(),
@@ -128,7 +128,7 @@ class ActivityFormMixin(forms.Form):
     authors = forms.CharField(label=_("Authors"), max_length=100)
     role = forms.CharField(label=_("Role"), max_length=100)
     keywords = forms.CharField(label=_("Keywords"), max_length=100)
-    journal = forms.CharField(label=_("Journal"), max_length=100)
+    journal = forms.CharField(label=_("Journal or publishing house name"), max_length=100)
     publication_status = forms.ChoiceField(choices=ChoixStatutPublication.choices())
     hour_volume = forms.CharField(max_length=100, label=_("Total hourly volume"))
     ects = forms.DecimalField(
@@ -178,7 +178,7 @@ class ActivityFormMixin(forms.Form):
     def clean(self):
         data = super().clean()
         if data.get('start_date') and data.get('end_date') and data.get('start_date') > data.get('end_date'):
-            self.add_error('start_date', _("The start date must be equal or lower than the end date."))
+            self.add_error('start_date', _("The start date must be earlier than or the same as the end date."))
         return data
 
     class Media:
@@ -188,7 +188,7 @@ class ActivityFormMixin(forms.Form):
 class ConferenceForm(ActivityFormMixin, forms.Form):
     object_type = "Conference"
     template_name = "admission/doctorate/forms/training/conference.html"
-    type = ConfigurableActivityTypeField('conference_types', label=_("Type of activity"))
+    type = ConfigurableActivityTypeField('conference_types', label=_("Activity type"))
     is_online = IsOnlineField()
 
     class Meta:
@@ -208,7 +208,7 @@ class ConferenceForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'title': _("Name of the manifestation"),
+            'title': _("Event name"),
             'website': _("Event website"),
             'ects': _("ECTS for the participation"),
         }
@@ -223,7 +223,7 @@ class ConferenceCommunicationForm(ActivityFormMixin, forms.Form):
     type = SelectOrOtherField(
         label=_("Type of communication"),
         choices=[
-            _("Oral expose"),
+            _("Oral presentation"),
             _("Poster"),
         ],
     )
@@ -258,7 +258,7 @@ class ConferenceCommunicationForm(ActivityFormMixin, forms.Form):
 class ConferencePublicationForm(ActivityFormMixin, forms.Form):
     object_type = "ConferencePublication"
     template_name = "admission/doctorate/forms/training/conference_publication.html"
-    type = ConfigurableActivityTypeField('conference_publication_types', label=_("Type of publication"))
+    type = ConfigurableActivityTypeField('conference_publication_types', label=_("Publication type"))
 
     class Meta:
         fields = [
@@ -278,12 +278,12 @@ class ConferencePublicationForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'type': _("Type of publication"),
-            'title': _("Title of the publication"),
-            'start_date': _("Date of the publication"),
+            'type': _("Publication type"),
+            'title': _("Publication title"),
+            'start_date': _("Publication date"),
             'committee': _("Selection committee"),
             'summary': pgettext_lazy("paper summary", "Summary"),
-            'acceptation_proof': _("Proof of acceptation or publication"),
+            'acceptation_proof': _("Proof of acceptance or publication"),
             'publication_status': _("Publication status"),
         }
 
@@ -291,11 +291,11 @@ class ConferencePublicationForm(ActivityFormMixin, forms.Form):
 class CommunicationForm(ActivityFormMixin, forms.Form):
     object_type = "Communication"
     template_name = "admission/doctorate/forms/training/communication.html"
-    type = ConfigurableActivityTypeField('communication_types', label=_("Type of activity"))
+    type = ConfigurableActivityTypeField('communication_types', label=_("Activity type"))
     subtype = SelectOrOtherField(
         label=_("Type of communication"),
         choices=[
-            _("Oral expose"),
+            _("Oral presentation"),
             _("Poster"),
         ],
     )
@@ -333,8 +333,8 @@ class CommunicationForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'title': _("Name of the activity"),
-            'start_date': _("Date of the activity"),
+            'title': _("Activity name"),
+            'start_date': _("Activity date"),
             'website': _("Event website"),
             'acceptation_proof': _("Proof of acceptation by the committee"),
             'participating_proof': _("Communication attestation"),
@@ -346,7 +346,7 @@ class CommunicationForm(ActivityFormMixin, forms.Form):
 class PublicationForm(ActivityFormMixin, forms.Form):
     object_type = "Publication"
     template_name = "admission/doctorate/forms/training/publication.html"
-    type = ConfigurableActivityTypeField('publication_types', label=_("Type of publication"))
+    type = ConfigurableActivityTypeField('publication_types', label=_("Publication type"))
 
     class Meta:
         fields = [
@@ -365,8 +365,8 @@ class PublicationForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'title': _("Title of the publication"),
-            'start_date': _("Date of the publication"),
+            'title': _("Publication title"),
+            'start_date': _("Publication date"),
             'publication_status': _("Publication status"),
             'acceptation_proof': _("Proof of publication"),
         }
@@ -375,7 +375,7 @@ class PublicationForm(ActivityFormMixin, forms.Form):
 class ResidencyForm(ActivityFormMixin, forms.Form):
     object_type = "Residency"
     template_name = "admission/doctorate/forms/training/residency.html"
-    type = ConfigurableActivityTypeField('residency_types', label=_("Type of activity"))
+    type = ConfigurableActivityTypeField('residency_types', label=_("Activity type"))
 
     class Meta:
         fields = [
@@ -390,17 +390,17 @@ class ResidencyForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'subtitle': _("Description of the activity"),
-            'participating_proof': _("Proof (if needed)"),
+            'subtitle': _("Activity description"),
+            'participating_proof': _("Proof (if applicable)"),
         }
 
 
 class ResidencyCommunicationForm(ActivityFormMixin, forms.Form):
     object_type = "ResidencyCommunication"
     template_name = "admission/doctorate/forms/training/residency_communication.html"
-    type = SelectOrOtherField(choices=[_("Research seminar")], label=_("Type of activity"))
+    type = SelectOrOtherField(choices=[_("Research seminar")], label=_("Activity type"))
     subtype = SelectOrOtherField(
-        choices=[_("Oral expose")],
+        choices=[_("Oral presentation")],
         label=_("Type of communication"),
         required=False,
     )
@@ -423,8 +423,8 @@ class ResidencyCommunicationForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'title': _("Name of the event"),
-            'start_date': _("Date of the activity"),
+            'title': _("Event name"),
+            'start_date': _("Activity date"),
             'website': _("Event website"),
             'summary': _("Summary of the communication"),
             'participating_proof': _("Attestation of the communication"),
@@ -434,7 +434,7 @@ class ResidencyCommunicationForm(ActivityFormMixin, forms.Form):
 class ServiceForm(ActivityFormMixin, forms.Form):
     object_type = "Service"
     template_name = "admission/doctorate/forms/training/service.html"
-    type = ConfigurableActivityTypeField("service_types", label=_("Type of activity"))
+    type = ConfigurableActivityTypeField("service_types", label=_("Activity type"))
 
     class Meta:
         fields = [
@@ -449,8 +449,8 @@ class ServiceForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'title': _("Name of the activity"),
-            'participating_proof': _("Proof (if needed)"),
+            'title': _("Activity name"),
+            'participating_proof': _("Proof (if applicable)"),
             'organizing_institution': _("Institution"),
         }
 
@@ -458,7 +458,7 @@ class ServiceForm(ActivityFormMixin, forms.Form):
 class SeminarForm(ActivityFormMixin, forms.Form):
     object_type = "Seminar"
     template_name = "admission/doctorate/forms/training/seminar.html"
-    type = ConfigurableActivityTypeField("seminar_types", label=_("Type of activity"))
+    type = ConfigurableActivityTypeField("seminar_types", label=_("Activity type"))
 
     class Meta:
         fields = [
@@ -471,7 +471,7 @@ class SeminarForm(ActivityFormMixin, forms.Form):
             'ects',
         ]
         labels = {
-            'title': _("Name of the activity"),
+            'title': _("Activity name"),
             'participating_proof': _("Proof of participation for the whole activity"),
         }
 
@@ -496,7 +496,7 @@ class SeminarCommunicationForm(ActivityFormMixin, forms.Form):
         ]
         labels = {
             'title': _("Title of the communication"),
-            'start_date': _("Date of presentation"),
+            'start_date': _("Presentation date"),
             'authors': _("Speaker"),
             'participating_proof': _("Certificate of participation in the presentation"),
         }
@@ -526,14 +526,14 @@ class ValorisationForm(ActivityFormMixin, forms.Form):
 class CourseForm(ActivityFormMixin, forms.Form):
     object_type = "Course"
     template_name = "admission/doctorate/forms/training/course.html"
-    type = ConfigurableActivityTypeField("course_types", label=_("Type of activity"))
+    type = ConfigurableActivityTypeField("course_types", label=_("Activity type"))
     subtitle = forms.CharField(
-        label=_("Course code (if needed)"),
+        label=_("Course unit code (if applicable)"),
         max_length=200,
         required=False,
     )
     start_date = forms.DateField(
-        label=_("Begin date"),
+        label=_("Start date"),
         widget=CustomDateInput(),
         help_text=_(
             "For courses in the UCLouvain catalogue, the academic year "
@@ -542,7 +542,7 @@ class CourseForm(ActivityFormMixin, forms.Form):
     )
     organizing_institution = SelectOrOtherField(choices=[INSTITUTION_UCL], label=_("Institution"), required=True)
     is_online = forms.BooleanField(
-        label=_("Course with evaluation"),  # Yes, its another meaning, but we spare a db field
+        label=_("Course unit with evaluation"),  # Yes, its another meaning, but we spare a db field
         initial=False,
         required=False,
         widget=BooleanRadioSelect(choices=((False, _("No")), (True, _("Yes")))),
@@ -565,8 +565,8 @@ class CourseForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'title': _("Name of the activity"),
-            'authors': _("Course owner if applicable"),
+            'title': _("Activity name"),
+            'authors': _("Course unit instructor (if applicable)"),
             'participating_proof': _("Proof of participation or success"),
         }
 
@@ -575,7 +575,7 @@ class ComplementaryCourseForm(CourseForm):
     """Course form for complementary training"""
 
     object_type = "Course"
-    type = ConfigurableActivityTypeField("complementary_course_types", label=_("Type of activity"))
+    type = ConfigurableActivityTypeField("complementary_course_types", label=_("Activity type"))
 
 
 class PaperForm(ActivityFormMixin, forms.Form):

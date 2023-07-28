@@ -29,7 +29,7 @@
 
 {% block tab_content %}
   {% if admission.statut != "EN_BROUILLON" %}
-    {% panel _("Summary of the proposition") %}
+    {% panel _("Proposal summary") %}
       {% if admission.fiche_archive_signatures_envoyees %}
         {% get_file_url admission.fiche_archive_signatures_envoyees.0 as file_url %}
         <a href="{{ file_url }}" class="btn btn-default" target="_blank">
@@ -37,14 +37,14 @@
           {% trans "Download as PDF" %}
         </a>
       {% else %}
-        <p>{% trans "The summary of the proposal in PDF format is being generated, please come back later to get it." %}</p>
+        <p>{% trans "The summary of the proposal in PDF format is being generated. Please come back later to access it." %}</p>
       {% endif %}
     {% endpanel %}
   {% endif %}
 
   {% if admission|can_make_action:'add_approval' and approval_form and approval_form.decision %}
     {% include "admission/modal/prevent_quitting_modal.html" %}
-    {% panel _("Proposition approval") %}
+    {% panel _("Proposal approved") %}
       {% bootstrap_form_errors approval_form %}
       <form class="osis-form approval-form" method="post" action="">
         {% csrf_token %}

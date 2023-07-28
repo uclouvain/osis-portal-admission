@@ -29,7 +29,7 @@
   <form class="osis-form" method="post" action="">
     {% csrf_token %}
     <p>
-      {% trans "Are you sure you want to cancel this request?" %}
+      {% trans "Are you sure you want to cancel this application?" %}
     </p>
 
     <button
@@ -40,7 +40,7 @@
       {% trans "Confirm" %}
     </button>
     <a href="{% url 'admission:list' %}">
-      {% trans "Back to requests" %}
+      {% trans "Back to applications" %}
     </a>
 
   </form>

@@ -42,8 +42,8 @@ BooleanRadioSelect = partial(
 class PoolQuestionsForm(forms.Form):
     is_belgian_bachelor = forms.NullBooleanField(
         label=_(
-            "Are you currently enrolled in the first year of a bachelor's degree "
-            "at a college or university in the French Community of Belgium?"
+            "Are you currently enrolled in the first year of a bachelor's degree at a French Community "
+            "of Belgium haute ecole or university?"
         ),
         widget=BooleanRadioSelect(),
         required=False,
@@ -51,7 +51,7 @@ class PoolQuestionsForm(forms.Form):
     is_external_reorientation = forms.NullBooleanField(
         label=format_html(
             _(
-                'Would you like to reorient yourself for this academic year at UCLouvain? '
+                'Would you like to switch courses this academic year at UCLouvain? '
                 '(<a href="{url}" target="_blank">Informations</a>)'
             ),
             url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#r%C3%A9orientation',
@@ -63,7 +63,7 @@ class PoolQuestionsForm(forms.Form):
     is_external_modification = forms.NullBooleanField(
         label=format_html(
             _(
-                "Would you like to change your registration for this academic year at UCLouvain? "
+                "Would you like to change your UCLouvain enrolment for this academic year? "
                 '(<a href="{url}" target="_blank">Informations</a>)'
             ),
             url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#modificationinscr',
@@ -73,7 +73,7 @@ class PoolQuestionsForm(forms.Form):
     )
     registration_change_form = FileUploadField(max_files=1, required=False)
     is_non_resident = forms.NullBooleanField(
-        label=_("Are you a non-resident (as defined in decree)?"),
+        label=_("Are you a non-resident (as defined by government decree)?"),
         widget=BooleanRadioSelect(),
         required=False,
     )
@@ -85,8 +85,8 @@ class PoolQuestionsForm(forms.Form):
             date: datetime.datetime = self.initial['modification_pool_end_date']
             label = format_html(
                 _(
-                    '<a href="{url}" target=_blank">Registration modification form</a>, '
-                    'duly completed and accompanied by the annexes mentioned'
+                    '<a href="{url}" target=_blank">Change of enrolment form</a>, '
+                    'duly completed and accompanied by the mentioned annexes'
                 ),
                 url=(
                     'https://cdn.uclouvain.be/groups/cms-editors-sic/sic/public/inscriptions/'
@@ -99,8 +99,8 @@ class PoolQuestionsForm(forms.Form):
         elif self.initial['reorientation_pool_end_date'] is not None:
             date: datetime.datetime = self.initial['reorientation_pool_end_date']
             self.fields['regular_registration_proof'].label = _(
-                'Certificate of regular enrolment for the academic year %(year)s from the institution in which '
-                'you are currently enrolled (dated no earlier than 1st of November)'
+                'Certificate of regular enrolment for the %(year)s academic year from the establishment in '
+                'which you are currently enrolled (dated no earlier than 1 November)'
             ) % {'year': f"{date.year - 1}-{date.year}"}
 
         # Remove fields that are not returned pool_questions

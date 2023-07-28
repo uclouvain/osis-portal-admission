@@ -34,14 +34,14 @@ class ChoixInscriptionATitre(ChoiceEnum):
 
 
 class ChoixTypeAdresseFacturation(ChoiceEnum):
-    RESIDENTIEL = _("Residential address")
-    CONTACT = _("Contact address")
+    RESIDENTIEL = _("Legal domicile")
+    CONTACT = _("Postal address")
     AUTRE = _("Another address")
 
     @classmethod
     def verbose_choices(cls):
         return (
-            (cls.RESIDENTIEL.name, _("My residential address provided before")),
+            (cls.RESIDENTIEL.name, _("My legal domicile provided above")),
             (cls.CONTACT.name, _("The contact address I provided")),
             (cls.AUTRE.name, cls.AUTRE.value),
         )

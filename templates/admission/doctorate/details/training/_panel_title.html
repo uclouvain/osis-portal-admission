@@ -45,7 +45,7 @@
 ></a>
 <span class="badge">{{ activity.status|enum_display:'StatutActivite' }}</span>
 
-{% trans "Please check the details of the activity (and sub-activities) to fill in all mandatory fields" as not_complete_sub %}
+{% trans "Please check the details of the activity (and sub-activities) to fill in all the mandatory fields" as not_complete_sub %}
 {% trans "Please check the details of the activity to fill in all mandatory fields" as not_complete %}
 
 <div style="width: auto" class="pull-right">
@@ -98,14 +98,14 @@
             {% if activity.category|safe == "SEMINAR" and activity.status|safe == "NON_SOUMISE" and add_communication_url %}
               <li>
                 <a href="{{ add_communication_url }}?parent={{ activity.uuid }}">
-                  {% trans "Add a communication" %}
+                  {% trans "Add a paper/presentation" %}
                 </a>
               </li>
               {# Can add a communication to others once submitted #}
               {% elif activity.category|safe != "SEMINAR" and add_communication_url %}
               <li>
                 <a href="{{ add_communication_url }}?parent={{ activity.uuid }}">
-                  {% trans "Add a communication" %}
+                  {% trans "Add a paper/presentation" %}
                 </a>
               </li>
             {% endif %}
@@ -151,13 +151,13 @@
       {% endif %}
 
     {% elif activity.status|safe == "SOUMISE" and not remove_action and doctorate|can_make_action:'assent_training' %}
-      {# Reference promoter #}
+      {# Lead supervisor #}
       {% if activity.object_type|safe == "SeminarCommunication" %}
         {# No assent on seminar communication #}
       {% else %}
         {% url namespace|add:":assent" pk=view.kwargs.pk activity_id=activity.uuid as assent_url %}
         <a href="{{ assent_url }}" class="btn btn-default btn-sm">
-          {% trans "Give assent/dissent" %}
+          {% trans "Give an opinion" %}
         </a>
       {% endif %}
     {% endif %}
@@ -174,12 +174,12 @@
             data-placement="auto left"
             data-container="body"
             {% if activity.reference_promoter_assent %}
-            title="{% trans "Assent from reference promoter" %}"
+            title="{% trans "Lead supervisor approval" %}"
             class="btn btn-sm btn-success"
               >
               <span class="glyphicon glyphicon-ok-circle"></span>
             {% else %}
-              title="{% trans "Dissent from reference promoter" %}"
+              title="{% trans "Negative assessment by lead supervisor" %}"
               class="btn btn-sm btn-danger"
               >
               <span class="glyphicon glyphicon-remove-circle"></span>
@@ -194,7 +194,7 @@
             data-content="{{ activity.cdd_comment|linebreaksbr|force_escape }}"
             data-toggle="popover"
             data-placement="auto left"
-            title="{% trans "Comment from CDD manager" %}"
+            title="{% trans "Comment for PhD Committee manager" %}"
             data-container="body"
             class="btn btn-sm btn-danger"
           >

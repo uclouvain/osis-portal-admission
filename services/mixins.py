@@ -80,7 +80,7 @@ class WebServiceFormMixin:
     def get_success_url(self):
         from admission.templatetags.admission import can_update_tab, TAB_TREES
 
-        messages.info(self.request, _("Your data has been saved"))
+        messages.info(self.request, _("Your data have been saved"))
         tab_mapping = {
             child.name: child for tab, children in TAB_TREES[self.current_context].items() for child in children
         }

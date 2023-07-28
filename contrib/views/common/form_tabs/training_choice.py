@@ -153,7 +153,7 @@ class AdmissionTrainingChoiceFormView(
             )
 
     def get_success_url(self):
-        messages.info(self.request, _("Your data has been saved"))
+        messages.info(self.request, _("Your data have been saved"))
 
         next_context = NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type)
         tab_to_redirect = (

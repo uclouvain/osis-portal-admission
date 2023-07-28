@@ -178,7 +178,7 @@ class LanguagesTestCase(TestCase):
             "formset",
             None,
             None,
-            _("You cannot fill in a language more than once, please correct the form."),
+            _("You cannot enter a language more than once, please correct the form."),
         )
 
     def test_form_language_required(self):

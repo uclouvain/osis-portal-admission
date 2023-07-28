@@ -30,12 +30,12 @@
   {% with form=forms.0 %}
     {% bootstrap_form_errors form %}
     {% if view.is_continuing %}
-      {% panel _('Specificities') %}
+      {% panel _('Specific aspects') %}
         {% if admission.pays_nationalite_ue_candidat == False %}
           <p class="alert alert-info text-justify">
             {% blocktranslate trimmed %}
-              The certification and short programs (continuing education) do not allow you to obtain a visa and a
-              residence permit in Belgium. More information:
+              Certification and short programmes (continuing education) do not allow for obtaining a visa and residence
+              permit in Belgium. More information:
               <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
             {% endblocktranslate %}
           </p>
@@ -96,7 +96,7 @@
         {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
       {% endpanel %}
     {% elif form.specific_question_answers.field.fields %}
-      {% panel _('Specificities') %}
+      {% panel _('Specific aspects') %}
         {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
       {% endpanel %}
     {% endif %}
@@ -107,20 +107,20 @@
     {% with form=forms.1 %}
 
       {% if form.is_non_resident %}
-        {% panel _("Enrollment in a bachelor with quota") %}
+        {% panel _("Enrolment in limited enrolment bachelor's course") %}
           {% bootstrap_field form.is_non_resident form_group_class="form-group required_field" %}
         {% endpanel %}
       {% endif %}
 
       {% if form.is_external_modification %}
-        {% panel _("Registration change") id="panel-modification" %}
+        {% panel _("Change of enrolment") id="panel-modification" %}
           {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
           <div class="belgian-bachelor-children">
             {% bootstrap_field form.is_external_modification form_group_class="form-group required_field" %}
 
             <div class="registration-change-form">
               <p>{% blocktrans trimmed with date=modification_pool_end_date|date:'d/m/Y H:i' %}
-                In the case of an external registration change, you must confirm your request before {{ date }}.
+                If you wish to change your application, you must confirm your application before {{ date }}.
               {% endblocktrans %}</p>
               {% bootstrap_field form.registration_change_form form_group_class="form-group required_field" %}
             </div>
@@ -128,14 +128,14 @@
         {% endpanel %}
 
       {% elif form.is_external_reorientation %}
-        {% panel _("Reorientation") id="panel-reorientation" %}
+        {% panel _("Course change") id="panel-reorientation" %}
           {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
           <div class="belgian-bachelor-children">
             {% bootstrap_field form.is_external_reorientation form_group_class="form-group required_field" %}
 
             <div class="regular-registration-proof">
               <p>{% blocktrans trimmed with date=reorientation_pool_end_date|date:'d/m/Y H:i' %}
-                In the case of an external reorientation, you must confirm your request before {{ date }}.
+                If you are applying for a change of course, you must confirm your application before {{ date }}.
               {% endblocktrans %}</p>
               {% bootstrap_field form.regular_registration_proof form_group_class="form-group required_field" %}
             </div>

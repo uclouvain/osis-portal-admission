@@ -35,8 +35,8 @@ class GenderEnum(ChoiceEnum):
 
 
 class SexEnum(ChoiceEnum):
-    F = _('Female')
-    M = _('Male')
+    F = pgettext_lazy("female gender", "Female")
+    M = pgettext_lazy("gender male", "Male")
 
 
 class CivilState(ChoiceEnum):
@@ -44,7 +44,7 @@ class CivilState(ChoiceEnum):
     SINGLE = pgettext_lazy("admission", "Single")
     DIVORCED = pgettext_lazy("admission", "Divorced")
     MARRIED = pgettext_lazy("admission", "Married")
-    SEPARATE = pgettext_lazy("admission", "Separate")
+    SEPARATE = pgettext_lazy("admission", "Separated")
     WIDOWED = pgettext_lazy("admission", "Widowed")
 
 

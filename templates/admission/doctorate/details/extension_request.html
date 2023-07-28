@@ -27,7 +27,7 @@
 {% block tab_content %}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h4 class="panel-title">{% trans "Request a new deadline for the confirmation paper" %}</h4>
+      <h4 class="panel-title">{% trans "Request a new confirmation exam deadline" %}</h4>
     </div>
     <div class="panel-body">
       {% include 'admission/doctorate/includes/new_deadline_description.html' %}
@@ -36,7 +36,7 @@
         {% field_data _("Proposed new deadline") confirmation_paper.demande_prolongation.nouvelle_echeance inline=True %}
         {% field_data _("Brief justification") confirmation_paper.demande_prolongation.justification_succincte html_tag="blockquote" %}
         {% field_data _("Justification letter") confirmation_paper.demande_prolongation.lettre_justification %}
-        {% field_data _("DDC opinion") confirmation_paper.demande_prolongation.avis_cdd hide_empty=True html_tag="blockquote" %}
+        {% field_data _("PhD Committee opinion") confirmation_paper.demande_prolongation.avis_cdd hide_empty=True html_tag="blockquote" %}
       </div>
       {% else %}
         <p class="bold">
