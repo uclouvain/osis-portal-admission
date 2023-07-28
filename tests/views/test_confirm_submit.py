@@ -143,7 +143,7 @@ class ConfirmSubmitTestCase(TestCase):
         # Display an error message as some conditions aren't meet
         self.assertContains(
             response,
-            _('Your enrolment cannot be confirmed. All the following conditions must be met to do it.'),
+            _('Your enrolment cannot be confirmed. All of the following requirements must be met.'),
         )
 
     @freezegun.freeze_time('2022-09-22')
@@ -155,7 +155,7 @@ class ConfirmSubmitTestCase(TestCase):
         )
         response = self.client.get(self.url)
         # Display a message for late enrollment
-        self.assertContains(response, _("Late enrollment! Enroll before %(date)s") % {'date': date_fin})
+        self.assertContains(response, _("Late enrolment! Enrol before %(date)s") % {'date': date_fin})
 
     def test_post_with_incomplete_elements_confirmation(self):
         data = {
@@ -194,7 +194,7 @@ class ConfirmSubmitTestCase(TestCase):
             **self.default_kwargs,
         )
         self.assertRedirects(response, self.url)
-        self.assertContains(response, _("An error has occurred, please check the values and try again."))
+        self.assertContains(response, _("An error has occurred, please check fields and try again."))
 
     def test_post_doctorate_with_complete_form(self):
         autocomplete_api_patcher = patch("osis_admission_sdk.api.autocomplete_api.AutocompleteApi")

@@ -511,7 +511,7 @@ class SupervisionTestCase(TestCase):
         )
         response = self.client.post(post_url, {}, follow=True)
         self.assertRedirects(response, self.update_url)
-        self.assertContains(response, _("Please correct the errors first"))
+        self.assertContains(response, _("Please first correct the erros"))
         self.mock_api.return_value.create_signatures.assert_called()
 
     @patch(

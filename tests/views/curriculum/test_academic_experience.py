@@ -622,7 +622,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             response,
             'base_form',
             None,
-            errors=gettext("The start date must be equal or lower than the end date."),
+            errors=gettext("The start date must be earlier than or the same as the end date."),
         )
 
     def test_with_admission_on_update_experience_post_form_missing_other_institute(self):
@@ -799,7 +799,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the number limits
         self.assertIn(
-            gettext('This value cannot be greater than the entered credits number'),
+            gettext('This value may not exceed the number of registered credits'),
             forms_by_year[2005].errors.get('acquired_credit_number', []),
         )
         self.assertIn(

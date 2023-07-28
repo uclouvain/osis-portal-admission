@@ -221,7 +221,7 @@ class PersonViewTestCase(TestCase):
         self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_id', _("This field is required."))
-        self.assertFormError(response, 'form', 'first_name', _("This field is required if the last name is missing."))
+        self.assertFormError(response, 'form', 'first_name', _("This field is required if the surname is missing."))
         self.assertFormError(response, 'form', 'last_name', _("This field is required if the first name is missing."))
         self.assertFormError(response, 'form', 'last_registration_id', _("The NOMA must contain 8 digits."))
 

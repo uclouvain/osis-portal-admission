@@ -90,7 +90,7 @@ class AdmissionCurriculumFormExperienceMixin(AdmissionCurriculumFormMixin, ABC):
     }
 
     def get_success_url(self):
-        messages.info(self.request, _("Your data has been saved"))
+        messages.info(self.request, _("Your data have been saved"))
         if '_submit_and_continue' in self.request.POST:
             # Redirect to the list of experiences
             return self._get_url('curriculum', update=True) + getattr(self, 'url_hash', '')
@@ -403,7 +403,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
                 if acquired_credit_number > registered_credit_number:
                     form.add_error(
                         'acquired_credit_number',
-                        _('This value cannot be greater than the entered credits number'),
+                        _('This value may not exceed the number of registered credits'),
                     )
 
         else:

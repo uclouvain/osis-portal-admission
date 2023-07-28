@@ -631,7 +631,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
 
         self.assertContains(
             response,
-            _("Certificate of successful completion of the admission test for the first cycle of higher education"),
+            _("Certificate of passing the bachelor's course entrance exam"),
         )
         self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called()
         self.assertIn("admission", response.context)
@@ -839,7 +839,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "schedule_form", None, _("A field of the schedule must at least be set."))
+        self.assertFormError(response, "schedule_form", None, _("At least one schedule field must be completed."))
         self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_not_called()
 
     def test_bachelor_form_foreign_error_if_no_equivalence_for_ue_country(self):

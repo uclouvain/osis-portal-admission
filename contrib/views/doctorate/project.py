@@ -43,7 +43,7 @@ class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):
         # xgettext:no-python-format
         context_data['fte_label'] = _("Full-time equivalent (as %)")
         # xgettext:no-python-format
-        context_data['allocated_time_label'] = _("Allocated time for the thesis (in %)")
+        context_data['allocated_time_label'] = _("Time allocated for thesis (in %)")
 
         if 'submitted' in self.request.session:
             del self.request.session['submitted']

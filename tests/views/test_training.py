@@ -239,7 +239,7 @@ class TrainingTestCase(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(
-            response, "form", 'start_date', _("The start date must be equal or lower than the end date.")
+            response, "form", 'start_date', _("The start date must be earlier than or the same as the end date.")
         )
 
     def test_create_with_parent(self):

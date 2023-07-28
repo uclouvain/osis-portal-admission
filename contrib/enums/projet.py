@@ -37,36 +37,36 @@ class ChoixLangueRedactionThese(ChoiceEnum):
 
 class ChoixStatutPropositionDoctorale(ChoiceEnum):
     ANNULEE = _('Cancelled application')
-    EN_BROUILLON = _('In draft')
-    CONFIRMEE = _('Confirmed application (by student)')
+    EN_BROUILLON = _('In draft form')
+    CONFIRMEE = _('Application confirmed (by student)')
     EN_ATTENTE_DE_SIGNATURE = _('Waiting for signature')
-    INSCRIPTION_AUTORISEE = _('Enrollment allowed')
+    INSCRIPTION_AUTORISEE = _('Application accepted')
 
 
 class ChoixStatutPropositionGenerale(ChoiceEnum):
-    EN_BROUILLON = _('In draft')
+    EN_BROUILLON = _('In draft form')
     FRAIS_DOSSIER_EN_ATTENTE = _('Pending application fees')
-    CONFIRMEE = _('Confirmed application (by student)')
+    CONFIRMEE = _('Application confirmed (by student)')
     ANNULEE = _('Cancelled application')
-    A_COMPLETER_POUR_SIC = _('To be completed (by student) for SIC')
+    A_COMPLETER_POUR_SIC = _('To be completed (by student) for the Enrolment Office (SIC)')
     COMPLETEE_POUR_SIC = _('Completed (by student) for SIC')
-    TRAITEMENT_FAC = _('Processing by Fac/CDD')
-    A_COMPLETER_POUR_FAC = _('To be completed (by student) for FAC')
+    TRAITEMENT_FAC = _('Processing by Fac/PhD Committee')
+    A_COMPLETER_POUR_FAC = _('To be completed (by student) for Fac')
     COMPLETEE_POUR_FAC = _('Completed (by student) for FAC')
     RETOUR_DE_FAC = _('Feedback from FAC')
-    ATTENTE_VALIDATION_DIRECTION = _('Pending validation from management')
-    INSCRIPTION_AUTORISEE = _('Enrollment allowed')
-    INSCRIPTION_REFUSEE = _('Enrollment denied')
+    ATTENTE_VALIDATION_DIRECTION = _('Awaiting management approval')
+    INSCRIPTION_AUTORISEE = _('Application accepted')
+    INSCRIPTION_REFUSEE = _('Application denied')
     CLOTUREE = _('Closed')
 
 
 class ChoixStatutPropositionContinue(ChoiceEnum):
     ANNULEE = _('Cancelled application')
     # During the enrolment step
-    EN_BROUILLON = _('In draft')
-    CONFIRMEE = _('Confirmed application (by student)')
+    EN_BROUILLON = _('In draft form')
+    CONFIRMEE = _('Application confirmed (by student)')
     # After the enrolment step
-    INSCRIPTION_AUTORISEE = _('Enrollment allowed')
+    INSCRIPTION_AUTORISEE = _('Application accepted')
 
 
 IN_PROGRESS_STATUSES = {

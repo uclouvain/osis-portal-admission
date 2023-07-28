@@ -35,7 +35,7 @@
     </div>
     <div class="col-md-10">
       <h3>
-        {% blocktrans trimmed %}Give assent on "{{ object }}"?{% endblocktrans %}
+        {% blocktrans trimmed %}Give an opinion on "{{ object }}"?{% endblocktrans %}
       </h3>
       <form action="" method="post">
         {% csrf_token %}
@@ -44,7 +44,7 @@
           {{ form.approbation }}
           <span class="osis-slider round"></span>
         </label>
-        {% trans "Assent" %}
+        {% trans "Approval" %}
 
         {% bootstrap_field form.commentaire placeholder="" %}
         <div class="text-right">

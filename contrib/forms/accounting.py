@@ -56,35 +56,33 @@ from reference.services.iban_validator import (
 class AccountingForm(forms.Form):
     # Absence of debt
     attestation_absence_dette_etablissement = FileUploadField(
-        label=_('Certificate stating the absence of debts towards the institution attended during the academic year'),
+        label=_('Certificate stating no debts to the institution attended during the academic year'),
         required=False,
     )
 
-    # Reduced registration fees
+    # Reduced tuition fee
     demande_allocation_d_etudes_communaute_francaise_belgique = RadioBooleanField(
         label=mark_safe(
             _(
-                "Have you applied for a <a href="
-                'https://allocations-etudes.cfwb.be/etudes-superieures/'
-                " "
-                "target='_blank'>study allowance</a> from the French Community of Belgium?"
+                "Have you applied <a href='https://allocations-etudes.cfwb.be/etudes-superieures/' target='_blank'>"
+                "for a student grant</a> from the French Community of Belgium?"
             )
         ),
         required=False,
     )
     enfant_personnel = RadioBooleanField(
-        label=_('Are you the child of a member of the staff of the UCLouvain or the Martin V entity?'),
+        label=_('Are you the child of a UCLouvain or Martin V Lycee staff member?'),
         required=False,
     )
     attestation_enfant_personnel = FileUploadField(
-        label=_('Staff child certificate'),
+        label=_('Certificate for children of staff'),
         required=False,
     )
 
     # Assimilation
     type_situation_assimilation = forms.ChoiceField(
         choices=TypeSituationAssimilation.choices(),
-        label=_('Please select the first assimilation situation that applies to you'),
+        label=_('Please select the primary Belgian student status category that applies to you'),
         required=False,
         widget=forms.RadioSelect,
     )
@@ -92,29 +90,28 @@ class AccountingForm(forms.Form):
     # Assimilation 1
     sous_type_situation_assimilation_1 = forms.ChoiceField(
         choices=ChoixAssimilation1.choices(),
-        label=_('Choose among the following proposals'),
+        label=_('Choose from the following'),
         required=False,
         widget=forms.RadioSelect,
     )
     carte_resident_longue_duree = FileUploadField(
-        label=_('Copy of both sides of the EC long-term resident card (D or L card)'),
+        label=_('Copy of both sides of EC long-term resident card (D or L Card)'),
         required=False,
     )
     carte_cire_sejour_illimite_etranger = FileUploadField(
         label=_(
-            "Copy of both sides of the Certificate of Registration in the Register of Foreigners CIRE - unlimited stay "
-            "(B card) or copy of the foreigner's card - unlimited stay (C or K card)"
+            "Copy of both sides of Certificate of Registration in the Foreigners Registry (CIRE), unlimited stay "
+            "(B Card), or of Foreign National's Card, unlimited stay (C or K Card)"
         ),
         required=False,
     )
     carte_sejour_membre_ue = FileUploadField(
-        label=_('Copy of both sides of the residence card of a family member of a European Union citizen (F card)'),
+        label=_('Copy of both sides of residence permit for a family member of a European Union citizen (F Card)'),
         required=False,
     )
     carte_sejour_permanent_membre_ue = FileUploadField(
         label=_(
-            'Copy of both sides of the permanent residence card of a family member of a European Union citizen '
-            '(F+ card)'
+            'Copy of both sides of permanent residence card of a family member of a European Union citizen (F+ Card)'
         ),
         required=False,
     )
@@ -122,61 +119,60 @@ class AccountingForm(forms.Form):
     # Assimilation 2
     sous_type_situation_assimilation_2 = forms.ChoiceField(
         choices=ChoixAssimilation2.choices(),
-        label=_('Choose among the following proposals'),
+        label=_('Choose from the following'),
         required=False,
         widget=forms.RadioSelect,
     )
     carte_a_b_refugie = FileUploadField(
-        label=_('Copy of both sides of the A or B card (with "refugee" written on the back of the card)'),
+        label=_('Copy of both sides of A or B Card (with "refugee" on card back)'),
         required=False,
     )
     annexe_25_26_refugies_apatrides = FileUploadField(
         label=_(
-            'Copy of the Annex 25 or 26 completed by the Office of the Commissioner General for Refugees and '
+            'Copy of Annex 25 or 26 completed by the Office of the Commissioner General for Refugees and '
             'Stateless Persons'
         ),
         required=False,
     )
     attestation_immatriculation = FileUploadField(
-        label=_('Copy of the registration certificate "orange card"'),
+        label=_('Copy of "orange card" enrolment certificate'),
         required=False,
     )
     carte_a_b = FileUploadField(
-        label=_('Copy of both sides of the A or B Card'),
+        label=_('Copy of both sides of A or B Card'),
         required=False,
     )
     decision_protection_subsidiaire = FileUploadField(
-        label=_("Copy of the decision of the Foreigners' Office confirming the granting of subsidiary protection"),
+        label=_('Copy of Foreign Nationals Office decision granting subsidiary protection'),
         required=False,
     )
     decision_protection_temporaire = FileUploadField(
-        label=_("Copy of the decision of the Foreigners' Office confirming the granting of temporary protection"),
+        label=_('Copy of Foreign Nationals Office decision granting temporary protection'),
         required=False,
     )
 
     # Assimilation 3
     sous_type_situation_assimilation_3 = forms.ChoiceField(
         choices=ChoixAssimilation3.choices(),
-        label=_('Choose among the following proposals'),
+        label=_('Choose from the following'),
         required=False,
         widget=forms.RadioSelect,
     )
 
     titre_sejour_3_mois_professionel = FileUploadField(
-        label=_('Copy of both sides of the residence permit valid for more than 3 months'),
+        label=_('Copy of both sides of residence permit valid for more than 3 months'),
         required=False,
     )
     fiches_remuneration = FileUploadField(
-        label=_('Copy of 6 salary slips issued in the 12 months preceding the application'),
+        label=_('Copy of 6 payslips issued in the 12 months preceding application'),
         required=False,
         help_text=_(
-            'You must have worked in Belgium and your monthly salary must be at least half of the average monthly '
-            'minimum guaranteed remuneration set by the National Labour Council. As an indication, this corresponded '
-            'to &euro;903 in 2023.'
+            'You must have worked in Belgium and your monthly salary must be at least half of the guaranteed minimum '
+            'average monthly salary set by the National Labour Council. This corresponded to E903 in 2023.'
         ),
     )
     titre_sejour_3_mois_remplacement = FileUploadField(
-        label=_('Copy of both sides of the residence permit valid for more than 3 months'),
+        label=_('Copy of both sides of residence permit valid for more than 3 months'),
         required=False,
     )
     preuve_allocations_chomage_pension_indemnite = FileUploadField(
@@ -186,7 +182,7 @@ class AccountingForm(forms.Form):
 
     # Assimilation 4
     attestation_cpas = FileUploadField(
-        label=_('Recent certificate of support from the CPAS'),
+        label=_('Recent CPAS certificate of coverage'),
         required=False,
     )
 
@@ -199,16 +195,16 @@ class AccountingForm(forms.Form):
     )
     sous_type_situation_assimilation_5 = forms.ChoiceField(
         choices=ChoixAssimilation5.choices_with_interpolation({'person_concerned': dynamic_person_concerned}),
-        label=_('Choose among the following proposals'),
+        label=_('Choose from the following'),
         required=False,
         widget=forms.RadioSelect,
     )
     composition_menage_acte_naissance = FileUploadField(
-        label=_('Household composition, or a copy of your birth certificate'),
+        label=_('Household composition, or copy of your birth certificate'),
         required=False,
     )
     acte_tutelle = FileUploadField(
-        label=_('Copy of the tutorship act authenticated by the Belgian authorities'),
+        label=_('Copy of guardianship appointment legalised by Belgian authorities'),
         required=False,
     )
     composition_menage_acte_mariage = FileUploadField(
@@ -221,7 +217,7 @@ class AccountingForm(forms.Form):
     )
     carte_identite_parent = FileUploadField(
         label=mark_safe(
-            _('Copy of both sides of the identity card of %(person_concerned)s')
+            _('Copy of both sides of identity card of %(person_concerned)s')
             % {'person_concerned': dynamic_person_concerned}
         ),
         required=False,
@@ -229,8 +225,8 @@ class AccountingForm(forms.Form):
     titre_sejour_longue_duree_parent = FileUploadField(
         label=mark_safe(
             _(
-                'Copy of both sides of the long-term residence permit in Belgium of %(person_concerned)s (B, C, D, F, '
-                'F+, K, L or M cards)'
+                'Copy of both sides of long-term residence permit in Belgium of %(person_concerned)s (B, C, D, F, F+, '
+                'K, L or M Card)'
             )
             % {'person_concerned': dynamic_person_concerned}
         ),
@@ -239,10 +235,9 @@ class AccountingForm(forms.Form):
     annexe_25_26_refugies_apatrides_decision_protection_parent = FileUploadField(
         label=mark_safe(
             _(
-                "Copy of the Annex 25 or 26 or the A/B card mentioning the refugee status or copy of the decision of "
-                "the Foreigners' Office confirming the temporary/subsidiary protection of %(person_concerned)s "
-                "or copy of the official document from the municipality or the Foreigners' Office proving the "
-                "stateless status of %(person_concerned)s",
+                "Copy of Annex 25 or 26 or A/B Card indicating refugee status or copy of Foreign Nationals Office "
+                "decision confirming temporary/subsidiary protection of %(person_concerned)s or copy of official "
+                "Foreign Nationals Office or municipality document proving the stateless status of %(person_concerned)s"
             )
             % {'person_concerned': dynamic_person_concerned}
         ),
@@ -250,7 +245,7 @@ class AccountingForm(forms.Form):
     )
     titre_sejour_3_mois_parent = FileUploadField(
         label=mark_safe(
-            _('Copy of both sides of the residence permit valid for more than 3 months of %(person_concerned)s')
+            _('Copy of both sides of residence permit valid for more than 3 months of %(person_concerned)s')
             % {'person_concerned': dynamic_person_concerned}
         ),
         required=False,
@@ -258,22 +253,20 @@ class AccountingForm(forms.Form):
     fiches_remuneration_parent = FileUploadField(
         label=mark_safe(
             _(
-                'Copy of the 6 salary slips issued in the 12 months preceding the application for registration or '
-                'proof of receipt of unemployment benefit, pension or an indemnity from the mutual insurance company '
-                'of %(person_concerned)s'
+                'Copy of 6 payslips issued in the 12 months preceding application or proof of receipt of '
+                'unemployment benefit, pension or allowance from a mutual insurance company of %(person_concerned)s'
             )
             % {'person_concerned': dynamic_person_concerned}
         ),
         required=False,
         help_text=_(
-            'You must have worked in Belgium and your monthly salary must be at least half of the average monthly '
-            'minimum guaranteed remuneration set by the National Labour Council. As an indication, this corresponded '
-            'to &euro;903 in 2023.'
+            'You must have worked in Belgium and your monthly salary must be at least half of the guaranteed minimum '
+            'average monthly salary set by the National Labour Council. This corresponded to E903 in 2023.'
         ),
     )
     attestation_cpas_parent = FileUploadField(
         label=mark_safe(
-            _('Recent certificate of support from the CPAS of %(person_concerned)s')
+            _('Recent CPAS certificate of coverage for %(person_concerned)s')
             % {'person_concerned': dynamic_person_concerned}
         ),
         required=False,
@@ -282,42 +275,39 @@ class AccountingForm(forms.Form):
     # Assimilation 6
     sous_type_situation_assimilation_6 = forms.ChoiceField(
         choices=ChoixAssimilation6.choices(),
-        label=_('Choose among the following proposals'),
+        label=_('Choose from the following'),
         required=False,
         widget=forms.RadioSelect,
     )
     decision_bourse_cfwb = FileUploadField(
-        label=_('Copy of the decision to grant the scholarship from the CFWB'),
+        label=_('Copy of decision to grant CFWB scholarship'),
         required=False,
     )
     attestation_boursier = FileUploadField(
         label=_(
-            'Copy of the certificate of scholarship holder issued by the General Administration for '
-            'Development Cooperation'
+            "Copy of holder's certificate of scholarship issued by the General Administration for Development "
+            "Cooperation"
         ),
         required=False,
     )
 
     # Assimilation 7
     titre_identite_sejour_longue_duree_ue = FileUploadField(
-        label=_(
-            'Copy of both sides of the identity document proving the long-term stay in a member state of the European '
-            'Union'
-        ),
+        label=_('Copy of both sides of identity document proving long-term residence in a European Union member state'),
         required=False,
     )
     titre_sejour_belgique = FileUploadField(
-        label=_('Copy of both sides of the residence permit in Belgium'),
+        label=_('Copy of both sides of residence permit in Belgium'),
         required=False,
     )
 
-    # Affiliations
+    # Memberships
     affiliation_sport = forms.ChoiceField(
         label=mark_safe(
             _(
-                "Do you wish to join the <a href='https://uclouvain.be/fr/etudier/sport/le-sport-uclouvain.html' "
-                "target='_blank'>sports activities</a>? If so, the cost of this membership will be added to your "
-                "registration fee."
+                "Would you like to join the <a href='https://uclouvain.be/fr/etudier/sport/le-sport-uclouvain.html' "
+                "target='_blank'>sports activities</a>? If so, the cost of membership will be added to your tuition "
+                "fee."
             )
         ),
         widget=forms.RadioSelect,
@@ -326,10 +316,10 @@ class AccountingForm(forms.Form):
     etudiant_solidaire = RadioBooleanField(
         label=mark_safe(
             _(
-                "Would you like to be a <a href='https://uclouvain.be/fr/decouvrir/carte-solidaire.html' "
-                "target='_blank'>solidarity student</a>, a program proposed by Louvain Cooperation, the NGO of "
-                "UCLouvain? This affiliation will give you access to a fund for your solidarity projects. If so, the "
-                "cost of this affiliation, which is 12 EUR, will be added to your registration fees."
+                "Would you like to become a <a href='https://uclouvain.be/fr/decouvrir/carte-solidaire.html' "
+                "target='_blank'>Solidarity Student</a>, that is, a member of a programme proposed by UCLouvain's NGO, "
+                "Louvain Cooperation? This membership will give you access to a fund for your solidarity projects. "
+                "If so, the membership cost, which is E12, will be added to your tuition fee."
             )
         ),
     )
@@ -337,7 +327,7 @@ class AccountingForm(forms.Form):
     # Bank account
     type_numero_compte = forms.ChoiceField(
         choices=ChoixTypeCompteBancaire.choices(),
-        label=_('Would you like to enter an account number so that we can process a refund if necessary?'),
+        label=_('Would you like to enter an account number so that we can issue a refund?'),
         widget=forms.RadioSelect,
     )
     numero_compte_iban = forms.CharField(
@@ -352,10 +342,10 @@ class AccountingForm(forms.Form):
         ),
         help_text=mark_safe(
             _(
-                'The IBAN consists of up to 34 alphanumeric characters, corresponding to:'
+                'The IBAN contains up to 34 alphanumeric characters, which correspond to:'
                 '<ul>'
-                '<li>the country code (two letters)</li>'
-                '<li>the check digits (two digits)</li>'
+                '<li>country code (two letters)</li>'
+                '<li>verification key (two digits)</li>'
                 '<li>the Basic Bank Account Number (BBAN) (up to 30 alphanumeric characters)</li>'
                 '</ul>'
             )
@@ -366,7 +356,7 @@ class AccountingForm(forms.Form):
         required=False,
     )
     code_bic_swift_banque = BICFormField(
-        label=_('BIC/SWIFT code identifying the bank from which the account was opened'),
+        label=_('BIC/SWIFT code identifying the bank from which the account originates'),
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -375,22 +365,22 @@ class AccountingForm(forms.Form):
         ),
         help_text=mark_safe(
             _(
-                'The BIC/SWIFT code consists of 8 or 11 characters, corresponding to:'
+                'The BIC/SWIFT code consists of 8 or 11 characters, which correspond to:'
                 '<ul>'
-                '<li>the institution or bank code (four letters)</li>'
-                '<li>the country code (two letters)</li>'
-                '<li>the location code (two letters or digits)</li>'
-                '<li>the branch code (optional, three letters or digits)</li>'
+                '<li>bank code (four letters)</li>'
+                '<li>country code (two letters)</li>'
+                '<li>location code (two letters or numbers)</li>'
+                '<li>branch code (optional, three letters or numbers)</li>'
                 '</ul>'
             )
         ),
     )
     prenom_titulaire_compte = forms.CharField(
-        label=_('First name of the account holder'),
+        label=_('Account holder first name'),
         required=False,
     )
     nom_titulaire_compte = forms.CharField(
-        label=_('Last name of the account holder'),
+        label=_('Account holder surname'),
         required=False,
     )
 
@@ -412,9 +402,9 @@ class AccountingForm(forms.Form):
             academic_year = self.last_french_community_high_education_institutes_attended.get('academic_year')
 
             self.fields['attestation_absence_dette_etablissement'].label = ngettext(
-                'Certificate stating the absence of debts towards the institution attended during the academic year'
+                'Certificate stating no debts to the institution attended during the academic year'
                 ' %(academic_year)s: %(names)s.',
-                'Certificates stating the absence of debts towards the institutions attended during the academic year'
+                'Certificates stating no debts to the institutions attended during the academic year'
                 ' %(academic_year)s: %(names)s.',
                 len(names),
             ) % {
@@ -438,13 +428,13 @@ class AccountingForm(forms.Form):
             'tooltips',
             {
                 ChoixAssimilation2.PROTECTION_SUBSIDIAIRE.name: _(
-                    'Subsidiary protection status is given to a foreigner who does not qualify as a refugee but in'
-                    ' respect of whom there are substantial reasons for believing that, if returned to his or her '
-                    'country of origin, he or she would face a real risk of suffering serious harm'
+                    'Subsidiary protection status is granted to a foreign national who cannot be considered a refugee '
+                    'but with respect to whom there are serious grounds for believing that, if returned to his or '
+                    'her country of origin, he or she would face a genuine risk of suffering serious harm'
                 ),
                 ChoixAssimilation2.PROTECTION_TEMPORAIRE.name: _(
-                    'Temporary protection is given for a period of one year, which can be extended. '
-                    'This protection is given in the context of mass arrivals of refugees.'
+                    'Temporary protection is granted for a period of one year, which can be extended. This protection '
+                    'is granted in the event of a mass influx of refugees.'
                 ),
             },
         )
@@ -454,9 +444,10 @@ class AccountingForm(forms.Form):
             'tooltips',
             {
                 LienParente.TUTEUR_LEGAL.name: _(
-                    'A legal tutor has the prerogatives of parental authority over the child in case of the parents '
-                    'death or incapacity to exercise their parental authority as a result of a court decision. '
-                    'A student of legal age cannot have a tutor. A guarantor is in no way a legal tutor.'
+                    "A legal guardian has the prerogatives of parental authority over the child in the event of "
+                    "the parents' death or their inability to exercise parental authority following a court decision. "
+                    "A student of legal age cannot have a guardian. Under no circumstances is a guarantor a "
+                    "legal guardian."
                 ),
             },
         )
@@ -466,12 +457,11 @@ class AccountingForm(forms.Form):
             'tooltips',
             {
                 TypeSituationAssimilation.AUTORISATION_ETABLISSEMENT_OU_RESIDENT_LONGUE_DUREE.name: _(
-                    'You are considered a long-term resident if you are in possession of a residence permit valid for '
-                    'at least 5 years.'
+                    'You are considered a long-term resident if you hold a residence permit valid for at least 5 years.'
                 ),
                 TypeSituationAssimilation.RESIDENT_LONGUE_DUREE_UE_HORS_BELGIQUE.name: _(
-                    'To claim this assimilation, you must reside in Belgium during your studies and therefore '
-                    'obtain a residence permit in Belgium.'
+                    'To claim this Belgian student status, you will need to reside in Belgium during your studies and '
+                    'therefore obtain a residence permit in Belgium.'
                 ),
             },
         )

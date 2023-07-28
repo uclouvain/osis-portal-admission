@@ -66,21 +66,22 @@ def disable_fields_if_valuated(is_valuated, fields, fields_to_keep_enabled_names
 
 class BaseAdmissionEducationForm(ConfigurableFormMixin):
     graduated_from_high_school = forms.ChoiceField(
-        label=_("Do you have a high school diploma?"),
+        label=_("Do you have a secondary school diploma?"),
         widget=forms.RadioSelect,
         help_text='{}<br><br>{}'.format(
             _(
-                "High school in Belgium is the level of education between the end of primary school and the "
+                "Secondary education in Belgium is the level of education between the end of primary school and the "
                 "beginning of higher education."
             ),
             _(
-                "The high school diploma is the Certificate of Higher Secondary Education (CESS). "
-                "It is commonly referred to as the baccalaureate in many countries."
+                "The secondary school diploma is the Certificat d'Enseignement Secondaire Superieur "
+                "(CESS, Certificate of Higher Secondary Education). It is commonly referred to in many countries as "
+                "the baccalaureat."
             ),
         ),
     )
     graduated_from_high_school_year = forms.IntegerField(
-        label=_('Please mention the academic graduation year'),
+        label=_('Please indicate the academic year in which you obtained your degree'),
         widget=autocomplete.ListSelect2,
         required=False,
     )
@@ -126,7 +127,7 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         required=False,
     )
     high_school_diploma = FileUploadField(
-        label=_("High school diploma"),
+        label=_("Secondary school diploma"),
         max_files=1,
         required=False,
     )
@@ -136,7 +137,7 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         required=False,
     )
     first_cycle_admission_exam = FileUploadField(
-        label=_("Certificate of successful completion of the admission test for the first cycle of higher education"),
+        label=_("Certificate of passing the bachelor's course entrance exam"),
         max_files=1,
         required=False,
     )
@@ -177,24 +178,24 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
 
 class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
     community = forms.ChoiceField(
-        label=_("Educational community"),
+        label=_("Belgian education community"),
         choices=EMPTY_CHOICE + BelgianCommunitiesOfEducation.choices(),
         widget=autocomplete.ListSelect2,
     )
     educational_type = forms.ChoiceField(
-        label=_("Education type"),
+        label=_("Secondary education type"),
         choices=EMPTY_CHOICE + EDUCATIONAL_TYPES,
         widget=autocomplete.ListSelect2,
         required=False,
     )
     educational_other = forms.CharField(
-        label=_("If other education type, please specify"),
+        label=_("If other education type, specify"),
         required=False,
     )
     institute = forms.CharField(
         label=_("Institute"),
         required=False,
-        help_text=_("You can specify the location or the postal code in your search."),
+        help_text=_("You can specify the locality or postcode in your search."),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:high-school",
             attrs={
@@ -205,7 +206,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         ),
     )
     other_institute = forms.BooleanField(
-        label=_("I don't find my institute in this list"),
+        label=_("My institute is not on this list"),
         required=False,
     )
     other_institute_name = forms.CharField(
@@ -217,7 +218,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         required=False,
     )
     result = forms.ChoiceField(
-        label=_("What result did you get?"),
+        label=_("What result did you achieve?"),
         choices=DiplomaResults.choices(),
         widget=forms.RadioSelect,
     )
@@ -241,7 +242,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name and not (
             educational_type or educational_other
         ):
-            self.add_error("educational_type", _("Educational type is required with this community of education"))
+            self.add_error("educational_type", _("Choose secondary education type"))
 
         other_institute = cleaned_data.get('other_institute')
         if other_institute:
@@ -251,7 +252,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
                 self.add_error('other_institute_address', FIELD_REQUIRED_MESSAGE)
 
         elif not cleaned_data.get("institute"):
-            institute_error_msg = _("Please set one of institute or other institute fields")
+            institute_error_msg = _("Please choose the institute or specify another institute")
             self.add_error("institute", institute_error_msg)
             self.add_error("other_institute", '')
 
@@ -285,7 +286,7 @@ class BachelorAdmissionEducationScheduleForm(forms.Form):
     spanish = HourField(label=_("Spanish"))
     modern_languages_other_label = forms.CharField(
         label=_("Other"),
-        help_text=_("If other language, please specify"),
+        help_text=_("If other language, specify"),
         required=False,
         max_length=25,
         widget=forms.TextInput(attrs={'class': 'form-control'}),
@@ -297,10 +298,10 @@ class BachelorAdmissionEducationScheduleForm(forms.Form):
     mathematics = HourField(label=_("Mathematics"))
     it = HourField(label=_("IT"))
     social_sciences = HourField(label=_("Social sciences"))
-    economic_sciences = HourField(label=_("Economic sciences"))
+    economic_sciences = HourField(label=_("Economics"))
     other_label = forms.CharField(
         label=_("Other"),
-        help_text=_("If other optional domains, please specify"),
+        help_text=_("If other optional subjects, specify"),
         required=False,
         max_length=25,
         widget=forms.TextInput(attrs={'class': 'form-control'}),
@@ -324,7 +325,7 @@ class BachelorAdmissionEducationScheduleForm(forms.Form):
 
         # At least a field is required
         if not any(cleaned_data.get(f) for f in self.fields):
-            self.add_error(None, _("A field of the schedule must at least be set."))
+            self.add_error(None, _("At least one schedule field must be completed."))
 
         dependent_fields = [
             ("modern_languages_other_label", "modern_languages_other_hours"),
@@ -349,7 +350,7 @@ class BachelorAdmissionEducationScheduleForm(forms.Form):
 
 class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     foreign_diploma_type = forms.ChoiceField(
-        label=_("What diploma did you get (or will you get)?"),
+        label=_("What diploma have you obtained (or will obtain)?"),
         choices=ForeignDiplomaTypes.choices(),
         widget=forms.RadioSelect,
         help_text=mark_safe(
@@ -358,66 +359,64 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         ),
     )
     equivalence = forms.ChoiceField(
-        label=_(
-            "Has this diploma been subject to a decision of equivalence provided by the "
-            "French-speaking community of Belgium?"
-        ),
+        label=_("Has this diploma been recognised as equivalent by the French Community of Belgium?"),
         required=False,
         choices=Equivalence.choices(),
         widget=forms.RadioSelect,
     )
     linguistic_regime = forms.CharField(
-        label=_("Linguistic regime"),
+        label=_("Language regime"),
         widget=autocomplete.ListSelect2(url="admission:autocomplete:language"),
         required=False,
     )
     other_linguistic_regime = forms.CharField(
-        label=_("If other linguistic regime, please specify"),
+        label=_("If other language regime, specify"),
         required=False,
     )
     country = forms.CharField(
-        label=_("Organizing country"),
+        label=_("Organising country"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
             forward=[forward.Const(True, 'exclude_be')],
         ),
     )
     result = forms.ChoiceField(
-        label=_("What result did you get?"),
+        label=_("What result did you achieve?"),
         choices=DiplomaResults.choices(),
         widget=forms.RadioSelect,
     )
     high_school_transcript = FileUploadField(
-        label=_("A transcript or your last year at high school"),
+        label=_("A transcript for your last year of secondary school"),
         max_files=1,
         required=False,
     )
     high_school_transcript_translation = FileUploadField(
         label=_(
-            "A certified translation of your official transcript of marks for your final year of secondary education"
+            "A translation of your official transcript of marks for your final year of secondary school "
+            "by a sworn translator"
         ),
         max_files=1,
         required=False,
     )
     high_school_diploma_translation = FileUploadField(
-        label=_("A certified translation of your high school diploma"),
+        label=_("A translation of your secondary school diploma by a sworn translator"),
         max_files=1,
         required=False,
     )
     enrolment_certificate_translation = FileUploadField(
-        label=_("A certified translation of your certificate of enrolment or school attendance"),
+        label=_("A translation of the enrolment or school attendance certificate by a sworn translator"),
         max_files=1,
         required=False,
     )
     final_equivalence_decision_not_ue = FileUploadField(
         label=_(
-            "A double-sided copy of the final equivalence decision issued by the Ministry "
-            "of the French Community of Belgium (possibly with the DAES or the admission test for the "
-            "first cycle of higher education if your equivalence doesn't give access to the desired programme)"
+            "Copy of both sides of the definitive equivalency decision by the Ministry of the French-speaking "
+            "Community of Belgium (possibly accompanied by the DAES or the undergraduate studies exam, if your "
+            "equivalency does not confer eligibility for the desired programme)"
         ),
         help_text=_(
-            "For any high-school diploma from a country outside the European Union, the admission request "
-            "<strong>must contain the equivalence</strong> of your diploma delivered by the "
+            "For any secondary school diploma from a country outside the European Union, the application for admission "
+            "<strong>must contain the equivalency</strong> of your diploma issued by the "
             "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium."
         ),
         max_files=2,
@@ -425,8 +424,8 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     )
     final_equivalence_decision_ue = FileUploadField(
         label=_(
-            "A double-sided copy of the final equivalence decision (possibly with the DAES or the admission test "
-            "for the first cycle of higher education in case of restrictive equivalence)"
+            "Copy of both sides of the definitive equivalency decision (accompanied, where applicable, by the DAES "
+            "or undergraduate exam, in the case of restrictive equivalency)"
         ),
         help_text=_(
             "If you have a final equivalence decision issued by the "
@@ -437,13 +436,12 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         required=False,
     )
     equivalence_decision_proof = FileUploadField(
-        label=_("Proof of the final equivalence decision"),
+        label=_("Proof of equivalency request"),
         help_text=_(
-            "If you do not yet have a final equivalence decision issued by the "
-            "<a href='http://www.equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you must "
-            "provide a double-sided copy of this document as soon as possible. You are asked to "
-            "provide proof of the application in the meantime: receipt of the application and proof of payment, "
-            "acknowledgement of receipt of the application, etc."
+            "If you do not yet have a final equivalency decision from the <a href='http://www.equivalences.cfwb.be/' "
+            "target='_blank'>French Community</a> of Belgium, provide a copy of both sides of it as soon as you "
+            "receive it. In the meantime, you will be asked to provide proof that you have indeed requested it: postal "
+            "receipt and proof of payment, acknowledgement of receipt of the application, etc."
         ),
         max_files=1,
         required=False,
@@ -475,7 +473,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         cleaned_data = super().clean()
 
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
-            self.add_error("linguistic_regime", _("Please set either the linguistic regime or other field."))
+            self.add_error("linguistic_regime", _("Please choosee the language regime or specify another regime."))
 
         if cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name:
             # Equivalence

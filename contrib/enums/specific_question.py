@@ -31,7 +31,7 @@ from base.models.utils.utils import ChoiceEnum
 class Onglets(ChoiceEnum):
     ETUDES_SECONDAIRES = _('Secondary studies')
     CURRICULUM = _('Curriculum')
-    CHOIX_FORMATION = _('Training choice')
+    CHOIX_FORMATION = _('Course choice')
     INFORMATIONS_ADDITIONNELLES = _('Additional information')
     DOCUMENTS = _('Documents')
 
@@ -54,7 +54,7 @@ class TypeChampTexteFormulaire(ChoiceEnum):
 
 
 class TypeChampSelectionFormulaire(ChoiceEnum):
-    CASES_A_COCHER = _('Checkboxes')
+    CASES_A_COCHER = _('Tick boxes')
     BOUTONS_RADIOS = _('Radio buttons')
     LISTE = _('List')
 
@@ -63,5 +63,5 @@ class CleConfigurationItemFormulaire(ChoiceEnum):
     TAILLE_TEXTE = _('Text size')
     TYPE_SELECTION = _('Selection type')
     CLASSE_CSS = _('CSS class')
-    TYPES_MIME_FICHIER = _('File MIME types')
+    TYPES_MIME_FICHIER = _('MIME file types')
     NOMBRE_MAX_DOCUMENTS = _('Maximum number of documents')

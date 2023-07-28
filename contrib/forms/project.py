@@ -70,7 +70,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         widget=forms.Textarea(
             attrs={
                 'rows': 2,
-                'placeholder': _("Detail here the reasons which justify the recourse to a provisory admission."),
+                'placeholder': _("Reasons for provisional admission."),
             }
         ),
         required=False,
@@ -92,7 +92,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
 
     type_financement = forms.ChoiceField(
-        label=_("Financing type"),
+        label=_("Funding type"),
         choices=EMPTY_CHOICE + ChoixTypeFinancement.choices(),
         required=False,
     )
@@ -100,7 +100,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Work contract type"),
         choices=EMPTY_CHOICE + ChoixTypeContratTravail.choices(),
         required=False,
-        help_text=_("Specify the employer and your function"),
+        help_text=_("Specify employer and function"),
     )
     eft = forms.IntegerField(
         # xgettext:no-python-format
@@ -110,7 +110,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     bourse_recherche = forms.CharField(
-        label=_("Scholarship grant"),
+        label=_("Research scholarship"),
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:scholarship',
@@ -125,7 +125,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Scholarship start date"),
         widget=CustomDateInput(),
         required=False,
-        help_text=_("End date of the grant before any renewal."),
+        help_text=_("Scholarship end date prior to any possible renewal."),
     )
     bourse_date_fin = forms.DateField(
         label=_("Scholarship end date"),
@@ -133,22 +133,22 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     bourse_preuve = FileUploadField(
-        label=_("Scholarship proof"),
+        label=_("Proof of scholarship"),
         required=False,
         help_text=_(
-            "For example, a contract, a letter from a promoter or any other document indicating "
-            "that you have been awarded the scholarship on the dates indicated."
+            "For example, a contract, a letter from a supervisor, or any other document showing that you have been "
+            "awarded the scholarship on the dates indicated."
         ),
     )
     duree_prevue = forms.IntegerField(
-        label=_("Estimated time to complete the doctorate (in months)"),
+        label=_("Estimated time to complete the PhD (in months)"),
         min_value=0,
         max_value=100,
         required=False,
     )
     temps_consacre = forms.IntegerField(
         # xgettext:no-python-format
-        label=_("Allocated time for the thesis (in %)"),
+        label=_("Time allocated for thesis (in %)"),
         min_value=0,
         max_value=100,
         required=False,
@@ -158,8 +158,8 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Thesis location"),
         required=False,
         help_text=_(
-            "If known, indicate here the name of the laboratory, "
-            "clinical service or research centre where the thesis will be conducted"
+            "If known, indicate the name of the laboratory, clinical department or research centre where the thesis "
+            "will be carried out"
         ),
     )
     titre_projet = forms.CharField(
@@ -172,52 +172,49 @@ class DoctorateAdmissionProjectForm(forms.Form):
         widget=forms.Textarea,
     )
     documents_projet = FileUploadField(
-        label=_("Research project"),
+        label=_("PhD research project"),
         required=False,
     )
     graphe_gantt = FileUploadField(
-        label=_("Gantt graph"),
+        label=_("Gantt chart"),
         required=False,
     )
     proposition_programme_doctoral = FileUploadField(
-        label=_("Doctoral program proposition"),
+        label=_("PhD proposal"),
         required=False,
     )
     projet_formation_complementaire = FileUploadField(
         label=_("Complementary training proposition"),
         required=False,
         help_text=_(
-            "Depending on your previous experience and your research project, a complementary training "
-            "to the doctoral training may be imposed by the DDC, for a maximum of 60 credits. If so, "
-            "please indicate here a proposal for complementary training."
+            "Depending on your previous experience and your research project, the PhD Committee may require you to "
+            "take additional PhD training, up to a maximum of 60 credits. If so, please indicate here a proposal "
+            "for additional training."
         ),
     )
     lettres_recommandation = FileUploadField(
-        label=_("Recommendation letters"),
+        label=_("Letters of recommendation"),
         required=False,
     )
     langue_redaction_these = forms.ChoiceField(
-        label=_("Thesis redacting language"),
+        label=_("Thesis language"),
         choices=ChoixLangueRedactionThese.choices(),
         initial=ChoixLangueRedactionThese.UNDECIDED.name,
         required=False,
     )
     doctorat_deja_realise = forms.ChoiceField(
-        label=_("Have you ever started or completed a PhD?"),
+        label=_("Have you previously enrolled for a PhD?"),
         choices=ChoixDoctoratDejaRealise.choices(),
         initial=ChoixDoctoratDejaRealise.NO.name,
         required=False,
-        help_text=_(
-            "Indicate here any previous doctoral course, completed or interrupted, "
-            "in which you are no longer registered."
-        ),
+        help_text=_("Indicate any completed or interrupted PhD studies in which you are no longer enrolled."),
     )
     institution = forms.CharField(
         label=_("Institution"),
         required=False,
     )
     domaine_these = forms.CharField(
-        label=_("Thesis domain"),
+        label=_("Thesis field"),
         required=False,
     )
     non_soutenue = forms.BooleanField(
@@ -225,7 +222,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
     )
     date_soutenance = forms.DateField(
-        label=_("Defense date"),
+        label=_("Defence date"),
         widget=CustomDateInput(),
         required=False,
     )

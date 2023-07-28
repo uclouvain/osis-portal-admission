@@ -34,11 +34,11 @@
 
   {% if doctorate|can_make_action:'add_training' %}
     <a href="{{ add_url }}" class="btn btn-default">
-      {% trans "Add a course" %}
+      {% trans "Add a course unit" %}
     </a>
   {% endif %}
 
-  <h4>{% trans "Courses" %}</h4>
+  <h4>{% trans "Course units" %}</h4>
   {% if activities %}
     <div class="filter-status form-group">
       <strong>{% trans "Status" %}</strong>
@@ -82,11 +82,11 @@
       {% endif %}
     </form>
   {% else %}
-    {% trans "No course created yet." %}
+    {% trans "No course created at present." %}
     {% if doctorate|can_make_action:'add_training' %}
       {% url 'admission:doctorate:course-enrollment' pk=view.kwargs.pk as enrollment_url %}
       {% blocktrans trimmed %}
-        <a href="{{ enrollment_url }}">Go to course enrollment</a> or <a href="{{ add_url }}">add a course</a>
+        <a href="{{ enrollment_url }}">Go to course enrolment</a> or <a href="{{ add_url }}">add a course</a>
       {% endblocktrans %}
     {% endif %}
   {% endif %}

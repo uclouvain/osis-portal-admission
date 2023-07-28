@@ -32,7 +32,7 @@
     {% if is_valuated %}
       <div class="alert alert-warning">
         {% blocktranslate trimmed %}
-          Your secondary education data can no longer be updated. If you wish to make any changes, please contact the Enrolment service.
+          Your secondary education data can no longer be updated. To make changes, please contact the Enrolment Office.
         {% endblocktranslate %}
       </div>
     {% endif %}
@@ -49,7 +49,7 @@
   {% endpanel %}
 
   {% if form.specific_question_answers.field.fields %}
-    {% panel _('Specificities') %}
+    {% panel _('Specific aspects') %}
       {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
     {% endpanel %}
   {% endif %}

@@ -33,15 +33,15 @@
         {% endif %}
         {% field_data _("Sector") admission.intitule_secteur_formation %}
         {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
-        {% field_data _("Doctorate") doctorate_title %}
+        {% field_data _("PhD") doctorate_title %}
         {% if admission.commission_proximite %}
             {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixCommissionProximiteCDEouCLSM'|enum_display:'ChoixCommissionProximiteCDSS'|enum_display:'ChoixSousDomaineSciences' %}
         {% endif %}
     {% endpanel %}
 
-    {% panel _("Financing") %}
+    {% panel _("Funding") %}
         {% if admission.type_financement %}
-            {% field_data _("Financing type") admission.type_financement|enum_display:'ChoixTypeFinancement' %}
+            {% field_data _("Funding type") admission.type_financement|enum_display:'ChoixTypeFinancement' %}
             {% if admission.type_financement == "WORK_CONTRACT" %}
                 {% field_data _("Work contract") admission.type_contrat_travail|enum_display:'ChoixTypeContratTravail' %}
                 {% field_data fte_label admission.eft|default_if_none:'' %}
@@ -51,40 +51,40 @@
                 {% else %}
                   {% display admission.autre_bourse_recherche as nom_bourse %}
                 {% endif %}
-                {% field_data _("Scholarship grant") nom_bourse %}
+                {% field_data _("Research scholarship") nom_bourse %}
                 {% field_data _("Scholarship start date") admission.bourse_date_debut %}
                 {% field_data _("Scholarship end date") admission.bourse_date_fin %}
-                {% field_data _("Scholarship proof") admission.bourse_preuve %}
+                {% field_data _("Proof of scholarship") admission.bourse_preuve %}
             {% endif %}
-            {% field_data _("Estimated time to complete the doctorate (in months)") admission.duree_prevue|default_if_none:'' %}
+            {% field_data _("Estimated time to complete the PhD (in months)") admission.duree_prevue|default_if_none:'' %}
             {% field_data allocated_time_label admission.temps_consacre|default_if_none:'' %}
         {% endif %}
     {% endpanel %}
 
-    {% panel _("Doctoral project") %}
+    {% panel _("PhD research project") %}
         {% field_data _("Project title") admission.titre_projet %}
         {% field_data _("Project resume") admission.resume_projet|linebreaks %}
-        {% field_data _("Thesis redacting language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
+        {% field_data _("Thesis language") admission.langue_redaction_these|enum_display:'ChoixLangueRedactionThese' %}
         {% if admission.institut_these %}
           {% display admission.nom_institut_these ' ' '(' admission.sigle_institut_these ')' as institut_these %}
         {% endif %}
         {% field_data _("Research institute") institut_these|default_if_none:'' %}
         {% field_data _("Thesis location") admission.lieu_these %}
 
-        {% field_data _("Research project") admission.documents_projet %}
-        {% field_data _("Doctoral program proposition") admission.proposition_programme_doctoral %}
+        {% field_data _("PhD research project") admission.documents_projet %}
+        {% field_data _("PhD proposal") admission.proposition_programme_doctoral %}
         {% field_data _("Complementary training proposition") admission.projet_formation_complementaire %}
-        {% field_data _("Gantt graph") admission.graphe_gantt %}
-        {% field_data _("Recommendation letters") admission.lettres_recommandation %}
+        {% field_data _("Gantt chart") admission.graphe_gantt %}
+        {% field_data _("Letters of recommendation") admission.lettres_recommandation %}
     {% endpanel %}
 
     {% panel _("Previous research experience") %}
-      {% field_data _("Have you ever started or completed a PhD?") admission.doctorat_deja_realise|enum_display:'ChoixDoctoratDejaRealise' %}
+      {% field_data _("Have you previously enrolled for a PhD?") admission.doctorat_deja_realise|enum_display:'ChoixDoctoratDejaRealise' %}
         {% if admission.doctorat_deja_realise != "NO" %}
             {% field_data _("Institution") admission.institution %}
-            {% field_data _("Thesis domain") admission.domaine_these %}
+            {% field_data _("Thesis field") admission.domaine_these %}
             {% if admission.date_soutenance %}
-                {% field_data _("Defense date") admission.date_soutenance %}
+                {% field_data _("Defence date") admission.date_soutenance %}
             {% elif admission.raison_non_soutenue %}
                 {% field_data _("No defense reason") admission.raison_non_soutenue|linebreaks %}
             {% endif %}

@@ -26,7 +26,7 @@
 {% endcomment %}
 
 {% block specific_question_answers %}
-  {% panel _('Specificities') %}
+  {% panel _('Specific aspects') %}
     {% field_data _('Curriculum') admission.curriculum %}
     {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
   {% endpanel %}

@@ -76,7 +76,7 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
     def form_invalid(self, form):
         # If the form contains non_field errors, webservice has failed, redirect with error message
         if form.errors.get('__all__'):
-            messages.error(self.request, _("An error has occurred, please check the values and try again."))
+            messages.error(self.request, _("An error has occurred, please check fields and try again."))
             return redirect(self.request.get_full_path())
 
         # Else reset the form values and redisplay form

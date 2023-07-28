@@ -38,15 +38,15 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
 
     copie_titre_sejour = FileUploadField(
         label=_(
-            "Please provide a copy of the residence permit covering the entire course, including the evaluation "
-            "test (except for courses organised online)."
+            "Please provide a copy of the residence permit covering the entire course, including the assessment test "
+            "(except for online courses)."
         ),
         max_files=1,
         required=False,
     )
     inscription_a_titre = forms.ChoiceField(
         choices=ChoixInscriptionATitre.choices(),
-        label=_('Are you registering as'),
+        label=_('You are registering as'),
         widget=forms.RadioSelect,
     )
     nom_siege_social = forms.CharField(
@@ -62,19 +62,19 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
         required=False,
     )
     adresse_mail_professionnelle = forms.EmailField(
-        label=_('Please enter your professional e-mail address'),
+        label=_('Please enter your work email address'),
         required=False,
     )
 
     # Adresse facturation
     type_adresse_facturation = forms.ChoiceField(
         choices=ChoixTypeAdresseFacturation.verbose_choices(),
-        label=_('I want the billing address to be'),
+        label=_('I would like the billing address to be'),
         required=False,
         widget=forms.RadioSelect,
     )
     adresse_facturation_destinataire = forms.CharField(
-        label=_('For the attention of'),
+        label=_('To the attention of'),
         required=False,
     )
 

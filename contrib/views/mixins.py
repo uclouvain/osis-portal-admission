@@ -158,7 +158,7 @@ class LoadDossierViewMixin(LoadViewMixin):
         ):
             messages.warning(
                 self.request,
-                _("Late enrollment! Enroll before %(date)s") % {'date': self.admission.date_fin_pot},
+                _("Late enrolment! Enrol before %(date)s") % {'date': self.admission.date_fin_pot},
             )
         return context
 

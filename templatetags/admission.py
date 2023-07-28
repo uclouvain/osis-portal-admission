@@ -129,13 +129,13 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('training', _('Training choice'), 'person-chalkboard'): [
-            Tab('training-choice', _('Training choice')),
+        Tab('training', _('Course choice'), 'person-chalkboard'): [
+            Tab('training-choice', _('Course choice')),
         ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
-            Tab('languages', _('Languages knowledge')),
+            Tab('languages', _('Knowledge of languages')),
         ],
     },
     'doctorate': {
@@ -143,33 +143,33 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('training-choice', _('Training choice'), 'person-chalkboard'): [
-            Tab('training-choice', _('Training choice')),
+        Tab('training-choice', _('Course choice'), 'person-chalkboard'): [
+            Tab('training-choice', _('Course choice')),
         ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('curriculum', _('Curriculum')),
-            Tab('languages', _('Languages knowledge')),
+            Tab('languages', _('Knowledge of languages')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('accounting', _('Accounting')),
         ],
-        Tab('doctorate', pgettext('tab name', 'Doctoral project'), 'person-chalkboard'): [
+        Tab('doctorate', pgettext('tab name', 'PhD project'), 'person-chalkboard'): [
             Tab('project', pgettext('tab name', 'Research project')),
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Supervision')),
         ],
         # TODO specifics
-        Tab('confirm-submit', _('Completion'), 'flag'): [
+        Tab('confirm-submit', _('Finalise application'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
         ],
         Tab('confirmation-paper', _('Confirmation'), 'list-check'): [
-            Tab('confirmation-paper', _('Confirmation paper')),
+            Tab('confirmation-paper', _('Confirmation exam')),
             Tab('extension-request', _('New deadline')),
         ],
-        Tab('training', _('Training'), 'book-open-reader'): [
-            Tab('doctoral-training', _('Doctoral training')),
+        Tab('training', _('Course'), 'book-open-reader'): [
+            Tab('doctoral-training', _('PhD training')),
             Tab('complementary-training', _('Complementary training')),
-            Tab('course-enrollment', _('Course enrollment')),
+            Tab('course-enrollment', _('Course unit enrolment')),
         ],
         Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
             Tab('jury-preparation', pgettext('admission tab', 'Defense method')),
@@ -185,18 +185,18 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('general-education', _('Training choice'), 'person-chalkboard'): [
-            Tab('training-choice', _('Training choice')),
+        Tab('general-education', _('Course choice'), 'person-chalkboard'): [
+            Tab('training-choice', _('Course choice')),
         ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
-            Tab('specific-questions', _('Specificities')),
+            Tab('specific-questions', _('Specific aspects')),
             Tab('accounting', _('Accounting')),
         ],
-        Tab('confirm-submit', _('Completion'), 'flag'): [
+        Tab('confirm-submit', _('Finalise application'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
         ],
         Tab('documents', _('Documents'), 'folder-open'): [
@@ -208,17 +208,17 @@ TAB_TREES = {
             Tab('person', _('Identification')),
             Tab('coordonnees', _('Contact details')),
         ],
-        Tab('continuing-education', _('Training choice'), 'person-chalkboard'): [
-            Tab('training-choice', _('Training choice')),
+        Tab('continuing-education', _('Course choice'), 'person-chalkboard'): [
+            Tab('training-choice', _('Course choice')),
         ],
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
-            Tab('specific-questions', _('Specificities')),
+            Tab('specific-questions', _('Specific aspects')),
         ],
-        Tab('confirm-submit', _('Completion'), 'flag'): [
+        Tab('confirm-submit', _('Finalise application'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
         ],
     },
@@ -588,7 +588,7 @@ def report_ects(activity, categories, added, validated, parent_category=None):
     ):
         categories[_("Publication")][index] += activity.ects
     elif category == CategorieActivite.COURSE.name:
-        categories[_("Courses and training")][index] += activity.ects
+        categories[_("Course units and courses")][index] += activity.ects
     elif category == CategorieActivite.SERVICE.name:
         categories[_("Services")][index] += activity.ects
     elif (
@@ -610,12 +610,12 @@ def training_categories(activities):
         _("Participation"): [0, 0],
         _("Scientific communication"): [0, 0],
         _("Publication"): [0, 0],
-        _("Courses and training"): [0, 0],
+        _("Course units and courses"): [0, 0],
         _("Services"): [0, 0],
         _("VAE"): [0, 0],
         _("Scientific residencies"): [0, 0],
-        _("Confirmation paper"): [0, 0],
-        _("Thesis defences"): [0, 0],
+        _("Confirmation exam"): [0, 0],
+        _("Thesis defense"): [0, 0],
     }
     for activity in activities:
         if not hasattr(activity, 'ects'):
@@ -645,11 +645,11 @@ def training_categories(activities):
         elif category == CategorieActivite.VAE.name:
             categories[_("VAE")][index] += activity.ects
         elif category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
-            categories[_("Courses and training")][index] += activity.ects
+            categories[_("Course units and courses")][index] += activity.ects
         elif category == CategorieActivite.PAPER.name and activity.type == ChoixTypeEpreuve.CONFIRMATION_PAPER.name:
-            categories[_("Confirmation paper")][index] += activity.ects
+            categories[_("Confirmation exam")][index] += activity.ects
         elif category == CategorieActivite.PAPER.name:
-            categories[_("Thesis defences")][index] += activity.ects
+            categories[_("Thesis defense")][index] += activity.ects
     if not added:
         return {}
     return {
@@ -690,7 +690,7 @@ def get_country_name(context, iso_code: str):
 
 
 @register.inclusion_tag('admission/tags/multiple_field_data.html')
-def multiple_field_data(configurations, data, title=_('Specificities')):
+def multiple_field_data(configurations, data, title=_('Specific aspects')):
     """Display the answers of the specific questions based on a list of configurations and a data dictionary"""
     current_language = get_language()
 

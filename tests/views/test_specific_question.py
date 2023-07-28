@@ -81,7 +81,7 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, _("Reorientation"))
+        self.assertContains(response, _("Course change"))
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
     @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
@@ -107,7 +107,7 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, _("Enrollment in a bachelor with quota"))
+        self.assertContains(response, _("Enrolment in limited enrolment bachelor's course"))
 
 
 class ContinuingEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -203,7 +203,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, _("Reorientation"))
+        self.assertContains(response, _("Course change"))
         self.assertContains(response, '30/12/2022 23:59')
 
         response = self.client.post(self.url, data={'': ''})
@@ -299,7 +299,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, _("Registration change"))
+        self.assertContains(response, _("Change of enrolment"))
         self.assertContains(response, '30/03/2023 23:59')
 
         response = self.client.post(self.url, data={'pool_questions-is_belgian_bachelor': 'Foo'})

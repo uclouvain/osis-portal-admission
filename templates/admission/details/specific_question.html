@@ -27,25 +27,25 @@
 
 {% block tab_content %}
   {% if view.is_continuing %}
-    {% panel _('Specificities') %}
+    {% panel _('Specific aspects') %}
       {% if admission.pays_nationalite_ue_candidat == False %}
         <p class="alert alert-info text-justify">
           {% blocktranslate trimmed %}
-            The certification and short programs (continuing education) do not allow you to obtain a visa and a
-            residence permit in Belgium. More information:
+            Certification and short programmes (continuing education) do not allow for obtaining a visa and residence
+            permit in Belgium. More information:
             <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
           {% endblocktranslate %}
         </p>
-        {% field_data _('Copy of the residence permit covering the entire course, including the evaluation test (except for courses organised online).') admission.copie_titre_sejour %}
+        {% field_data _('Copy of residence permit covering entire course, including assessment test (except for online courses).') admission.copie_titre_sejour %}
       {% endif %}
-      {% field_data _('You are registering as') admission.inscription_a_titre|enum_display:'ChoixInscriptionATitre' %}
+      {% field_data _('You are enrolling as') admission.inscription_a_titre|enum_display:'ChoixInscriptionATitre' %}
       {% if admission.inscription_a_titre == 'PROFESSIONNEL' %}
         {% field_data _('Head office name') admission.nom_siege_social %}
         <div class="row">
           {% field_data _('Unique business number') admission.numero_unique_entreprise css_class="col-md-6" %}
           {% field_data _('VAT number') admission.numero_tva_entreprise css_class="col-md-6" %}
         </div>
-        {% field_data _('Your professional e-mail address') admission.adresse_mail_professionnelle %}
+        {% field_data _('Your professional email address') admission.adresse_mail_professionnelle %}
         {% if admission.type_adresse_facturation == 'AUTRE' and admission.adresse_facturation %}
           {% panel _("Billing address") %}
             <div class="row">
@@ -59,7 +59,7 @@
             <div class="row">
               {% get_country_name admission.adresse_facturation.pays as pays %}
               {% field_data _("Country") pays css_class="col-md-4" %}
-              {% field_data _("Postal code") admission.adresse_facturation.code_postal css_class="col-md-4" %}
+              {% field_data _("Postcode") admission.adresse_facturation.code_postal css_class="col-md-4" %}
               {% field_data _("City") admission.adresse_facturation.ville css_class="col-md-4" %}
             </div>
           {% endpanel %}
@@ -70,37 +70,37 @@
       {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
     {% endpanel %}
   {% else %}
-    {% multiple_field_data specific_questions admission.reponses_questions_specifiques title=_('Specificities') %}
+    {% multiple_field_data specific_questions admission.reponses_questions_specifiques title=_('Specific aspects') %}
   {% endif %}
 
   {% if "is_non_resident" in pool_questions %}
-    {% panel _("Enrollment in a bachelor with quota") %}
-      {% field_data _("Are you a non-resident (as defined in decree)?") pool_questions.is_non_resident|yesno:_("Yes,No,") %}
+    {% panel _("Enrolment in limited enrolment bachelor's course") %}
+      {% field_data _("Are you a non-resident (as defined by government decree)?") pool_questions.is_non_resident|yesno:_("Yes,No,") %}
     {% endpanel %}
   {% else %}
     {% if pool_questions.is_external_modification is not None or pool_questions.modification_pool_end_date %}
-      {% panel _("Registration change") %}
-        {% field_data _("Are you currently enrolled in the first year of a bachelor's degree at a college or university in the French Community of Belgium?") pool_questions.is_belgian_bachelor|yesno:_("Yes,No,") %}
+      {% panel _("Change of enrolment") %}
+        {% field_data _("Are you currently enrolled in the first year of a bachelor's degree at a French Community of Belgium haute ecole or university?") pool_questions.is_belgian_bachelor|yesno:_("Yes,No,") %}
         {% if pool_questions.is_belgian_bachelor %}
-          {% field_data _('Would you like to change your registration for this academic year at UCLouvain?') pool_questions.is_external_modification|yesno:_("Yes,No,") %}
+          {% field_data _('Would you like to change your UCLouvain enrolment for this academic year?') pool_questions.is_external_modification|yesno:_("Yes,No,") %}
           {% if pool_questions.is_external_modification %}
             <p>{% blocktrans trimmed with date=pool_questions.modification_pool_end_date|date:'d/m/Y H:i' %}
-              In the case of an external registration change, you must confirm your request before {{ date }}.
+              If you wish to change your application, you must confirm your application before {{ date }}.
             {% endblocktrans %}</p>
-            {% field_data _("Registration modification form") pool_questions.registration_change_form %}
+            {% field_data _("Change of enrolment form") pool_questions.registration_change_form %}
           {% endif %}
         {% endif %}
       {% endpanel %}
     {% endif %}
 
     {% if pool_questions.is_external_reorientation is not None or pool_questions.reorientation_pool_end_date %}
-      {% panel _("Reorientation") %}
-        {% field_data _("Are you currently enrolled in the first year of a bachelor's degree at a college or university in the French Community of Belgium?") pool_questions.is_belgian_bachelor|yesno:_("Yes,No,") %}
+      {% panel _("Course change") %}
+        {% field_data _("Are you currently enrolled in the first year of a bachelor's degree at a French Community of Belgium haute ecole or university?") pool_questions.is_belgian_bachelor|yesno:_("Yes,No,") %}
         {% if pool_questions.is_belgian_bachelor %}
-          {% field_data _('Would you like to reorient yourself for this academic year at UCLouvain?') pool_questions.is_external_reorientation|yesno:_("Yes,No,") %}
+          {% field_data _('Would you like to switch courses this academic year at UCLouvain?') pool_questions.is_external_reorientation|yesno:_("Yes,No,") %}
           {% if pool_questions.is_external_reorientation %}
             <p>{% blocktrans trimmed with date=pool_questions.reorientation_pool_end_date|date:'d/m/Y H:i' %}
-              In the case of an external reorientation, you must confirm your request before {{ date }}.
+              If you are applying for a change of course, you must confirm your application before {{ date }}.
             {% endblocktrans %}</p>
             {% field_data _("Certificate of regular enrolment") pool_questions.regular_registration_proof %}
           {% endif %}

@@ -26,9 +26,9 @@
 {% endcomment %}
 
 {% block specific_question_answers %}
-  {% panel _('Specificities') %}
+  {% panel _('Specific aspects') %}
     {% if display_equivalence %}
-      {% field_data _('Copy of the equivalence decision delivered by the French Community of Belgium making your 2nd cycle diploma (bac+5) equivalent to the academic grade of a corresponding master.') admission.equivalence_diplome %}
+      {% field_data _("Copy of equivalency decision issued by the French Community of Belgium making your bachelor's diploma (bac+5) equivalent to the academic rank of a corresponding master's degree.") admission.equivalence_diplome %}
     {% endif %}
     {% field_data _('Curriculum') admission.curriculum %}
     {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}

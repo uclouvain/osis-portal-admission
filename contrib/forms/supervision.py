@@ -57,15 +57,15 @@ class DoctorateAdmissionMemberSupervisionForm(forms.Form):
         required=False,
     )
     nom = forms.CharField(
-        label=_("Last name"),
+        label=_("Surname"),
         required=False,
     )
     email = forms.EmailField(
-        label=_("E-mail"),
+        label=_("Email"),
         required=False,
     )
     est_docteur = forms.BooleanField(
-        label=_("Holder of a doctorate with thesis"),
+        label=_("Holder of a PhD with thesis"),
         required=False,
         initial=True,
     )
@@ -132,7 +132,7 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
         required=False,
     )
     person = forms.CharField(
-        label=_("Search a person by name"),
+        label=_("Search a person by surname"),
         widget=autocomplete.ListSelect2(url="admission:autocomplete:person"),
         required=False,
     )
@@ -168,7 +168,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         required=True,
     )
     motif_refus = forms.CharField(
-        label=_('Rejection reason'),
+        label=_('Grounds for denied'),
         required=False,
         max_length=50,
     )
@@ -180,7 +180,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
                 'rows': 5,
             },
         ),
-        help_text=_("This comment will only be visible to the administrators."),
+        help_text=_("This comment will be visible only to administrators."),
     )
     commentaire_externe = forms.CharField(
         label=_('Comment for the candidate'),
@@ -190,7 +190,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
                 'rows': 5,
             },
         ),
-        help_text=_("This comment will be visible to all users who have access to this page."),
+        help_text=_("This comment will be visible to all users with access to this page."),
     )
     institut_these = forms.CharField(
         label=_("Research institute"),
