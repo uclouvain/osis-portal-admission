@@ -842,8 +842,11 @@ msgstr "Complet"
 msgid "Complete the proposition"
 msgstr "Compléter la proposition"
 
-msgid "Completed application"
-msgstr "Demande complétée"
+msgid "Completed (by student) for FAC"
+msgstr "Complétée (par étudiant) pour Fac"
+
+msgid "Completed (by student) for SIC"
+msgstr "Complétée (par étudiant) pour SIC"
 
 msgid "Completion"
 msgstr "Finalisation"
@@ -1511,6 +1514,9 @@ msgstr "FSR - Fonds Spéciaux de Recherche"
 
 msgid "Failure"
 msgstr "Échec"
+
+msgid "Feedback from FAC"
+msgstr "Retour de FAC"
 
 msgid "Female"
 msgstr "Féminin"
@@ -2612,9 +2618,6 @@ msgstr "E-mail privé"
 msgid "Processing by Fac/CDD"
 msgstr "Traitement en Fac/CDD"
 
-msgid "Processing by SIC"
-msgstr "Traitement en SIC"
-
 msgid "Professional"
 msgstr "Professionnel"
 
@@ -3413,8 +3416,8 @@ msgstr "Titre du mémoire"
 msgid "Title of the publication"
 msgstr "Intitulé de la publication"
 
-msgid "To be completed (by student) for FAC/CDD"
-msgstr "A compléter (par étudiant) pour Fac/CDD"
+msgid "To be completed (by student) for FAC"
+msgstr "A compléter (par étudiant) pour Fac"
 
 msgid "To be completed (by student) for SIC"
 msgstr "A compléter (par étudiant) pour SIC"
@@ -3513,9 +3516,6 @@ msgstr "UCLouvain"
 
 msgid "Undecided"
 msgstr "Non décidé"
-
-msgid "Under appeal"
-msgstr "En recours"
 
 msgid "Undertake and declaration"
 msgstr "Engagement et déclaration"

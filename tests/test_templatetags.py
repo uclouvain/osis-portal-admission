@@ -466,7 +466,7 @@ class DisplayStatusTestCase(TestCase):
         )
 
     def test_admission_status_for_a_general_training(self):
-        status = ChoixStatutPropositionGenerale.TRAITEMENT_SIC
+        status = ChoixStatutPropositionGenerale.RETOUR_DE_FAC
         self.assertEqual(
             admission_status(
                 status=status.name,
