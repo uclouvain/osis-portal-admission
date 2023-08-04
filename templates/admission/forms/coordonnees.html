@@ -33,9 +33,8 @@
     {% panel _("Legal domicile") %}
         <div class="row">
             <div class="col-md-4 required_field formatted-field">{% bootstrap_field residential.street %}</div>
-            <div class="col-md-2 required_field">{% bootstrap_field residential.street_number placeholder="" %}</div>
-            <div class="col-md-2">{% bootstrap_field residential.postal_box placeholder="" %}</div>
-            <div class="col-md-4 formatted-field">{% bootstrap_field residential.place placeholder="" %}</div>
+            <div class="col-md-4 required_field">{% bootstrap_field residential.street_number placeholder="" %}</div>
+            <div class="col-md-4">{% bootstrap_field residential.postal_box placeholder="" %}</div>
         </div>
         <div class="row">
             <div class="col-md-4 required_field">{% bootstrap_field residential.country %}</div>
@@ -55,9 +54,8 @@
     {% panel contact_address_label id="contact_address" %}
         <div class="row">
             <div class="col-md-4 required_field formatted-field">{% bootstrap_field contact.street %}</div>
-            <div class="col-md-2 required_field">{% bootstrap_field contact.street_number placeholder="" %}</div>
-            <div class="col-md-2">{% bootstrap_field contact.postal_box placeholder="" %}</div>
-            <div class="col-md-4 formatted-field">{% bootstrap_field contact.place placeholder="" %}</div>
+            <div class="col-md-4 required_field">{% bootstrap_field contact.street_number placeholder="" %}</div>
+            <div class="col-md-4">{% bootstrap_field contact.postal_box placeholder="" %}</div>
         </div>
         <div class="row">
             <div class="col-md-4 required_field">{% bootstrap_field contact.country %}</div>
@@ -74,15 +72,17 @@
 
     {% panel _("Contact") %}
         <div class="row">
-            <div class="col-md-6">{% bootstrap_field main_form.phone_mobile %}</div>
+            <div class="col-md-6">{% bootstrap_field main_form.phone_mobile placeholder="" %}</div>
             <div class="col-md-6">{% bootstrap_field main_form.private_email placeholder="" %}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">{% bootstrap_field main_form.emergency_contact_phone placeholder="" %}</div>
         </div>
     {% endpanel %}
 {% endblock %}
 
 {% block script %}
     {{ block.super }}
-    {{ main_form.media }}
     {{ residential.media }}
     <script type="application/javascript">
     $(function () {
@@ -138,6 +138,31 @@
         $('#id_contact-city, #id_contact-postal_code').dependsOn({
             '#id_contact-country': { not: [null] },
         }, { valueOnDisable: '', hide: false });
+
+        // Change the placeholder and the mask of phone inputs when selecting a new country
+        $('#id_phone_mobile, #id_emergency_contact_phone').on('countrychange', function(event) {
+            const currentInstance = window.intlTelInputGlobals.getInstance($(this)[0]);
+            const selectedCountryData = currentInstance.getSelectedCountryData();
+            const newPlaceholder = intlTelInputUtils.getExampleNumber(
+                selectedCountryData.iso2,
+                true,
+                intlTelInputUtils.numberFormat.NATIONAL,
+            );
+
+            $(this).attr('placeholder', '{% translate "eg:" %} ' + newPlaceholder);
+
+            // Apply the new mask for the input
+            $(this).mask(newPlaceholder.replace(/[1-9]/g, '0'));
+        });
+
+        // Initialize the mask
+        $('#id_phone_mobile, #id_emergency_contact_phone').each(function(){
+            const element = $(this);
+            const currentInstance = window.intlTelInputGlobals.getInstance($(this)[0]);
+            currentInstance.promise.then(function () {
+               element.trigger('countrychange');
+            });
+        });
 
         document.dispatchEvent(new Event('refreshFormInitial'));
     });

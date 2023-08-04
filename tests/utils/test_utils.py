@@ -129,7 +129,10 @@ class UtilsTestCase(TestCase):
             campus_inscription='Mons',
             code='INFO-1',
         )
-        self.assertEqual(format_training(formation), 'Certificat en informatique (Mons) - INFO-1')
+        self.assertEqual(
+            format_training(formation),
+            'Certificat en informatique (Mons) <span class="training-acronym">INFO-1</span>',
+        )
 
     def test_format_training_for_general_education(self):
         formation = FormationGeneraleDTO(
@@ -143,7 +146,10 @@ class UtilsTestCase(TestCase):
             campus_inscription='Mons',
             code='INFO-1',
         )
-        self.assertEqual(format_training(formation), 'Master en informatique (Mons) - INFO-1')
+        self.assertEqual(
+            format_training(formation),
+            'Master en informatique (Mons) <span class="training-acronym">INFO-1</span>',
+        )
 
     def test_format_training_with_year_for_doctorate(self):
         formation = DoctoratDTO(
@@ -156,7 +162,10 @@ class UtilsTestCase(TestCase):
             campus_inscription='Mons',
             code='FOOBAR',
         )
-        self.assertEqual(format_training_with_year(formation), '2021 - Foobar (Mons) - FOOBAR')
+        self.assertEqual(
+            format_training(formation),
+            'Foobar (Mons) <span class="training-acronym">FOOBAR</span>',
+        )
 
     def test_format_scholarship_with_long_name_and_short_name(self):
         scholarship = Scholarship(

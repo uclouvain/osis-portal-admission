@@ -23,13 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List, Mapping, Optional, Union
+import datetime
 from functools import partial
+from typing import List, Mapping, Optional, Union
 
+import phonenumbers
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.utils.translation import get_language, gettext_lazy as _, gettext
 
+from admission.contrib.enums.diploma import StudyType
 from admission.services.campus import AdmissionCampusService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import (
@@ -38,7 +42,7 @@ from admission.services.reference import (
     AcademicYearService,
     DiplomaService,
     HighSchoolService,
-    SuperiorNonUniversityService,
+    SuperiorInstituteService,
 )
 from admission.services.scholarship import AdmissionScholarshipService
 from admission.utils import format_entity_title, format_high_school_title, format_scholarship
@@ -67,6 +71,19 @@ def get_country_initial_choices(iso_code=None, person=None, loaded_country=None)
     )
 
 
+def get_year_choices(min_year=1920, max_year=None):
+    """Return the choices of a year choice field. If no max year is specified, the current year is used."""
+    if max_year is None:
+        max_year = datetime.datetime.now().year
+    return [EMPTY_CHOICE[0]] + [
+        (
+            year,
+            year,
+        )
+        for year in range(max_year, min_year - 1, -1)
+    ]
+
+
 def get_language_initial_choices(code, person):
     """Return the unique initial choice for a language when data is either set from initial or from webservice."""
     if not code:
@@ -93,12 +110,17 @@ def get_diploma_initial_choices(uuid, person):
     return EMPTY_CHOICE + ((diploma.uuid, diploma.title),)
 
 
-def get_superior_non_university_initial_choices(uuid, person):
+def get_superior_institute_initial_choices(institute_id, person):
     """Return the superior non university choices when data is either set from initial or webservice."""
-    if not uuid:
+    if not institute_id:
         return EMPTY_CHOICE
-    superior_non_university = SuperiorNonUniversityService.get_superior_non_university(person=person, uuid=uuid)
-    return EMPTY_CHOICE + ((superior_non_university.uuid, superior_non_university.name),)
+
+    institute = SuperiorInstituteService.get_superior_institute(
+        person=person,
+        uuid=institute_id,
+    )
+
+    return EMPTY_CHOICE + ((institute.uuid, institute.name),)
 
 
 def get_thesis_location_initial_choices(value):
@@ -284,12 +306,58 @@ class BooleanRadioSelect(forms.RadioSelect):
         return context
 
 
+class PhoneWidget(forms.TextInput):
+    input_type = 'tel'
+    INTL_TEL_VERSION = '18.1.1'
+
+    def __init__(self, *args, **kwargs):
+        attrs = kwargs.setdefault('attrs', {})
+        attrs['class'] = 'phone-input'
+        attrs['data-language'] = get_language()
+        attrs['data-intl-tel-input-version'] = self.INTL_TEL_VERSION
+        super().__init__(*args, **kwargs)
+
+    @property
+    def media(self):
+        return forms.Media(
+            css={
+                'all': (
+                    f'https://cdn.jsdelivr.net/npm/intl-tel-input@{self.INTL_TEL_VERSION}/build/css/intlTelInput.css',
+                ),
+            },
+            js=[
+                f'https://cdn.jsdelivr.net/npm/intl-tel-input@{self.INTL_TEL_VERSION}/build/js/intlTelInput.min.js',
+                'admission/initialize_phone_inputs.js',
+            ],
+        )
+
+
+class PhoneField(forms.CharField):
+    widget = PhoneWidget
+
+    def clean(self, value):
+        if not value:
+            return ''
+        try:
+            phone_number_obj = phonenumbers.parse(value)
+            if phonenumbers.is_valid_number(phone_number_obj):
+                return value
+        except phonenumbers.NumberParseException:
+            pass
+        raise ValidationError(_('Invalid phone number'))
+
+
 class NoInput(forms.Widget):
     input_type = "hidden"
     template_name = ""
 
     def render(self, name, value, attrs=None, renderer=None):
         return ""
+
+
+DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS = {
+    'data-minimum-input-length': 3,
+}
 
 
 # Add django-localflavours translations

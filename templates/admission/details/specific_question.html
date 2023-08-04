@@ -26,8 +26,8 @@
 {% endcomment %}
 
 {% block tab_content %}
-  {% if view.is_continuing %}
-    {% panel _('Specific aspects') %}
+  {% panel _('Specific aspects') %}
+    {% if view.is_continuing %}
       {% if admission.pays_nationalite_ue_candidat == False %}
         <p class="alert alert-info text-justify">
           {% blocktranslate trimmed %}
@@ -51,10 +51,8 @@
             <div class="row">
               {% field_data _("Street") admission.adresse_facturation.rue css_class="col-md-4" %}
               {% trans "Number" context "address" as address_number_label %}
-              {% field_data address_number_label admission.adresse_facturation.numero_rue css_class="col-md-2" %}
-              {% field_data _("Box") admission.adresse_facturation.boite_postale css_class="col-md-2" hide_empty=True %}
-              {% trans "Place" context "address" as address_place_label %}
-              {% field_data address_place_label admission.adresse_facturation.lieu_dit css_class="col-md-4" hide_empty=True %}
+              {% field_data address_number_label admission.adresse_facturation.numero_rue css_class="col-md-4" %}
+              {% field_data _("Box") admission.adresse_facturation.boite_postale css_class="col-md-4" hide_empty=True %}
             </div>
             <div class="row">
               {% get_country_name admission.adresse_facturation.pays as pays %}
@@ -67,11 +65,10 @@
           {% field_data _('Billing address') admission.type_adresse_facturation|enum_display:'ChoixTypeAdresseFacturation' %}
         {% endif %}
       {% endif %}
-      {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
-    {% endpanel %}
-  {% else %}
-    {% multiple_field_data specific_questions admission.reponses_questions_specifiques title=_('Specific aspects') %}
-  {% endif %}
+    {% endif %}
+    {% multiple_field_data specific_questions admission.reponses_questions_specifiques title='' %}
+    {% field_data _("You can add any document you feel is relevant to your application (supporting documents, proof of language level, etc.)") admission.documents_additionnels %}
+  {% endpanel %}
 
   {% if "is_non_resident" in pool_questions %}
     {% panel _("Enrolment in limited enrolment bachelor's course") %}

@@ -46,6 +46,7 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     EMPTY_CHOICE,
     AdmissionFileUploadField as FileUploadField,
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService, AcademicYearService
@@ -199,7 +200,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:high-school",
             attrs={
-                'data-minimum-input-length': 3,
+                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
                 'data-html': True,
             },
             forward=['community'],
@@ -216,11 +217,6 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
     other_institute_address = forms.CharField(
         label=_("Other institute address"),
         required=False,
-    )
-    result = forms.ChoiceField(
-        label=_("What result did you achieve?"),
-        choices=DiplomaResults.choices(),
-        widget=forms.RadioSelect,
     )
 
     def __init__(self, person, is_valuated, *args, **kwargs):
@@ -259,95 +255,6 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         return cleaned_data
 
 
-class HourField(forms.IntegerField):
-    def __init__(self, *, max_value=None, min_value=0, **kwargs):
-        kwargs.setdefault('required', False)
-        super().__init__(max_value=max_value, min_value=min_value, **kwargs)
-
-    def widget_attrs(self, widget):
-        attrs = super().widget_attrs(widget)
-        attrs['placeholder'] = ''
-        return attrs
-
-
-class BachelorAdmissionEducationScheduleForm(forms.Form):
-    # ancient language
-    latin = HourField(label=_("Latin"))
-    greek = HourField(label=_("Greek"))
-    # sciences
-    chemistry = HourField(label=_("Chemistry"))
-    physic = HourField(label=_("Physic"))
-    biology = HourField(label=_("Biology"))
-    # modern languages
-    german = HourField(label=_("German"))
-    dutch = HourField(label=_("Dutch"))
-    english = HourField(label=_("English"))
-    french = HourField(label=_("French"))
-    spanish = HourField(label=_("Spanish"))
-    modern_languages_other_label = forms.CharField(
-        label=_("Other"),
-        help_text=_("If other language, specify"),
-        required=False,
-        max_length=25,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-    )
-    modern_languages_other_hours = HourField(
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
-    )
-    # other disciplines
-    mathematics = HourField(label=_("Mathematics"))
-    it = HourField(label=_("IT"))
-    social_sciences = HourField(label=_("Social sciences"))
-    economic_sciences = HourField(label=_("Economics"))
-    other_label = forms.CharField(
-        label=_("Other"),
-        help_text=_("If other optional subjects, specify"),
-        required=False,
-        max_length=25,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-    )
-    other_hours = HourField(
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
-    )
-
-    def __init__(self, is_valuated, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        disable_fields_if_valuated(is_valuated, self.fields)
-
-    def get_initial_for_field(self, field, field_name):
-        # Set all hours fields to None if initial is 0, so that nothing is displayed in field
-        if isinstance(field, HourField) and not self.initial.get(field_name):
-            return None
-        return super().get_initial_for_field(field, field_name)
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        # At least a field is required
-        if not any(cleaned_data.get(f) for f in self.fields):
-            self.add_error(None, _("At least one schedule field must be completed."))
-
-        dependent_fields = [
-            ("modern_languages_other_label", "modern_languages_other_hours"),
-            ("other_label", "other_hours"),
-        ]
-
-        for label_field, hours_field in dependent_fields:
-            label = cleaned_data.get(label_field)
-            hours = cleaned_data.get(hours_field)
-            if label and not hours:
-                self.add_error(hours_field, _("hours are required"))
-            if not label and hours:
-                self.add_error(label_field, _("label is required"))
-
-        # Set all hours fields to 0 if they have no value, because API rejects None
-        for field in self.fields:
-            if isinstance(self.fields[field], HourField) and not cleaned_data.get(field):
-                cleaned_data[field] = 0
-
-        return cleaned_data
-
-
 class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     foreign_diploma_type = forms.ChoiceField(
         label=_("What diploma have you obtained (or will obtain)?"),
@@ -366,7 +273,10 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     )
     linguistic_regime = forms.CharField(
         label=_("Language regime"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:language"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:language",
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
         required=False,
     )
     other_linguistic_regime = forms.CharField(
@@ -378,6 +288,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
             forward=[forward.Const(True, 'exclude_be')],
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     result = forms.ChoiceField(

@@ -31,7 +31,11 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.languages_knowledge import LanguageKnowledgeGrade
-from admission.contrib.forms import get_language_initial_choices, AdmissionFileUploadField as FileUploadField
+from admission.contrib.forms import (
+    get_language_initial_choices,
+    AdmissionFileUploadField as FileUploadField,
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+)
 
 MANDATORY_LANGUAGES = ["EN", "FR"]
 
@@ -75,7 +79,10 @@ class SliderWidget(forms.widgets.TextInput):
 class DoctorateAdmissionLanguageForm(forms.Form):
     language = forms.CharField(
         label=_("Language"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:language"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:language",
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
     )
     listening_comprehension = forms.ChoiceField(
         label=_("Please rate your listening comprehension"),

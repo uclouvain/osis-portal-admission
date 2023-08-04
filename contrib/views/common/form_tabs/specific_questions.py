@@ -31,9 +31,8 @@ from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
-from admission.contrib.forms.additional_information import ContinuingSpecificQuestionForm
+from admission.contrib.forms.additional_information import ContinuingSpecificQuestionForm, GeneralSpecificQuestionForm
 from admission.contrib.forms.pool_questions import PoolQuestionsForm
-from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
@@ -92,10 +91,13 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                 prefix='specific_questions',
             )
             if self.is_continuing
-            else ConfigurableFormMixin(
+            else GeneralSpecificQuestionForm(
                 self.request.POST or None,
                 form_item_configurations=form_kwargs['form_item_configurations'],
-                initial={'specific_question_answers': self.admission.reponses_questions_specifiques},
+                initial={
+                    'documents_additionnels': self.admission.documents_additionnels,
+                    'reponses_questions_specifiques': self.admission.reponses_questions_specifiques,
+                },
                 prefix='specific_questions',
             )
         ]
@@ -118,7 +120,6 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                     'adresse_facturation_destinataire': adresse_facturation.get('destinataire'),
                     'street': adresse_facturation.get('rue'),
                     'street_number': adresse_facturation.get('numero_rue'),
-                    'place': adresse_facturation.get('lieu_dit'),
                     'postal_box': adresse_facturation.get('boite_postale'),
                     'postal_code': adresse_facturation.get('code_postal'),
                     'city': adresse_facturation.get('ville'),
@@ -135,6 +136,7 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                 'copie_titre_sejour': value.get('copie_titre_sejour')
                 if self.admission.pays_nationalite_ue_candidat is False
                 else [],
+                'documents_additionnels': value.get('documents_additionnels'),
             }
 
             if value.get('inscription_a_titre') == ChoixInscriptionATitre.PROFESSIONNEL.name:
@@ -156,7 +158,6 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
                     continuing_value['adresse_facturation_pays'] = value.get('country')
                     continuing_value['adresse_facturation_destinataire'] = value.get('adresse_facturation_destinataire')
                     continuing_value['adresse_facturation_boite_postale'] = value.get('postal_box')
-                    continuing_value['adresse_facturation_lieu_dit'] = value.get('place')
             return continuing_value
 
         return value

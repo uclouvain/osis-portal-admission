@@ -118,7 +118,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         self.assertTrue('has_erasmus_mundus_scholarship' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['has_erasmus_mundus_scholarship'])
 
-    def test_form_submitting_missing_scholarshipfields_with_master(self):
+    def test_form_submitting_missing_scholarship_fields_with_master(self):
         response = self.client.post(
             self.url,
             data={
@@ -308,11 +308,9 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         )
 
         # Initial values
-        self.assertEqual(form.initial['erasmus_mundus_scholarship'], self.first_erasmus_mundus_scholarship.uuid)
         self.assertEqual(form.initial['doctorate_training'], 'TR3-2020')
         self.assertEqual(form.fields['campus'].initial, EMPTY_VALUE)
         self.assertEqual(form.fields['training_type'].initial, TypeFormationChoisissable.DOCTORAT.name)
-        self.assertTrue(form.fields['has_erasmus_mundus_scholarship'].initial)
         self.assertEqual(form.initial['proximity_commission'], 'MANAGEMENT')
         self.assertEqual(form.fields['proximity_commission_cde'].initial, 'MANAGEMENT')
 
@@ -346,25 +344,9 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         response = self.client.post(self.url, {'training_type': TypeFormationChoisissable.DOCTORAT.name})
         form = response.context['form']
         self.assertFalse(form.is_valid())
-        self.assertTrue('has_erasmus_mundus_scholarship' in form.errors)
-        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['has_erasmus_mundus_scholarship'])
 
         self.assertTrue('admission_type' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['admission_type'])
-
-    def test_form_submitting_missing_scholarship_fields(self):
-        data = {
-            'training_type': TypeFormationChoisissable.DOCTORAT.name,
-            'has_erasmus_mundus_scholarship': True,
-        }
-        response = self.client.post(self.url, data=data)
-
-        form = response.context['form']
-
-        self.assertFalse(form.is_valid())
-
-        self.assertTrue('erasmus_mundus_scholarship' in form.errors)
-        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['erasmus_mundus_scholarship'])
 
     def test_form_submitting_missing_pre_admission_comment_field(self):
         data = {
@@ -389,10 +371,8 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
                 'sector': 'SSH',
                 'doctorate_training': 'TR3-2020',
                 'proximity_commission_cde': 'ECONOMY',
-                'has_erasmus_mundus_scholarship': True,
                 'admission_type': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
-                'erasmus_mundus_scholarship': self.first_erasmus_mundus_scholarship.uuid,
                 'specific_question_answers_1': 'Answer',
             },
         )
@@ -404,7 +384,6 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
                 'sigle_formation': 'TR3',
                 'annee_formation': 2020,
                 'commission_proximite': 'ECONOMY',
-                'bourse_erasmus_mundus': self.first_erasmus_mundus_scholarship.uuid,
                 'type_admission': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
                 'reponses_questions_specifiques': {

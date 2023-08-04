@@ -17,9 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid " (h/w)"
-msgstr " (h/s)"
-
 msgid "\"Artistique de qualification\""
 msgstr "Artistique de qualification"
 
@@ -170,6 +167,38 @@ msgstr ""
 "moment en vous connectant à cette application</li></ul><p>Nous vous "
 "remercions d'avoir choisi l'UCLouvain et vous souhaitons plein succès dans "
 "la formation que vous comptez entreprendre !</p>"
+
+msgid ""
+"<strong>Academic course</strong>: any course of higher education leading to "
+"a 1st, 2nd or 3rd cycle degree (e.g. bachelor's degree, master's degree, "
+"specialised master's degree, doctorate)."
+msgstr ""
+"<strong>Formation académique</strong> : toute formation suivie dans "
+"l'enseignement supérieur au terme de laquelle est délivré un diplôme de 1er, "
+"2ème ou 3ème cycle (ex: bachelier, master, master de spécialisation, "
+"doctorat)."
+
+msgid ""
+"<strong>Adding an academic course</strong>: To add an academic course to the "
+"curriculum, enter the start and end year of the course (e.g. start "
+"2018-2019, end 2021-2022)."
+msgstr ""
+"<strong>Ajout d'une formation académique</strong> : Pour ajouter une "
+"formation académique au curriculum, introduisez l'année de commencement et "
+"de fin de cette formation (ex : début 2018-2019, fin : 2021-2022)."
+
+msgid ""
+"<strong>Non-academic activity</strong>: any professional or private activity "
+"that you have previously carried out. Example: work, unemployment, voluntary "
+"work, work placement, job search, sabbatical year, etc. You can also "
+"indicate your non-academic training (language course, individual course, "
+"certificate, short course, etc.)."
+msgstr ""
+"<strong>Activité non académique</strong> : toute activité professionnelle ou "
+"privée que vous avez réalisée précédemment . Exemple: travail, chômage, "
+"volontariat, stage, recherche d'emploi, année sabbatique, ... Vous pouvez "
+"également indiquer vos formations non académiques (cours de langue, cours "
+"isolé, certificat, formation courte, ...)"
 
 msgid ""
 "A legal guardian has the prerogatives of parental authority over the child "
@@ -398,9 +427,6 @@ msgstr ""
 "Un utilisateur peut soit payer suite la soumission de sa demande, soit suite "
 "à une demande d'un gestionnaire."
 
-msgid "Ancient languages"
-msgstr "Langues anciennes"
-
 msgid "Another address"
 msgstr "Une autre adresse"
 
@@ -429,10 +455,12 @@ msgid ""
 "Articles 16 and 17)."
 msgstr ""
 "Toute fausse déclaration ou omission volontaire dans la constitution des "
-"dossiers d'admission est constitutive de fraude à l'inscription. Celui qui "
-"est suspecté de fraude est invité à s'expliquer et à faire valoir ses moyens "
-"(Article 16 et 17 - Section 2 du Chapitre 1 du Titre III du Règlement "
-"général des études et des examens de l'UCLouvain)."
+"dossiers d'admission est constitutive de fraude à l'inscription et "
+"entrainera l’exclusion des études supérieures en Communauté française de "
+"Belgique en application de l’article 95/2 du décret du 07 novembre 2013. "
+"Celui qui est suspecté de fraude est invité à s'expliquer et à faire valoir "
+"ses moyens (Article 16 et 17 - Section 3 du Chapitre 1 du Titre III du "
+"Règlement général des études et des examens de l'UCLouvain)."
 
 msgid "Application accepted"
 msgstr "Inscription autorisée"
@@ -538,9 +566,6 @@ msgstr[1] ""
 msgid "At least one academic year is required."
 msgstr "Au-moins une année académique est requise."
 
-msgid "At least one schedule field must be completed."
-msgstr "Au moins un champ de la grille horaire doit être complété."
-
 msgid "Attachments"
 msgstr "Pièces jointes"
 
@@ -613,9 +638,6 @@ msgstr "Entre 65 et 75%"
 
 msgid "Billing address"
 msgstr "Adresse de facturation"
-
-msgid "Biology"
-msgstr "Biologie"
 
 msgid "Box"
 msgstr "Boîte"
@@ -772,9 +794,6 @@ msgstr "Modifier la publication de cette conférence"
 
 msgid "Check my previous experience"
 msgstr "Vérifier mon parcours antérieur"
-
-msgid "Chemistry"
-msgstr "Chimie"
 
 msgid "China Scholarship Council (CSC)"
 msgstr "China Scholarship Council (CSC)"
@@ -951,6 +970,9 @@ msgstr ""
 "Copie de la décision de l’Office des étrangers attestant de l’octroi de la "
 "protection temporaire"
 
+msgid "Copy of both sides of A Card"
+msgstr "Copie recto-verso de la Carte A"
+
 msgid "Copy of both sides of A or B Card"
 msgstr "Copie recto-verso de la Carte A ou B"
 
@@ -1063,6 +1085,13 @@ msgid ""
 msgstr ""
 "Copie de l’attestation de boursier délivrée par l'administration générale de "
 "la Coopération au Développement"
+
+msgid ""
+"Copy of official document from the local authority or Foreign Nationals "
+"Office proving stateless status"
+msgstr ""
+"Copie du document officiel de la commune ou de l’Office des étrangers "
+"prouvant le statut d’apatride"
 
 msgid ""
 "Copy of residence permit covering entire course, including assessment test "
@@ -1284,9 +1313,6 @@ msgstr ""
 msgid "Dual or triple degree"
 msgstr "Double ou triple diplomation"
 
-msgid "Dutch"
-msgstr "Néerlandais"
-
 msgid "ECONOMY"
 msgstr "Economie"
 
@@ -1305,9 +1331,6 @@ msgstr "ECTS pour la participation"
 
 msgid "ECTS for the participation"
 msgstr "ECTS pour la participation"
-
-msgid "Economics"
-msgstr "Sciences économiques"
 
 msgid "Edit"
 msgstr "Modifier"
@@ -1328,6 +1351,9 @@ msgstr "Conditions d'accès"
 
 msgid "Email"
 msgstr "E-mail"
+
+msgid "Emergency contact (telephone number)"
+msgstr "Contact en cas d'urgence (numéro de téléphone)"
 
 msgid "Employer"
 msgstr "Employeur"
@@ -1362,9 +1388,6 @@ msgstr ""
 "partenariat international d'établissements d'enseignement supérieurs. Des "
 "bourses sont octroyées aux étudiants et une attestation de financement est "
 "dès lors à fournir."
-
-msgid "Erasmus Mundus scholarship"
-msgstr "Bourse Erasmus Mundus"
 
 msgid "Estimated time to complete the PhD (in months)"
 msgstr "Durée prévue pour la réalisation du doctorat (en mois)"
@@ -1450,6 +1473,13 @@ msgctxt "female gender"
 msgid "Female"
 msgstr "Féminin"
 
+msgid ""
+"Fill in all your academic courses, even those you have failed or abandoned "
+"(with the exception of those taken at UCLouvain)."
+msgstr ""
+"Renseignez toutes vos formations académiques, même celles que vous avez "
+"échouées ou abandonnées (à l'exception de celles suivies à l'UCLouvain)."
+
 msgid "Finalise application"
 msgstr "Finalisation"
 
@@ -1534,9 +1564,6 @@ msgstr "Genre"
 msgid "General education"
 msgstr "Formation générale"
 
-msgid "German"
-msgstr "Allemand"
-
 msgid "German-speaking Community"
 msgstr "Communauté germanophone"
 
@@ -1549,9 +1576,6 @@ msgstr "Donner son avis sur \"%(object)s\""
 
 msgid "Grade"
 msgstr "Mention obtenue"
-
-msgid "Greek"
-msgstr "Grec"
 
 msgid "Grounds for denied"
 msgstr "Motif de refus"
@@ -1611,11 +1635,14 @@ msgid "I am a refugee"
 msgstr "Je suis réfugié·e"
 
 msgid ""
-"I am a refugee or stateless person or have subsidiary/temporary protection "
-"(Belgian student status category 2)"
+"I am a refugee, an asylum seeker, or a stateless person or have subsidiary/"
+"temporary protection (Belgian student status category 2)"
 msgstr ""
-"Je suis réfugié·e, apatride, ou je bénéficie d’une protection subsidiaire/"
-"temporaire (assimilation 2)"
+"Je suis réfugié·e, demandeur d'asile, apatride, ou je bénéficie d’une "
+"protection subsidiaire/temporaire (assimilation 2)"
+
+msgid "I am a stateless person"
+msgstr "Je suis apatride"
 
 msgid "I am an asylum seeker"
 msgstr "Je suis demandeur d’asile"
@@ -1721,9 +1748,6 @@ msgstr "Numéro de compte IBAN"
 msgid "INVITED"
 msgstr "Invité"
 
-msgid "IT"
-msgstr "Informatique"
-
 msgid "Identification"
 msgstr "Identification"
 
@@ -1732,6 +1756,9 @@ msgstr "Photo d'identité"
 
 msgid "Identity card (both sides)"
 msgstr "Carte d'identité (recto/verso)"
+
+msgid "Identity card expiry date"
+msgstr "Date de fin de validité de la carte d'identité"
 
 msgid "Identity card number"
 msgstr "Numéro de carte d'identité"
@@ -1779,12 +1806,6 @@ msgstr "Si autre type d'enseignement, précisez"
 
 msgid "If other language regime, specify"
 msgstr "Si autre régime linguistique, précisez"
-
-msgid "If other language, specify"
-msgstr "Si autre langue, précisez"
-
-msgid "If other optional subjects, specify"
-msgstr "Si autres matières optionnelles, précisez"
 
 msgid "If other scholarship, specify"
 msgstr "Si autre bourse, spécifier"
@@ -1942,6 +1963,9 @@ msgstr "Bourse internationale"
 msgid "Internship"
 msgstr "Stage"
 
+msgid "Invalid phone number"
+msgstr "Numéro de téléphone invalide"
+
 msgid "Is it a Wallonia-Brussels Federation institution?"
 msgstr "S'agit-il d'une institution de la Fédération Wallonie-Bruxelles ?"
 
@@ -2005,9 +2029,6 @@ msgstr "Dernière année d'inscription"
 #, python-format
 msgid "Late enrolment! Enrol before %(date)s"
 msgstr "Inscription tardive ! Inscrivez-vous avant le %(date)s"
-
-msgid "Latin"
-msgstr "Latin"
 
 msgid "Lead supervisor"
 msgstr "Promoteur de référence"
@@ -2081,9 +2102,6 @@ msgstr "Master"
 msgid "Master and Specialised master"
 msgstr "Master et Master de spécialisation"
 
-msgid "Mathematics"
-msgstr "Mathématiques"
-
 msgid "Maximum number of documents"
 msgstr "Nombre maximum de documents"
 
@@ -2112,9 +2130,6 @@ msgid ""
 msgstr ""
 "Formule 2 (La défense et la soutenance sont organisées le même jour, et "
 "soumises à une condition de recevabilité)"
-
-msgid "Modern languages"
-msgstr "Langues modernes"
 
 msgid "Modification of a non-academic activity"
 msgstr "Modification d'une activité non-académique"
@@ -2250,6 +2265,9 @@ msgstr "Formation non-organisée"
 msgid "Non-profit"
 msgstr "Associatif"
 
+msgid "Non-university institution"
+msgstr "Etablissement non-universitaire"
+
 msgid "None of these are relevant to me"
 msgstr "Aucune de ces propositions ne me correspond"
 
@@ -2322,9 +2340,6 @@ msgstr "Nom autre établissement"
 msgid "Other program"
 msgstr "Autre formation"
 
-msgid "Others"
-msgstr "Autres"
-
 msgid "PAPER"
 msgstr "Épreuve"
 
@@ -2379,6 +2394,9 @@ msgstr "Réussite avec crédits résiduels"
 msgid "Passport"
 msgstr "Passeport"
 
+msgid "Passport expiry date"
+msgstr "Date de fin de validité du passeport"
+
 msgid "Passport number"
 msgstr "Numéro de passeport"
 
@@ -2429,16 +2447,6 @@ msgstr "Projet de recherche doctoral"
 msgid "PhD training"
 msgstr "Formation doctorale"
 
-msgid "Physic"
-msgstr "Physique"
-
-msgctxt "address"
-msgid "Place"
-msgstr "Lieu-dit"
-
-msgid "Place (optional)"
-msgstr "Lieu-dit (optionnel)"
-
 msgid "Place of birth"
 msgstr "Lieu de naissance"
 
@@ -2467,15 +2475,6 @@ msgid ""
 msgstr ""
 "Veuillez compléter le formulaire « demande d'ouverture de "
 "cotutelle » (disponible ici) et le téléverser ici."
-
-msgid ""
-"Please complete the schedule information of your last year of high school. "
-"We invite you to indicate the number of hours of education your followed per "
-"domain and per week."
-msgstr ""
-"Veuillez encoder les informations relatives à votre gille horaire de votre "
-"dernière année d'études. Nous vous invitons à encoder le nombre d'heures par "
-"matière suivie et par semaine."
 
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
@@ -2569,9 +2568,6 @@ msgstr "Poster"
 
 msgid "Pre-admission"
 msgstr "Pré-admission"
-
-msgid "Preferred first name"
-msgstr "Prénom d'usage"
 
 msgid "Presentation date"
 msgstr "Date de l'exposé"
@@ -2861,9 +2857,6 @@ msgstr "Date de fin de la bourse avant tout renouvellement éventuel."
 msgid "Scholarship start date"
 msgstr "Date de démarrage de la bourse"
 
-msgid "Sciences"
-msgstr "Sciences"
-
 msgid "Scientific communication"
 msgstr "Communication scientifique"
 
@@ -2963,12 +2956,6 @@ msgstr "Demandes de signature envoyées"
 msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
-
-msgid "Social sciences"
-msgstr "Sciences sociales"
-
-msgid "Spanish"
-msgstr "Espagnol"
 
 msgid "Speaker"
 msgstr "Orateur ou oratrice"
@@ -3342,9 +3329,6 @@ msgstr "Cocher le lien de parenté"
 msgid "Time allocated for thesis (in %)"
 msgstr "Temps consacré à la thèse (en %)"
 
-msgid "Timetable"
-msgstr "Grille horaire"
-
 msgid "Title"
 msgstr "Titre"
 
@@ -3470,6 +3454,9 @@ msgstr ""
 
 msgid "Unique business number"
 msgstr "Numéro unique d'entreprise"
+
+msgid "University"
+msgstr "Université"
 
 msgid "Unknown date of birth"
 msgstr "Date de naissance exacte inconnue"
@@ -3707,6 +3694,13 @@ msgid "You are registering as"
 msgstr "Vous inscrivez-vous à titre"
 
 msgid ""
+"You can add any document you feel is relevant to your application "
+"(supporting documents, proof of language level, etc.)"
+msgstr ""
+"Vous avez la possibilité d'ajouter tout document que vous jugez pertinent "
+"pour votre dossier (justificatifs, preuve de niveau de langue, ...)"
+
+msgid ""
 "You can either pay them now, by using our payment system, or pay them with a "
 "delay by bank transfer. Please note that your application will not be "
 "considered until we have received the proof of payment."
@@ -3871,21 +3865,15 @@ msgstr "ex: 5ème sur 30"
 msgid "e.g.: Librarian"
 msgstr "ex: Bibliothécaire"
 
+msgid "eg:"
+msgstr "ex: "
+
 msgid "foreign"
 msgstr "étranger"
 
 #, python-format
 msgid "from %(start)s to %(end)s"
 msgstr "du %(start)s au %(end)s"
-
-msgid "h/w"
-msgstr "h/s"
-
-msgid "hours are required"
-msgstr "les heures sont requises"
-
-msgid "label is required"
-msgstr "un label est requis"
 
 msgid "the person concerned"
 msgstr "la personne concernée"
@@ -3908,6 +3896,3 @@ msgstr "votre mère"
 
 msgid "your partner"
 msgstr "votre conjoint"
-
-msgid "yyyy"
-msgstr "aaaa"

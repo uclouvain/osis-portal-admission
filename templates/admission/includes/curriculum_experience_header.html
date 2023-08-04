@@ -33,7 +33,10 @@
 {% endif %}
 <div id="curriculum-header" class="panel-heading flex-container scroll-with-margin">
   <span>{{ title }}</span>
-  <a href="{{ experience_list }}#{% if educational_tab %}academic-activities{% else %}non-academic-activities{% endif %}">
+  <a
+    class="prevent-quitting-link"
+    href="{{ experience_list }}#{% if educational_tab %}academic-activities{% else %}non-academic-activities{% endif %}"
+  >
     <i class="fa fa-stream"></i>
     {% translate "Back to overview" %}
   </a>

@@ -735,6 +735,8 @@ class GeneralAccountingViewTestCase(TestCase):
             'code_bic_swift_banque': 'GKCCBEBB',
             'prenom_titulaire_compte': 'John',
             'nom_titulaire_compte': 'Doe',
+            'preuve_statut_apatride': [],
+            'carte_a': [],
         }
 
         self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
@@ -952,10 +954,10 @@ class GeneralAccountingViewTestCase(TestCase):
             'type_situation_assimilation': (
                 TypeSituationAssimilation.AUTORISATION_ETABLISSEMENT_OU_RESIDENT_LONGUE_DUREE.name
             ),
-            'carte_resident_longue_duree': ['carte_resident_longue_duree.pdf'],
-            'carte_cire_sejour_illimite_etranger': ['carte_cire_sejour_illimite_etranger.pdf'],
-            'carte_sejour_membre_ue': ['carte_sejour_membre_ue.pdf'],
-            'carte_sejour_permanent_membre_ue': ['carte_sejour_permanent_membre_ue.pdf'],
+            'carte_resident_longue_duree_0': ['carte_resident_longue_duree.pdf'],
+            'carte_cire_sejour_illimite_etranger_0': ['carte_cire_sejour_illimite_etranger.pdf'],
+            'carte_sejour_membre_ue_0': ['carte_sejour_membre_ue.pdf'],
+            'carte_sejour_permanent_membre_ue_0': ['carte_sejour_permanent_membre_ue.pdf'],
         }
 
         response = self.client.post(
@@ -963,7 +965,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_1': ChoixAssimilation1.TITULAIRE_CARTE_RESIDENT_LONGUE_DUREE.name,
-                'carte_resident_longue_duree': [],
+                'carte_resident_longue_duree_0': [],
             },
         )
 
@@ -980,7 +982,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_1': ChoixAssimilation1.TITULAIRE_CARTE_ETRANGER.name,
-                'carte_cire_sejour_illimite_etranger': [],
+                'carte_cire_sejour_illimite_etranger_0': [],
             },
         )
 
@@ -997,7 +999,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_1': ChoixAssimilation1.TITULAIRE_CARTE_SEJOUR_MEMBRE_UE.name,
-                'carte_sejour_membre_ue': [],
+                'carte_sejour_membre_ue_0': [],
             },
         )
 
@@ -1016,7 +1018,7 @@ class GeneralAccountingViewTestCase(TestCase):
                 'sous_type_situation_assimilation_1': (
                     ChoixAssimilation1.TITULAIRE_CARTE_SEJOUR_PERMANENT_MEMBRE_UE.name
                 ),
-                'carte_sejour_permanent_membre_ue': [],
+                'carte_sejour_permanent_membre_ue_0': [],
             },
         )
 
@@ -1033,12 +1035,14 @@ class GeneralAccountingViewTestCase(TestCase):
             'type_situation_assimilation': (
                 TypeSituationAssimilation.REFUGIE_OU_APATRIDE_OU_PROTECTION_SUBSIDIAIRE_TEMPORAIRE.name
             ),
-            'carte_a_b_refugie': ['carte_a_b_refugie.pdf'],
-            'annexe_25_26_refugies_apatrides': ['annexe_25_26_refugies_apatrides.pdf'],
-            'attestation_immatriculation': ['attestation_immatriculation.pdf'],
-            'carte_a_b': ['carte_a_b.pdf'],
-            'decision_protection_subsidiaire': ['decision_protection_subsidiaire.pdf'],
-            'decision_protection_temporaire': ['decision_protection_temporaire.pdf'],
+            'carte_a_b_refugie_0': ['carte_a_b_refugie.pdf'],
+            'annexe_25_26_refugies_apatrides_0': ['annexe_25_26_refugies_apatrides.pdf'],
+            'attestation_immatriculation_0': ['attestation_immatriculation.pdf'],
+            'carte_a_b_0': ['carte_a_b.pdf'],
+            'decision_protection_subsidiaire_0': ['decision_protection_subsidiaire.pdf'],
+            'decision_protection_temporaire_0': ['decision_protection_temporaire.pdf'],
+            'carte_a_0': ['carte_a.pdf'],
+            'preuve_statut_apatride_0': ['preuve_statut_apatride.pdf'],
         }
 
         response = self.client.post(
@@ -1046,7 +1050,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_2': ChoixAssimilation2.REFUGIE.name,
-                'carte_a_b_refugie': [],
+                'carte_a_b_refugie_0': [],
             },
         )
 
@@ -1059,14 +1063,16 @@ class GeneralAccountingViewTestCase(TestCase):
         self.assertEqual(form.cleaned_data.get('carte_a_b'), [])
         self.assertEqual(form.cleaned_data.get('decision_protection_subsidiaire'), [])
         self.assertEqual(form.cleaned_data.get('decision_protection_temporaire'), [])
+        self.assertEqual(form.cleaned_data.get('carte_a'), [])
+        self.assertEqual(form.cleaned_data.get('preuve_statut_apatride'), [])
 
         response = self.client.post(
             self.update_url,
             data={
                 **default_data,
                 'sous_type_situation_assimilation_2': ChoixAssimilation2.DEMANDEUR_ASILE.name,
-                'annexe_25_26_refugies_apatrides': [],
-                'attestation_immatriculation': [],
+                'annexe_25_26_refugies_apatrides_0': [],
+                'attestation_immatriculation_0': [],
             },
         )
 
@@ -1078,14 +1084,33 @@ class GeneralAccountingViewTestCase(TestCase):
         self.assertEqual(form.cleaned_data.get('carte_a_b'), [])
         self.assertEqual(form.cleaned_data.get('decision_protection_subsidiaire'), [])
         self.assertEqual(form.cleaned_data.get('decision_protection_temporaire'), [])
+
+        response = self.client.post(
+            self.update_url,
+            data={
+                **default_data,
+                'sous_type_situation_assimilation_2': ChoixAssimilation2.APATRIDE.name,
+                'preuve_statut_apatride_0': [],
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        # Check that the unnecessary fields are clean
+        form = response.context.get('form')
+        self.assertEqual(form.cleaned_data.get('carte_a_b_refugie'), [])
+        self.assertEqual(form.cleaned_data.get('carte_a_b'), [])
+        self.assertEqual(form.cleaned_data.get('decision_protection_subsidiaire'), [])
+        self.assertEqual(form.cleaned_data.get('decision_protection_temporaire'), [])
+        self.assertEqual(form.cleaned_data.get('carte_a'), [])
 
         response = self.client.post(
             self.update_url,
             data={
                 **default_data,
                 'sous_type_situation_assimilation_2': ChoixAssimilation2.PROTECTION_SUBSIDIAIRE.name,
-                'carte_a_b': [],
-                'decision_protection_subsidiaire': [],
+                'carte_a_b_0': [],
+                'decision_protection_subsidiaire_0': [],
             },
         )
 
@@ -1097,13 +1122,16 @@ class GeneralAccountingViewTestCase(TestCase):
         self.assertEqual(form.cleaned_data.get('annexe_25_26_refugies_apatrides'), [])
         self.assertEqual(form.cleaned_data.get('attestation_immatriculation'), [])
         self.assertEqual(form.cleaned_data.get('decision_protection_temporaire'), [])
+        self.assertEqual(form.cleaned_data.get('carte_a'), [])
+        self.assertEqual(form.cleaned_data.get('preuve_statut_apatride'), [])
 
         response = self.client.post(
             self.update_url,
             data={
                 **default_data,
                 'sous_type_situation_assimilation_2': ChoixAssimilation2.PROTECTION_TEMPORAIRE.name,
-                'decision_protection_temporaire': [],
+                'decision_protection_temporaire_0': [],
+                'carte_a_0': [],
             },
         )
 
@@ -1116,16 +1144,17 @@ class GeneralAccountingViewTestCase(TestCase):
         self.assertEqual(form.cleaned_data.get('attestation_immatriculation'), [])
         self.assertEqual(form.cleaned_data.get('carte_a_b'), [])
         self.assertEqual(form.cleaned_data.get('decision_protection_subsidiaire'), [])
+        self.assertEqual(form.cleaned_data.get('preuve_statut_apatride'), [])
 
     def test_accounting_form_with_incomplete_assimilation_3(self):
         default_data = {
             'type_situation_assimilation': (
                 TypeSituationAssimilation.AUTORISATION_SEJOUR_ET_REVENUS_PROFESSIONNELS_OU_REMPLACEMENT.name
             ),
-            'titre_sejour_3_mois_professionel': ['titre_sejour_3_mois_professionel.pdf'],
-            'fiches_remuneration': ['fiches_remuneration.pdf'],
-            'titre_sejour_3_mois_remplacement': ['titre_sejour_3_mois_remplacement.pdf'],
-            'preuve_allocations_chomage_pension_indemnite': ['preuve_allocations_chomage_pension_indemnite.pdf'],
+            'titre_sejour_3_mois_professionel_0': ['titre_sejour_3_mois_professionel.pdf'],
+            'fiches_remuneration_0': ['fiches_remuneration.pdf'],
+            'titre_sejour_3_mois_remplacement_0': ['titre_sejour_3_mois_remplacement.pdf'],
+            'preuve_allocations_chomage_pension_indemnite_0': ['preuve_allocations_chomage_pension_indemnite.pdf'],
         }
 
         response = self.client.post(
@@ -1135,8 +1164,8 @@ class GeneralAccountingViewTestCase(TestCase):
                 'sous_type_situation_assimilation_3': (
                     ChoixAssimilation3.AUTORISATION_SEJOUR_ET_REVENUS_PROFESSIONNELS.name
                 ),
-                'titre_sejour_3_mois_professionel': [],
-                'fiches_remuneration': [],
+                'titre_sejour_3_mois_professionel_0': [],
+                'fiches_remuneration_0': [],
             },
         )
 
@@ -1154,8 +1183,8 @@ class GeneralAccountingViewTestCase(TestCase):
                 'sous_type_situation_assimilation_3': (
                     ChoixAssimilation3.AUTORISATION_SEJOUR_ET_REVENUS_DE_REMPLACEMENT.name
                 ),
-                'titre_sejour_3_mois_remplacement': [],
-                'preuve_allocations_chomage_pension_indemnite': [],
+                'titre_sejour_3_mois_remplacement_0': [],
+                'preuve_allocations_chomage_pension_indemnite_0': [],
             },
         )
 
@@ -1181,10 +1210,10 @@ class GeneralAccountingViewTestCase(TestCase):
             'type_situation_assimilation': (
                 TypeSituationAssimilation.PROCHE_A_NATIONALITE_UE_OU_RESPECTE_ASSIMILATIONS_1_A_4.name
             ),
-            'composition_menage_acte_naissance': ['composition_menage_acte_naissance.pdf'],
-            'acte_tutelle': ['acte_tutelle.pdf'],
-            'composition_menage_acte_mariage': ['composition_menage_acte_mariage.pdf'],
-            'attestation_cohabitation_legale': ['attestation_cohabitation_legale.pdf'],
+            'composition_menage_acte_naissance_0': ['composition_menage_acte_naissance.pdf'],
+            'acte_tutelle_0': ['acte_tutelle.pdf'],
+            'composition_menage_acte_mariage_0': ['composition_menage_acte_mariage.pdf'],
+            'attestation_cohabitation_legale_0': ['attestation_cohabitation_legale.pdf'],
         }
 
         response = self.client.post(
@@ -1192,7 +1221,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'relation_parente': LienParente.PERE.name,
-                'composition_menage_acte_naissance': [],
+                'composition_menage_acte_naissance_0': [],
             },
         )
 
@@ -1209,7 +1238,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'relation_parente': LienParente.MERE.name,
-                'composition_menage_acte_naissance': [],
+                'composition_menage_acte_naissance_0': [],
             },
         )
 
@@ -1226,7 +1255,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'relation_parente': LienParente.TUTEUR_LEGAL.name,
-                'acte_tutelle': [],
+                'acte_tutelle_0': [],
             },
         )
 
@@ -1243,7 +1272,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'relation_parente': LienParente.COHABITANT_LEGAL.name,
-                'attestation_cohabitation_legale': [],
+                'attestation_cohabitation_legale_0': [],
             },
         )
 
@@ -1260,7 +1289,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'relation_parente': LienParente.CONJOINT.name,
-                'composition_menage_acte_mariage': [],
+                'composition_menage_acte_mariage_0': [],
             },
         )
 
@@ -1277,14 +1306,14 @@ class GeneralAccountingViewTestCase(TestCase):
             'type_situation_assimilation': (
                 TypeSituationAssimilation.PROCHE_A_NATIONALITE_UE_OU_RESPECTE_ASSIMILATIONS_1_A_4.name
             ),
-            'carte_identite_parent': ['carte_identite_parent.pdf'],
-            'titre_sejour_longue_duree_parent': ['titre_sejour_longue_duree_parent.pdf'],
-            'annexe_25_26_refugies_apatrides_decision_protection_parent': [
+            'carte_identite_parent_0': ['carte_identite_parent.pdf'],
+            'titre_sejour_longue_duree_parent_0': ['titre_sejour_longue_duree_parent.pdf'],
+            'annexe_25_26_refugies_apatrides_decision_protection_parent_0': [
                 'annexe_25_26_refugies_apatrides_decision_protection_parent.pdf'
             ],
-            'titre_sejour_3_mois_parent': ['titre_sejour_3_mois_parent.pdf'],
-            'fiches_remuneration_parent': ['fiches_remuneration_parent.pdf'],
-            'attestation_cpas_parent': ['attestation_cpas_parent.pdf'],
+            'titre_sejour_3_mois_parent_0': ['titre_sejour_3_mois_parent.pdf'],
+            'fiches_remuneration_parent_0': ['fiches_remuneration_parent.pdf'],
+            'attestation_cpas_parent_0': ['attestation_cpas_parent.pdf'],
         }
 
         response = self.client.post(
@@ -1292,7 +1321,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_5': ChoixAssimilation5.A_NATIONALITE_UE.name,
-                'carte_identite_parent': [],
+                'carte_identite_parent_0': [],
             },
         )
 
@@ -1311,7 +1340,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_5': ChoixAssimilation5.TITULAIRE_TITRE_SEJOUR_LONGUE_DUREE.name,
-                'titre_sejour_longue_duree_parent': [],
+                'titre_sejour_longue_duree_parent_0': [],
             },
         )
 
@@ -1330,7 +1359,7 @@ class GeneralAccountingViewTestCase(TestCase):
             'sous_type_situation_assimilation_5': (
                 ChoixAssimilation5.CANDIDATE_REFUGIE_OU_REFUGIE_OU_APATRIDE_OU_PROTECTION_SUBSIDIAIRE_TEMPORAIRE.name
             ),
-            'annexe_25_26_refugies_apatrides_decision_protection_parent': [],
+            'annexe_25_26_refugies_apatrides_decision_protection_parent_0': [],
         }
 
         response = self.client.post(
@@ -1353,8 +1382,8 @@ class GeneralAccountingViewTestCase(TestCase):
             'sous_type_situation_assimilation_5': (
                 ChoixAssimilation5.AUTORISATION_SEJOUR_ET_REVENUS_PROFESSIONNELS_OU_REMPLACEMENT.name
             ),
-            'titre_sejour_3_mois_parent': [],
-            'fiches_remuneration_parent': [],
+            'titre_sejour_3_mois_parent_0': [],
+            'fiches_remuneration_parent_0': [],
         }
 
         response = self.client.post(
@@ -1376,7 +1405,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_5': ChoixAssimilation5.PRIS_EN_CHARGE_OU_DESIGNE_CPAS.name,
-                'attestation_cpas_parent': [],
+                'attestation_cpas_parent_0': [],
             },
         )
 
@@ -1393,8 +1422,8 @@ class GeneralAccountingViewTestCase(TestCase):
     def test_accounting_form_with_incomplete_assimilation_6(self):
         default_data = {
             'type_situation_assimilation': TypeSituationAssimilation.A_BOURSE_ARTICLE_105_PARAGRAPH_2.name,
-            'decision_bourse_cfwb': ['decision_bourse_cfwb.pdf'],
-            'attestation_boursier': ['attestation_boursier.pdf'],
+            'decision_bourse_cfwb_0': ['decision_bourse_cfwb.pdf'],
+            'attestation_boursier_0': ['attestation_boursier.pdf'],
         }
 
         response = self.client.post(
@@ -1402,7 +1431,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_6': ChoixAssimilation6.A_BOURSE_ETUDES_COMMUNAUTE_FRANCAISE.name,
-                'decision_bourse_cfwb': [],
+                'decision_bourse_cfwb_0': [],
             },
         )
 
@@ -1417,7 +1446,7 @@ class GeneralAccountingViewTestCase(TestCase):
             data={
                 **default_data,
                 'sous_type_situation_assimilation_6': ChoixAssimilation6.A_BOURSE_COOPERATION_DEVELOPPEMENT.name,
-                'attestation_boursier': [],
+                'attestation_boursier_0': [],
             },
         )
 

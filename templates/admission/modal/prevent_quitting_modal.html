@@ -40,10 +40,12 @@
   <a class="btn btn-danger" id="continue-link" href="#">
     {% trans "Exit without saving" %}
   </a>
+  {% if not force_click_on_form_button %}
   <button type="button" class="btn btn-primary" id="save-link">
     <i class="fas fa-floppy-disk"></i>
     {% trans "Save" context 'admission' %}
   </button>
+  {% endif %}
 {% endblock %}
 
 
@@ -97,12 +99,14 @@
       // But not continue link (from modal) itself
       if (window.preventQuitting && isOpeningAnchor && e.target.id !== 'continue-link') {
         allForms.forEach(function (form) {
-          // Check the link is not part of the form
-          if (!(form.querySelector('.quitting-context-excluded') || form).contains(e.target)) {
+          // Check the link is not part of the form or that the link has the "prevent-quitting-link" class
+          if (!(form.querySelector('.quitting-context-excluded') || form).contains(e.target) || e.target.classList.contains('prevent-quitting-link')) {
             if (formHasChanged(form)) {
               e.preventDefault();
               // Show modal and change its 'continue' link so that it link to the same link that clicked
               $('#prevent-quitting-modal').modal('show');
+
+              {% if not force_click_on_form_button %}
               document.querySelector('a#continue-link').setAttribute('href', e.target.href)
               document.querySelector('button#save-link').addEventListener('click', function () {
                 const event = new MouseEvent('click', {
@@ -110,8 +114,15 @@
                   bubbles: true,
                   cancelable: true,
                 });
+                // Add the clicked link to form data to redirect to this link after form submission
+                $('<input>', {
+                    type: 'hidden',
+                    name: 'redirect_to',
+                    value: e.target.href,
+                }).appendTo(form);
                 form.querySelector('button[type="submit"]').dispatchEvent(event);
               });
+              {% endif %}
               // Do not show browser popup
               doBrowserPrevent = false;
               return false;

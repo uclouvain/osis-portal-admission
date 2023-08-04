@@ -138,6 +138,12 @@ class AccountingForm(forms.Form):
         label=_('Copy of "orange card" enrolment certificate'),
         required=False,
     )
+    preuve_statut_apatride = FileUploadField(
+        label=_(
+            'Copy of official document from the local authority or Foreign Nationals Office proving stateless status'
+        ),
+        required=False,
+    )
     carte_a_b = FileUploadField(
         label=_('Copy of both sides of A or B Card'),
         required=False,
@@ -148,6 +154,10 @@ class AccountingForm(forms.Form):
     )
     decision_protection_temporaire = FileUploadField(
         label=_('Copy of Foreign Nationals Office decision granting temporary protection'),
+        required=False,
+    )
+    carte_a = FileUploadField(
+        label=_('Copy of both sides of A Card'),
         required=False,
     )
 
@@ -480,9 +490,11 @@ class AccountingForm(forms.Form):
         'carte_a_b_refugie',
         'annexe_25_26_refugies_apatrides',
         'attestation_immatriculation',
+        'preuve_statut_apatride',
         'carte_a_b',
         'decision_protection_subsidiaire',
         'decision_protection_temporaire',
+        'carte_a',
         'titre_sejour_3_mois_professionel',
         'fiches_remuneration',
         'titre_sejour_3_mois_remplacement',
@@ -561,12 +573,16 @@ class AccountingForm(forms.Form):
                 'annexe_25_26_refugies_apatrides',
                 'attestation_immatriculation',
             },
+            ChoixAssimilation2.APATRIDE.name: {
+                'preuve_statut_apatride',
+            },
             ChoixAssimilation2.PROTECTION_SUBSIDIAIRE.name: {
                 'carte_a_b',
                 'decision_protection_subsidiaire',
             },
             ChoixAssimilation2.PROTECTION_TEMPORAIRE.name: {
                 'decision_protection_temporaire',
+                'carte_a',
             },
         },
         'sous_type_situation_assimilation_3': {

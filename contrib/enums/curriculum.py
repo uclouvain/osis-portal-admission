@@ -40,6 +40,10 @@ class Result(ChoiceEnum):
     FAILURE = _('Failed')
     WAITING_RESULT = _('Waiting for a result')
 
+    @classmethod
+    def choices_for_past_years(cls):
+        return tuple((x.name, x.value) for x in cls if x.name != cls.WAITING_RESULT.name)
+
 
 class Grade(ChoiceEnum):
     GREATER_DISTINCTION = _('With highest honours (90-100%)')

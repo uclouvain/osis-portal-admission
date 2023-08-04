@@ -513,11 +513,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
             "academic_graduation_year": 2020,
             "other_institute_name": "Special school",
             "other_institute_address": "Louvain-La-Neuve",
-            "schedule": {
-                "latin": 10,
-                "greek": 10,
-                "chemistry": 10,
-            },
         }
 
         response = self.client.get(self.detail_url)
@@ -532,11 +527,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "academic_graduation_year": 2020,
                 "institute_name": "Special school",
                 "institute_address": "Louvain-La-Neuve",
-                "schedule": {
-                    "latin": 10,
-                    "greek": 10,
-                    "chemistry": 10,
-                },
             },
         )
 
@@ -656,7 +646,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         self.assertIn('main_form', response.context)
         self.assertIn('belgian_diploma_form', response.context)
         self.assertIn('foreign_diploma_form', response.context)
-        self.assertIn('schedule_form', response.context)
 
     def test_form_initialization_with_valuated_experience(self):
         self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
@@ -704,13 +693,10 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "high_school_diploma_0": "test",
                 "enrolment_certificate_0": "test",
                 "graduated_from_high_school_year": 2020,
-                "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
                 "belgian_diploma-institute": self.first_high_school_uuid,
                 "belgian_diploma-other_institute": False,
                 "belgian_diploma-other_institute_name": "Special school",
-                # Even if we send data for schedule, it should be stripped from data sent to WS
-                "schedule-greek": 5,
                 # Even if we send data for foreign diploma, it should be stripped from data sent to WS
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             },
@@ -730,7 +716,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
                     "high_school_diploma": ["test"],
                     "enrolment_certificate": [],
-                    "result": DiplomaResults.GT_75_RESULT.name,
                     # Clean other institute
                     "institute": self.first_high_school_uuid,
                     "other_institute_name": "",
@@ -742,105 +727,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
         )
-
-    def test_bachelor_form_belgian_schedule(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "graduated_from_high_school": GotDiploma.YES.name,
-                "diploma_type": DiplomaTypes.BELGIAN.name,
-                "graduated_from_high_school_year": 2020,
-                "high_school_diploma_0": "test",
-                "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,
-                "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
-                "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
-                "belgian_diploma-other_institute": True,
-                "belgian_diploma-other_institute_name": "Special school",
-                "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
-                "schedule-latin": 5,
-                "schedule-chemistry": 5,
-                "schedule-physic": 5,
-                "schedule-biology": 5,
-                "schedule-german": 5,
-                "schedule-english": 5,
-                "schedule-french": 5,
-                "schedule-dutch": 5,
-                "schedule-mathematics": 5,
-                "schedule-spanish": 5,
-                "schedule-it": 5,
-                "schedule-social_sciences": 5,
-                "schedule-economic_sciences": 5,
-                # Even if we send data for foreign diploma, it should be stripped from data sent to WS
-                "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-            },
-        )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
-        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
-            "high_school_diploma"
-        ]
-        self.assertEqual(
-            sent,
-            {
-                "graduated_from_high_school": GotDiploma.YES.name,
-                "graduated_from_high_school_year": 2020,
-                "belgian_diploma": {
-                    "academic_graduation_year": 2020,
-                    "enrolment_certificate": [],
-                    "high_school_diploma": ["test"],
-                    "community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
-                    "educational_other": "",
-                    "educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
-                    "institute": "",
-                    "other_institute_name": "Special school",
-                    "other_institute_address": "Louvain-La-Neuve",
-                    "result": DiplomaResults.GT_75_RESULT.name,
-                    "schedule": {
-                        "biology": 5,
-                        "chemistry": 5,
-                        "dutch": 5,
-                        "economic_sciences": 5,
-                        "english": 5,
-                        "french": 5,
-                        "german": 5,
-                        "greek": 0,
-                        "it": 5,
-                        "latin": 5,
-                        "mathematics": 5,
-                        "spanish": 5,
-                        "modern_languages_other_hours": 0,
-                        "modern_languages_other_label": "",
-                        "other_hours": 0,
-                        "other_label": "",
-                        "physic": 5,
-                        "social_sciences": 5,
-                    },
-                },
-                "specific_question_answers": self.proposition.reponses_questions_specifiques,
-            },
-        )
-
-    def test_bachelor_form_belgian_bad_schedule(self):
-        response = self.client.post(
-            self.form_url,
-            {
-                "graduated_from_high_school": GotDiploma.YES.name,
-                "diploma_type": DiplomaTypes.BELGIAN.name,
-                "graduated_from_high_school_year": 2020,
-                "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,
-                "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
-                "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
-                "belgian_diploma-other_institute": True,
-                "belgian_diploma-other_institute_name": "Special school",
-                "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
-                # Even if we send data for foreign diploma, it should be stripped from data sent to WS
-                "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
-            },
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "schedule_form", None, _("At least one schedule field must be completed."))
-        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_not_called()
 
     def test_bachelor_form_foreign_error_if_no_equivalence_for_ue_country(self):
         response = self.client.post(
@@ -1080,8 +966,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
                 "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
-                # Even if we send data for schedule, it should be stripped from data sent to WS
-                "schedule-greek": 5,
             },
         )
 
@@ -1180,8 +1064,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
                 "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
-                # Even if we send data for schedule, it should be stripped from data sent to WS
-                "schedule-greek": 5,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -1244,15 +1126,39 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "graduated_from_high_school": GotDiploma.THIS_YEAR.name,
                 "diploma_type": DiplomaTypes.BELGIAN.name,
                 "enrolment_certificate_0": "test",
+                "high_school_diploma_0": "test",
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
                 "belgian_diploma-other_institute_address": "Louvain-La-Neuve",
-                "schedule-greek": 5,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
-                "belgian_diploma-result": DiplomaResults.GT_75_RESULT.name,
             },
         )
         self.assertEqual(response.status_code, HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
+            "high_school_diploma"
+        ]
+        self.assertEqual(
+            sent,
+            {
+                "graduated_from_high_school": GotDiploma.THIS_YEAR.name,
+                "graduated_from_high_school_year": 2020,
+                "belgian_diploma": {
+                    "academic_graduation_year": 2020,
+                    "community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
+                    "high_school_diploma": [],
+                    "enrolment_certificate": ["test"],
+                    # Clean other institute
+                    "institute": '',
+                    "other_institute_name": "Special school",
+                    "other_institute_address": "Louvain-La-Neuve",
+                    # Clean education type
+                    "educational_type": "",
+                    "educational_other": "",
+                },
+                "specific_question_answers": self.proposition.reponses_questions_specifiques,
+            },
+        )
 
     def test_bachelor_form_error_if_got_diploma_but_nothing_else(self):
         response = self.client.post(
@@ -1274,13 +1180,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "graduated_from_high_school_year": 2020,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
                 "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
-                "schedule-modern_languages_other_label": "Chinese",
-                "schedule-other_hours": 5,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("modern_languages_other_hours", response.context["schedule_form"].errors)
-        self.assertIn("other_label", response.context["schedule_form"].errors)
 
     def test_bachelor_belgian_form_error_if_french_community_and_no_educational(self):
         response = self.client.post(

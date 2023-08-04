@@ -221,7 +221,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'year_formset-2019-academic_year': '2019',
             'year_formset-2019-acquired_credit_number': 100,
             'year_formset-2019-registered_credit_number': 150,
-            'year_formset-2019-result': Result.WAITING_RESULT.name,
+            'year_formset-2019-result': Result.FAILURE.name,
             'year_formset-2019-transcript_0': ['f1_2019.pdf'],
             'year_formset-2019-transcript_translation_0': ['f11_2019.pdf'],
             'year_formset-2020-is_enrolled': True,
@@ -358,6 +358,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'result': Result.SUCCESS.name,
             },
         )
+        past_choices = list(EMPTY_CHOICE + Result.choices_for_past_years())
+        self.assertEqual(forms[0].fields['result'].choices, past_choices)
         self.assertEqual(
             forms[1].initial,
             {
@@ -365,6 +367,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'is_enrolled': False,
             },
         )
+        self.assertEqual(forms[1].fields['result'].choices, past_choices)
         self.assertEqual(
             forms[2].initial,
             {
@@ -374,6 +377,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'result': Result.SUCCESS.name,
             },
         )
+        self.assertEqual(forms[2].fields['result'].choices, past_choices)
 
     def test_with_admission_on_update_experience_form_is_forbidden_with_doctorate_and_valuated_by_doctorate(self):
         # Valuated by a doctorate admission
@@ -741,15 +745,65 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, HTTP_200_OK)
 
         # Check that the API calls aren't done
+        # self.mockapi.update_educational_experience_admission.assert_not_called()
+
+        # Check the context data
+        # for field in [
+        #     'acquired_credit_number',
+        #     'registered_credit_number',
+        #     'result',
+        # ]:
+        #     self.assertFormsetError(response, 'year_formset', 0, field, errors=FIELD_REQUIRED_MESSAGE)
+
+        response = self.client.post(
+            self.admission_update_url,
+            data={
+                'base_form-start': '2020',
+                'base_form-end': '2022',
+                'base_form-country': self.not_ue_country.iso_code,
+                'base_form-evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
+                'base_form-transcript_type': TranscriptType.ONE_A_YEAR.name,
+                'base_form-linguistic_regime': self.language_with_translation.code,
+                'year_formset-2020-is_enrolled': True,
+                'year_formset-2020-result': Result.SUCCESS.name,  # Valid choice and credits not specified -> ko
+                'year_formset-2020-academic_year': '2020',
+                'year_formset-2021-is_enrolled': True,
+                'year_formset-2021-result': Result.WAITING_RESULT.name,  # Invalid choice
+                'year_formset-2021-academic_year': '2021',
+                'year_formset-2022-is_enrolled': True,
+                'year_formset-2022-result': Result.WAITING_RESULT.name,  # Valid choices and credits not specified -> ok
+                'year_formset-2022-academic_year': '2022',
+                'year_formset-TOTAL_FORMS': '3',
+                'year_formset-INITIAL_FORMS': '0',
+            },
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        # Check that the API calls aren't done
         self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
-        for field in [
-            'acquired_credit_number',
-            'registered_credit_number',
-            'result',
-        ]:
-            self.assertFormsetError(response, 'year_formset', 0, field, errors=FIELD_REQUIRED_MESSAGE)
+        forms = response.context['year_formset']
+
+        form = forms[0]  # 2022
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['result'], Result.WAITING_RESULT.name)
+        self.assertEqual(form.cleaned_data['acquired_credit_number'], None)
+        self.assertEqual(form.cleaned_data['registered_credit_number'], None)
+
+        form = forms[1]  # 2021
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            'Sélectionnez un choix valide. WAITING_RESULT n’en fait pas partie.',
+            form.errors.get('result', []),
+        )
+
+        form = forms[2]  # 2020
+        self.assertFalse(form.is_valid())
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('acquired_credit_number', []))
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('registered_credit_number', []))
 
     def test_with_admission_on_update_experience_post_form_for_be_country_invalid_credits_for_required_years(self):
         response = self.client.post(
@@ -1077,8 +1131,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'base_form-transcript_type': TranscriptType.ONE_A_YEAR.name,
                 'base_form-evaluation_type': EvaluationSystem.NO_CREDIT_SYSTEM.name,
                 'year_formset-2018-result': Result.FAILURE.name,
-                'year_formset-2019-result': Result.WAITING_RESULT.name,
-                'year_formset-2020-result': Result.WAITING_RESULT.name,
+                'year_formset-2019-result': Result.SUCCESS.name,
+                'year_formset-2020-result': Result.SUCCESS.name,
             },
         )
 
@@ -1119,7 +1173,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
-                        'result': Result.WAITING_RESULT.name,
+                        'result': Result.SUCCESS.name,
                         'registered_credit_number': None,
                         'acquired_credit_number': None,
                         'transcript': ['f1_2020.pdf'],
@@ -1149,8 +1203,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'base_form-transcript_type': TranscriptType.ONE_A_YEAR.name,
                 'base_form-evaluation_type': EvaluationSystem.NO_CREDIT_SYSTEM.name,
                 'year_formset-2018-result': Result.FAILURE.name,
-                'year_formset-2019-result': Result.WAITING_RESULT.name,
-                'year_formset-2020-result': Result.WAITING_RESULT.name,
+                'year_formset-2019-result': Result.SUCCESS.name,
+                'year_formset-2020-result': Result.SUCCESS.name,
             },
         )
 
@@ -1191,7 +1245,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
-                        'result': Result.WAITING_RESULT.name,
+                        'result': Result.SUCCESS.name,
                         'registered_credit_number': None,
                         'acquired_credit_number': None,
                         'transcript': ['f1_2020.pdf'],

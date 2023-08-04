@@ -267,6 +267,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             reponses_questions_specifiques={
                 cls.first_question_uuid: 'My answer',
             },
+            documents_additionnels=['uuid-documents-additionnels'],
         )
         cls.bachelor_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -292,6 +293,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             reponses_questions_specifiques={
                 cls.first_question_uuid: 'My answer',
             },
+            documents_additionnels=['uuid-documents-additionnels'],
         )
 
         cls.continuing_proposition_dict = {
@@ -325,7 +327,6 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'destinataire': 'Mr Doe',
                 'rue': 'Rue des Pins',
                 'numero_rue': '10',
-                'lieu_dit': 'Dit',
                 'boite_postale': 'B1',
                 'code_postal': '1348',
                 'ville': 'Louvain-La-Neuve',
@@ -334,6 +335,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             'pays_nationalite': 'FR',
             'pays_nationalite_ue_candidat': True,
             'copie_titre_sejour': [],
+            'documents_additionnels': [],
         }
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -366,7 +368,6 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 destinataire='Mr Doe',
                 rue='Rue des Pins',
                 numero_rue='10',
-                lieu_dit='Dit',
                 boite_postale='B1',
                 code_postal='1348',
                 ville='Louvain-La-Neuve',
@@ -376,6 +377,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             pays_nationalite='FR',
             pays_nationalite_ue_candidat=True,
             copie_titre_sejour=[],
+            documents_additionnels=['uuid-documents-additionnels'],
         )
 
         cls.doctorate_proposition = Mock(
@@ -399,12 +401,6 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             links={'update_proposition': {'url': 'ok'}},
             commission_proximite='MANAGEMENT',
             statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
-            bourse_erasmus_mundus=Mock(
-                uuid=cls.first_erasmus_mundus_scholarship.uuid,
-                nom_court=cls.first_erasmus_mundus_scholarship.short_name,
-                nom_long=cls.first_erasmus_mundus_scholarship.long_name,
-                type=cls.first_erasmus_mundus_scholarship.type,
-            ),
             reponses_questions_specifiques={
                 cls.first_question_uuid: 'My answer',
             },

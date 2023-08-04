@@ -27,6 +27,7 @@ import datetime
 import uuid
 from unittest.mock import ANY, patch, MagicMock
 
+from django.http import Http404
 from django.test import TestCase, override_settings
 from osis_admission_sdk.model.action_link import ActionLink
 from osis_admission_sdk.model.activity_sector import ActivitySector
@@ -64,7 +65,9 @@ from osis_reference_sdk.model.paginated_country import PaginatedCountry
 from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 from osis_reference_sdk.model.paginated_language import PaginatedLanguage
 from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
+from osis_reference_sdk.model.paginated_university import PaginatedUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
+from osis_reference_sdk.model.university import University
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import (
@@ -112,6 +115,14 @@ class MixinTestCase(TestCase):
             zipcode="1348",
             street="Boulevard de l'Université",
             street_number="1",
+        )
+        cls.university = University(
+            uuid=str(uuid.uuid4()),
+            name="University of Technology",
+            city="Louvain-la-Neuve",
+            zipcode="1348",
+            street="Boulevard de l'Université",
+            street_number="2",
         )
 
         # Academic years
@@ -236,6 +247,8 @@ class MixinTestCase(TestCase):
             links=DoctoratePropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
+                update_specific_question=ActionLink(method='POST', url='url'),
+                retrieve_specific_question=ActionLink(method='GET', url='url'),
             ),
             date_fin_pot=None,
             doctorat=PropositionSearchDoctorat._from_openapi_data(
@@ -291,6 +304,8 @@ class MixinTestCase(TestCase):
             links=GeneralEducationPropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
+                update_specific_question=ActionLink(method='POST', url='url'),
+                retrieve_specific_question=ActionLink(method='GET', url='url'),
             ),
             date_fin_pot=None,
             erreurs=[],
@@ -304,6 +319,7 @@ class MixinTestCase(TestCase):
             creee_le=datetime.datetime(2022, 12, 1),
             equivalence_diplome=['file2.pdf'],
             pdf_recapitulatif=[],
+            documents_additionnels=[],
         )
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(
@@ -328,6 +344,8 @@ class MixinTestCase(TestCase):
             links=ContinuingEducationPropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
+                update_specific_question=ActionLink(method='POST', url='url'),
+                retrieve_specific_question=ActionLink(method='GET', url='url'),
             ),
             erreurs=[],
             reponses_questions_specifiques={},
@@ -338,6 +356,7 @@ class MixinTestCase(TestCase):
             pays_nationalite_ue_candidat=True,
             copie_titre_sejour=[],
             pdf_recapitulatif=[],
+            documents_additionnels=[],
         )
 
         cls.api_default_params = {
@@ -444,10 +463,10 @@ class MixinTestCase(TestCase):
 
         def get_institute(**kwargs):
             institute_uuid = kwargs.get('uuid')
-            return next(
-                (institute for institute in [self.institute] if institute.uuid == institute_uuid),
-                None,
-            )
+            try:
+                return next(institute for institute in [self.institute] if institute.uuid == institute_uuid)
+            except StopIteration:
+                raise Http404
 
         self.mock_superior_non_universities_api.return_value.superior_non_universities_list.return_value = (
             PaginatedSuperiorNonUniversity(results=[self.institute])
@@ -455,6 +474,24 @@ class MixinTestCase(TestCase):
 
         self.mock_superior_non_universities_api.return_value.superior_non_university_read.side_effect = get_institute
         self.addCleanup(superior_non_universities_api_patcher.stop)
+
+    def mock_university_api(self):
+        universities_api_patcher = patch("osis_reference_sdk.api.universities_api.UniversitiesApi")
+        self.mock_universities_api = universities_api_patcher.start()
+
+        def get_institute(**kwargs):
+            institute_uuid = kwargs.get('uuid')
+            try:
+                return next(institute for institute in [self.university] if institute.uuid == institute_uuid)
+            except StopIteration:
+                raise Http404
+
+        self.mock_universities_api.return_value.universities_list.return_value = PaginatedUniversity(
+            results=[self.university]
+        )
+
+        self.mock_universities_api.return_value.university_read.side_effect = get_institute
+        self.addCleanup(universities_api_patcher.stop)
 
     def mock_person_api(self):
         api_person_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
@@ -512,3 +549,4 @@ class MixinTestCase(TestCase):
         self.mock_documents_api()
         self.mock_diplomas_api()
         self.mock_superior_non_university_api()
+        self.mock_university_api()

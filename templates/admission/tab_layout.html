@@ -177,7 +177,7 @@
 
   <div class="{% if subtabs|length > 1 %}col-md-10 {% endif %}{% if form %}quitting-context-excluded{% endif %}">
     {% block tab_content %}
-      {% if form.visible_fields %}
+      {% if form.visible_fields or force_form %}
         {# Form and form buttons #}
         {% block form %}{% endblock %}
         {% block submit_button_bottom %}
@@ -221,7 +221,7 @@
   {% endif %}
 
   {% endblock form_content %}
-  {% if form.visible_fields %}</form>{% endif %}
+  {% if form.visible_fields or force_form %}</form>{% endif %}
   {% endblock tabs_content %}
   {% block extra_content %}{% endblock %}
 {% endblock %}
