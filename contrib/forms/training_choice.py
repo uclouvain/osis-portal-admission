@@ -82,7 +82,7 @@ def get_training_choices(training):
 class TrainingChoiceForm(ConfigurableFormMixin):
     training_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + TypeFormationChoisissable.choices(),
-        label=_('Training type'),
+        label=_('Course type'),
         required=True,
     )
 
@@ -94,7 +94,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     # General education
     general_education_training = forms.CharField(
-        label=_('Training'),
+        label=_('Course'),
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:general-education',
@@ -107,7 +107,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     # A mix of continuing education and general certificate
     mixed_training = forms.CharField(
-        label=_('Training'),
+        label=_('Course'),
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:mixed-training',
@@ -132,7 +132,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=forms.Textarea(
             attrs={
                 'rows': 2,
-                'placeholder': _("Detail here the reasons which justify the recourse to a provisory admission."),
+                'placeholder': _("Reasons for provisional admission."),
             }
         ),
         required=False,
@@ -145,7 +145,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
     )
 
     doctorate_training = forms.CharField(
-        label=_('Training'),
+        label=_('Course'),
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:doctorate',
@@ -174,11 +174,11 @@ class TrainingChoiceForm(ConfigurableFormMixin):
     # Scholarship
 
     has_double_degree_scholarship = RadioBooleanField(
-        label=_('Are you a double degree student?'),
+        label=_('Are you a dual degree student?'),
         required=False,
         help_text=_(
-            'Double degree refers to joint training between two or more universities, '
-            'which will lead to the granting of two separate degrees provided by each signatory university.'
+            'Dual degrees involve joint coursework between two or more universities, leading to two separate diplomas '
+            'awarded by each signatory university.'
         ),
     )
 
@@ -194,8 +194,8 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         label=_('Do you have an international scholarship?'),
         required=False,
         help_text=_(
-            'An international scholarship can be granted to students as part of a project. These international '
-            'scholarships are granted by the ARES organisation and a scholarship certificate must be provided.'
+            'An international scholarship may be awarded to students as part of a project. These international '
+            'grants are awarded by ARES and a scholarship certificate must be provided.'
         ),
     )
 
@@ -208,11 +208,11 @@ class TrainingChoiceForm(ConfigurableFormMixin):
     )
 
     has_erasmus_mundus_scholarship = RadioBooleanField(
-        label=_('Are you an erasmus mundus student?'),
+        label=_('Are you an Erasmus Mundus student?'),
         required=False,
         help_text=_(
-            'Erasmus Mundus is a study abroad programme designed by an international partnership of higher education '
-            'institutions. Scholarships are granted to students and proof of funding is therefore required.'
+            'Erasmus Mundus is a study abroad programme devised by an international partnership of higher '
+            'education institutions. Scholarships are awarded to students and proof of funding is therefore required.'
         ),
     )
 
@@ -357,8 +357,8 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                 training = get_training(person=self.person, training=training)
                 if self.current_context != ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE[training['education_group_type']]:
                     msg = _(
-                        'To choose this training, you need to <a href="%(url)s">cancel</a> '
-                        'the current application and create a new one.'
+                        'To choose this course, you need to <a href="%(url)s">cancel</a> '
+                        'your application and create a new one.'
                     )
                     url = resolve_url(f'admission:{self.current_context}:cancel', pk=self.admission_uuid)
                     raise forms.ValidationError(mark_safe(msg % {'url': url}))

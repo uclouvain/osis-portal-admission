@@ -31,12 +31,12 @@ from admission.contrib.forms import CustomDateInput, AdmissionFileUploadField as
 
 class PromoterConfirmationPaperForm(forms.Form):
     proces_verbal_ca = FileUploadField(
-        label=_('Report of the supervisory panel'),
+        label=_('Support Committee minutes'),
         required=False,
         max_files=1,
     )
     avis_renouvellement_mandat_recherche = FileUploadField(
-        label=_('Opinion on the renewal of the research mandate'),
+        label=_('Opinion on research mandate renewal'),
         required=False,
         max_files=1,
         help_text=_(
@@ -48,7 +48,7 @@ class PromoterConfirmationPaperForm(forms.Form):
 
 class ConfirmationPaperForm(PromoterConfirmationPaperForm):
     date = forms.DateField(
-        label=_('Date of confirmation'),
+        label=_('Confirmation exam date'),
         required=True,
         widget=CustomDateInput(),
     )

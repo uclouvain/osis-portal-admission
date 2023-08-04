@@ -28,7 +28,7 @@
 
 {% block tab_content %}
   {% url "admission:doctorate:course-enrollment:add" pk=view.kwargs.pk category='UCL_COURSE' as add_url %}
-  <h3>{% trans "Course enrollment" %}</h3>
+  <h3>{% trans "Course unit enrolment" %}</h3>
 
   <p>{% lorem %}</p>
 
@@ -38,7 +38,7 @@
     </a>
   {% endif %}
 
-  <h4>{% trans "Courses" %}</h4>
+  <h4>{% trans "Course units" %}</h4>
   {% if activities %}
     <div class="filter-status form-group">
       <strong>{% trans "Status" %}</strong>
@@ -82,7 +82,7 @@
       {% endif %}
     </form>
   {% else %}
-    {% trans "No course created yet." %}
+    {% trans "No course created at present." %}
     {% if doctorate|can_make_action:'add_training' %}
       <a href="{{ add_url }}">
         {% trans "Enroll in a course" %}

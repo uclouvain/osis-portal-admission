@@ -31,19 +31,19 @@
 
     {% panel _('Belgian diploma') %}
 
-      {% field_data _('Year of graduation from secondary school') belgian_diploma.academic_graduation_year|display_as_academic_year %}
+      {% field_data _('Secondary school graduation year') belgian_diploma.academic_graduation_year|display_as_academic_year %}
 
-      {% field_data _('Community of education') belgian_diploma.community|enum_display:'BelgianCommunitiesOfEducation' %}
+      {% field_data _('Belgian education community') belgian_diploma.community|enum_display:'BelgianCommunitiesOfEducation' %}
 
       {% if belgian_diploma.community == 'FRENCH_SPEAKING' %}
         {% if belgian_diploma.educational_type %}
-          {% field_data _('Education type') belgian_diploma.educational_type|enum_display:'EducationalType' %}
+          {% field_data _('Secondary education type') belgian_diploma.educational_type|enum_display:'EducationalType' %}
         {% else %}
-          {% field_data _('Education type') belgian_diploma.educational_other %}
+          {% field_data _('Secondary education type') belgian_diploma.educational_other %}
         {% endif %}
       {% endif %}
 
-      {% field_data _('What result did you get?') belgian_diploma.result|enum_display:'DiplomaResults' %}
+      {% field_data _('What result did you achieve?') belgian_diploma.result|enum_display:'DiplomaResults' %}
 
       {% display belgian_diploma.institute_name ' (' belgian_diploma.institute_address ')' as belgian_institute %}
       {% field_data _('Institute') belgian_institute %}
@@ -79,7 +79,7 @@
                   {% field_data _('Mathematics')|add:_(' (h/w)') belgian_diploma.schedule.mathematics inline=True %}
                   {% field_data _('IT')|add:_(' (h/w)') belgian_diploma.schedule.it inline=True %}
                   {% field_data _('Social sciences')|add:_(' (h/w)') belgian_diploma.schedule.social_sciences inline=True %}
-                  {% field_data _('Economic sciences')|add:_(' (h/w)') belgian_diploma.schedule.economic_sciences inline=True %}
+                  {% field_data _('Economics')|add:_(' (h/w)') belgian_diploma.schedule.economic_sciences inline=True %}
                   {% field_data belgian_diploma.schedule.other_label|add:_(' (h/w)') belgian_diploma.schedule.other_hours hide_empty=True inline=True %}
                 {% endpanel %}
               </div>
@@ -90,7 +90,7 @@
     {% endpanel %}
 
     {% panel _('Attachments') %}
-      {% field_data _('High school diploma') belgian_diploma.high_school_diploma %}
+      {% field_data _('Secondary school diploma') belgian_diploma.high_school_diploma %}
       {% if graduated_from_high_school == 'THIS_YEAR' %}
         {% field_data _('Certificate of enrolment or school attendance') belgian_diploma.enrolment_certificate %}
       {% endif %}
@@ -100,56 +100,56 @@
 
     {% panel _('Foreign diploma') %}
 
-      {% field_data _('Year of graduation from secondary school') foreign_diploma.academic_graduation_year|display_as_academic_year %}
+      {% field_data _('Secondary school graduation year') foreign_diploma.academic_graduation_year|display_as_academic_year %}
 
-      {% field_data _('What diploma did you get (or will you get)?') foreign_diploma.foreign_diploma_type|enum_display:'ForeignDiplomaTypes' %}
+      {% field_data _('What diploma have you obtained (or will obtain)?') foreign_diploma.foreign_diploma_type|enum_display:'ForeignDiplomaTypes' %}
 
-      {% field_data _('Organizing country') foreign_diploma.country.name %}
+      {% field_data _('Organising country') foreign_diploma.country.name %}
 
-      {% field_data _('Linguistic regime') foreign_diploma.linguistic_regime|default:foreign_diploma.other_linguistic_regime %}
+      {% field_data _('Language regime') foreign_diploma.linguistic_regime|default:foreign_diploma.other_linguistic_regime %}
       {% if foreign_diploma.foreign_diploma_type == 'NATIONAL_BACHELOR' %}
         {% if foreign_diploma.country.european_union %}
-          {% field_data _('Has this diploma been subject to a decision of equivalence provided by the French-speaking community of Belgium?') foreign_diploma.equivalence|enum_display:'Equivalence' %}
+          {% field_data _('Has this diploma been recognised as equivalent by the French Community of Belgium?') foreign_diploma.equivalence|enum_display:'Equivalence' %}
           {% if foreign_diploma.equivalence == 'YES' %}
-            {% field_data _("A double-sided copy of the final equivalence decision (possibly with the DAES or the admission test for the first cycle of higher education in case of restrictive equivalence)") foreign_diploma.final_equivalence_decision_ue %}
+            {% field_data _("Copy of both sides of the definitive equivalency decision (accompanied, where applicable, by the DAES or undergraduate exam, in the case of restrictive equivalency)") foreign_diploma.final_equivalence_decision_ue %}
           {% elif foreign_diploma.equivalence == 'PENDING' %}
-            {% field_data _('Proof of the final equivalence decision') foreign_diploma.equivalence_decision_proof %}
+            {% field_data _('Proof of equivalency request') foreign_diploma.equivalence_decision_proof %}
           {% endif %}
         {% else %}
-          {% field_data _("A double-sided copy of the final equivalence decision issued by the Ministry of the French Community of Belgium (possibly with the DAES or the admission test for the first cycle of higher education if your equivalence doesn't give access to the desired programme)") foreign_diploma.final_equivalence_decision_not_ue %}
+          {% field_data _("Copy of both sides of the definitive equivalency decision by the Ministry of the French-speaking Community of Belgium (possibly accompanied by the DAES or the undergraduate studies exam, if your equivalency does not confer eligibility for the desired programme)") foreign_diploma.final_equivalence_decision_not_ue %}
         {% endif %}
       {% endif %}
 
-      {% field_data _('What result did you get?') foreign_diploma.result|enum_display:'DiplomaResults' %}
+      {% field_data _('What result did you achieve?') foreign_diploma.result|enum_display:'DiplomaResults' %}
 
     {% endpanel %}
 
     {% panel _('Attachments') %}
-      {% field_data _('High school diploma') foreign_diploma.high_school_diploma %}
+      {% field_data _('Secondary school diploma') foreign_diploma.high_school_diploma %}
 
       {% if need_translations %}
-        {% field_data _('A certified translation of your high school diploma') foreign_diploma.high_school_diploma_translation %}
+        {% field_data _('A translation of your secondary school diploma by a sworn translator') foreign_diploma.high_school_diploma_translation %}
       {% endif %}
 
       {% if graduated_from_high_school == 'THIS_YEAR' and foreign_diploma.country.european_union %}
         {% field_data _('Certificate of enrolment or school attendance') foreign_diploma.enrolment_certificate %}
         {% if need_translations %}
-          {% field_data _('A certified translation of your certificate of enrolment or school attendance') foreign_diploma.enrolment_certificate_translation %}
+          {% field_data _('A translation of the enrolment or school attendance certificate by a sworn translator') foreign_diploma.enrolment_certificate_translation %}
         {% endif %}
       {% endif %}
 
-      {% field_data _('A transcript or your last year at high school') foreign_diploma.high_school_transcript %}
+      {% field_data _('A transcript for your last year of secondary school') foreign_diploma.high_school_transcript %}
       {% if need_translations %}
-        {% field_data _('A certified translation of your official transcript of marks for your final year of secondary education') foreign_diploma.high_school_transcript_translation %}
+        {% field_data _('A translation of your official transcript of marks for your final year of secondary school by a sworn translator') foreign_diploma.high_school_transcript_translation %}
       {% endif %}
     {% endpanel %}
 
   {% elif is_bachelor and high_school_diploma_alternative %}
     {% panel _('Secondary studies') %}
-      {% field_data _('Do you have a high school diploma?') _('No') %}
+      {% field_data _('Do you have a secondary school diploma?') _('No') %}
     {% endpanel %}
     {% panel _('Attachments') %}
-      {% field_data _('Certificate of successful completion of the admission test for the first cycle of higher education') high_school_diploma_alternative.first_cycle_admission_exam %}
+      {% field_data _("Certificate of passing the bachelor's course entrance exam") high_school_diploma_alternative.first_cycle_admission_exam %}
     {% endpanel %}
 
   {% else %}
@@ -160,12 +160,12 @@
         {% endblocktranslate %}
       {% elif graduated_from_high_school == 'THIS_YEAR' %}
         {% blocktranslate trimmed with year=graduated_from_high_school_year|display_as_academic_year asvar graduation_text %}
-          You have indicated that you will get it in {{ year }}.
+          You indicated that you will obtain it in {{ year }}.
         {% endblocktranslate %}
       {% elif graduated_from_high_school == 'NO' %}
         {% blocktranslate asvar graduation_text %}No.{% endblocktranslate %}
       {% endif %}
-      {% field_data _('Do you have a high school diploma?') graduation_text %}
+      {% field_data _('Do you have a secondary school diploma?') graduation_text %}
     {% endpanel %}
   {% endif %}
 

@@ -75,7 +75,7 @@ class JuryMembreForm(forms.Form):
     )
 
     nom = forms.CharField(
-        label=_("Last name"),
+        label=_("Surname"),
         required=False,
     )
 

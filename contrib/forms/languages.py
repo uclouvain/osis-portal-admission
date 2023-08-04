@@ -83,20 +83,20 @@ class DoctorateAdmissionLanguageForm(forms.Form):
         widget=SliderWidget(choices=LanguageKnowledgeGrade),
     )
     speaking_ability = forms.ChoiceField(
-        label=_("Please rate your speaking ability"),
+        label=_("Please rate your oral skills"),
         choices=LanguageKnowledgeGrade.choices(),
         widget=SliderWidget(choices=LanguageKnowledgeGrade),
     )
     writing_ability = forms.ChoiceField(
-        label=_("Please rate your writing ability"),
+        label=_("Please rate your writing skills"),
         choices=LanguageKnowledgeGrade.choices(),
         widget=SliderWidget(choices=LanguageKnowledgeGrade),
     )
     certificate = FileUploadField(
         label=_("Certificate of language knowledge"),
         help_text=_(
-            "If applicable, upload an attestation of language proficiency in the format required by the "
-            "specific provisions of your doctoral field commission"
+            "If applicable, upload a language proficiency certificate in the format required by the specific "
+            "provisions of your PhD committee."
         ),
         required=False,
         max_files=1,
@@ -127,7 +127,7 @@ class DoctorateAdmissionLanguagesBaseFormset(forms.BaseFormSet):
             for form in self.forms:
                 if form.cleaned_data.get("language") in duplicate_languages:
                     form.add_error("language", _("This language is set more than once."))
-            raise ValidationError(_("You cannot fill in a language more than once, please correct the form."))
+            raise ValidationError(_("You cannot enter a language more than once, please correct the form."))
 
     def __init__(self, *args, initial=None, **kwargs):
         for mandatory_language in MANDATORY_LANGUAGES:

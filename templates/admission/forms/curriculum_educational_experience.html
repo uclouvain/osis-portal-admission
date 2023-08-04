@@ -32,7 +32,7 @@
   {{ year_formset.management_form }}
 
   {% if view.kwargs.experience_id %}
-    {% display _("Update of an academic training") as header_title %}
+    {% display _("Modification of an academic activity") as header_title %}
   {% else %}
     {% display _("Adding an academic training") as header_title %}
   {% endif %}
@@ -118,14 +118,14 @@
                   role="button"
                   tabindex="0"
                   data-content="{% blocktrans trimmed %}
-                If you have not attended your training for one or more years,
-                please indicate this by turning off the switch for those years.
+                If you have not attended your course for one or more years,
+                please indicate this by turning off the switch for the those years.
                 {% endblocktrans %}"
               >
               </a>
             </th>
             <th class="required_text" style="width: 150px;">{% translate 'Registered credits' %}</th>
-            <th class="required_text" style="width: 150px;">{% translate 'Acquired credits' %}</th>
+            <th class="required_text" style="width: 150px;">{% translate 'Credits earned' %}</th>
             <th class="required_text">{% translate 'Result' %}</th>
           </tr>
         </thead>
@@ -135,7 +135,7 @@
         <tfoot id="empty-formset" class="hidden">
           <tr>
             <td colspan="4">
-              <p>{% translate "No year has been added." %}</p>
+              <p>{% translate "No year has yet been added" %}</p>
             </td>
           </tr>
         </tfoot>
@@ -424,7 +424,7 @@
               '#id_base_form-country': { is_truthy, not: [beIsoCode] },
           });
 
-          {# Evaluation type field #}
+          {# Evaluation system field #}
           evaluationType.dependsOn({
               '#id_base_form-country': { is_truthy, not: [beIsoCode] },
           }, {

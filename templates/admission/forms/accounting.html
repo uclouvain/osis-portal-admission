@@ -33,23 +33,22 @@
   {% endif %}
 
   {% if is_general %}
-    {% panel _('Reduced registration fees') %}
+    {% panel _('Reduced tuition fee') %}
       {% bootstrap_field form.demande_allocation_d_etudes_communaute_francaise_belgique form_group_class="form-group required_field" %}
       {% bootstrap_field form.enfant_personnel form_group_class="form-group required_field" %}
       <div id="staff-child-container">
         {% bootstrap_field form.attestation_enfant_personnel %}
         {% blocktranslate trimmed %}
-          The child of a member of staff may, under some conditions, benefit from a reduction of the registration fee for
-          any registration for a bachelor's or master's degree. This parent should contact the Human Resources
-          Administration of his or her employer to check whether he or she meets these conditions and, if so,
-          request the certificate confirming this.
+          To enrol in a bachelor's or master's course, the child of a staff member may, under certain conditions,
+          benefit from a reduced tuition fee. Parents contact their employer's Human Resources Administration to check
+          whether they meet the requirements, and if so, request the certificate that confirms this.
         {% endblocktranslate %}
       </div>
     {% endpanel %}
   {% endif %}
 
   {% if with_assimilation %}
-    {% panel _('Assimilation') %}
+    {% panel _('Belgian student status') %}
       {% with field=form.type_situation_assimilation %}
         <div class="form-group required_field {% if field.errors %}has-error{% elif form.is_bound %}has-success{% endif %}">
           {% bootstrap_label field.label label_for=form.type_situation_assimilation.0.id_for_label label_class='control-label' %}
@@ -214,14 +213,14 @@
     {% endpanel %}
   {% endif %}
 
-  {% panel _('Affiliations') %}
+  {% panel _('Memberships') %}
     {% if is_general %}
       {% bootstrap_field form.affiliation_sport form_group_class="form-group required_field" %}
     {% endif %}
     {% bootstrap_field form.etudiant_solidaire form_group_class="form-group required_field" %}
     <p id="solidarity-student-explication">
       {% blocktranslate trimmed %}
-        You will receive a monthly newsletter with all the benefits and activities related to this program.
+        You will receive a monthly newsletter explaining all the benefits and activities associated with this programme.
       {% endblocktranslate %}
     </p>
   {% endpanel %}
@@ -258,7 +257,7 @@
           const assimilation5RadioLabelsToUpdate = $('#id_sous_type_situation_assimilation_5 label .relationship');
 
           {% if is_general %}
-              {# Reduced registration fees #}
+              {# Reduced tuition fee #}
               $('#staff-child-container').dependsOn({
                   'input[name=enfant_personnel]': { values: ["True"] },
               });
@@ -399,7 +398,7 @@
 
           {% endif %}
 
-          {# Affiliations #}
+          {# Memberships #}
           $('#solidarity-student-explication').dependsOn({
               'input[name=etudiant_solidaire]': { values: ["True"] },
           });

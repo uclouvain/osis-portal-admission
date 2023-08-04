@@ -71,7 +71,7 @@ class DoctorateAdmissionConfirmationPaperFormView(LoadDoctorateViewMixin, WebSer
         context_data['confirmation_paper'] = self.confirmation_paper
 
         if self.is_doctorate_student:
-            context_data['submit_label'] = _('Submit and notify the DDC')
+            context_data['submit_label'] = _('Submit and notify CDD')
 
         return context_data
 

@@ -99,7 +99,7 @@
     {% if user.is_authenticated %}
       <a href="{{ list_url }}" class="pull-right h5 text-primary">
         <span class="fa fa-stream"></span>
-        {% trans "Back to requests" %}
+        {% trans "Back to applications" %}
       </a>
     {% endif %}
   </div>
@@ -110,7 +110,7 @@
       <div>
         {% trans "Reference:" %}
         {% if not admission %}
-          {% trans "No reference yet - Go to 'Training choice' tab" %}
+          {% trans 'No reference at present, see "Course options" tab' %}
         {% else %}
           {{ doctorate_title }} ({{ admission.reference }})
         {% endif %}
@@ -129,11 +129,9 @@
   {% if not admission or admission.status in IN_PROGRESS_STATUSES %}
     <p><em>
       {% blocktrans trimmed %}
-        The online enrolment request procedure is split up into several
-        sheet. The enrolment request can only be validated as soon as all
-        sheets have been duly completed. The icons will remind you of the
-        state of progress of your enrolment request which you can interrupt
-        and resume at any moment.
+        The online application is comprised of several tabs. The application can
+        only be validated once all the tabs have been successfully completed.
+        The icons indicate the progress of your application, which can be interrupted and resumed at any time.
       {% endblocktrans %}
     </em></p>
   {% endif %}

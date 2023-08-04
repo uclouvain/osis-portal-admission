@@ -9,11 +9,11 @@
             <i class="far fa-address-card" style="grid-area: icon;"></i>
             <h4 class="media-heading" style="grid-area: title;">
                 <a href="{% url 'admission:list' %}" id="lnk_admission">
-                    {% trans 'My enrolment request' %}
+                    {% trans 'My application' %}
                 </a>
             </h4>
             <div class="description" style="grid-area: description;">
-                <p>{% trans 'Create and manage my enrolment request for UCLouvain' %}.</p>
+                <p>{% trans 'Create and manage my UCLouvain application' %}.</p>
             </div>
         </div>
         {% endif %}
@@ -25,11 +25,11 @@
                             href="{% url 'admission:supervised-list' %}"
                             id="lnk_member_admission"
                     >
-                        {% trans 'Manage doctorates' %}
+                        {% trans 'Management of PhDs' %}
                     </a>
                 </h4>
             <div class="description" style="grid-area: description;">
-                <p>{% trans "Access my doctoral students' requests" %}.</p>
+                <p>{% trans "Access my PhD students' files" %}.</p>
             </div>
         </div>
         {% endif %}

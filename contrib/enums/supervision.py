@@ -30,4 +30,4 @@ from base.models.utils.utils import ChoiceEnum
 
 class DecisionApprovalEnum(ChoiceEnum):
     APPROVED = pgettext_lazy("admission decision", "Approved")
-    DECLINED = pgettext_lazy("admission decision", "Rejected")
+    DECLINED = pgettext_lazy("admission decision", "Denied")

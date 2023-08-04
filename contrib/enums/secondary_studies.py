@@ -31,7 +31,7 @@ from base.models.utils.utils import ChoiceEnum
 
 class GotDiploma(ChoiceEnum):
     YES = _("Yes")
-    THIS_YEAR = _("I will have a high school diploma this year")
+    THIS_YEAR = _("I will be graduating from secondary school at the end of this academic year")
     NO = _("No")
 
     @classmethod
@@ -40,7 +40,11 @@ class GotDiploma(ChoiceEnum):
         return tuple(
             (x.name, x.value)
             if x.name != cls.THIS_YEAR.name
-            else (x.name, _("I will have a high school diploma this year %s") % format_academic_year(current_year))
+            else (
+                x.name,
+                _("I will be graduating from secondary school during the %s academic year")
+                % format_academic_year(current_year),
+            )
             for x in cls
         )
 
@@ -49,7 +53,7 @@ HAS_DIPLOMA_CHOICES = {GotDiploma.YES.name, GotDiploma.THIS_YEAR.name}
 
 
 class DiplomaTypes(ChoiceEnum):
-    BELGIAN = _("belgian")
+    BELGIAN = _("Belgian")
     FOREIGN = _("foreign")
 
 
@@ -60,36 +64,36 @@ class DiplomaResults(ChoiceEnum):
 
 
 class BelgianCommunitiesOfEducation(ChoiceEnum):
-    FRENCH_SPEAKING = _("French-speaking Community")
-    FLEMISH_SPEAKING = _("Flemish-speaking Community")
+    FRENCH_SPEAKING = _("Belgian French Community")
+    FLEMISH_SPEAKING = _("Belgian Flemish Community")
     GERMAN_SPEAKING = _("German-speaking Community")
 
 
 EDUCATIONAL_TYPES = (
-    ("TEACHING_OF_GENERAL_EDUCATION", _("Teaching of general education")),
-    ("TRANSITION_METHOD", _("Transition method")),
-    ("ARTISTIC_TRANSITION", _("Artistic transition")),
-    ("QUALIFICATION_METHOD", _("Qualification method")),
-    ("ARTISTIC_QUALIFICATION", _("Artistic qualification")),
-    ("PROFESSIONAL_EDUCATION", _("Professional education")),
+    ("TEACHING_OF_GENERAL_EDUCATION", _('"Enseignement de formation generale"')),
+    ("TRANSITION_METHOD", _('"Technique de transition"')),
+    ("ARTISTIC_TRANSITION", _('"Artistique de transition"')),
+    ("QUALIFICATION_METHOD", _('"Technique de qualification"')),
+    ("ARTISTIC_QUALIFICATION", _('"Artistique de qualification"')),
+    ("PROFESSIONAL_EDUCATION", _('"Enseignement professionnel"')),
 )
 
 
 # FIXME to be removed when fully replaced by EDUCATIONAL_TYPES above
 class EducationalType(ChoiceEnum):
-    TEACHING_OF_GENERAL_EDUCATION = _("Teaching of general education")
-    TRANSITION_METHOD = _("Transition method")
-    ARTISTIC_TRANSITION = _("Artistic transition")
-    QUALIFICATION_METHOD = _("Qualification method")
-    ARTISTIC_QUALIFICATION = _("Artistic qualification")
-    PROFESSIONAL_EDUCATION = _("Professional education")
+    TEACHING_OF_GENERAL_EDUCATION = _('"Enseignement de formation generale"')
+    TRANSITION_METHOD = _('"Technique de transition"')
+    ARTISTIC_TRANSITION = _('"Artistique de transition"')
+    QUALIFICATION_METHOD = _('"Technique de qualification"')
+    ARTISTIC_QUALIFICATION = _('"Artistique de qualification"')
+    PROFESSIONAL_EDUCATION = _('"Enseignement professionnel"')
     PROFESSIONAL_EDUCATION_AND_MATURITY_EXAM = _("Professional education + Maturity exam")
 
 
 class ForeignDiplomaTypes(ChoiceEnum):
-    NATIONAL_BACHELOR = _("National Bachelor (or government diploma, ...)")
-    EUROPEAN_BACHELOR = _("European Bachelor (Schola Europaea)")
-    INTERNATIONAL_BACCALAUREATE = _("International Baccalaureate")
+    NATIONAL_BACHELOR = _("National baccalaureate (or state diploma, etc.)")
+    EUROPEAN_BACHELOR = _("European Baccalaureate (European Schools)")
+    INTERNATIONAL_BACCALAUREATE = _("International Baccalaureate (IB)")
 
 
 class Equivalence(ChoiceEnum):

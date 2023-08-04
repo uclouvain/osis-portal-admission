@@ -28,7 +28,7 @@
 {% block form %}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h4 class="panel-title">{% trans "Confirmation paper" %}</h4>
+      <h4 class="panel-title">{% trans "Confirmation exam" %}</h4>
     </div>
     <div class="panel-body">
       {% include 'admission/doctorate/includes/confirmation_papers_description.html' %}
@@ -36,7 +36,7 @@
       {% bootstrap_form_errors form %}
 
       {% field_data _("Definitive admission date") doctorate.admission_acceptee_le inline=True %}
-      {% field_data _("Deadline for confirmation") confirmation_paper.date_limite inline=True %}
+      {% field_data _("Confirmation deadline") confirmation_paper.date_limite inline=True %}
 
       {% csrf_token %}
 

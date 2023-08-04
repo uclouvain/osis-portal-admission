@@ -28,12 +28,12 @@
 {% block tab_content %}
   <div class="panel panel-default">
     {% if educational_tab %}
-      {% translate "Deletion of an academic training" as header_title %}
+      {% translate "Delete course" as header_title %}
       {% blocktranslate with name=experience.education_name asvar question trimmed %}
-        Are you sure you want to delete the training "{{ name }}"?
+        Are you sure you want to delete the course "{{ name }}"?
       {% endblocktranslate %}
     {% else %}
-      {% translate "Deletion of a non-academic activity" as header_title %}
+      {% translate "Delete non-academic activity" as header_title %}
       {% if experience.start_date.year != experience.end_date.year or experience.start_date.month != experience.end_date.month %}
         {% blocktranslate with type=experience.type|enum_display:'ActivityType' start=experience.start_date|date:"YEAR_MONTH_FORMAT"|capfirst end=experience.end_date|date:"YEAR_MONTH_FORMAT"|capfirst asvar question trimmed %}
           Are you sure you want to delete the activity "{{ type }}" that took place from {{ start }} to {{ end }}?

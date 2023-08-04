@@ -54,21 +54,21 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          {% field_data _("Education name") experience.education_name %}
+          {% field_data _("Course name") experience.education_name %}
         </div>
         <div class="col-md-6">
-          {% field_data _('Study system') experience.study_system.value|enum_display:'TeachingTypeEnum' hide_empty=True %}
+          {% field_data _('System of education') experience.study_system.value|enum_display:'TeachingTypeEnum' hide_empty=True %}
         </div>
       </div>
       {% if view.is_continuing %}
         <div class="row">
           <div class="col-md-6">
-            {% field_data _('Did you graduate from this training?') experience.obtained_diploma|yesno:_("Yes,No,") %}
+            {% field_data _('Did you graduate from this course?') experience.obtained_diploma|yesno:_("Yes,No,") %}
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
-            {% field_data _('Graduate degree') experience.graduate_degree %}
+            {% field_data _('Diploma') experience.graduate_degree %}
           </div>
         </div>
       {% else %}
@@ -76,7 +76,7 @@
         {% if is_foreign_experience %}
           <div class="row">
             <div class="col-md-6">
-              {% field_data _("Linguistic regime") experience.linguistic_regime_name %}
+              {% field_data _("Language regime") experience.linguistic_regime_name %}
             </div>
           </div>
         {% endif %}
@@ -86,7 +86,7 @@
             {% field_data _("Transcript type") experience.transcript_type.value|enum_display:'TranscriptType' %}
           </div>
           <div class="col-md-6">
-            {% field_data _("Evaluation type") experience.evaluation_type.value|enum_display:'EvaluationSystem' %}
+            {% field_data _("Evaluation system") experience.evaluation_type.value|enum_display:'EvaluationSystem' %}
           </div>
         </div>
 
@@ -97,7 +97,7 @@
             </div>
             {% if translation_required %}
               <div class="col-md-6">
-                {% field_data _("Translation of the transcript") experience.transcript_translation %}
+                {% field_data _("Transcript translation") experience.transcript_translation %}
               </div>
             {% endif %}
           </div>
@@ -111,7 +111,7 @@
                 <th style="width: 120px;">{% translate 'Academic year' %}</th>
                 {% if experience.evaluation_system_with_credits %}
                   <th>{% translate 'Registered credits' %}</th>
-                  <th>{% translate 'Acquired credits' %}</th>
+                  <th>{% translate 'Credits earned' %}</th>
                 {% endif %}
                 <th>{% translate 'Result' %}</th>
               </tr>
@@ -151,7 +151,7 @@
                   <tr>
                     <td class="academic-year-container">{{ experience_year.academic_year|get_academic_year }}</td>
                     <td {% if experience.evaluation_system_with_credits %}colspan="3"{% endif %}>
-                      {% translate 'Year without registration for the training.' %}
+                      {% translate 'Year without enrolling in the course.' %}
                     </td>
                   </tr>
                 {% endif %}
@@ -161,13 +161,13 @@
         </div>
         <div class="row">
           <div class="col-md-6">
-            {% field_data _('Did you graduate from this training?') experience.obtained_diploma|yesno:_("Yes,No,") %}
+            {% field_data _('Did you graduate from this course?') experience.obtained_diploma|yesno:_("Yes,No,") %}
           </div>
           {% if not experience.obtained_diploma %}
             </div>
           {% else %}
             <div class="col-md-6">
-              {% field_data _('Obtained mention') experience.obtained_grade.value|enum_display:'Grade' %}
+              {% field_data _('Grade') experience.obtained_grade.value|enum_display:'Grade' %}
             </div>
             </div>
             {% if view.is_doctorate %}
@@ -176,15 +176,15 @@
                   {% field_data _('Rank in diploma') experience.rank_in_diploma %}
                 </div>
                 <div class="col-md-6">
-                  {% field_data _('Expected date of graduation (signed document)') experience.expected_graduation_date|date:"DATE_FORMAT" %}
+                  {% field_data _('Expected graduation date (signed diploma)') experience.expected_graduation_date|date:"DATE_FORMAT" %}
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  {% field_data _('Title of the dissertation') experience.dissertation_title html_tag="blockquote" %}
+                  {% field_data _('Dissertation title') experience.dissertation_title html_tag="blockquote" %}
                 </div>
                 <div class="col-md-6">
-                  {% field_data _('Dissertation score') experience.dissertation_score %}
+                  {% field_data _('Dissertation mark') experience.dissertation_score %}
                 </div>
               </div>
               <div class="row">
@@ -195,11 +195,11 @@
             {% endif %}
             <div class="row">
               <div class="col-md-6">
-                {% field_data _('Graduate degree') experience.graduate_degree %}
+                {% field_data _('Diploma') experience.graduate_degree %}
               </div>
               {% if translation_required %}
                 <div class="col-md-6">
-                  {% field_data _('Graduate degree translation') experience.graduate_degree_translation %}
+                  {% field_data _('Diploma translation') experience.graduate_degree_translation %}
                 </div>
               {% endif %}
             </div>

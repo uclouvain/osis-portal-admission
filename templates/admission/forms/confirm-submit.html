@@ -28,11 +28,10 @@
 {% block tab_content %}
   <div>
     <div class="alert alert-info confirmation-header text-justify">
-      <p>{% trans "You have now reached the confirmation tab of your enrolment request." %}</p>
+      <p>{% trans "You have now reached the application confirmation tab." %}</p>
       <p>
         {% blocktranslate trimmed %}
-          Before sending your application, please review the data you have entered to ensure that you have not made
-          any errors or omissions.
+          Before sending your application, please check the data you have entered for any errors or omissions.
         {% endblocktranslate %}
       </p>
 
@@ -43,19 +42,19 @@
             href="{{ pdf_url }}"
             target="_blank"
         >
-          {% translate "Visualize the summary" %}
+          {% translate "View summary" %}
           <i class="fa-solid fa-file-pdf"></i>
         </a>
       </p>
       <p>
-        {% translate "If everything looks good, you can then submit your application below." %}
+        {% translate "If everything appears correct, send your enrolment request below." %}
       </p>
     </div>
 
     {% switch 'debug' %}
       {% firstof admission.doctorat.annee admission.formation.annee as annee %}
       {% field_data _('Academic year') annee|get_academic_year css_class='debug-content' %}
-      {% field_data _('Determined academic year') admission.annee_calculee|get_academic_year css_class='debug-content' %}
+      {% field_data _('Specific academic year') admission.annee_calculee|get_academic_year css_class='debug-content' %}
       {% field_data _('Determined pool') admission.pot_calcule css_class='debug-content' %}
     {% endswitch %}
 
@@ -64,7 +63,7 @@
       {% url base_namespace|add:':update:curriculum' admission.uuid as cv_url %}
 
       <p class="alert alert-danger">
-        {% trans "Your enrolment cannot be confirmed. All the following conditions must be met to do it." %}
+        {% trans "Your enrolment cannot be confirmed. All of the following requirements must be met." %}
       </p>
 
       <table class="table table-bordered">
@@ -89,8 +88,8 @@
                         {# TODO message #}
                         <p>
                           {% blocktrans with start_date=pool_start_date|date:'d/m/Y' end_date=pool_end_date|date:'d/m/Y' trimmed %}
-                            You are enrolling in a bachelor with quota, the application can only be submitted
-                            in the period from {{ start_date }} to {{ end_date }}.
+                            If you are applying for a limited enrolment bachelor's course, the application can only be
+                            submitted during the period from {{ start_date }} to {{ end_date }}.
                           {% endblocktrans %}</p>
                       </li>
 
@@ -99,30 +98,30 @@
                       <li>
                         {# TODO url #}
                         <p>{% blocktrans with url="#" trimmed %}
-                          Unexpected error, please <a href="{{ url }}">contact the service desk</a>.
+                          Unexpected error, please <a href="{{ url }}">contact service desk</a>.
                         {% endblocktrans %}</p>
                       </li>
 
                       {# Conditions d'accès non remplies #}
                     {% elif error_code == 'ADMISSION-2' %}
                       <li>
-                        <p>{% trans "Your application cannot be confirmed. The conditions of access do not seem to be fulfilled." %}</p>
+                        <p>{% trans "Your application cannot be confirmed. The admission requirements do not appear to have been met." %}</p>
                         <div class="panel panel-default">
-                          <div class="panel-heading">{% trans "Access conditions" %}</div>
+                          <div class="panel-heading">{% trans "Eligibility requirements" %}</div>
                           {% if admission.doctorat %}
                             {% display admission.doctorat.intitule as training_title %}
                           {% else %}
                             {% display admission.formation.intitule as training_title %}
                           {% endif %}
                           <div class="panel-body">
-                            {% blocktrans with url=access_conditions_url training_title=training_title trimmed %}
+                            {% blocktrans with url=access_conditions_url course_title=training_title trimmed %}
                               <p>
-                                On the basis of the information you have provided in your previous experience, you do
+                                On the basis of the information you have provided on your previous experience, you do
                                 not appear to meet the
-                                <a href="{{ url }}" target="_blank">access conditions for the training</a>
-                                <em>{{ training_title }}</em>.
+                                <a href="{{ url }}" target="_blank">eligibility requirements for the course</a>
+                                <em>{{ course_title }}</em>.
                               </p>
-                              <p>We invite you to check your previous course data or to choose another course.</p>
+                              <p>Please check your previous course data or choose another course.</p>
                             {% endblocktrans %}
                             <div class="text-right">
                               <a href="{{ cv_url }}" class="btn btn-primary">
@@ -132,7 +131,7 @@
                               {% if current_context != 'doctorate' %}
                                 <a href="{{ training_choice_url }}" class="btn btn-primary">
                                   <span class="fa fa-person-chalkboard"></span>
-                                  {% trans "Choose another training" %}
+                                  {% trans "Choose another course" %}
                                 </a>
                               {% endif %}
                             </div>
@@ -143,7 +142,7 @@
                       {# Formation non organisée #}
                     {% elif error_code == 'ADMISSION-7' %}
                       <li>
-                        <p>{% trans "Your application cannot be confirmed. The requested training is not organised." %}</p>
+                        <p>{% trans "Your application cannot be confirmed. The desired course is not offered." %}</p>
                         <div class="panel panel-default">
                           <div class="panel-heading">{% trans "Non-organised training" %}</div>
                           {% if admission.doctorat %}
@@ -154,9 +153,9 @@
                           <div class="panel-body">
                             {% blocktrans with url=calendar_url year=admission.annee_calculee|get_academic_year trimmed %}
                               <p>
-                                On the basis of the <a href="{{ url }}" target="_blank">registration calendar</a>
+                                On the basis of the <a href="{{ url }}" target="_blank">enrolment calendar</a>
                                 and the information you have provided, your application will be considered for the
-                                academic year <strong>{{ year }}</strong>.
+                                <strong>{{ year }}</strong> academic year.
                               </p>
                               <p>
                                 Unfortunately, the training you have selected, <em>{{ training_title }}</em>, will not
@@ -167,7 +166,7 @@
                             <div class="text-right">
                               <a href="{{ training_choice_url }}" class="btn btn-primary">
                                 <span class="fa fa-person-chalkboard"></span>
-                                {% trans "Choose another training" %}
+                                {% trans "Choose another course" %}
                               </a>
                             </div>
                           </div>
@@ -234,7 +233,7 @@
 
 
         {% if confirmation_form.justificatifs and confirmation_form.declaration_sur_lhonneur %}
-          {% panel _("Undertake and declaration") %}
+          {% panel _("Commitment and declaration") %}
             {% bootstrap_field confirmation_form.justificatifs %}
             {% bootstrap_field_no_post_widget_render confirmation_form.declaration_sur_lhonneur %}
             {% if confirmation_form.droits_inscription_iufc %}
@@ -245,16 +244,16 @@
 
         <p class="alert alert-info confirmation-warning">
           {% blocktrans trimmed %}
-            Any false declaration or deliberate omission regarding the constitution of the application file
-            constitues a fraud on registration. Anyone suspected of fraud will be invited to provide further
-            explanation or clarification (Article 16 et 17 - Section 2 du Chapitre 1 du Titre III du
-            Reglement general des etudes et des examens de l'UCLouvain).
+            Any false declaration or deliberate omission in the compilation of the application constitutes
+            enrolment fraud. Anyone suspected of fraud will be asked to provide further explanation and present
+            their case (UCLouvain Academic Regulations and Procedures, Part III, Chapter 1, Section 3,
+            Articles 16 and 17).
           {% endblocktrans %}
         </p>
         <div
             id="submit-button-wrapper"
             class="pull-right"
-            title="{% trans "Sending the application requires your agreement for all the elements" %}"
+            title="{% trans "Sending the request requires your agreement with all of the following elements" %}"
         >
           <button
               type="button"
@@ -278,16 +277,16 @@
               </div>
               <div class="modal-body">
                 {% if current_context == 'continuing-education' %}
-                  <p>{% trans "Your application will be sent to the University Institute of Continuing Education." %}</p>
+                  <p>{% trans "Your application will be sent to the University Institute for Continuing Education." %}</p>
                 {% elif confirmation_form.fields.frais_dossier %}
-                  <p>{% trans "After payment, your application will be sent to the Enrolment Service of UCLouvain." %}</p>
+                  <p>{% trans "After payment, your application will be sent to the UCLouvain Enrolment Office." %}</p>
                 {% else %}
-                  <p>{% trans "Your application will be sent to the Enrolment Service of UCLouvain." %}</p>
+                  <p>{% trans "Your application will be sent to the UCLouvain Enrolment Office." %}</p>
                 {% endif %}
-                <p><strong>{% trans "Do you confirm that you actually want to submit it?" %}</strong></p>
+                <p><strong>{% trans "Confirm submission?" %}</strong></p>
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-success">{% trans "Yes, submit" %}</button>
+                <button type="submit" class="btn btn-success">{% trans "Yes, send" %}</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "No" %}</button>
               </div>
             </div>

@@ -52,7 +52,7 @@
   {% endif %}
 
   {% if doctorate_propositions %}
-    <h3>{% trans "Doctorate" %}</h3>
+    <h3>{% trans "PhD" %}</h3>
     {% for admission in doctorate_propositions %}
       {% include "admission/includes/admission_list_item.html" with base_namespace='admission:doctorate' admission=admission tab_tree=doctorate_tab_tree %}
     {% endfor %}

@@ -292,7 +292,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             response=response,
             form='form',
             field=None,
-            errors=gettext("The start date must be equal or lower than the end date."),
+            errors=gettext("The start date must be earlier than or the same as the end date."),
         )
 
     def test_with_admission_on_update_experience_post_form_bad_months(self):
@@ -317,7 +317,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             response=response,
             form='form',
             field=None,
-            errors=gettext("The start date must be equal or lower than the end date."),
+            errors=gettext("The start date must be earlier than or the same as the end date."),
         )
 
     def test_with_admission_on_update_experience_post_form_for_work(self):

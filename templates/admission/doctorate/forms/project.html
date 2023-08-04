@@ -64,7 +64,7 @@
     {% else %}
       {% field_data _("Sector") sector_label %}
       {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
-      {% field_data _("Doctorate") doctorate_title %}
+      {% field_data _("PhD") doctorate_title %}
       {% if admission.commission_proximite %}
         {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixCommissionProximiteCDEouCLSM'|enum_display:'ChoixCommissionProximiteCDSS'|enum_display:'ChoixSousDomaineSciences' %}
       {% endif %}
@@ -86,7 +86,7 @@
     </div>
   {% endpanel %}
 
-  {% panel _("Financing") %}
+  {% panel _("Funding") %}
     <div class="row">
       <div class="col-md-4">
         {% bootstrap_field form.type_financement form_group_class="form-group required_field" %}
@@ -121,7 +121,7 @@
     </div>
   {% endpanel %}
 
-  {% panel _("Doctoral project") %}
+  {% panel _("PhD research project") %}
     {% bootstrap_field form.titre_projet form_group_class="form-group required_field" placeholder="" %}
     {% bootstrap_field form.resume_projet form_group_class="form-group required_field" placeholder="" %}
     <div class="row">
@@ -136,8 +136,8 @@
     </div>
     <p>
       {% blocktrans trimmed %}
-        The format of the documents to be uploaded below may vary from one Doctoral Domain Commission (DDC) to another.
-        Please check the website of your DDC or contact your doctoral manager.
+        The format of the documents to be uploaded below may vary from one CDD to another. Find out more on your CDD's
+        website or from your doctoral manager.
       {% endblocktrans %}
     </p>
     {% bootstrap_field form.documents_projet form_group_class="form-group required_field" %}

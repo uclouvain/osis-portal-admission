@@ -68,7 +68,7 @@ from admission.services.reference import CountriesService
 
 CurriculumField = partial(
     FileUploadField,
-    label=_('Curriculum vitae detailed, dated and signed'),
+    label=_('Detailed curriculum vitae, dated and signed'),
     max_files=1,
     required=False,
 )
@@ -76,11 +76,11 @@ CurriculumField = partial(
 DiplomaEquivalenceField = partial(
     FileUploadField,
     label=_(
-        'Copy of the equivalence decision delivered by the French Community of Belgium making your 2nd cycle diploma '
-        '(bac+5) equivalent to the academic grade of a corresponding master.'
+        "Copy of equivalency decision issued by the French Community of Belgium making your bachelor's diploma (bac+5) "
+        "equivalent to the academic rank of a corresponding master's degree."
     ),
     help_text=_(
-        'You can find more information on the page of the French Community '
+        'You can find more information on the French Community webpage '
         '<a href="https://equisup.cfwb.be/" target="_blank">https://equisup.cfwb.be/</a>'
     ),
     required=False,
@@ -196,7 +196,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
         label=_('Type'),
     )
     role = forms.CharField(
-        label=__('curriculum', 'Role'),
+        label=__('curriculum', 'Function'),
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -249,7 +249,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
             if start_date_year > end_date_year or (
                 start_date_year == end_date_year and start_date_month > end_date_month
             ):
-                self.add_error(None, _("The start date must be equal or lower than the end date."))
+                self.add_error(None, _("The start date must be earlier than or the same as the end date."))
 
         activity_type = cleaned_data.get('type')
 
@@ -394,7 +394,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     program = forms.CharField(
         empty_value=None,
-        label=_('Program'),
+        label=_('Course'),
         required=False,
         widget=autocomplete.ListSelect2(url='admission:autocomplete:diploma'),
     )
@@ -403,16 +403,16 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         required=False,
     )
     education_name = forms.CharField(
-        label=_('Education name'),
+        label=_('Course name'),
         required=False,
     )
     evaluation_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + EvaluationSystem.choices(),
-        label=_('Evaluation type'),
+        label=_('Evaluation system'),
     )
     linguistic_regime = forms.CharField(
         empty_value=None,
-        label=_('Linguistic regime'),
+        label=_('Language regime'),
         required=False,
         widget=autocomplete.ListSelect2(url='admission:autocomplete:language'),
     )
@@ -421,19 +421,19 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         label=_('Transcript type'),
     )
     obtained_diploma = RadioBooleanField(
-        label=_('Did you graduate from this training?'),
+        label=_('Did you graduate from this course?'),
     )
     obtained_grade = forms.ChoiceField(
         choices=EMPTY_CHOICE + Grade.choices(),
-        label=_('Obtained mention'),
+        label=_('Grade'),
         required=False,
     )
     graduate_degree = FileUploadField(
-        label=_('Graduate degree'),
+        label=_('Diploma'),
         required=False,
     )
     graduate_degree_translation = FileUploadField(
-        label=_('Graduate degree translation'),
+        label=_('Diploma translation'),
         required=False,
     )
     transcript = FileUploadField(
@@ -455,12 +455,12 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     expected_graduation_date = forms.DateField(
         help_text=_('Date on which you expect to graduate.'),
-        label=_('Expected date of graduation (signed document)'),
+        label=_('Expected graduation date (signed diploma)'),
         required=False,
         widget=CustomDateInput(),
     )
     dissertation_title = forms.CharField(
-        label=_('Title of the dissertation'),
+        label=_('Dissertation title'),
         required=False,
         widget=forms.Textarea(
             attrs={
@@ -469,7 +469,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         ),
     )
     dissertation_score = forms.CharField(
-        label=_('Dissertation score'),
+        label=_('Dissertation mark'),
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -553,7 +553,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         start = cleaned_data.get('start')
         end = cleaned_data.get('end')
         if start and end and int(start) > int(end):
-            self.add_error(None, _("The start date must be equal or lower than the end date."))
+            self.add_error(None, _("The start date must be earlier than or the same as the end date."))
 
         # Institute fields
         self.clean_data_institute(cleaned_data)
@@ -685,7 +685,7 @@ class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
         localize=True,
     )
     acquired_credit_number = forms.FloatField(
-        label=_('Acquired credits'),
+        label=_('Credits earned'),
         required=False,
         localize=True,
     )
