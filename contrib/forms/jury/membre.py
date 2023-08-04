@@ -28,7 +28,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from admission.contrib.enums import TitreMembre, GenreMembre
-from admission.contrib.forms import EMPTY_CHOICE
+from admission.contrib.forms import EMPTY_CHOICE, DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from base.models.person import Person
 from base.models.utils.utils import ChoiceEnum
 
@@ -44,7 +44,7 @@ class JuryMembreForm(forms.Form):
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:person",
             attrs={
-                'data-minimum-input-length': 3,
+                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
                 'data-placeholder': _('Last name / First name / Global id'),
             },
         ),
@@ -70,7 +70,10 @@ class JuryMembreForm(forms.Form):
 
     pays = forms.CharField(
         label=_('Country'),
-        widget=autocomplete.ListSelect2(url='admission:autocomplete:country'),
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:country',
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
         required=False,
     )
 

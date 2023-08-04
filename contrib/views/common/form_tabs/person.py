@@ -99,16 +99,19 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
             data['id_card_number'] = ''
             data['passport_number'] = ''
             data['passport'] = []
+            data['passport_expiry_date'] = None
 
         elif data.get('identification_type') == IdentificationType.ID_CARD_NUMBER.name:
             data['national_number'] = ''
             data['passport_number'] = ''
             data['passport'] = []
+            data['passport_expiry_date'] = None
 
         elif data.get('identification_type') == IdentificationType.PASSPORT_NUMBER.name:
             data['national_number'] = ''
             data['id_card_number'] = ''
             data['id_card'] = []
+            data['id_card_expiry_date'] = None
 
         else:
             data['national_number'] = ''
@@ -116,6 +119,8 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
             data['passport_number'] = ''
             data['passport'] = []
             data['id_card'] = []
+            data['id_card_expiry_date'] = None
+            data['passport_expiry_date'] = None
 
         for field in ['already_registered', 'unknown_birth_date', 'identification_type', 'has_national_number']:
             data.pop(field, None)
@@ -123,8 +128,19 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         return data
 
     def call_webservice(self, data):
-        self.service_mapping[self.current_context].update_person(
+        updated_person = self.service_mapping[self.current_context].update_person(
             person=self.person,
             data=data,
             uuid=self.admission_uuid,
         )
+        # Update local person to make sure future requests to API don't rollback person
+        update_fields = []
+        for field in [
+            'first_name',
+            'last_name',
+            'language',
+        ]:
+            if getattr(self.person, field) != updated_person.get(field):
+                update_fields.append(field)
+                setattr(self.person, field, updated_person.get(field))
+        self.person.save(update_fields=update_fields)

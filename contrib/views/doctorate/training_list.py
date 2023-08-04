@@ -68,7 +68,7 @@ class DoctoralTrainingListView(LoadDoctorateViewMixin, WebServiceFormMixin, Form
         )
 
     def get_success_url(self):
-        return self.request.get_full_path()
+        return self.request.POST.get('redirect_to') or self.request.get_full_path()
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

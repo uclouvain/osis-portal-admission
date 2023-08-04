@@ -84,7 +84,10 @@ class DoctorateAdmissionJuryMembreUpdateFormView(LoadJuryMemberViewMixin, WebSer
     }
 
     def get_success_url(self):
-        return reverse('admission:doctorate:jury', kwargs={'pk': self.admission_uuid})
+        return self.request.POST.get('redirect_to') or reverse(
+            'admission:doctorate:jury',
+            kwargs={'pk': self.admission_uuid},
+        )
 
     def get_initial(self):
         if self.membre.matricule:

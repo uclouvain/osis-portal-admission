@@ -93,6 +93,13 @@ textarea {
   gap: 1em;
 }
 
+.flex-container-align-no-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+}
+
 .flex-container-no-wrap > * {
   flex: 1;
 }
@@ -110,9 +117,14 @@ textarea {
 }
 
 .popover-buttons {
-  color: initial !important;
   text-decoration: none !important;
   margin-left: 5px;
+  font-size: 1.25em;
+  vertical-align: -.075em;
+}
+
+.popover {
+  max-width:600px;
 }
 
 .field-with-tooltip .label-container {

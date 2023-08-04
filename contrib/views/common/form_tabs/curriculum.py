@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.shortcuts import resolve_url
 from django.views.generic import FormView
 
 from admission.contrib.enums.specific_question import Onglets
@@ -48,13 +49,29 @@ class AdmissionCurriculumFormView(
 ):
     template_name = 'admission/details/curriculum.html'
     tab_of_specific_questions = Onglets.CURRICULUM.name
+    extra_context = {
+        'force_form': True,
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        access_conditions_url = self.request.session.pop('access_conditions_url', '')
+        if access_conditions_url:
+            context['display_access_conditions_message'] = True
+            context['access_conditions_url'] = access_conditions_url
+
+        return context
 
     def get_initial(self):
         if self.admission_uuid:
             return self.admission.to_dict()
 
     def call_webservice(self, data):
-        self.service_mapping[self.current_context].update_curriculum(self.person, data, self.admission_uuid)
+        result = self.service_mapping[self.current_context].update_curriculum(self.person, data, self.admission_uuid)
+
+        if '_submit_and_continue' in self.request.POST and result.get('access_conditions_url', ''):
+            self.success_url = resolve_url(self.request.path)
+            self.request.session['access_conditions_url'] = result['access_conditions_url']
 
     def prepare_data(self, data):
         data['uuid_proposition'] = self.admission_uuid

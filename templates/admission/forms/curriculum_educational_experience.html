@@ -251,6 +251,7 @@
           let startYear = parseInt(startSelect.val());
           let transcriptType;
           let attachmentsToToggle;
+          const currentAcademicYear = {{ current_year }};
 
           const is_truthy = val => !!val;
           const beIsoCode = '{{ BE_ISO_CODE }}';
@@ -320,7 +321,9 @@
           }
 
           function formatEmptyFormContent(emptyFormContent, year) {
-              return emptyFormContent.replace(/{{FORM_SET_PREFIX}}|{{FOLLOWING_FORM_SET_PREFIX}}|{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}/g, function(matched) {
+              return emptyFormContent.replace(
+                  /{{FORM_SET_PREFIX}}|{{FOLLOWING_FORM_SET_PREFIX}}|{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}|value="WAITING_RESULT"/g,
+                  function(matched) {
                   switch (matched) {
                       {# Dynamic part of the form identifier corresponding to the first year of the academic year #}
                       case '{{FORM_SET_PREFIX}}':
@@ -335,6 +338,9 @@
                       {# and set up the appropriate VueJS components.#}
                       case '{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}':
                           return '{{OSIS_DOCUMENT_UPLOADER_CLASS}}';
+                      case 'value="WAITING_RESULT"':
+                          {# The waiting result option must not be selectable for past years #}
+                          return year < currentAcademicYear ? 'value="WAITING_RESULT" disabled class="hidden"' : matched
                       default:
                           return '';
                   }
@@ -399,7 +405,8 @@
           {% if not base_form.institute.field.disabled %}
             $('#id_base_form-institute').dependsOn({
                 '#id_base_form-other_institute': { checked: false },
-            }, { hide: false, });
+                '#id_base_form-country': { is_truthy }
+            }, { hide: false, valueOnDisable: null,});
           {% endif %}
 
           $('#other-institute').dependsOn({
@@ -436,6 +443,8 @@
 
               {# Translated fields #}
               manageTranslatedFields(this.value, linguisticRegime.val());
+
+              $('#id_base_form-institute').val(null).change();
           });
 
           {# Credits field #}
@@ -470,6 +479,7 @@
               if (transcriptType === 'ONE_A_YEAR') {
                   annualTranscripts.filter('input').prop('disabled', false);
                   annualTranscriptsButtons.removeClass('hidden');
+                  $('.result button:visible:first').click();
               } else {
                   annualTranscripts.filter('input').prop('disabled', true);
                   annualTranscripts.addClass('hidden');

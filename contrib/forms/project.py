@@ -48,6 +48,7 @@ from admission.contrib.forms import (
     get_thesis_location_initial_choices,
     get_scholarship_choices,
     AdmissionFileUploadField as FileUploadField,
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 from admission.services.autocomplete import AdmissionAutocompleteService
 
@@ -115,6 +116,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:scholarship',
             forward=[forward.Const(TypeBourse.BOURSE_INTERNATIONALE_DOCTORAT.name, 'scholarship_type')],
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     autre_bourse_recherche = forms.CharField(

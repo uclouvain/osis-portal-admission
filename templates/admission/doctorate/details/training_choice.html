@@ -43,12 +43,6 @@
     {% endswitch %}
   {% endpanel %}
 
-  {% panel _('Specific profile') %}
-    {% with admission.bourse_erasmus_mundus.nom_court|default:_('No') as short_name %}
-      {% field_data _('Erasmus Mundus scholarship') admission.bourse_erasmus_mundus.nom_long|default:short_name %}
-    {% endwith %}
-  {% endpanel %}
-
   {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
 
   {% if just_submitted %}

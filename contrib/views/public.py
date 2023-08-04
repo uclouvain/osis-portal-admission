@@ -92,7 +92,10 @@ class DoctorateAdmissionExternalApprovalView(UserPassesTestMixin, WebServiceForm
 
     def get_success_url(self):
         messages.info(self.request, _("Your decision has been saved."))
-        return resolve_url('admission:public-doctorate:external-confirm', pk=self.kwargs['pk'])
+        return self.request.POST.get('redirect_to') or resolve_url(
+            'admission:public-doctorate:external-confirm',
+            pk=self.kwargs['pk'],
+        )
 
 
 class DoctorateAdmissionExternalConfirmView(TemplateView):

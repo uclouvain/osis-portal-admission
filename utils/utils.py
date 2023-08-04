@@ -44,11 +44,11 @@ def format_high_school_title(high_school: HighSchool):
 
 
 def format_training(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
-    return '{intitule} ({campus}) - {sigle}'.format_map(training)
+    return '{intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training)
 
 
 def format_training_with_year(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
-    return '{annee} - {intitule} ({campus}) - {sigle}'.format_map(training)
+    return '{annee} - {intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training)
 
 
 def format_scholarship(scholarship: Scholarship):

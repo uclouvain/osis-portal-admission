@@ -41,7 +41,12 @@ from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
-from admission.services.reference import DiplomaService, LanguageService, SuperiorNonUniversityService
+from admission.services.reference import (
+    DiplomaService,
+    LanguageService,
+    SuperiorNonUniversityService,
+    SuperiorInstituteService,
+)
 from admission.utils import format_address
 from osis_admission_sdk.model.educational_experience import EducationalExperience
 from osis_admission_sdk.model.professional_experience import ProfessionalExperience
@@ -191,7 +196,7 @@ def initialize_field_texts(person, curriculum_experiences, context):
 
         # Initialize the institute
         if getattr(experience, 'institute', None):
-            institute = SuperiorNonUniversityService.get_superior_non_university(
+            institute = SuperiorInstituteService.get_superior_institute(
                 uuid=experience.institute,
                 person=person,
             )

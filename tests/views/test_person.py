@@ -27,6 +27,7 @@ import datetime
 from unittest.mock import Mock, patch, ANY
 
 import freezegun
+from django.conf import settings
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
@@ -34,7 +35,7 @@ from rest_framework import status
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.person import CivilState
-from admission.contrib.forms import PDF_MIME_TYPE
+from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
 from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
@@ -65,6 +66,17 @@ class PersonViewTestCase(TestCase):
 
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
         self.mock_countries_api = countries_api_patcher.start()
+
+        self.mock_person_api.return_value.update_person_identification.return_value = {
+            'first_name': 'Joe',
+            'last_name': 'Doe',
+            'language': settings.LANGUAGE_CODE,
+        }
+        self.mock_person_api.return_value.update_person_identification_admission.return_value = {
+            'first_name': 'Joe',
+            'last_name': 'Doe',
+            'language': settings.LANGUAGE_CODE,
+        }
 
         def get_countries(**kwargs):
             countries = [
@@ -119,9 +131,22 @@ class PersonViewTestCase(TestCase):
         self.assertContains(response, "dependsOn.min.js", count=1)
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
-        self.assertEqual(response.context['form'].initial['unknown_birth_date'], True)
-        self.assertIsNone(response.context['form'].initial.get('has_national_number'))
-        self.assertEqual(response.context['form'].initial['identification_type'], '')
+        form = response.context['form']
+        self.assertEqual(form.initial['unknown_birth_date'], True)
+        self.assertIsNone(form.initial.get('has_national_number'))
+        self.assertEqual(form.initial['identification_type'], '')
+        self.maxDiff = None
+        self.assertEqual(
+            form.fields['birth_year'].choices,
+            [EMPTY_CHOICE[0]]
+            + [
+                (
+                    year,
+                    year,
+                )
+                for year in range(2023, 1919, -1)
+            ],
+        )
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
         self.mock_proposition_api.assert_not_called()
 
@@ -138,6 +163,7 @@ class PersonViewTestCase(TestCase):
                 'birth_date': datetime.date(1990, 1, 1),
                 'has_national_number': True,
                 'national_number': '01234567890',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
             },
         )
 
@@ -173,6 +199,7 @@ class PersonViewTestCase(TestCase):
                 '_submit_and_continue': '',
                 'has_national_number': True,
                 'national_number': '01234567890',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
             },
         )
 
@@ -220,10 +247,33 @@ class PersonViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
-        self.assertFormError(response, 'form', 'last_registration_id', _("This field is required."))
         self.assertFormError(response, 'form', 'first_name', _("This field is required if the surname is missing."))
         self.assertFormError(response, 'form', 'last_name', _("This field is required if the first name is missing."))
         self.assertFormError(response, 'form', 'last_registration_id', _("The NOMA must contain 8 digits."))
+
+        response = self.client.post(
+            url,
+            {
+                'passport_number': '0123456789',
+                'has_national_number': False,
+                'identification_type': 'PASSPORT_NUMBER',
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'passport_expiry_date', _("This field is required."))
+
+        response = self.client.post(
+            url,
+            {
+                'id_card_number': '0123456789',
+                'has_national_number': False,
+                'identification_type': 'ID_CARD_NUMBER',
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(response, 'form', 'id_card_expiry_date', _("This field is required."))
 
     def test_post_update(self):
         url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -262,13 +312,14 @@ class PersonViewTestCase(TestCase):
             'national_number': '01234567890',
             'id_card_0': 'test',
             'id_card_number': '0123456789',
+            'id_card_expiry_date': datetime.date(2020, 1, 1),
+            'passport_expiry_date': datetime.date(2020, 1, 1),
         }
 
         person_kwargs = {
             'first_name': 'Joe',
             'middle_name': 'Jim,John,Jean-Pierre',
             'last_name': 'Doe',
-            'first_name_in_use': '',
             'sex': 'M',
             'gender': 'X',
             'birth_year': 1990,
@@ -282,6 +333,7 @@ class PersonViewTestCase(TestCase):
             'national_number': '',
             'id_card_number': '',
             'passport_number': '0123456789',
+            'passport_expiry_date': datetime.date(2020, 1, 1),
             'id_photo': [],
             'last_registration_year': self.current_year - 2,
             'last_registration_id': '12345678',
@@ -298,6 +350,8 @@ class PersonViewTestCase(TestCase):
                 'identification_type': 'PASSPORT_NUMBER',
                 'passport_number': '0123456789',
                 'passport_0': 'test',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
+                'passport_expiry_date': datetime.date(2020, 1, 1),
                 'national_number': '01234567890',
                 'id_card_0': 'test',
                 'id_card_number': '0123456789',
@@ -311,6 +365,7 @@ class PersonViewTestCase(TestCase):
                 **person_kwargs,
                 'id_card': ['test'],
                 'national_number': '01234567890',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
                 # Clean some fields depending on other fields values
                 'birth_date': None,
                 'last_registration_year': None,
@@ -318,6 +373,7 @@ class PersonViewTestCase(TestCase):
                 'passport': [],
                 'passport_number': '',
                 'id_card_number': '',
+                'passport_expiry_date': None,
             },
             **self.default_kwargs,
         )
@@ -334,6 +390,8 @@ class PersonViewTestCase(TestCase):
                 'national_number': '01234567890',
                 'id_card_0': 'test',
                 'id_card_number': '0123456789',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
+                'passport_expiry_date': datetime.date(2020, 1, 1),
             },
         )
 
@@ -344,11 +402,13 @@ class PersonViewTestCase(TestCase):
                 **person_kwargs,
                 'id_card': ['test'],
                 'id_card_number': '0123456789',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
                 # Clean some fields depending on other fields values
                 'birth_year': None,
                 'passport': [],
                 'passport_number': '',
                 'national_number': '',
+                'passport_expiry_date': None,
             },
             **self.default_kwargs,
         )
@@ -366,6 +426,8 @@ class PersonViewTestCase(TestCase):
                 'national_number': '01234567890',
                 'id_card_0': 'test',
                 'id_card_number': '0123456789',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
+                'passport_expiry_date': datetime.date(2020, 1, 1),
             },
         )
 
@@ -376,12 +438,14 @@ class PersonViewTestCase(TestCase):
                 **person_kwargs,
                 'passport': ['test'],
                 'passport_number': '0123456789',
+                'passport_expiry_date': datetime.date(2020, 1, 1),
                 # Clean some fields depending on other fields values
                 'birth_date': None,
                 'last_registration_year': None,
                 'last_registration_id': '',
                 'id_card': [],
                 'id_card_number': '',
+                'id_card_expiry_date': None,
                 'national_number': '',
             },
             **self.default_kwargs,
@@ -403,6 +467,8 @@ class PersonViewTestCase(TestCase):
                 'national_number': '01234567890',
                 'id_card_0': 'test',
                 'id_card_number': '0123456789',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
+                'passport_expiry_date': datetime.date(2020, 1, 1),
             },
         )
 
@@ -414,12 +480,14 @@ class PersonViewTestCase(TestCase):
                 'country_of_citizenship': BE_ISO_CODE,
                 'id_card': ['test'],
                 'national_number': '01234567890',
+                'id_card_expiry_date': datetime.date(2020, 1, 1),
                 # Clean some fields depending on other fields values
                 'birth_date': None,
                 'last_registration_year': None,
                 'last_registration_id': '',
                 'passport': [],
                 'passport_number': '',
+                'passport_expiry_date': None,
                 'id_card_number': '',
             },
             **self.default_kwargs,

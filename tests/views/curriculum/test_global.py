@@ -101,14 +101,12 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
             },
         )
 
-        self.assertRegex(response.rendered_content, r'Les expériences préfixées par .* sont incomplètes.')
-
     def test_with_admission_on_update_curriculum_is_loaded(self):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
-        self.assertNotContains(response, _("Save and continue"))
+        self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
 
         # Check that the right API calls are done
@@ -480,6 +478,48 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
                 'equivalence_diplome': [],
             },
             **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_post_curriculum_file_with_master_submit_and_continue(self):
+        update_method = (
+            self.mock_person_api.return_value.update_general_education_completer_curriculum_command_admission
+        )
+
+        # CV to check as the access conditions are not meet
+        update_method.return_value = {}
+
+        response = self.client.post(
+            self.admission_update_url,
+            data={
+                **self.post_data,
+                '_submit_and_continue': True,
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url(
+                'admission:general-education:update:specific-questions', pk=self.general_proposition.uuid
+            ),
+        )
+
+        # CV to check as the access conditions are not meet
+        update_method.return_value = {
+            'access_conditions_url': 'url',
+        }
+        response = self.client.post(
+            self.admission_update_url,
+            data={
+                **self.post_data,
+                '_submit_and_continue': True,
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid),
         )
 
     def test_with_admission_on_update_post_curriculum_with_bachelor(self):

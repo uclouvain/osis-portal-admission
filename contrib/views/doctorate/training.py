@@ -117,7 +117,7 @@ class TrainingActivityFormMixin(LoadDoctorateViewMixin, WebServiceFormMixin, For
 
     def get_success_url(self):
         base_url = resolve_url(':'.join(self.request.resolver_match.namespaces), pk=self.kwargs['pk'])
-        return f"{base_url}#{self.activity_uuid}"
+        return self.request.POST.get('redirect_to') or f"{base_url}#{self.activity_uuid}"
 
     def prepare_data(self, data):
         data = super().prepare_data(data)
@@ -246,7 +246,10 @@ class TrainingActivityDeleteView(LoadDoctorateViewMixin, WebServiceFormMixin, Fo
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
-        return resolve_url(':'.join(self.request.resolver_match.namespaces), pk=self.kwargs['pk'])
+        return self.request.POST.get('redirect_to') or resolve_url(
+            ':'.join(self.request.resolver_match.namespaces),
+            pk=self.kwargs['pk'],
+        )
 
 
 class TrainingActivityAssentView(LoadDoctorateViewMixin, WebServiceFormMixin, FormView):
@@ -295,4 +298,7 @@ class TrainingActivityAssentView(LoadDoctorateViewMixin, WebServiceFormMixin, Fo
         ).to_dict()
 
     def get_success_url(self):
-        return resolve_url(':'.join(self.request.resolver_match.namespaces), pk=self.kwargs['pk'])
+        return self.request.POST.get('redirect_to') or resolve_url(
+            ':'.join(self.request.resolver_match.namespaces),
+            pk=self.kwargs['pk'],
+        )

@@ -36,6 +36,7 @@ from admission.contrib.forms import (
     EMPTY_CHOICE,
     get_country_initial_choices,
     get_thesis_institute_initial_choices,
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 
 ACTOR_EXTERNAL = "EXTERNAL"
@@ -80,7 +81,10 @@ class DoctorateAdmissionMemberSupervisionForm(forms.Form):
     pays = forms.CharField(
         label=_("Country"),
         required=False,
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:country",
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
         initial=BE_ISO_CODE,
     )
     langue = forms.ChoiceField(
@@ -128,12 +132,18 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
     )
     tutor = forms.CharField(
         label=_("Search a tutor by name"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:tutor"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:tutor",
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
         required=False,
     )
     person = forms.CharField(
         label=_("Search a person by surname"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:person"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:person",
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
         required=False,
     )
 
@@ -197,9 +207,7 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         required=False,
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:institute",
-            attrs={
-                'data-minimum-input-length': 3,
-            },
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 

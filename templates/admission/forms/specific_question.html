@@ -29,8 +29,8 @@
   {# Specific questions #}
   {% with form=forms.0 %}
     {% bootstrap_form_errors form %}
-    {% if view.is_continuing %}
-      {% panel _('Specific aspects') %}
+    {% panel _('Specific aspects') %}
+      {% if view.is_continuing %}
         {% if admission.pays_nationalite_ue_candidat == False %}
           <p class="alert alert-info text-justify">
             {% blocktranslate trimmed %}
@@ -60,14 +60,11 @@
                 <div class="col-md-4 required_field formatted-field">
                   {% bootstrap_field form.street %}
                 </div>
-                <div class="col-md-2 required_field">
+                <div class="col-md-4 required_field">
                   {% bootstrap_field form.street_number placeholder="" %}
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                   {% bootstrap_field form.postal_box placeholder="" %}
-                </div>
-                <div class="col-md-4 formatted-field">
-                  {% bootstrap_field form.place placeholder="" %}
                 </div>
             </div>
             <div class="row">
@@ -93,13 +90,10 @@
             </div>
           {% endpanel %}
         </div>
-        {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
-      {% endpanel %}
-    {% elif form.specific_question_answers.field.fields %}
-      {% panel _('Specific aspects') %}
-        {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
-      {% endpanel %}
-    {% endif %}
+      {% endif %}
+      {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
+      {% bootstrap_field form.documents_additionnels %}
+    {% endpanel %}
   {% endwith %}
 
   {# Pool questions #}

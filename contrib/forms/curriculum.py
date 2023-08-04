@@ -56,10 +56,11 @@ from admission.contrib.forms import (
     get_diploma_initial_choices,
     get_example_text,
     RadioBooleanField,
-    get_superior_non_university_initial_choices,
+    get_superior_institute_initial_choices,
     FORM_SET_PREFIX,
     NoInput,
     AdmissionFileUploadField as FileUploadField,
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
@@ -369,7 +370,10 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     country = forms.CharField(
         label=_('Country'),
-        widget=autocomplete.ListSelect2(url='admission:autocomplete:country'),
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:country',
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
     )
     other_institute = forms.BooleanField(
         label=_('Other institute'),
@@ -388,15 +392,20 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         label=_('Institute'),
         required=False,
         widget=autocomplete.ListSelect2(
-            url='admission:autocomplete:superior-non-university',
+            url='admission:autocomplete:superior-institute',
             forward=['country'],
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     program = forms.CharField(
         empty_value=None,
         label=_('Course'),
         required=False,
-        widget=autocomplete.ListSelect2(url='admission:autocomplete:diploma'),
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:diploma',
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+            forward=['institute__type'],
+        ),
     )
     other_program = forms.BooleanField(
         label=_('Other program'),
@@ -414,7 +423,10 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         empty_value=None,
         label=_('Language regime'),
         required=False,
-        widget=autocomplete.ListSelect2(url='admission:autocomplete:language'),
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:language',
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
     )
     transcript_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + TranscriptType.choices(),
@@ -529,7 +541,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
             person,
         )
 
-        self.fields['institute'].widget.choices = get_superior_non_university_initial_choices(
+        self.fields['institute'].widget.choices = get_superior_institute_initial_choices(
             self.data.get(self.add_prefix('institute'), self.initial.get('institute')),
             person,
         )
@@ -605,6 +617,8 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         else:
             if not institute:
                 self.add_error('institute', FIELD_REQUIRED_MESSAGE)
+            else:
+                cleaned_data['institute'] = institute
 
             cleaned_data['institute_address'] = ''
             cleaned_data['institute_name'] = ''
@@ -700,9 +714,12 @@ class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
         required=False,
     )
 
-    def __init__(self, prefix_index_start=0, **kwargs):
+    def __init__(self, current_year, prefix_index_start=0, **kwargs):
         kwargs['fields_by_context'] = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
         super().__init__(**kwargs)
+        academic_year = self.data.get(self.add_prefix('academic_year'), self.initial.get('academic_year'))
+        if academic_year and int(academic_year) < current_year:
+            self.fields['result'].choices = EMPTY_CHOICE + Result.choices_for_past_years()
 
     def clean(self):
         cleaned_data = super().clean()

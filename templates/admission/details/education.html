@@ -43,55 +43,14 @@
         {% endif %}
       {% endif %}
 
-      {% field_data _('What result did you achieve?') belgian_diploma.result|enum_display:'DiplomaResults' %}
-
       {% display belgian_diploma.institute_name ' (' belgian_diploma.institute_address ')' as belgian_institute %}
       {% field_data _('Institute') belgian_institute %}
-
-      {% if belgian_diploma.schedule %}
-        <dl>
-          <dt>{% translate 'Timetable' %}</dt>
-          <dd>
-            <div class='row' style='margin-top: 0.5em;'>
-              <div class='col-md-4'>
-                {% panel _('Ancient languages') %}
-                  {% field_data _('Latin')|add:_(' (h/w)') belgian_diploma.schedule.latin inline=True %}
-                  {% field_data _('Greek')|add:_(' (h/w)') belgian_diploma.schedule.greek inline=True %}
-                {% endpanel %}
-                {% panel _('Sciences') %}
-                  {% field_data _('Chemistry')|add:_(' (h/w)') belgian_diploma.schedule.chemistry inline=True %}
-                  {% field_data _('Physic')|add:_(' (h/w)') belgian_diploma.schedule.physic inline=True %}
-                  {% field_data _('Biology')|add:_(' (h/w)') belgian_diploma.schedule.biology inline=True %}
-                {% endpanel %}
-              </div>
-              <div class='col-md-4'>
-                {% panel _('Modern languages') %}
-                  {% field_data _('French')|add:_(' (h/w)') belgian_diploma.schedule.french inline=True %}
-                  {% field_data _('English')|add:_(' (h/w)') belgian_diploma.schedule.english inline=True %}
-                  {% field_data _('Dutch')|add:_(' (h/w)') belgian_diploma.schedule.dutch inline=True %}
-                  {% field_data _('Spanish')|add:_(' (h/w)') belgian_diploma.schedule.spanish inline=True %}
-                  {% field_data _('German')|add:_(' (h/w)') belgian_diploma.schedule.german inline=True %}
-                  {% field_data belgian_diploma.schedule.modern_languages_other_label|add:_(' (h/w)') belgian_diploma.schedule.modern_languages_other_hours hide_empty=True inline=True %}
-                {% endpanel %}
-              </div>
-              <div class='col-md-4'>
-                {% panel _('Others') %}
-                  {% field_data _('Mathematics')|add:_(' (h/w)') belgian_diploma.schedule.mathematics inline=True %}
-                  {% field_data _('IT')|add:_(' (h/w)') belgian_diploma.schedule.it inline=True %}
-                  {% field_data _('Social sciences')|add:_(' (h/w)') belgian_diploma.schedule.social_sciences inline=True %}
-                  {% field_data _('Economics')|add:_(' (h/w)') belgian_diploma.schedule.economic_sciences inline=True %}
-                  {% field_data belgian_diploma.schedule.other_label|add:_(' (h/w)') belgian_diploma.schedule.other_hours hide_empty=True inline=True %}
-                {% endpanel %}
-              </div>
-            </div>
-          </dd>
-        </dl>
-      {% endif %}
     {% endpanel %}
 
     {% panel _('Attachments') %}
-      {% field_data _('Secondary school diploma') belgian_diploma.high_school_diploma %}
-      {% if graduated_from_high_school == 'THIS_YEAR' %}
+      {% if graduated_from_high_school == 'YES' %}
+        {% field_data _('Secondary school diploma') belgian_diploma.high_school_diploma %}
+      {% elif graduated_from_high_school == 'THIS_YEAR' %}
         {% field_data _('Certificate of enrolment or school attendance') belgian_diploma.enrolment_certificate %}
       {% endif %}
     {% endpanel %}

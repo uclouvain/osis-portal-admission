@@ -71,6 +71,11 @@ class AdmissionTrainingChoiceFormView(
         'SCIENCE_DOCTORATE': SCIENCE_DOCTORATE,
     }
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['force_click_on_form_button'] = not bool(self.admission_uuid)
+        return context_data
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.created_uuid: Optional[str] = None
@@ -105,7 +110,6 @@ class AdmissionTrainingChoiceFormView(
         return {
             'type_admission': data.get('admission_type'),
             'justification': data.get('justification'),
-            'bourse_erasmus_mundus': data.get('erasmus_mundus_scholarship'),
             'sigle_formation': training_acronym,
             'annee_formation': int(training_year),
             'commission_proximite': (
@@ -155,6 +159,10 @@ class AdmissionTrainingChoiceFormView(
     def get_success_url(self):
         messages.info(self.request, _("Your data have been saved"))
 
+        # If a url to redirect is specified in the request, use it
+        if self.request.POST.get('redirect_to'):
+            return self.request.POST.get('redirect_to')
+
         next_context = NAMESPACE_KEY_BY_ADMISSION_TYPE.get(self.training_type)
         tab_to_redirect = (
             self.get_next_tab_name(for_context=next_context)
@@ -177,9 +185,6 @@ class AdmissionTrainingChoiceFormView(
                 'justification': self.admission.justification,
                 'sector': self.admission.code_secteur_formation,
                 'doctorate_training': get_training_id(self.admission.doctorat),
-                'erasmus_mundus_scholarship': (
-                    self.admission.bourse_erasmus_mundus and self.admission.bourse_erasmus_mundus.uuid
-                ),
                 'proximity_commission': self.admission.commission_proximite,
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
             }

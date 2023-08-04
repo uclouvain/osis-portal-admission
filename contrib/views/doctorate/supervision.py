@@ -155,7 +155,7 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
                 return resolve_url('home')
             # Redirect on list
             return resolve_url('admission:supervised-list')
-        return self.request.get_full_path()
+        return self.request.POST.get('redirect_to') or self.request.get_full_path()
 
 
 class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -177,7 +177,6 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
             context['member'] = self.get_member(supervision)
         except (ApiException, AttributeError, KeyError):
             raise Http404(_('Member not found'))
-        context['force_form'] = True
         return context
 
     def get_member(self, supervision):
@@ -198,7 +197,7 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
         AdmissionSupervisionService.remove_member(person=self.person, uuid=self.admission_uuid, **data)
 
     def get_success_url(self):
-        return self._get_url("supervision")
+        return self.request.POST.get('redirect_to') or self._get_url("supervision")
 
 
 class DoctorateAdmissionEditExternalMemberView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -218,7 +217,7 @@ class DoctorateAdmissionEditExternalMemberView(LoadDossierViewMixin, WebServiceF
         AdmissionSupervisionService.edit_external_member(person=self.person, uuid=self.admission_uuid, **data)
 
     def get_success_url(self):
-        return self._get_url("supervision")
+        return self.request.POST.get('redirect_to') or self._get_url("supervision")
 
     def form_invalid(self, form):
         messages.error(self.request, _("Please correct the errors below"))
@@ -244,7 +243,10 @@ class DoctorateAdmissionSetReferencePromoterView(LoginRequiredMixin, WebServiceF
         )
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
+        return self.request.POST.get('redirect_to') or resolve_url(
+            'admission:doctorate:supervision',
+            pk=self.kwargs['pk'],
+        )
 
     def form_invalid(self, form):
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
@@ -262,7 +264,10 @@ class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixi
         )
 
     def get_success_url(self):
-        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
+        return self.request.POST.get('redirect_to') or resolve_url(
+            'admission:doctorate:supervision',
+            pk=self.kwargs['pk'],
+        )
 
     def form_invalid(self, form):
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
@@ -288,7 +293,10 @@ class DoctorateAdmissionExternalResendView(LoginRequiredMixin, WebServiceFormMix
 
     def get_success_url(self):
         messages.info(self.request, _("An invitation has been sent again."))
-        return resolve_url('admission:doctorate:supervision', pk=self.kwargs['pk'])
+        return self.request.POST.get('redirect_to') or resolve_url(
+            'admission:doctorate:supervision',
+            pk=self.kwargs['pk'],
+        )
 
     def form_invalid(self, form):
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])

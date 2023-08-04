@@ -41,4 +41,4 @@ class AdmissionRedirectView(RedirectView):
         namespace = self.request.resolver_match.url_name
         if namespace == 'doctorate':
             return f'admission:{namespace}:project'
-        return f'admission:{namespace}:training-choice'
+        return f'admission:{namespace}:person'
