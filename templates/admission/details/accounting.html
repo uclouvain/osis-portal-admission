@@ -82,11 +82,14 @@
         {% elif accounting.sous_type_situation_assimilation_2 == 'DEMANDEUR_ASILE' %}
           {% field_data _('Copy of Annex 25 or 26 completed by the Office of the Commissioner General for Refugees and Stateless Persons') accounting.annexe_25_26_refugies_apatrides %}
           {% field_data _('Copy of "orange card" enrolment certificate') accounting.attestation_immatriculation %}
+        {% elif accounting.sous_type_situation_assimilation_2 == 'APATRIDE' %}
+          {% field_data _('Copy of official document from the local authority or Foreign Nationals Office proving stateless status') accounting.preuve_statut_apatride %}
         {% elif accounting.sous_type_situation_assimilation_2 == 'PROTECTION_SUBSIDIAIRE' %}
           {% field_data _('Copy of both sides of A or B Card') accounting.carte_a_b %}
           {% field_data _('Copy of Foreign Nationals Office decision granting subsidiary protection') accounting.decision_protection_subsidiaire %}
         {% elif accounting.sous_type_situation_assimilation_2 == 'PROTECTION_TEMPORAIRE' %}
           {% field_data _('Copy of Foreign Nationals Office decision granting temporary protection') accounting.decision_protection_temporaire %}
+          {% field_data _('Copy of both sides of A Card') accounting.carte_a %}
         {% endif %}
 
       {% elif accounting.type_situation_assimilation == 'AUTORISATION_SEJOUR_ET_REVENUS_PROFESSIONNELS_OU_REMPLACEMENT' %}

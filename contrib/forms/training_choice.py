@@ -49,7 +49,13 @@ from admission.contrib.enums.training_choice import (
     TypeFormation,
     TypeFormationChoisissable,
 )
-from admission.contrib.forms import EMPTY_CHOICE, EMPTY_VALUE, RadioBooleanField, get_campus_choices
+from admission.contrib.forms import (
+    EMPTY_CHOICE,
+    EMPTY_VALUE,
+    RadioBooleanField,
+    get_campus_choices,
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+)
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -68,9 +74,10 @@ def get_training_choices(training):
     return [
         (
             "{acronym}-{academic_year}".format(
-                acronym=training['acronym'], academic_year=int(training['academic_year'])
+                acronym=training['acronym'],
+                academic_year=int(training['academic_year']),
             ),
-            '{name} ({campus}) - {acronym}'.format(
+            '{name} ({campus}) <span class="training-acronym">{acronym}</span>'.format(
                 name=training['title'] if get_language() == settings.LANGUAGE_CODE else training['title_en'],
                 campus=training['main_teaching_campus'].get('name'),
                 acronym=training['acronym'],
@@ -100,7 +107,8 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             url='admission:autocomplete:general-education',
             forward=['training_type', 'campus'],
             attrs={
-                'data-minimum-input-length': 3,
+                'data-html': True,
+                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
             },
         ),
     )
@@ -113,7 +121,8 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             url='admission:autocomplete:mixed-training',
             forward=['training_type', 'campus'],
             attrs={
-                'data-minimum-input-length': 3,
+                'data-html': True,
+                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
             },
         ),
     )
@@ -150,6 +159,10 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:doctorate',
             forward=['sector', 'campus'],
+            attrs={
+                'data-html': True,
+                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+            },
         ),
     )
 
@@ -187,6 +200,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:scholarship',
             forward=[forward.Const(TypeBourse.DOUBLE_TRIPLE_DIPLOMATION.name, 'scholarship_type')],
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 
@@ -204,6 +218,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:scholarship',
             forward=[forward.Const(TypeBourse.BOURSE_INTERNATIONALE_FORMATION_GENERALE.name, 'scholarship_type')],
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 
@@ -221,6 +236,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:scholarship',
             forward=[forward.Const(TypeBourse.ERASMUS_MUNDUS.name, 'scholarship_type')],
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 
@@ -408,7 +424,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             cleaned_data['international_scholarship'] = ''
 
     def clean_erasmus_scholarship(self, training_type, cleaned_data):
-        if training_type == TypeFormation.MASTER.name or training_type == TypeFormation.DOCTORAT.name:
+        if training_type == TypeFormation.MASTER.name:
             if cleaned_data.get('has_erasmus_mundus_scholarship'):
                 if not cleaned_data.get('erasmus_mundus_scholarship'):
                     self.add_error('erasmus_mundus_scholarship', FIELD_REQUIRED_MESSAGE)

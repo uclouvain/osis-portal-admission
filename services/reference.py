@@ -27,6 +27,7 @@ import datetime
 from functools import lru_cache
 from typing import List
 
+from django.http import Http404
 from osis_reference_sdk import ApiClient, ApiException
 from osis_reference_sdk.api import (
     academic_years_api,
@@ -36,9 +37,11 @@ from osis_reference_sdk.api import (
     diplomas_api,
     high_schools_api,
     superior_non_universities_api,
+    universities_api,
 )
 from osis_reference_sdk.model.academic_year import AcademicYear
 
+from admission.contrib.enums.diploma import StudyType
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
 from frontoffice.settings.osis_sdk import reference as reference_sdk
@@ -263,3 +266,48 @@ class SuperiorNonUniversityService(metaclass=ServiceMeta):
             **kwargs,
             **build_mandatory_auth_headers(person),
         )
+
+
+class UniversityAPIClient:
+    def __new__(cls):
+        api_config = reference_sdk.build_configuration()
+        return universities_api.UniversitiesApi(ApiClient(configuration=api_config))
+
+
+class UniversityService(metaclass=ServiceMeta):
+    api_exception_cls = ApiException
+
+    @classmethod
+    def get_universities(cls, person, **kwargs):
+        return (
+            UniversityAPIClient()
+            .universities_list(
+                limit=100,
+                **kwargs,
+                **build_mandatory_auth_headers(person),
+            )
+            .results
+        )
+
+    @classmethod
+    def get_university(cls, person, uuid, **kwargs):
+        return UniversityAPIClient().university_read(
+            uuid=uuid,
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        )
+
+
+class SuperiorInstituteService:
+    @classmethod
+    def get_superior_institute(cls, person, uuid, study_type=''):
+        if study_type == StudyType.UNIVERSITY.name:
+            return UniversityService.get_university(person=person, uuid=uuid)
+        elif study_type == StudyType.NON_UNIVERSITY.name:
+            return SuperiorNonUniversityService.get_superior_non_university(person=person, uuid=uuid)
+        else:
+            # We don't know so we need to check the two services
+            try:
+                return UniversityService.get_university(person=person, uuid=uuid)
+            except Http404:
+                return SuperiorNonUniversityService.get_superior_non_university(person=person, uuid=uuid)

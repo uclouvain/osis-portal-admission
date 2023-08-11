@@ -101,7 +101,9 @@
           })
 
           $('#id_type').change(function () {
-              $('#certificate .popover-buttons').attr('data-content', this.value ? CERTIFICATE_HELP_TEXT[this.value] : '');
+              const specificLabel = this.value ? CERTIFICATE_HELP_TEXT[this.value] : '{% translate 'Certificate' %}';
+              $('#certificate .popover-buttons').attr('data-content', specificLabel);
+              $('#certificate label').text(specificLabel);
           }).change()
 
           {# Display the options of the end date depending on the start date #}

@@ -45,6 +45,7 @@ from admission.contrib.forms import (
     get_academic_years_choices,
     get_country_initial_choices,
     AdmissionFileUploadField as FileUploadField,
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 from admission.services.reference import AcademicYearService
 from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
@@ -112,7 +113,10 @@ class ActivityFormMixin(forms.Form):
     country = forms.CharField(
         required=False,
         label=_("Country"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:country",
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
     )
     city = forms.CharField(label=_("City"), max_length=100)
     organizing_institution = forms.CharField(label=_("Organising institution"), max_length=100)
@@ -605,8 +609,8 @@ class UclCourseForm(ActivityFormMixin, forms.Form):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:learning-unit-years',
             attrs={
+                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
                 'data-html': True,
-                'data-minimum-input-length': 2,
                 'data-placeholder': _('Search for an EU code (outside the EU of the form)'),
             },
             forward=["academic_year"],

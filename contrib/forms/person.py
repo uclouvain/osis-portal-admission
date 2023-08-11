@@ -42,6 +42,8 @@ from admission.contrib.forms import (
     RadioBooleanField,
     AdmissionFileUploadField as FileUploadField,
     IMAGE_MIME_TYPES,
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+    get_year_choices,
 )
 from admission.utils import force_title
 
@@ -82,16 +84,6 @@ class DoctorateAdmissionPersonForm(forms.Form):
             },
         ),
     )
-    first_name_in_use = forms.CharField(
-        required=False,
-        label=_("Preferred first name"),
-        help_text=get_example_text('Martin <del>martin MARTIN</del>'),
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": get_example_text("Martin"),
-            },
-        ),
-    )
     sex = forms.ChoiceField(
         label=_("Sex"),
         choices=EMPTY_CHOICE + SexEnum.choices(),
@@ -106,12 +98,11 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("Date of birth"),
         widget=CustomDateInput(),
     )
-    birth_year = forms.IntegerField(
+    birth_year = forms.TypedChoiceField(
         required=False,
         label=_("Year of birth"),
-        widget=forms.NumberInput(attrs={'placeholder': _("yyyy")}),
-        min_value=1900,
-        max_value=lambda: datetime.date.today().year,
+        coerce=int,
+        widget=forms.Select,
     )
     civil_state = forms.ChoiceField(
         label=_("Civil status"),
@@ -120,7 +111,10 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     birth_country = forms.CharField(
         label=_("Country of birth"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:country",
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
     )
     birth_place = forms.CharField(
         label=_("Place of birth"),
@@ -133,7 +127,10 @@ class DoctorateAdmissionPersonForm(forms.Form):
     country_of_citizenship = forms.CharField(
         required=False,
         label=_("Country of citizenship"),
-        widget=autocomplete.ListSelect2(url="admission:autocomplete:country"),
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:country",
+            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+        ),
     )
 
     language = forms.ChoiceField(
@@ -150,10 +147,33 @@ class DoctorateAdmissionPersonForm(forms.Form):
         max_files=2,
     )
 
-    passport = FileUploadField(required=False, label=_("Passport"), max_files=2)
+    passport = FileUploadField(
+        required=False,
+        label=_("Passport"),
+        max_files=2,
+    )
+
+    id_card_expiry_date = forms.DateField(
+        required=False,
+        label=_('Identity card expiry date'),
+        widget=CustomDateInput(),
+    )
+
+    passport_expiry_date = forms.DateField(
+        required=False,
+        label=_('Passport expiry date'),
+        widget=CustomDateInput(),
+    )
 
     has_national_number = RadioBooleanField(
         label=_("Do you have a Belgian National Register Number (NISS)?"),
+        help_text=_(
+            'The Belgian national register number (or NISS, Social Security Identification Number) is a '
+            'number composed of 11 digits, the first 6 of which refer to the date of birth of the concerned '
+            'person. This number is assigned to every person living in Belgium when they register with '
+            'the municipality (or other official body). It can be found on the Belgian identity card or on the '
+            'residence permit.'
+        ),
     )
     identification_type = forms.ChoiceField(
         label=_("Please provide one of these two pieces of identification information:"),
@@ -175,13 +195,6 @@ class DoctorateAdmissionPersonForm(forms.Form):
                 "data-mask": "00.00.00-000.00",
                 "placeholder": get_example_text("85.07.30-001.33"),
             },
-        ),
-        help_text=_(
-            'The Belgian national register number (or NISS, Social Security Identification Number) is a '
-            'number composed of 11 digits, the first 6 of which refer to the date of birth of the concerned '
-            'person. This number is assigned to every person living in Belgium when they register with '
-            'the municipality (or other official body). It can be found on the Belgian identity card or on the '
-            'residence permit.'
         ),
     )
     id_card_number = forms.CharField(required=False, label=_("Identity card number"))
@@ -232,6 +245,8 @@ class DoctorateAdmissionPersonForm(forms.Form):
         if self.initial.get('birth_year'):
             self.initial['unknown_birth_date'] = True
 
+        self.fields['birth_year'].choices = get_year_choices()
+
         self.fields['birth_country'].widget.choices = get_country_initial_choices(
             self.data.get(self.add_prefix("birth_country"), self.initial.get("birth_country")),
             person,
@@ -266,8 +281,6 @@ class DoctorateAdmissionPersonForm(forms.Form):
         if data.get('already_registered'):
             if not data.get('last_registration_year'):
                 self.add_error('last_registration_year', FIELD_REQUIRED_MESSAGE)
-            if not data.get('last_registration_id'):
-                self.add_error('last_registration_id', FIELD_REQUIRED_MESSAGE)
 
         if not data.get('first_name') and not data.get('last_name'):
             self.add_error('first_name', _('This field is required if the surname is missing.'))
@@ -276,17 +289,23 @@ class DoctorateAdmissionPersonForm(forms.Form):
         if data.get('has_national_number'):
             if not data.get('national_number'):
                 self.add_error('national_number', FIELD_REQUIRED_MESSAGE)
+            if not data.get('id_card_expiry_date'):
+                self.add_error('id_card_expiry_date', FIELD_REQUIRED_MESSAGE)
         elif data.get('identification_type') == IdentificationType.ID_CARD_NUMBER.name:
             if not data.get('id_card_number'):
                 self.add_error('id_card_number', FIELD_REQUIRED_MESSAGE)
+            if not data.get('id_card_expiry_date'):
+                self.add_error('id_card_expiry_date', FIELD_REQUIRED_MESSAGE)
         elif data.get('identification_type') == IdentificationType.PASSPORT_NUMBER.name:
             if not data.get('passport_number'):
                 self.add_error('passport_number', FIELD_REQUIRED_MESSAGE)
+            if not data.get('passport_expiry_date'):
+                self.add_error('passport_expiry_date', FIELD_REQUIRED_MESSAGE)
         else:
             self.add_error('identification_type', FIELD_REQUIRED_MESSAGE)
 
         # Lowercase the specified names
-        for field in ['first_name', 'last_name', 'middle_name', 'first_name_in_use', 'birth_place']:
+        for field in ['first_name', 'last_name', 'middle_name', 'birth_place']:
             if data.get(field):
                 data[field] = force_title(data[field])
 

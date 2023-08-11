@@ -48,12 +48,14 @@ from admission.contrib.enums import (
     EvaluationSystemsWithCredits,
     TranscriptType,
     CURRICULUM_ACTIVITY_LABEL,
+    Result,
 )
 from admission.contrib.forms import (
     FOLLOWING_FORM_SET_PREFIX,
     FORM_SET_PREFIX,
     OSIS_DOCUMENT_UPLOADER_CLASS,
     OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
+    EMPTY_CHOICE,
 )
 from admission.contrib.forms.curriculum import (
     AdmissionCurriculumEducationalExperienceForm,
@@ -78,6 +80,8 @@ __all__ = [
 ]
 __namespace__ = 'curriculum'
 
+from admission.services.reference import AcademicYearService
+
 
 class AdmissionCurriculumFormMixin(WebServiceFormMixin, AdmissionCurriculumMixin, ABC):
     pass
@@ -91,6 +95,9 @@ class AdmissionCurriculumFormExperienceMixin(AdmissionCurriculumFormMixin, ABC):
 
     def get_success_url(self):
         messages.info(self.request, _("Your data have been saved"))
+        # If a url to redirect is specified in the request, use it
+        if self.request.POST.get('redirect_to'):
+            return self.request.POST.get('redirect_to')
         if '_submit_and_continue' in self.request.POST:
             # Redirect to the list of experiences
             return self._get_url('curriculum', update=True) + getattr(self, 'url_hash', '')
@@ -264,11 +271,14 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
             prefix='base_form',
         )
 
+        current_year = AcademicYearService.get_current_academic_year(self.person)
+
         year_formset = AdmissionCurriculumEducationalExperienceYearFormSet(
             self.request.POST or None,
             initial=all_educational_experience_years,
             prefix='year_formset',
             form_kwargs={
+                'current_year': current_year,
                 'prefix_index_start': int(
                     base_form.data.get(
                         base_form.add_prefix('end'),
@@ -292,6 +302,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
             },
         ).replace(OSIS_DOCUMENT_UPLOADER_CLASS, OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX)
 
+        context_data['current_year'] = current_year
         context_data['form'] = base_form  # Trick template to display form tag
         context_data['base_form'] = base_form
         context_data['year_formset'] = year_formset
@@ -376,9 +387,11 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
 
             acquired_credit_number = cleaned_data.get('acquired_credit_number', None)
             registered_credit_number = cleaned_data.get('registered_credit_number', None)
+            credits_are_required_for_this_year = cleaned_data.get('result') != Result.WAITING_RESULT.name
 
             if acquired_credit_number is None or acquired_credit_number == '':
-                form.add_error('acquired_credit_number', FIELD_REQUIRED_MESSAGE)
+                if credits_are_required_for_this_year:
+                    form.add_error('acquired_credit_number', FIELD_REQUIRED_MESSAGE)
             else:
                 acquired_credit_number = Decimal(acquired_credit_number)
                 if acquired_credit_number < MINIMUM_CREDIT_NUMBER:
@@ -389,7 +402,8 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
                     )
 
             if registered_credit_number is None or registered_credit_number == '':
-                form.add_error('registered_credit_number', FIELD_REQUIRED_MESSAGE)
+                if credits_are_required_for_this_year:
+                    form.add_error('registered_credit_number', FIELD_REQUIRED_MESSAGE)
             else:
                 registered_credit_number = Decimal(registered_credit_number)
                 if registered_credit_number <= MINIMUM_CREDIT_NUMBER:

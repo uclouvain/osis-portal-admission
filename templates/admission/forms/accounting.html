@@ -112,12 +112,16 @@
           {% bootstrap_field form.annexe_25_26_refugies_apatrides form_group_class="form-group required_field" %}
           {% bootstrap_field form.attestation_immatriculation form_group_class="form-group required_field" %}
         </div>
+        <div id="assimilation2-stateless-container">
+          {% bootstrap_field form.preuve_statut_apatride form_group_class="form-group required_field" %}
+        </div>
         <div id="assimilation2-subsidiary-protection-container">
           {% bootstrap_field form.carte_a_b form_group_class="form-group required_field" %}
           {% bootstrap_field form.decision_protection_subsidiaire form_group_class="form-group required_field" %}
         </div>
         <div id="assimilation2-temporary-protection-container">
           {% bootstrap_field form.decision_protection_temporaire form_group_class="form-group required_field" %}
+          {% bootstrap_field form.carte_a form_group_class="form-group required_field" %}
         </div>
       </div>
 
@@ -299,6 +303,10 @@
 
               $('#assimilation2-asylum-seeker-container').dependsOn({
                   'input[name=sous_type_situation_assimilation_2]': { values: ["DEMANDEUR_ASILE"] },
+              });
+
+              $('#assimilation2-stateless-container').dependsOn({
+                  'input[name=sous_type_situation_assimilation_2]': { values: ["APATRIDE"] },
               });
 
               $('#assimilation2-subsidiary-protection-container').dependsOn({

@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+import itertools
 from typing import List
 
 from dal import autocomplete
@@ -31,10 +31,12 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import get_language
 from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
+from osis_reference_sdk.model.university import University
 from waffle import switch_is_active
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums import TypeFormation
+from admission.contrib.enums.diploma import StudyType
 from admission.contrib.forms import EMPTY_VALUE
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.organisation import EntitiesService
@@ -45,6 +47,7 @@ from admission.services.reference import (
     HighSchoolService,
     LanguageService,
     SuperiorNonUniversityService,
+    UniversityService,
 )
 from admission.utils import (
     format_entity_address,
@@ -73,6 +76,8 @@ __all__ = [
     "GeneralEducationAutocomplete",
     "MixedTrainingAutocomplete",
     "ScholarshipAutocomplete",
+    "UniversityAutocomplete",
+    "SuperiorInstituteAutocomplete",
 ]
 
 
@@ -353,6 +358,7 @@ class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             person=self.request.user.person,
             search=self.q,
             active=True,
+            study_type=self.forwarded.get('institute', '').split(':', maxsplit=1)[0],
         )
 
     def results(self, results):
@@ -412,6 +418,76 @@ class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2
             dict(
                 id=result.uuid,
                 text=result.name,
+            )
+            for result in results
+        ]
+
+    def autocomplete_results(self, results):
+        return results
+
+
+class UniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    urlpatterns = 'university'
+
+    def get_list(self):
+        additional_filters = {}
+        country = self.forwarded.get('country')
+        if country:
+            additional_filters['country_iso_code'] = country
+
+        return UniversityService.get_universities(
+            person=self.request.user.person,
+            search=self.q,
+            active=True,
+            **additional_filters,
+        )
+
+    def results(self, results):
+        return [
+            dict(
+                id=result.uuid,
+                text=result.name,
+            )
+            for result in results
+        ]
+
+    def autocomplete_results(self, results):
+        return results
+
+
+class SuperiorInstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    urlpatterns = 'superior-institute'
+
+    def get_list(self):
+        additional_filters = {}
+        country = self.forwarded.get('country')
+        if country:
+            additional_filters['country_iso_code'] = country
+
+        universities = UniversityService.get_universities(
+            person=self.request.user.person,
+            search=self.q,
+            active=True,
+            **additional_filters,
+        )
+        superior_non_universities = SuperiorNonUniversityService.get_superior_non_universities(
+            person=self.request.user.person,
+            search=self.q,
+            active=True,
+            **additional_filters,
+        )
+
+        return sorted(
+            itertools.chain(universities, superior_non_universities),
+            key=lambda institute: institute.name,
+        )
+
+    def results(self, results):
+        return [
+            dict(
+                id=result.uuid,
+                text=result.name,
+                type=StudyType.UNIVERSITY.name if isinstance(result, University) else StudyType.NON_UNIVERSITY.name,
             )
             for result in results
         ]

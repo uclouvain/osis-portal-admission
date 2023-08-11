@@ -44,7 +44,6 @@ from admission.contrib.forms.education import (
     BachelorAdmissionEducationBelgianDiplomaForm,
     BachelorAdmissionEducationForeignDiplomaForm,
     BachelorAdmissionEducationForm,
-    BachelorAdmissionEducationScheduleForm,
     BaseAdmissionEducationForm,
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -55,9 +54,6 @@ from admission.services.person import (
 )
 from admission.utils import is_med_dent_training
 
-EDUCATIONAL_TYPES_REQUIRING_SCHEDULE = [
-    EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
-]
 
 __all__ = [
     'AdmissionEducationFormView',
@@ -66,7 +62,6 @@ __all__ = [
 
 class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = "admission/forms/education.html"
-    success_url = reverse_lazy("admission:list")
     forms = None
     service_mapping = {
         'general-education': GeneralEducationAdmissionPersonService,
@@ -93,7 +88,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 'EUROPEAN_BACHELOR': 'admission/images/schola_europa.png',
             }
             context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
-            context_data['educational_types_requiring_schedule'] = EDUCATIONAL_TYPES_REQUIRING_SCHEDULE
             context_data['is_med_dent_training'] = self.is_med_dent_training
             context_data['is_vae_potential'] = self.high_school_diploma['is_vae_potential']
         return context_data
@@ -157,19 +151,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
         self.check_bound_and_set_required_attr(belgian_diploma_form)
         self.check_bound_and_set_required_attr(foreign_diploma_form)
 
-        # Cross-form check: make schedule required for some belgian diploma educational types
-        if belgian_diploma_form.is_bound:
-            educational_type = belgian_diploma_form.data.get(belgian_diploma_form.add_prefix("educational_type"))
-            community = belgian_diploma_form.data.get(belgian_diploma_form.add_prefix("community"))
-
-            if (
-                community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name
-                and educational_type in EDUCATIONAL_TYPES_REQUIRING_SCHEDULE
-            ):
-                self.check_bound_and_set_required_attr(forms["schedule_form"])
-            else:
-                forms["schedule_form"].is_bound = False  # drop data if schedule is not required
-
         # Page is valid if all bound forms are valid
         if all(not form.is_bound or form.is_valid() for form in forms.values()):
             return self.form_valid(main_form)
@@ -216,15 +197,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                     data=data if data and got_foreign_diploma else None,
                     **kwargs,
                 ),
-                "schedule_form": BachelorAdmissionEducationScheduleForm(
-                    prefix="schedule",
-                    initial=initial.get("belgian_diploma") and initial["belgian_diploma"].get("schedule"),
-                    # don't send data to prevent validation
-                    data=data if data and got_belgian_diploma else None,
-                    empty_permitted=True,
-                    use_required_attribute=False,  # for number input that can't be empty
-                    **kwargs,
-                ),
             }
         return self.forms
 
@@ -269,10 +241,11 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 'high_school_diploma_alternative': {'first_cycle_admission_exam': first_cycle_admission_exam},
             }
 
+        # The candidate has a diploma or will have one this year
+
         enrolment_certificate = data.pop("enrolment_certificate", [])
         if data.pop("diploma_type") == DiplomaTypes.BELGIAN.name:
             self.prepare_diploma(data, forms, "belgian_diploma")
-            schedule = forms.get("schedule_form")
             belgian_diploma = data.get("belgian_diploma")
 
             if belgian_diploma.get("community") != BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name:
@@ -290,12 +263,11 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 belgian_diploma['other_institute_name'] = ""
                 belgian_diploma['other_institute_address'] = ""
 
-            if schedule and educational_type in EDUCATIONAL_TYPES_REQUIRING_SCHEDULE:
-                belgian_diploma["schedule"] = schedule.cleaned_data
-
-            belgian_diploma['enrolment_certificate'] = (
-                enrolment_certificate if graduated_from_high_school == GotDiploma.THIS_YEAR.name else []
-            )
+            if graduated_from_high_school == GotDiploma.THIS_YEAR.name:
+                belgian_diploma['enrolment_certificate'] = enrolment_certificate
+                belgian_diploma['high_school_diploma'] = []
+            else:
+                belgian_diploma['enrolment_certificate'] = []
 
         else:
             self.prepare_diploma(data, forms, "foreign_diploma")

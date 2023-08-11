@@ -81,6 +81,14 @@ class WebServiceFormMixin:
         from admission.templatetags.admission import can_update_tab, TAB_TREES
 
         messages.info(self.request, _("Your data have been saved"))
+
+        # If a url to redirect is specified in the request, use it
+        if self.request.POST.get('redirect_to'):
+            return self.request.POST.get('redirect_to')
+
+        if self.success_url:
+            return self.success_url
+
         tab_mapping = {
             child.name: child for tab, children in TAB_TREES[self.current_context].items() for child in children
         }

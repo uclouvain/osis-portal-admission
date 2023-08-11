@@ -101,7 +101,7 @@
         {% bootstrap_field form.international_scholarship show_label=False %}
       </div>
     </div>
-    <div id="erasmus-scholarship" class="required_field">
+    <div id="master-scholarship" class="required_field">
       {% bootstrap_field_with_tooltip form.has_erasmus_mundus_scholarship %}
       <div id="erasmus-scholarship-field">
         {% bootstrap_field form.erasmus_mundus_scholarship show_label=False %}
@@ -118,10 +118,6 @@
   {% if just_submitted %}
     {% include "admission/modal/just_submitted_modal.html" %}
   {% endif %}
-{% endblock %}
-
-{% block style %}
-  {{ block.super }}
 {% endblock %}
 
 {% block script %}
@@ -224,13 +220,7 @@
 
           // Display right scholaships depending on the training type
 
-          $('#student-profile, #erasmus-scholarship').dependsOn({
-              '#id_training_type': {
-                  values: ['MASTER', 'DOCTORAT'],
-              },
-          }, defaultOptions);
-
-          $('.master-scholarship').dependsOn({
+          $('#student-profile').dependsOn({
               '#id_training_type': {
                   values: ['MASTER'],
               },

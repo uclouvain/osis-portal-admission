@@ -252,9 +252,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertTrue('sector' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['sector'])
 
-        self.assertTrue('has_erasmus_mundus_scholarship' in form.errors)
-        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['has_erasmus_mundus_scholarship'])
-
     def test_doctorate_education_form_submitting_without_required_pre_admission_fields(self):
         data = {
             'training_type': TypeFormation.DOCTORAT.name,
@@ -317,8 +314,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'campus': EMPTY_VALUE,
                 'doctorate_training': 'SC3DP-2020',
                 'sector': 'SSH',
-                'has_erasmus_mundus_scholarship': True,
-                'erasmus_mundus_scholarship': self.first_erasmus_mundus_scholarship.uuid,
                 'admission_type': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
                 'science_sub_domain': 'MATHEMATICS',
@@ -335,7 +330,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'matricule_candidat': self.person.global_id,
                 'justification': 'Justification',
                 'commission_proximite': 'MATHEMATICS',
-                'bourse_erasmus_mundus': self.first_erasmus_mundus_scholarship.uuid,
             },
             **self.default_kwargs,
         )
@@ -353,8 +347,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'campus': EMPTY_VALUE,
                 'doctorate_training': 'TR3-2020',
                 'sector': 'SSH',
-                'has_erasmus_mundus_scholarship': False,
-                'erasmus_mundus_scholarship': self.first_erasmus_mundus_scholarship.uuid,
                 'admission_type': AdmissionType.ADMISSION.name,
                 'justification': 'Justification',
                 'science_sub_domain': 'MATHEMATICS',
@@ -371,7 +363,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'matricule_candidat': self.person.global_id,
                 'justification': '',
                 'commission_proximite': 'ECONOMY',
-                'bourse_erasmus_mundus': '',
             },
             **self.default_kwargs,
         )
@@ -389,8 +380,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'campus': EMPTY_VALUE,
                 'doctorate_training': 'TR4-2020',
                 'sector': 'SSH',
-                'has_erasmus_mundus_scholarship': False,
-                'erasmus_mundus_scholarship': self.first_erasmus_mundus_scholarship.uuid,
                 'admission_type': AdmissionType.ADMISSION.name,
                 'justification': 'Justification',
                 'science_sub_domain': 'MATHEMATICS',
@@ -407,7 +396,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'matricule_candidat': self.person.global_id,
                 'justification': '',
                 'commission_proximite': 'ECLI',
-                'bourse_erasmus_mundus': '',
             },
             **self.default_kwargs,
         )

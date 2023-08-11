@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import uuid
 from datetime import datetime
 from unittest.mock import patch, ANY
 
@@ -167,24 +168,31 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             tab=Onglets.INFORMATIONS_ADDITIONNELLES.name,
             **self.default_kwargs,
         )
-        self.assertEqual(response.context['admission'].uuid, self.general_proposition.uuid)
+        self.assertEqual(response.context['admission'].uuid, self.bachelor_proposition.uuid)
         self.assertEqual(response.context['specific_questions'], self.specific_questions)
         self.assertEqual(
             response.context['forms'][0].initial,
-            {'specific_question_answers': self.general_proposition.reponses_questions_specifiques},
+            {
+                'reponses_questions_specifiques': self.bachelor_proposition.reponses_questions_specifiques,
+                'documents_additionnels': self.bachelor_proposition.documents_additionnels,
+            },
         )
 
     def test_post_page(self):
         response = self.client.post(
             self.url,
-            data={'specific_questions-specific_question_answers_1': 'My updated answer'},
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-documents_additionnels_0': 'uuid-doc',
+            },
         )
 
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
             modifier_questions_specifiques_formation_generale_command={
-                'specific_question_answers': {self.first_question_uuid: 'My updated answer'},
+                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                'documents_additionnels': ['uuid-doc'],
             },
             **self.default_kwargs,
         )
@@ -216,7 +224,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof': [],
-            'specific_questions-specific_question_answers_1': 'Answer',
+            'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data=data)
         self.assertRedirects(response, self.url)
@@ -234,7 +242,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof_0': 'uuid',
-            'specific_questions-specific_question_answers_1': 'Answer',
+            'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -253,7 +261,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': False,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof_0': 'uuid',
-            'specific_questions-specific_question_answers_1': 'Answer',
+            'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -271,7 +279,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': False,
             'pool_questions-regular_registration_proof_0': 'uuid',
-            'specific_questions-specific_question_answers_1': 'Answer',
+            'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -312,7 +320,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_modification': True,
             'pool_questions-registration_change_form': [],
-            'specific_questions-specific_question_answers_1': 'Answer',
+            'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -330,7 +338,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_modification': True,
             'pool_questions-registration_change_form_0': 'uuid',
-            'specific_questions-specific_question_answers_1': 'Answer',
+            'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -348,7 +356,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': False,
             'pool_questions-is_external_modification': True,
             'pool_questions-registration_change_form_0': 'uuid',
-            'specific_questions-specific_question_answers_1': 'Answer',
+            'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -366,7 +374,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_modification': False,
             'pool_questions-registration_change_form_0': 'uuid',
-            'specific_questions-specific_question_answers_1': 'Answer',
+            'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -416,7 +424,6 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertEqual(initial_data.get('adresse_facturation_destinataire'), 'Mr Doe')
         self.assertEqual(initial_data.get('street'), 'Rue des Pins')
         self.assertEqual(initial_data.get('street_number'), '10')
-        self.assertEqual(initial_data.get('place'), 'Dit')
         self.assertEqual(initial_data.get('postal_box'), 'B1')
         self.assertEqual(initial_data.get('postal_code'), '1348')
         self.assertEqual(initial_data.get('city'), 'Louvain-La-Neuve')
@@ -455,6 +462,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
                 'specific_questions-inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
                 'specific_questions-copie_titre_sejour_0': ['file-token'],
+                'specific_questions-documents_additionnels_0': ['file-token1'],
             },
         )
 
@@ -465,6 +473,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'reponses_questions_specifiques': ANY,
                 'inscription_a_titre': ANY,
                 'copie_titre_sejour': [],
+                'documents_additionnels': ['file-token1'],
             },
             **self.default_kwargs,
         )
@@ -486,6 +495,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'reponses_questions_specifiques': ANY,
                 'inscription_a_titre': ANY,
                 'copie_titre_sejour': ['file-token'],
+                'documents_additionnels': [],
             },
             **self.default_kwargs,
         )
@@ -512,6 +522,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
                 'copie_titre_sejour': [],
+                'documents_additionnels': [],
             },
             **self.default_kwargs,
         )
@@ -542,6 +553,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_mail_professionnelle': 'jane.doe@example.be',
                 'type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
                 'copie_titre_sejour': [],
+                'documents_additionnels': [],
             },
             **self.default_kwargs,
         )
@@ -608,8 +620,8 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_facturation_pays': 'FR',
                 'adresse_facturation_destinataire': 'Jane Doe',
                 'adresse_facturation_boite_postale': 'PB1',
-                'adresse_facturation_lieu_dit': 'Avant',
                 'copie_titre_sejour': [],
+                'documents_additionnels': [],
             },
             **self.default_kwargs,
         )
@@ -654,8 +666,8 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_facturation_pays': 'BE',
                 'adresse_facturation_destinataire': 'Jane Doe',
                 'adresse_facturation_boite_postale': 'PB1',
-                'adresse_facturation_lieu_dit': 'Avant',
                 'copie_titre_sejour': [],
+                'documents_additionnels': [],
             },
             **self.default_kwargs,
         )

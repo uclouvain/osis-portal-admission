@@ -38,9 +38,12 @@ from osis_reference_sdk.model.high_school import HighSchool
 from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
 from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
+from osis_reference_sdk.model.paginated_university import PaginatedUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
+from osis_reference_sdk.model.university import University
 
 from admission.contrib.enums import BelgianCommunitiesOfEducation, TypeFormationChoisissable
+from admission.contrib.enums.diploma import StudyType
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType, TypeFormation
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
@@ -92,7 +95,7 @@ class AutocompleteTestCase(TestCase):
                 'id': 'FOOBAR-2021',
                 'sigle': 'FOOBAR',
                 'sigle_entite_gestion': 'CDE',
-                'text': 'Foobar (Louvain-La-Neuve) - FOOBAR',
+                'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
             }
         ]
         self.assertEqual(response.json(), {'results': results})
@@ -528,11 +531,11 @@ class AutocompleteTestCase(TestCase):
         results = [
             {
                 'id': 'FOOBAR-2021',
-                'text': 'Foobar (Louvain-La-Neuve) - FOOBAR',
+                'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
             },
             {
                 'id': 'BARBAZ-2021',
-                'text': 'Barbaz (Mons) - BARBAZ',
+                'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
             },
         ]
         self.assertEqual(response.json(), {'results': results})
@@ -594,15 +597,21 @@ class AutocompleteTestCase(TestCase):
         }
         response = self.client.get(url, data)
         results = [
-            {'id': 'CONFOOBAR-2021', 'text': 'Foobar (Louvain-La-Neuve) - CONFOOBAR'},
-            {'id': 'CONBARBAZ-2021', 'text': 'Barbaz (Mons) - CONBARBAZ'},
-            {'id': 'GENFOOBAR-2021', 'text': 'Foobar (Louvain-La-Neuve) - GENFOOBAR'},
-            {'id': 'GENBARBAZ-2021', 'text': 'Barbaz (Mons) - GENBARBAZ'},
+            {
+                'id': 'CONFOOBAR-2021',
+                'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">CONFOOBAR</span>',
+            },
+            {'id': 'CONBARBAZ-2021', 'text': 'Barbaz (Mons) <span class="training-acronym">CONBARBAZ</span>'},
+            {
+                'id': 'GENFOOBAR-2021',
+                'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">GENFOOBAR</span>',
+            },
+            {'id': 'GENBARBAZ-2021', 'text': 'Barbaz (Mons) <span class="training-acronym">GENBARBAZ</span>'},
         ]
         self.assertEqual(response.json(), {'results': results})
 
     @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
-    def test_autocomplete_superior_list(self, api):
+    def test_autocomplete_non_universities_list(self, api):
         self.first_superior_school_uuid = str(uuid.uuid4())
         self.second_superior_school_uuid = str(uuid.uuid4())
 
@@ -670,4 +679,168 @@ class AutocompleteTestCase(TestCase):
             **DEFAULT_API_PARAMS,
         )
 
+        self.assertEqual(response.json(), {'results': expected})
+
+    @patch('osis_reference_sdk.api.universities_api.UniversitiesApi')
+    def test_autocomplete_universities_list(self, api):
+        self.first_superior_school_uuid = str(uuid.uuid4())
+        self.second_superior_school_uuid = str(uuid.uuid4())
+
+        mock_schools = [
+            University(
+                url='',
+                uuid=self.first_superior_school_uuid,
+                name="Superior 1",
+                acronym="S1",
+                city="Louvain-La-Neuve",
+                zipcode="1348",
+                street="Place de l'Université",
+                street_number="1",
+            ),
+            University(
+                url='',
+                uuid=self.second_superior_school_uuid,
+                name="Superior 2",
+                acronym="S1",
+                city="Bruxelles",
+                zipcode="1000",
+                street="Boulevard du Triomphe",
+                street_number="1",
+            ),
+        ]
+        api.return_value.universities_list.return_value = PaginatedUniversity(
+            results=mock_schools,
+        )
+        url = reverse('admission:autocomplete:university')
+        response = self.client.get(url, {'q': 'Superior'})
+
+        api.return_value.universities_list.assert_called_with(
+            limit=100,
+            search='Superior',
+            active=True,
+            **DEFAULT_API_PARAMS,
+        )
+
+        expected = [
+            {
+                'id': self.first_superior_school_uuid,
+                'text': 'Superior 1',
+            },
+            {
+                'id': self.second_superior_school_uuid,
+                'text': 'Superior 2',
+            },
+        ]
+        self.assertEqual(response.json(), {'results': expected})
+
+        # With speaking community filter
+        response = self.client.get(
+            url,
+            {
+                'q': 'Superior',
+                'forward': json.dumps({'country': 'FR'}),
+            },
+        )
+
+        api.return_value.universities_list.assert_called_with(
+            limit=100,
+            search='Superior',
+            active=True,
+            country_iso_code='FR',
+            **DEFAULT_API_PARAMS,
+        )
+
+        self.assertEqual(response.json(), {'results': expected})
+
+    @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
+    @patch('osis_reference_sdk.api.universities_api.UniversitiesApi')
+    def test_autocomplete_superior_list(self, api_university, api_non_university):
+        self.first_superior_school_uuid = str(uuid.uuid4())
+        self.second_superior_school_uuid = str(uuid.uuid4())
+        self.third_superior_school_uuid = str(uuid.uuid4())
+        self.fourth_superior_school_uuid = str(uuid.uuid4())
+
+        mock_universities = [
+            University(
+                url='',
+                uuid=self.first_superior_school_uuid,
+                name="Superior 2",
+                acronym="S2",
+                city="Louvain-La-Neuve",
+                zipcode="1348",
+                street="Place de l'Université",
+                street_number="2",
+            ),
+            University(
+                url='',
+                uuid=self.second_superior_school_uuid,
+                name="Superior 3",
+                acronym="S3",
+                city="Bruxelles",
+                zipcode="1000",
+                street="Boulevard du Triomphe",
+                street_number="1",
+            ),
+        ]
+        api_university.return_value.universities_list.return_value = PaginatedUniversity(
+            results=mock_universities,
+        )
+        mock_non_universities = [
+            SuperiorNonUniversity(
+                url='',
+                uuid=self.third_superior_school_uuid,
+                name="Superior 1",
+                acronym="S1",
+                city="Louvain-La-Neuve",
+                zipcode="1348",
+                street="Place de l'Université",
+                street_number="3",
+            ),
+            SuperiorNonUniversity(
+                url='',
+                uuid=self.fourth_superior_school_uuid,
+                name="Superior 4",
+                acronym="S4",
+                city="Bruxelles",
+                zipcode="1000",
+                street="Boulevard du Triomphe",
+                street_number="4",
+            ),
+        ]
+        self.maxDiff = None
+        api_non_university.return_value.superior_non_universities_list.return_value = PaginatedSuperiorNonUniversity(
+            results=mock_non_universities,
+        )
+        url = reverse('admission:autocomplete:superior-institute')
+        response = self.client.get(url, {'q': 'Superior'})
+
+        api_non_university.return_value.superior_non_universities_list.assert_called_with(
+            limit=100,
+            search='Superior',
+            active=True,
+            **DEFAULT_API_PARAMS,
+        )
+
+        expected = [
+            {
+                'id': self.third_superior_school_uuid,
+                'text': 'Superior 1',
+                'type': StudyType.NON_UNIVERSITY.name,
+            },
+            {
+                'id': self.first_superior_school_uuid,
+                'text': 'Superior 2',
+                'type': StudyType.UNIVERSITY.name,
+            },
+            {
+                'id': self.second_superior_school_uuid,
+                'text': 'Superior 3',
+                'type': StudyType.UNIVERSITY.name,
+            },
+            {
+                'id': self.fourth_superior_school_uuid,
+                'text': 'Superior 4',
+                'type': StudyType.NON_UNIVERSITY.name,
+            },
+        ]
         self.assertEqual(response.json(), {'results': expected})

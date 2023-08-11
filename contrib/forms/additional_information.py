@@ -33,6 +33,19 @@ from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 
 
+class GeneralSpecificQuestionForm(ConfigurableFormMixin, forms.Form):
+    configurable_form_field_name = 'reponses_questions_specifiques'
+
+    documents_additionnels = FileUploadField(
+        label=_(
+            'You can add any document you feel is relevant to your application '
+            '(supporting documents, proof of language level, etc.)'
+        ),
+        required=False,
+        max_files=10,
+    )
+
+
 class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAddressForm):
     configurable_form_field_name = 'reponses_questions_specifiques'
 
@@ -76,6 +89,14 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
     adresse_facturation_destinataire = forms.CharField(
         label=_('To the attention of'),
         required=False,
+    )
+    documents_additionnels = FileUploadField(
+        label=_(
+            'You can add any document you feel is relevant to your application '
+            '(supporting documents, proof of language level, etc.)'
+        ),
+        required=False,
+        max_files=10,
     )
 
     class Media:

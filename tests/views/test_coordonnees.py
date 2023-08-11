@@ -30,7 +30,6 @@ from django.test import TestCase
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
-from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
@@ -59,24 +58,20 @@ class CoordonneesTestCase(TestCase):
             email="john@example.org",
             phone_mobile="",
             residential={
-                'location': "",
                 'postal_code': "",
                 'city': "",
                 'country': "",
                 'street': "",
                 'street_number': "",
                 'postal_box': "",
-                'place': "",
             },
             contact={
-                'location': "",
                 'postal_code': "",
                 'city': "",
                 'country': "",
                 'street': "",
                 'street_number': "",
                 'postal_box': "",
-                'place': "",
             },
         )
 
@@ -168,6 +163,8 @@ class CoordonneesTestCase(TestCase):
                 "contact-street_number": "2",
                 "show_contact": True,
                 "private_email": "john@example.org",
+                "phone_mobile": "+32474123456",
+                "emergency_contact_phone": "+32474123457",
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -178,12 +175,14 @@ class CoordonneesTestCase(TestCase):
                 "country": "FR",
                 "postal_code": "44001",
                 "city": "Nantes",
-                "place": "",
                 "street": "Rue du Compas",
                 "street_number": "2",
                 "postal_box": "",
             },
         )
+        self.assertEqual(last_call_kwargs["coordonnees"]["private_email"], '')
+        self.assertEqual(last_call_kwargs["coordonnees"]["phone_mobile"], '+32474123456')
+        self.assertEqual(last_call_kwargs["coordonnees"]["emergency_contact_phone"], '+32474123457')
 
     def test_update(self):
         url = resolve_url('admission:doctorate:update:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -206,14 +205,45 @@ class CoordonneesTestCase(TestCase):
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
 
-        response = self.client.post(url, {
+        valid_data = {
             "residential-country": "BE",
             "residential-be_postal_code": "1111",
             "residential-be_city": "Louvain-La-Neuve",
             "residential-street": "Rue du Compas",
             "residential-street_number": "1",
             'private_email': 'john@example.org',
-        })
+            'phone_mobile': '+32474123456',
+        }
+
+        response = self.client.post(
+            url,
+            {
+                **valid_data,
+                'phone_mobile': "1234567890",  # Not in international format
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+        self.assertIn(_('Invalid phone number'), form.errors.get('phone_mobile', []))
+
+        response = self.client.post(
+            url,
+            {
+                **valid_data,
+                'phone_mobile': "+324741234560",  # Too long
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+        self.assertIn(_('Invalid phone number'), form.errors.get('phone_mobile', []))
+
+        response = self.client.post(url, valid_data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_detail(self):
