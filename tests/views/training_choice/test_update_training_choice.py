@@ -79,7 +79,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         self.assertEqual(
             form.fields['general_education_training'].widget.choices,
             [
-                ('TR1-2020', 'Formation 1 (Louvain-La-Neuve) - TR1'),
+                ('TR1-2020', 'Formation 1 (Louvain-La-Neuve) <span class="training-acronym">TR1</span>'),
             ],
         )
 
@@ -233,7 +233,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         self.assertEqual(
             form.fields['mixed_training'].widget.choices,
             [
-                ('TR2-2020', 'Formation 2 (Louvain-La-Neuve) - TR2'),
+                ('TR2-2020', 'Formation 2 (Louvain-La-Neuve) <span class="training-acronym">TR2</span>'),
             ],
         )
 
@@ -329,7 +329,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
                 'id': 'TR3-2020',
                 'sigle': 'TR3',
                 'sigle_entite_gestion': 'CDE',
-                'text': 'Formation 3 (Louvain-La-Neuve) - TR3',
+                'text': 'Formation 3 (Louvain-La-Neuve) <span class="training-acronym">TR3</span>',
             }
         ]
         self.assertEqual(form.fields['doctorate_training'].widget.attrs['data-data'], json.dumps(expected))
