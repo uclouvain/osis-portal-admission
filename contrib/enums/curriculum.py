@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from base.models.utils.utils import ChoiceEnum
 
@@ -66,7 +66,7 @@ class TranscriptType(ChoiceEnum):
 
 class ActivityType(ChoiceEnum):
     WORK = _('Work')
-    INTERNSHIP = _('Internship')
+    INTERNSHIP = pgettext_lazy('admission', 'Internship')
     VOLUNTEERING = _('Volunteering')
     UNEMPLOYMENT = _('Unemployment')
     LANGUAGE_TRAVEL = _('Language study abroad')

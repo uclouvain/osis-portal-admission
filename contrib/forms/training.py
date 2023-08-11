@@ -100,7 +100,7 @@ class ActivityFormMixin(forms.Form):
     config_types = {}
 
     type = ConfigurableActivityTypeField(label=_("Activity type"))
-    title = forms.CharField(label=_("Title"), max_length=200)
+    title = forms.CharField(label=pgettext_lazy("admission", "Title"), max_length=200)
     participating_proof = FileUploadField(label=_("Participation certification"), max_files=1)
     start_date = forms.DateField(label=_("Start date"), widget=CustomDateInput())
     end_date = forms.DateField(label=_("End date"), widget=CustomDateInput())
@@ -520,7 +520,7 @@ class ValorisationForm(ActivityFormMixin, forms.Form):
             'comment',
         ]
         labels = {
-            'title': _("Title"),
+            'title': pgettext_lazy("admission", "Title"),
             'subtitle': _("Description"),
             'summary': _("Detailed curriculum vitae"),
             'participating_proof': _("Proof"),

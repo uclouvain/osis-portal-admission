@@ -118,7 +118,7 @@
       <div>
         {% trans "Status:" %}
         {% if not admission %}
-          {% trans "Not submitted" %}
+          {% trans "Not submitted" context 'admission' %}
         {% else %}
           {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
         {% endif %}

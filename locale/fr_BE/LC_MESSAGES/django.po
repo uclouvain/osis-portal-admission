@@ -265,6 +265,7 @@ msgstr "Formations académiques"
 msgid "Academic year"
 msgstr "Année académique"
 
+msgctxt "publication-status"
 msgid "Accepted"
 msgstr "Acceptée"
 
@@ -1115,6 +1116,7 @@ msgstr "Pays de naissance"
 msgid "Country of citizenship"
 msgstr "Pays de nationalité"
 
+msgctxt "admission"
 msgid "Course"
 msgstr "Formation"
 
@@ -1262,6 +1264,7 @@ msgstr "Note du mémoire"
 msgid "Dissertation summary"
 msgstr "Résumé du mémoire"
 
+msgctxt "admission"
 msgid "Dissertation title"
 msgstr "Titre du mémoire"
 
@@ -1349,6 +1352,7 @@ msgstr "Modifier la communication de cette conférence"
 msgid "Eligibility requirements"
 msgstr "Conditions d'accès"
 
+msgctxt "admission"
 msgid "Email"
 msgstr "E-mail"
 
@@ -1358,6 +1362,7 @@ msgstr "Contact en cas d'urgence (numéro de téléphone)"
 msgid "Employer"
 msgstr "Employeur"
 
+msgctxt "admission"
 msgid "End"
 msgstr "Fin"
 
@@ -1574,6 +1579,7 @@ msgstr "Donner son avis"
 msgid "Give an opinion on \"%(object)s\"?"
 msgstr "Donner son avis sur \"%(object)s\""
 
+msgctxt "admission"
 msgid "Grade"
 msgstr "Mention obtenue"
 
@@ -1960,6 +1966,7 @@ msgstr "Internationale pour la formation générale"
 msgid "International scholarship"
 msgstr "Bourse internationale"
 
+msgctxt "admission"
 msgid "Internship"
 msgstr "Stage"
 
@@ -2146,6 +2153,7 @@ msgstr "Plus de 75%"
 msgid "Motivation for joint supervision"
 msgstr "Motivation de la cotutelle"
 
+msgctxt "admission"
 msgid "My application"
 msgstr "Ma demande d'inscription"
 
@@ -2277,6 +2285,7 @@ msgstr "IBAN invalide."
 msgid "Not specified"
 msgstr "Non renseigné(e)"
 
+msgctxt "admission"
 msgid "Not submitted"
 msgstr "Non soumis"
 
@@ -2838,9 +2847,6 @@ msgstr "Confirmation soumise"
 msgid "Satisfactory (60-69%)"
 msgstr "Satisfaction"
 
-msgid "Save"
-msgstr "Enregistrer"
-
 msgctxt "admission"
 msgid "Save"
 msgstr "Enregistrer"
@@ -2969,6 +2975,7 @@ msgstr "Année académique déterminée"
 msgid "Specific aspects"
 msgstr "Spécificités"
 
+msgctxt "admission"
 msgid "Specific profile"
 msgstr "Profil particulier"
 
@@ -3011,6 +3018,11 @@ msgstr "Soumettre ma nouvelle échéance"
 msgid "Submit selected activities"
 msgstr "Soumettre les activités sélectionnées"
 
+msgctxt "category"
+msgid "Submitted"
+msgstr "Soumise"
+
+msgctxt "publication-status"
 msgid "Submitted"
 msgstr "Soumise"
 
@@ -3329,6 +3341,7 @@ msgstr "Cocher le lien de parenté"
 msgid "Time allocated for thesis (in %)"
 msgstr "Temps consacré à la thèse (en %)"
 
+msgctxt "admission"
 msgid "Title"
 msgstr "Titre"
 
@@ -3415,6 +3428,7 @@ msgstr "Type de relevé de notes"
 msgid "Translation"
 msgstr "Traduction"
 
+msgctxt "admission"
 msgid "Type"
 msgstr "Type"
 
