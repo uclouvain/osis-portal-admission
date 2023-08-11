@@ -120,20 +120,6 @@
   {% endif %}
 {% endblock %}
 
-{% block style %}
-  {{ block.super }}
-  <style>
-    .training-acronym {
-      font-size: 0.80em;
-      color: #888;
-      margin-left: 0.5em;
-    }
-    .select2-results__option--highlighted[aria-selected] .training-acronym {
-      color: #eee;
-    }
-  </style>
-{% endblock %}
-
 {% block script %}
   {{ block.super }}
   <script>

@@ -336,3 +336,13 @@ body, html {
 .multi-widget ul label {
   font-weight: normal;
 }
+
+.training-acronym {
+  font-size: 0.80em;
+  color: #888;
+  margin-left: 0.5em;
+}
+
+.select2-results__option--highlighted[aria-selected] .training-acronym {
+  color: #eee;
+}

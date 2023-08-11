@@ -77,7 +77,7 @@ def get_training_choices(training):
                 acronym=training['acronym'],
                 academic_year=int(training['academic_year']),
             ),
-            '{name} ({campus}) - {acronym}'.format(
+            '{name} ({campus}) <span class="training-acronym">{acronym}</span>'.format(
                 name=training['title'] if get_language() == settings.LANGUAGE_CODE else training['title_en'],
                 campus=training['main_teaching_campus'].get('name'),
                 acronym=training['acronym'],
