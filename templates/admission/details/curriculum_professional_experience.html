@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain
+  * Copyright (C) 2015-2023 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,8 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          {% field_data _('Type') experience.type.value|enum_display:'ActivityType' %}
+          {% translate 'Type' context 'admission' as type_label %}
+          {% field_data type_label experience.type.value|enum_display:'ActivityType' %}
         </div>
         {% if experience.type.value == 'WORK' %}
           <div class="col-md-6">

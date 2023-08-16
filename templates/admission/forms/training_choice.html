@@ -88,7 +88,8 @@
     </div>
   {% endpanel %}
 
-  {% panel _('Specific profile') id="student-profile" %}
+  {% translate 'Specific profile' context 'admission' as specific_profile_title %}
+  {% panel specific_profile_title id="student-profile" %}
     <div class="master-scholarship required_field">
       {% bootstrap_field_with_tooltip form.has_double_degree_scholarship %}
       <div id="double-degree-scholarship-field">

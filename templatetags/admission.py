@@ -41,7 +41,7 @@ from django.core.validators import EMPTY_VALUES
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.safestring import SafeString
-from django.utils.translation import get_language, gettext_lazy as _, pgettext
+from django.utils.translation import get_language, gettext_lazy as _, pgettext, pgettext_lazy
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums import (
@@ -166,7 +166,7 @@ TAB_TREES = {
             Tab('confirmation-paper', _('Confirmation exam')),
             Tab('extension-request', _('New deadline')),
         ],
-        Tab('training', _('Course'), 'book-open-reader'): [
+        Tab('training', pgettext_lazy('admission', 'Course'), 'book-open-reader'): [
             Tab('doctoral-training', _('PhD training')),
             Tab('complementary-training', _('Complementary training')),
             Tab('course-enrollment', _('Course unit enrolment')),
