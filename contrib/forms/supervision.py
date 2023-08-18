@@ -26,7 +26,7 @@
 from dal import autocomplete
 from django import forms
 from django.conf import settings
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.actor import ActorType
@@ -62,7 +62,7 @@ class DoctorateAdmissionMemberSupervisionForm(forms.Form):
         required=False,
     )
     email = forms.EmailField(
-        label=_("Email"),
+        label=pgettext_lazy("admission", "Email"),
         required=False,
     )
     est_docteur = forms.BooleanField(

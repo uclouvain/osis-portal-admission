@@ -32,7 +32,7 @@ from django import forms
 from django.conf import settings
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _, pgettext_lazy
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
@@ -101,7 +101,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     # General education
     general_education_training = forms.CharField(
-        label=_('Course'),
+        label=pgettext_lazy('admission', 'Course'),
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:general-education',
@@ -115,7 +115,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     # A mix of continuing education and general certificate
     mixed_training = forms.CharField(
-        label=_('Course'),
+        label=pgettext_lazy('admission', 'Course'),
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:mixed-training',
@@ -154,7 +154,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
     )
 
     doctorate_training = forms.CharField(
-        label=_('Course'),
+        label=pgettext_lazy('admission', 'Course'),
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:doctorate',

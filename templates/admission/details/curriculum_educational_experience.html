@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain
+  * Copyright (C) 2015-2023 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,8 @@
           {% field_data _("Start") experience.start|get_academic_year %}
         </div>
         <div class="col-md-6">
-          {% field_data _("End") experience.end|get_academic_year %}
+          {% translate "End" context 'admission' as end_label %}
+          {% field_data end_label experience.end|get_academic_year %}
         </div>
       </div>
       <div class="row">
@@ -167,7 +168,8 @@
             </div>
           {% else %}
             <div class="col-md-6">
-              {% field_data _('Grade') experience.obtained_grade.value|enum_display:'Grade' %}
+              {% translate 'Grade' context 'admission' as grade_label %}
+              {% field_data grade_label experience.obtained_grade.value|enum_display:'Grade' %}
             </div>
             </div>
             {% if view.is_doctorate %}
@@ -181,7 +183,8 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  {% field_data _('Dissertation title') experience.dissertation_title html_tag="blockquote" %}
+                  {% translate 'Dissertation title' context 'admission' as dissertation_title_label %}
+                  {% field_data dissertation_title_label experience.dissertation_title html_tag="blockquote" %}
                 </div>
                 <div class="col-md-6">
                   {% field_data _('Dissertation mark') experience.dissertation_score %}

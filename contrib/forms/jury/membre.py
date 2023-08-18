@@ -106,7 +106,7 @@ class JuryMembreForm(forms.Form):
     )
 
     email = forms.EmailField(
-        label=_("Email"),
+        label=pgettext_lazy("admission", "Email"),
         required=False,
     )
 

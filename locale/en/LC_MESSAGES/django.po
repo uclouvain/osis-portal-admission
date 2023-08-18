@@ -212,6 +212,7 @@ msgstr ""
 msgid "Academic year"
 msgstr ""
 
+msgctxt "publication-status"
 msgid "Accepted"
 msgstr ""
 
@@ -954,6 +955,7 @@ msgstr ""
 msgid "Country of citizenship"
 msgstr ""
 
+msgctxt "admission"
 msgid "Course"
 msgstr ""
 
@@ -1097,6 +1099,7 @@ msgstr ""
 msgid "Dissertation summary"
 msgstr ""
 
+msgctxt "admission"
 msgid "Dissertation title"
 msgstr ""
 
@@ -1181,6 +1184,7 @@ msgstr ""
 msgid "Eligibility requirements"
 msgstr ""
 
+msgctxt "admission"
 msgid "Email"
 msgstr ""
 
@@ -1190,6 +1194,7 @@ msgstr ""
 msgid "Employer"
 msgstr ""
 
+msgctxt "admission"
 msgid "End"
 msgstr ""
 
@@ -1391,6 +1396,7 @@ msgstr ""
 msgid "Give an opinion on \"%(object)s\"?"
 msgstr ""
 
+msgctxt "admission"
 msgid "Grade"
 msgstr ""
 
@@ -1701,6 +1707,7 @@ msgstr ""
 msgid "International scholarship"
 msgstr ""
 
+msgctxt "admission"
 msgid "Internship"
 msgstr ""
 
@@ -1883,6 +1890,7 @@ msgstr ""
 msgid "Motivation for joint supervision"
 msgstr ""
 
+msgctxt "admission"
 msgid "My application"
 msgstr ""
 
@@ -2009,6 +2017,7 @@ msgstr ""
 msgid "Not specified"
 msgstr ""
 
+msgctxt "admission"
 msgid "Not submitted"
 msgstr ""
 
@@ -2538,9 +2547,6 @@ msgstr "Submitted confirmation"
 msgid "Satisfactory (60-69%)"
 msgstr ""
 
-msgid "Save"
-msgstr ""
-
 msgctxt "admission"
 msgid "Save"
 msgstr ""
@@ -2664,6 +2670,7 @@ msgstr ""
 msgid "Specific aspects"
 msgstr ""
 
+msgctxt "admission"
 msgid "Specific profile"
 msgstr ""
 
@@ -2706,6 +2713,11 @@ msgstr ""
 msgid "Submit selected activities"
 msgstr ""
 
+msgctxt "category"
+msgid "Submitted"
+msgstr ""
+
+msgctxt "publication-status"
 msgid "Submitted"
 msgstr ""
 
@@ -2962,6 +2974,7 @@ msgstr ""
 msgid "Time allocated for thesis (in %)"
 msgstr ""
 
+msgctxt "admission"
 msgid "Title"
 msgstr ""
 
@@ -3034,6 +3047,7 @@ msgstr ""
 msgid "Translation"
 msgstr ""
 
+msgctxt "admission"
 msgid "Type"
 msgstr ""
 

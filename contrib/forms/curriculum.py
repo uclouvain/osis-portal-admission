@@ -33,7 +33,7 @@ from dal import autocomplete
 from django import forms
 from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
-from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
+from django.utils.translation import gettext_lazy as _, pgettext_lazy as __, pgettext_lazy
 
 from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from osis_document.contrib.widgets import HiddenFileWidget
@@ -194,7 +194,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
     )
     type = forms.ChoiceField(
         choices=EMPTY_CHOICE + ActivityType.choices(),
-        label=_('Type'),
+        label=pgettext_lazy('admission', 'Type'),
     )
     role = forms.CharField(
         label=__('curriculum', 'Function'),
@@ -365,7 +365,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         widget=autocomplete.Select2(),
     )
     end = forms.ChoiceField(
-        label=_('End'),
+        label=pgettext_lazy('admission', 'End'),
         widget=autocomplete.Select2(),
     )
     country = forms.CharField(
@@ -399,7 +399,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     program = forms.CharField(
         empty_value=None,
-        label=_('Course'),
+        label=pgettext_lazy('admission', 'Course'),
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:diploma',
@@ -437,7 +437,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     obtained_grade = forms.ChoiceField(
         choices=EMPTY_CHOICE + Grade.choices(),
-        label=_('Grade'),
+        label=pgettext_lazy('admission', 'Grade'),
         required=False,
     )
     graduate_degree = FileUploadField(
@@ -472,7 +472,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         widget=CustomDateInput(),
     )
     dissertation_title = forms.CharField(
-        label=_('Dissertation title'),
+        label=pgettext_lazy('admission', 'Dissertation title'),
         required=False,
         widget=forms.Textarea(
             attrs={
