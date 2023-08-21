@@ -3543,7 +3543,7 @@ msgid "With highest honours (90-100%)"
 msgstr "La plus grande distinction"
 
 msgid "With honours (70-79%)"
-msgstr "With honours (70-79%)"
+msgstr "Distinction"
 
 msgid "Work"
 msgstr "Travail"
