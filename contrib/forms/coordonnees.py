@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ from admission.constants import BE_ISO_CODE, FIELD_REQUIRED_MESSAGE
 from admission.contrib.forms import (
     get_country_initial_choices,
     get_example_text,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
     PhoneField,
 )
 from admission.utils import force_title
@@ -101,7 +100,6 @@ class DoctorateAdmissionAddressForm(forms.Form):
         label=_("Country"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     # Enable autocompletion only for Belgium postal codes
@@ -116,7 +114,6 @@ class DoctorateAdmissionAddressForm(forms.Form):
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:city",
             forward=(forward.Field('be_postal_code', 'postal_code'),),
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 

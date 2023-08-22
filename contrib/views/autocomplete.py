@@ -29,7 +29,8 @@ from typing import List
 from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.translation import get_language
+from django.http import JsonResponse
+from django.utils.translation import get_language, gettext_lazy as _
 from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 from osis_reference_sdk.model.university import University
 from waffle import switch_is_active
@@ -183,16 +184,37 @@ class ScholarshipAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
 
 
 class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+    paginate_by = 20
+    page_kwargs = 'page'
     urlpatterns = 'country'
 
-    def get_list(self):
-        return CountriesService.get_countries(person=self.request.user.person, search=self.q)
+    def get_page(self):
+        try:
+            return int(self.request.GET.get(self.page_kwargs, 1))
+        except Exception:
+            return 1
 
-    def autocomplete_results(self, results):
-        return results
+    def get_list(self):
+        return CountriesService.get_countries(
+            person=self.request.user.person,
+            search=self.q,
+            limit=self.paginate_by,
+            offset=(self.get_page() - 1) * self.paginate_by,
+        )
 
     def results(self, results):
-        return [
+        page = self.get_page()
+        belgique = []
+        if not self.q and not self.forwarded.get('exclude_be', False) and page == 1:
+            belgique = [
+                {
+                    'id': BE_ISO_CODE,
+                    'text': _('Belgium'),
+                    'european_union': True,
+                },
+                {'id': None, 'text': '----------'},
+            ]
+        return belgique + [
             dict(
                 id=country.iso_code,
                 text=country.name if get_language() == settings.LANGUAGE_CODE else country.name_en,
@@ -201,6 +223,13 @@ class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             for country in results
             if not self.forwarded.get('exclude_be', False) or country.iso_code != BE_ISO_CODE
         ]
+
+    def get(self, request, *args, **kwargs):
+        """Return option list json response."""
+        results = self.get_list()
+        return JsonResponse(
+            {'results': self.results(results), 'pagination': {'more': len(results) >= self.paginate_by}}
+        )
 
 
 class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
