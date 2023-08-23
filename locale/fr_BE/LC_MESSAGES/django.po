@@ -634,6 +634,9 @@ msgstr "Numéro de registre national belge (NISS)"
 msgid "Belgian student status"
 msgstr "Assimilation"
 
+msgid "Belgium"
+msgstr "Belgique"
+
 msgid "Between 65 and 75%"
 msgstr "Entre 65 et 75%"
 

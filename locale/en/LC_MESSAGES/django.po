@@ -546,6 +546,9 @@ msgstr ""
 msgid "Belgian student status"
 msgstr ""
 
+msgid "Belgium"
+msgstr ""
+
 msgid "Between 65 and 75%"
 msgstr ""
 
