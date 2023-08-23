@@ -165,8 +165,8 @@ msgstr ""
 "votre demande vous sera envoyé à l'adresse mail que vous avez renseignée "
 "dans votre dossier</li><li>Le résumé de votre demande sera accessible à tout "
 "moment en vous connectant à cette application</li></ul><p>Nous vous "
-"remercions d'avoir choisi l'UCLouvain et vous souhaitons plein succès dans "
-"la formation que vous comptez entreprendre !</p>"
+"remercions d'avoir choisi l'UCLouvain et vous souhaitons plein de succès "
+"dans la formation que vous comptez entreprendre !</p>"
 
 msgid ""
 "<strong>Academic course</strong>: any course of higher education leading to "
@@ -633,6 +633,9 @@ msgstr "Numéro de registre national belge (NISS)"
 
 msgid "Belgian student status"
 msgstr "Assimilation"
+
+msgid "Belgium"
+msgstr "Belgique"
 
 msgid "Between 65 and 75%"
 msgstr "Entre 65 et 75%"

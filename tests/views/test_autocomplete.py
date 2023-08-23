@@ -117,6 +117,15 @@ class AutocompleteTestCase(TestCase):
         response = self.client.get(url, {'q': ''})
         expected = [
             {
+                'id': 'BE',
+                'text': 'Belgique',
+                'european_union': True,
+            },
+            {
+                'id': None,
+                'text': '----------',
+            },
+            {
                 'id': 'FR',
                 'text': 'France',
                 'european_union': True,
@@ -127,7 +136,7 @@ class AutocompleteTestCase(TestCase):
                 'european_union': True,
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertEqual(response.json(), {'results': expected, 'pagination': {'more': False}})
         api.return_value.countries_list.assert_called()
 
         api.return_value.countries_list.return_value = Mock(
@@ -143,8 +152,21 @@ class AutocompleteTestCase(TestCase):
                 'european_union': True,
             }
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertEqual(response.json(), {'results': expected, 'pagination': {'more': False}})
         self.assertEqual(api.return_value.countries_list.call_args[1]['search'], 'F')
+
+        api.return_value.countries_list.return_value = Mock(
+            results=[
+                MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
+            ]
+            * 20
+        )
+        url = reverse('admission:autocomplete:country')
+        response = self.client.get(url)
+        results = response.json()
+        self.assertEqual(len(results['results']), 22)
+        self.assertIs(results['pagination']['more'], True)
+        api.return_value.countries_list.assert_called()
 
     @patch('osis_reference_sdk.api.languages_api.LanguagesApi')
     def test_autocomplete_languages(self, api):
