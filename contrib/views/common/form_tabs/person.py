@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,8 @@ from admission.services.person import (
 
 __all__ = ['AdmissionPersonFormView']
 
+from admission.services.proposition import BelgianNissBusinessException
+
 
 class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     service_mapping = {
@@ -49,10 +51,17 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
     }
     template_name = 'admission/forms/person.html'
     form_class = DoctorateAdmissionPersonForm
+    error_mapping = {
+        BelgianNissBusinessException.BelgianNISSCharactersException: 'national_number',
+        BelgianNissBusinessException.BelgianNISSLengthException: 'national_number',
+        BelgianNissBusinessException.BelgianNISSBirthDateException: 'national_number',
+        BelgianNissBusinessException.BelgianNISSSexException: 'national_number',
+        BelgianNissBusinessException.BelgianNISSChecksumException: 'national_number',
+        BelgianNissBusinessException.BelgianMissingBirthDataException: 'national_number',
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resides_in_belgium'] = self.resides_in_belgium
         context['BE_ISO_CODE'] = BE_ISO_CODE
         return context
 
@@ -66,10 +75,6 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
             )
             .to_dict()
         )
-
-    @property
-    def resides_in_belgium(self):
-        return self.person_info.get('resides_in_belgium')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -95,7 +100,7 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         else:
             data['birth_year'] = None
 
-        if (self.resides_in_belgium and is_belgian) or data.get('has_national_number'):
+        if is_belgian or data.get('has_national_number'):
             data['id_card_number'] = ''
             data['passport_number'] = ''
             data['passport'] = []
