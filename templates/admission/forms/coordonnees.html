@@ -8,7 +8,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -122,6 +122,45 @@
             cityContactCheck.check()
             $('#id_contact-be_city').val('').trigger('change');
         });
+        //-------------------------------------------------------------------------------
+        // Set the postal code mask after choosing a country
+
+        const countryToPostalCodeMask = {
+            'FR': '00000',
+            'CA': 'S0Se0S0',
+            'LU': '0000',
+        };
+
+        $('#id_residential-be_postal_code').mask('0000');
+        $('#id_contact-be_postal_code').mask('0000');
+
+        const maskPostalCode = function(country, $postalCode) {
+          if (!country) {
+              return ;
+          }
+
+          if (countryToPostalCodeMask[country]) {
+            $postalCode.mask(
+                countryToPostalCodeMask[country],
+                {
+                    translation: {
+                        'e': {pattern: / /, optional: true},
+                    }
+                }
+            );
+          } else {
+            $postalCode.unmask();
+          }
+        }
+
+        $('#id_residential-country').change(function() {
+          maskPostalCode($(this).val(), $('#id_residential-postal_code'));
+        });
+
+        $('#id_contact-country').change(function() {
+          maskPostalCode($(this).val(), $('#id_contact-postal_code'));
+        });
+
         //-------------------------------------------------------------------------------
 
         // "city" and "postal code" depends on "country" for residential

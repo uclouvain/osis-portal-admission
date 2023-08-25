@@ -424,6 +424,11 @@ class PropositionBusinessException(Enum):
     CoordonneesNonCompleteesException = "PROPOSITION-51"
 
 
+class PostalCodeBusinessException(Enum):
+    PersonResidentialAddressBadPostalCodeFormatException = "RESIDENTIAL-PERSON-ADDRESS-1"
+    PersonContactAddressBadPostalCodeFormatException = "CONTACT-PERSON-ADDRESS-1"
+
+
 class GlobalPropositionBusinessException(Enum):
     BourseNonTrouveeException = "ADMISSION-1"
     ConditionsAccessNonRempliesException = "ADMISSION-2"
@@ -490,6 +495,8 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,
         PropositionBusinessException.AdresseCorrespondanceNonCompleteeException,
         PropositionBusinessException.CoordonneesNonCompleteesException,
+        PostalCodeBusinessException.PersonResidentialAddressBadPostalCodeFormatException,
+        PostalCodeBusinessException.PersonContactAddressBadPostalCodeFormatException,
     },
     'education': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesEtudesSecondairesNonCompleteesException,
