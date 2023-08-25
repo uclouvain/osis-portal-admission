@@ -372,7 +372,6 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         label=_('Country'),
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:country',
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     other_institute = forms.BooleanField(
