@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -38,6 +38,8 @@ from admission.services.person import (
 
 __all__ = ['AdmissionCoordonneesFormView']
 
+from admission.services.proposition import PostalCodeBusinessException
+
 
 class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     template_name = 'admission/forms/coordonnees.html'
@@ -49,6 +51,17 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
         'general-education': GeneralEducationAdmissionPersonService,
         'continuing-education': ContinuingEducationAdmissionPersonService,
     }
+    error_mapping_contact = {
+        PostalCodeBusinessException.PersonContactAddressBadPostalCodeFormatException: "postal_code",
+    }
+    error_mapping_residential = {
+        PostalCodeBusinessException.PersonResidentialAddressBadPostalCodeFormatException: "postal_code",
+    }
+
+    def __init__(self, *args, **kwargs):
+        self._error_mapping_contact = {exc.value: field for exc, field in self.error_mapping_contact.items()}
+        self._error_mapping_residential = {exc.value: field for exc, field in self.error_mapping_residential.items()}
+        super().__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -102,6 +115,16 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
             uuid=self.admission_uuid,
             data=data,
         )
+
+    def handle_form_exception(self, form, exception):
+        if exception.status_code in self._error_mapping_contact:
+            field = self._error_mapping_contact.get(exception.status_code)
+            self.forms['contact'].add_error(field, exception.detail)
+        elif exception.status_code in self._error_mapping_residential:
+            field = self._error_mapping_residential.get(exception.status_code)
+            self.forms['residential'].add_error(field, exception.detail)
+        else:
+            super().handle_form_exception(form, exception)
 
     def get_forms(self):
         if not self.forms:
