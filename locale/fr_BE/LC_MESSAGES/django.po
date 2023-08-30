@@ -2296,6 +2296,9 @@ msgctxt "address"
 msgid "Number"
 msgstr "Numéro"
 
+msgid "Number of credits earned at the end of the academic year."
+msgstr "Nombre de crédits réussis au terme de l'année académique."
+
 msgid "Number of days participating"
 msgstr "Nombre de jours de participation"
 
@@ -3411,6 +3414,9 @@ msgstr "A l'attention de"
 msgid "Total hourly volume"
 msgstr "Volume horaire total"
 
+msgid "Total number of credits registered in your yearly programme."
+msgstr "Nombre total des crédits inscrits dans votre programme d'année (PAE)."
+
 msgid "Training certificate, with dates, justifying the period concerned"
 msgstr ""
 "Attestation de stage, avec mention des dates, justifiant la période concernée"
@@ -3836,8 +3842,8 @@ msgid ""
 "Your enrolment can be confirmed as all the necessary conditions have been "
 "met."
 msgstr ""
-"Votre inscription peut être confirmée car toutes les conditions nécessaires "
-"ont été remplies."
+"Votre demande peut être confirmée car toutes les conditions nécessaires ont "
+"été remplies."
 
 msgid ""
 "Your enrolment cannot be confirmed. All of the following requirements must "
