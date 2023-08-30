@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -113,7 +113,6 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("Country of birth"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     birth_place = forms.CharField(
@@ -129,7 +128,6 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("Country of citizenship"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 

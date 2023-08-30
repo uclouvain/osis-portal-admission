@@ -49,6 +49,12 @@ class WebServiceFormMixin:
         messages.error(self.request, _("Please correct the errors below"))
         return super().form_invalid(form)
 
+    def handle_form_exception(self, form, exception):
+        if exception.status_code in self._error_mapping:
+            form.add_error(self._error_mapping[exception.status_code], exception.detail)
+        else:
+            form.add_error(None, exception.detail)
+
     def form_valid(self, form):
         data = self.prepare_data(copy(form.cleaned_data))
 
@@ -56,10 +62,7 @@ class WebServiceFormMixin:
             self.call_webservice(data)
         except MultipleApiBusinessException as multiple_business_api_exception:
             for exception in multiple_business_api_exception.exceptions:
-                if exception.status_code in self._error_mapping:
-                    form.add_error(self._error_mapping[exception.status_code], exception.detail)
-                else:
-                    form.add_error(None, exception.detail)
+                self.handle_form_exception(form, exception)
             return self.form_invalid(form)
         except PermissionDenied as e:
             form.add_error(None, str(e))

@@ -2028,6 +2028,9 @@ msgctxt "address"
 msgid "Number"
 msgstr ""
 
+msgid "Number of credits earned at the end of the academic year."
+msgstr ""
+
 msgid "Number of days participating"
 msgstr ""
 
@@ -3029,6 +3032,9 @@ msgid "To the attention of"
 msgstr ""
 
 msgid "Total hourly volume"
+msgstr ""
+
+msgid "Total number of credits registered in your yearly programme."
 msgstr ""
 
 msgid "Training certificate, with dates, justifying the period concerned"

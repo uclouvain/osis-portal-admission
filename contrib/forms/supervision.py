@@ -83,7 +83,6 @@ class DoctorateAdmissionMemberSupervisionForm(forms.Form):
         required=False,
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
         initial=BE_ISO_CODE,
     )

@@ -289,7 +289,6 @@ class PersonViewTestCase(TestCase):
             birth_country="BE",
             country_of_citizenship="FR",
             last_registration_year=2021,
-            resides_in_belgium=False,
         )
 
         data = {
@@ -450,8 +449,6 @@ class PersonViewTestCase(TestCase):
             },
             **self.default_kwargs,
         )
-
-        mocking_dict.to_dict.return_value['resides_in_belgium'] = True
 
         response = self.client.post(
             url,

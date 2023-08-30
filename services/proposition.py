@@ -424,6 +424,20 @@ class PropositionBusinessException(Enum):
     CoordonneesNonCompleteesException = "PROPOSITION-51"
 
 
+class PostalCodeBusinessException(Enum):
+    PersonResidentialAddressBadPostalCodeFormatException = "RESIDENTIAL-PERSON-ADDRESS-1"
+    PersonContactAddressBadPostalCodeFormatException = "CONTACT-PERSON-ADDRESS-1"
+
+
+class BelgianNissBusinessException(Enum):
+    BelgianNISSCharactersException = "BELGIAN-NISS-1"
+    BelgianNISSLengthException = "BELGIAN-NISS-2"
+    BelgianNISSBirthDateException = "BELGIAN-NISS-3"
+    BelgianNISSSexException = "BELGIAN-NISS-4"
+    BelgianNISSChecksumException = "BELGIAN-NISS-5"
+    BelgianMissingBirthDataException = "BELGIAN-NISS-6"
+
+
 class GlobalPropositionBusinessException(Enum):
     BourseNonTrouveeException = "ADMISSION-1"
     ConditionsAccessNonRempliesException = "ADMISSION-2"
@@ -485,11 +499,19 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.CarteIdentiteeNonSpecifieeException,
         PropositionBusinessException.NomEtPrenomNonSpecifiesException,
         PropositionBusinessException.SpecifierNOMASiDejaInscritException,
+        BelgianNissBusinessException.BelgianNISSCharactersException,
+        BelgianNissBusinessException.BelgianNISSLengthException,
+        BelgianNissBusinessException.BelgianNISSBirthDateException,
+        BelgianNissBusinessException.BelgianNISSSexException,
+        BelgianNissBusinessException.BelgianNISSChecksumException,
+        BelgianNissBusinessException.BelgianMissingBirthDataException,
     },
     'coordonnees': {
         PropositionBusinessException.AdresseDomicileLegalNonCompleteeException,
         PropositionBusinessException.AdresseCorrespondanceNonCompleteeException,
         PropositionBusinessException.CoordonneesNonCompleteesException,
+        PostalCodeBusinessException.PersonResidentialAddressBadPostalCodeFormatException,
+        PostalCodeBusinessException.PersonContactAddressBadPostalCodeFormatException,
     },
     'education': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesEtudesSecondairesNonCompleteesException,
