@@ -270,6 +270,7 @@ $(function () {
             preferredCountries: ['be'],
             autoPlaceholder: 'off',
             localizedCountries: element.dataset.language === 'en' ? {} : fr_countries,
+            separateDialCode: true,
         });
     });
 });

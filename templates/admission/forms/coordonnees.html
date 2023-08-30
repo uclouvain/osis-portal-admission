@@ -8,7 +8,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -146,13 +146,13 @@
             const newPlaceholder = intlTelInputUtils.getExampleNumber(
                 selectedCountryData.iso2,
                 true,
-                intlTelInputUtils.numberFormat.NATIONAL,
+                intlTelInputUtils.numberType.MOBILE,
             );
 
             $(this).attr('placeholder', '{% translate "eg:" %} ' + newPlaceholder);
 
             // Apply the new mask for the input
-            $(this).mask(newPlaceholder.replace(/[1-9]/g, '0'));
+            $(this).mask(newPlaceholder.replace(/[1-9]/g, '0'), {reverse: true});
         });
 
         // Initialize the mask
