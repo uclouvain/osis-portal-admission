@@ -124,8 +124,26 @@
               >
               </a>
             </th>
-            <th class="required_text" style="width: 150px;">{% translate 'Registered credits' %}</th>
-            <th class="required_text" style="width: 150px;">{% translate 'Credits earned' %}</th>
+            <th class="required_text" style="width: 150px;">
+              <span>{% translate 'Registered credits' %}</span>
+              <a
+                  class="fa fa-info-circle popover-buttons"
+                  role="button"
+                  tabindex="0"
+                  data-content="{% translate "Total number of credits registered in your yearly programme." %}"
+              >
+              </a>
+            </th>
+            <th class="required_text" style="width: 150px;">
+              <span>{% translate 'Credits earned' %}</span>
+              <a
+                  class="fa fa-info-circle popover-buttons"
+                  role="button"
+                  tabindex="0"
+                  data-content="{% translate "Number of credits earned at the end of the academic year." %}"
+              >
+              </a>
+            </th>
             <th class="required_text">{% translate 'Result' %}</th>
           </tr>
         </thead>
