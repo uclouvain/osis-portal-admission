@@ -83,7 +83,6 @@ class DoctorateAdmissionAddressForm(forms.Form):
     postal_code = forms.CharField(
         required=False,
         label=_("Postcode"),
-        help_text=get_example_text("1234"),
     )
     city = forms.CharField(
         required=False,
@@ -106,7 +105,6 @@ class DoctorateAdmissionAddressForm(forms.Form):
     be_postal_code = forms.CharField(
         required=False,
         label=_("Postcode"),
-        help_text=get_example_text("1234"),
     )
     be_city = forms.CharField(
         required=False,
