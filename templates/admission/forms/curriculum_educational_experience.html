@@ -600,6 +600,10 @@
           displayBadgesAccordingToSubmittedTranscripts(event, '.translation-badge > span');
       });
 
+      yl.registerForwardHandler("get_institute_type", function (element) {
+        return $('#id_base_form-institute').select2('data')[0]['type'] || '';
+      });
+
       document.dispatchEvent(new Event('refreshFormInitial'));
     });
   </script>
