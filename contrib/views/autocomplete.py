@@ -387,7 +387,7 @@ class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             person=self.request.user.person,
             search=self.q,
             active=True,
-            study_type=self.forwarded.get('institute', '').split(':', maxsplit=1)[0],
+            study_type=self.forwarded.get('institute_type', ''),
         )
 
     def results(self, results):
