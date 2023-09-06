@@ -27,6 +27,7 @@
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
 from rest_framework import status
+from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import AdmissionType, TypeFormationChoisissable
@@ -35,6 +36,7 @@ from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
 
 
+@override_switch('admission-doctorat', active=True)
 class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
     @classmethod
     def setUpTestData(cls):
