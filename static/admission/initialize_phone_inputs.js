@@ -263,7 +263,7 @@ const fr_countries = {
 $(function () {
     $('.phone-input').each(function(index) {
         const element = $(this)[0];
-        window.intlTelInput(element, {
+        const iti = window.intlTelInput(element, {
             utilsScript: `https://cdn.jsdelivr.net/npm/intl-tel-input@${element.dataset.intlTelInputVersion}/build/js/utils.js`,
             hiddenInput: element.getAttribute('name'),
             initialCountry: 'be',
@@ -271,6 +271,10 @@ $(function () {
             autoPlaceholder: 'off',
             localizedCountries: element.dataset.language === 'en' ? {} : fr_countries,
             separateDialCode: true,
+        });
+
+        iti.promise.then(function() {
+          document.dispatchEvent(new Event('refreshFormInitial'));
         });
     });
 });
