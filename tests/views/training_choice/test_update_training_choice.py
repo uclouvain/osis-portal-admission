@@ -29,6 +29,7 @@ import json
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
 from rest_framework import status
+from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import AdmissionType, TypeFormationChoisissable
@@ -291,6 +292,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         self.assertRedirects(response, self.url)
 
 
+@override_switch('admission-doctorat', active=True)
 class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
     @classmethod
     def setUpTestData(cls):

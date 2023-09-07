@@ -33,6 +33,7 @@ from django.conf import settings
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language, gettext_lazy as _, pgettext_lazy
+from waffle import switch_is_active
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
@@ -246,6 +247,13 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         self.admission_uuid = kwargs.pop('admission_uuid', None)
 
         super().__init__(*args, **kwargs)
+
+        if not switch_is_active('admission-doctorat'):
+            self.fields['training_type'].choices = tuple(
+                choice
+                for choice in self.fields['training_type'].choices
+                if choice[0] != TypeFormationChoisissable.DOCTORAT.name
+            )
 
         general_education_training = self.data.get(
             self.add_prefix('general_education_training'),
