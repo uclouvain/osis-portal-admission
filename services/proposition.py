@@ -141,8 +141,22 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def get_general_education_training_choice(cls, person: Person, uuid) -> None:
+        return APIClient().list_general_training_choices(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def get_continuing_education_proposition(cls, person: Person, uuid) -> ContinuingEducationPropositionDTO:
         return APIClient().retrieve_continuing_education_proposition(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def get_continuing_education_training_choice(cls, person: Person, uuid) -> None:
+        return APIClient().list_continuing_training_choices(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
