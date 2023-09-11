@@ -144,7 +144,7 @@
                       <li>
                         <p>{% trans "Your application cannot be confirmed. The desired course is not offered." %}</p>
                         <div class="panel panel-default">
-                          <div class="panel-heading">{% trans "Non-organised training" %}</div>
+                          <div class="panel-heading">{% trans "Course not offered" %}</div>
                           {% if admission.doctorat %}
                             {% display admission.doctorat.intitule as training_title %}
                           {% else %}
@@ -209,7 +209,7 @@
 
     {% else %}
       <p class="alert alert-success">
-        {% trans "Your enrolment can be confirmed as all the necessary conditions have been met." %}
+        {% trans "Your application is complete and may be submitted." %}
       </p>
       <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
         {% csrf_token %}
@@ -244,10 +244,11 @@
 
         <p class="alert alert-info confirmation-warning">
           {% blocktrans trimmed %}
-            Any false declaration or deliberate omission in the compilation of the application constitutes
-            enrolment fraud. Anyone suspected of fraud will be asked to provide further explanation and present
-            their case (UCLouvain Academic Regulations and Procedures, Part III, Chapter 1, Section 3,
-            Articles 16 and 17).
+            Any false declaration or wilful omission in the compilation of application files constitutes enrolment
+            fraud and will result in exclusion from higher education studies in the French Community of Belgium
+            pursuant to Article 95/2 of the Decree of 7 November 2013. Anyone suspected of fraud has the right to
+            defend themselves and present their case (Articles 16 and 17, Section 3 of Chapter 1 of Title III of the
+            UCLouvain Academic Regulations and Procedures).
           {% endblocktrans %}
         </p>
         <div

@@ -26,7 +26,7 @@
 from dal import autocomplete, forward
 from django import forms
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import HAS_DIPLOMA_CHOICES
@@ -122,7 +122,7 @@ class BaseAdmissionEducationForm(ConfigurableFormMixin):
 
 class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
     diploma_type = forms.ChoiceField(
-        label=_("This is a diploma from"),
+        label=pgettext_lazy("diploma_type", "It is a diploma"),
         choices=DiplomaTypes.choices(),
         widget=forms.RadioSelect,
         required=False,

@@ -54,7 +54,7 @@
     {% if admission|can_make_action:'pay_after_submission' or admission|can_make_action:'pay_after_request' %}
       <a class="btn btn-default pull-right" href="{% url base_namespace|add:':payment' admission.uuid %}">
         <span class="fas fa-credit-card"></span>
-        {% translate "Pay the application fees" %}
+        {% translate "Pay the application fee" %}
       </a>
     {% endif %}
 
