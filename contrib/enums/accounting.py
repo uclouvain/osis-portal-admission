@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from admission.utils import mark_safe_lazy
 from base.models.utils.utils import ChoiceEnum
 
 
@@ -125,7 +125,7 @@ class ChoixAssimilation5(ChoiceEnum):
     @classmethod
     def choices_with_interpolation(cls, variables: dict):
         """Returns a list of choices with interpolation."""
-        return tuple((x.name, mark_safe(x.value % variables)) for x in cls)
+        return tuple((x.name, mark_safe_lazy(x.value, **variables)) for x in cls)
 
 
 class ChoixAssimilation6(ChoiceEnum):

@@ -31,6 +31,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
+from admission.utils import mark_safe_lazy
 
 BooleanRadioSelect = partial(
     forms.RadioSelect,
@@ -49,10 +50,10 @@ class PoolQuestionsForm(forms.Form):
         required=False,
     )
     is_external_reorientation = forms.NullBooleanField(
-        label=format_html(
+        label=mark_safe_lazy(
             _(
                 'Would you like to switch courses this academic year at UCLouvain? '
-                '(<a href="{url}" target="_blank">Informations</a>)'
+                '(<a href="%(url)s" target="_blank">Informations</a>)'
             ),
             url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#r%C3%A9orientation',
         ),
@@ -61,10 +62,10 @@ class PoolQuestionsForm(forms.Form):
     )
     regular_registration_proof = FileUploadField(max_files=1, required=False)
     is_external_modification = forms.NullBooleanField(
-        label=format_html(
+        label=mark_safe_lazy(
             _(
                 "Would you like to change your UCLouvain enrolment for this academic year? "
-                '(<a href="{url}" target="_blank">Informations</a>)'
+                '(<a href="%(url)s" target="_blank">Informations</a>)'
             ),
             url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#modificationinscr',
         ),
