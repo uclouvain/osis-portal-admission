@@ -54,7 +54,7 @@ class CreateGlobalCurriculumTestCase(MixinTestCase):
 
         self.assertContains(
             response,
-            _("You must choose your training before filling in your previous experience."),
+            _("You must choose your course before entering your previous experience."),
         )
 
 

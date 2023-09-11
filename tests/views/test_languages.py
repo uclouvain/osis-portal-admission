@@ -156,7 +156,7 @@ class LanguagesTestCase(TestCase):
         self.mock_proposition_api.assert_not_called()
         self.assertContains(
             response,
-            _("You must choose your training before filling in your previous experience."),
+            _("You must choose your course before entering your previous experience."),
         )
 
     def test_form_language_duplicate(self):

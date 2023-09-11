@@ -407,7 +407,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         ),
     )
     other_program = forms.BooleanField(
-        label=_('Other program'),
+        label=_('Other programme'),
         required=False,
     )
     education_name = forms.CharField(

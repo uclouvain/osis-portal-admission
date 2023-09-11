@@ -127,9 +127,7 @@ class ConfirmSubmitTestCase(TestCase):
         self.assertContains(response, 'I do not authorize')
         self.assertContains(response, 'Test to do something with my data')
         self.assertContains(response, '<ul><li>Element1</li></ul>')
-        self.assertContains(
-            response, _('Your enrolment can be confirmed as all the necessary conditions have been met.')
-        )
+        self.assertContains(response, _('Your application is complete and may be submitted.'))
 
     def test_get_with_incomplete_admission(self):
         self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.return_value = {

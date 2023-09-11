@@ -8,7 +8,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -191,7 +191,7 @@
           {% translate "IBAN account number" %}</dt>
         <dd>
           <span id="bank-account-iban-number">{{ accounting.numero_compte_iban}}</span>
-          {% if accounting.iban_valide %}<i title="{% translate 'This number has been checked' %}" class="fa-solid fa-check"></i>{% endif %}
+          {% if accounting.iban_valide %}<i title="{% translate 'This account number has been verified' %}" class="fa-solid fa-check"></i>{% endif %}
         </dd>
       </dl>
     {% elif accounting.type_numero_compte == 'AUTRE_FORMAT' %}

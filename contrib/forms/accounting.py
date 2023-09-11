@@ -82,7 +82,7 @@ class AccountingForm(forms.Form):
     # Assimilation
     type_situation_assimilation = forms.ChoiceField(
         choices=TypeSituationAssimilation.choices(),
-        label=_('Please select the primary Belgian student status category that applies to you'),
+        label=_('Please select the Belgian student status situation that most applies to you'),
         required=False,
         widget=forms.RadioSelect,
     )

@@ -105,9 +105,8 @@
               e.preventDefault();
               // Show modal and change its 'continue' link so that it link to the same link that clicked
               $('#prevent-quitting-modal').modal('show');
-
-              {% if not force_click_on_form_button %}
               document.querySelector('a#continue-link').setAttribute('href', e.target.href)
+              {% if not force_click_on_form_button %}
               document.querySelector('button#save-link').addEventListener('click', function () {
                 const event = new MouseEvent('click', {
                   view: window,

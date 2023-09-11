@@ -137,22 +137,21 @@ msgid ""
 msgstr ""
 
 msgid ""
-"<strong>Academic course</strong>: any course of higher education leading to "
-"a 1st, 2nd or 3rd cycle degree (e.g. bachelor's degree, master's degree, "
-"specialised master's degree, doctorate)."
+"<strong>Academic course</strong>: any higher education course leading to a "
+"bachelor's, master's, advanced master's, or PhD degree."
 msgstr ""
 
 msgid ""
-"<strong>Adding an academic course</strong>: To add an academic course to the "
-"curriculum, enter the start and end year of the course (e.g. start "
-"2018-2019, end 2021-2022)."
+"<strong>Adding an academic course</strong>: to add an academic course to the "
+"curriculum, enter the course start and end years (e.g. start 2018-2019, end "
+"2021-2022)."
 msgstr ""
 
 msgid ""
 "<strong>Non-academic activity</strong>: any professional or private activity "
 "that you have previously carried out. Example: work, unemployment, voluntary "
-"work, work placement, job search, sabbatical year, etc. You can also "
-"indicate your non-academic training (language course, individual course, "
+"work, internship, job search, sabbatical year, etc. You can also indicate "
+"your non-academic training (language classes, individual classes, "
 "certificate, short course, etc.)."
 msgstr ""
 
@@ -273,6 +272,9 @@ msgstr ""
 msgid "Add a new member"
 msgstr ""
 
+msgid "Add a non-academic activity"
+msgstr ""
+
 msgid "Add a non-academic experience"
 msgstr ""
 
@@ -309,6 +311,9 @@ msgstr ""
 msgid "Add a service"
 msgstr ""
 
+msgid "Add an academic course"
+msgstr ""
+
 msgid "Add an academic experience"
 msgstr ""
 
@@ -316,12 +321,6 @@ msgid "Add an activity"
 msgstr ""
 
 msgid "Add validation of prior experience (VAE)"
-msgstr ""
-
-msgid "Adding a non-academic activity"
-msgstr ""
-
-msgid "Adding an academic training"
 msgstr ""
 
 msgid "Additional information"
@@ -368,9 +367,6 @@ msgid ""
 "from a manager."
 msgstr ""
 
-msgid "Another address"
-msgstr ""
-
 msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
 "classification. Detailed explanations of this framework can be found at <a "
@@ -382,11 +378,13 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Any false declaration or deliberate omission in the compilation of the "
-"application constitutes enrolment fraud. Anyone suspected of fraud will be "
-"asked to provide further explanation and present their case (UCLouvain "
-"Academic Regulations and Procedures, Part III, Chapter 1, Section 3, "
-"Articles 16 and 17)."
+"Any false declaration or wilful omission in the compilation of application "
+"files constitutes enrolment fraud and will result in exclusion from higher "
+"education studies in the French Community of Belgium pursuant to Article "
+"95/2 of the Decree of 7 November 2013. Anyone suspected of fraud has the "
+"right to defend themselves and present their case (Articles 16 and 17, "
+"Section 3 of Chapter 1 of Title III of the UCLouvain Academic Regulations "
+"and Procedures)."
 msgstr ""
 
 msgid "Application accepted"
@@ -537,8 +535,9 @@ msgid ""
 "any errors or omissions."
 msgstr ""
 
+msgctxt "diploma_type"
 msgid "Belgian"
-msgstr ""
+msgstr "Belgian diploma"
 
 msgid "Belgian Flemish Community"
 msgstr ""
@@ -806,12 +805,6 @@ msgid ""
 "to the website of your commission for more details."
 msgstr ""
 
-msgid "Consultation of a non-academic activity"
-msgstr ""
-
-msgid "Consultation of an academic training"
-msgstr ""
-
 msgid "Contact"
 msgstr ""
 
@@ -981,6 +974,9 @@ msgid "Course choice"
 msgstr ""
 
 msgid "Course name"
+msgstr ""
+
+msgid "Course not offered"
 msgstr ""
 
 msgid "Course owner"
@@ -1228,6 +1224,11 @@ msgstr ""
 msgid "Enrolment in limited enrolment bachelor's course"
 msgstr ""
 
+msgid ""
+"Enter all of your academic courses, even those you failed or abandoned (with "
+"the exception of those taken at UCLouvain)."
+msgstr ""
+
 msgid "Erasmus Mundus"
 msgstr ""
 
@@ -1318,11 +1319,6 @@ msgstr ""
 
 msgctxt "female gender"
 msgid "Female"
-msgstr ""
-
-msgid ""
-"Fill in all your academic courses, even those you have failed or abandoned "
-"(with the exception of those taken at UCLouvain)."
 msgstr ""
 
 msgid "Finalise application"
@@ -1673,7 +1669,13 @@ msgstr ""
 msgid "In person"
 msgstr ""
 
+msgid "In progress"
+msgstr ""
+
 msgid "Incomplete"
+msgstr ""
+
+msgid "Incomplete field"
 msgstr ""
 
 msgid ""
@@ -1729,6 +1731,10 @@ msgstr ""
 msgid "Is it a Wallonia-Brussels Federation institution?"
 msgstr ""
 
+msgctxt "diploma_type"
+msgid "It is a diploma"
+msgstr "It is a"
+
 msgid "JURY_APPROUVE_ADRE"
 msgstr "Jury approved by ADRE"
 
@@ -1781,9 +1787,6 @@ msgid "Language study abroad"
 msgstr ""
 
 msgid "Last name / First name / Global id"
-msgstr ""
-
-msgid "Last registration year"
 msgstr ""
 
 #, python-format
@@ -1899,6 +1902,9 @@ msgstr ""
 msgid "More than 75%"
 msgstr ""
 
+msgid "Most recent year of enrolment"
+msgstr ""
+
 msgid "Motivation for joint supervision"
 msgstr ""
 
@@ -2011,9 +2017,6 @@ msgstr ""
 msgid "Non-academic activities"
 msgstr ""
 
-msgid "Non-organised training"
-msgstr ""
-
 msgid "Non-profit"
 msgstr ""
 
@@ -2024,9 +2027,6 @@ msgid "None of these are relevant to me"
 msgstr ""
 
 msgid "Not a valid IBAN."
-msgstr ""
-
-msgid "Not specified"
 msgstr ""
 
 msgctxt "admission"
@@ -2046,9 +2046,6 @@ msgstr ""
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
 "enter your academic courses and non-academic activities below."
-msgstr ""
-
-msgid "Ongoing request"
 msgstr ""
 
 msgid "Online"
@@ -2072,6 +2069,9 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
+msgid "Other address"
+msgstr ""
+
 msgid "Other documents relating to joint supervision"
 msgstr ""
 
@@ -2090,7 +2090,7 @@ msgstr ""
 msgid "Other institute name"
 msgstr ""
 
-msgid "Other program"
+msgid "Other programme"
 msgstr ""
 
 msgid "PAPER"
@@ -2162,13 +2162,13 @@ msgstr ""
 msgid "Pay now (valid payment)"
 msgstr ""
 
-msgid "Pay the application fees"
+msgid "Pay the application fee"
 msgstr ""
 
-msgid "Payment of the application fees"
+msgid "Payment of the application fee"
 msgstr ""
 
-msgid "Pending application fees"
+msgid "Pending application fee"
 msgstr ""
 
 msgid "Period"
@@ -2225,6 +2225,9 @@ msgstr ""
 "Please complete the « Application for a cotutelle » form (available here) "
 "and upload it here."
 
+msgid "Please complete this field: {}"
+msgstr ""
+
 msgid "Please correct the errors below"
 msgstr ""
 
@@ -2260,11 +2263,6 @@ msgstr ""
 msgid "Please provide one of these two pieces of identification information:"
 msgstr ""
 
-msgid ""
-"Please provide the details of at least your most recent academic course and "
-"your most recent non-academic activity."
-msgstr ""
-
 msgid "Please rate your listening comprehension"
 msgstr ""
 
@@ -2280,10 +2278,7 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Please select the primary Belgian student status category that applies to you"
-msgstr ""
-
-msgid "Please specify a value for the following field: {}"
+"Please select the Belgian student status situation that most applies to you"
 msgstr ""
 
 msgid "Postal address"
@@ -2394,6 +2389,11 @@ msgid "Proposed new deadline"
 msgstr ""
 
 msgid "Proposed thesis title"
+msgstr ""
+
+msgid ""
+"Provide the details of your most recent academic course and your most recent "
+"non-academic experience."
 msgstr ""
 
 msgid "Proximity Commission for Dental Sciences (DENT)"
@@ -2927,6 +2927,9 @@ msgstr ""
 msgid "Thesis location"
 msgstr ""
 
+msgid "This account number has been verified"
+msgstr ""
+
 msgid "This activity and its potential subactivities will be discontinued"
 msgstr ""
 
@@ -2954,18 +2957,12 @@ msgstr ""
 msgid "This field is required."
 msgstr ""
 
-msgid "This is a diploma from"
-msgstr ""
-
 msgid ""
 "This is a temporary title and it will be modifiable later depending on the "
 "jury analysis."
 msgstr ""
 
 msgid "This language is set more than once."
-msgstr ""
-
-msgid "This number has been checked"
 msgstr ""
 
 msgid "This value may not exceed the number of registered credits"
@@ -3034,7 +3031,7 @@ msgstr ""
 
 msgid ""
 "To finalize the submission of your application, you have to pay the "
-"application fees."
+"application fee."
 msgstr ""
 
 msgid "To the attention of"
@@ -3043,7 +3040,7 @@ msgstr ""
 msgid "Total hourly volume"
 msgstr ""
 
-msgid "Total number of credits registered in your yearly programme."
+msgid "Total number of credits registered in your annual programme (PAE)."
 msgstr ""
 
 msgid "Training certificate, with dates, justifying the period concerned"
@@ -3130,6 +3127,12 @@ msgid "Validated"
 msgstr ""
 
 msgid "View"
+msgstr ""
+
+msgid "View academic activity"
+msgstr ""
+
+msgid "View non-academic activity"
 msgstr ""
 
 msgid "View summary"
@@ -3321,7 +3324,7 @@ msgstr ""
 
 msgid ""
 "You can add any document you feel is relevant to your application "
-"(supporting documents, proof of language level, etc.)"
+"(supporting documents, proof of language level, etc.)."
 msgstr ""
 
 msgid ""
@@ -3349,8 +3352,7 @@ msgstr ""
 msgid "You indicated that you will obtain it in %(year)s."
 msgstr ""
 
-msgid ""
-"You must choose your training before filling in your previous experience."
+msgid "You must choose your course before entering your previous experience."
 msgstr ""
 
 msgid "You must correct your application before you can request signatures."
@@ -3397,6 +3399,9 @@ msgstr ""
 msgid "Your application has been submitted"
 msgstr ""
 
+msgid "Your application is complete and may be submitted."
+msgstr ""
+
 msgid "Your application will be sent to the UCLouvain Enrolment Office."
 msgstr ""
 
@@ -3409,11 +3414,6 @@ msgid "Your data have been saved"
 msgstr ""
 
 msgid "Your decision has been saved."
-msgstr ""
-
-msgid ""
-"Your enrolment can be confirmed as all the necessary conditions have been "
-"met."
 msgstr ""
 
 msgid ""
@@ -3457,8 +3457,9 @@ msgstr ""
 msgid "eg:"
 msgstr ""
 
+msgctxt "diploma_type"
 msgid "foreign"
-msgstr ""
+msgstr "foreign diploma"
 
 #, python-format
 msgid "from %(start)s to %(end)s"

@@ -363,7 +363,7 @@ def field_data(
     translate_data=False,
     inline=False,
     html_tag='',
-    empty_value=_('Not specified'),
+    empty_value=_('Incomplete field'),
     tooltip=None,
 ):
     if isinstance(data, list):
