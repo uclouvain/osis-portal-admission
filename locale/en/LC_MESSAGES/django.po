@@ -1416,9 +1416,6 @@ msgid ""
 "superieures/' target='_blank'>for a student grant</a> from the French "
 "Community of Belgium?"
 msgstr ""
-"Avez-vous fait une <a href='https://allocations-etudes.cfwb.be/etudes-"
-"superieures/' target='_blank'>demande d'allocation d'études</a> auprès de la "
-"Communauté française de Belgique ?"
 
 msgid ""
 "Have you applied for a student grant from the French Community of Belgium?"
@@ -3211,10 +3208,10 @@ msgid ""
 "Would you like to change your UCLouvain enrolment for this academic year?"
 msgstr ""
 
-#, python-brace-format
+#, python-format
 msgid ""
 "Would you like to change your UCLouvain enrolment for this academic year? "
-"(<a href=\"{url}\" target=\"_blank\">Informations</a>)"
+"(<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 msgstr ""
 
 msgid ""
@@ -3235,10 +3232,10 @@ msgstr ""
 msgid "Would you like to switch courses this academic year at UCLouvain?"
 msgstr ""
 
-#, python-brace-format
+#, python-format
 msgid ""
 "Would you like to switch courses this academic year at UCLouvain? (<a "
-"href=\"{url}\" target=\"_blank\">Informations</a>)"
+"href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 msgstr ""
 
 msgid "Writing ability"

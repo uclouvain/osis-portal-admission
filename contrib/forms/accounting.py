@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ from typing import Set
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _, ngettext
 from localflavor.generic.forms import BICFormField, IBAN_MIN_LENGTH
 
@@ -46,6 +45,7 @@ from admission.contrib.enums.accounting import (
 )
 from admission.contrib.forms import RadioBooleanField, get_example_text, AdmissionFileUploadField as FileUploadField
 from admission.templatetags.admission import get_academic_year
+from admission.utils import mark_safe_lazy
 from reference.services.iban_validator import (
     IBANValidatorService,
     IBANValidatorException,
@@ -62,7 +62,7 @@ class AccountingForm(forms.Form):
 
     # Reduced tuition fee
     demande_allocation_d_etudes_communaute_francaise_belgique = RadioBooleanField(
-        label=mark_safe(
+        label=mark_safe_lazy(
             _(
                 "Have you applied <a href='https://allocations-etudes.cfwb.be/etudes-superieures/' target='_blank'>"
                 "for a student grant</a> from the French Community of Belgium?"
@@ -226,47 +226,47 @@ class AccountingForm(forms.Form):
         required=False,
     )
     carte_identite_parent = FileUploadField(
-        label=mark_safe(
-            _('Copy of both sides of identity card of %(person_concerned)s')
-            % {'person_concerned': dynamic_person_concerned}
+        label=mark_safe_lazy(
+            _('Copy of both sides of identity card of %(person_concerned)s'),
+            person_concerned=dynamic_person_concerned,
         ),
         required=False,
     )
     titre_sejour_longue_duree_parent = FileUploadField(
-        label=mark_safe(
+        label=mark_safe_lazy(
             _(
                 'Copy of both sides of long-term residence permit in Belgium of %(person_concerned)s (B, C, D, F, F+, '
                 'K, L or M Card)'
-            )
-            % {'person_concerned': dynamic_person_concerned}
+            ),
+            person_concerned=dynamic_person_concerned,
         ),
         required=False,
     )
     annexe_25_26_refugies_apatrides_decision_protection_parent = FileUploadField(
-        label=mark_safe(
+        label=mark_safe_lazy(
             _(
                 "Copy of Annex 25 or 26 or A/B Card indicating refugee status or copy of Foreign Nationals Office "
                 "decision confirming temporary/subsidiary protection of %(person_concerned)s or copy of official "
                 "Foreign Nationals Office or municipality document proving the stateless status of %(person_concerned)s"
-            )
-            % {'person_concerned': dynamic_person_concerned}
+            ),
+            person_concerned=dynamic_person_concerned,
         ),
         required=False,
     )
     titre_sejour_3_mois_parent = FileUploadField(
-        label=mark_safe(
-            _('Copy of both sides of residence permit valid for more than 3 months of %(person_concerned)s')
-            % {'person_concerned': dynamic_person_concerned}
+        label=mark_safe_lazy(
+            _('Copy of both sides of residence permit valid for more than 3 months of %(person_concerned)s'),
+            person_concerned=dynamic_person_concerned,
         ),
         required=False,
     )
     fiches_remuneration_parent = FileUploadField(
-        label=mark_safe(
+        label=mark_safe_lazy(
             _(
                 'Copy of 6 payslips issued in the 12 months preceding application or proof of receipt of '
                 'unemployment benefit, pension or allowance from a mutual insurance company of %(person_concerned)s'
-            )
-            % {'person_concerned': dynamic_person_concerned}
+            ),
+            person_concerned=dynamic_person_concerned,
         ),
         required=False,
         help_text=_(
@@ -275,9 +275,9 @@ class AccountingForm(forms.Form):
         ),
     )
     attestation_cpas_parent = FileUploadField(
-        label=mark_safe(
-            _('Recent CPAS certificate of coverage for %(person_concerned)s')
-            % {'person_concerned': dynamic_person_concerned}
+        label=mark_safe_lazy(
+            _('Recent CPAS certificate of coverage for %(person_concerned)s'),
+            person_concerned=dynamic_person_concerned,
         ),
         required=False,
     )
@@ -313,7 +313,7 @@ class AccountingForm(forms.Form):
 
     # Memberships
     affiliation_sport = forms.ChoiceField(
-        label=mark_safe(
+        label=mark_safe_lazy(
             _(
                 "Would you like to join the <a href='https://uclouvain.be/fr/etudier/sport/le-sport-uclouvain.html' "
                 "target='_blank'>sports activities</a>? If so, the cost of membership will be added to your tuition "
@@ -324,7 +324,7 @@ class AccountingForm(forms.Form):
         required=False,
     )
     etudiant_solidaire = RadioBooleanField(
-        label=mark_safe(
+        label=mark_safe_lazy(
             _(
                 "Would you like to become a <a href='https://uclouvain.be/fr/decouvrir/carte-solidaire.html' "
                 "target='_blank'>Solidarity Student</a>, that is, a member of a programme proposed by UCLouvain's NGO, "
@@ -350,7 +350,7 @@ class AccountingForm(forms.Form):
                 "placeholder": get_example_text('BE43 0689 9999 9501'),
             },
         ),
-        help_text=mark_safe(
+        help_text=mark_safe_lazy(
             _(
                 'The IBAN contains up to 34 alphanumeric characters, which correspond to:'
                 '<ul>'
@@ -373,7 +373,7 @@ class AccountingForm(forms.Form):
                 "placeholder": get_example_text('GKCC BE BB'),
             },
         ),
-        help_text=mark_safe(
+        help_text=mark_safe_lazy(
             _(
                 'The BIC/SWIFT code consists of 8 or 11 characters, which correspond to:'
                 '<ul>'

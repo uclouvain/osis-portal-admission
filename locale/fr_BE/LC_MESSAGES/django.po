@@ -3600,13 +3600,13 @@ msgstr ""
 "Souhaitez-vous modifier votre inscription pour cette année académique, à "
 "l'UCLouvain ?"
 
-#, python-brace-format
+#, python-format
 msgid ""
 "Would you like to change your UCLouvain enrolment for this academic year? "
-"(<a href=\"{url}\" target=\"_blank\">Informations</a>)"
+"(<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 msgstr ""
 "Souhaitez-vous modifier votre inscription pour cette année académique, à "
-"l'UCLouvain ? (<a href=\"{url}\" target=\"_blank\">Informations</a>)"
+"l'UCLouvain ? (<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 
 msgid ""
 "Would you like to enter an account number so that we can issue a refund?"
@@ -3635,13 +3635,13 @@ msgid "Would you like to switch courses this academic year at UCLouvain?"
 msgstr ""
 "Souhaitez-vous vous réorienter pour cette année académique, à l’UCLouvain ?"
 
-#, python-brace-format
+#, python-format
 msgid ""
 "Would you like to switch courses this academic year at UCLouvain? (<a "
-"href=\"{url}\" target=\"_blank\">Informations</a>)"
+"href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 msgstr ""
 "Souhaitez-vous vous réorienter pour cette année académique, à l’UCLouvain ? "
-"(<a href=\"{url}\" target=\"_blank\">Informations</a>)"
+"(<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 
 msgid "Writing ability"
 msgstr "Écrire"
