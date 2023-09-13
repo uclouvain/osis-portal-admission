@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,13 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.core.exceptions import PermissionDenied
+from django.urls import reverse
 from django.views.generic import RedirectView
 
 __all__ = ['AdmissionRedirectView']
 __namespace__ = False
 
+from admission.contrib.views.mixins import LoadDossierViewMixin
+from admission.templatetags.admission import can_make_action
 
-class AdmissionRedirectView(RedirectView):
+
+class AdmissionRedirectView(LoadDossierViewMixin, RedirectView):
     urlpatterns = {
         'doctorate': 'doctorate/<uuid:pk>/',
         'general-education': 'general-education/<uuid:pk>/',
@@ -37,8 +42,42 @@ class AdmissionRedirectView(RedirectView):
     }
 
     @property
+    def current_context(self):
+        return self.request.resolver_match.url_name
+
+    @property
     def pattern_name(self):
-        namespace = self.request.resolver_match.url_name
+        try:
+            admission = self.admission
+        except PermissionDenied:
+            return 'admission:list'
+        namespace = self.current_context
+
         if namespace == 'doctorate':
             return f'admission:{namespace}:project'
-        return f'admission:{namespace}:person'
+
+        if can_make_action(admission, 'retrieve_person'):
+            return f'admission:{namespace}:person'
+        if can_make_action(admission, 'update_documents'):
+            return f'admission:{namespace}:update:documents'
+        if can_make_action(admission, 'pay_after_submission'):
+            return f'admission:{namespace}:payment'
+        if can_make_action(admission, 'pay_after_request'):
+            return f'admission:{namespace}:payment'
+
+        return 'admission:list'
+
+    def get_redirect_url(self, *args, **kwargs):
+        """
+        Override get_redirect_url to not include kwargs for the listing view.
+        """
+        pattern_name = self.pattern_name
+        if pattern_name == 'admission:list':
+            url = reverse(self.pattern_name)
+        else:
+            url = reverse(self.pattern_name, args=args, kwargs=kwargs)
+
+        args = self.request.META.get('QUERY_STRING', '')
+        if args and self.query_string:
+            url = "%s?%s" % (url, args)
+        return url

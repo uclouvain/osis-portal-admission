@@ -144,6 +144,7 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
             'first_name',
             'last_name',
             'language',
+            'gender'
         ]:
             if getattr(self.person, field) != updated_person.get(field):
                 update_fields.append(field)

@@ -145,11 +145,14 @@ class MixedTrainingAutocomplete(GeneralEducationAutocomplete):
 
     def get_list(self):
         selected_campus = self.forwarded.get('campus', EMPTY_VALUE)
-        iufc_trainings = AdmissionAutocompleteService.get_continuing_education_trainings(
-            person=self.request.user.person,
-            name=self.q,
-            campus=selected_campus if selected_campus != EMPTY_VALUE else '',
-        )
+        if not switch_is_active('admission-iufc'):
+            iufc_trainings = []
+        else:
+            iufc_trainings = AdmissionAutocompleteService.get_continuing_education_trainings(
+                person=self.request.user.person,
+                name=self.q,
+                campus=selected_campus if selected_campus != EMPTY_VALUE else '',
+            )
         certificate = AdmissionAutocompleteService.get_general_education_trainings(
             person=self.request.user.person,
             training_type=TypeFormation.CERTIFICAT.name,
@@ -387,7 +390,7 @@ class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             person=self.request.user.person,
             search=self.q,
             active=True,
-            study_type=self.forwarded.get('institute', '').split(':', maxsplit=1)[0],
+            study_type=self.forwarded.get('institute_type', ''),
         )
 
     def results(self, results):

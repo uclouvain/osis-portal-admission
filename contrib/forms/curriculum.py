@@ -29,7 +29,7 @@ from datetime import datetime
 from functools import partial
 from typing import List
 
-from dal import autocomplete
+from dal import autocomplete, forward
 from django import forms
 from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
@@ -403,7 +403,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:diploma',
             attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
-            forward=['institute__type'],
+            forward=[forward.JavaScript('get_institute_type', 'institute_type')],
         ),
     )
     other_program = forms.BooleanField(

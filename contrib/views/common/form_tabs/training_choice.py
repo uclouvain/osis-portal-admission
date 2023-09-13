@@ -81,6 +81,20 @@ class AdmissionTrainingChoiceFormView(
         self.created_uuid: Optional[str] = None
         self.training_type: Optional[TypeFormation] = None
 
+    def dispatch(self, request, *args, **kwargs):
+        # Check permission
+        if self.current_context == 'general-education':
+            AdmissionPropositionService.get_general_education_training_choice(
+                self.request.user.person,
+                uuid=self.admission_uuid,
+            )
+        elif self.current_context == 'continuing-education':
+            AdmissionPropositionService.get_continuing_education_training_choice(
+                self.request.user.person,
+                uuid=self.admission_uuid,
+            )
+        return super().dispatch(request, *args, **kwargs)
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person

@@ -13,6 +13,7 @@ from .utils import (
     is_med_dent_training,
     format_academic_year,
     format_address,
+    mark_safe_lazy,
 )
 
 __all__ = [
@@ -30,4 +31,5 @@ __all__ = [
     'is_med_dent_training',
     'format_academic_year',
     'format_address',
+    'mark_safe_lazy',
 ]

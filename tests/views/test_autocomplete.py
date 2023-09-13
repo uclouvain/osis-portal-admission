@@ -41,6 +41,7 @@ from osis_reference_sdk.model.paginated_superior_non_university import Paginated
 from osis_reference_sdk.model.paginated_university import PaginatedUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 from osis_reference_sdk.model.university import University
+from waffle.testutils import override_switch
 
 from admission.contrib.enums import BelgianCommunitiesOfEducation, TypeFormationChoisissable
 from admission.contrib.enums.diploma import StudyType
@@ -563,6 +564,7 @@ class AutocompleteTestCase(TestCase):
         self.assertEqual(response.json(), {'results': results})
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    @override_switch('admission-iufc', active=True)
     def test_autocomplete_mixed_education_training(self, api):
         api.return_value.list_formation_continue_dtos.return_value = [
             FormationContinueDTO(

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ from django.views.generic import TemplateView
 
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.views.mixins import LoadDossierViewMixin
+from admission.services.proposition import AdmissionPropositionService
 
 __all__ = ['TrainingChoiceDetailView']
 
@@ -35,6 +36,18 @@ class TrainingChoiceDetailView(LoadDossierViewMixin, TemplateView):
     tab_of_specific_questions = Onglets.CHOIX_FORMATION.name
 
     def get_context_data(self, **kwargs):
+        # Check permission
+        if self.current_context == 'general-education':
+            AdmissionPropositionService.get_general_education_training_choice(
+                self.request.user.person,
+                uuid=self.admission_uuid,
+            )
+        elif self.current_context == 'continuing-education':
+            AdmissionPropositionService.get_continuing_education_training_choice(
+                self.request.user.person,
+                uuid=self.admission_uuid,
+            )
+
         if 'submitted' in self.request.session:
             del self.request.session['submitted']
             kwargs['just_submitted'] = True

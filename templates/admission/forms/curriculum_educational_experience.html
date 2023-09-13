@@ -268,7 +268,6 @@
           const evaluationType = $('#id_base_form-evaluation_type');
           let startYear = parseInt(startSelect.val());
           let transcriptType;
-          let attachmentsToToggle;
           const currentAcademicYear = {{ current_year }};
 
           const is_truthy = val => !!val;
@@ -480,6 +479,45 @@
               manageTranslatedFields(country.val(), this.value);
           }).change();
 
+
+          {# Display the right badges at page initialization #}
+          const initializeYearlyTranscripts = function() {
+            const allYears = $('#formset-container > .year-form');
+
+            allYears.each(function() {
+                if ($('#id_base_form-transcript_type').val() !== 'ONE_A_YEAR') {
+                  return ;
+                }
+
+                const $this = $(this);
+                const tbodyContainer = $this.closest('tbody');
+                const hasTranslationFile = $this.find('.annual-transcript-translation-file input[type=hidden]').length > 0;
+                const needsTranslationFile = $this.find('.annual-transcript-translation-file.hidden').length === 0;
+                const hasTranscriptFile = $this.find('.annual-transcript-file input[type=hidden]').length > 0;
+                const needsTranscriptFile = $this.find('.annual-transcript-file.hidden').length === 0;
+
+                if (hasTranslationFile) {
+                  const translationBadge = $this.find('.translation-badge > span');
+                  translationBadge.addClass('fa-circle-check');
+                  translationBadge.removeClass('fa-circle-xmark');
+                } else if (needsTranslationFile) {
+                  const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
+                  newAttachmentsToToggle.removeClass('hidden');
+                }
+
+                if (hasTranscriptFile) {
+                  const transcriptBadge = $this.find('.transcript-badge > span');
+                  transcriptBadge.addClass('fa-circle-check');
+                  transcriptBadge.removeClass('fa-circle-xmark');
+                } else if (needsTranscriptFile) {
+                  const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
+                  newAttachmentsToToggle.removeClass('hidden');
+                }
+            });
+          };
+
+          initializeYearlyTranscripts();
+
           {# Transcript fields #}
           $('#id_base_form-transcript_type').change(function() {
               transcriptType = this.value;
@@ -497,7 +535,7 @@
               if (transcriptType === 'ONE_A_YEAR') {
                   annualTranscripts.filter('input').prop('disabled', false);
                   annualTranscriptsButtons.removeClass('hidden');
-                  $('.result button:visible:first').click();
+                  initializeYearlyTranscripts();
               } else {
                   annualTranscripts.filter('input').prop('disabled', true);
                   annualTranscripts.addClass('hidden');
@@ -540,15 +578,7 @@
             const tbodyContainer = $(event.target).closest('tbody');
 
             const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
-
-            {# Hide the attachments for the other years #}
-            if (attachmentsToToggle && !attachmentsToToggle.is(newAttachmentsToToggle)) {
-                attachmentsToToggle.addClass('hidden');
-            }
-
             newAttachmentsToToggle.toggleClass('hidden');
-
-            attachmentsToToggle = newAttachmentsToToggle;
           });
 
         {# Display a badge specifying if the transcript and its translation have been uploaded #}
@@ -570,24 +600,8 @@
           displayBadgesAccordingToSubmittedTranscripts(event, '.translation-badge > span');
       });
 
-      {# Display the right badges at page initialization #}
-      const allYears = $('#formset-container > .year-form');
-
-      allYears.each(function() {
-          const hasTranslationFile = $(this).find('.annual-transcript-translation-file input[type=hidden]').length > 0;
-          const hasTranscriptFile = $(this).find('.annual-transcript-file input[type=hidden]').length > 0;
-
-          if (hasTranslationFile) {
-            const translationBadge = $(this).find('.translation-badge > span');
-            translationBadge.addClass('fa-circle-check');
-            translationBadge.removeClass('fa-circle-xmark');
-          }
-
-          if (hasTranscriptFile) {
-            const transcriptBadge = $(this).find('.transcript-badge > span');
-            transcriptBadge.addClass('fa-circle-check');
-            transcriptBadge.removeClass('fa-circle-xmark');
-          }
+      yl.registerForwardHandler("get_institute_type", function (element) {
+        return $('#id_base_form-institute').select2('data')[0]['type'] || '';
       });
 
       document.dispatchEvent(new Event('refreshFormInitial'));
