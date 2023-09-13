@@ -140,13 +140,12 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         )
         # Update local person to make sure future requests to API don't rollback person
         update_fields = []
-        for field in [
-            'first_name',
-            'last_name',
-            'language',
-            'gender'
-        ]:
-            if getattr(self.person, field) != updated_person.get(field):
+        for field in data.keys():
+            if (
+                hasattr(self.person, field)
+                and updated_person.get(field) is not None
+                and getattr(self.person, field) != updated_person.get(field)
+            ):
                 update_fields.append(field)
                 setattr(self.person, field, updated_person.get(field))
         self.person.save(update_fields=update_fields)
