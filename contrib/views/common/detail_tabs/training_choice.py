@@ -47,10 +47,6 @@ class TrainingChoiceDetailView(LoadDossierViewMixin, TemplateView):
                 self.request.user.person,
                 uuid=self.admission_uuid,
             )
-
-        if 'submitted' in self.request.session:
-            del self.request.session['submitted']
-            kwargs['just_submitted'] = True
         return super().get_context_data(**kwargs)
 
     def get_template_names(self):

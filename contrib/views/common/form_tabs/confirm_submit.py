@@ -136,10 +136,10 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
     def get_success_url(self):
         if self.submit_proposition_result.get('status') == ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name:
             return resolve_url(f'admission:{self.current_context}:payment', pk=self.admission_uuid)
-        self.request.session['submitted'] = True
+        self.request.session['submitted'] = self.current_context
         if self.current_context == 'doctorate':
             return resolve_url(f'admission:{self.current_context}:project', pk=self.admission_uuid)
-        return resolve_url(f'admission:{self.current_context}:training-choice', pk=self.admission_uuid)
+        return resolve_url(f'admission:{self.current_context}', pk=self.admission_uuid)
 
     def prepare_data(self, data):
         return {
