@@ -8,7 +8,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,14 @@
 {% endcomment %}
 
 {% block tab_content %}
+    {% if not admission|can_update_tab:"coordonnees" %}
+      <div class="alert alert-warning">
+        {% blocktrans trimmed %}
+          Because you already submitted an admission, information about coordinates can not be updated.
+          If you want to update them, please contact the enrolment office.
+        {% endblocktrans %}
+      </div>
+    {% endif %}
     {% panel _("Legal domicile") %}
         <div class="row">
             <div class="col-md-4">{% field_data _("Street") coordonnees.residential.street %}</div>

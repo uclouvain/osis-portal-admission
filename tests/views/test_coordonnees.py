@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from unittest import mock
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
@@ -46,6 +47,12 @@ class CoordonneesTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
         self.addCleanup(propositions_api_patcher.stop)
+
+        self.mock_proposition_api.return_value.list_proposition_create_permissions.return_value = mock.Mock(
+            links={
+                'create_coordinates': {'url': 'foobar'},
+            }
+        )
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = person_api_patcher.start()
@@ -96,13 +103,29 @@ class CoordonneesTestCase(TestCase):
         self.mock_academic_year_api = academic_year_api_patcher.start()
         self.addCleanup(academic_year_api_patcher.stop)
 
+    def test_form_with_submitted_admission_is_readonly(self):
+        url = resolve_url('admission:create:coordonnees')
+        self.client.force_login(self.person.user)
+
+        self.mock_proposition_api.return_value.list_proposition_create_permissions.return_value = mock.Mock(
+            links={
+                'create_coordinates': {'error': 'foobar'},
+            }
+        )
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateNotUsed(response, 'admission/forms/coordonnees.html')
+        self.assertTemplateUsed(response, 'admission/details/coordonnees.html')
+
     def test_form_display(self):
         url = resolve_url('admission:create:coordonnees')
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateNotUsed(response, 'admission/details/coordonnees.html')
+        self.assertTemplateUsed(response, 'admission/forms/coordonnees.html')
         self.mock_person_api.return_value.retrieve_coordonnees.assert_called()
-        self.mock_proposition_api.assert_not_called()
 
     def test_form_empty(self):
         url = resolve_url('admission:create:coordonnees')
