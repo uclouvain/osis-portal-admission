@@ -235,6 +235,8 @@ def _get_active_parent(tab_tree, tab_name):
 @register.filter
 def can_make_action(admission, action_name):
     """Return true if the specified action can be applied for this admission, otherwise return False"""
+    if not admission:
+        return False
     return 'url' in admission.links.get(action_name, {})
 
 

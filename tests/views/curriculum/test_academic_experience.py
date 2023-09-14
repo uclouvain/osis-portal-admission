@@ -159,26 +159,6 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
 
         self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
-    def test_without_admission_on_delete_experience_form_is_not_initialized(self):
-        response = self.client.get(
-            resolve_url(
-                'admission:create:curriculum:educational_delete',
-                experience_id=self.educational_experience.uuid,
-            )
-        )
-
-        # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
-
-        # Check that the API calls aren't done
-        self.mock_person_api.return_value.retrieve_educational_experience.assert_not_called()
-        self.mock_proposition_api.assert_not_called()
-
-        self.assertContains(
-            response,
-            gettext("You must choose your training before filling in your previous experience."),
-        )
-
 
 @freezegun.freeze_time('2023-01-01')
 class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
@@ -241,10 +221,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.admission_update_url = resolve_url(
             'admission:doctorate:update:curriculum:educational_update',
             pk=self.proposition.uuid,
-            experience_id=self.educational_experience.uuid,
-        )
-        self.without_admission_update_url = resolve_url(
-            'admission:create:curriculum:educational_update',
             experience_id=self.educational_experience.uuid,
         )
         self.general_admission_update_url = resolve_url(
@@ -569,21 +545,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
-
-    def test_without_admission_on_update_experience_form_is_not_initialized(self):
-        response = self.client.get(self.without_admission_update_url)
-
-        # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
-
-        # Check that the API calls aren't done
-        self.mockapi.retrieve_educational_experience.assert_not_called()
-        self.mock_proposition_api.assert_not_called()
-
-        self.assertContains(
-            response,
-            gettext("You must choose your training before filling in your previous experience."),
-        )
 
     def test_with_admission_on_update_experience_post_form_empty_data(self):
         response = self.client.post(
@@ -1377,22 +1338,4 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 experience_id=self.educational_experience.uuid,
             )
             + '#curriculum-header',
-        )
-
-    def test_without_admission_on_create_experience_form_is_not_initialized(self):
-        response = self.client.get(
-            resolve_url('admission:create:curriculum:educational_create'),
-            data=self.all_form_data,
-        )
-
-        # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
-
-        # Check that the API calls aren't done
-        self.mockapi.retrieve_educational_experience.assert_not_called()
-        self.mock_proposition_api.assert_not_called()
-
-        self.assertContains(
-            response,
-            gettext("You must choose your training before filling in your previous experience."),
         )

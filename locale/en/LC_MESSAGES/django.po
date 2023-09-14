@@ -521,6 +521,18 @@ msgid "Bank account"
 msgstr ""
 
 msgid ""
+"Because you already submitted an admission, information about coordinates "
+"can not be updated. If you want to update them, please contact the enrolment "
+"office."
+msgstr ""
+
+msgid ""
+"Because you already submitted an admission, information about identification "
+"can not be updated. If you want to update them, please contact the enrolment "
+"office."
+msgstr ""
+
+msgid ""
 "Before sending your application, please check the data you have entered for "
 "any errors or omissions."
 msgstr ""

@@ -74,6 +74,12 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         return APIClient().retrieve_dashboard(**build_mandatory_auth_headers(person)).to_dict().get('links', {})
 
     @classmethod
+    def list_proposition_create_permissions(cls, person):
+        return APIClient().list_proposition_create_permissions(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def create_doctorate_proposition(cls, person: Person, data):
         return APIClient().create_doctorate_training_choice(
             initier_proposition_command=data,

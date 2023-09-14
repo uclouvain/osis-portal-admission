@@ -23,7 +23,8 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.shortcuts import render
+from django.utils.functional import cached_property
 from django.views.generic import FormView
 
 from admission.constants import BE_ISO_CODE
@@ -38,7 +39,8 @@ from admission.services.person import (
 
 __all__ = ['AdmissionCoordonneesFormView']
 
-from admission.services.proposition import PostalCodeBusinessException
+from admission.services.proposition import PostalCodeBusinessException, AdmissionPropositionService
+from admission.templatetags.admission import can_make_action
 
 
 class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -63,6 +65,21 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
         self._error_mapping_residential = {exc.value: field for exc, field in self.error_mapping_residential.items()}
         super().__init__(*args, **kwargs)
 
+    def get(self, request, *args, **kwargs):
+        # In case of a creation and if we don't have permission to update the coordinates,
+        # we show the read-only template
+        if not self.admission_uuid:
+            permissions = AdmissionPropositionService.list_proposition_create_permissions(request.user.person)
+            if not can_make_action(permissions, 'create_coordinates'):
+                coordonnees = self.coordonnees
+                context = super().get_context_data(
+                    with_submit=False,
+                    coordonnees=coordonnees,
+                    show_contact=coordonnees['contact'] is not None,
+                )
+                return render(request, 'admission/details/coordonnees.html', context)
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update(self.get_forms())
@@ -75,7 +92,8 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
             return self.form_valid(forms['main_form'])
         return self.form_invalid(forms['main_form'])
 
-    def get_initial(self):
+    @cached_property
+    def coordonnees(self):
         return (
             self.service_mapping[self.current_context]
             .retrieve_person_coordonnees(
@@ -84,6 +102,9 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
             )
             .to_dict()
         )
+
+    def get_initial(self):
+        return self.coordonnees
 
     @staticmethod
     def prepare_be_city(form_cleaned_data):
