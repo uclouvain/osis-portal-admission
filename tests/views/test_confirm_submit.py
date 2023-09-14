@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -234,7 +234,7 @@ class ConfirmSubmitTestCase(TestCase):
         data = {**self.data_ok, 'pool': 'CONTINUING_EDUCATION_ENROLLMENT'}
 
         response = self.client.post(url, data=data, follow=True)
-        url = resolve_url('admission:continuing-education:training-choice', pk=uuid)
+        url = resolve_url('admission:list')
         self.assertRedirects(response, url)
         api.submit_continuing_education_proposition.assert_called_with(
             uuid=uuid,
@@ -265,7 +265,7 @@ class ConfirmSubmitTestCase(TestCase):
         }
 
         response = self.client.post(url, data=data, follow=True)
-        url = resolve_url('admission:general-education:training-choice', pk=uuid)
+        url = resolve_url('admission:list')
         self.assertRedirects(response, url)
         api.submit_general_education_proposition.assert_called_with(
             uuid=uuid,
