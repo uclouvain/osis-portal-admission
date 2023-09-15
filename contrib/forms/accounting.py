@@ -404,6 +404,7 @@ class AccountingForm(forms.Form):
             None,
         )
         self.valid_iban = None
+        self.display_sport_question = False
 
         super().__init__(**kwargs)
 
@@ -425,10 +426,15 @@ class AccountingForm(forms.Form):
         if self.is_general_admission:
             self.fields['demande_allocation_d_etudes_communaute_francaise_belgique'].required = True
             self.fields['enfant_personnel'].required = True
-            self.fields['affiliation_sport'].required = True
 
-            if self.education_site:
-                self.fields['affiliation_sport'].choices = ChoixAffiliationSport.choices(self.education_site)
+            # Only display the sport question for the right campuses
+            self.fields['affiliation_sport'].choices = ChoixAffiliationSport.choices(self.education_site)
+
+            if len(self.fields['affiliation_sport'].choices) > 1:
+                self.fields['affiliation_sport'].required = True
+                self.display_sport_question = True
+            else:
+                self.fields['affiliation_sport'].widget = forms.HiddenInput()
 
         if self.with_assimilation:
             self.fields['type_situation_assimilation'].required = True
@@ -665,6 +671,9 @@ class AccountingForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
+
+        if not self.display_sport_question:
+            cleaned_data['affiliation_sport'] = ''
 
         if self.is_general_admission:
             if not cleaned_data.get('enfant_personnel'):

@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 import uuid
+from unittest import mock
 from unittest.mock import ANY, MagicMock, Mock, patch
 
 from django.shortcuts import resolve_url
@@ -670,12 +671,23 @@ class GeneralAccountingViewTestCase(TestCase):
         self.assertEqual(sport_affiliation_choices[0][0], ChoixAffiliationSport.MONS_UCL.name)
         self.assertEqual(sport_affiliation_choices[1][0], ChoixAffiliationSport.MONS.name)
         self.assertEqual(sport_affiliation_choices[2][0], ChoixAffiliationSport.NON.name)
+        self.assertTrue(form.fields['affiliation_sport'].required)
         self.assertEqual(
             form.fields['attestation_absence_dette_etablissement'].label,
             "Attestations stipulant l'absence de dettes vis-à-vis des établissements fréquentés durant l'année "
             "académique 2021-2022 : Institut de technologie, Institut de pharmacologie.",
         )
         self.assertTrue(form.fields['type_situation_assimilation'].required)
+
+        with mock.patch.multiple(self.proposition.formation, campus='Unknown campus'):
+            response = self.client.get(self.update_url)
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+        sport_affiliation_choices = form.fields['affiliation_sport'].choices
+        self.assertEqual(sport_affiliation_choices[0][0], ChoixAffiliationSport.NON.name)
+        self.assertFalse(form.fields['affiliation_sport'].required)
 
     def test_post_accounting_form_with_valid_data(self):
         response = self.client.post(self.update_url, data=self.valid_data)
@@ -744,6 +756,22 @@ class GeneralAccountingViewTestCase(TestCase):
             completer_comptabilite_proposition_generale_command=command_params,
             **self.default_kwargs,
         )
+
+        with mock.patch.multiple(self.proposition.formation, campus='Unknown campus'):
+            response = self.client.post(self.update_url, data=self.valid_data)
+
+            # Check status and redirection
+            self.assertRedirects(response, self.update_url)
+
+            # Check API calls
+            self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
+                uuid=self.proposition.uuid,
+                completer_comptabilite_proposition_generale_command={
+                    **command_params,
+                    'affiliation_sport': '',
+                },
+                **self.default_kwargs,
+            )
 
         # Valid IBAN
         self.client.post(
