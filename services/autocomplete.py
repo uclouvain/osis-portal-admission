@@ -24,13 +24,13 @@
 #
 # ##############################################################################
 import osis_learning_unit_sdk
+from osis_admission_sdk import ApiClient, ApiException
+from osis_admission_sdk.api import autocomplete_api
 from osis_learning_unit_sdk.api import learning_units_api
 
 from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import admission as admission_sdk, learning_unit as learning_unit_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
-from osis_admission_sdk import ApiClient, ApiException
-from osis_admission_sdk.api import autocomplete_api
 
 
 class AdmissionAutocompleteAPIClient:
@@ -55,18 +55,18 @@ class AdmissionAutocompleteService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def get_general_education_trainings(cls, person, training_type, name, campus=''):
+    def get_general_education_trainings(cls, person, training_type, acronym_or_name, campus=''):
         return AdmissionAutocompleteAPIClient().list_formation_generale_dtos(
             type=training_type,
-            name=name,
+            acronym_or_name=acronym_or_name,
             campus=campus,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def get_continuing_education_trainings(cls, person, name, campus=''):
+    def get_continuing_education_trainings(cls, person, acronym_or_name, campus=''):
         return AdmissionAutocompleteAPIClient().list_formation_continue_dtos(
-            name=name,
+            acronym_or_name=acronym_or_name,
             campus=campus,
             **build_mandatory_auth_headers(person),
         )

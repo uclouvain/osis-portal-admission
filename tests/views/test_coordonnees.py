@@ -48,7 +48,7 @@ class CoordonneesTestCase(TestCase):
         self.mock_proposition_api = propositions_api_patcher.start()
         self.addCleanup(propositions_api_patcher.stop)
 
-        self.mock_proposition_api.return_value.list_proposition_create_permissions.return_value = mock.Mock(
+        self.mock_proposition_api.return_value.detail_proposition_create_permissions.return_value = mock.Mock(
             links={
                 'create_coordinates': {'url': 'foobar'},
             }
@@ -107,7 +107,7 @@ class CoordonneesTestCase(TestCase):
         url = resolve_url('admission:create:coordonnees')
         self.client.force_login(self.person.user)
 
-        self.mock_proposition_api.return_value.list_proposition_create_permissions.return_value = mock.Mock(
+        self.mock_proposition_api.return_value.detail_proposition_create_permissions.return_value = mock.Mock(
             links={
                 'create_coordinates': {'error': 'foobar'},
             }

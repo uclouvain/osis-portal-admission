@@ -31,6 +31,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.utils.translation import get_language, gettext_lazy as _
+from osis_admission_sdk.model.scholarship import Scholarship
 from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 from osis_reference_sdk.model.university import University
 from waffle import switch_is_active
@@ -59,7 +60,6 @@ from admission.utils import (
     format_training_with_year,
 )
 from base.models.enums.entity_type import INSTITUTE
-from osis_admission_sdk.model.scholarship import Scholarship
 
 __all__ = [
     "DoctorateAutocomplete",
@@ -122,7 +122,7 @@ class GeneralEducationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListV
         return AdmissionAutocompleteService.get_general_education_trainings(
             person=self.request.user.person,
             training_type=self.forwarded.get('training_type'),
-            name=self.q,
+            acronym_or_name=self.q,
             campus=selected_campus if selected_campus != EMPTY_VALUE else '',
         )
 
@@ -150,13 +150,13 @@ class MixedTrainingAutocomplete(GeneralEducationAutocomplete):
         else:
             iufc_trainings = AdmissionAutocompleteService.get_continuing_education_trainings(
                 person=self.request.user.person,
-                name=self.q,
+                acronym_or_name=self.q,
                 campus=selected_campus if selected_campus != EMPTY_VALUE else '',
             )
         certificate = AdmissionAutocompleteService.get_general_education_trainings(
             person=self.request.user.person,
             training_type=TypeFormation.CERTIFICAT.name,
-            name=self.q,
+            acronym_or_name=self.q,
             campus=selected_campus if selected_campus != EMPTY_VALUE else '',
         )
         # Mix the two types
