@@ -319,6 +319,10 @@
   {% endif %}
 {% endblock %}
 
+{% block submit_button_bottom %}
+  {% if form %}{{ block.super }}{% endif %}
+{% endblock %}
+
 {% block style %}
   {{ block.super }}
   <style>
