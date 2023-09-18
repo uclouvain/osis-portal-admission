@@ -79,15 +79,6 @@ class AutocompleteTestCase(TestCase):
                 type=TrainingType.PHD.name,
                 campus_inscription='Mons',
             ),
-            DoctoratDTO(
-                sigle='BARBAZ',
-                intitule='Barbaz',
-                annee=2021,
-                sigle_entite_gestion="AZERT",
-                campus="Mons",
-                type=TrainingType.PHD.name,
-                campus_inscription='Mons',
-            ),
         ]
         url = reverse('admission:autocomplete:doctorate')
         response = self.client.get(url, {'forward': json.dumps({'sector': 'SSH'}), 'q': 'foo'})
@@ -99,8 +90,9 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
             }
         ]
-        self.assertEqual(response.json(), {'results': results})
+        self.assertDictEqual(response.json(), {'results': results})
         api.return_value.list_doctorat_dtos.assert_called_with(
+            acronym_or_name='foo',
             sigle='SSH',
             campus='',
             **DEFAULT_API_PARAMS,
@@ -137,7 +129,7 @@ class AutocompleteTestCase(TestCase):
                 'european_union': True,
             },
         ]
-        self.assertEqual(response.json(), {'results': expected, 'pagination': {'more': False}})
+        self.assertDictEqual(response.json(), {'results': expected, 'pagination': {'more': False}})
         api.return_value.countries_list.assert_called()
 
         api.return_value.countries_list.return_value = Mock(
@@ -153,7 +145,7 @@ class AutocompleteTestCase(TestCase):
                 'european_union': True,
             }
         ]
-        self.assertEqual(response.json(), {'results': expected, 'pagination': {'more': False}})
+        self.assertDictEqual(response.json(), {'results': expected, 'pagination': {'more': False}})
         self.assertEqual(api.return_value.countries_list.call_args[1]['search'], 'F')
 
         api.return_value.countries_list.return_value = Mock(
@@ -189,7 +181,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Anglais',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
         api.return_value.languages_list.assert_called()
 
         api.return_value.languages_list.return_value = Mock(
@@ -204,7 +196,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Français',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
         self.assertEqual(api.return_value.languages_list.call_args[1]['search'], 'F')
 
     @patch('osis_reference_sdk.api.cities_api.CitiesApi')
@@ -227,7 +219,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Montreuil-les-Sardouille',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'results': expected})
         self.assertEqual(api.return_value.cities_list.call_args[1]['zip_code'], '1111')
 
         api.return_value.cities_list.return_value = Mock(
@@ -242,13 +234,13 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Montreuil-les-Sardouille',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'results': expected})
         self.assertEqual(api.return_value.cities_list.call_args[1]['zip_code'], '1111')
         self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')
 
         # Without the postal code
         response = self.client.get(url, {'forward': json.dumps({'postal_code': ''}), 'q': 'Mont'})
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'results': expected})
         self.assertEqual(api.return_value.cities_list.call_args[1]['search'], 'Mont')
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
@@ -271,7 +263,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Marie-Odile Troufignon',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_persons(self, api):
@@ -293,7 +285,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Marie-Odile Troufignon',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_organisation_sdk.api.entites_api.EntitesApi')
     def test_autocomplete_institute_list(self, api):
@@ -328,7 +320,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Institute of foreign languages (IFL)',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_organisation_sdk.api.entites_api.EntitesApi')
     def test_autocomplete_institute_location(self, api):
@@ -361,7 +353,7 @@ class AutocompleteTestCase(TestCase):
         url = reverse('admission:autocomplete:institute-location')
 
         response = self.client.get(url, {'forward': json.dumps({'institut_these': ''})}, {'uuid': 'uuid1'})
-        self.assertEqual(response.json(), {'results': []})
+        self.assertDictEqual(response.json(), {'results': []})
 
         response = self.client.get(url, {'forward': json.dumps({'institut_these': 'IFL'})}, {'uuid': 'uuid1'})
         expected = [
@@ -373,7 +365,7 @@ class AutocompleteTestCase(TestCase):
                 #     'text': 'Avenue E. Mounier 81, 1200 Woluwe-Saint-Lambert, Belgique',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'results': expected})
 
     @patch('osis_reference_sdk.api.high_schools_api.HighSchoolsApi')
     def test_autocomplete_high_school_list(self, api):
@@ -406,7 +398,8 @@ class AutocompleteTestCase(TestCase):
         response = self.client.get(url, {'q': 'HighSchool'})
 
         api.return_value.high_schools_list.assert_called_with(
-            limit=100,
+            limit=20,
+            offset=0,
             search='HighSchool',
             active=True,
             **DEFAULT_API_PARAMS,
@@ -424,7 +417,7 @@ class AutocompleteTestCase(TestCase):
                 '</span>',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
         # With speaking community filter
         response = self.client.get(
@@ -436,14 +429,15 @@ class AutocompleteTestCase(TestCase):
         )
 
         api.return_value.high_schools_list.assert_called_with(
-            limit=100,
+            limit=20,
+            offset=0,
             search='HighSchool',
             active=True,
             linguistic_regime=BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
             **DEFAULT_API_PARAMS,
         )
 
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_reference_sdk.api.diplomas_api.DiplomasApi')
     def test_autocomplete_diploma_list(self, api):
@@ -469,7 +463,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Human sciences',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_learning_unit_sdk.api.learning_units_api.LearningUnitsApi')
     def test_autocomplete_learning_unit_year(self, api):
@@ -485,7 +479,7 @@ class AutocompleteTestCase(TestCase):
             {'id': "ESA2004", 'text': "ESA2004 - dumb text"},
             {'id': "ESA2006", 'text': "ESA2006 - dumb text 2"},
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_scholarship(self, api):
@@ -519,7 +513,7 @@ class AutocompleteTestCase(TestCase):
             {'id': first_scholarship_uuid, 'text': "Erasmus Mundus 1"},
             {'id': second_scholarship_uuid, 'text': "EM-2"},
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_general_education_training(self, api):
@@ -561,7 +555,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
             },
         ]
-        self.assertEqual(response.json(), {'results': results})
+        self.assertDictEqual(response.json(), {'results': results})
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     @override_switch('admission-iufc', active=True)
@@ -632,7 +626,7 @@ class AutocompleteTestCase(TestCase):
             },
             {'id': 'GENBARBAZ-2021', 'text': 'Barbaz (Mons) <span class="training-acronym">GENBARBAZ</span>'},
         ]
-        self.assertEqual(response.json(), {'results': results})
+        self.assertDictEqual(response.json(), {'results': results})
 
     @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
     def test_autocomplete_non_universities_list(self, api):
@@ -668,7 +662,8 @@ class AutocompleteTestCase(TestCase):
         response = self.client.get(url, {'q': 'Superior'})
 
         api.return_value.superior_non_universities_list.assert_called_with(
-            limit=100,
+            limit=20,
+            offset=0,
             search='Superior',
             active=True,
             **DEFAULT_API_PARAMS,
@@ -684,7 +679,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Superior 2',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
         # With speaking community filter
         response = self.client.get(
@@ -696,14 +691,15 @@ class AutocompleteTestCase(TestCase):
         )
 
         api.return_value.superior_non_universities_list.assert_called_with(
-            limit=100,
+            limit=20,
+            offset=0,
             search='Superior',
             active=True,
             country_iso_code='FR',
             **DEFAULT_API_PARAMS,
         )
 
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_reference_sdk.api.universities_api.UniversitiesApi')
     def test_autocomplete_universities_list(self, api):
@@ -739,7 +735,8 @@ class AutocompleteTestCase(TestCase):
         response = self.client.get(url, {'q': 'Superior'})
 
         api.return_value.universities_list.assert_called_with(
-            limit=100,
+            limit=20,
+            offset=0,
             search='Superior',
             active=True,
             **DEFAULT_API_PARAMS,
@@ -755,7 +752,7 @@ class AutocompleteTestCase(TestCase):
                 'text': 'Superior 2',
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
         # With speaking community filter
         response = self.client.get(
@@ -767,14 +764,15 @@ class AutocompleteTestCase(TestCase):
         )
 
         api.return_value.universities_list.assert_called_with(
-            limit=100,
+            limit=20,
+            offset=0,
             search='Superior',
             active=True,
             country_iso_code='FR',
             **DEFAULT_API_PARAMS,
         )
 
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
     @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
     @patch('osis_reference_sdk.api.universities_api.UniversitiesApi')
@@ -807,6 +805,7 @@ class AutocompleteTestCase(TestCase):
             ),
         ]
         api_university.return_value.universities_list.return_value = PaginatedUniversity(
+            count=2,
             results=mock_universities,
         )
         mock_non_universities = [
@@ -833,13 +832,15 @@ class AutocompleteTestCase(TestCase):
         ]
         self.maxDiff = None
         api_non_university.return_value.superior_non_universities_list.return_value = PaginatedSuperiorNonUniversity(
+            count=2,
             results=mock_non_universities,
         )
         url = reverse('admission:autocomplete:superior-institute')
         response = self.client.get(url, {'q': 'Superior'})
 
         api_non_university.return_value.superior_non_universities_list.assert_called_with(
-            limit=100,
+            limit=18,
+            offset=0,
             search='Superior',
             active=True,
             **DEFAULT_API_PARAMS,
@@ -867,4 +868,4 @@ class AutocompleteTestCase(TestCase):
                 'type': StudyType.NON_UNIVERSITY.name,
             },
         ]
-        self.assertEqual(response.json(), {'results': expected})
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})

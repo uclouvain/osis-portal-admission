@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -47,10 +47,11 @@ class AdmissionAutocompleteService(metaclass=ServiceMeta):
         return AdmissionAutocompleteAPIClient().list_sector_dtos(**build_mandatory_auth_headers(person))
 
     @classmethod
-    def get_doctorates(cls, person=None, sigle="", campus=""):
+    def get_doctorates(cls, person=None, sigle="", campus="", acronym_or_name=''):
         return AdmissionAutocompleteAPIClient().list_doctorat_dtos(
             sigle=sigle,
             campus=campus,
+            acronym_or_name=acronym_or_name,
             **build_mandatory_auth_headers(person),
         )
 
@@ -72,10 +73,11 @@ class AdmissionAutocompleteService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def get_scholarships(cls, person, scholarship_type, search=''):
+    def get_scholarships(cls, person, scholarship_type, search='', **kwargs):
         return AdmissionAutocompleteAPIClient().list_scholarships(
             scholarship_type=scholarship_type,
             search=search,
+            **kwargs,
             **build_mandatory_auth_headers(person),
         )
 

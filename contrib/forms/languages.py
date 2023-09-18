@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ from admission.contrib.enums.languages_knowledge import LanguageKnowledgeGrade
 from admission.contrib.forms import (
     get_language_initial_choices,
     AdmissionFileUploadField as FileUploadField,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 
 MANDATORY_LANGUAGES = ["EN", "FR"]
@@ -81,7 +80,6 @@ class DoctorateAdmissionLanguageForm(forms.Form):
         label=_("Language"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:language",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     listening_comprehension = forms.ChoiceField(

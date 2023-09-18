@@ -201,7 +201,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:scholarship',
             forward=[forward.Const(TypeBourse.DOUBLE_TRIPLE_DIPLOMATION.name, 'scholarship_type')],
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 
@@ -219,7 +218,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:scholarship',
             forward=[forward.Const(TypeBourse.BOURSE_INTERNATIONALE_FORMATION_GENERALE.name, 'scholarship_type')],
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 
@@ -237,7 +235,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:scholarship',
             forward=[forward.Const(TypeBourse.ERASMUS_MUNDUS.name, 'scholarship_type')],
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 
