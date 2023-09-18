@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -64,7 +64,6 @@ __namespace__ = 'curriculum'
 
 class AdmissionCurriculumMixin(LoadDossierViewMixin):
     service_mapping = {
-        'create': AdmissionPersonService,
         'doctorate': AdmissionPersonService,
         'general-education': GeneralEducationAdmissionPersonService,
         'continuing-education': ContinuingEducationAdmissionPersonService,
@@ -89,13 +88,6 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
-
-    def get(self, request, *args, **kwargs):
-        if not self.admission_uuid:
-            # Trick template to not display form and buttons
-            context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
-            return render(request, 'admission/forms/need_training_choice.html', context)
-        return super().get(request, *args, **kwargs)
 
 
 class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMixin, TemplateView):

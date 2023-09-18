@@ -161,6 +161,10 @@
           maskPostalCode($(this).val(), $('#id_contact-postal_code'));
         });
 
+        // Initialize postal code masks
+        maskPostalCode($('#id_residential-country').val(), $('#id_residential-postal_code'));
+        maskPostalCode($('#id_contact-country').val(), $('#id_contact-postal_code'));
+
         //-------------------------------------------------------------------------------
 
         // "city" and "postal code" depends on "country" for residential

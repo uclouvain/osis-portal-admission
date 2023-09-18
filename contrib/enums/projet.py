@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ class ChoixStatutPropositionDoctorale(ChoiceEnum):
 
 class ChoixStatutPropositionGenerale(ChoiceEnum):
     EN_BROUILLON = _('In draft form')
-    FRAIS_DOSSIER_EN_ATTENTE = _('Pending application fees')
+    FRAIS_DOSSIER_EN_ATTENTE = _('Pending application fee')
     CONFIRMEE = _('Application confirmed (by student)')
     ANNULEE = _('Cancelled application')
     A_COMPLETER_POUR_SIC = _('To be completed (by student) for the Enrolment Office (SIC)')

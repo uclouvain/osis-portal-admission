@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.shortcuts import resolve_url
+from django.shortcuts import resolve_url, render
 from django.views.generic import FormView
 
 from admission.contrib.enums.specific_question import Onglets
@@ -34,6 +34,7 @@ from admission.contrib.forms.curriculum import (
 )
 from admission.contrib.views.common.detail_tabs.curriculum import AdmissionCurriculumDetailView
 from admission.contrib.views.common.form_tabs.curriculum_experiences import AdmissionCurriculumFormMixin
+from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions
 
 __all__ = [
@@ -52,6 +53,13 @@ class AdmissionCurriculumFormView(
     extra_context = {
         'force_form': True,
     }
+
+    def get(self, request, *args, **kwargs):
+        if not self.admission_uuid:
+            # Trick template to not display form and buttons
+            context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
+            return render(request, 'admission/forms/need_training_choice.html', context)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

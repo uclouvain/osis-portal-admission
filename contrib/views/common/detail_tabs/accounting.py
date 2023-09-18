@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
+from admission.contrib.enums import CHOIX_AFFILIATION_SPORT_SELON_SITE
 from admission.contrib.enums.accounting import FORMATTED_RELATIONSHIPS
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.proposition import AdmissionPropositionService
@@ -51,6 +52,7 @@ class BaseAdmissionAccountingView(LoadDossierViewMixin):
         context_data['accounting'] = self.accounting
         context_data['formatted_relationship'] = FORMATTED_RELATIONSHIPS.get(self.accounting['relation_parente'])
         context_data['with_assimilation'] = self.with_assimilation
+        context_data['sport_affiliation_choices_by_campus'] = CHOIX_AFFILIATION_SPORT_SELON_SITE
         return context_data
 
     @property

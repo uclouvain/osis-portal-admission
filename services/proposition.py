@@ -26,29 +26,26 @@
 from enum import Enum
 from typing import List
 
+import osis_admission_sdk
 from django.conf import settings
 from django.utils.translation import get_language
-
-import osis_admission_sdk
-from osis_admission_sdk.model.general_education_accounting_dto import GeneralEducationAccountingDTO
-
+from osis_admission_sdk import ApiClient, ApiException
+from osis_admission_sdk.api import propositions_api
+from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
+from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
 from osis_admission_sdk.model.doctorate_education_accounting_dto import DoctorateEducationAccountingDTO
+from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
+from osis_admission_sdk.model.general_education_accounting_dto import GeneralEducationAccountingDTO
+from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
 from osis_admission_sdk.model.jury_identity_dto import JuryIdentityDTO
 from osis_admission_sdk.model.membre_jury_identity_dto import MembreJuryIdentityDTO
-
 from osis_admission_sdk.model.specific_question import SpecificQuestion
+from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
 from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
-from osis_admission_sdk import ApiClient, ApiException
-from osis_admission_sdk.api import propositions_api
-from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
-from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
-from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
-from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
 __all__ = [
     "AdmissionPropositionService",
@@ -72,6 +69,12 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     @classmethod
     def get_dashboard_links(cls, person: Person):
         return APIClient().retrieve_dashboard(**build_mandatory_auth_headers(person)).to_dict().get('links', {})
+
+    @classmethod
+    def list_proposition_create_permissions(cls, person):
+        return APIClient().detail_proposition_create_permissions(
+            **build_mandatory_auth_headers(person),
+        )
 
     @classmethod
     def create_doctorate_proposition(cls, person: Person, data):

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -115,9 +115,7 @@ def _get_default_field_params(configuration: dict, current_language: str):
         'label': configuration['title'].get(current_language, ''),
         'help_text': configuration['text'].get(current_language, ''),
         'error_messages': {
-            'incomplete': _('Please specify a value for the following field: {}').format(
-                configuration['title'].get(current_language)
-            ),
+            'incomplete': _('Please complete this field: {}').format(configuration['title'].get(current_language)),
         },
     }
 

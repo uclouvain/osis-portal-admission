@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -127,9 +127,7 @@ class ConfirmSubmitTestCase(TestCase):
         self.assertContains(response, 'I do not authorize')
         self.assertContains(response, 'Test to do something with my data')
         self.assertContains(response, '<ul><li>Element1</li></ul>')
-        self.assertContains(
-            response, _('Your enrolment can be confirmed as all the necessary conditions have been met.')
-        )
+        self.assertContains(response, _('Your application is complete and may be submitted.'))
 
     def test_get_with_incomplete_admission(self):
         self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.return_value = {
@@ -234,7 +232,7 @@ class ConfirmSubmitTestCase(TestCase):
         data = {**self.data_ok, 'pool': 'CONTINUING_EDUCATION_ENROLLMENT'}
 
         response = self.client.post(url, data=data, follow=True)
-        url = resolve_url('admission:continuing-education:training-choice', pk=uuid)
+        url = resolve_url('admission:list')
         self.assertRedirects(response, url)
         api.submit_continuing_education_proposition.assert_called_with(
             uuid=uuid,
@@ -265,7 +263,7 @@ class ConfirmSubmitTestCase(TestCase):
         }
 
         response = self.client.post(url, data=data, follow=True)
-        url = resolve_url('admission:general-education:training-choice', pk=uuid)
+        url = resolve_url('admission:list')
         self.assertRedirects(response, url)
         api.submit_general_education_proposition.assert_called_with(
             uuid=uuid,

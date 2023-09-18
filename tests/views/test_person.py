@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 import datetime
+from unittest import mock
 from unittest.mock import Mock, patch, ANY
 
 import freezegun
@@ -59,6 +60,12 @@ class PersonViewTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
         self.addCleanup(propositions_api_patcher.stop)
+
+        self.mock_proposition_api.return_value.detail_proposition_create_permissions.return_value = mock.Mock(
+            links={
+                'create_person': {'url': 'foobar'},
+            }
+        )
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
         self.mock_person_api = person_api_patcher.start()
@@ -112,6 +119,31 @@ class PersonViewTestCase(TestCase):
 
         self.addCleanup(academic_year_api_patcher.stop)
 
+    def test_form_with_submitted_admission_is_readonly(self):
+        url = resolve_url('admission:create:person')
+        self.client.force_login(self.person.user)
+
+        self.mock_proposition_api.return_value.detail_proposition_create_permissions.return_value = mock.Mock(
+            links={
+                'create_person': {'error': 'foobar'},
+            }
+        )
+
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name="John",
+            last_name="Doe",
+            id_card=[],
+            passport=[],
+            id_photo=[],
+            birth_year="1990",
+            language=settings.LANGUAGE_CODE,
+        )
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateNotUsed(response, 'admission/forms/person.html')
+        self.assertTemplateUsed(response, 'admission/details/person.html')
+
     def test_form(self):
         url = resolve_url('admission:create:person')
         self.client.force_login(self.person.user)
@@ -127,6 +159,8 @@ class PersonViewTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'admission/forms/person.html')
+        self.assertTemplateNotUsed(response, 'admission/details/person.html')
         self.assertContains(response, "osis-document.umd.min.js", count=1)
         self.assertContains(response, "dependsOn.min.js", count=1)
         self.assertContains(response, _("Save and continue"))
@@ -148,7 +182,6 @@ class PersonViewTestCase(TestCase):
             ],
         )
         self.mock_person_api.return_value.retrieve_person_identification.assert_called()
-        self.mock_proposition_api.assert_not_called()
 
         response = self.client.post(
             url,

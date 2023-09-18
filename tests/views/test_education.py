@@ -346,7 +346,7 @@ class EducationTestCase(BaseEducationTestCase):
         # Check template content
         self.assertContains(
             response,
-            _("You must choose your training before filling in your previous experience."),
+            _("You must choose your course before entering your previous experience."),
         )
 
     def test_form_initialization(self):

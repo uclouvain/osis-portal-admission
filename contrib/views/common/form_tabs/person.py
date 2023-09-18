@@ -23,6 +23,8 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.conf import settings
+from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.views.generic import FormView
 
@@ -39,7 +41,8 @@ from admission.services.person import (
 
 __all__ = ['AdmissionPersonFormView']
 
-from admission.services.proposition import BelgianNissBusinessException
+from admission.services.proposition import BelgianNissBusinessException, AdmissionPropositionService
+from admission.templatetags.admission import can_make_action
 
 
 class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -59,6 +62,20 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         BelgianNissBusinessException.BelgianNISSChecksumException: 'national_number',
         BelgianNissBusinessException.BelgianMissingBirthDataException: 'national_number',
     }
+
+    def get(self, request, *args, **kwargs):
+        # In case of a creation and if we don't have permission to update the person, we show the read-only template
+        if not self.admission_uuid:
+            permissions = AdmissionPropositionService.list_proposition_create_permissions(request.user.person)
+            if not can_make_action(permissions, 'create_person'):
+                person = self.person_info
+                context = super().get_context_data(
+                    with_submit=False,
+                    person=person,
+                    contact_language=dict(settings.LANGUAGES).get(person.get('language')),
+                )
+                return render(request, 'admission/details/person.html', context)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -140,13 +157,12 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         )
         # Update local person to make sure future requests to API don't rollback person
         update_fields = []
-        for field in [
-            'first_name',
-            'last_name',
-            'language',
-            'gender'
-        ]:
-            if getattr(self.person, field) != updated_person.get(field):
+        for field in data.keys():
+            if (
+                hasattr(self.person, field)
+                and updated_person.get(field) is not None
+                and getattr(self.person, field) != updated_person.get(field)
+            ):
                 update_fields.append(field)
                 setattr(self.person, field, updated_person.get(field))
         self.person.save(update_fields=update_fields)

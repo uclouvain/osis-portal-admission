@@ -32,7 +32,7 @@
     {% if view.kwargs.experience_id %}
       {% display _("Modification of a non-academic activity") as header_title %}
     {% else %}
-      {% display _("Adding a non-academic activity") as header_title %}
+      {% display _("Add a non-academic activity") as header_title %}
     {% endif %}
     {% include 'admission/includes/curriculum_experience_header.html' with on_update=True title=header_title %}
     <div class="panel-body">

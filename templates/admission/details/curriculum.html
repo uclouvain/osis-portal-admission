@@ -35,24 +35,25 @@
   {% endif %}
 
   {% blocktranslate trimmed asvar global_info_p1 %}
-    <strong>Academic course</strong>: any course of higher education leading to a 1st, 2nd or 3rd cycle degree
-    (e.g. bachelor's degree, master's degree, specialised master's degree, doctorate).
+    <strong>Academic course</strong>: any higher education course leading to a bachelor's, master's, advanced master's,
+    or PhD degree.
   {% endblocktranslate %}
 
   {% blocktranslate trimmed asvar global_info_p2 %}
-    Fill in all your academic courses, even those you have failed or abandoned
+    Enter all of your academic courses, even those you failed or abandoned
     (with the exception of those taken at UCLouvain).
   {% endblocktranslate %}
 
   {% blocktranslate trimmed asvar global_info_p3 %}
-    <strong>Adding an academic course</strong>: To add an academic course to the curriculum, enter the start and end year of the
-    course (e.g. start 2018-2019, end 2021-2022).
+    <strong>Adding an academic course</strong>: to add an academic course to the curriculum, enter the course start
+    and end years (e.g. start 2018-2019, end 2021-2022).
   {% endblocktranslate %}
 
   {% blocktranslate trimmed asvar global_info_p4 %}
-    <strong>Non-academic activity</strong>: any professional or private activity that you have previously carried out. Example:
-    work, unemployment, voluntary work, work placement, job search, sabbatical year, etc. You can also indicate
-    your non-academic training (language course, individual course, certificate, short course, etc.).
+    <strong>Non-academic activity</strong>: any professional or private activity that you have previously carried out.
+    Example: work, unemployment, voluntary work, internship, job search, sabbatical year, etc.
+    You can also indicate your non-academic training (language classes, individual classes, certificate,
+    short course, etc.).
   {% endblocktranslate %}
 
 
@@ -61,8 +62,7 @@
       <p>
         {% if view.is_continuing %}
           {% blocktranslate trimmed %}
-            Please provide the details of at least your most recent academic course and your most recent non-academic
-            activity.
+            Provide the details of your most recent academic course and your most recent non-academic experience.
           {% endblocktranslate %}
         {% elif need_to_complete %}
           {% blocktranslate trimmed with date=minimal_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
@@ -317,6 +317,10 @@
   {% if display_access_conditions_message %}
     {% include 'admission/modal/admission_requirements_not_met_message_modal.html' %}
   {% endif %}
+{% endblock %}
+
+{% block submit_button_bottom %}
+  {% if form %}{{ block.super }}{% endif %}
 {% endblock %}
 
 {% block style %}

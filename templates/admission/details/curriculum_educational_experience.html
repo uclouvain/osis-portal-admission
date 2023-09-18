@@ -28,7 +28,7 @@
 
 {% block tab_content %}
   <div class="panel panel-default">
-    {% include 'admission/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True title=_("Consultation of an academic training") %}
+    {% include 'admission/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True title=_("View academic activity") %}
     <div class="panel-body">
       <div class="row">
         <div class="col-md-6">
@@ -126,14 +126,14 @@
                     </td>
                     {% if experience.evaluation_system_with_credits %}
                       <td>
-                        {{ experience_year.registered_credit_number|default:_('Not specified') }}
+                        {{ experience_year.registered_credit_number|default:_('Incomplete field') }}
                       </td>
                       <td>
-                        {{ experience_year.acquired_credit_number|default:_('Not specified') }}
+                        {{ experience_year.acquired_credit_number|default:_('Incomplete field') }}
                       </td>
                     {% endif %}
                     <td>
-                      {{ experience_year.result.value|enum_display:'Result'|default:_('Not specified') }}
+                      {{ experience_year.result.value|enum_display:'Result'|default:_('Incomplete field') }}
                     </td>
                   </tr>
                   {% if experience.transcript_type.value == 'ONE_A_YEAR' %}

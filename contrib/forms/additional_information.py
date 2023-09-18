@@ -39,7 +39,7 @@ class GeneralSpecificQuestionForm(ConfigurableFormMixin, forms.Form):
     documents_additionnels = FileUploadField(
         label=_(
             'You can add any document you feel is relevant to your application '
-            '(supporting documents, proof of language level, etc.)'
+            '(supporting documents, proof of language level, etc.).'
         ),
         required=False,
         max_files=10,
@@ -93,7 +93,7 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
     documents_additionnels = FileUploadField(
         label=_(
             'You can add any document you feel is relevant to your application '
-            '(supporting documents, proof of language level, etc.)'
+            '(supporting documents, proof of language level, etc.).'
         ),
         required=False,
         max_files=10,

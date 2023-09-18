@@ -169,9 +169,8 @@ msgstr ""
 "dans la formation que vous comptez entreprendre !</p>"
 
 msgid ""
-"<strong>Academic course</strong>: any course of higher education leading to "
-"a 1st, 2nd or 3rd cycle degree (e.g. bachelor's degree, master's degree, "
-"specialised master's degree, doctorate)."
+"<strong>Academic course</strong>: any higher education course leading to a "
+"bachelor's, master's, advanced master's, or PhD degree."
 msgstr ""
 "<strong>Formation académique</strong> : toute formation suivie dans "
 "l'enseignement supérieur au terme de laquelle est délivré un diplôme de 1er, "
@@ -179,9 +178,9 @@ msgstr ""
 "doctorat)."
 
 msgid ""
-"<strong>Adding an academic course</strong>: To add an academic course to the "
-"curriculum, enter the start and end year of the course (e.g. start "
-"2018-2019, end 2021-2022)."
+"<strong>Adding an academic course</strong>: to add an academic course to the "
+"curriculum, enter the course start and end years (e.g. start 2018-2019, end "
+"2021-2022)."
 msgstr ""
 "<strong>Ajout d'une formation académique</strong> : Pour ajouter une "
 "formation académique au curriculum, introduisez l'année de commencement et "
@@ -190,8 +189,8 @@ msgstr ""
 msgid ""
 "<strong>Non-academic activity</strong>: any professional or private activity "
 "that you have previously carried out. Example: work, unemployment, voluntary "
-"work, work placement, job search, sabbatical year, etc. You can also "
-"indicate your non-academic training (language course, individual course, "
+"work, internship, job search, sabbatical year, etc. You can also indicate "
+"your non-academic training (language classes, individual classes, "
 "certificate, short course, etc.)."
 msgstr ""
 "<strong>Activité non académique</strong> : toute activité professionnelle ou "
@@ -326,6 +325,9 @@ msgstr "Ajouter une langue"
 msgid "Add a new member"
 msgstr "Ajouter un nouveau membre"
 
+msgid "Add a non-academic activity"
+msgstr "Ajout d'une activité non-académique"
+
 msgid "Add a non-academic experience"
 msgstr "Ajouter une nouvelle expérience non-académique"
 
@@ -362,6 +364,9 @@ msgstr "Ajouter un séminaire"
 msgid "Add a service"
 msgstr "Ajouter un service"
 
+msgid "Add an academic course"
+msgstr "Ajout d'une formation académique"
+
 msgid "Add an academic experience"
 msgstr "Ajouter une nouvelle expérience académique"
 
@@ -370,12 +375,6 @@ msgstr "Ajouter une activité"
 
 msgid "Add validation of prior experience (VAE)"
 msgstr "Ajouter une valorisation des acquis d'expérience"
-
-msgid "Adding a non-academic activity"
-msgstr "Ajout d'une activité non-académique"
-
-msgid "Adding an academic training"
-msgstr "Ajout d'une formation académique"
 
 msgid "Additional information"
 msgstr "Informations complémentaires"
@@ -428,9 +427,6 @@ msgstr ""
 "Un utilisateur peut soit payer suite la soumission de sa demande, soit suite "
 "à une demande d'un gestionnaire."
 
-msgid "Another address"
-msgstr "Une autre adresse"
-
 msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
 "classification. Detailed explanations of this framework can be found at <a "
@@ -449,11 +445,13 @@ msgstr ""
 "global-scale</a>"
 
 msgid ""
-"Any false declaration or deliberate omission in the compilation of the "
-"application constitutes enrolment fraud. Anyone suspected of fraud will be "
-"asked to provide further explanation and present their case (UCLouvain "
-"Academic Regulations and Procedures, Part III, Chapter 1, Section 3, "
-"Articles 16 and 17)."
+"Any false declaration or wilful omission in the compilation of application "
+"files constitutes enrolment fraud and will result in exclusion from higher "
+"education studies in the French Community of Belgium pursuant to Article "
+"95/2 of the Decree of 7 November 2013. Anyone suspected of fraud has the "
+"right to defend themselves and present their case (Articles 16 and 17, "
+"Section 3 of Chapter 1 of Title III of the UCLouvain Academic Regulations "
+"and Procedures)."
 msgstr ""
 "Toute fausse déclaration ou omission volontaire dans la constitution des "
 "dossiers d'admission est constitutive de fraude à l'inscription et "
@@ -607,12 +605,32 @@ msgid "Bank account"
 msgstr "Compte bancaire"
 
 msgid ""
+"Because you already submitted an admission, information about coordinates "
+"can not be updated. If you want to update them, please contact the enrolment "
+"office."
+msgstr ""
+"Etant donné que vous avez envoyé une autre demande d'inscription, les "
+"informations des coordonnées ne peuvent être modifiées. Si vous souhaitez y "
+"apporter des modifications, merci de contacter le service des inscriptions."
+
+msgid ""
+"Because you already submitted an admission, information about identification "
+"can not be updated. If you want to update them, please contact the enrolment "
+"office."
+msgstr ""
+"Etant donné que vous avez envoyé une autre demande d'inscription, les "
+"informations de l'identification ne peuvent être modifiées. Si vous "
+"souhaitez y apporter des modifications, merci de contacter le service des "
+"inscriptions."
+
+msgid ""
 "Before sending your application, please check the data you have entered for "
 "any errors or omissions."
 msgstr ""
 "Avant d'envoyer votre demande, relisez les données que vous avez introduites "
 "afin de vous assurer de ne pas avoir fait d'erreur ou d'omission."
 
+msgctxt "diploma_type"
 msgid "Belgian"
 msgstr "belge"
 
@@ -903,12 +921,6 @@ msgstr ""
 "doctorale de domaine. Consultez le site web de votre commission pour plus de "
 "détails."
 
-msgid "Consultation of a non-academic activity"
-msgstr "Consultation d'une activité non-académique"
-
-msgid "Consultation of an academic training"
-msgstr "Consultation d'une formation académique"
-
 msgid "Contact"
 msgstr "Contact"
 
@@ -1131,6 +1143,9 @@ msgstr "Choix de formation"
 
 msgid "Course name"
 msgstr "Intitulé de la formation"
+
+msgid "Course not offered"
+msgstr "Formation non-organisée"
 
 msgid "Course owner"
 msgstr "Titulaire du cours"
@@ -1384,6 +1399,13 @@ msgstr "Inscrit"
 msgid "Enrolment in limited enrolment bachelor's course"
 msgstr "Inscription à un bachelier contingenté"
 
+msgid ""
+"Enter all of your academic courses, even those you failed or abandoned (with "
+"the exception of those taken at UCLouvain)."
+msgstr ""
+"Renseignez toutes vos formations académiques, même celles que vous avez "
+"échouées ou abandonnées (à l'exception de celles suivies à l'UCLouvain)."
+
 msgid "Erasmus Mundus"
 msgstr "Erasmus Mundus"
 
@@ -1480,13 +1502,6 @@ msgstr "Retour de FAC"
 msgctxt "female gender"
 msgid "Female"
 msgstr "Féminin"
-
-msgid ""
-"Fill in all your academic courses, even those you have failed or abandoned "
-"(with the exception of those taken at UCLouvain)."
-msgstr ""
-"Renseignez toutes vos formations académiques, même celles que vous avez "
-"échouées ou abandonnées (à l'exception de celles suivies à l'UCLouvain)."
 
 msgid "Finalise application"
 msgstr "Finalisation"
@@ -1919,8 +1934,14 @@ msgstr "En brouillon"
 msgid "In person"
 msgstr "En présentiel"
 
+msgid "In progress"
+msgstr "En cours de demande"
+
 msgid "Incomplete"
 msgstr "Incomplet"
+
+msgid "Incomplete field"
+msgstr "Non renseigné(e)"
 
 msgid ""
 "Indicate any completed or interrupted PhD studies in which you are no longer "
@@ -1979,6 +2000,10 @@ msgstr "Numéro de téléphone invalide"
 msgid "Is it a Wallonia-Brussels Federation institution?"
 msgstr "S'agit-il d'une institution de la Fédération Wallonie-Bruxelles ?"
 
+msgctxt "diploma_type"
+msgid "It is a diploma"
+msgstr "Il s'agit d'un diplôme"
+
 msgid "JURY_APPROUVE_ADRE"
 msgstr "Jury approuvé par ADRE"
 
@@ -2032,9 +2057,6 @@ msgstr "Séjour linguistique"
 
 msgid "Last name / First name / Global id"
 msgstr "Nom / Prénom / ID Global"
-
-msgid "Last registration year"
-msgstr "Dernière année d'inscription"
 
 #, python-format
 msgid "Late enrolment! Enrol before %(date)s"
@@ -2153,6 +2175,9 @@ msgstr "Mois"
 msgid "More than 75%"
 msgstr "Plus de 75%"
 
+msgid "Most recent year of enrolment"
+msgstr "Dernière année d'inscription"
+
 msgid "Motivation for joint supervision"
 msgstr "Motivation de la cotutelle"
 
@@ -2270,9 +2295,6 @@ msgstr "Crédits non-européens"
 msgid "Non-academic activities"
 msgstr "Activités non-académiques"
 
-msgid "Non-organised training"
-msgstr "Formation non-organisée"
-
 msgid "Non-profit"
 msgstr "Associatif"
 
@@ -2284,9 +2306,6 @@ msgstr "Aucune de ces propositions ne me correspond"
 
 msgid "Not a valid IBAN."
 msgstr "IBAN invalide."
-
-msgid "Not specified"
-msgstr "Non renseigné(e)"
 
 msgctxt "admission"
 msgid "Not submitted"
@@ -2310,9 +2329,6 @@ msgstr ""
 "compléter ci-dessous vos formations académiques et vos activités non-"
 "académiques."
 
-msgid "Ongoing request"
-msgstr "En cours de demande"
-
 msgid "Online"
 msgstr "En ligne"
 
@@ -2334,6 +2350,9 @@ msgstr "Institution organisatrice"
 msgid "Other"
 msgstr "Autre"
 
+msgid "Other address"
+msgstr "Une autre adresse"
+
 msgid "Other documents relating to joint supervision"
 msgstr "Autres documents relatifs à la cotutelle"
 
@@ -2352,7 +2371,7 @@ msgstr "Adresse autre établissement"
 msgid "Other institute name"
 msgstr "Nom autre établissement"
 
-msgid "Other program"
+msgid "Other programme"
 msgstr "Autre formation"
 
 msgid "PAPER"
@@ -2424,13 +2443,13 @@ msgstr "Payer maintenant (paiement invalide)"
 msgid "Pay now (valid payment)"
 msgstr "Payer maintenant (paiement valide)"
 
-msgid "Pay the application fees"
+msgid "Pay the application fee"
 msgstr "Payer les frais de dossier"
 
-msgid "Payment of the application fees"
+msgid "Payment of the application fee"
 msgstr "Paiement des frais de dossier"
 
-msgid "Pending application fees"
+msgid "Pending application fee"
 msgstr "Frais de dossier en attente"
 
 msgid "Period"
@@ -2491,6 +2510,9 @@ msgstr ""
 "Veuillez compléter le formulaire « demande d'ouverture de "
 "cotutelle » (disponible ici) et le téléverser ici."
 
+msgid "Please complete this field: {}"
+msgstr "Merci de spécifier une valeur pour le champ suivant : {}"
+
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
 
@@ -2536,13 +2558,6 @@ msgstr ""
 msgid "Please provide one of these two pieces of identification information:"
 msgstr "Veuillez fournir l’une de ces deux informations d’identification :"
 
-msgid ""
-"Please provide the details of at least your most recent academic course and "
-"your most recent non-academic activity."
-msgstr ""
-"Veuillez renseigner au minimum les informations de votre dernière formation "
-"académique ainsi que votre activité non-académique la plus récente."
-
 msgid "Please rate your listening comprehension"
 msgstr "Évaluez votre compréhension à l'audition"
 
@@ -2560,13 +2575,10 @@ msgstr ""
 "doctorale de domaine pour le choix des activités."
 
 msgid ""
-"Please select the primary Belgian student status category that applies to you"
+"Please select the Belgian student status situation that most applies to you"
 msgstr ""
 "Veuillez sélectionner la première situation d’assimilation qui vous "
 "correspond"
-
-msgid "Please specify a value for the following field: {}"
-msgstr "Merci de spécifier une valeur pour le champ suivant : {}"
 
 msgid "Postal address"
 msgstr "Adresse de correspondance"
@@ -2681,6 +2693,13 @@ msgstr "Nouvelle échéance proposée"
 
 msgid "Proposed thesis title"
 msgstr "Titre proposé pour la thèse"
+
+msgid ""
+"Provide the details of your most recent academic course and your most recent "
+"non-academic experience."
+msgstr ""
+"Veuillez renseigner au minimum les informations de votre dernière formation "
+"académique ainsi que votre activité non-académique la plus récente."
 
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr "Commission de proximité de sciences dentaires (DENT)"
@@ -3277,6 +3296,9 @@ msgstr "Langue de rédaction de la thèse"
 msgid "Thesis location"
 msgstr "Lieu de la thèse"
 
+msgid "This account number has been verified"
+msgstr "Ce numéro a été vérifié"
+
 msgid "This activity and its potential subactivities will be discontinued"
 msgstr "Cette activité et ses potentielles sous-activités seront supprimées"
 
@@ -3310,9 +3332,6 @@ msgstr "Ce champ est obligatoire si le nom est manquant."
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."
 
-msgid "This is a diploma from"
-msgstr "Il s'agit d'un diplôme"
-
 msgid ""
 "This is a temporary title and it will be modifiable later depending on the "
 "jury analysis."
@@ -3322,9 +3341,6 @@ msgstr ""
 
 msgid "This language is set more than once."
 msgstr "Cette langue est définie plusieurs fois."
-
-msgid "This number has been checked"
-msgstr "Ce numéro a été vérifié"
 
 msgid "This value may not exceed the number of registered credits"
 msgstr "Cette valeur ne peut être supérieure au nombre de crédits inscrits"
@@ -3403,7 +3419,7 @@ msgstr ""
 
 msgid ""
 "To finalize the submission of your application, you have to pay the "
-"application fees."
+"application fee."
 msgstr ""
 "Pour finaliser la soumission de votre demande, vous devez payer les frais de "
 "dossier."
@@ -3414,7 +3430,7 @@ msgstr "A l'attention de"
 msgid "Total hourly volume"
 msgstr "Volume horaire total"
 
-msgid "Total number of credits registered in your yearly programme."
+msgid "Total number of credits registered in your annual programme (PAE)."
 msgstr "Nombre total des crédits inscrits dans votre programme d'année (PAE)."
 
 msgid "Training certificate, with dates, justifying the period concerned"
@@ -3507,6 +3523,12 @@ msgstr "Validé"
 
 msgid "View"
 msgstr "Voir"
+
+msgid "View academic activity"
+msgstr "Consultation d'une formation académique"
+
+msgid "View non-academic activity"
+msgstr "Consultation d'une activité non-académique"
 
 msgid "View summary"
 msgstr "Visualiser le résumé"
@@ -3625,8 +3647,8 @@ msgstr ""
 "d'inscription."
 
 msgid ""
-"Would you like to pursue fitness or sport activities? If so, the cost of "
-"membership will be added to your tuition fee."
+"Would you like to join the sport activities? If so, the cost of membership "
+"will be added to your tuition fee."
 msgstr ""
 "Désirez-vous l'affiliation aux activités sportives ? Dans l'affirmative, le "
 "coût de cette affiliation sera ajouté à vos droits d'inscription."
@@ -3680,17 +3702,23 @@ msgstr "Oui, sur Mons et les autres sites de l’UCLouvain (60 EUR)"
 msgid "Yes, in Saint-Gilles and other UCLouvain campuses (E60)"
 msgstr "Oui, sur Saint-Gilles et les autres sites de l’UCLouvain (60 EUR)"
 
+msgid "Yes, in Saint-Louis and other UCLouvain campuses (E60)"
+msgstr "Oui, sur Saint-Louis et les autres sites de l’UCLouvain (60 EUR)"
+
 msgid "Yes, in Tournai and other UCLouvain campuses (E60)"
 msgstr "Oui, sur Tournai et les autres sites de l’UCLouvain (60 EUR)"
 
-msgid "Yes, only in Mons (E10)"
-msgstr "Oui, sur Mons uniquement (10 EUR)"
+msgid "Yes, only in Mons (E12)"
+msgstr "Oui, sur Mons uniquement (12 EUR)"
 
-msgid "Yes, only in Saint-Gilles (E10)"
-msgstr "Oui, sur Saint-Gilles uniquement (10 EUR)"
+msgid "Yes, only in Saint-Gilles (E12)"
+msgstr "Oui, sur Saint-Gilles uniquement (12 EUR)"
 
-msgid "Yes, only in Tournai (E10)"
-msgstr "Oui, sur Tournai uniquement (10 EUR)"
+msgid "Yes, only in Saint-Louis (E12)"
+msgstr "Oui, sur Saint-Louis uniquement (12 EUR)"
+
+msgid "Yes, only in Tournai (E12)"
+msgstr "Oui, sur Tournai uniquement (12 EUR)"
 
 msgid "Yes, send"
 msgstr "Oui, envoyer"
@@ -3718,10 +3746,10 @@ msgstr "Vous inscrivez-vous à titre"
 
 msgid ""
 "You can add any document you feel is relevant to your application "
-"(supporting documents, proof of language level, etc.)"
+"(supporting documents, proof of language level, etc.)."
 msgstr ""
 "Vous avez la possibilité d'ajouter tout document que vous jugez pertinent "
-"pour votre dossier (justificatifs, preuve de niveau de langue, ...)"
+"pour votre dossier (justificatifs, preuve de niveau de langue, ...)."
 
 msgid ""
 "You can either pay them now, by using our payment system, or pay them with a "
@@ -3760,8 +3788,7 @@ msgstr ""
 msgid "You indicated that you will obtain it in %(year)s."
 msgstr "Vous avez indiqué que vous alliez l'obtenir en %(year)s."
 
-msgid ""
-"You must choose your training before filling in your previous experience."
+msgid "You must choose your course before entering your previous experience."
 msgstr ""
 "Vous devez faire votre choix de formation avant de renseigner votre parcours "
 "antérieur."
@@ -3820,6 +3847,11 @@ msgstr ""
 msgid "Your application has been submitted"
 msgstr "Votre demande a bien été envoyée"
 
+msgid "Your application is complete and may be submitted."
+msgstr ""
+"Votre demande peut être confirmée car toutes les conditions nécessaires ont "
+"été remplies."
+
 msgid "Your application will be sent to the UCLouvain Enrolment Office."
 msgstr ""
 "Votre demande d'inscription va être envoyée au Service des inscriptions de "
@@ -3837,13 +3869,6 @@ msgstr "Vos données ont été enregistrées"
 
 msgid "Your decision has been saved."
 msgstr "Votre décision a bien été enregistrée."
-
-msgid ""
-"Your enrolment can be confirmed as all the necessary conditions have been "
-"met."
-msgstr ""
-"Votre demande peut être confirmée car toutes les conditions nécessaires ont "
-"été remplies."
 
 msgid ""
 "Your enrolment cannot be confirmed. All of the following requirements must "
@@ -3891,6 +3916,7 @@ msgstr "ex: Bibliothécaire"
 msgid "eg:"
 msgstr "ex: "
 
+msgctxt "diploma_type"
 msgid "foreign"
 msgstr "étranger"
 
