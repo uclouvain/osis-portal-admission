@@ -36,7 +36,6 @@ from admission.contrib.forms import (
     EMPTY_CHOICE,
     get_country_initial_choices,
     get_thesis_institute_initial_choices,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 
 ACTOR_EXTERNAL = "EXTERNAL"
@@ -133,7 +132,6 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
         label=_("Search a tutor by name"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:tutor",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
         required=False,
     )
@@ -141,7 +139,6 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
         label=_("Search a person by surname"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:person",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
         required=False,
     )
@@ -206,7 +203,6 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         required=False,
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:institute",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
 

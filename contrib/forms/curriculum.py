@@ -393,7 +393,6 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:superior-institute',
             forward=['country'],
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     program = forms.CharField(
@@ -402,7 +401,6 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:diploma',
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
             forward=[forward.JavaScript('get_institute_type', 'institute_type')],
         ),
     )
@@ -424,7 +422,6 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         required=False,
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:language',
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
     )
     transcript_type = forms.ChoiceField(

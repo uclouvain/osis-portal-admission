@@ -87,7 +87,6 @@ class DoctorateAdmissionAddressForm(forms.Form):
     city = forms.CharField(
         required=False,
         label=_("City"),
-        help_text=get_example_text("Louvain-la-Neuve <del>louvain-la-neuve</del> <del>LOUVAIN-LA-NEUVE</del>"),
         widget=forms.TextInput(
             attrs={
                 "placeholder": get_example_text('Louvain-la-Neuve'),

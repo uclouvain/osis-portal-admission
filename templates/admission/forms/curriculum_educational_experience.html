@@ -601,7 +601,11 @@
       });
 
       yl.registerForwardHandler("get_institute_type", function (element) {
-        return $('#id_base_form-institute').select2('data')[0]['type'] || '';
+          const data = $('#id_base_form-institute').select2('data')[0];
+          if (!!data) {
+              return data['type'];
+          }
+          return '';
       });
 
       document.dispatchEvent(new Event('refreshFormInitial'));

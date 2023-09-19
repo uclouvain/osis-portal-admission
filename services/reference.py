@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -158,7 +158,7 @@ class LanguageService(metaclass=ServiceMeta):
         return (
             LanguagesAPIClient()
             .languages_list(
-                limit=100,
+                limit=kwargs.pop('limit', 100),
                 *args,
                 **kwargs,
                 **build_mandatory_auth_headers(person),
@@ -222,7 +222,7 @@ class DiplomaService(metaclass=ServiceMeta):
         return (
             DiplomaAPIClient()
             .diplomas_list(
-                limit=100,
+                limit=kwargs.pop('limit', 100),
                 **kwargs,
                 **build_mandatory_auth_headers(person),
             )
@@ -252,7 +252,7 @@ class SuperiorNonUniversityService(metaclass=ServiceMeta):
         return (
             SuperiorNonUniversityAPIClient()
             .superior_non_universities_list(
-                limit=100,
+                limit=kwargs.pop('limit', 100),
                 **kwargs,
                 **build_mandatory_auth_headers(person),
             )
@@ -279,14 +279,10 @@ class UniversityService(metaclass=ServiceMeta):
 
     @classmethod
     def get_universities(cls, person, **kwargs):
-        return (
-            UniversityAPIClient()
-            .universities_list(
-                limit=100,
-                **kwargs,
-                **build_mandatory_auth_headers(person),
-            )
-            .results
+        return UniversityAPIClient().universities_list(
+            limit=kwargs.pop('limit', 100),
+            **kwargs,
+            **build_mandatory_auth_headers(person),
         )
 
     @classmethod

@@ -28,7 +28,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from admission.contrib.enums import TitreMembre, GenreMembre
-from admission.contrib.forms import EMPTY_CHOICE, DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
+from admission.contrib.forms import EMPTY_CHOICE
 from base.models.person import Person
 from base.models.utils.utils import ChoiceEnum
 
@@ -44,7 +44,6 @@ class JuryMembreForm(forms.Form):
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:person",
             attrs={
-                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
                 'data-placeholder': _('Last name / First name / Global id'),
             },
         ),

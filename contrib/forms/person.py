@@ -42,7 +42,6 @@ from admission.contrib.forms import (
     RadioBooleanField,
     AdmissionFileUploadField as FileUploadField,
     IMAGE_MIME_TYPES,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
     get_year_choices,
 )
 from admission.utils import force_title
