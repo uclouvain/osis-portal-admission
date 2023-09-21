@@ -1312,7 +1312,7 @@ msgid "FRIA"
 msgstr ""
 
 msgid "Failed"
-msgstr "Échec"
+msgstr ""
 
 msgid "Feedback from FAC"
 msgstr ""
@@ -2058,7 +2058,7 @@ msgid "Opinion on research mandate renewal"
 msgstr ""
 
 msgid "Oral presentation"
-msgstr "Oral exposé"
+msgstr ""
 
 msgid "Organising country"
 msgstr ""
@@ -2476,7 +2476,7 @@ msgid ""
 msgstr ""
 
 msgid "Reference DIAL.Pr"
-msgstr "Référence DIAL.Pr"
+msgstr "Reference DIAL.Pr"
 
 msgid "Reference:"
 msgstr ""
