@@ -163,10 +163,12 @@
           $('#id_card_container').dependsOn({
               'input[name=has_national_number]': { values: ['True'] },
           }).or({
+              'input[name=has_national_number]': { values: ['False'] },
               'input[name=identification_type]': { values: ['ID_CARD_NUMBER'] },
           });
 
           $('#passport_container').dependsOn({
+              'input[name=has_national_number]': { values: ['False'] },
               'input[name=identification_type]': { values: ['PASSPORT_NUMBER'] },
           });
 
