@@ -82,6 +82,36 @@ __all__ = [
 ]
 
 
+class PaginatedAutocompleteMixin:
+    paginate_by = 20
+    page_kwargs = 'page'
+
+    def get_page(self):
+        try:
+            return int(self.request.GET.get(self.page_kwargs, 1))
+        except Exception:
+            return 1
+
+    def get_webservice_pagination_kwargs(self):
+        return {
+            'limit': self.paginate_by,
+            'offset': (self.get_page() - 1) * self.paginate_by,
+        }
+
+    def get_list(self):
+        raise NotImplementedError
+
+    def results(self, results):
+        raise NotImplementedError
+
+    def get(self, request, *args, **kwargs):
+        """Return option list json response."""
+        results = self.get_list()
+        return JsonResponse(
+            {'results': self.results(results), 'pagination': {'more': len(results) >= self.paginate_by}}
+        )
+
+
 class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     urlpatterns = 'doctorate'
 
@@ -91,6 +121,7 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             person=self.request.user.person,
             sigle=self.forwarded['sector'],
             campus=selected_campus if selected_campus != EMPTY_VALUE else '',
+            acronym_or_name=self.q,
         )
 
     def results(self, results):
@@ -106,12 +137,7 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         ]
 
     def autocomplete_results(self, results):
-        """Return list of strings that match the autocomplete query."""
-        return [
-            x
-            for x in results
-            if self.q.lower() in "{sigle} - {intitule}".format(sigle=x.sigle, intitule=x.intitule).lower()
-        ]
+        return results
 
 
 class GeneralEducationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
@@ -163,7 +189,7 @@ class MixedTrainingAutocomplete(GeneralEducationAutocomplete):
         return iufc_trainings + certificate
 
 
-class ScholarshipAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class ScholarshipAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'scholarship'
 
     def get_list(self):
@@ -171,6 +197,7 @@ class ScholarshipAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             person=self.request.user.person,
             scholarship_type=self.forwarded.get('scholarship_type'),
             search=self.q,
+            **self.get_webservice_pagination_kwargs(),
         ).get('results')
 
     def results(self, results: List[Scholarship]):
@@ -182,27 +209,15 @@ class ScholarshipAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             for result in results
         ]
 
-    def autocomplete_results(self, results):
-        return results
 
-
-class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
-    paginate_by = 20
-    page_kwargs = 'page'
+class CountryAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'country'
-
-    def get_page(self):
-        try:
-            return int(self.request.GET.get(self.page_kwargs, 1))
-        except Exception:
-            return 1
 
     def get_list(self):
         return CountriesService.get_countries(
             person=self.request.user.person,
             search=self.q,
-            limit=self.paginate_by,
-            offset=(self.get_page() - 1) * self.paginate_by,
+            **self.get_webservice_pagination_kwargs(),
         )
 
     def results(self, results):
@@ -227,13 +242,6 @@ class CountryAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             if not self.forwarded.get('exclude_be', False) or country.iso_code != BE_ISO_CODE
         ]
 
-    def get(self, request, *args, **kwargs):
-        """Return option list json response."""
-        results = self.get_list()
-        return JsonResponse(
-            {'results': self.results(results), 'pagination': {'more': len(results) >= self.paginate_by}}
-        )
-
 
 class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     urlpatterns = 'city'
@@ -253,14 +261,15 @@ class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         return [dict(id=city.name, text=city.name) for city in results]
 
 
-class LanguageAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class LanguageAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'language'
 
     def get_list(self):
-        return LanguageService.get_languages(person=self.request.user.person, search=self.q)
-
-    def autocomplete_results(self, results):
-        return results
+        return LanguageService.get_languages(
+            person=self.request.user.person,
+            search=self.q,
+            **self.get_webservice_pagination_kwargs(),
+        )
 
     def results(self, results):
         return [
@@ -272,7 +281,7 @@ class LanguageAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         ]
 
 
-class TutorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class TutorAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'tutor'
 
     def get_list(self):
@@ -290,9 +299,6 @@ class TutorAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             for result in results
         ]
 
-    def autocomplete_results(self, results):
-        return results
-
 
 class PersonAutocomplete(TutorAutocomplete):
     urlpatterns = 'person'
@@ -304,7 +310,7 @@ class PersonAutocomplete(TutorAutocomplete):
         )
 
 
-class HighSchoolAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class HighSchoolAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'high-school'
 
     def get_list(self):
@@ -315,15 +321,12 @@ class HighSchoolAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             additional_filters['linguistic_regime'] = community
 
         return HighSchoolService.get_high_schools(
-            limit=100,
             person=self.request.user.person,
             search=self.q,
             active=True,
             **additional_filters,
+            **self.get_webservice_pagination_kwargs(),
         )
-
-    def autocomplete_results(self, results):
-        return results
 
     def results(self, results):
         return [
@@ -335,7 +338,7 @@ class HighSchoolAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         ]
 
 
-class InstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class InstituteAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'institute'
 
     def get_list(self):
@@ -348,9 +351,6 @@ class InstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             ],
             search=self.q,
         )
-
-    def autocomplete_results(self, results):
-        return results
 
     def results(self, results):
         return [
@@ -382,7 +382,7 @@ class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2List
         return formatted_results
 
 
-class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class DiplomaAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'diploma'
 
     def get_list(self):
@@ -391,6 +391,7 @@ class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             search=self.q,
             active=True,
             study_type=self.forwarded.get('institute_type', ''),
+            **self.get_webservice_pagination_kwargs(),
         )
 
     def results(self, results):
@@ -402,11 +403,8 @@ class DiplomaAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             for result in results
         ]
 
-    def autocomplete_results(self, results):
-        return results
 
-
-class LearningUnitYearsAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class LearningUnitYearsAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'learning-unit-years'
 
     def get_list(self):
@@ -425,11 +423,8 @@ class LearningUnitYearsAutocomplete(LoginRequiredMixin, autocomplete.Select2List
             for result in results
         ]
 
-    def autocomplete_results(self, results):
-        return results
 
-
-class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'superior-non-university'
 
     def get_list(self):
@@ -443,6 +438,7 @@ class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2
             search=self.q,
             active=True,
             **additional_filters,
+            **self.get_webservice_pagination_kwargs(),
         )
 
     def results(self, results):
@@ -454,11 +450,8 @@ class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2
             for result in results
         ]
 
-    def autocomplete_results(self, results):
-        return results
 
-
-class UniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class UniversityAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'university'
 
     def get_list(self):
@@ -472,7 +465,8 @@ class UniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             search=self.q,
             active=True,
             **additional_filters,
-        )
+            **self.get_webservice_pagination_kwargs(),
+        ).results
 
     def results(self, results):
         return [
@@ -483,11 +477,8 @@ class UniversityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
             for result in results
         ]
 
-    def autocomplete_results(self, results):
-        return results
 
-
-class SuperiorInstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class SuperiorInstituteAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'superior-institute'
 
     def get_list(self):
@@ -495,6 +486,7 @@ class SuperiorInstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2List
         country = self.forwarded.get('country')
         if country:
             additional_filters['country_iso_code'] = country
+        additional_filters.update(self.get_webservice_pagination_kwargs())
 
         universities = UniversityService.get_universities(
             person=self.request.user.person,
@@ -502,12 +494,26 @@ class SuperiorInstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2List
             active=True,
             **additional_filters,
         )
-        superior_non_universities = SuperiorNonUniversityService.get_superior_non_universities(
-            person=self.request.user.person,
-            search=self.q,
-            active=True,
-            **additional_filters,
-        )
+        total_universities = universities.count
+        universities = universities.results
+
+        # In case we ran out of universities to show
+        if len(universities) < self.paginate_by or additional_filters['offset'] >= total_universities:
+            if universities:
+                # We only get the amount we need to hit the limit so that later calls can just substract the total
+                # to get the current offset.
+                additional_filters['limit'] = self.paginate_by - total_universities % self.paginate_by
+                additional_filters['offset'] = 0
+            else:
+                additional_filters['offset'] -= total_universities
+            superior_non_universities = SuperiorNonUniversityService.get_superior_non_universities(
+                person=self.request.user.person,
+                search=self.q,
+                active=True,
+                **additional_filters,
+            )
+        else:
+            superior_non_universities = []
 
         return sorted(
             itertools.chain(universities, superior_non_universities),
@@ -523,6 +529,3 @@ class SuperiorInstituteAutocomplete(LoginRequiredMixin, autocomplete.Select2List
             )
             for result in results
         ]
-
-    def autocomplete_results(self, results):
-        return results

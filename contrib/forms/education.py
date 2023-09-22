@@ -46,7 +46,6 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     EMPTY_CHOICE,
     AdmissionFileUploadField as FileUploadField,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService, AcademicYearService
@@ -200,7 +199,6 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:high-school",
             attrs={
-                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
                 'data-html': True,
             },
             forward=['community'],
@@ -275,7 +273,6 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         label=_("Language regime"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:language",
-            attrs=DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
         ),
         required=False,
     )
