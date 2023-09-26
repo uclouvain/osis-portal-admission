@@ -23,25 +23,22 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 import uuid
 from unittest.mock import ANY, MagicMock, patch
 
 import mock
-from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
-from django.utils.translation import gettext
-from osis_admission_sdk.model.document_specific_question import DocumentSpecificQuestion
+from rest_framework.status import HTTP_200_OK
 
-from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
     TrainingType,
-    CleConfigurationItemFormulaire,
-    TypeItemFormulaire,
 )
+from admission.contrib.enums.payment import PaymentStatus, PaymentMethod
 from admission.contrib.enums.projet import ChoixStatutPropositionGenerale
-from admission.contrib.forms import PDF_MIME_TYPE, JPEG_MIME_TYPE
 from base.tests.factories.person import PersonFactory
+from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
@@ -62,17 +59,41 @@ class DocumentsFormViewTestCase(TestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name,
-            links={'pay_after_submission': {'url': 'ok'}},
+            links={'view_payment': {'url': 'ok'}},
             erreurs={},
             bourse_double_diplome=None,
             bourse_internationale=None,
             bourse_erasmus_mundus=None,
             reponses_questions_specifiques={},
         )
+        cls.payments = {
+            'id_p1': MagicMock(
+                identifiant_paiement='id_p1',
+                statut=PaymentStatus.PAID.name,
+                methode=PaymentMethod.BANCONTACT.name,
+                montant='200',
+                url_checkout='https://dummy_url_id_p1/checkout',
+                date_creation=datetime.datetime(2020, 1, 2, 0),
+                date_mise_a_jour=datetime.datetime(2020, 1, 2, 1),
+                date_expiration=datetime.datetime(2020, 1, 2, 2),
+            ),
+            'id_p2': MagicMock(
+                identifiant_paiement='id_p2',
+                statut=PaymentStatus.CANCELED.name,
+                methode=PaymentMethod.BANK_TRANSFER.name,
+                montant='200',
+                url_checkout='https://dummy_url_id_p2/checkout',
+                date_creation=datetime.datetime(2020, 1, 1, 0),
+                date_mise_a_jour=datetime.datetime(2020, 1, 1, 1),
+                date_expiration=datetime.datetime(2020, 1, 1, 2),
+            ),
+        }
+        cls.payments_as_list = list(cls.payments.values())
 
         cls.url = resolve_url('admission:general-education:payment', pk=cls.proposition.uuid)
 
         cls.default_kwargs = {
+            'uuid': cls.proposition.uuid,
             'accept_language': ANY,
             'x_user_first_name': ANY,
             'x_user_last_name': ANY,
@@ -87,125 +108,319 @@ class DocumentsFormViewTestCase(TestCase):
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = self.proposition
 
+        self.mock_proposition_api.return_value.list_application_fees_payments.return_value = self.payments_as_list
+
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.return_value = (
+            self.payments_as_list[0]
+        )
+
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_request.return_value = (
+            self.payments_as_list[0]
+        )
+
         self.addCleanup(propositions_api_patcher.stop)
 
         self.client.force_login(self.person.user)
 
-    def test_display_payment_form(self):
-        # The user doesn't have the permission to pay
+    @staticmethod
+    def _raise_already_paid_exception(*args, **kwargs):
+        raise MultipleApiBusinessException(exceptions=MagicMock(detail="Already paid"))
+
+    def test_raise_permission_denied_when_no_permission(self):
         with mock.patch.object(self.proposition, 'links', {}):
             response = self.client.get(self.url)
 
+        # Check response
         self.assertEqual(response.status_code, 403)
 
+        # Check api calls
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
-            uuid=self.proposition.uuid,
             **self.default_kwargs,
         )
 
-        self.mock_proposition_api.reset_mock()
+        self.mock_proposition_api.return_value.list_application_fees_payments.assert_not_called()
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
 
-        # The user have the permission to pay after the submission
-        with mock.patch.object(
-            self.proposition,
-            'links',
-            {
-                'pay_after_submission': {'url': 'ok'},
-            },
-        ):
-            response = self.client.get(self.url)
-            self.assertEqual(response.status_code, 200)
-            self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
-                uuid=self.proposition.uuid,
-                **self.default_kwargs,
-            )
+    def test_display_the_payment_list_if_already_paid_and_cannot_pay_and_no_recent_payment(self):
+        response = self.client.get(self.url)
 
-        self.mock_proposition_api.reset_mock()
-
-        # The user have the permission to pay after a manager request
-        with mock.patch.object(
-            self.proposition,
-            'links',
-            {
-                'pay_after_request': {'url': 'ok'},
-            },
-        ):
-            response = self.client.get(self.url)
-            self.assertEqual(response.status_code, 200)
-            self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
-                uuid=self.proposition.uuid,
-                **self.default_kwargs,
-            )
-
-    def test_submit_payment_form_with_invalid_payment(self):
-        response = self.client.post(self.url, data={'invalid-payment': ''})
-
-        # Check the response
+        # Check response
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['payments'], [self.payments_as_list[0]])
+        self.assertEqual(response.context['already_paid'], True)
+        self.assertEqual(response.context['can_pay'], False)
 
-        self.assertEqual(str(list(response.context['messages'])[0]), gettext('An error occurred during your payment.'))
-
-    def test_submit_payment_form_with_invalid_request(self):
-        response = self.client.post(self.url, data={})
-
-        # Check the response
-        self.assertEqual(response.status_code, 400)
-
-    def test_submit_payment_form_with_invalid_permission_configuration(self):
-        with mock.patch.object(
-            self.proposition,
-            'links',
-            {
-                'pay_after_submission': {'url': 'ok'},
-                'pay_after_request': {'url': 'ok'},
-            },
-        ):
-            with self.assertRaises(ImproperlyConfigured):
-                self.client.post(self.url, data={'valid-payment': ''})
-
-    def test_submit_payment_form_with_valid_payment_after_submission(self):
-        response = self.client.post(self.url, data={'valid-payment': ''})
-
-        # Check the response
-        self.assertRedirects(
-            response,
-            resolve_url(
-                'admission:general-education',
-                pk=self.proposition.uuid,
-            ),
-            target_status_code=302,
-        )
-
-        self.assertTrue(self.client.session.get('submitted'))
-
-        # Check API calls
-        self.mock_proposition_api.return_value.pay_application_fees_after_submission.assert_called_with(
-            uuid=self.proposition.uuid,
+        # Check api calls
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
             **self.default_kwargs,
         )
 
-    def test_submit_payment_form_with_valid_payment_after_request(self):
+        self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+
+    def test_redirect_to_default_proposition_page_if_already_paid_and_cannot_pay_and_recent_payment_after_submission(
+        self,
+    ):
+        session = self.client.session
+        session[f'pay_fees_{self.proposition.uuid}'] = 'after_submission:id_p1'
+        session.save()
+
+        response = self.client.get(self.url)
+
+        # Check response
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education', pk=self.proposition.uuid),
+            fetch_redirect_response=False,
+        )
+
+        session = self.client.session
+        self.assertEqual(session.get('submitted'), True)
+
+        # Check api calls
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+
+    def test_redirect_to_default_proposition_page_if_already_paid_and_cannot_pay_and_recent_payment_after_request(self):
+        session = self.client.session
+        session[f'pay_fees_{self.proposition.uuid}'] = 'after_request:id_p1'
+        session.save()
+
+        response = self.client.get(self.url)
+
+        # Check response
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:general-education', pk=self.proposition.uuid),
+            fetch_redirect_response=False,
+        )
+
+        session = self.client.session
+        self.assertEqual(session.get('submitted'), None)
+
+        # Check api calls
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+
+    def test_display_the_payment_list_if_already_paid_and_cannot_pay_and_unknown_recent_payment(self):
+        session = self.client.session
+        session[f'pay_fees_{self.proposition.uuid}'] = 'after_request:id_unknown'
+        session.save()
+
+        response = self.client.get(self.url)
+
+        # Check response
+        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.context['payments'], [self.payments_as_list[0]])
+        self.assertEqual(response.context['already_paid'], True)
+        self.assertEqual(response.context['can_pay'], False)
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+
+    def test_display_the_payment_list_if_already_paid_and_can_pay_after_manager_request_and_no_recent_payment(self):
         with mock.patch.object(
             self.proposition,
             'links',
             {
+                'view_payment': {'url': 'ok'},
                 'pay_after_request': {'url': 'ok'},
             },
         ):
-            response = self.client.post(self.url, data={'valid-payment': ''})
-
-            # Check the response
-            self.assertRedirects(
-                response,
-                resolve_url(
-                    'admission:general-education',
-                    pk=self.proposition.uuid,
-                ),
-                target_status_code=302,
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_request.side_effect = (
+                self._raise_already_paid_exception
             )
 
-            # Check API calls
-            self.mock_proposition_api.return_value.pay_application_fees_after_request.assert_called_with(
-                uuid=self.proposition.uuid,
+            response = self.client.get(self.url)
+
+            # Check response
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.context['payments'], [self.payments_as_list[0]])
+            self.assertEqual(response.context['already_paid'], True)
+            self.assertEqual(response.context['can_pay'], True)
+
+            # Check api calls
+            self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
                 **self.default_kwargs,
             )
+
+            self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+                **self.default_kwargs,
+            )
+
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+
+    def test_display_the_payment_list_if_already_paid_and_can_pay_after_submission_and_no_recent_payment(self):
+        with mock.patch.object(
+            self.proposition,
+            'links',
+            {
+                'view_payment': {'url': 'ok'},
+                'pay_after_submission': {'url': 'ok'},
+            },
+        ):
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.side_effect = (
+                self._raise_already_paid_exception
+            )
+
+            response = self.client.get(self.url)
+
+            # Check response
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.context['payments'], [self.payments_as_list[0]])
+            self.assertEqual(response.context['already_paid'], True)
+            self.assertEqual(response.context['can_pay'], True)
+
+            # Check api calls
+            self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+                **self.default_kwargs,
+            )
+
+            self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+                **self.default_kwargs,
+            )
+
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+
+    def test_redirect_to_checkout_page_if_not_already_paid_and_can_pay_after_submission(self):
+        with mock.patch.object(
+            self.proposition,
+            'links',
+            {
+                'view_payment': {'url': 'ok'},
+                'pay_after_submission': {'url': 'ok'},
+            },
+        ):
+            self.mock_proposition_api.return_value.list_application_fees_payments.return_value = []
+
+            response = self.client.get(self.url)
+
+            # Check response
+            self.assertRedirects(
+                response=response,
+                expected_url=self.payments['id_p1'].url_checkout,
+                fetch_redirect_response=False,
+            )
+
+            # Check api calls
+            self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+                **self.default_kwargs,
+            )
+
+            self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+                **self.default_kwargs,
+            )
+
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_called_with(
+                **self.default_kwargs,
+            )
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+
+    def test_redirect_to_checkout_page_if_not_already_paid_and_can_pay_after_manager_request(self):
+        with mock.patch.object(
+            self.proposition,
+            'links',
+            {
+                'view_payment': {'url': 'ok'},
+                'pay_after_request': {'url': 'ok'},
+            },
+        ):
+            self.mock_proposition_api.return_value.list_application_fees_payments.return_value = []
+
+            response = self.client.get(self.url)
+
+            # Check response
+            self.assertRedirects(
+                response=response,
+                expected_url=self.payments['id_p1'].url_checkout,
+                fetch_redirect_response=False,
+            )
+
+            # Check api calls
+            self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+                **self.default_kwargs,
+            )
+
+            self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+                **self.default_kwargs,
+            )
+
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_called_with(
+                **self.default_kwargs,
+            )
+            self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+
+    def test_display_the_payment_list_if_already_paid_and_from_mollie(self):
+        response = self.client.get(self.url + '?from_mollie=1')
+
+        # Check response
+        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.context['payments'], [self.payments_as_list[0]])
+        self.assertEqual(response.context['already_paid'], True)
+        self.assertEqual(response.context['can_pay'], False)
+
+        # Check api calls
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()
+
+    def test_display_the_payment_list_if_not_already_paid_and_from_mollie(self):
+        self.mock_proposition_api.return_value.list_application_fees_payments.return_value = []
+
+        response = self.client.get(self.url + '?from_mollie=1')
+
+        # Check response
+        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.context['payments'], [])
+        self.assertEqual(response.context['already_paid'], False)
+        self.assertEqual(response.context['can_pay'], False)
+
+        # Check api calls
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.list_application_fees_payments.assert_called_with(
+            **self.default_kwargs,
+        )
+
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_request.assert_not_called()
+        self.mock_proposition_api.return_value.open_application_fees_payment_after_submission.assert_not_called()

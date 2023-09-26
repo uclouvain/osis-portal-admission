@@ -373,15 +373,22 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def pay_application_fees_after_submission(cls, person: Person, uuid):
-        return APIClient().pay_application_fees_after_submission(
+    def open_application_fees_payment_after_submission(cls, person: Person, uuid):
+        return APIClient().open_application_fees_payment_after_submission(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
 
     @classmethod
-    def pay_application_fees_after_request(cls, person: Person, uuid):
-        return APIClient().pay_application_fees_after_request(
+    def open_application_fees_payment_after_request(cls, person: Person, uuid):
+        return APIClient().open_application_fees_payment_after_request(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def list_application_fees_payments(cls, person: Person, uuid):
+        return APIClient().list_application_fees_payments(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
@@ -482,6 +489,15 @@ class FormationGeneraleBusinessException(Enum):
     EtudesSecondairesNonCompleteesPourDiplomeBelgeException = "FORMATION-GENERALE-8"
     EtudesSecondairesNonCompleteesPourDiplomeEtrangerException = "FORMATION-GENERALE-9"
     EtudesSecondairesNonCompleteesPourAlternativeException = "FORMATION-GENERALE-10"
+    PropositionPourPaiementInvalideException = "FORMATION-GENERALE-11"
+    PropositionDoitEtreEnAttenteDePaiementException = "FORMATION-GENERALE-12"
+    StatutPropositionInvalidePourPaiementInscriptionException = "FORMATION-GENERALE-13"
+    PaiementNonRealiseException = "FORMATION-GENERALE-14"
+    SituationPropositionNonSICException = "FORMATION-GENERALE-15"
+    SituationPropositionNonFACException = "FORMATION-GENERALE-16"
+    MotifRefusFacultaireNonSpecifieException = "FORMATION-GENERALE-17"
+    InformationsAcceptationFacultaireNonSpecifieesException = "FORMATION-GENERALE-18"
+    PaiementDejaRealiseException = "FORMATION-GENERALE-19"
 
 
 class FormationContinueBusinessException(Enum):
