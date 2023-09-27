@@ -153,7 +153,18 @@ class ConfirmSubmitTestCase(TestCase):
         )
         response = self.client.get(self.url)
         # Display a message for late enrollment
-        self.assertContains(response, _("Late enrolment! Enrol before %(date)s") % {'date': date_fin})
+        self.assertContains(
+            response,
+            _(
+                "On the basis of the information you have provided, you are requesting consideration "
+                'of <a href="https://uclouvain.be/en/study/inscriptions/special-follow-up.html#Late_enrolment" '
+                'target="_blank">a late enrolment application</a>. This must be confirmed as soon as '
+                'possible and no '
+                "later than %(date)s. The admission panel reserves the right to accept or refuse this "
+                "late application."
+            )
+            % {'date': date_fin},
+        )
 
     def test_post_with_incomplete_elements_confirmation(self):
         data = {

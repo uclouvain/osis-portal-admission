@@ -355,11 +355,6 @@ class NoInput(forms.Widget):
         return ""
 
 
-DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS = {
-    'data-minimum-input-length': 3,
-}
-
-
 # Add django-localflavours translations
 gettext("%(character)s is not a valid character for IBAN.")
 gettext("%(country_code)s IBANs must contain %(number)s characters.")

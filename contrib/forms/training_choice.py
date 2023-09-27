@@ -55,7 +55,6 @@ from admission.contrib.forms import (
     EMPTY_VALUE,
     RadioBooleanField,
     get_campus_choices,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
@@ -109,7 +108,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             forward=['training_type', 'campus'],
             attrs={
                 'data-html': True,
-                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
             },
         ),
     )
@@ -123,7 +121,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             forward=['training_type', 'campus'],
             attrs={
                 'data-html': True,
-                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
             },
         ),
     )
@@ -162,7 +159,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             forward=['sector', 'campus'],
             attrs={
                 'data-html': True,
-                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
             },
         ),
     )
