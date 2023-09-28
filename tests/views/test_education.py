@@ -39,7 +39,6 @@ from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import ChoixStatutPropositionGenerale, TrainingType
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
-    DiplomaResults,
     DiplomaTypes,
     EducationalType,
     Equivalence,
@@ -103,7 +102,6 @@ class BaseEducationTestCase(TestCase):
             "foreign_diploma-country": "FR",
             "foreign_diploma-equivalence": Equivalence.PENDING.name,
             "foreign_diploma-high_school_transcript_0": "test",
-            "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
             "foreign_diploma-final_equivalence_decision_ue_0": "test_ue",
             "foreign_diploma-final_equivalence_decision_not_ue_0": "test_not_ue",
         }
@@ -553,7 +551,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
     def test_detail_foreign_diploma(self):
         self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {
             "academic_graduation_year": 2019,
-            "result": DiplomaResults.LT_65_RESULT.name,
             "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             "linguistic_regime": "EN",
             "other_linguistic_regime": "",
@@ -570,7 +567,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
             response.context['foreign_diploma'],
             {
                 "academic_graduation_year": 2019,
-                "result": DiplomaResults.LT_65_RESULT.name,
                 "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 "linguistic_regime": "Anglais",
                 "other_linguistic_regime": "",
@@ -585,7 +581,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
 
         self.mock_retrieve_high_school_diploma_for_general['foreign_diploma'] = {
             "academic_graduation_year": 2019,
-            "result": DiplomaResults.LT_65_RESULT.name,
             "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
             "linguistic_regime": None,
             "other_linguistic_regime": "Français",
@@ -905,7 +900,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.INTERNATIONAL_BACCALAUREATE.name,
                 "foreign_diploma-other_linguistic_regime": "FR",
                 "foreign_diploma-country": "FR",
-                "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 "foreign_diploma-high_school_transcript_translation_0": "test",
                 "foreign_diploma-high_school_diploma_translation_0": "test",
             },
@@ -925,7 +919,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "academic_graduation_year": 2020,
                     "high_school_transcript": ["test"],
                     "high_school_diploma": ["test"],
-                    "result": DiplomaResults.GT_75_RESULT.name,
                     "country": "FR",
                     "foreign_diploma_type": ForeignDiplomaTypes.INTERNATIONAL_BACCALAUREATE.name,
                     "linguistic_regime": "",
@@ -957,7 +950,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "foreign_diploma-equivalence_decision_proof_0": "test",
                 "foreign_diploma-high_school_transcript_translation_0": "test",
                 "foreign_diploma-high_school_diploma_translation_0": "test",
-                "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 # Even if we send data for belgian diploma, it should be stripped from data sent to WS
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
@@ -979,7 +971,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "academic_graduation_year": 2020,
                     "high_school_transcript": ["test"],
                     "high_school_diploma": ["test"],
-                    "result": DiplomaResults.GT_75_RESULT.name,
                     "country": "FR",
                     "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                     "linguistic_regime": "AR",
@@ -1035,7 +1026,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
             "belgian_diploma": {},
             "foreign_diploma": {
                 "academic_graduation_year": get_current_year(),
-                "result": DiplomaResults.GT_75_RESULT.name,
                 "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 "linguistic_regime": "EN",
                 "other_linguistic_regime": "",
@@ -1053,7 +1043,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "foreign_diploma-linguistic_regime": "EN",
                 "foreign_diploma-country": "FR",
                 "foreign_diploma-equivalence": "NO",
-                "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 # Even if we send data for belgian diploma, it should be stripped from data sent to WS
                 "belgian_diploma-other_institute": True,
                 "belgian_diploma-other_institute_name": "Special school",
@@ -1075,7 +1064,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "high_school_transcript": ["test"],
                     "high_school_diploma": ["test"],
                     "equivalence_decision_proof": [],
-                    "result": DiplomaResults.GT_75_RESULT.name,
                     "country": "FR",
                     "foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                     "linguistic_regime": "EN",
@@ -1099,7 +1087,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.INTERNATIONAL_BACCALAUREATE.name,
                 "foreign_diploma-linguistic_regime": "EN",
                 "foreign_diploma-country": "US",
-                "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -1207,7 +1194,6 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "graduated_from_high_school": GotDiploma.YES.name,
                 "diploma_type": DiplomaTypes.FOREIGN.name,
                 "graduated_from_high_school_year": 2020,
-                "foreign_diploma-result": DiplomaResults.GT_75_RESULT.name,
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
                 "foreign_diploma-country": "FR",
             },

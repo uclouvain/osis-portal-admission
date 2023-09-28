@@ -32,7 +32,6 @@ from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import HAS_DIPLOMA_CHOICES
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
-    DiplomaResults,
     DiplomaTypes,
     EDUCATIONAL_TYPES,
     Equivalence,
@@ -281,11 +280,6 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
             url="admission:autocomplete:country",
             forward=[forward.Const(True, 'exclude_be')],
         ),
-    )
-    result = forms.ChoiceField(
-        label=_("What result did you achieve?"),
-        choices=DiplomaResults.choices(),
-        widget=forms.RadioSelect,
     )
     high_school_transcript = FileUploadField(
         label=_("A transcript for your last year of secondary school"),
