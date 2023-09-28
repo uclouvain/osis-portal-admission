@@ -556,9 +556,6 @@ msgstr ""
 msgid "Belgium"
 msgstr ""
 
-msgid "Between 65 and 75%"
-msgstr ""
-
 msgid "Billing address"
 msgstr ""
 
@@ -1797,9 +1794,6 @@ msgstr ""
 msgid "Legal domicile"
 msgstr ""
 
-msgid "Less than 65%"
-msgstr ""
-
 msgid "Letters of recommendation"
 msgstr ""
 
@@ -1887,9 +1881,6 @@ msgid "Modification of an academic activity"
 msgstr ""
 
 msgid "Month"
-msgstr ""
-
-msgid "More than 75%"
 msgstr ""
 
 msgid "Most recent year of enrolment"
@@ -3157,9 +3148,6 @@ msgid "Website"
 msgstr ""
 
 msgid "What diploma have you obtained (or will obtain)?"
-msgstr ""
-
-msgid "What result did you achieve?"
 msgstr ""
 
 msgid "What was the most recent year you were enrolled at UCLouvain?"

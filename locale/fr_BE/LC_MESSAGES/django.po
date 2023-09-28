@@ -649,9 +649,6 @@ msgstr "Assimilation"
 msgid "Belgium"
 msgstr "Belgique"
 
-msgid "Between 65 and 75%"
-msgstr "Entre 65 et 75%"
-
 msgid "Billing address"
 msgstr "Adresse de facturation"
 
@@ -2064,9 +2061,6 @@ msgstr "Cohabitant·e légal·e"
 msgid "Legal domicile"
 msgstr "Domicile légal"
 
-msgid "Less than 65%"
-msgstr "Moins de 65%"
-
 msgid "Letters of recommendation"
 msgstr "Lettres de recommandation"
 
@@ -2159,9 +2153,6 @@ msgstr "Modification d'une formation académique"
 
 msgid "Month"
 msgstr "Mois"
-
-msgid "More than 75%"
-msgstr "Plus de 75%"
 
 msgid "Most recent year of enrolment"
 msgstr "Dernière année d'inscription"
@@ -3557,9 +3548,6 @@ msgstr "Site web"
 
 msgid "What diploma have you obtained (or will obtain)?"
 msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"
-
-msgid "What result did you achieve?"
-msgstr "Quel résultat avez-vous obtenu ?"
 
 msgid "What was the most recent year you were enrolled at UCLouvain?"
 msgstr "Quelle est votre dernière année d'inscription à l'UCLouvain ?"

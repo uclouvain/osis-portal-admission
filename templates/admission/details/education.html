@@ -76,9 +76,6 @@
           {% field_data _("Copy of both sides of the definitive equivalency decision by the Ministry of the French-speaking Community of Belgium (possibly accompanied by the DAES or the undergraduate studies exam, if your equivalency does not confer eligibility for the desired programme)") foreign_diploma.final_equivalence_decision_not_ue %}
         {% endif %}
       {% endif %}
-
-      {% field_data _('What result did you achieve?') foreign_diploma.result|enum_display:'DiplomaResults' %}
-
     {% endpanel %}
 
     {% panel _('Attachments') %}

@@ -57,12 +57,6 @@ class DiplomaTypes(ChoiceEnum):
     FOREIGN = pgettext_lazy("diploma_type", "foreign")
 
 
-class DiplomaResults(ChoiceEnum):
-    LT_65_RESULT = _("Less than 65%")
-    BTW_65_AND_75_RESULT = _("Between 65 and 75%")
-    GT_75_RESULT = _("More than 75%")
-
-
 class BelgianCommunitiesOfEducation(ChoiceEnum):
     FRENCH_SPEAKING = _("Belgian French Community")
     FLEMISH_SPEAKING = _("Belgian Flemish Community")
