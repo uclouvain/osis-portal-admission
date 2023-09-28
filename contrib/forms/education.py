@@ -130,11 +130,7 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         label=_("Secondary school diploma"),
         max_files=1,
         required=False,
-    )
-    enrolment_certificate = FileUploadField(
-        label=_("Certificate of enrolment or school attendance"),
-        max_files=1,
-        required=False,
+        help_text=_('Secondary school diploma or, if not available, a certificate of enrolment or school attendance.'),
     )
     first_cycle_admission_exam = FileUploadField(
         label=_("Certificate of passing the bachelor's course entrance exam"),
@@ -159,7 +155,6 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
                 DiplomaTypes.BELGIAN.name if belgian_diploma else DiplomaTypes.FOREIGN.name
             )
             self.fields['high_school_diploma'].initial = diploma.get("high_school_diploma")
-            self.fields['enrolment_certificate'].initial = diploma.get("enrolment_certificate")
         elif high_school_diploma_alternative:
             self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
                 "first_cycle_admission_exam"
@@ -307,11 +302,6 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     )
     high_school_diploma_translation = FileUploadField(
         label=_("A translation of your secondary school diploma by a sworn translator"),
-        max_files=1,
-        required=False,
-    )
-    enrolment_certificate_translation = FileUploadField(
-        label=_("A translation of the enrolment or school attendance certificate by a sworn translator"),
         max_files=1,
         required=False,
     )

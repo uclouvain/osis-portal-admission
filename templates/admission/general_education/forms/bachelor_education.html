@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain
+  * Copyright (C) 2015-2023 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -157,24 +157,12 @@
     {% endpanel %}
 
     {% panel _("Attachments") id="attachments" %}
-      <p id="foreign-enrolment-certificate" class="required_text">
-        {% translate 'Secondary school diploma or, if not available, a certificate of enrolment or school attendance.' %}
-        <span class="translated-field">{% translate 'A translation is required for each uploaded document.' %}</span>
-      </p>
       <div id="high-school-diploma" class="row">
         <div class="col-md-6">
-          {% bootstrap_field main_form.high_school_diploma %}
+          {% bootstrap_field_with_tooltip main_form.high_school_diploma classes="required_field" %}
         </div>
-        <div class="col-md-6 translated-field">
+        <div class="col-md-6 translated-field required_field">
           {% bootstrap_field foreign_diploma_form.high_school_diploma_translation %}
-        </div>
-      </div>
-      <div id="enrolment-certificate" class="row">
-        <div class="col-md-6">
-          {% bootstrap_field main_form.enrolment_certificate %}
-        </div>
-        <div class="col-md-6 translated-field">
-          {% bootstrap_field foreign_diploma_form.enrolment_certificate_translation %}
         </div>
       </div>
       <div id="foreign-attachments">
@@ -220,12 +208,19 @@
           }
 
           const isMedOrDentTraining = '{{ is_med_dent_training }}' === 'True';
+          const plus5IsoCodes = {{ plus_5_iso_codes|safe }};
 
           const is_ue_country = () => {
               const countryData = $('#id_foreign_diploma-country').select2('data');
               return (countryData.length > 0 && countryData[0].european_union) || isMedOrDentTraining;
           }
           const is_not_ue_country = () => !is_ue_country();
+
+          const is_ue_country_plus_5 = () => {
+              const country = $('#id_foreign_diploma-country');
+              const countryData = country.select2('data');
+              return isMedOrDentTraining || (countryData.length > 0 && countryData[0].european_union) || plus5IsoCodes.includes(country.val());
+          }
 
           $('#got-diploma').dependsOn({
               'input[name=graduated_from_high_school]': { values: ['YES', 'THIS_YEAR'] },
@@ -310,42 +305,25 @@
 
           {# Attachments #}
           const highSchoolDiploma = $('#high-school-diploma');
-          const enrolmentCertificate = $('#enrolment-certificate');
           $('#attachments').dependsOn({
               'input[name=diploma_type]': { is_truthy },
           });
 
-          $('#foreign-enrolment-certificate').dependsOn({
+          $('#high-school-diploma .popover-buttons').dependsOn({
+              'input[name=graduated_from_high_school]': { values: ['THIS_YEAR'] },
+              'input[name=diploma_type]': { values: ['BELGIAN'] },
+          }).or({
               'input[name=graduated_from_high_school]': { values: ['THIS_YEAR'] },
               'input[name=diploma_type]': { values: ['FOREIGN'] },
-              '#id_foreign_diploma-country': { is_ue_country },
-          },  {
-              onEnable: function () {
-                  highSchoolDiploma.removeClass('required_field');
-                  enrolmentCertificate.removeClass('required_field');
-              },
-              onDisable: function () {
-                  highSchoolDiploma.addClass('required_field');
-                  enrolmentCertificate.addClass('required_field');
-              },
-          });
+              '#id_foreign_diploma-country': { is_ue_country_plus_5 },
+          })
 
           highSchoolDiploma.dependsOn({
-              'input[name=graduated_from_high_school]': { values: ['YES'] },
+              'input[name=graduated_from_high_school]': { values: ['YES', 'THIS_YEAR'] },
               'input[name=diploma_type]': { values: ['BELGIAN'] },
           }).or({
               'input[name=graduated_from_high_school]': { values: ['THIS_YEAR', 'YES'] },
               'input[name=diploma_type]': { values: ['FOREIGN'] },
-          });
-
-
-          $('#enrolment-certificate').dependsOn({
-              'input[name=graduated_from_high_school]': { values: ['THIS_YEAR'] },
-              'input[name=diploma_type]': { values: ['BELGIAN'] },
-          }).or({
-              'input[name=graduated_from_high_school]': { values: ['THIS_YEAR'] },
-              'input[name=diploma_type]': { values: ['FOREIGN'] },
-              '#id_foreign_diploma-country': { is_ue_country },
           });
 
           $('#foreign-attachments').dependsOn({

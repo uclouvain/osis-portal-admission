@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,15 +24,13 @@
 #
 # ##############################################################################
 from django.shortcuts import render
-from django.urls import reverse_lazy
 from django.utils.functional import cached_property
 from django.views.generic import FormView
 
-from admission.constants import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
+from admission.constants import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION, PLUS_5_ISO_CODES
 from admission.contrib.enums.secondary_studies import (
     BelgianCommunitiesOfEducation,
     DiplomaTypes,
-    EducationalType,
     Equivalence,
     ForeignDiplomaTypes,
     GotDiploma,
@@ -53,7 +51,6 @@ from admission.services.person import (
     GeneralEducationAdmissionPersonService,
 )
 from admission.utils import is_med_dent_training
-
 
 __all__ = [
     'AdmissionEducationFormView',
@@ -90,6 +87,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             context_data['linguistic_regimes_without_translation'] = LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
             context_data['is_med_dent_training'] = self.is_med_dent_training
             context_data['is_vae_potential'] = self.high_school_diploma['is_vae_potential']
+            context_data['plus_5_iso_codes'] = PLUS_5_ISO_CODES
         return context_data
 
     @cached_property
@@ -243,7 +241,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
 
         # The candidate has a diploma or will have one this year
 
-        enrolment_certificate = data.pop("enrolment_certificate", [])
         if data.pop("diploma_type") == DiplomaTypes.BELGIAN.name:
             self.prepare_diploma(data, forms, "belgian_diploma")
             belgian_diploma = data.get("belgian_diploma")
@@ -263,12 +260,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 belgian_diploma['other_institute_name'] = ""
                 belgian_diploma['other_institute_address'] = ""
 
-            if graduated_from_high_school == GotDiploma.THIS_YEAR.name:
-                belgian_diploma['enrolment_certificate'] = enrolment_certificate
-                belgian_diploma['high_school_diploma'] = []
-            else:
-                belgian_diploma['enrolment_certificate'] = []
-
         else:
             self.prepare_diploma(data, forms, "foreign_diploma")
             foreign_diploma_data = data.get("foreign_diploma")
@@ -278,12 +269,6 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             equivalence_ue_country = foreign_diploma_form.fields['country'].is_ue_country or self.is_med_dent_training
 
             # Define and clean main form fields
-            if graduated_from_high_school == GotDiploma.THIS_YEAR.name and equivalence_ue_country:
-                foreign_diploma_data['enrolment_certificate'] = enrolment_certificate
-            else:
-                foreign_diploma_data['enrolment_certificate'] = []
-                foreign_diploma_data["enrolment_certificate_translation"] = []
-
             # Clean equivalence fields
             if not is_bachelor or not equivalence_ue_country:
                 foreign_diploma_data["equivalence"] = ''
@@ -312,6 +297,5 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 if foreign_diploma_data.get("linguistic_regime") in LINGUISTIC_REGIMES_WITHOUT_TRANSLATION:
                     foreign_diploma_data["high_school_transcript_translation"] = []
                     foreign_diploma_data["high_school_diploma_translation"] = []
-                    foreign_diploma_data["enrolment_certificate_translation"] = []
 
         return data

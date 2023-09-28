@@ -109,3 +109,11 @@ FIRST_YEAR_WITH_ECTS_BE = 2004
 LINGUISTIC_REGIMES_WITHOUT_TRANSLATION = ['FR', 'NL', 'DE', 'EN', 'IT', 'ES', 'PT']
 
 MINIMUM_YEAR = 1900
+
+PLUS_5_ISO_CODES = [
+    'CH',  # Switzerland
+    'IS',  # Island
+    'NO',  # Norway
+    'LI',  # Liechtenstein
+    'MC',  # Monaco
+]
