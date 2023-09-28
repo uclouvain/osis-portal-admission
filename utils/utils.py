@@ -30,15 +30,14 @@ from typing import Union
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.scholarship import Scholarship
-
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-
-from osis_organisation_sdk.model.entite import Entite
+from osis_admission_sdk.model.scholarship import Scholarship
 from osis_organisation_sdk.model.address import Address
+from osis_organisation_sdk.model.entite import Entite
 from osis_reference_sdk.model.high_school import HighSchool
+from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
+from osis_reference_sdk.model.university import University
 
 
 def format_entity_title(entity: Entite):
@@ -61,12 +60,16 @@ def format_entity_address(address: Address):
     return format_address(address.street, address.street_number, address.postal_code, address.city, address.state)
 
 
-def format_high_school_title(high_school: HighSchool):
-    """Return the concatenation of the high school name and city."""
-    return '{} <span class="high-school-address">{}, {}</span>'.format(
-        high_school['name'],
-        ' '.join([high_school['street'], high_school['street_number']]),
-        ' '.join([high_school['zipcode'], high_school['city']]),
+def format_school_title(school: Union[HighSchool, SuperiorNonUniversity, University]):
+    """Return the concatenation of the school name and city."""
+    return '{} <span class="school-address">{}</span>'.format(
+        school['name'],
+        format_address(
+            street=school['street'],
+            street_number=school['street_number'],
+            postal_code=school['zipcode'],
+            city=school['city'],
+        ),
     )
 
 

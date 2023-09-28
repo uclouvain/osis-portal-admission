@@ -45,7 +45,7 @@ from admission.services.reference import (
     SuperiorInstituteService,
 )
 from admission.services.scholarship import AdmissionScholarshipService
-from admission.utils import format_entity_title, format_high_school_title, format_scholarship
+from admission.utils import format_entity_title, format_school_title, format_scholarship
 from osis_document.contrib import FileUploadField
 
 EMPTY_CHOICE = (('', ' - '),)
@@ -120,7 +120,7 @@ def get_superior_institute_initial_choices(institute_id, person):
         uuid=institute_id,
     )
 
-    return EMPTY_CHOICE + ((institute.uuid, institute.name),)
+    return EMPTY_CHOICE + ((institute.uuid, format_school_title(school=institute)),)
 
 
 def get_thesis_location_initial_choices(value):
@@ -133,7 +133,7 @@ def get_high_school_initial_choices(uuid, person):
     if not uuid:
         return EMPTY_CHOICE
     high_school = HighSchoolService.get_high_school(person=person, uuid=uuid)
-    return EMPTY_CHOICE + ((high_school.uuid, format_high_school_title(high_school=high_school)),)
+    return EMPTY_CHOICE + ((high_school.uuid, format_school_title(school=high_school)),)
 
 
 def get_campus_choices(person):

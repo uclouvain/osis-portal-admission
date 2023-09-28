@@ -54,7 +54,7 @@ from admission.services.reference import (
 from admission.utils import (
     format_entity_address,
     format_entity_title,
-    format_high_school_title,
+    format_school_title,
     format_scholarship,
     format_training,
     format_training_with_year,
@@ -332,7 +332,7 @@ class HighSchoolAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, aut
         return [
             dict(
                 id=high_school.uuid,
-                text=format_high_school_title(high_school),
+                text=format_school_title(high_school),
             )
             for high_school in results
         ]
@@ -524,7 +524,7 @@ class SuperiorInstituteAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMix
         return [
             dict(
                 id=result.uuid,
-                text=result.name,
+                text=format_school_title(result),
                 type=StudyType.UNIVERSITY.name if isinstance(result, University) else StudyType.NON_UNIVERSITY.name,
             )
             for result in results

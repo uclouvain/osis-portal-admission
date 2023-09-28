@@ -393,6 +393,9 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:superior-institute',
             forward=['country'],
+            attrs={
+                'data-html': True,
+            },
         ),
     )
     program = forms.CharField(

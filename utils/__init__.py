@@ -1,7 +1,7 @@
 from .utils import (
     format_entity_title,
     format_entity_address,
-    format_high_school_title,
+    format_school_title,
     force_title,
     format_training,
     format_scholarship,
@@ -19,7 +19,7 @@ from .utils import (
 __all__ = [
     'format_entity_title',
     'format_entity_address',
-    'format_high_school_title',
+    'format_school_title',
     'force_title',
     'format_scholarship',
     'format_training',
