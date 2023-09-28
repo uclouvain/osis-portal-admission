@@ -408,13 +408,12 @@ class AutocompleteTestCase(TestCase):
         expected = [
             {
                 'id': self.first_high_school_uuid,
-                'text': 'HighSchool 1 <span class="high-school-address">Place de l\'Université 1, '
+                'text': 'HighSchool 1 <span class="school-address">Place de l\'Université 1, '
                 '1348 Louvain-La-Neuve</span>',
             },
             {
                 'id': self.second_high_school_uuid,
-                'text': 'HighSchool 2 <span class="high-school-address">Boulevard du Triomphe 1, 1000 Bruxelles'
-                '</span>',
+                'text': 'HighSchool 2 <span class="school-address">Boulevard du Triomphe 1, 1000 Bruxelles</span>',
             },
         ]
         self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
@@ -849,22 +848,24 @@ class AutocompleteTestCase(TestCase):
         expected = [
             {
                 'id': self.third_superior_school_uuid,
-                'text': 'Superior 1',
+                'text': 'Superior 1'
+                ' <span class="school-address">Place de l\'Université 3, 1348 Louvain-La-Neuve</span>',
                 'type': StudyType.NON_UNIVERSITY.name,
             },
             {
                 'id': self.first_superior_school_uuid,
-                'text': 'Superior 2',
+                'text': 'Superior 2'
+                ' <span class="school-address">Place de l\'Université 2, 1348 Louvain-La-Neuve</span>',
                 'type': StudyType.UNIVERSITY.name,
             },
             {
                 'id': self.second_superior_school_uuid,
-                'text': 'Superior 3',
+                'text': 'Superior 3 <span class="school-address">Boulevard du Triomphe 1, 1000 Bruxelles</span>',
                 'type': StudyType.UNIVERSITY.name,
             },
             {
                 'id': self.fourth_superior_school_uuid,
-                'text': 'Superior 4',
+                'text': 'Superior 4 <span class="school-address">Boulevard du Triomphe 4, 1000 Bruxelles</span>',
                 'type': StudyType.NON_UNIVERSITY.name,
             },
         ]
