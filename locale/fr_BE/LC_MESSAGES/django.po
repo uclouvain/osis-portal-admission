@@ -2437,7 +2437,7 @@ msgid "Passed"
 msgstr "Réussite"
 
 msgid "Passed (50-59%)"
-msgstr "Réussite sans mention"
+msgstr "Réussite sans mention (50-59%)"
 
 msgid "Passed with residual credits"
 msgstr "Réussite avec crédits résiduels"
@@ -2887,7 +2887,7 @@ msgid "SUBMITTED_CONFIRMATION"
 msgstr "Confirmation soumise"
 
 msgid "Satisfactory (60-69%)"
-msgstr "Satisfaction"
+msgstr "Satisfaction (60-69%)"
 
 msgctxt "admission"
 msgid "Save"
@@ -3585,13 +3585,13 @@ msgid "Widowed"
 msgstr "Veuf.ve"
 
 msgid "With high honours (80-89%)"
-msgstr "Grande distinction"
+msgstr "Grande distinction (80-89%)"
 
 msgid "With highest honours (90-100%)"
-msgstr "La plus grande distinction"
+msgstr "La plus grande distinction (90-100%)"
 
 msgid "With honours (70-79%)"
-msgstr "Distinction"
+msgstr "Distinction (70-79%)"
 
 msgid "Work"
 msgstr "Travail"
