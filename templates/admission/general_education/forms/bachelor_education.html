@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain
+  * Copyright (C) 2015-2023 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -72,6 +72,7 @@
                     type="{{ field.field.widget.input_type }}"
                     value="{{ radio_value }}"
                     style="position: relative"
+                    {% if field.field.disabled %}disabled{% endif %}
                     {% ifequal field.value radio_value %}
                     checked="checked"
                     {% endifequal %}/>

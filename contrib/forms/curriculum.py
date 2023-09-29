@@ -60,7 +60,6 @@ from admission.contrib.forms import (
     FORM_SET_PREFIX,
     NoInput,
     AdmissionFileUploadField as FileUploadField,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 
 from admission.contrib.forms.specific_question import ConfigurableFormMixin

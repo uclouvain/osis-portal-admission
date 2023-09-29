@@ -208,6 +208,10 @@ msgstr ""
 msgid "Academic courses"
 msgstr ""
 
+#, python-format
+msgid "Academic courses prefixed with %(icon)s are incomplete."
+msgstr ""
+
 msgid "Academic year"
 msgstr ""
 
@@ -1265,10 +1269,6 @@ msgstr ""
 msgid "Expected graduation date (signed diploma)"
 msgstr ""
 
-#, python-format
-msgid "Experience prefixed with %(icon)s is incomplete."
-msgstr ""
-
 msgid "External"
 msgstr ""
 
@@ -1789,10 +1789,6 @@ msgstr ""
 msgid "Last name / First name / Global id"
 msgstr ""
 
-#, python-format
-msgid "Late enrolment! Enrol before %(date)s"
-msgstr ""
-
 msgid "Lead supervisor"
 msgstr ""
 
@@ -2046,6 +2042,16 @@ msgstr ""
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
 "enter your academic courses and non-academic activities below."
+msgstr ""
+
+#, python-format
+msgid ""
+"On the basis of the information you have provided, you are requesting "
+"consideration of <a href=\"https://uclouvain.be/en/study/inscriptions/"
+"special-follow-up.html#Late_enrolment\" target=\"_blank\">a late enrolment "
+"application</a>. This must be confirmed as soon as possible and no later "
+"than %(date)s. The admission panel reserves the right to accept or refuse "
+"this late application."
 msgstr ""
 
 msgid "Online"
@@ -2818,10 +2824,10 @@ msgstr ""
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr ""
 
-msgid "The CV does not yet contain any education."
+msgid "The CV does not yet contain any academic course."
 msgstr ""
 
-msgid "The CV does not yet contain any non-academic experience."
+msgid "The CV does not yet contain any non-academic activity."
 msgstr ""
 
 msgid ""

@@ -123,7 +123,6 @@ class DoctorateAdmissionPersonForm(forms.Form):
         ),
     )
     country_of_citizenship = forms.CharField(
-        required=False,
         label=_("Country of citizenship"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
