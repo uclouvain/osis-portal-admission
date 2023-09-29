@@ -468,8 +468,8 @@ msgstr ""
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr ""
 
-msgid "Are you the child of a UCLouvain or Martin V Lycee staff member?"
-msgstr "Are you the child of a UCLouvain or Martin V Lycée staff member?"
+msgid "Are you the child of a UCLouvain or Martin V staff member?"
+msgstr ""
 
 msgid ""
 "As part of your application, one document must be uploaded to continue the "
@@ -1853,6 +1853,11 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Married"
+msgstr ""
+
+msgid ""
+"Martin V comprises both the Martin V Ecole Fondamentale and the Martin V "
+"Lycee."
 msgstr ""
 
 msgid "Master"

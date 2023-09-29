@@ -71,7 +71,8 @@ class AccountingForm(forms.Form):
         required=False,
     )
     enfant_personnel = RadioBooleanField(
-        label=_('Are you the child of a UCLouvain or Martin V Lycee staff member?'),
+        label=_('Are you the child of a UCLouvain or Martin V staff member?'),
+        help_text=_("Martin V comprises both the Martin V Ecole Fondamentale and the Martin V Lycee."),
         required=False,
     )
     attestation_enfant_personnel = FileUploadField(
