@@ -55,7 +55,6 @@ from admission.contrib.forms import (
     FORM_SET_PREFIX,
     OSIS_DOCUMENT_UPLOADER_CLASS,
     OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
-    EMPTY_CHOICE,
 )
 from admission.contrib.forms.curriculum import (
     AdmissionCurriculumEducationalExperienceForm,

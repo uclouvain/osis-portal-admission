@@ -25,6 +25,7 @@
 # ##############################################################################
 
 from django.conf import settings
+from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -36,6 +37,9 @@ from admission.services.person import (
 
 __all__ = ['AdmissionPersonDetailView']
 
+from admission.services.proposition import AdmissionPropositionService
+from admission.templatetags.admission import can_make_action
+
 
 class AdmissionPersonDetailView(LoadDossierViewMixin, TemplateView):
     template_name = 'admission/details/person.html'
@@ -45,6 +49,11 @@ class AdmissionPersonDetailView(LoadDossierViewMixin, TemplateView):
         'general-education': GeneralEducationAdmissionPersonService,
         'continuing-education': ContinuingEducationAdmissionPersonService,
     }
+
+    @cached_property
+    def hide_files(self):
+        permissions = AdmissionPropositionService.list_proposition_create_permissions(self.request.user.person)
+        return not can_make_action(permissions, 'create_person')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

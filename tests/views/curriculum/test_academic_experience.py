@@ -24,16 +24,18 @@
 #
 # ##############################################################################
 import datetime
-from unittest.mock import ANY
+from unittest import TestCase
+from unittest.mock import ANY, MagicMock
 
 import freezegun
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.translation import gettext
+from osis_admission_sdk.model.educational_experience import EducationalExperience
 from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import TypeFormation
+from admission.contrib.enums import TypeFormation, TrainingType
 from admission.contrib.enums.curriculum import (
     TranscriptType,
     EvaluationSystem,
@@ -46,6 +48,7 @@ from admission.contrib.forms.curriculum import (
     EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS,
     EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS,
 )
+from admission.contrib.views.common.detail_tabs.curriculum_experiences import experience_valuated_fields
 from admission.tests.views.curriculum.mixin import MixinTestCase
 
 
@@ -1338,4 +1341,35 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 experience_id=self.educational_experience.uuid,
             )
             + '#curriculum-header',
+        )
+
+
+class AcademicExperienceValuatedFieldsTestCase(TestCase):
+    def test_if_not_valuated(self):
+        self.assertCountEqual(experience_valuated_fields(MagicMock(valuated_from_trainings=[])), set())
+
+    def test_if_valuated_by_a_continuing_education(self):
+        self.assertCountEqual(
+            experience_valuated_fields(
+                MagicMock(
+                    valuated_from_trainings=[
+                        TypeFormation.FORMATION_CONTINUE.name,
+                    ]
+                ),
+            ),
+            {
+                'start',
+                'end',
+                'country',
+                'other_institute',
+                'institute_name',
+                'institute_address',
+                'institute',
+                'program',
+                'other_program',
+                'education_name',
+                'obtained_diploma',
+                'graduate_degree',
+                'annual:academic_year',
+            },
         )

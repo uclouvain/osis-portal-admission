@@ -23,17 +23,26 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Set
+
 from django.conf import settings
-from django.shortcuts import render
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
+from osis_admission_sdk.model.educational_experience import EducationalExperience
+from osis_admission_sdk.model.professional_experience import ProfessionalExperience
 
 from admission.constants import BE_ISO_CODE, LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
 from admission.contrib.enums import (
     EvaluationSystemsWithCredits,
     ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT,
     CURRICULUM_ACTIVITY_LABEL,
+    ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE,
+)
+from admission.contrib.forms.curriculum import (
+    EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT,
+    EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT,
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
@@ -44,12 +53,9 @@ from admission.services.person import (
 from admission.services.reference import (
     DiplomaService,
     LanguageService,
-    SuperiorNonUniversityService,
     SuperiorInstituteService,
 )
 from admission.utils import format_address
-from osis_admission_sdk.model.educational_experience import EducationalExperience
-from osis_admission_sdk.model.professional_experience import ProfessionalExperience
 
 __all__ = [
     'initialize_field_texts',
@@ -94,6 +100,10 @@ class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMix
     urlpatterns = {'professional_read': 'professional/<uuid:experience_id>/'}
     template_name = 'admission/details/curriculum_professional_experience.html'
 
+    @cached_property
+    def hide_files(self):
+        return bool(self.professional_experience.valuated_from_trainings)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['experience'] = self.professional_experience
@@ -104,6 +114,17 @@ class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMix
 class AdmissionCurriculumEducationalExperienceDetailView(AdmissionCurriculumMixin, TemplateView):
     urlpatterns = {'educational_read': 'educational/<uuid:experience_id>/'}
     template_name = 'admission/details/curriculum_educational_experience.html'
+
+    @cached_property
+    def experience_valuated_fields(self):
+        return experience_valuated_fields(self.educational_experience)
+
+    def hide_files(self, field_name):
+        if not field_name:
+            raise ImproperlyConfigured(
+                'The name of each file field must be specified when calling field_data ("field_name" attribute)'
+            )
+        return field_name in self.experience_valuated_fields
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -201,6 +222,29 @@ def initialize_field_texts(person, curriculum_experiences, context):
             )
 
         experience.can_be_updated = experience_can_be_updated(experience, context)
+
+
+def experience_valuated_fields(experience) -> Set[str]:
+    """
+    Return the set of fields of an experience that have been valuated by the submission of the candidate propositions.
+
+    @param experience
+    @return: the set of the names of the valuated fields (eventually prefixed by 'annual:' for the fields related to
+    an experience year)
+    """
+    valuated_contexts = set(
+        ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE.get(training) for training in experience.valuated_from_trainings
+    )
+
+    valuated_fields = set()
+
+    for context in valuated_contexts:
+        for field in EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT[context]:
+            valuated_fields.add(field)
+        for field in EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT[context]:
+            valuated_fields.add(f'annual:{field}')
+
+    return valuated_fields
 
 
 def experience_can_be_updated(experience, context):

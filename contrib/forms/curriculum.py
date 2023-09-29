@@ -33,10 +33,7 @@ from dal import autocomplete, forward
 from django import forms
 from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
-from django.utils.translation import gettext_lazy as _, pgettext_lazy as __, pgettext_lazy
-
-from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
-from osis_document.contrib.widgets import HiddenFileWidget
+from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
 from admission.constants import (
     BE_ISO_CODE,
@@ -44,7 +41,7 @@ from admission.constants import (
     LINGUISTIC_REGIMES_WITHOUT_TRANSLATION,
     MINIMUM_YEAR,
 )
-
+from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import (
@@ -60,12 +57,10 @@ from admission.contrib.forms import (
     FORM_SET_PREFIX,
     NoInput,
     AdmissionFileUploadField as FileUploadField,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+    IsCompletedWidget,
 )
-
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
-
 
 CurriculumField = partial(
     FileUploadField,
@@ -309,7 +304,7 @@ class ByContextAdmissionForm(forms.Form):
         for field in self.current_context_fields & valuated_fields:
             self.fields[field].disabled = True
             if isinstance(self.fields[field], FileUploadField):
-                self.fields[field].widget = HiddenFileWidget(display_visualizer=True)
+                self.fields[field].widget = IsCompletedWidget()
 
     def add_error(self, field, error):
         if field and self.fields[field].disabled:

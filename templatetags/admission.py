@@ -354,8 +354,9 @@ def get_detail_url(context, tab_name, pk, base_namespace=''):
     return resolve_url('{}:{}'.format(base_namespace, tab_name), pk=pk)
 
 
-@register.inclusion_tag('admission/tags/field_data.html')
+@register.inclusion_tag('admission/tags/field_data.html', takes_context=True)
 def field_data(
+    context,
     name,
     data=None,
     css_class=None,
@@ -365,11 +366,18 @@ def field_data(
     html_tag='',
     empty_value=_('Incomplete field'),
     tooltip=None,
+    field_name='',
 ):
     if isinstance(data, list):
-        template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
-        template_context = {'files': data}
-        data = template.Template(template_string).render(template.Context(template_context))
+        if hasattr(context['view'], 'hide_files') and (
+            (callable(context['view'].hide_files) and context['view'].hide_files(field_name))
+            or context['view'].hide_files
+        ):
+            data = _('Sent document') if data else empty_value
+        else:
+            template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
+            template_context = {'files': data}
+            data = template.Template(template_string).render(template.Context(template_context))
 
     elif type(data) == bool:
         data = _('Yes') if data else _('No')

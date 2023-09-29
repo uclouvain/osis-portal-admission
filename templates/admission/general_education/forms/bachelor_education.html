@@ -340,6 +340,11 @@
               },
           });
 
+          {# We need this as dependsOn enable some fields that are disabled at load page #}
+          {% if is_valuated %}
+            $('form.osis-form .form-group :input:not(button)').prop('disabled', true);
+          {% endif %}
+
           document.dispatchEvent(new Event('refreshFormInitial'));
       });
   </script>

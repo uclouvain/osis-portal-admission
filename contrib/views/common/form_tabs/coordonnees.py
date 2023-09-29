@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.views.generic import FormView
@@ -40,7 +41,7 @@ from admission.services.person import (
 __all__ = ['AdmissionCoordonneesFormView']
 
 from admission.services.proposition import PostalCodeBusinessException, AdmissionPropositionService
-from admission.templatetags.admission import can_make_action
+from admission.templatetags.admission import can_make_action, can_update_tab
 
 
 class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -78,6 +79,8 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
                     show_contact=coordonnees['contact'] is not None,
                 )
                 return render(request, 'admission/details/coordonnees.html', context)
+        elif not can_update_tab(admission=self.admission, tab='coordonnees'):
+            raise PermissionDenied
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.conf import settings
+from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
@@ -52,17 +53,25 @@ class AdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
     }
     tab_of_specific_questions = Onglets.ETUDES_SECONDAIRES.name
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-
-        high_school_diploma = (
+    @cached_property
+    def high_school_diploma(self):
+        return (
             self.service_mapping[self.current_context]
             .retrieve_high_school_diploma(
-                person=self.request.user.person,
+                person=self.person,
                 uuid=self.admission_uuid,
             )
             .to_dict()
         )
+
+    @cached_property
+    def hide_files(self):
+        return self.high_school_diploma['is_valuated']
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        high_school_diploma = self.high_school_diploma
 
         context_data.update(high_school_diploma)
 

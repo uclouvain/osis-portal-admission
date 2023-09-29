@@ -33,7 +33,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import get_language, gettext_lazy as _, gettext
 
-from admission.contrib.enums.diploma import StudyType
 from admission.services.campus import AdmissionCampusService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import (
@@ -345,6 +344,12 @@ class PhoneField(forms.CharField):
         except phonenumbers.NumberParseException:
             pass
         raise ValidationError(_('Invalid phone number'))
+
+
+class IsCompletedWidget(forms.Widget):
+    def render(self, name, value, attrs=None, renderer=None):
+        """Render the widget as an HTML string."""
+        return f"<p>{gettext('Sent document') if value else gettext('Incomplete field')}</p>"
 
 
 class NoInput(forms.Widget):

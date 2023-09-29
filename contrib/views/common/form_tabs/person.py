@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.views.generic import FormView
@@ -42,7 +43,7 @@ from admission.services.person import (
 __all__ = ['AdmissionPersonFormView']
 
 from admission.services.proposition import BelgianNissBusinessException, AdmissionPropositionService
-from admission.templatetags.admission import can_make_action
+from admission.templatetags.admission import can_make_action, can_update_tab
 
 
 class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -75,6 +76,8 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
                     contact_language=dict(settings.LANGUAGES).get(person.get('language')),
                 )
                 return render(request, 'admission/details/person.html', context)
+        elif not can_update_tab(admission=self.admission, tab='person'):
+            raise PermissionDenied
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

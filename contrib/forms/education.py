@@ -45,10 +45,10 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     EMPTY_CHOICE,
     AdmissionFileUploadField as FileUploadField,
+    IsCompletedWidget,
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService, AcademicYearService
-from osis_document.contrib.widgets import HiddenFileWidget
 
 
 def disable_fields_if_valuated(is_valuated, fields, fields_to_keep_enabled_names=None):
@@ -60,7 +60,7 @@ def disable_fields_if_valuated(is_valuated, fields, fields_to_keep_enabled_names
             if field not in fields_to_keep_enabled_names:
                 fields[field].disabled = True
                 if isinstance(fields[field], FileUploadField):
-                    fields[field].widget = HiddenFileWidget(display_visualizer=True)
+                    fields[field].widget = IsCompletedWidget()
 
 
 class BaseAdmissionEducationForm(ConfigurableFormMixin):

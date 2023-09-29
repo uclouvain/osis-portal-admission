@@ -69,7 +69,7 @@
         </div>
         <div class="row">
           <div class="col-md-6">
-            {% field_data _('Diploma') experience.graduate_degree %}
+            {% field_data _('Diploma') experience.graduate_degree field_name='graduate_degree' %}
           </div>
         </div>
       {% else %}
@@ -94,11 +94,11 @@
         {% if experience.transcript_type.value == 'ONE_FOR_ALL_YEARS' %}
           <div class="row">
             <div class="col-md-6">
-              {% field_data _("Transcript") experience.transcript %}
+              {% field_data _("Transcript") experience.transcript field_name='transcript' %}
             </div>
             {% if translation_required %}
               <div class="col-md-6">
-                {% field_data _("Transcript translation") experience.transcript_translation %}
+                {% field_data _("Transcript translation") experience.transcript_translation field_name='transcript_translation' %}
               </div>
             {% endif %}
           </div>
@@ -140,9 +140,9 @@
                     <tr>
                       <td {% if experience.evaluation_system_with_credits %}colspan="3"{% endif %}>
                         <div class="flex-container-no-wrap">
-                          {% field_data _('Transcript') experience_year.transcript %}
+                          {% field_data _('Transcript') experience_year.transcript field_name='annual:transcript' %}
                           {% if translation_required %}
-                            {% field_data _('Transcript translation') experience_year.transcript_translation %}
+                            {% field_data _('Transcript translation') experience_year.transcript_translation field_name='annual:transcript_translation' %}
                           {% endif %}
                         </div>
                       </td>
@@ -192,17 +192,17 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  {% field_data _('Dissertation summary') experience.dissertation_summary %}
+                  {% field_data _('Dissertation summary') experience.dissertation_summary field_name='dissertation_summary' %}
                 </div>
               </div>
             {% endif %}
             <div class="row">
               <div class="col-md-6">
-                {% field_data _('Diploma') experience.graduate_degree %}
+                {% field_data _('Diploma') experience.graduate_degree field_name='graduate_degree' %}
               </div>
               {% if translation_required %}
                 <div class="col-md-6">
-                  {% field_data _('Diploma translation') experience.graduate_degree_translation %}
+                  {% field_data _('Diploma translation') experience.graduate_degree_translation field_name='graduate_degree_translation' %}
                 </div>
               {% endif %}
             </div>
