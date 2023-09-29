@@ -75,7 +75,8 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
         # Trick template to display form tag and buttons
         kwargs['form'] = next((form for form in kwargs['forms'] if form.visible_fields()), kwargs['forms'][0])
         kwargs['BE_ISO_CODE'] = BE_ISO_CODE
-        if self.display_pool_questions_form and self.pool_questions:
+        # Put self.pool_questions first so that the API call is made and permissions are checked
+        if self.pool_questions and self.display_pool_questions_form:
             kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
             kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
         return super().get_context_data(**kwargs)
