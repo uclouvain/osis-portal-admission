@@ -62,6 +62,7 @@ class CountriesService(metaclass=ServiceMeta):
         return (
             CountriesAPIClient()
             .countries_list(
+                active=True,
                 *args,
                 **kwargs,
                 **build_mandatory_auth_headers(person),
@@ -75,6 +76,7 @@ class CountriesService(metaclass=ServiceMeta):
         return (
             CountriesAPIClient()
             .countries_list(
+                active=True,
                 *args,
                 **kwargs,
                 **build_mandatory_auth_headers(person),

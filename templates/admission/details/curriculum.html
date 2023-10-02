@@ -202,12 +202,12 @@
         {% if incomplete_experiences %}
           <p class="alert alert-danger">
             {% blocktranslate trimmed with icon="<i class='fa-solid fa-triangle-exclamation'></i>" %}
-              Experience prefixed with {{ icon }} is incomplete.
+              Academic courses prefixed with {{ icon }} are incomplete.
             {% endblocktranslate %}
           </p>
         {% endif %}
       {% else %}
-        {% trans "The CV does not yet contain any education." %}
+        {% trans "The CV does not yet contain any academic course." %}
       {% endif %}
     </div>
   </div>
@@ -296,7 +296,7 @@
           </tbody>
         </table>
       {% else %}
-        {% trans "The CV does not yet contain any non-academic experience." %}
+        {% trans "The CV does not yet contain any non-academic activity." %}
       {% endif %}
     </div>
   </div>

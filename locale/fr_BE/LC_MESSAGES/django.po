@@ -219,16 +219,6 @@ msgstr "Un relevé de notes pour chaque année"
 msgid "A transcript for your last year of secondary school"
 msgstr "Un relevé de notes pour votre dernière année d'études secondaires"
 
-msgid "A translation is required for each uploaded document."
-msgstr "Une traduction est requise pour chaque document téléversé."
-
-msgid ""
-"A translation of the enrolment or school attendance certificate by a sworn "
-"translator"
-msgstr ""
-"Une traduction du certificat d'inscription ou de fréquentation scolaire par "
-"un traducteur juré"
-
 msgid ""
 "A translation of your official transcript of marks for your final year of "
 "secondary school by a sworn translator"
@@ -260,6 +250,10 @@ msgstr "Absence de dettes"
 
 msgid "Academic courses"
 msgstr "Formations académiques"
+
+#, python-format
+msgid "Academic courses prefixed with %(icon)s are incomplete."
+msgstr "Les formations académiques préfixées par %(icon)s sont incomplètes."
 
 msgid "Academic year"
 msgstr "Année académique"
@@ -544,7 +538,7 @@ msgstr "Êtes-vous sûr de vouloir retirer \"%(prenom)s %(nom)s\" du jury ?"
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr "Êtes-vous sûr de vouloir requérir les signatures pour cette demande ?"
 
-msgid "Are you the child of a UCLouvain or Martin V Lycee staff member?"
+msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
 "Êtes-vous l'enfant d'un membre du personnel de l'UCLouvain ou de l'entité "
 "Martin V ?"
@@ -655,9 +649,6 @@ msgstr "Assimilation"
 msgid "Belgium"
 msgstr "Belgique"
 
-msgid "Between 65 and 75%"
-msgstr "Entre 65 et 75%"
-
 msgid "Billing address"
 msgstr "Adresse de facturation"
 
@@ -732,9 +723,6 @@ msgstr ""
 
 msgid "Certificate of achievement"
 msgstr "Attestation de réussite"
-
-msgid "Certificate of enrolment or school attendance"
-msgstr "Certificat d'inscription ou de fréquentation scolaire"
 
 msgid "Certificate of language knowledge"
 msgstr "Certificat de connaissance des langues"
@@ -1446,10 +1434,6 @@ msgstr "Quitter sans enregistrer"
 msgid "Expected graduation date (signed diploma)"
 msgstr "Date (prévue) de délivrance du diplôme (document signé)"
 
-#, python-format
-msgid "Experience prefixed with %(icon)s is incomplete."
-msgstr "Les expériences préfixées par %(icon)s sont incomplètes."
-
 msgid "External"
 msgstr "Externe"
 
@@ -2058,10 +2042,6 @@ msgstr "Séjour linguistique"
 msgid "Last name / First name / Global id"
 msgstr "Nom / Prénom / ID Global"
 
-#, python-format
-msgid "Late enrolment! Enrol before %(date)s"
-msgstr "Inscription tardive ! Inscrivez-vous avant le %(date)s"
-
 msgid "Lead supervisor"
 msgstr "Promoteur de référence"
 
@@ -2080,9 +2060,6 @@ msgstr "Cohabitant·e légal·e"
 
 msgid "Legal domicile"
 msgstr "Domicile légal"
-
-msgid "Less than 65%"
-msgstr "Moins de 65%"
 
 msgid "Letters of recommendation"
 msgstr "Lettres de recommandation"
@@ -2128,6 +2105,11 @@ msgctxt "admission"
 msgid "Married"
 msgstr "Marié·e"
 
+msgid ""
+"Martin V comprises both the Martin V Ecole Fondamentale and the Martin V "
+"Lycee."
+msgstr "L'entité Martin V regroupe l'Ecole Fondamentale et le Lycée Martin V."
+
 msgid "Master"
 msgstr "Master"
 
@@ -2171,9 +2153,6 @@ msgstr "Modification d'une formation académique"
 
 msgid "Month"
 msgstr "Mois"
-
-msgid "More than 75%"
-msgstr "Plus de 75%"
 
 msgid "Most recent year of enrolment"
 msgstr "Dernière année d'inscription"
@@ -2329,6 +2308,22 @@ msgstr ""
 "compléter ci-dessous vos formations académiques et vos activités non-"
 "académiques."
 
+#, python-format
+msgid ""
+"On the basis of the information you have provided, you are requesting "
+"consideration of <a href=\"https://uclouvain.be/en/study/inscriptions/"
+"special-follow-up.html#Late_enrolment\" target=\"_blank\">a late enrolment "
+"application</a>. This must be confirmed as soon as possible and no later "
+"than %(date)s. The admission panel reserves the right to accept or refuse "
+"this late application."
+msgstr ""
+"Sur base des informations que vous avez fournies, vous sollicitez une "
+"demande <a href=\"https://uclouvain.be/fr/etudier/inscriptions/suivi-"
+"particulier.html#InscrTardive\" target=\"_blank\">d'inscription tardive</a>. "
+"Celle-ci doit obligatoirement être confirmée le plus tôt possible et au plus "
+"tard pour le %(date)s. Le jury d'admission se réserve le droit d'accepter ou "
+"de refuser cette demande d'inscription tardive."
+
 msgid "Online"
 msgstr "En ligne"
 
@@ -2420,7 +2415,7 @@ msgid "Passed"
 msgstr "Réussite"
 
 msgid "Passed (50-59%)"
-msgstr "Réussite sans mention"
+msgstr "Réussite sans mention (50-59%)"
 
 msgid "Passed with residual credits"
 msgstr "Réussite avec crédits résiduels"
@@ -2870,7 +2865,7 @@ msgid "SUBMITTED_CONFIRMATION"
 msgstr "Confirmation soumise"
 
 msgid "Satisfactory (60-69%)"
-msgstr "Satisfaction"
+msgstr "Satisfaction (60-69%)"
 
 msgctxt "admission"
 msgid "Save"
@@ -3157,11 +3152,11 @@ msgstr ""
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr "Le numéro de registre national belge doit être composé de 11 chiffres."
 
-msgid "The CV does not yet contain any education."
-msgstr "Le CV ne contient pas encore d'expérience académique."
+msgid "The CV does not yet contain any academic course."
+msgstr "Le CV ne contient pas encore de formation académique."
 
-msgid "The CV does not yet contain any non-academic experience."
-msgstr "Le CV ne contient pas encore d'expérience non-académique."
+msgid "The CV does not yet contain any non-academic activity."
+msgstr "Le CV ne contient pas encore d'activité non-académique."
 
 msgid ""
 "The IBAN contains up to 34 alphanumeric characters, which correspond to:"
@@ -3554,9 +3549,6 @@ msgstr "Site web"
 msgid "What diploma have you obtained (or will obtain)?"
 msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"
 
-msgid "What result did you achieve?"
-msgstr "Quel résultat avez-vous obtenu ?"
-
 msgid "What was the most recent year you were enrolled at UCLouvain?"
 msgstr "Quelle est votre dernière année d'inscription à l'UCLouvain ?"
 
@@ -3568,13 +3560,13 @@ msgid "Widowed"
 msgstr "Veuf.ve"
 
 msgid "With high honours (80-89%)"
-msgstr "Grande distinction"
+msgstr "Grande distinction (80-89%)"
 
 msgid "With highest honours (90-100%)"
-msgstr "La plus grande distinction"
+msgstr "La plus grande distinction (90-100%)"
 
 msgid "With honours (70-79%)"
-msgstr "Distinction"
+msgstr "Distinction (70-79%)"
 
 msgid "Work"
 msgstr "Travail"

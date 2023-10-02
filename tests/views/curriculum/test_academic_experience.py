@@ -47,6 +47,7 @@ from admission.contrib.forms.curriculum import (
     EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS,
 )
 from admission.tests.views.curriculum.mixin import MixinTestCase
+from admission.utils import format_entity_address
 
 
 @freezegun.freeze_time('2023-01-01')
@@ -313,7 +314,14 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
         self.assertEqual(
             base_form.fields['institute'].widget.choices,
-            EMPTY_CHOICE + ((self.institute.uuid, self.institute.name),),
+            EMPTY_CHOICE
+            + (
+                (
+                    self.institute.uuid,
+                    f'{self.institute.name}'
+                    f' <span class="school-address">Boulevard de l\'Université 1, 1348 Louvain-la-Neuve</span>',
+                ),
+            ),
         )
 
         # Check that no field is hidden or disabled

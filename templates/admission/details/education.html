@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2022 Université catholique de Louvain
+  * Copyright (C) 2015-2023 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -48,10 +48,8 @@
     {% endpanel %}
 
     {% panel _('Attachments') %}
-      {% if graduated_from_high_school == 'YES' %}
+      {% if graduated_from_high_school == 'YES' or graduated_from_high_school == 'THIS_YEAR' %}
         {% field_data _('Secondary school diploma') belgian_diploma.high_school_diploma %}
-      {% elif graduated_from_high_school == 'THIS_YEAR' %}
-        {% field_data _('Certificate of enrolment or school attendance') belgian_diploma.enrolment_certificate %}
       {% endif %}
     {% endpanel %}
 
@@ -78,9 +76,6 @@
           {% field_data _("Copy of both sides of the definitive equivalency decision by the Ministry of the French-speaking Community of Belgium (possibly accompanied by the DAES or the undergraduate studies exam, if your equivalency does not confer eligibility for the desired programme)") foreign_diploma.final_equivalence_decision_not_ue %}
         {% endif %}
       {% endif %}
-
-      {% field_data _('What result did you achieve?') foreign_diploma.result|enum_display:'DiplomaResults' %}
-
     {% endpanel %}
 
     {% panel _('Attachments') %}
@@ -88,13 +83,6 @@
 
       {% if need_translations %}
         {% field_data _('A translation of your secondary school diploma by a sworn translator') foreign_diploma.high_school_diploma_translation %}
-      {% endif %}
-
-      {% if graduated_from_high_school == 'THIS_YEAR' and foreign_diploma.country.european_union %}
-        {% field_data _('Certificate of enrolment or school attendance') foreign_diploma.enrolment_certificate %}
-        {% if need_translations %}
-          {% field_data _('A translation of the enrolment or school attendance certificate by a sworn translator') foreign_diploma.enrolment_certificate_translation %}
-        {% endif %}
       {% endif %}
 
       {% field_data _('A transcript for your last year of secondary school') foreign_diploma.high_school_transcript %}

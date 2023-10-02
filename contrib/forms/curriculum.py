@@ -60,7 +60,6 @@ from admission.contrib.forms import (
     FORM_SET_PREFIX,
     NoInput,
     AdmissionFileUploadField as FileUploadField,
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
 )
 
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
@@ -393,6 +392,9 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:superior-institute',
             forward=['country'],
+            attrs={
+                'data-html': True,
+            },
         ),
     )
     program = forms.CharField(

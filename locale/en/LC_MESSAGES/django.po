@@ -171,14 +171,6 @@ msgstr ""
 msgid "A transcript for your last year of secondary school"
 msgstr ""
 
-msgid "A translation is required for each uploaded document."
-msgstr ""
-
-msgid ""
-"A translation of the enrolment or school attendance certificate by a sworn "
-"translator"
-msgstr ""
-
 msgid ""
 "A translation of your official transcript of marks for your final year of "
 "secondary school by a sworn translator"
@@ -206,6 +198,10 @@ msgid "Absence of debt"
 msgstr ""
 
 msgid "Academic courses"
+msgstr ""
+
+#, python-format
+msgid "Academic courses prefixed with %(icon)s are incomplete."
 msgstr ""
 
 msgid "Academic year"
@@ -464,8 +460,8 @@ msgstr ""
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr ""
 
-msgid "Are you the child of a UCLouvain or Martin V Lycee staff member?"
-msgstr "Are you the child of a UCLouvain or Martin V Lycée staff member?"
+msgid "Are you the child of a UCLouvain or Martin V staff member?"
+msgstr ""
 
 msgid ""
 "As part of your application, one document must be uploaded to continue the "
@@ -560,9 +556,6 @@ msgstr ""
 msgid "Belgium"
 msgstr ""
 
-msgid "Between 65 and 75%"
-msgstr ""
-
 msgid "Billing address"
 msgstr ""
 
@@ -634,9 +627,6 @@ msgid ""
 msgstr ""
 
 msgid "Certificate of achievement"
-msgstr ""
-
-msgid "Certificate of enrolment or school attendance"
 msgstr ""
 
 msgid "Certificate of language knowledge"
@@ -1265,10 +1255,6 @@ msgstr ""
 msgid "Expected graduation date (signed diploma)"
 msgstr ""
 
-#, python-format
-msgid "Experience prefixed with %(icon)s is incomplete."
-msgstr ""
-
 msgid "External"
 msgstr ""
 
@@ -1789,10 +1775,6 @@ msgstr ""
 msgid "Last name / First name / Global id"
 msgstr ""
 
-#, python-format
-msgid "Late enrolment! Enrol before %(date)s"
-msgstr ""
-
 msgid "Lead supervisor"
 msgstr ""
 
@@ -1810,9 +1792,6 @@ msgid "Legal cohabitant"
 msgstr ""
 
 msgid "Legal domicile"
-msgstr ""
-
-msgid "Less than 65%"
 msgstr ""
 
 msgid "Letters of recommendation"
@@ -1859,6 +1838,11 @@ msgctxt "admission"
 msgid "Married"
 msgstr ""
 
+msgid ""
+"Martin V comprises both the Martin V Ecole Fondamentale and the Martin V "
+"Lycee."
+msgstr ""
+
 msgid "Master"
 msgstr ""
 
@@ -1897,9 +1881,6 @@ msgid "Modification of an academic activity"
 msgstr ""
 
 msgid "Month"
-msgstr ""
-
-msgid "More than 75%"
 msgstr ""
 
 msgid "Most recent year of enrolment"
@@ -2046,6 +2027,16 @@ msgstr ""
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
 "enter your academic courses and non-academic activities below."
+msgstr ""
+
+#, python-format
+msgid ""
+"On the basis of the information you have provided, you are requesting "
+"consideration of <a href=\"https://uclouvain.be/en/study/inscriptions/"
+"special-follow-up.html#Late_enrolment\" target=\"_blank\">a late enrolment "
+"application</a>. This must be confirmed as soon as possible and no later "
+"than %(date)s. The admission panel reserves the right to accept or refuse "
+"this late application."
 msgstr ""
 
 msgid "Online"
@@ -2818,10 +2809,10 @@ msgstr ""
 msgid "The Belgian national register number must consist of 11 digits."
 msgstr ""
 
-msgid "The CV does not yet contain any education."
+msgid "The CV does not yet contain any academic course."
 msgstr ""
 
-msgid "The CV does not yet contain any non-academic experience."
+msgid "The CV does not yet contain any non-academic activity."
 msgstr ""
 
 msgid ""
@@ -3157,9 +3148,6 @@ msgid "Website"
 msgstr ""
 
 msgid "What diploma have you obtained (or will obtain)?"
-msgstr ""
-
-msgid "What result did you achieve?"
 msgstr ""
 
 msgid "What was the most recent year you were enrolled at UCLouvain?"
