@@ -29,6 +29,27 @@
   {# Specific questions #}
   {% with form=forms.0 %}
     {% bootstrap_form_errors form %}
+
+    {% if view.is_general and view.display_visa_question %}
+      {% panel _('Visa') %}
+        <p>
+          {% blocktranslate trimmed %}
+            On the basis of the information you have provided, you will need to apply for a student visa if your
+            application to attend our university is accepted (i.e. if UCLouvain sends you an "enrolment
+            authorisation"). Please read the student
+            <a href="https://uclouvain.be/en/study/inscriptions/welcome-to-international-students.html" target="_blank">
+              visa
+            </a> application information.
+          {% endblocktranslate %}
+        </p>
+        <div class="row">
+          <div class="col-md-6 required_field">
+           {% bootstrap_field form.poste_diplomatique %}
+          </div>
+        </div>
+      {% endpanel %}
+    {% endif %}
+
     {% panel _('Specific aspects') %}
       {% if view.is_continuing %}
         {% if admission.pays_nationalite_ue_candidat == False %}

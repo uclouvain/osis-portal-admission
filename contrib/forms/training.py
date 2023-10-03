@@ -114,6 +114,9 @@ class ActivityFormMixin(forms.Form):
         label=_("Country"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
+            attrs={
+                "data-html": True,
+            },
         ),
     )
     city = forms.CharField(label=_("City"), max_length=100)

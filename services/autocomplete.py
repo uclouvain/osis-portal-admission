@@ -105,3 +105,10 @@ class AdmissionAutocompleteService(metaclass=ServiceMeta):
             acronym_like=acronym_search,
             **build_mandatory_auth_headers(person),
         )['results']
+
+    @classmethod
+    def list_diplomatic_posts(cls, person, **kwargs):
+        return AdmissionAutocompleteAPIClient().list_diplomatic_posts(
+            **kwargs,
+            **build_mandatory_auth_headers(person),
+        )['results']

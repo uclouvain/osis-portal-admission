@@ -112,6 +112,9 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("Country of birth"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
+            attrs={
+                "data-html": True,
+            },
         ),
     )
     birth_place = forms.CharField(
@@ -126,6 +129,9 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("Country of citizenship"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
+            attrs={
+                "data-html": True,
+            },
         ),
     )
 

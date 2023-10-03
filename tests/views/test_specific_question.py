@@ -25,7 +25,7 @@
 # ##############################################################################
 import uuid
 from datetime import datetime
-from unittest.mock import patch, ANY
+from unittest.mock import patch, ANY, MagicMock
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
@@ -35,7 +35,7 @@ from rest_framework.status import HTTP_200_OK
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
 from admission.contrib.enums.specific_question import Onglets
-from admission.contrib.forms import PDF_MIME_TYPE
+from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
 
 
@@ -168,14 +168,133 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             tab=Onglets.INFORMATIONS_ADDITIONNELLES.name,
             **self.default_kwargs,
         )
+
         self.assertEqual(response.context['admission'].uuid, self.bachelor_proposition.uuid)
         self.assertEqual(response.context['specific_questions'], self.specific_questions)
+        main_form = response.context['forms'][0]
         self.assertEqual(
-            response.context['forms'][0].initial,
+            main_form.initial,
             {
                 'reponses_questions_specifiques': self.bachelor_proposition.reponses_questions_specifiques,
                 'documents_additionnels': self.bachelor_proposition.documents_additionnels,
+                'poste_diplomatique': None,
             },
+        )
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+        self.assertFalse(main_form.fields['poste_diplomatique'].required)
+
+    def test_get_page_with_visa_question(self):
+        # No identification -> no visa
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = None
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+
+        # With identification but no nationality or residence -> no visa
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            pays_nationalite='',
+            pays_nationalite_europeen=None,
+            pays_residence='',
+        )
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+
+        # With identification and UE nationality and foreign residence -> no visa
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            pays_nationalite='FR',
+            pays_nationalite_europeen=True,
+            pays_residence='FR',
+        )
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+
+        # With identification and UE+5 nationality and foreign residence -> no visa
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            pays_nationalite='CH',
+            pays_nationalite_europeen=False,
+            pays_residence='FR',
+        )
+
+        response = self.client.get(self.url)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+
+        # With identification and not UE+5 nationality but no residence -> no visa
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            pays_nationalite='US',
+            pays_nationalite_europeen=False,
+            pays_residence='',
+        )
+
+        response = self.client.get(self.url)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+
+        # With identification and not UE+5 nationality and residence in Belgium -> no visa
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            pays_nationalite='US',
+            pays_nationalite_europeen=False,
+            pays_residence='BE',
+        )
+
+        response = self.client.get(self.url)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+
+        # With identification and not UE+5 nationality and residence not in Belgium -> visa
+        # > Without initial visa
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            pays_nationalite='US',
+            pays_nationalite_europeen=False,
+            pays_residence='FR',
+        )
+
+        response = self.client.get(self.url)
+        main_form = response.context['forms'][0]
+        self.assertFalse(main_form.fields['poste_diplomatique'].disabled)
+        self.assertTrue(main_form.fields['poste_diplomatique'].required)
+        self.assertEqual(main_form.fields['poste_diplomatique'].choices, EMPTY_CHOICE)
+
+        # > With initial visa
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            pays_nationalite='US',
+            pays_nationalite_europeen=False,
+            pays_residence='FR',
+        )
+        proposition = self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value
+        proposition.poste_diplomatique = MagicMock(code=self.first_diplomatic_post.code)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.mock_diplomatic_post_api.return_value.retrieve_diplomatic_post.assert_called_with(
+            code=self.first_diplomatic_post.code,
+            **self.default_kwargs,
+        )
+
+        main_form = response.context['forms'][0]
+        self.assertFalse(main_form.fields['poste_diplomatique'].disabled)
+        self.assertEqual(
+            main_form.fields['poste_diplomatique'].choices,
+            EMPTY_CHOICE
+            + (
+                (
+                    self.first_diplomatic_post.code,
+                    self.first_diplomatic_post.name_fr,
+                ),
+            ),
         )
 
     def test_post_page(self):
@@ -184,6 +303,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             data={
                 'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
                 'specific_questions-documents_additionnels_0': 'uuid-doc',
+                'specific_questions-poste_diplomatique': self.first_diplomatic_post.code,
             },
         )
 
@@ -193,7 +313,57 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             modifier_questions_specifiques_formation_generale_command={
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'documents_additionnels': ['uuid-doc'],
+                'poste_diplomatique': None,  # Visa not requested
             },
+            **self.default_kwargs,
+        )
+
+    def test_post_page_with_visa(self):
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            pays_nationalite='US',
+            pays_nationalite_europeen=False,
+            pays_residence='FR',
+        )
+
+        # The visa is required but not specified
+        # response = self.client.post(
+        #     self.url,
+        #     data={
+        #         'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+        #         'specific_questions-poste_diplomatique': '',
+        #     },
+        # )
+        #
+        # self.assertEqual(response.status_code, status.HTTP_200_OK)
+        #
+        # main_form = response.context['forms'][0]
+        #
+        # self.assertFalse(main_form.is_valid())
+        # self.assertIn(FIELD_REQUIRED_MESSAGE, main_form.errors.get('poste_diplomatique', []))
+
+        # The visa is required and specified
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-poste_diplomatique': self.second_diplomatic_post.code,
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+
+        self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_generale_command={
+                'documents_additionnels': [],
+                'poste_diplomatique': self.second_diplomatic_post.code,
+                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+            },
+            **self.default_kwargs,
+        )
+
+        self.mock_diplomatic_post_api.return_value.retrieve_diplomatic_post.assert_called_with(
+            code=self.second_diplomatic_post.code,
             **self.default_kwargs,
         )
 

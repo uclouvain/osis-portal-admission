@@ -79,6 +79,7 @@ __all__ = [
     "ScholarshipAutocomplete",
     "UniversityAutocomplete",
     "SuperiorInstituteAutocomplete",
+    "DiplomaticPostAutocomplete",
 ]
 
 
@@ -230,7 +231,7 @@ class CountryAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autoco
                     'text': _('Belgium'),
                     'european_union': True,
                 },
-                {'id': None, 'text': '----------'},
+                {'id': None, 'text': '<hr>'},
             ]
         return belgique + [
             dict(
@@ -241,6 +242,37 @@ class CountryAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autoco
             for country in results
             if not self.forwarded.get('exclude_be', False) or country.iso_code != BE_ISO_CODE
         ]
+
+
+class DiplomaticPostAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+    urlpatterns = 'diplomatic-post'
+
+    def get_list(self):
+        return AdmissionAutocompleteService.list_diplomatic_posts(
+            person=self.request.user.person,
+            country=self.forwarded.get('residential_country', ''),
+            search=self.q,
+            **self.get_webservice_pagination_kwargs(),
+        )
+
+    def results(self, results):
+        residential_country = self.forwarded.get('residential_country', '')
+        name_attribute = 'name_fr' if get_language() == settings.LANGUAGE_CODE else 'name_en'
+
+        final_results = [dict(id=post.code, text=getattr(post, name_attribute)) for post in results]
+
+        if residential_country:
+            # The diplomatic posts in the residential country are returned first and we add a separator between them
+            # and the other ones
+            previous_post_in_residential_country = False
+            for index, post in enumerate(results):
+                if residential_country in post.countries_iso_codes:
+                    previous_post_in_residential_country = True
+                else:
+                    if previous_post_in_residential_country:
+                        final_results.insert(index, dict(id=None, text='<hr>'))
+                    break
+        return final_results
 
 
 class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):

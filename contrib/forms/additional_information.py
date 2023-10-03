@@ -23,12 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from dal import autocomplete
+from dal.forward import Const
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField, get_diplomatic_post_initial_choices
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 
@@ -44,6 +46,38 @@ class GeneralSpecificQuestionForm(ConfigurableFormMixin, forms.Form):
         required=False,
         max_files=10,
     )
+
+    poste_diplomatique = forms.IntegerField(
+        label=_('Competent diplomatic post'),
+        required=False,
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:diplomatic-post',
+            attrs={
+                'data-html': True,
+                'data-allow-clear': 'true',
+            },
+        ),
+    )
+
+    def __init__(self, display_visa: bool, residential_country: str, person, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if display_visa:
+            self.fields['poste_diplomatique'].required = True
+
+            if residential_country:
+                self.fields['poste_diplomatique'].widget.forward = [Const(residential_country, 'residential_country')]
+
+            self.fields['poste_diplomatique'].choices = get_diplomatic_post_initial_choices(
+                diplomatic_post_code=self.data.get(
+                    self.add_prefix('poste_diplomatique'),
+                    self.initial.get('poste_diplomatique'),
+                ),
+                person=person,
+            )
+            self.fields['poste_diplomatique'].widget.choices = self.fields['poste_diplomatique'].choices
+        else:
+            self.fields['poste_diplomatique'].disabled = True
 
 
 class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAddressForm):
