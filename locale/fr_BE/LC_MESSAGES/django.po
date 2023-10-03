@@ -396,11 +396,11 @@ msgctxt "filters"
 msgid "All"
 msgstr "Tout"
 
+msgid "Amount"
+msgstr "Montant"
+
 msgid "An error has occurred, please check fields and try again."
 msgstr "Une erreur est survenue, veuillez vérifier les valeurs et réessayer."
-
-msgid "An error occurred during your payment."
-msgstr "Une erreur est survenue au cours de votre paiement."
 
 msgid ""
 "An international scholarship may be awarded to students as part of a "
@@ -413,13 +413,6 @@ msgstr ""
 
 msgid "An invitation has been sent again."
 msgstr "Une invitation a été envoyée de nouveau."
-
-msgid ""
-"An user can pay either after submitting its application or after a request "
-"from a manager."
-msgstr ""
-"Un utilisateur peut soit payer suite la soumission de sa demande, soit suite "
-"à une demande d'un gestionnaire."
 
 msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
@@ -530,6 +523,9 @@ msgstr ""
 #, python-format
 msgid "Are you sure you want to delete the course \"%(name)s\"?"
 msgstr "Êtes-vous sûr de vouloir supprimer la formation \"%(name)s\" ?"
+
+msgid "Are you sure you want to pay them?"
+msgstr "Êtes-vous sûr de vouloir les payer ?"
 
 #, python-format
 msgid "Are you sure you want to remove \"%(prenom)s %(nom)s\" from the jury?"
@@ -1169,6 +1165,9 @@ msgctxt "an admission"
 msgid "Created on:"
 msgstr "Créée le :"
 
+msgid "Creation date"
+msgstr "Date de création"
+
 msgid "Credits earned"
 msgstr "Crédits acquis"
 
@@ -1321,6 +1320,10 @@ msgstr ""
 
 msgid "Dual or triple degree"
 msgstr "Double ou triple diplomation"
+
+#, python-format
+msgid "E%(amount)s"
+msgstr "%(amount)s€"
 
 msgid "ECONOMY"
 msgstr "Economie"
@@ -1988,6 +1991,9 @@ msgctxt "diploma_type"
 msgid "It is a diploma"
 msgstr "Il s'agit d'un diplôme"
 
+msgid "It seems that you paid the application fee."
+msgstr "Il semblerait que vous ayez payé les frais de dossier."
+
 msgid "JURY_APPROUVE_ADRE"
 msgstr "Jury approuvé par ADRE"
 
@@ -2066,6 +2072,9 @@ msgstr "Lettres de recommandation"
 
 msgid "List"
 msgstr "Liste"
+
+msgid "List of payments related to this application"
+msgstr "Liste des paiements relatifs à cette demande"
 
 msgid "Listening comprehension"
 msgstr "Compréhension à l'audition"
@@ -2428,15 +2437,6 @@ msgstr "Date de fin de validité du passeport"
 
 msgid "Passport number"
 msgstr "Numéro de passeport"
-
-msgid "Pay later"
-msgstr "Payer plus tard"
-
-msgid "Pay now (invalid payment)"
-msgstr "Payer maintenant (paiement invalide)"
-
-msgid "Pay now (valid payment)"
-msgstr "Payer maintenant (paiement valide)"
 
 msgid "Pay the application fee"
 msgstr "Payer les frais de dossier"
@@ -3189,6 +3189,10 @@ msgstr ""
 "nature à aboutir à la présentation d'une thèse de doctorat (art. 2.3.1. du "
 "règlement doctoral)."
 
+msgid "The application will be updated soon to take that into account."
+msgstr ""
+"La demande va être mise à jour prochainement pour prendre cela en compte."
+
 #, python-format
 msgid ""
 "The canvas of the supervisory panel report must be sent to the accompanying "
@@ -3246,9 +3250,6 @@ msgstr ""
 "demande d'inscription ne peut être validée que lorsque tous les onglets ont "
 "été complétés avec succès. Les icônes indiquent la progression de votre "
 "demande qui peut être interrompue et reprise à tout moment."
-
-msgid "The payment has been processed."
-msgstr "Le paiement a été réalisé."
 
 msgid "The person concerned"
 msgstr "La personne concernée"
@@ -3411,13 +3412,6 @@ msgstr ""
 "l'Administration des ressources humaines de son employeur pour vérifier s'il "
 "remplit ces conditions, et dans l'affirmative, demande l'attestation qui le "
 "confirme."
-
-msgid ""
-"To finalize the submission of your application, you have to pay the "
-"application fee."
-msgstr ""
-"Pour finaliser la soumission de votre demande, vous devez payer les frais de "
-"dossier."
 
 msgid "To the attention of"
 msgstr "A l'attention de"
@@ -3744,16 +3738,6 @@ msgstr ""
 "pour votre dossier (justificatifs, preuve de niveau de langue, ...)."
 
 msgid ""
-"You can either pay them now, by using our payment system, or pay them with a "
-"delay by bank transfer. Please note that your application will not be "
-"considered until we have received the proof of payment."
-msgstr ""
-"Vous pouvez soit les payer directement, en utilisant notre système de "
-"paiement, soit les payer avec un délai, par virement bancaire. Veuillez "
-"noter que votre demande ne sera pas prise en compte tant que nous n'aurons "
-"pas reçu la preuve de paiement."
-
-msgid ""
 "You can find more information on the French Community webpage <a "
 "href=\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/"
 "</a>"
@@ -3770,6 +3754,9 @@ msgid "You cannot enter a language more than once, please correct the form."
 msgstr ""
 "Vous ne pouvez pas définir une langue plusieurs fois, merci de corriger le "
 "formulaire."
+
+msgid "You cannot pay the application fee now."
+msgstr "Vous ne pouvez pas payer les frais de dossier maintenant."
 
 msgid "You have now reached the application confirmation tab."
 msgstr ""
@@ -3871,6 +3858,11 @@ msgstr ""
 
 msgid "Your participation in the event"
 msgstr "Votre participation à l'événement"
+
+#, python-brace-format
+msgid ""
+"Your payment for the application {reference} has been taken into account."
+msgstr "Votre paiement pour la demande {reference} a été pris en compte."
 
 msgid "Your previous NOMA (matriculation number)"
 msgstr "Votre ancien NOMA (numéro de matricule)"
