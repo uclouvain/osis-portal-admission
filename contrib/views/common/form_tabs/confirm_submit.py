@@ -30,6 +30,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import get_language, gettext as _
 from django.views.generic import FormView
 
+from admission.constants import PROPOSITION_JUST_SUBMITTED
 from admission.contrib.enums import ChoixStatutPropositionGenerale
 from admission.contrib.forms.confirm_submit import AdmissionConfirmSubmitForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -136,7 +137,7 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
     def get_success_url(self):
         if self.submit_proposition_result.get('status') == ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name:
             return resolve_url(f'admission:{self.current_context}:payment', pk=self.admission_uuid)
-        self.request.session['submitted'] = self.current_context
+        self.request.session[PROPOSITION_JUST_SUBMITTED] = self.current_context
         if self.current_context == 'doctorate':
             return resolve_url(f'admission:{self.current_context}:project', pk=self.admission_uuid)
         return resolve_url(f'admission:{self.current_context}', pk=self.admission_uuid)

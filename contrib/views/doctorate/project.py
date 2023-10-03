@@ -27,6 +27,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
+from admission.constants import PROPOSITION_JUST_SUBMITTED
 from admission.contrib.views.mixins import LoadDossierViewMixin
 
 __all__ = ['DoctorateAdmissionProjectDetailView']
@@ -45,8 +46,8 @@ class DoctorateAdmissionProjectDetailView(LoadDossierViewMixin, TemplateView):
         # xgettext:no-python-format
         context_data['allocated_time_label'] = _("Time allocated for thesis (in %)")
 
-        if 'submitted' in self.request.session:
-            del self.request.session['submitted']
+        if PROPOSITION_JUST_SUBMITTED in self.request.session:
+            del self.request.session[PROPOSITION_JUST_SUBMITTED]
             context_data['just_submitted'] = True
 
         return context_data

@@ -117,3 +117,5 @@ PLUS_5_ISO_CODES = [
     'LI',  # Liechtenstein
     'MC',  # Monaco
 ]
+
+PROPOSITION_JUST_SUBMITTED = 'proposition_just_submitted'

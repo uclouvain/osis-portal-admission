@@ -46,3 +46,8 @@ class PaymentMethod(ChoiceEnum):
     BANCONTACT = 'bancontact'
     CREDIT_CARD = 'creditcard'
     BANK_TRANSFER = 'banktransfer'
+
+
+class PaymentSessionValue(ChoiceEnum):
+    CANDIDATE_JUST_PAID_AFTER_SUBMISSION = 'CANDIDATE_JUST_PAID_AFTER_SUBMISSION'
+    CANDIDATE_JUST_PAID_AFTER_MANAGER_REQUEST = 'CANDIDATE_JUST_PAID_AFTER_MANAGER_REQUEST'

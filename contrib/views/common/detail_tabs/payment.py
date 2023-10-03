@@ -32,7 +32,8 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 
-from admission.contrib.enums.payment import PaymentStatus
+from admission.constants import PROPOSITION_JUST_SUBMITTED
+from admission.contrib.enums.payment import PaymentStatus, PaymentSessionValue
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.proposition import AdmissionPropositionService
 from admission.templatetags.admission import can_make_action
@@ -81,10 +82,10 @@ class AdmissionPaymentView(LoadDossierViewMixin, PermissionRequiredMixin, Templa
                 del self.request.session[self.session_key]
 
                 if any(payment.identifiant_paiement == payment_id for payment in paid_payments):
-                    if event == 'after_submission':
+                    if event == PaymentSessionValue.CANDIDATE_JUST_PAID_AFTER_SUBMISSION.name:
                         # Display a popup
-                        self.request.session['submitted'] = True
-                    elif event == 'after_request':
+                        self.request.session[PROPOSITION_JUST_SUBMITTED] = self.current_context
+                    elif event == PaymentSessionValue.CANDIDATE_JUST_PAID_AFTER_MANAGER_REQUEST.name:
                         # Display a message
                         info(
                             request,
@@ -112,7 +113,9 @@ class AdmissionPaymentView(LoadDossierViewMixin, PermissionRequiredMixin, Templa
                 if created_payment and created_payment.url_checkout:
                     # The candidate can pay the application fee and doesn't come from Mollie
                     self.request.session[self.session_key] = '{}:{}'.format(
-                        'after_submission' if self.can_pay_after_submission else 'after_request',
+                        PaymentSessionValue.CANDIDATE_JUST_PAID_AFTER_SUBMISSION.name
+                        if self.can_pay_after_submission
+                        else PaymentSessionValue.CANDIDATE_JUST_PAID_AFTER_MANAGER_REQUEST.name,
                         created_payment.identifiant_paiement,
                     )
                     return HttpResponseRedirect(created_payment.url_checkout)

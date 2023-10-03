@@ -32,17 +32,18 @@ from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from rest_framework.status import HTTP_200_OK
 
+from admission.constants import PROPOSITION_JUST_SUBMITTED
 from admission.contrib.enums import (
     TrainingType,
 )
-from admission.contrib.enums.payment import PaymentStatus, PaymentMethod
+from admission.contrib.enums.payment import PaymentStatus, PaymentMethod, PaymentSessionValue
 from admission.contrib.enums.projet import ChoixStatutPropositionGenerale
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class DocumentsFormViewTestCase(TestCase):
+class AdmissionPaymentViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
@@ -167,7 +168,9 @@ class DocumentsFormViewTestCase(TestCase):
         self,
     ):
         session = self.client.session
-        session[f'pay_fees_{self.proposition.uuid}'] = 'after_submission:id_p1'
+        session[
+            f'pay_fees_{self.proposition.uuid}'
+        ] = f'{PaymentSessionValue.CANDIDATE_JUST_PAID_AFTER_SUBMISSION.name}:id_p1'
         session.save()
 
         response = self.client.get(self.url)
@@ -180,7 +183,7 @@ class DocumentsFormViewTestCase(TestCase):
         )
 
         session = self.client.session
-        self.assertEqual(session.get('submitted'), True)
+        self.assertEqual(session.get(PROPOSITION_JUST_SUBMITTED), 'general-education')
 
         # Check api calls
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
@@ -196,7 +199,9 @@ class DocumentsFormViewTestCase(TestCase):
 
     def test_redirect_to_default_proposition_page_if_already_paid_and_cannot_pay_and_recent_payment_after_request(self):
         session = self.client.session
-        session[f'pay_fees_{self.proposition.uuid}'] = 'after_request:id_p1'
+        session[
+            f'pay_fees_{self.proposition.uuid}'
+        ] = f'{PaymentSessionValue.CANDIDATE_JUST_PAID_AFTER_MANAGER_REQUEST.name}:id_p1'
         session.save()
 
         response = self.client.get(self.url)
@@ -209,7 +214,7 @@ class DocumentsFormViewTestCase(TestCase):
         )
 
         session = self.client.session
-        self.assertEqual(session.get('submitted'), None)
+        self.assertEqual(session.get(PROPOSITION_JUST_SUBMITTED), None)
 
         # Check api calls
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
@@ -225,7 +230,9 @@ class DocumentsFormViewTestCase(TestCase):
 
     def test_display_the_payment_list_if_already_paid_and_cannot_pay_and_unknown_recent_payment(self):
         session = self.client.session
-        session[f'pay_fees_{self.proposition.uuid}'] = 'after_request:id_unknown'
+        session[
+            f'pay_fees_{self.proposition.uuid}'
+        ] = f'{PaymentSessionValue.CANDIDATE_JUST_PAID_AFTER_MANAGER_REQUEST.name}:id_unknown'
         session.save()
 
         response = self.client.get(self.url)
