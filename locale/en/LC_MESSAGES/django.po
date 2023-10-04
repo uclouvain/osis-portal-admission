@@ -2926,7 +2926,7 @@ msgstr ""
 
 msgid ""
 "This choice will define the language of communication throughout your "
-"admission process."
+"admission process. This will also change the interface language."
 msgstr ""
 
 msgid "This comment will be visible only to administrators."

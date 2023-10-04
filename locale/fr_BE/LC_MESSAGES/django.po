@@ -3299,10 +3299,10 @@ msgstr "Cette activité et ses potentielles sous-activités seront supprimées"
 
 msgid ""
 "This choice will define the language of communication throughout your "
-"admission process."
+"admission process. This will also change the interface language."
 msgstr ""
 "Ce choix définira la langue de communication tout au long de votre parcours "
-"d'admission."
+"d'admission. Il modifiera également la langue de l'interface."
 
 msgid "This comment will be visible only to administrators."
 msgstr "Ce commentaire ne sera visible que par les gestionnaires."

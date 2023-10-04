@@ -133,7 +133,10 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("Contact language"),
         required=False,
         choices=settings.LANGUAGES,
-        help_text=_('This choice will define the language of communication throughout your admission process.'),
+        help_text=_(
+            'This choice will define the language of communication throughout your admission process.'
+            ' This will also change the interface language.'
+        ),
     )
 
     # Proof of identity

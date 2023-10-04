@@ -25,7 +25,9 @@
 # ##############################################################################
 from django.conf import settings
 from django.shortcuts import render
+from django.utils import translation
 from django.utils.functional import cached_property
+from django.utils.translation import activate
 from django.views.generic import FormView
 
 from admission.constants import BE_ISO_CODE
@@ -166,3 +168,5 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
                 update_fields.append(field)
                 setattr(self.person, field, updated_person.get(field))
         self.person.save(update_fields=update_fields)
+        activate(self.person.language)
+        self.request.session[translation.LANGUAGE_SESSION_KEY] = self.person.language
