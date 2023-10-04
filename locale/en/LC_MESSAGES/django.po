@@ -343,10 +343,10 @@ msgctxt "filters"
 msgid "All"
 msgstr ""
 
-msgid "An error has occurred, please check fields and try again."
+msgid "Amount"
 msgstr ""
 
-msgid "An error occurred during your payment."
+msgid "An error has occurred, please check fields and try again."
 msgstr ""
 
 msgid ""
@@ -356,11 +356,6 @@ msgid ""
 msgstr ""
 
 msgid "An invitation has been sent again."
-msgstr ""
-
-msgid ""
-"An user can pay either after submitting its application or after a request "
-"from a manager."
 msgstr ""
 
 msgid ""
@@ -451,6 +446,9 @@ msgstr ""
 
 #, python-format
 msgid "Are you sure you want to delete the course \"%(name)s\"?"
+msgstr ""
+
+msgid "Are you sure you want to pay them?"
 msgstr ""
 
 #, python-format
@@ -1003,6 +1001,9 @@ msgctxt "an admission"
 msgid "Created on:"
 msgstr ""
 
+msgid "Creation date"
+msgstr ""
+
 msgid "Credits earned"
 msgstr ""
 
@@ -1147,6 +1148,10 @@ msgid ""
 msgstr ""
 
 msgid "Dual or triple degree"
+msgstr ""
+
+#, python-format
+msgid "E%(amount)s"
 msgstr ""
 
 msgid "ECONOMY"
@@ -1721,6 +1726,9 @@ msgctxt "diploma_type"
 msgid "It is a diploma"
 msgstr "It is a"
 
+msgid "It seems that you paid the application fee."
+msgstr ""
+
 msgid "JURY_APPROUVE_ADRE"
 msgstr "Jury approved by ADRE"
 
@@ -1798,6 +1806,9 @@ msgid "Letters of recommendation"
 msgstr ""
 
 msgid "List"
+msgstr ""
+
+msgid "List of payments related to this application"
 msgstr ""
 
 msgid "Listening comprehension"
@@ -2142,15 +2153,6 @@ msgid "Passport expiry date"
 msgstr ""
 
 msgid "Passport number"
-msgstr ""
-
-msgid "Pay later"
-msgstr ""
-
-msgid "Pay now (invalid payment)"
-msgstr ""
-
-msgid "Pay now (valid payment)"
 msgstr ""
 
 msgid "Pay the application fee"
@@ -2836,6 +2838,9 @@ msgid ""
 "submission of a PhD thesis (Art. 2.3.1. of the PhD Regulations)."
 msgstr ""
 
+msgid "The application will be updated soon to take that into account."
+msgstr ""
+
 #, python-format
 msgid ""
 "The canvas of the supervisory panel report must be sent to the accompanying "
@@ -2874,9 +2879,6 @@ msgid ""
 "only be validated once all the tabs have been successfully completed. The "
 "icons indicate the progress of your application, which can be interrupted "
 "and resumed at any time."
-msgstr ""
-
-msgid "The payment has been processed."
 msgstr ""
 
 msgid "The person concerned"
@@ -3018,11 +3020,6 @@ msgid ""
 "contact their employer's Human Resources Administration to check whether "
 "they meet the requirements, and if so, request the certificate that confirms "
 "this."
-msgstr ""
-
-msgid ""
-"To finalize the submission of your application, you have to pay the "
-"application fee."
 msgstr ""
 
 msgid "To the attention of"
@@ -3322,12 +3319,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"You can either pay them now, by using our payment system, or pay them with a "
-"delay by bank transfer. Please note that your application will not be "
-"considered until we have received the proof of payment."
-msgstr ""
-
-msgid ""
 "You can find more information on the French Community webpage <a "
 "href=\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/"
 "</a>"
@@ -3337,6 +3328,9 @@ msgid "You can specify the locality or postcode in your search."
 msgstr ""
 
 msgid "You cannot enter a language more than once, please correct the form."
+msgstr ""
+
+msgid "You cannot pay the application fee now."
 msgstr ""
 
 msgid "You have now reached the application confirmation tab."
@@ -3416,6 +3410,11 @@ msgid ""
 msgstr ""
 
 msgid "Your participation in the event"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Your payment for the application {reference} has been taken into account."
 msgstr ""
 
 msgid "Your previous NOMA (matriculation number)"

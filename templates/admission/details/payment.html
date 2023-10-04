@@ -33,44 +33,37 @@
       </p>
     </div>
     <div class="panel-body">
-      <p>
-        <strong>
-          {% translate "To finalize the submission of your application, you have to pay the application fee." %}
-        </strong>
-      </p>
-      <p>
-        {% blocktranslate trimmed %}
-          You can either pay them now, by using our payment system, or pay them with a delay by bank transfer.
-          Please note that your application will not be considered until we have received the proof of payment.
-        {% endblocktranslate %}
-      </p>
-
-      <form class="osis-form" method="post" action="">
-        {% csrf_token %}
-        <button
-            type="submit"
-            name="invalid-payment"
-            class="btn btn-danger"
-        >
-          {% translate "Pay now (invalid payment)" %}
-        </button>
-
-        <button
-            type="submit"
-            name="valid-payment"
-            class="btn btn-success"
-        >
-          {% translate "Pay now (valid payment)" %}
-        </button>
-
-        <a
-            href="{% url 'admission:list' %}"
-            class="btn btn-default"
-        >
-          {% translate 'Pay later' %}
-        </a>
-
-      </form>
+      {% if already_paid %}
+        <p>
+          {% translate 'It seems that you paid the application fee.' %}
+          {% if can_pay %}
+            {% translate 'The application will be updated soon to take that into account.' %}
+          {% endif %}
+        </p>
+        <table class="table table-bordered">
+          <caption>{% translate 'List of payments related to this application' %}</caption>
+          <thead>
+            <tr>
+              <th>{% translate 'Creation date' %}</th>
+              <th>{% translate 'Amount' %}</th>
+            </tr>
+          </thead>
+          {% for payment in payments %}
+            <tr>
+              <td>
+                {{ payment.date_creation }}
+              </td>
+              <td>{% blocktranslate with amount=payment.montant%}E{{ amount }}{% endblocktranslate %}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% elif can_pay %}
+        <p>{% translate "Are you sure you want to pay them?" %}</p>
+        <a class="btn btn-primary" href="{{ request.path }}">{% translate 'Confirm' %}</a>
+        <a href="{% url 'admission:list' %}">{% trans "Back to applications" %}</a>
+      {% else %}
+        <p>{% translate 'You cannot pay the application fee now.' %}</p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
