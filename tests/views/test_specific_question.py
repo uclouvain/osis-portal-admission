@@ -326,20 +326,20 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         )
 
         # The visa is required but not specified
-        # response = self.client.post(
-        #     self.url,
-        #     data={
-        #         'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
-        #         'specific_questions-poste_diplomatique': '',
-        #     },
-        # )
-        #
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        #
-        # main_form = response.context['forms'][0]
-        #
-        # self.assertFalse(main_form.is_valid())
-        # self.assertIn(FIELD_REQUIRED_MESSAGE, main_form.errors.get('poste_diplomatique', []))
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
+                'specific_questions-poste_diplomatique': '',
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        main_form = response.context['forms'][0]
+
+        self.assertFalse(main_form.is_valid())
+        self.assertIn(FIELD_REQUIRED_MESSAGE, main_form.errors.get('poste_diplomatique', []))
 
         # The visa is required and specified
         response = self.client.post(

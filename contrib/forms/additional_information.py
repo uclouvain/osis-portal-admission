@@ -68,11 +68,13 @@ class GeneralSpecificQuestionForm(ConfigurableFormMixin, forms.Form):
             if residential_country:
                 self.fields['poste_diplomatique'].widget.forward = [Const(residential_country, 'residential_country')]
 
+            initial_code = self.initial.get('poste_diplomatique')
+            submitted_code = self.data.get(self.add_prefix('poste_diplomatique'))
+
             self.fields['poste_diplomatique'].choices = get_diplomatic_post_initial_choices(
-                diplomatic_post_code=self.data.get(
-                    self.add_prefix('poste_diplomatique'),
-                    self.initial.get('poste_diplomatique'),
-                ),
+                diplomatic_post_code=int(submitted_code)
+                if submitted_code and submitted_code.isdigit()
+                else initial_code,
                 person=person,
             )
             self.fields['poste_diplomatique'].widget.choices = self.fields['poste_diplomatique'].choices

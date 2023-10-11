@@ -81,7 +81,7 @@ def get_diplomatic_post_initial_choices(diplomatic_post_code, person, loaded_pos
         loaded_post
         if loaded_post
         else AdmissionDiplomaticPostService.get_diplomatic_post(
-            code=str(diplomatic_post_code),
+            code=diplomatic_post_code,
             person=person,
         )
     )
