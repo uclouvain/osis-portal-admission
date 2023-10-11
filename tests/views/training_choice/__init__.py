@@ -27,6 +27,8 @@ import uuid
 from django.test import TestCase
 from unittest.mock import Mock, ANY, patch
 
+from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
+
 from admission.contrib.enums import (
     ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionContinue,
@@ -141,6 +143,13 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         return next((scholarship for scholarship in cls.mock_scholarships if scholarship.uuid == uuid), None)
 
     @classmethod
+    def get_diplomatic_post(cls, code, **kwargs):
+        return next(
+            (diplomatic_post for diplomatic_post in cls.mock_diplomatic_posts if diplomatic_post.code == code),
+            None,
+        )
+
+    @classmethod
     def get_general_education_admission(cls, **kwargs):
         return cls.general_proposition
 
@@ -228,6 +237,32 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             cls.international_scholarship,
         ]
 
+        cls.first_diplomatic_post = DiplomaticPost._from_openapi_data(
+            code=1,
+            name_fr="Bruxelles",
+            name_en="Brussels",
+            countries_iso_codes=['BE', 'FR'],
+            email='brussels@example.be',
+        )
+
+        cls.second_diplomatic_post = DiplomaticPost._from_openapi_data(
+            code=2,
+            name_fr="Paris",
+            name_en="Paris",
+            countries_iso_codes=['FR'],
+            email='paris@example.fr',
+        )
+
+        cls.third_diplomatic_post = DiplomaticPost._from_openapi_data(
+            code=3,
+            name_fr="Londres",
+            name_en="London",
+            countries_iso_codes=['EN'],
+            email='london@example.en',
+        )
+
+        cls.mock_diplomatic_posts = [cls.first_diplomatic_post, cls.second_diplomatic_post, cls.third_diplomatic_post]
+
         cls.general_proposition = Mock(
             uuid=cls.proposition_uuid,
             formation={
@@ -268,6 +303,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 cls.first_question_uuid: 'My answer',
             },
             documents_additionnels=['uuid-documents-additionnels'],
+            poste_diplomatique=None,
         )
         cls.bachelor_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -294,6 +330,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 cls.first_question_uuid: 'My answer',
             },
             documents_additionnels=['uuid-documents-additionnels'],
+            poste_diplomatique=None,
         )
 
         cls.continuing_proposition_dict = {
@@ -585,12 +622,17 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_campus_api.return_value.list_campus.side_effect = self.get_campuses
         self.addCleanup(campus_api_patcher.stop)
 
+        # Mock country sdk api
         countries_api_patcher = patch("osis_reference_sdk.api.countries_api.CountriesApi")
         self.mock_countries_api = countries_api_patcher.start()
-
-        # Mock country sdk api
         self.mock_countries_api.return_value.countries_list.side_effect = self.get_countries
         self.addCleanup(countries_api_patcher.stop)
+
+        # Mock diplomatic post sdk api
+        diplomatic_post_api_patcher = patch("osis_admission_sdk.api.diplomatic_post_api.DiplomaticPostApi")
+        self.mock_diplomatic_post_api = diplomatic_post_api_patcher.start()
+        self.mock_diplomatic_post_api.return_value.retrieve_diplomatic_post.side_effect = self.get_diplomatic_post
+        self.addCleanup(diplomatic_post_api_patcher.stop)
 
         # Mock document api
         patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')

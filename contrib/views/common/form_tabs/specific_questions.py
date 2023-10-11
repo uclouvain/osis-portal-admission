@@ -29,20 +29,25 @@ from django.views.generic import FormView
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
-from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.additional_information import ContinuingSpecificQuestionForm, GeneralSpecificQuestionForm
 from admission.contrib.forms.pool_questions import PoolQuestionsForm
-from admission.contrib.views.mixins import LoadDossierViewMixin
+from admission.contrib.views.common.detail_tabs.specific_questions import (
+    SpecificQuestionViewMixin,
+)
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
 
 __all__ = ['SpecificQuestionsFormView']
 
 
-class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormMixinWithSpecificQuestions, FormView):
+class SpecificQuestionsFormView(
+    SpecificQuestionViewMixin,
+    WebServiceFormMixin,
+    FormMixinWithSpecificQuestions,
+    FormView,
+):
     template_name = 'admission/forms/specific_question.html'
-    tab_of_specific_questions = Onglets.INFORMATIONS_ADDITIONNELLES.name
     service_mapping = {
         'general-education': AdmissionPropositionService.update_general_specific_question,
         'continuing-education': AdmissionPropositionService.update_continuing_specific_question,
@@ -93,13 +98,19 @@ class SpecificQuestionsFormView(LoadDossierViewMixin, WebServiceFormMixin, FormM
             )
             if self.is_continuing
             else GeneralSpecificQuestionForm(
-                self.request.POST or None,
+                display_visa=self.display_visa_question,
+                residential_country=self.identification.pays_residence if self.identification else '',
+                data=self.request.POST or None,
                 form_item_configurations=form_kwargs['form_item_configurations'],
                 initial={
                     'documents_additionnels': self.admission.documents_additionnels,
                     'reponses_questions_specifiques': self.admission.reponses_questions_specifiques,
+                    'poste_diplomatique': self.admission.poste_diplomatique.code
+                    if self.admission.poste_diplomatique
+                    else None,
                 },
                 prefix='specific_questions',
+                person=self.person,
             )
         ]
         if self.display_pool_questions_form and self.pool_questions:

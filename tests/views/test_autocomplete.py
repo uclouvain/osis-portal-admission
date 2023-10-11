@@ -30,6 +30,11 @@ from unittest.mock import ANY, Mock, patch
 
 from django.test import TestCase
 from django.urls import reverse
+from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
+from osis_admission_sdk.model.scholarship import Scholarship
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
@@ -49,10 +54,6 @@ from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType, TypeFormation
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.scholarship import Scholarship
 
 DEFAULT_API_PARAMS = {
     'accept_language': ANY,
@@ -116,7 +117,7 @@ class AutocompleteTestCase(TestCase):
             },
             {
                 'id': None,
-                'text': '----------',
+                'text': '<hr>',
             },
             {
                 'id': 'FR',
@@ -867,6 +868,80 @@ class AutocompleteTestCase(TestCase):
                 'id': self.fourth_superior_school_uuid,
                 'text': 'Superior 4 <span class="school-address">Boulevard du Triomphe 4, 1000 Bruxelles</span>',
                 'type': StudyType.NON_UNIVERSITY.name,
+            },
+        ]
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
+
+    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    def test_autocomplete_diplomatic_post(self, api):
+        self.first_diplomatic_post_code = 1
+        self.second_diplomatic_post_code = 2
+        self.third_diplomatic_post_code = 3
+
+        api.return_value.list_diplomatic_posts.return_value = {
+            'results': [
+                DiplomaticPost._new_from_openapi_data(
+                    code=self.first_diplomatic_post_code,
+                    name_fr='Marseille',
+                    name_en='Marseille',
+                    email='marseille@example.be',
+                    countries_iso_codes=['FR'],
+                ),
+                DiplomaticPost._new_from_openapi_data(
+                    code=self.second_diplomatic_post_code,
+                    name_fr='Paris',
+                    name_en='Paris',
+                    email='paris@example.be',
+                    countries_iso_codes=['FR', 'GF'],
+                ),
+                DiplomaticPost._new_from_openapi_data(
+                    code=self.third_diplomatic_post_code,
+                    name_fr='Londres',
+                    name_en='London',
+                    email='london@example.be',
+                    countries_iso_codes=['GB'],
+                ),
+            ]
+        }
+        url = reverse('admission:autocomplete:diplomatic-post')
+        response = self.client.get(url, {'q': 'a'})
+
+        expected = [
+            {
+                'id': self.first_diplomatic_post_code,
+                'text': 'Marseille',
+            },
+            {
+                'id': self.second_diplomatic_post_code,
+                'text': 'Paris',
+            },
+            {
+                'id': self.third_diplomatic_post_code,
+                'text': 'Londres',
+            },
+        ]
+        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
+
+        url = reverse('admission:autocomplete:diplomatic-post')
+
+        response = self.client.get(url, {'q': 'a', 'forward': json.dumps({'residential_country': 'FR'})})
+
+        expected = [
+            {
+                'id': self.first_diplomatic_post_code,
+                'text': 'Marseille',
+            },
+            {
+                'id': self.second_diplomatic_post_code,
+                'text': 'Paris',
+            },
+            {
+                'id': None,
+                'text': '<hr>',
+            },
+            {
+                'id': self.third_diplomatic_post_code,
+                'text': 'Londres',
             },
         ]
         self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})

@@ -760,3 +760,10 @@ def edit_external_member_form(context, membre: 'SupervisionDTOPromoteur'):
         person=context['user'].person,
         initial=initial,
     )
+
+
+@register.filter
+def diplomatic_post_name(diplomatic_post):
+    """Get the name of a diplomatic post"""
+    if diplomatic_post:
+        return getattr(diplomatic_post, 'nom_francais' if get_language() == settings.LANGUAGE_CODE else 'nom_anglais')

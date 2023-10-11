@@ -98,6 +98,9 @@ class DoctorateAdmissionAddressForm(forms.Form):
         label=_("Country"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
+            attrs={
+                "data-html": True,
+            },
         ),
     )
     # Enable autocompletion only for Belgium postal codes

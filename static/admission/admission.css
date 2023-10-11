@@ -346,3 +346,8 @@ body, html {
 .select2-results__option--highlighted[aria-selected] .training-acronym {
   color: #eee;
 }
+
+.select2-results hr {
+  padding: 0;
+  margin: 0;
+}
