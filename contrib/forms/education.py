@@ -279,6 +279,9 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:country",
             forward=[forward.Const(True, 'exclude_be')],
+            attrs={
+                "data-html": True,
+            },
         ),
     )
     high_school_transcript = FileUploadField(

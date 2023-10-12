@@ -84,6 +84,13 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def retrieve_general_identification(cls, person: Person, uuid_proposition: str):
+        return APIClient().retrieve_general_identification(
+            uuid=uuid_proposition,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def create_general_education_proposition(cls, person: Person, data):
         return APIClient().create_general_training_choice(
             initier_proposition_generale_command=data,
@@ -498,6 +505,7 @@ class FormationGeneraleBusinessException(Enum):
     MotifRefusFacultaireNonSpecifieException = "FORMATION-GENERALE-17"
     InformationsAcceptationFacultaireNonSpecifieesException = "FORMATION-GENERALE-18"
     PaiementDejaRealiseException = "FORMATION-GENERALE-19"
+    InformationsVisaNonCompleteesException = "FORMATION-GENERALE-20"
 
 
 class FormationContinueBusinessException(Enum):
@@ -612,6 +620,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.ModificationInscriptionExterneNonConfirmeeException,
         GlobalPropositionBusinessException.ResidenceAuSensDuDecretNonRenseigneeException,
         FormationContinueBusinessException.InformationsComplementairesNonRenseigneesException,
+        FormationGeneraleBusinessException.InformationsVisaNonCompleteesException,
     },
     'documents': set(),
     'jury-preparation': set(),

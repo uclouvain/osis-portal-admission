@@ -35,6 +35,7 @@ from django.utils.translation import get_language, gettext_lazy as _, gettext
 
 from admission.contrib.enums.diploma import StudyType
 from admission.services.campus import AdmissionCampusService
+from admission.services.diplomatic_post import AdmissionDiplomaticPostService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import (
     CountriesService,
@@ -69,6 +70,23 @@ def get_country_initial_choices(iso_code=None, person=None, loaded_country=None)
     return EMPTY_CHOICE + (
         (country.iso_code, country.name if get_language() == settings.LANGUAGE_CODE else country.name_en),
     )
+
+
+def get_diplomatic_post_initial_choices(diplomatic_post_code, person, loaded_post=None):
+    """Return the unique initial choice for a diplomatic post."""
+    if not diplomatic_post_code:
+        return EMPTY_CHOICE
+
+    post = (
+        loaded_post
+        if loaded_post
+        else AdmissionDiplomaticPostService.get_diplomatic_post(
+            code=diplomatic_post_code,
+            person=person,
+        )
+    )
+
+    return EMPTY_CHOICE + ((post.code, post.name_fr if get_language() == settings.LANGUAGE_CODE else post.name_en),)
 
 
 def get_year_choices(min_year=1920, max_year=None):

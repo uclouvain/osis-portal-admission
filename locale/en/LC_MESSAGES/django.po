@@ -752,6 +752,9 @@ msgstr ""
 msgid "Communication attestation"
 msgstr ""
 
+msgid "Competent diplomatic post"
+msgstr ""
+
 msgid "Complementary training"
 msgstr ""
 
@@ -2050,6 +2053,15 @@ msgid ""
 "this late application."
 msgstr ""
 
+msgid ""
+"On the basis of the information you have provided, you will need to apply "
+"for a student visa if your application to attend our university is accepted "
+"(i.e. if UCLouvain sends you an \"enrolment authorisation\"). Please read "
+"the student <a href=\"https://uclouvain.be/en/study/inscriptions/welcome-to-"
+"international-students.html\" target=\"_blank\"> visa </a> application "
+"information."
+msgstr ""
+
 msgid "Online"
 msgstr ""
 
@@ -2928,7 +2940,7 @@ msgstr ""
 
 msgid ""
 "This choice will define the language of communication throughout your "
-"admission process."
+"admission process. This will also change the interface language."
 msgstr ""
 
 msgid "This comment will be visible only to administrators."
@@ -3124,6 +3136,9 @@ msgid "View non-academic activity"
 msgstr ""
 
 msgid "View summary"
+msgstr ""
+
+msgid "Visa"
 msgstr ""
 
 msgid "Volunteering"

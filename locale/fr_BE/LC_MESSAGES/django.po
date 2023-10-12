@@ -861,6 +861,9 @@ msgstr "Engagement et déclaration"
 msgid "Communication attestation"
 msgstr "Attestation de communication"
 
+msgid "Competent diplomatic post"
+msgstr "Poste diplomatique compétent"
+
 msgid "Complementary training"
 msgstr "Formation complémentaire"
 
@@ -2333,6 +2336,21 @@ msgstr ""
 "tard pour le %(date)s. Le jury d'admission se réserve le droit d'accepter ou "
 "de refuser cette demande d'inscription tardive."
 
+msgid ""
+"On the basis of the information you have provided, you will need to apply "
+"for a student visa if your application to attend our university is accepted "
+"(i.e. if UCLouvain sends you an \"enrolment authorisation\"). Please read "
+"the student <a href=\"https://uclouvain.be/en/study/inscriptions/welcome-to-"
+"international-students.html\" target=\"_blank\"> visa </a> application "
+"information."
+msgstr ""
+"Sur la base des informations que vous avez précédemment complétées, vous "
+"êtes concerné·e par la demande de visa si vous deviez obtenir une "
+"autorisation d’inscription. Nous vous invitons à prendre connaissance des "
+"informations relatives à la demande <a href=\"https://uclouvain.be/fr/"
+"etudier/inscriptions/bienvenue-aux-etudiants-internationaux-et-aux-"
+"etudiantes-internationales.html\" target=\"_blank\"> visa </a>."
+
 msgid "Online"
 msgstr "En ligne"
 
@@ -3300,10 +3318,10 @@ msgstr "Cette activité et ses potentielles sous-activités seront supprimées"
 
 msgid ""
 "This choice will define the language of communication throughout your "
-"admission process."
+"admission process. This will also change the interface language."
 msgstr ""
 "Ce choix définira la langue de communication tout au long de votre parcours "
-"d'admission."
+"d'admission. Il modifiera également la langue de l'interface."
 
 msgid "This comment will be visible only to administrators."
 msgstr "Ce commentaire ne sera visible que par les gestionnaires."
@@ -3521,6 +3539,9 @@ msgstr "Consultation d'une activité non-académique"
 
 msgid "View summary"
 msgstr "Visualiser le résumé"
+
+msgid "Visa"
+msgstr "Visa"
 
 msgid "Volunteering"
 msgstr "Volontariat"
