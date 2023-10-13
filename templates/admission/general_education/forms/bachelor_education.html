@@ -254,6 +254,20 @@
 
           const context = $('.osis-form');
 
+          {# Reset the institute when the community is changed #}
+          const community = context.find('select[name=belgian_diploma-community]');
+          const institute = context.find('select[name=belgian_diploma-institute]');
+          const hasOtherInstitute = context.find('input[name=belgian_diploma-other_institute]');
+          const otherInstituteName = context.find('input[name=belgian_diploma-other_institute_name]');
+          const otherInstituteAddress = context.find('input[name=belgian_diploma-other_institute_address]');
+
+          community.on('select2:select', function () {
+              institute.val(null).change();
+              hasOtherInstitute.prop('checked', false).change();
+              otherInstituteName.val('').change();
+              otherInstituteAddress.val('').change();
+          });
+
           const education = context.find('select[name=belgian_diploma-educational_type]');
           const otherEducation = context.find('input[name=belgian_diploma-educational_other]');
 
