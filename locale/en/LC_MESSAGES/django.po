@@ -704,9 +704,6 @@ msgstr ""
 msgid "Choose from the following"
 msgstr ""
 
-msgid "Choose secondary education type"
-msgstr ""
-
 msgid "Choose your course"
 msgstr ""
 
@@ -1584,9 +1581,6 @@ msgid ""
 "defense preparation below before submitting the jury proposition."
 msgstr ""
 
-msgid "If other education type, specify"
-msgstr ""
-
 msgid "If other language regime, specify"
 msgstr ""
 
@@ -1953,6 +1947,9 @@ msgstr "Not invited to sign"
 msgid "Name in the language of the manifestation"
 msgstr ""
 
+msgid "Name of the education type"
+msgstr ""
+
 msgid "National baccalaureate (or state diploma, etc.)"
 msgstr ""
 
@@ -2087,6 +2084,9 @@ msgid "Other address"
 msgstr ""
 
 msgid "Other documents relating to joint supervision"
+msgstr ""
+
+msgid "Other education type"
 msgstr ""
 
 msgid "Other given names"

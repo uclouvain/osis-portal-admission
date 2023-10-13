@@ -130,10 +130,13 @@
     {% panel _("Belgian diploma") id="belgian-diploma" %}
       {% bootstrap_field belgian_diploma_form.community form_group_class="form-group required_field" %}
 
-      <div id="education-type" class="row">
-        {% bootstrap_field belgian_diploma_form.educational_type form_group_class="form-group required_field col-md-6" %}
-        <div id="educational-other">
-          {% bootstrap_field belgian_diploma_form.educational_other placeholder="" form_group_class="form-group col-md-6" %}
+      <div id="education-type">
+        <div class="row vertical-align">
+          {% bootstrap_field belgian_diploma_form.educational_type form_group_class="form-group required_field col-md-6" %}
+          {% bootstrap_field belgian_diploma_form.has_other_educational_type form_group_class="form-group col-md-6" %}
+        </div>
+        <div class="row" id="educational-other">
+          {% bootstrap_field belgian_diploma_form.educational_other placeholder="" form_group_class="form-group required_field col-md-6" %}
         </div>
       </div>
 
@@ -244,6 +247,11 @@
               'select[name=belgian_diploma-community]': { values: ['FRENCH_SPEAKING'] },
           });
 
+          $('#id_belgian_diploma-educational_type').dependsOn({
+              '#id_belgian_diploma-has_other_educational_type': { checked: false },
+          }, { hide: false, valueOnDisable: null,});
+
+
           const context = $('.osis-form');
 
           const education = context.find('select[name=belgian_diploma-educational_type]');
@@ -255,7 +263,7 @@
           });
 
           $('#educational-other').dependsOn({
-              'select[name=belgian_diploma-educational_type]': { values: ['', null] },
+              '#id_belgian_diploma-has_other_educational_type': { checked: true },
           });
 
           $('#other_institute').dependsOn({

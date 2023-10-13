@@ -813,9 +813,6 @@ msgstr "Choisir une autre formation"
 msgid "Choose from the following"
 msgstr "Choisissez parmi les propositions suivantes"
 
-msgid "Choose secondary education type"
-msgstr "Veuillez renseigner le type d'enseignement"
-
 msgid "Choose your course"
 msgstr "Formation souhaitée"
 
@@ -1815,9 +1812,6 @@ msgstr ""
 "doctorale et compléter les modalités de défenses ci-dessous avant de "
 "soumettre la proposition de jury"
 
-msgid "If other education type, specify"
-msgstr "Si autre type d'enseignement, précisez"
-
 msgid "If other language regime, specify"
 msgstr "Si autre régime linguistique, précisez"
 
@@ -2225,6 +2219,9 @@ msgstr "Pas encore invité à signer"
 msgid "Name in the language of the manifestation"
 msgstr "Nom dans la langue de la manifestation"
 
+msgid "Name of the education type"
+msgstr "Intitulé du type d'enseignement"
+
 msgid "National baccalaureate (or state diploma, etc.)"
 msgstr "Baccalauréat national (ou diplôme d'état, ...)"
 
@@ -2377,6 +2374,9 @@ msgstr "Une autre adresse"
 
 msgid "Other documents relating to joint supervision"
 msgstr "Autres documents relatifs à la cotutelle"
+
+msgid "Other education type"
+msgstr "Autre type d'enseignement"
 
 msgid "Other given names"
 msgstr "Autres prénoms"
