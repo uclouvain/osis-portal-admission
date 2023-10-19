@@ -27,7 +27,7 @@
 import json
 from typing import Optional
 
-from dal import autocomplete, forward
+from dal import forward
 from django import forms
 from django.conf import settings
 from django.shortcuts import resolve_url
@@ -55,6 +55,7 @@ from admission.contrib.forms import (
     EMPTY_VALUE,
     RadioBooleanField,
     get_campus_choices,
+    autocomplete,
 )
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.contrib.forms.specific_question import ConfigurableFormMixin

@@ -23,9 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
-
-from dal import autocomplete
 from django import forms
 from django.conf import settings
 from django.core import validators
@@ -43,6 +40,7 @@ from admission.contrib.forms import (
     AdmissionFileUploadField as FileUploadField,
     IMAGE_MIME_TYPES,
     get_year_choices,
+    autocomplete,
 )
 from admission.utils import force_title
 

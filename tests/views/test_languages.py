@@ -151,7 +151,7 @@ class LanguagesTestCase(TestCase):
     def test_create(self):
         response = self.client.get(self.create_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
         self.mock_person_api.return_value.list_language_knowledges.assert_not_called()
         self.mock_proposition_api.assert_not_called()
         self.assertContains(
@@ -252,7 +252,7 @@ class LanguagesTestCase(TestCase):
     def test_detail(self):
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "Français")
         self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
         self.assertIn('admission', response.context)

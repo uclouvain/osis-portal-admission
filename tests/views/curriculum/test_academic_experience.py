@@ -63,7 +63,7 @@ class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
 
         # Check that the right API calls are done
         self.mock_person_api.return_value.retrieve_educational_experience_admission.assert_called()

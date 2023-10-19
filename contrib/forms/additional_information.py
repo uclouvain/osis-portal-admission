@@ -23,14 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete
 from dal.forward import Const
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField, get_diplomatic_post_initial_choices
+from admission.contrib.forms import (
+    AdmissionFileUploadField as FileUploadField,
+    get_diplomatic_post_initial_choices,
+    autocomplete,
+)
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 

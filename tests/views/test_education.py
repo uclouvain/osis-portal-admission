@@ -246,7 +246,7 @@ class EducationTestCase(BaseEducationTestCase):
 
         # Check response status
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
 
         # Check api calls
         self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(
@@ -335,7 +335,7 @@ class EducationTestCase(BaseEducationTestCase):
 
         # Check response status
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
 
         # Check api calls
         self.mock_person_api.return_value.retrieve_high_school_diploma.assert_not_called()

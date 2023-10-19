@@ -33,7 +33,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import get_language, gettext_lazy as _, gettext
 
-from admission.contrib.enums.diploma import StudyType
 from admission.services.campus import AdmissionCampusService
 from admission.services.diplomatic_post import AdmissionDiplomaticPostService
 from admission.services.organisation import EntitiesService
