@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete, forward
+from dal import forward
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
@@ -39,6 +39,7 @@ from admission.contrib.enums.secondary_studies import (
     GotDiploma,
 )
 from admission.contrib.forms import (
+    autocomplete,
     get_country_initial_choices,
     get_high_school_initial_choices,
     get_language_initial_choices,

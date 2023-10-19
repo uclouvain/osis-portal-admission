@@ -283,340 +283,355 @@
           const firstYearWithECTSBe = '{{ FIRST_YEAR_WITH_ECTS_BE }}';
           const linguisticRegimesWithoutTranslation = {{ linguistic_regimes_without_translation|safe }}
 
-          {# Indicate if the initial country is a UE country #}
-          const countriesData = country.select2('data');
+          const fieldsThatMustBeInitialized = new Set(
+              [
+                   'id_base_form-country',
+                   'id_base_form-end',
+                   'id_base_form-institute',
+              ]
+          );
 
-          if (countriesData.length) {
-              {% if base_form.fields.country.is_ue_country %}
-                  countriesData[0].european_union = true;
-              {% else %}
-                  countriesData[0].european_union = false;
-              {% endif %}
-          }
+         $(document).on('dal-element-initialized', function (e) {
+             // We need to wait that select2 has been initialized as the display depends on some fields
+             if (!fieldsThatMustBeInitialized.delete(e.detail.element.id) || fieldsThatMustBeInitialized.size > 0) {
+                 return;
+             }
 
-          const is_ue_country = () => {
-              const countryData = country.select2('data');
-              return countryData.length > 0 && countryData[0].european_union;
-          }
+             {# Indicate if the initial country is a UE country #}
+             const countriesData = country.select2('data');
 
-          function manageTranslatedFields(countryValue, linguisticRegimeValue) {
-              {# Display the translated fields for the foreign countries whose the linguistic regime is not managed #}
-              const translatedFields = $('.translated-fields');
-              if (
-                  countryValue && countryValue !== beIsoCode && linguisticRegimeValue
-                  && !linguisticRegimesWithoutTranslation.includes(linguisticRegimeValue)
-              ) {
-                  translatedFields.removeClass('hidden');
-                  translatedFields.find('input').prop('disabled', false);
-              } else {
-                  translatedFields.addClass('hidden');
-                  translatedFields.find('input').prop('disabled', true);
-              }
-          }
+             if (countriesData.length) {
+                 {% if base_form.fields.country.is_ue_country %}
+                     countriesData[0].european_union = true;
+                 {% else %}
+                     countriesData[0].european_union = false;
+                 {% endif %}
+             }
 
-          function setEvaluationTypeField(countryValue) {
-              if (countryValue) {
-                  evaluationType.val(is_ue_country() ? 'ECTS_CREDITS' : '');
-              }
-              evaluationType.change();
-          }
+             const is_ue_country = () => {
+                 const countryData = country.select2('data');
+                 return countryData.length > 0 && countryData[0].european_union;
+             }
 
-          function manageCreditsFields(evaluationTypeValue, countryValue) {
-              if (countryValue === beIsoCode) {
-                  {# Belgian -> Disable the credit inputs according to the year #}
-                  const years = $('#formset-container > .year-form');
-                  years.each(function() {
-                      const creditsInputs = $(this).find('.credit-input input');
-                      const currentYear = parseInt($(this).find('input[type=hidden]').val());
-                      if (currentYear < firstYearWithECTSBe) {
-                        creditsInputs.val('').prop('readonly', true);
-                      } else {
-                        creditsInputs.prop('readonly', false);
-                      }
-                  })
-              } else {
-                  {# Foreign country -> Disable the value according to the value of the evaluation type #}
-                  const creditsInputs = $('.credit-input input');
-                  if (evaluationTypeValue !== 'ECTS_CREDITS' && evaluationTypeValue !== 'NON_EUROPEAN_CREDITS') {
-                        creditsInputs.val('').prop('readonly', true);
-                      } else {
-                        creditsInputs.prop('readonly', false);
-                  }
-              }
-          }
+             function manageTranslatedFields(countryValue, linguisticRegimeValue) {
+                 {# Display the translated fields for the foreign countries whose the linguistic regime is not managed #}
+                 const translatedFields = $('.translated-fields');
+                 if (
+                     countryValue && countryValue !== beIsoCode && linguisticRegimeValue
+                     && !linguisticRegimesWithoutTranslation.includes(linguisticRegimeValue)
+                 ) {
+                     translatedFields.removeClass('hidden');
+                     translatedFields.find('input').prop('disabled', false);
+                 } else {
+                     translatedFields.addClass('hidden');
+                     translatedFields.find('input').prop('disabled', true);
+                 }
+             }
 
-          function formatEmptyFormContent(emptyFormContent, year) {
-              return emptyFormContent.replace(
-                  /{{FORM_SET_PREFIX}}|{{FOLLOWING_FORM_SET_PREFIX}}|{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}|value="WAITING_RESULT"/g,
-                  function(matched) {
-                  switch (matched) {
-                      {# Dynamic part of the form identifier corresponding to the first year of the academic year #}
-                      case '{{FORM_SET_PREFIX}}':
-                          return year;
-                      {# Used to display the second year of the academic year #}
-                      case '{{FOLLOWING_FORM_SET_PREFIX}}':
-                          return year + 1;
-                      {# We need to prevent the uploader component of osis-document from being initialized when #}
-                      {# the page is loaded so that the events remain attached when the form is copied. The class #}
-                      {# identifying the component is replaced in the default form and will be reset in the #}
-                      {# duplicated form allowing osis-document to detect the file fields in this new form #}
-                      {# and set up the appropriate VueJS components.#}
-                      case '{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}':
-                          return '{{OSIS_DOCUMENT_UPLOADER_CLASS}}';
-                      case 'value="WAITING_RESULT"':
-                          {# The waiting result option must not be selectable for past years #}
-                          return year < currentAcademicYear ? 'value="WAITING_RESULT" disabled class="hidden"' : matched
-                      default:
-                          return '';
-                  }
-              })
-          }
+             function setEvaluationTypeField(countryValue) {
+                 if (countryValue) {
+                     evaluationType.val(is_ue_country() ? 'ECTS_CREDITS' : '');
+                 }
+                 evaluationType.change();
+             }
 
-          {# Dynamically update the formset depending on the base form values #}
-          $([startSelect[0], endSelect[0]]).change(function() {
-              startYear = parseInt(startSelect.val());
-              const endYear = parseInt(endSelect.val());
-              const nbYearsOfTheExperience = endYear - startYear + 1;
+             function manageCreditsFields(evaluationTypeValue, countryValue) {
+                 if (countryValue === beIsoCode) {
+                     {# Belgian -> Disable the credit inputs according to the year #}
+                     const years = $('#formset-container > .year-form');
+                     years.each(function() {
+                         const creditsInputs = $(this).find('.credit-input input');
+                         const currentYear = parseInt($(this).find('input[type=hidden]').val());
+                         if (currentYear < firstYearWithECTSBe) {
+                           creditsInputs.val('').prop('readonly', true);
+                         } else {
+                           creditsInputs.prop('readonly', false);
+                         }
+                     })
+                 } else {
+                     {# Foreign country -> Disable the value according to the value of the evaluation type #}
+                     const creditsInputs = $('.credit-input input');
+                     if (evaluationTypeValue !== 'ECTS_CREDITS' && evaluationTypeValue !== 'NON_EUROPEAN_CREDITS') {
+                           creditsInputs.val('').prop('readonly', true);
+                         } else {
+                           creditsInputs.prop('readonly', false);
+                     }
+                 }
+             }
 
-              const allYears = $('#formset-container > .year-form');
-              const visibleYears = allYears.filter(':not(.hidden)');
+             function formatEmptyFormContent(emptyFormContent, year) {
+                 return emptyFormContent.replace(
+                     /{{FORM_SET_PREFIX}}|{{FOLLOWING_FORM_SET_PREFIX}}|{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}|value="WAITING_RESULT"/g,
+                     function(matched) {
+                     switch (matched) {
+                         {# Dynamic part of the form identifier corresponding to the first year of the academic year #}
+                         case '{{FORM_SET_PREFIX}}':
+                             return year;
+                         {# Used to display the second year of the academic year #}
+                         case '{{FOLLOWING_FORM_SET_PREFIX}}':
+                             return year + 1;
+                         {# We need to prevent the uploader component of osis-document from being initialized when #}
+                         {# the page is loaded so that the events remain attached when the form is copied. The class #}
+                         {# identifying the component is replaced in the default form and will be reset in the #}
+                         {# duplicated form allowing osis-document to detect the file fields in this new form #}
+                         {# and set up the appropriate VueJS components.#}
+                         case '{{OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX}}':
+                             return '{{OSIS_DOCUMENT_UPLOADER_CLASS}}';
+                         case 'value="WAITING_RESULT"':
+                             {# The waiting result option must not be selectable for past years #}
+                             return year < currentAcademicYear ? 'value="WAITING_RESULT" disabled class="hidden"' : matched
+                         default:
+                             return '';
+                     }
+                 })
+             }
 
-              {# Hide all the visible years if the number of years is invalid or is zero #}
-              if (!(nbYearsOfTheExperience > 0)) {
-                  visibleYears.addClass('hidden');
-                  emptyFormSet.removeClass('hidden')
-                  totalFormInput.val(0);
-              } else {
-                  emptyFormSet.addClass('hidden')
-                  const emptyFormContent = emptyForm.html();
-                  const yearsToDisplay = new Set();
-                  let insertAfterElement = tableHeader;
+             {# Dynamically update the formset depending on the base form values #}
+             $([startSelect[0], endSelect[0]]).change(function() {
+                 startYear = parseInt(startSelect.val());
+                 const endYear = parseInt(endSelect.val());
+                 const nbYearsOfTheExperience = endYear - startYear + 1;
 
-                  {# Display the missing year forms (just show it or create it if necessary) #}
-                  for(let year = endYear; year >= startYear; year -= 1) {
-                      const id_form_to_display = `year_form_${year}`;
-                      yearsToDisplay.add(id_form_to_display);
-                      const form = allYears.filter('#' + id_form_to_display);
-                      if (form.length) {
-                          form.removeClass('hidden');
-                          insertAfterElement = form;
-                      } else {
-                          insertAfterElement = $(formatEmptyFormContent(emptyFormContent, year)).insertAfter(insertAfterElement);
-                      }
-                  }
+                 const allYears = $('#formset-container > .year-form');
+                 const visibleYears = allYears.filter(':not(.hidden)');
 
-                  {# Hide the excess years #}
-                  const yearsToHide = visibleYears.filter(function() { return !yearsToDisplay.has($(this).attr('id'))});
-                  yearsToHide.addClass('hidden');
+                 {# Hide all the visible years if the number of years is invalid or is zero #}
+                 if (!(nbYearsOfTheExperience > 0)) {
+                     visibleYears.addClass('hidden');
+                     emptyFormSet.removeClass('hidden')
+                     totalFormInput.val(0);
+                 } else {
+                     emptyFormSet.addClass('hidden')
+                     const emptyFormContent = emptyForm.html();
+                     const yearsToDisplay = new Set();
+                     let insertAfterElement = tableHeader;
 
-                  {# Hide the switchs of the first and the last years #}
-                  $('.year-form .switch').removeClass('hidden');
-                  const switchToHide = $(`#year_form_${startYear} .switch, #year_form_${endYear} .switch`);
-                  switchToHide.addClass('hidden');
-                  switchToHide.find('input').prop('checked', true).change();
+                     {# Display the missing year forms (just show it or create it if necessary) #}
+                     for(let year = endYear; year >= startYear; year -= 1) {
+                         const id_form_to_display = `year_form_${year}`;
+                         yearsToDisplay.add(id_form_to_display);
+                         const form = allYears.filter('#' + id_form_to_display);
+                         if (form.length) {
+                             form.removeClass('hidden');
+                             insertAfterElement = form;
+                         } else {
+                             insertAfterElement = $(formatEmptyFormContent(emptyFormContent, year)).insertAfter(insertAfterElement);
+                         }
+                     }
 
-                  totalFormInput.val(nbYearsOfTheExperience);
-              }
-              {# Update fields depending on the fields of the year forms #}
-              const countryValue = country.val();
-              if (countryValue === beIsoCode) manageCreditsFields(evaluationType.val(), countryValue);
-          });
+                     {# Hide the excess years #}
+                     const yearsToHide = visibleYears.filter(function() { return !yearsToDisplay.has($(this).attr('id'))});
+                     yearsToHide.addClass('hidden');
 
-          endSelect.change();
+                     {# Hide the switchs of the first and the last years #}
+                     $('.year-form .switch').removeClass('hidden');
+                     const switchToHide = $(`#year_form_${startYear} .switch, #year_form_${endYear} .switch`);
+                     switchToHide.addClass('hidden');
+                     switchToHide.find('input').prop('checked', true).change();
 
-          {# Display / hide the fields depending on the values of other fields #}
+                     totalFormInput.val(nbYearsOfTheExperience);
+                 }
+                 {# Update fields depending on the fields of the year forms #}
+                 const countryValue = country.val();
+                 if (countryValue === beIsoCode) manageCreditsFields(evaluationType.val(), countryValue);
+             });
 
-          {# Institute fields #}
-          {% if not base_form.institute.field.disabled %}
-            $('#id_base_form-institute').dependsOn({
-                '#id_base_form-other_institute': { checked: false },
-                '#id_base_form-country': { is_truthy }
-            }, { hide: false, valueOnDisable: null,});
-          {% endif %}
+             endSelect.change();
 
-          $('#other-institute').dependsOn({
-              '#id_base_form-other_institute': { checked: true },
-          });
+             {# Display / hide the fields depending on the values of other fields #}
 
-          {# Program fields #}
-          $('#belgian-program').dependsOn({
-              '#id_base_form-country': { values: [beIsoCode] },
-          });
+             {# Institute fields #}
+             {% if not base_form.institute.field.disabled %}
+               $('#id_base_form-institute').dependsOn({
+                   '#id_base_form-other_institute': { checked: false },
+                   '#id_base_form-country': { is_truthy }
+               }, { hide: false, valueOnDisable: null,});
+             {% endif %}
 
-          {% if not base_form.program.field.disabled %}
-            $('#id_base_form-program').dependsOn({
-                '#id_base_form-other_program': { checked: false },
-            }, { hide: false, });
-          {% endif %}
+             $('#other-institute').dependsOn({
+                 '#id_base_form-other_institute': { checked: true },
+             });
 
-          $('#other-program').dependsOn({
-              '#id_base_form-country': { values: [beIsoCode] },
-              '#id_base_form-other_program': { checked: true },
-          }).or({
-              '#id_base_form-country': { is_truthy, not: [beIsoCode] },
-          });
+             {# Program fields #}
+             $('#belgian-program').dependsOn({
+                 '#id_base_form-country': { values: [beIsoCode] },
+             });
 
-          {# Evaluation system field #}
-          evaluationType.dependsOn({
-              '#id_base_form-country': { is_truthy, not: [beIsoCode] },
-          }, {
-              disable: false,
-          });
+             {% if not base_form.program.field.disabled %}
+               $('#id_base_form-program').dependsOn({
+                   '#id_base_form-other_program': { checked: false },
+               }, { hide: false, });
+             {% endif %}
 
-          country.change(function() {
-              setEvaluationTypeField(this.value);
+             $('#other-program').dependsOn({
+                 '#id_base_form-country': { values: [beIsoCode] },
+                 '#id_base_form-other_program': { checked: true },
+             }).or({
+                 '#id_base_form-country': { is_truthy, not: [beIsoCode] },
+             });
 
-              {# Translated fields #}
-              manageTranslatedFields(this.value, linguisticRegime.val());
+             {# Evaluation system field #}
+             evaluationType.dependsOn({
+                 '#id_base_form-country': { is_truthy, not: [beIsoCode] },
+             }, {
+                 disable: false,
+             });
 
-              $('#id_base_form-institute').val(null).change();
-          });
+             country.change(function() {
+                 setEvaluationTypeField(this.value);
 
-          {# Credits field #}
-          evaluationType.change(function() {
-              manageCreditsFields(this.value, country.val());
-          }).change();
+                 {# Translated fields #}
+                 manageTranslatedFields(this.value, linguisticRegime.val());
 
-          {# Foreign fields #}
-          $('.foreign-field').dependsOn({
-              '#id_base_form-country': { is_truthy, not: [beIsoCode] },
-          });
+                 $('#id_base_form-institute').val(null).change();
+             });
 
-          {# Translated fields #}
-          linguisticRegime.change(function() {
-              manageTranslatedFields(country.val(), this.value);
-          }).change();
+             {# Credits field #}
+             evaluationType.change(function() {
+                 manageCreditsFields(this.value, country.val());
+             }).change();
+
+             {# Foreign fields #}
+             $('.foreign-field').dependsOn({
+                 '#id_base_form-country': { is_truthy, not: [beIsoCode] },
+             });
+
+             {# Translated fields #}
+             linguisticRegime.change(function() {
+                 manageTranslatedFields(country.val(), this.value);
+             }).change();
 
 
-          {# Display the right badges at page initialization #}
-          const initializeYearlyTranscripts = function() {
-            const allYears = $('#formset-container > .year-form');
+             {# Display the right badges at page initialization #}
+             const initializeYearlyTranscripts = function() {
+                 const allYears = $('#formset-container > .year-form');
 
-            allYears.each(function() {
-                if ($('#id_base_form-transcript_type').val() !== 'ONE_A_YEAR') {
-                  return ;
-                }
+                 allYears.each(function() {
+                     if ($('#id_base_form-transcript_type').val() !== 'ONE_A_YEAR') {
+                         return ;
+                     }
 
-                const $this = $(this);
-                const tbodyContainer = $this.closest('tbody');
-                const hasTranslationFile = $this.find('.annual-transcript-translation-file input[type=hidden]').length > 0;
-                const needsTranslationFile = $this.find('.annual-transcript-translation-file.hidden').length === 0;
-                const hasTranscriptFile = $this.find('.annual-transcript-file input[type=hidden]').length > 0;
-                const needsTranscriptFile = $this.find('.annual-transcript-file.hidden').length === 0;
+                     const $this = $(this);
+                     const tbodyContainer = $this.closest('tbody');
+                     const hasTranslationFile = $this.find('.annual-transcript-translation-file input[type=hidden]').length > 0;
+                     const needsTranslationFile = $this.find('.annual-transcript-translation-file.hidden').length === 0;
+                     const hasTranscriptFile = $this.find('.annual-transcript-file input[type=hidden]').length > 0;
+                     const needsTranscriptFile = $this.find('.annual-transcript-file.hidden').length === 0;
 
-                if (hasTranslationFile) {
-                  const translationBadge = $this.find('.translation-badge > span');
-                  translationBadge.addClass('fa-circle-check');
-                  translationBadge.removeClass('fa-circle-xmark');
-                } else if (needsTranslationFile) {
-                  const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
-                  newAttachmentsToToggle.removeClass('hidden');
-                }
+                     if (hasTranslationFile) {
+                         const translationBadge = $this.find('.translation-badge > span');
+                         translationBadge.addClass('fa-circle-check');
+                         translationBadge.removeClass('fa-circle-xmark');
+                     } else if (needsTranslationFile) {
+                         const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
+                         newAttachmentsToToggle.removeClass('hidden');
+                     }
 
-                if (hasTranscriptFile) {
-                  const transcriptBadge = $this.find('.transcript-badge > span');
-                  transcriptBadge.addClass('fa-circle-check');
-                  transcriptBadge.removeClass('fa-circle-xmark');
-                } else if (needsTranscriptFile) {
-                  const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
-                  newAttachmentsToToggle.removeClass('hidden');
-                }
-            });
-          };
+                     if (hasTranscriptFile) {
+                         const transcriptBadge = $this.find('.transcript-badge > span');
+                         transcriptBadge.addClass('fa-circle-check');
+                         transcriptBadge.removeClass('fa-circle-xmark');
+                     } else if (needsTranscriptFile) {
+                         const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
+                         newAttachmentsToToggle.removeClass('hidden');
+                     }
+                 });
+             };
 
-          initializeYearlyTranscripts();
+             initializeYearlyTranscripts();
 
-          {# Transcript fields #}
-          $('#id_base_form-transcript_type').change(function() {
-              transcriptType = this.value;
-              const globalTranscript = $('#global-transcript');
-              const annualTranscripts = $('.annual-transcript');
-              const annualTranscriptsButtons = $('.result button');
+             {# Transcript fields #}
+             $('#id_base_form-transcript_type').change(function() {
+                 transcriptType = this.value;
+                 const globalTranscript = $('#global-transcript');
+                 const annualTranscripts = $('.annual-transcript');
+                 const annualTranscriptsButtons = $('.result button');
 
-              if (transcriptType === 'ONE_FOR_ALL_YEARS') {
-                  globalTranscript.filter('input').prop('disabled', false);
-                  globalTranscript.removeClass('hidden');
-              } else {
-                  globalTranscript.filter('input').prop('disabled', true);
-                  globalTranscript.addClass('hidden');
-              }
-              if (transcriptType === 'ONE_A_YEAR') {
-                  annualTranscripts.filter('input').prop('disabled', false);
-                  annualTranscriptsButtons.removeClass('hidden');
-                  initializeYearlyTranscripts();
-              } else {
-                  annualTranscripts.filter('input').prop('disabled', true);
-                  annualTranscripts.addClass('hidden');
-                  annualTranscriptsButtons.addClass('hidden');
-              }
-          }).change();
+                 if (transcriptType === 'ONE_FOR_ALL_YEARS') {
+                     globalTranscript.filter('input').prop('disabled', false);
+                     globalTranscript.removeClass('hidden');
+                 } else {
+                     globalTranscript.filter('input').prop('disabled', true);
+                     globalTranscript.addClass('hidden');
+                 }
+                 if (transcriptType === 'ONE_A_YEAR') {
+                     annualTranscripts.filter('input').prop('disabled', false);
+                     annualTranscriptsButtons.removeClass('hidden');
+                     initializeYearlyTranscripts();
+                 } else {
+                     annualTranscripts.filter('input').prop('disabled', true);
+                     annualTranscripts.addClass('hidden');
+                     annualTranscriptsButtons.addClass('hidden');
+                 }
+             }).change();
 
-          {# Enable or disable a year #}
-          $('#formset-container').on('change', '.switch input', function(event) {
-              const tbodyContainer = $(event.target).closest('tbody');
+             {# Enable or disable a year #}
+             $('#formset-container').on('change', '.switch input', function(event) {
+                 const tbodyContainer = $(event.target).closest('tbody');
 
-              const activeElts = tbodyContainer.find('.active-year');
-              const nonActiveElts = tbodyContainer.find('.non-active-year');
+                 const activeElts = tbodyContainer.find('.active-year');
+                 const nonActiveElts = tbodyContainer.find('.non-active-year');
 
-              if(this.checked) {
-                  nonActiveElts.addClass('hidden');
-                  activeElts.removeClass('hidden');
-              } else {
-                  activeElts.addClass('hidden');
-                  nonActiveElts.removeClass('hidden');
-              }
-          }).change();
+                 if(this.checked) {
+                     nonActiveElts.addClass('hidden');
+                     activeElts.removeClass('hidden');
+                 } else {
+                     activeElts.addClass('hidden');
+                     nonActiveElts.removeClass('hidden');
+                 }
+             }).change();
 
-          {# Graduate fields #}
-          $('.diploma-year-field').dependsOn({
-              'input[name=base_form-obtained_diploma]': { values: ['True'] },
-          });
+             {# Graduate fields #}
+             $('.diploma-year-field').dependsOn({
+                 'input[name=base_form-obtained_diploma]': { values: ['True'] },
+             });
 
-          {# Display the options of the end date depending on the start date #}
-          function formatState (result) {
-              return result.id && parseInt(result.id) >= startYear ? result.text : null;
-          }
+             {# Display the options of the end date depending on the start date #}
+             function formatState (result) {
+                 return result.id && parseInt(result.id) >= startYear ? result.text : null;
+             }
 
-          $('#id_base_form-end').select2({
-            templateResult: formatState,
-          });
+             $('#id_base_form-end').select2({
+                 templateResult: formatState,
+             });
 
-          {# Show the annual attachments if the related button is clicked #}
-          $('#formset-container').on('click', '.result button', function(event) {
-            const tbodyContainer = $(event.target).closest('tbody');
+             {# Show the annual attachments if the related button is clicked #}
+             $('#formset-container').on('click', '.result button', function(event) {
+                 const tbodyContainer = $(event.target).closest('tbody');
 
-            const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
-            newAttachmentsToToggle.toggleClass('hidden');
-          });
+                 const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
+                 newAttachmentsToToggle.toggleClass('hidden');
+             });
 
-        {# Display a badge specifying if the transcript and its translation have been uploaded #}
-        function displayBadgesAccordingToSubmittedTranscripts(event, badgeSelector) {
-          const tbodyContainer = $(event.target).closest('tbody');
-          const transcriptBadge = tbodyContainer.find(badgeSelector);
-          if (Object.keys(event.originalEvent.detail.newTokens).length === 0) {
-            transcriptBadge.addClass('fa-circle-xmark').removeClass('fa-circle-check');
-          } else {
-            transcriptBadge.addClass('fa-circle-check').removeClass('fa-circle-xmark');
-          }
-        }
+             {# Display a badge specifying if the transcript and its translation have been uploaded #}
+             function displayBadgesAccordingToSubmittedTranscripts(event, badgeSelector) {
+                 const tbodyContainer = $(event.target).closest('tbody');
+                 const transcriptBadge = tbodyContainer.find(badgeSelector);
+                 if (Object.keys(event.originalEvent.detail.newTokens).length === 0) {
+                     transcriptBadge.addClass('fa-circle-xmark').removeClass('fa-circle-check');
+                 } else {
+                     transcriptBadge.addClass('fa-circle-check').removeClass('fa-circle-xmark');
+                 }
+             }
 
-      $('#formset-container').on('osisdocument:add osisdocument:delete', '.annual-transcript-file .osis-document-uploader', function(event) {
-          displayBadgesAccordingToSubmittedTranscripts(event, '.transcript-badge > span');
-      });
+             $('#formset-container').on('osisdocument:add osisdocument:delete', '.annual-transcript-file .osis-document-uploader', function(event) {
+                 displayBadgesAccordingToSubmittedTranscripts(event, '.transcript-badge > span');
+             });
 
-      $('#formset-container').on('osisdocument:add osisdocument:delete', '.annual-transcript-translation-file .osis-document-uploader', function(event) {
-          displayBadgesAccordingToSubmittedTranscripts(event, '.translation-badge > span');
-      });
+             $('#formset-container').on('osisdocument:add osisdocument:delete', '.annual-transcript-translation-file .osis-document-uploader', function(event) {
+                 displayBadgesAccordingToSubmittedTranscripts(event, '.translation-badge > span');
+             });
 
-      yl.registerForwardHandler("get_institute_type", function (element) {
-          const data = $('#id_base_form-institute').select2('data')[0];
-          if (!!data) {
-              return data['type'];
-          }
-          return '';
-      });
+             yl.registerForwardHandler("get_institute_type", function (element) {
+                 const data = $('#id_base_form-institute').select2('data')[0];
+                 if (!!data) {
+                     return data['type'];
+                 }
+                 return '';
+             });
 
-      document.dispatchEvent(new Event('refreshFormInitial'));
+             document.dispatchEvent(new Event('refreshFormInitial'));
+        });
     });
   </script>
   {{ block.super }}

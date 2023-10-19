@@ -28,29 +28,23 @@
 {% comment "Usage" %}
   `tab_layout.html` gère le layout des formulaires et des détails, ceci implique
   - si la variable `form` est présente, le {% block form %} est affiché
-  - si dans `form` il y a des `visible_fields`, labalise
+  - si dans `form` il y a des `visible_fields`, la balise
   <form> est ajoutée
   ainsi que les boutons de soumission dans les onglets et en bas de page
 {% endcomment %}
 
 
 {% block style %}
-  {# Add either form styles or osis-documents for detail #}
   <link href="{% static "admission/admission.css" %}" rel="stylesheet" />
   {% if form %}
     {{ form.media.css }}
-  {% else %}
-    <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
   {% endif %}
 {% endblock %}
 
 {% block script %}
-  {# Add either form scripts or osis-documents for detail #}
   {{ block.super }}
   {% if form %}
     {{ form.media.js }}
-  {% else %}
-    <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
   {% endif %}
   <script src="{% static 'admission/admission.js' %}"></script>
   <script src="{% static 'admission/popover.js' %}"></script>

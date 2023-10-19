@@ -201,7 +201,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         response = self.client.get(self.detail_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
 
         # Check api calls
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
@@ -223,7 +223,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         response = self.client.get(self.update_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "dependsOn.min.js", count=1)
         self.assertContains(response, '<form class="osis-form"')
         self.assertContains(response, _("Save and continue"))

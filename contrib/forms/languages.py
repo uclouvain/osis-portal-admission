@@ -25,13 +25,13 @@
 # ##############################################################################
 import json
 
-from dal import autocomplete
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums.languages_knowledge import LanguageKnowledgeGrade
 from admission.contrib.forms import (
+    autocomplete,
     get_language_initial_choices,
     AdmissionFileUploadField as FileUploadField,
 )

@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete, forward
+from dal import forward
 from django import forms
 from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
@@ -32,6 +32,7 @@ from admission.contrib.forms import (
     get_country_initial_choices,
     get_example_text,
     PhoneField,
+    autocomplete,
 )
 from admission.utils import force_title
 

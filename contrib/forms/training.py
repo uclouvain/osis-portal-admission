@@ -26,7 +26,6 @@
 import datetime
 from functools import partial
 
-from dal import autocomplete
 from django import forms
 from django.core import validators
 from django.utils.translation import get_language, gettext_lazy as _, pgettext_lazy
@@ -45,6 +44,7 @@ from admission.contrib.forms import (
     get_academic_years_choices,
     get_country_initial_choices,
     AdmissionFileUploadField as FileUploadField,
+    autocomplete,
 )
 from admission.services.reference import AcademicYearService
 from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
