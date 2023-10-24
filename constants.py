@@ -110,6 +110,8 @@ LINGUISTIC_REGIMES_WITHOUT_TRANSLATION = ['FR', 'NL', 'DE', 'EN', 'IT', 'ES', 'P
 
 MINIMUM_YEAR = 1900
 
+MINIMUM_BIRTH_YEAR = 1920
+
 PLUS_5_ISO_CODES = [
     'CH',  # Switzerland
     'IS',  # Island

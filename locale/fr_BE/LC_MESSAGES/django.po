@@ -1183,6 +1183,9 @@ msgstr "Date de naissance"
 msgid "Date on which you expect to graduate."
 msgstr "Date à laquelle vous pensez obtenir votre diplôme."
 
+msgid "Day"
+msgstr "Jour"
+
 msgid "Decision"
 msgstr "Décision"
 

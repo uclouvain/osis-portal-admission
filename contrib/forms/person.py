@@ -23,12 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
+
 from django import forms
 from django.conf import settings
 from django.core import validators
+from django.forms import SelectDateWidget
 from django.utils.translation import gettext_lazy as _
 
-from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.constants import FIELD_REQUIRED_MESSAGE, MINIMUM_BIRTH_YEAR
 from admission.contrib.enums.person import CivilState, GenderEnum, SexEnum, IdentificationType
 from admission.contrib.forms import (
     CustomDateInput,
@@ -93,7 +96,9 @@ class DoctorateAdmissionPersonForm(forms.Form):
     birth_date = forms.DateField(
         required=False,
         label=_("Date of birth"),
-        widget=CustomDateInput(),
+        widget=SelectDateWidget(
+            empty_label=[_('Year'), _('Month'), _('Day')],
+        ),
     )
     birth_year = forms.TypedChoiceField(
         required=False,
@@ -243,6 +248,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields['last_registration_year'].choices = get_past_academic_years_choices(person)
+        self.fields['birth_date'].widget.years = range(MINIMUM_BIRTH_YEAR, datetime.date.today().year + 1)
         self.initial['already_registered'] = True if self.initial.get('last_registration_year') else False
 
         if self.initial.get('birth_year'):
