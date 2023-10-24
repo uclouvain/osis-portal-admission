@@ -1019,6 +1019,9 @@ msgstr ""
 msgid "Date on which you expect to graduate."
 msgstr ""
 
+msgid "Day"
+msgstr ""
+
 msgid "Decision"
 msgstr ""
 
