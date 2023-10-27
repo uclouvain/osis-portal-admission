@@ -163,8 +163,11 @@
 
     {% if subtabs|length > 1 %}
       {# If there are multiple subtabs, display them on the side #}
-      <div class="row">
-      <div class="col-md-2 visible-md visible-lg">
+      <div id="subtabs-row" class="row">
+      <div id="subtabs" class="col-md-2 visible-md visible-lg">
+        {% get_current_parent_tab as current_parent %}
+        <div id="subtab-current-parent">{{ current_parent.label }}</div>
+        <hr>
         {% admission_subtabs admission %}
       </div>
     {% endif %}

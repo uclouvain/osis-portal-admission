@@ -29,8 +29,8 @@
 {% block form_content %}
   {% url request.resolver_match.namespace pk=view.kwargs.pk as back_url %}
   {% admission_tabs doctorate %}
-  <div class="row">
-    <div class="col-md-2 visible-md visible-lg">
+  <div id="subtabs-row" class="row">
+    <div id="subtabs" class="col-md-2 visible-md visible-lg">
       {% admission_subtabs doctorate %}
     </div>
     <div class="col-md-10">

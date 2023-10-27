@@ -67,7 +67,7 @@
           {% if parent == 'confirm-submit' %}{% firstof True '' as no_status %}{% endif %}
           {% if parent == active_parent %}
             {% include 'admission/admission_tab_entry.html' with tab=children.0 is_active=True icon=parent.icon label=parent.label no_status=no_status %}
-            <div class="col-xs-offset-1">
+            <div id="subtabs-xs" class="col-xs-offset-1">
               {% admission_subtabs admission %}
             </div>
           {% else %}
