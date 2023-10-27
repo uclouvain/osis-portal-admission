@@ -351,3 +351,42 @@ body, html {
   padding: 0;
   margin: 0;
 }
+
+/* Subtabs */
+
+#subtabs-row {
+  margin-left: 0;
+}
+
+#subtabs {
+  border: solid 1px #ddd;
+  padding: 10px;
+}
+
+#subtabs li a {
+  background-color: #eee;
+}
+
+#subtabs li.active a {
+  background-color: #d9edf7;
+  color: #31708f;
+}
+
+#subtabs li a:hover {
+  background-color: #337ab7;
+  color: #fff;
+}
+
+#subtab-current-parent {
+  margin-top: 10px;
+  font-style: italic;
+}
+
+#subtabs-xs li a {
+  background-color: #eee;
+}
+
+#subtabs-xs li.active a {
+  background-color: #d9edf7;
+  color: #31708f;
+}
