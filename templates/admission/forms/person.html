@@ -201,7 +201,7 @@
 
           $('#id_birth_date_day, #id_birth_date_month, #id_birth_date_year').dependsOn({
               '#id_unknown_birth_date': { checked: false },
-          }, { valueOnDisable: '', hide: false });
+          }, { hide: false });
 
           $('#already_registered').dependsOn({
               'input[name=already_registered]': { values: ['True'] },

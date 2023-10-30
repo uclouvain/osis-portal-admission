@@ -44,6 +44,7 @@ from admission.contrib.forms import (
     IMAGE_MIME_TYPES,
     get_year_choices,
     autocomplete,
+    LOWERCASE_MONTHS,
 )
 from admission.utils import force_title
 
@@ -98,6 +99,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
         label=_("Date of birth"),
         widget=SelectDateWidget(
             empty_label=[_('Year'), _('Month'), _('Day')],
+            months=LOWERCASE_MONTHS,
         ),
     )
     birth_year = forms.TypedChoiceField(

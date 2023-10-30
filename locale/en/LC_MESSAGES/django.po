@@ -404,6 +404,10 @@ msgctxt "admission decision"
 msgid "Approved"
 msgstr ""
 
+msgctxt "admission"
+msgid "April"
+msgstr ""
+
 msgid "Are you a dual degree student?"
 msgstr ""
 
@@ -477,6 +481,10 @@ msgid "Attachments"
 msgstr ""
 
 msgid "Attestation of the communication"
+msgstr ""
+
+msgctxt "admission"
+msgid "August"
 msgstr ""
 
 msgid "Authors"
@@ -1022,6 +1030,10 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
+msgctxt "admission"
+msgid "December"
+msgstr ""
+
 msgid "Decision"
 msgstr ""
 
@@ -1306,6 +1318,10 @@ msgid "FRIA"
 msgstr ""
 
 msgid "Failed"
+msgstr ""
+
+msgctxt "admission"
+msgid "February"
 msgstr ""
 
 msgid "Feedback from FAC"
@@ -1747,6 +1763,10 @@ msgstr "Jury declined by CDD"
 msgid "JURY_SOUMIS"
 msgstr "Jury submitted"
 
+msgctxt "admission"
+msgid "January"
+msgstr ""
+
 msgid "Joint research project (ARC)"
 msgstr "ARC - Action de Recherche Concertée"
 
@@ -1757,6 +1777,14 @@ msgid "Joint supervision request"
 msgstr ""
 
 msgid "Journal or publishing house name"
+msgstr ""
+
+msgctxt "admission"
+msgid "July"
+msgstr ""
+
+msgctxt "admission"
+msgid "June"
 msgstr ""
 
 msgid "Jury composition"
@@ -1846,6 +1874,10 @@ msgid "Mandatory languages are missing."
 msgstr ""
 
 msgctxt "admission"
+msgid "March"
+msgstr ""
+
+msgctxt "admission"
 msgid "Married"
 msgstr ""
 
@@ -1861,6 +1893,10 @@ msgid "Master and Specialised master"
 msgstr ""
 
 msgid "Maximum number of documents"
+msgstr ""
+
+msgctxt "admission"
+msgid "May"
 msgstr ""
 
 msgid "Member not found"
@@ -2028,6 +2064,10 @@ msgctxt "admission"
 msgid "Not submitted"
 msgstr ""
 
+msgctxt "admission"
+msgid "November"
+msgstr ""
+
 msgctxt "address"
 msgid "Number"
 msgstr ""
@@ -2036,6 +2076,10 @@ msgid "Number of credits earned at the end of the academic year."
 msgstr ""
 
 msgid "Number of days participating"
+msgstr ""
+
+msgctxt "admission"
+msgid "October"
 msgstr ""
 
 msgid ""
@@ -2651,6 +2695,10 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Separated"
+msgstr ""
+
+msgctxt "admission"
+msgid "September"
 msgstr ""
 
 msgid "Services"
