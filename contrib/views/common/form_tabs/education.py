@@ -244,15 +244,11 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
         if data.pop("diploma_type") == DiplomaTypes.BELGIAN.name:
             self.prepare_diploma(data, forms, "belgian_diploma")
             belgian_diploma = data.get("belgian_diploma")
+            belgian_diploma.pop("has_other_educational_type")
 
             if belgian_diploma.get("community") != BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name:
                 belgian_diploma["educational_type"] = ""
                 belgian_diploma["educational_other"] = ""
-
-            educational_type = belgian_diploma.get("educational_type")
-
-            if educational_type:
-                data["belgian_diploma"]["educational_other"] = ""
 
             if belgian_diploma.pop('other_institute'):
                 belgian_diploma["institute"] = ""

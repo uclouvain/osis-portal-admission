@@ -33,7 +33,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import get_language, gettext_lazy as _, gettext
 
-from admission.contrib.enums.diploma import StudyType
+from admission.constants import MINIMUM_BIRTH_YEAR
 from admission.services.campus import AdmissionCampusService
 from admission.services.diplomatic_post import AdmissionDiplomaticPostService
 from admission.services.organisation import EntitiesService
@@ -89,7 +89,7 @@ def get_diplomatic_post_initial_choices(diplomatic_post_code, person, loaded_pos
     return EMPTY_CHOICE + ((post.code, post.name_fr if get_language() == settings.LANGUAGE_CODE else post.name_en),)
 
 
-def get_year_choices(min_year=1920, max_year=None):
+def get_year_choices(min_year=MINIMUM_BIRTH_YEAR, max_year=None):
     """Return the choices of a year choice field. If no max year is specified, the current year is used."""
     if max_year is None:
         max_year = datetime.datetime.now().year

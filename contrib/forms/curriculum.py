@@ -29,11 +29,11 @@ from datetime import datetime
 from functools import partial
 from typing import List
 
-from dal import autocomplete, forward
+from dal import forward
 from django import forms
 from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
-from django.utils.translation import gettext_lazy as _, pgettext_lazy as __, pgettext_lazy
+from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 
 from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from osis_document.contrib.widgets import HiddenFileWidget
@@ -60,6 +60,7 @@ from admission.contrib.forms import (
     FORM_SET_PREFIX,
     NoInput,
     AdmissionFileUploadField as FileUploadField,
+    autocomplete,
 )
 
 from admission.contrib.forms.specific_question import ConfigurableFormMixin

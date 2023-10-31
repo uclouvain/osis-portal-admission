@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 import uuid
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 
 from django.core.exceptions import ImproperlyConfigured
 from django.template import Context, Template
@@ -35,16 +35,12 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from admission.contrib.enums import (
-    TypeChampSelectionFormulaire,
-    CleConfigurationItemFormulaire,
     ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionGenerale,
     ChoixStatutPropositionContinue,
     TrainingType,
 )
 from admission.contrib.enums.specific_question import TypeItemFormulaire
-from osis_admission_sdk.model.specific_question import SpecificQuestion
-
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.templatetags.admission import (
     TAB_TREES,
@@ -63,6 +59,7 @@ from admission.templatetags.admission import (
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
 from osis_admission_sdk.exceptions import UnauthorizedException
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 
 class TemplateTagsTestCase(TestCase):

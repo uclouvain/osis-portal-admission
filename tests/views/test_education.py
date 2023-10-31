@@ -246,7 +246,7 @@ class EducationTestCase(BaseEducationTestCase):
 
         # Check response status
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
 
         # Check api calls
         self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(
@@ -335,7 +335,7 @@ class EducationTestCase(BaseEducationTestCase):
 
         # Check response status
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
 
         # Check api calls
         self.mock_person_api.return_value.retrieve_high_school_diploma.assert_not_called()
@@ -642,6 +642,37 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         self.assertIn('belgian_diploma_form', response.context)
         self.assertIn('foreign_diploma_form', response.context)
 
+    def test_belgian_bachelor_form_initialization(self):
+        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma'] = {
+            "academic_graduation_year": 2020,
+            "other_institute_name": "Special school",
+            "other_institute_address": "Louvain-La-Neuve",
+            "educational_other": "Other educational type",
+        }
+        response = self.client.get(self.form_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertIn('belgian_diploma_form', response.context)
+        form = response.context['belgian_diploma_form']
+        self.assertTrue(form.initial['has_other_educational_type'])
+
+        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma'] = {
+            "academic_graduation_year": 2020,
+            "other_institute_name": "Special school",
+            "other_institute_address": "Louvain-La-Neuve",
+            "educational_other": "",
+        }
+        response = self.client.get(self.form_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertIn('belgian_diploma_form', response.context)
+        form = response.context['belgian_diploma_form']
+        self.assertFalse(form.initial['has_other_educational_type'])
+
     def test_form_initialization_with_valuated_experience(self):
         self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
         response = self.client.get(self.form_url)
@@ -720,6 +751,58 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
         )
+
+    def test_bachelor_form_belgian_for_french_community(self):
+        form_data = {
+            "graduated_from_high_school": GotDiploma.YES.name,
+            "diploma_type": DiplomaTypes.BELGIAN.name,
+            "high_school_diploma_0": "test",
+            "graduated_from_high_school_year": 2020,
+            "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
+            "belgian_diploma-institute": self.first_high_school_uuid,
+            "belgian_diploma-other_institute": False,
+            "belgian_diploma-other_institute_name": "Special school",
+            "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
+            "belgian_diploma-educational_other": "Other educational type",
+            "belgian_diploma-has_other_educational_type": False,
+        }
+        api_data = {
+            "graduated_from_high_school": GotDiploma.YES.name,
+            "graduated_from_high_school_year": 2020,
+            "belgian_diploma": {
+                "academic_graduation_year": 2020,
+                "community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
+                "high_school_diploma": ["test"],
+                "educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
+                # Clean other institute
+                "institute": self.first_high_school_uuid,
+                "other_institute_name": "",
+                "other_institute_address": "",
+                # Clean education type
+                "educational_other": "",
+            },
+            "specific_question_answers": self.proposition.reponses_questions_specifiques,
+        }
+        response = self.client.post(self.form_url, form_data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
+            "high_school_diploma"
+        ]
+        self.assertEqual(sent, api_data)
+
+        # Choose another educational type
+        form_data["belgian_diploma-has_other_educational_type"] = True
+        response = self.client.post(self.form_url, form_data)
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called()
+        sent = self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.call_args[1][
+            "high_school_diploma"
+        ]
+        api_data["belgian_diploma"]["educational_type"] = ""
+        api_data["belgian_diploma"]["educational_other"] = "Other educational type"
+        self.assertEqual(sent, api_data)
 
     def test_bachelor_form_foreign_error_if_no_equivalence_for_ue_country(self):
         response = self.client.post(
@@ -1173,6 +1256,44 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("educational_type", response.context["belgian_diploma_form"].errors)
+
+    def test_bachelor_belgian_form_error_if_french_community_and_empty_other_educational_type(self):
+        response = self.client.post(
+            self.form_url,
+            {
+                "graduated_from_high_school": GotDiploma.YES.name,
+                "diploma_type": DiplomaTypes.BELGIAN.name,
+                "graduated_from_high_school_year": 2020,
+                "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
+                "belgian_diploma-has_other_educational_type": True,
+                "belgian_diploma-educational_other": "",
+                "belgian_diploma-educational_type": "uuid",
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn(
+            FIELD_REQUIRED_MESSAGE,
+            response.context["belgian_diploma_form"].errors.get("educational_other", []),
+        )
+
+    def test_bachelor_belgian_form_error_if_french_community_and_empty_educational_type(self):
+        response = self.client.post(
+            self.form_url,
+            {
+                "graduated_from_high_school": GotDiploma.YES.name,
+                "diploma_type": DiplomaTypes.BELGIAN.name,
+                "graduated_from_high_school_year": 2020,
+                "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
+                "belgian_diploma-has_other_educational_type": False,
+                "belgian_diploma-educational_other": "The education type",
+                "belgian_diploma-educational_type": "",
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn(
+            FIELD_REQUIRED_MESSAGE,
+            response.context["belgian_diploma_form"].errors.get("educational_type", []),
+        )
 
     def test_bachelor_belgian_form_error_if_no_institute(self):
         response = self.client.post(

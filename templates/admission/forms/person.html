@@ -46,20 +46,20 @@
       <div class="col-md-4">
         {% bootstrap_field form.gender form_group_class="form-group required_field" %}
       </div>
+      <div class="col-md-4">
+        {% bootstrap_field form.civil_state form_group_class="form-group required_field" %}
+      </div>
     </div>
 
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-5" id="birth_date">
         {% bootstrap_field form.birth_date form_group_class="form-group required_field" %}
       </div>
       <div class="col-md-3">
         {% bootstrap_field form.unknown_birth_date %}
       </div>
-      <div class="col-md-3" id="birth_year">
+      <div class="col-md-4" id="birth_year">
         {% bootstrap_field form.birth_year form_group_class="form-group required_field" %}
-      </div>
-      <div class="col-md-3">
-        {% bootstrap_field form.civil_state form_group_class="form-group required_field" %}
       </div>
     </div>
     <div class="row">
@@ -123,6 +123,29 @@
   {% endpanel %}
 {% endblock %}
 
+{% block style %}
+  {{ block.super }}
+  <style>
+    #birth_date .bootstrap3-multi-input {
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    #birth_date .bootstrap3-multi-input:before, #birth_date .bootstrap3-multi-input:after {
+      display: none;
+    }
+
+    #birth_date .bootstrap3-multi-input > div {
+      padding: 0;
+      min-width: fit-content;
+      width: auto;
+      flex: 1;
+    }
+  </style>
+{% endblock %}
+
 {% block script %}
   {{ block.super }}
   <script type="application/javascript">
@@ -172,12 +195,11 @@
               'input[name=identification_type]': { values: ['PASSPORT_NUMBER'] },
           });
 
-          // Justification depends on pre-admission
           $('#birth_year').dependsOn({
               '#id_unknown_birth_date': { checked: true },
           });
 
-          $('#id_birth_date').dependsOn({
+          $('#id_birth_date_day, #id_birth_date_month, #id_birth_date_year').dependsOn({
               '#id_unknown_birth_date': { checked: false },
           }, { valueOnDisable: '', hide: false });
 

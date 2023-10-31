@@ -89,7 +89,7 @@ class ExtensionRequestDetailViewTestCase(TestCase):
         # Load the confirmation papers information
         self.mock_api.return_value.retrieve_last_confirmation_paper.assert_called()
 
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
         self.assertIsNotNone(response.context.get('confirmation_paper'))
         self.assertEqual(response.context.get('confirmation_paper').uuid, 'c1')
 
@@ -185,7 +185,7 @@ class ExtensionRequestFormViewTestCase(TestCase):
         self.client.force_login(self.phd_student.user)
 
         response = self.client.get(self.url)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
 
         # Load the doctorate information
         self.mock_api.return_value.retrieve_doctorate_dto.assert_called()

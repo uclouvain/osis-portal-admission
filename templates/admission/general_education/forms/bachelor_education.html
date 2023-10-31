@@ -130,10 +130,13 @@
     {% panel _("Belgian diploma") id="belgian-diploma" %}
       {% bootstrap_field belgian_diploma_form.community form_group_class="form-group required_field" %}
 
-      <div id="education-type" class="row">
-        {% bootstrap_field belgian_diploma_form.educational_type form_group_class="form-group required_field col-md-6" %}
-        <div id="educational-other">
-          {% bootstrap_field belgian_diploma_form.educational_other placeholder="" form_group_class="form-group col-md-6" %}
+      <div id="education-type">
+        <div class="row vertical-align">
+          {% bootstrap_field belgian_diploma_form.educational_type form_group_class="form-group required_field col-md-6" %}
+          {% bootstrap_field belgian_diploma_form.has_other_educational_type form_group_class="form-group col-md-6" %}
+        </div>
+        <div class="row" id="educational-other">
+          {% bootstrap_field belgian_diploma_form.educational_other placeholder="" form_group_class="form-group required_field col-md-6" %}
         </div>
       </div>
 
@@ -194,159 +197,187 @@
   <script type="application/javascript">
       $(function () {
           const is_truthy = val => !!val;
+          const fieldsThatMustBeInitialized = new Set(['id_foreign_diploma-country']);
 
-          const countriesData = $('#id_foreign_diploma-country').select2('data');
+          $(document).on('dal-element-initialized', function (e) {
+              // We need to wait that select2 has been initialized as the display depends on country field
+              if (!fieldsThatMustBeInitialized.delete(e.detail.element.id) || fieldsThatMustBeInitialized.size > 0) {
+                  return;
+              }
 
-          if (countriesData.length) {
-              {% if foreign_diploma_form.fields.country.is_ue_country %}
-                  countriesData[0].european_union = true;
-              {% else %}
-                  countriesData[0].european_union = false;
+              const countriesData = $('#id_foreign_diploma-country').select2('data');
+
+              if (countriesData.length) {
+                  {% if foreign_diploma_form.fields.country.is_ue_country %}
+                      countriesData[0].european_union = true;
+                  {% else %}
+                      countriesData[0].european_union = false;
+                  {% endif %}
+              }
+
+              const isMedOrDentTraining = '{{ is_med_dent_training }}' === 'True';
+              const plus5IsoCodes = {{ plus_5_iso_codes|safe }};
+
+              const is_ue_country = () => {
+                  const countryData = $('#id_foreign_diploma-country').select2('data');
+                  return (countryData.length > 0 && countryData[0].european_union) || isMedOrDentTraining;
+              }
+              const is_not_ue_country = () => !is_ue_country();
+
+              const is_ue_country_plus_5 = () => {
+                  const country = $('#id_foreign_diploma-country');
+                  const countryData = country.select2('data');
+                  return isMedOrDentTraining || (countryData.length > 0 && countryData[0].european_union) || plus5IsoCodes.includes(country.val());
+              }
+
+              $('#got-diploma').dependsOn({
+                  'input[name=graduated_from_high_school]': { values: ['YES', 'THIS_YEAR'] },
+              });
+
+              $('#academic-year').dependsOn({
+                  'input[name=graduated_from_high_school]': { values: ['YES'] },
+              });
+
+              $('#has-no-diploma').dependsOn({
+                  'input[name=graduated_from_high_school]': { values: ['NO'] },
+              })
+
+              $('#belgian-diploma').dependsOn({
+                  'input[name=diploma_type]': { values: ['BELGIAN'] },
+              });
+              $('#foreign-diploma').dependsOn({
+                  'input[name=diploma_type]': { values: ['FOREIGN'] },
+              });
+
+              {# Belgian diploma #}
+              $('#education-type').dependsOn({
+                  'select[name=belgian_diploma-community]': { values: ['FRENCH_SPEAKING'] },
+              });
+
+              $('#id_belgian_diploma-educational_type').dependsOn({
+                  '#id_belgian_diploma-has_other_educational_type': { checked: false },
+              }, { hide: false, valueOnDisable: null,});
+
+
+              const context = $('.osis-form');
+
+              {# Reset the institute when the community is changed #}
+              const community = context.find('select[name=belgian_diploma-community]');
+              const institute = context.find('select[name=belgian_diploma-institute]');
+              const hasOtherInstitute = context.find('input[name=belgian_diploma-other_institute]');
+              const otherInstituteName = context.find('input[name=belgian_diploma-other_institute_name]');
+              const otherInstituteAddress = context.find('input[name=belgian_diploma-other_institute_address]');
+
+              community.on('select2:select', function () {
+                  institute.val(null).change();
+                  hasOtherInstitute.prop('checked', false).change();
+                  otherInstituteName.val('').change();
+                  otherInstituteAddress.val('').change();
+              });
+
+              const education = context.find('select[name=belgian_diploma-educational_type]');
+              const otherEducation = context.find('input[name=belgian_diploma-educational_other]');
+
+              education.on('select2:select', function () {
+                  education.val() && otherEducation.val(null);
+                  education.trigger('change');
+              });
+
+              $('#educational-other').dependsOn({
+                  '#id_belgian_diploma-has_other_educational_type': { checked: true },
+              });
+
+              $('#other_institute').dependsOn({
+                  '#id_belgian_diploma-other_institute': { checked: true},
+              });
+
+              $('#id_belgian_diploma-institute').dependsOn({
+                  '#id_belgian_diploma-other_institute': { checked: false},
+              }, {
+                  hide: false,
+                  valueOnDisable: null,
+              });
+
+              {# Foreign diploma #}
+              $('#linguistic-regime-other').dependsOn({
+                  'select[name=foreign_diploma-linguistic_regime]': { values: ['', null] },
+              }, {
+                  valueOnDisable: null,
+              });
+
+              {# Equivalence #}
+              $('.equivalence-fields').dependsOn({
+                  'input[name=foreign_diploma-foreign_diploma_type]': { values: ['NATIONAL_BACHELOR'] },
+              });
+
+              {# Not UE equivalence #}
+              $('#container_final_equivalence_decision_not_ue').dependsOn({
+                  '#id_foreign_diploma-country': { is_truthy, is_not_ue_country },
+              });
+
+              {# UE equivalence #}
+              $('#equivalence_ue').dependsOn({
+                  '#id_foreign_diploma-country': { is_ue_country },
+              });
+
+              $('#final_equivalence_decision_ue').dependsOn({
+                  'input[name=foreign_diploma-equivalence]': { values: ['YES'] },
+              });
+              $('#equivalence_decision_proof').dependsOn({
+                  'input[name=foreign_diploma-equivalence]': { values: ['PENDING'] },
+              });
+              $('#equivalence_info').dependsOn({
+                  'input[name=foreign_diploma-equivalence]': { values: ['NO'] },
+              });
+
+              {# Attachments #}
+              const highSchoolDiploma = $('#high-school-diploma');
+              $('#attachments').dependsOn({
+                  'input[name=diploma_type]': { is_truthy },
+              });
+
+              $('#high-school-diploma .popover-buttons').dependsOn({
+                  'input[name=graduated_from_high_school]': { values: ['THIS_YEAR'] },
+                  'input[name=diploma_type]': { values: ['BELGIAN'] },
+              }).or({
+                  'input[name=graduated_from_high_school]': { values: ['THIS_YEAR'] },
+                  'input[name=diploma_type]': { values: ['FOREIGN'] },
+                  '#id_foreign_diploma-country': { is_ue_country_plus_5 },
+              })
+
+              highSchoolDiploma.dependsOn({
+                  'input[name=graduated_from_high_school]': { values: ['YES', 'THIS_YEAR'] },
+                  'input[name=diploma_type]': { values: ['BELGIAN'] },
+              }).or({
+                  'input[name=graduated_from_high_school]': { values: ['THIS_YEAR', 'YES'] },
+                  'input[name=diploma_type]': { values: ['FOREIGN'] },
+              });
+
+              $('#foreign-attachments').dependsOn({
+                  'input[name=diploma_type]': { values: ['FOREIGN'] },
+              });
+
+              $('.translated-field').dependsOn({
+                  'input[name=diploma_type]': { values: ['FOREIGN'] },
+                  'select[name=foreign_diploma-linguistic_regime]': {
+                      is_truthy,
+                      not: {{ linguistic_regimes_without_translation|safe }},
+                  },
+              }).or({
+                  'input[name=diploma_type]': { values: ['FOREIGN'] },
+                  '#id_foreign_diploma-other_linguistic_regime': {
+                      is_truthy,
+                  },
+              });
+
+              {# We need this as dependsOn enable some fields that are disabled at load page #}
+              {% if is_valuated %}
+                  $('form.osis-form .form-group :input:not(button)').prop('disabled', true);
               {% endif %}
-          }
 
-          const isMedOrDentTraining = '{{ is_med_dent_training }}' === 'True';
-          const plus5IsoCodes = {{ plus_5_iso_codes|safe }};
-
-          const is_ue_country = () => {
-              const countryData = $('#id_foreign_diploma-country').select2('data');
-              return (countryData.length > 0 && countryData[0].european_union) || isMedOrDentTraining;
-          }
-          const is_not_ue_country = () => !is_ue_country();
-
-          const is_ue_country_plus_5 = () => {
-              const country = $('#id_foreign_diploma-country');
-              const countryData = country.select2('data');
-              return isMedOrDentTraining || (countryData.length > 0 && countryData[0].european_union) || plus5IsoCodes.includes(country.val());
-          }
-
-          $('#got-diploma').dependsOn({
-              'input[name=graduated_from_high_school]': { values: ['YES', 'THIS_YEAR'] },
+              document.dispatchEvent(new Event('refreshFormInitial'));
           });
 
-          $('#academic-year').dependsOn({
-              'input[name=graduated_from_high_school]': { values: ['YES'] },
-          });
-
-          $('#has-no-diploma').dependsOn({
-              'input[name=graduated_from_high_school]': { values: ['NO'] },
-          })
-
-          $('#belgian-diploma').dependsOn({
-              'input[name=diploma_type]': { values: ['BELGIAN'] },
-          });
-          $('#foreign-diploma').dependsOn({
-              'input[name=diploma_type]': { values: ['FOREIGN'] },
-          });
-
-          {# Belgian diploma #}
-          $('#education-type').dependsOn({
-              'select[name=belgian_diploma-community]': { values: ['FRENCH_SPEAKING'] },
-          });
-
-          const context = $('.osis-form');
-
-          const education = context.find('select[name=belgian_diploma-educational_type]');
-          const otherEducation = context.find('input[name=belgian_diploma-educational_other]');
-
-          education.on('select2:select', function () {
-              education.val() && otherEducation.val(null);
-              education.trigger('change');
-          });
-
-          $('#educational-other').dependsOn({
-              'select[name=belgian_diploma-educational_type]': { values: ['', null] },
-          });
-
-          $('#other_institute').dependsOn({
-              '#id_belgian_diploma-other_institute': { checked: true},
-          });
-
-          $('#id_belgian_diploma-institute').dependsOn({
-              '#id_belgian_diploma-other_institute': { checked: false},
-          }, {
-              hide: false,
-              valueOnDisable: null,
-          });
-
-          {# Foreign diploma #}
-          $('#linguistic-regime-other').dependsOn({
-              'select[name=foreign_diploma-linguistic_regime]': { values: ['', null] },
-          }, {
-              valueOnDisable: null,
-          });
-
-          {# Equivalence #}
-          $('.equivalence-fields').dependsOn({
-              'input[name=foreign_diploma-foreign_diploma_type]': { values: ['NATIONAL_BACHELOR'] },
-          });
-
-          {# Not UE equivalence #}
-          $('#container_final_equivalence_decision_not_ue').dependsOn({
-              '#id_foreign_diploma-country': { is_truthy, is_not_ue_country },
-          });
-
-          {# UE equivalence #}
-          $('#equivalence_ue').dependsOn({
-              '#id_foreign_diploma-country': { is_ue_country },
-          });
-
-          $('#final_equivalence_decision_ue').dependsOn({
-              'input[name=foreign_diploma-equivalence]': { values: ['YES'] },
-          });
-          $('#equivalence_decision_proof').dependsOn({
-              'input[name=foreign_diploma-equivalence]': { values: ['PENDING'] },
-          });
-          $('#equivalence_info').dependsOn({
-              'input[name=foreign_diploma-equivalence]': { values: ['NO'] },
-          });
-
-          {# Attachments #}
-          const highSchoolDiploma = $('#high-school-diploma');
-          $('#attachments').dependsOn({
-              'input[name=diploma_type]': { is_truthy },
-          });
-
-          $('#high-school-diploma .popover-buttons').dependsOn({
-              'input[name=graduated_from_high_school]': { values: ['THIS_YEAR'] },
-              'input[name=diploma_type]': { values: ['BELGIAN'] },
-          }).or({
-              'input[name=graduated_from_high_school]': { values: ['THIS_YEAR'] },
-              'input[name=diploma_type]': { values: ['FOREIGN'] },
-              '#id_foreign_diploma-country': { is_ue_country_plus_5 },
-          })
-
-          highSchoolDiploma.dependsOn({
-              'input[name=graduated_from_high_school]': { values: ['YES', 'THIS_YEAR'] },
-              'input[name=diploma_type]': { values: ['BELGIAN'] },
-          }).or({
-              'input[name=graduated_from_high_school]': { values: ['THIS_YEAR', 'YES'] },
-              'input[name=diploma_type]': { values: ['FOREIGN'] },
-          });
-
-          $('#foreign-attachments').dependsOn({
-              'input[name=diploma_type]': { values: ['FOREIGN'] },
-          });
-
-          $('.translated-field').dependsOn({
-              'input[name=diploma_type]': { values: ['FOREIGN'] },
-              'select[name=foreign_diploma-linguistic_regime]': {
-                  is_truthy,
-                  not: {{ linguistic_regimes_without_translation|safe }},
-              },
-          }).or({
-              'input[name=diploma_type]': { values: ['FOREIGN'] },
-              '#id_foreign_diploma-other_linguistic_regime': {
-                  is_truthy,
-              },
-          });
-
-          {# We need this as dependsOn enable some fields that are disabled at load page #}
-          {% if is_valuated %}
-            $('form.osis-form .form-group :input:not(button)').prop('disabled', true);
-          {% endif %}
-
-          document.dispatchEvent(new Event('refreshFormInitial'));
       });
   </script>
 {% endblock %}

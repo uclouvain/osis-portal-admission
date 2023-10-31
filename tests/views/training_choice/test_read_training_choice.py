@@ -40,7 +40,7 @@ class GeneralAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingChoice
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,

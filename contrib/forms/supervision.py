@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete
 from django import forms
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
@@ -32,6 +31,7 @@ from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms import (
+    autocomplete,
     AdmissionFileUploadField as FileUploadField,
     EMPTY_CHOICE,
     get_country_initial_choices,

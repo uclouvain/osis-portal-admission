@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import autocomplete, forward
+from dal import forward
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
@@ -39,6 +39,7 @@ from admission.contrib.enums.secondary_studies import (
     GotDiploma,
 )
 from admission.contrib.forms import (
+    autocomplete,
     get_country_initial_choices,
     get_high_school_initial_choices,
     get_language_initial_choices,
@@ -182,8 +183,12 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         widget=autocomplete.ListSelect2,
         required=False,
     )
+    has_other_educational_type = forms.BooleanField(
+        label=_("Other education type"),
+        required=False,
+    )
     educational_other = forms.CharField(
-        label=_("If other education type, specify"),
+        label=_("Name of the education type"),
         required=False,
     )
     institute = forms.CharField(
@@ -214,6 +219,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
     def __init__(self, person, is_valuated, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['other_institute'] = bool(self.initial.get('other_institute_name'))
+        self.initial['has_other_educational_type'] = bool(self.initial.get('educational_other'))
         self.fields['institute'].widget.choices = get_high_school_initial_choices(
             self.data.get(self.add_prefix("institute"), self.initial.get("institute")),
             person,
@@ -224,13 +230,19 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         community = cleaned_data.get("community")
-        educational_type = cleaned_data.get("educational_type")
-        educational_other = cleaned_data.get("educational_other")
+        has_other_educational_type = cleaned_data.get("has_other_educational_type")
 
-        if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name and not (
-            educational_type or educational_other
-        ):
-            self.add_error("educational_type", _("Choose secondary education type"))
+        if has_other_educational_type:
+            cleaned_data["educational_type"] = ""
+        else:
+            cleaned_data["educational_other"] = ""
+
+        if community == BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name:
+            if has_other_educational_type:
+                if not cleaned_data.get("educational_other"):
+                    self.add_error("educational_other", FIELD_REQUIRED_MESSAGE)
+            elif not cleaned_data.get("educational_type"):
+                self.add_error("educational_type", FIELD_REQUIRED_MESSAGE)
 
         other_institute = cleaned_data.get('other_institute')
         if other_institute:

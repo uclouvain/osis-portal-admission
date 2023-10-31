@@ -90,19 +90,19 @@
 
   {% translate 'Specific profile' context 'admission' as specific_profile_title %}
   {% panel specific_profile_title id="student-profile" %}
-    <div class="master-scholarship required_field">
+    <div class="required_field">
       {% bootstrap_field_with_tooltip form.has_double_degree_scholarship %}
       <div id="double-degree-scholarship-field">
         {% bootstrap_field form.double_degree_scholarship show_label=False %}
       </div>
     </div>
-    <div class="master-scholarship required_field">
+    <div class="required_field">
       {% bootstrap_field_with_tooltip form.has_international_scholarship %}
       <div id="international-scholarship-field">
         {% bootstrap_field form.international_scholarship show_label=False %}
       </div>
     </div>
-    <div id="master-scholarship" class="required_field">
+    <div class="required_field">
       {% bootstrap_field_with_tooltip form.has_erasmus_mundus_scholarship %}
       <div id="erasmus-scholarship-field">
         {% bootstrap_field form.erasmus_mundus_scholarship show_label=False %}

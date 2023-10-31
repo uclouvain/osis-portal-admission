@@ -28,29 +28,23 @@
 {% comment "Usage" %}
   `tab_layout.html` gère le layout des formulaires et des détails, ceci implique
   - si la variable `form` est présente, le {% block form %} est affiché
-  - si dans `form` il y a des `visible_fields`, labalise
+  - si dans `form` il y a des `visible_fields`, la balise
   <form> est ajoutée
   ainsi que les boutons de soumission dans les onglets et en bas de page
 {% endcomment %}
 
 
 {% block style %}
-  {# Add either form styles or osis-documents for detail #}
   <link href="{% static "admission/admission.css" %}" rel="stylesheet" />
   {% if form %}
     {{ form.media.css }}
-  {% else %}
-    <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
   {% endif %}
 {% endblock %}
 
 {% block script %}
-  {# Add either form scripts or osis-documents for detail #}
   {{ block.super }}
   {% if form %}
     {{ form.media.js }}
-  {% else %}
-    <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
   {% endif %}
   <script src="{% static 'admission/admission.js' %}"></script>
   <script src="{% static 'admission/popover.js' %}"></script>
@@ -169,8 +163,11 @@
 
     {% if subtabs|length > 1 %}
       {# If there are multiple subtabs, display them on the side #}
-      <div class="row">
-      <div class="col-md-2 visible-md visible-lg">
+      <div id="subtabs-row" class="row">
+      <div id="subtabs" class="col-md-2 visible-md visible-lg">
+        {% get_current_parent_tab as current_parent %}
+        <div id="subtab-current-parent">{{ current_parent.label }}</div>
+        <hr>
         {% admission_subtabs admission %}
       </div>
     {% endif %}

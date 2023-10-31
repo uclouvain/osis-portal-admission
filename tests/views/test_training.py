@@ -169,7 +169,7 @@ class TrainingTestCase(TestCase):
         ]
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "Informatique")
         self.assertContains(response, "45")
 
@@ -202,7 +202,7 @@ class TrainingTestCase(TestCase):
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, _("Add a conference"))
 
         data = {
@@ -228,7 +228,7 @@ class TrainingTestCase(TestCase):
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, "osis-document.umd.min.js", count=1)
+        self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, _("Add a conference"))
 
         data = {

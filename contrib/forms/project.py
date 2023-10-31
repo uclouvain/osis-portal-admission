@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 
-from dal import autocomplete, forward
+from dal import forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -42,6 +42,7 @@ from admission.contrib.enums.proximity_commission import (
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.forms import (
+    autocomplete,
     CustomDateInput,
     EMPTY_CHOICE,
     SelectOrOtherField,

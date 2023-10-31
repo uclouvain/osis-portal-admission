@@ -319,6 +319,13 @@ def current_subtabs(context):
 
 
 @register.simple_tag(takes_context=True)
+def get_current_parent_tab(context):
+    current_tab_name = get_current_tab_name(context)
+    current_tab_tree = get_current_tab_tree(context)
+    return _get_active_parent(current_tab_tree, current_tab_name)
+
+
+@register.simple_tag(takes_context=True)
 def get_current_tab(context):
     current_tab_name = get_current_tab_name(context)
     current_tab_tree = get_current_tab_tree(context)
