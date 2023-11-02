@@ -485,6 +485,11 @@ class GlobalPropositionBusinessException(Enum):
     PoolOuAnneeDifferentException = "ADMISSION-13"
     ElementsConfirmationNonConcordants = "ADMISSION-14"
     NombrePropositionsSoumisesDepasseException = "ADMISSION-15"
+    PropositionNonTrouveeException = "ADMISSION-16"
+    EmplacementDocumentNonTrouveException = "ADMISSION-17"
+    DocumentsCompletesDifferentsDesReclamesException = "ADMISSION-18"
+    PosteDiplomatiqueNonTrouveException = "ADMISSION-19"
+    ResidenceAuSensDuDecretNonDisponiblePourInscriptionException = "ADMISSION-20"
 
 
 class FormationGeneraleBusinessException(Enum):
@@ -619,6 +624,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.ReorientationInscriptionExterneNonConfirmeeException,
         GlobalPropositionBusinessException.ModificationInscriptionExterneNonConfirmeeException,
         GlobalPropositionBusinessException.ResidenceAuSensDuDecretNonRenseigneeException,
+        GlobalPropositionBusinessException.ResidenceAuSensDuDecretNonDisponiblePourInscriptionException,
         FormationContinueBusinessException.InformationsComplementairesNonRenseigneesException,
         FormationGeneraleBusinessException.InformationsVisaNonCompleteesException,
     },
