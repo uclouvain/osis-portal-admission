@@ -1369,6 +1369,9 @@ msgstr ""
 msgid "Foreign diploma"
 msgstr ""
 
+msgid "Form link"
+msgstr ""
+
 msgid "Former UCLouvain student"
 msgstr ""
 
@@ -3473,6 +3476,11 @@ msgstr ""
 msgid ""
 "Your enrolment cannot be confirmed. All of the following requirements must "
 "be met."
+msgstr ""
+
+msgid ""
+"Your opinion matters to us. Once you have submitted your application, can "
+"you fill in the form at the following link?"
 msgstr ""
 
 msgid "Your participation in the event"
