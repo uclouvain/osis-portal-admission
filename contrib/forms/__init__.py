@@ -368,6 +368,8 @@ class PhoneField(forms.CharField):
     widget = PhoneWidget
 
     def clean(self, value):
+        value = super().clean(value)
+
         if not value:
             return ''
         try:
