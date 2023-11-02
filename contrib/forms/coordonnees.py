@@ -48,7 +48,6 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
         required=False,
     )
     phone_mobile = PhoneField(
-        required=False,
         label=__('admission', "Telephone (mobile)"),
     )
     emergency_contact_phone = PhoneField(

@@ -146,6 +146,7 @@ class CoordonneesTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('city', response.context['residential'].errors)
+        self.assertIn('phone_mobile', response.context['main_form'].errors)
 
     def test_form_belgian(self):
         url = resolve_url('admission:create:coordonnees')
@@ -159,6 +160,7 @@ class CoordonneesTestCase(TestCase):
                 "residential-street": "Rue du Compas",
                 "residential-street_number": "1",
                 "private_email": "john@example.org",
+                "phone_mobile": "+32474123456",
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -167,6 +169,7 @@ class CoordonneesTestCase(TestCase):
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['city'], "Louvain-La-Neuve")
         self.assertEqual(last_call_kwargs['coordonnees']['private_email'], "")
         self.assertIsNone(last_call_kwargs['coordonnees']['contact'])
+        self.assertEqual(last_call_kwargs['coordonnees']['phone_mobile'], "+32474123456")
 
     def test_form_foreign_with_contact_address(self):
         url = resolve_url('admission:create:coordonnees')
