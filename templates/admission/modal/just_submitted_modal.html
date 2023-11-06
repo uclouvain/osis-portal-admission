@@ -30,6 +30,7 @@
 {% block modal_title %}{% trans "Your application has been submitted" %}{% endblock %}
 
 {% block modal_body %}
+  <div class="hidden"> {# To delete after the test session #}
   {% if current_context == 'continuing-education' %}
     {% trans "by the University Institute for Continuing Education (IUFC)" as by_service %}
   {% else %}
@@ -44,6 +45,7 @@
     </ul>
     <p>We thank you for choosing UCLouvain and wish you every success in the course you intend to undertake!</p>
   {% endblocktrans %}
+  </div> {# To delete after the test session #}
   {% include 'admission/includes/test_session_message.html' %}
 {% endblock %}
 
