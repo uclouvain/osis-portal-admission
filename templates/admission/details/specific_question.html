@@ -92,9 +92,15 @@
 
   {% if "is_non_resident" in pool_questions %}
     {% panel _("Enrolment in limited enrolment bachelor's course") %}
-      {% field_data _("Are you a non-resident (as defined by government decree)?") pool_questions.is_non_resident|yesno:_("Yes,No,") %}
+      {% if pool_questions.is_non_resident %}
+        {% translate 'You are applying as non-resident (as defined by government decree).' %}
+      {% elif pool_questions.is_non_resident is False %}
+        {% translate 'You are applying as resident (as defined by government decree).' %}
+      {% else %}
+        {% translate 'You do not specify if you are applying as resident or non-resident (as defined by government decree).' %}
+      {% endif %}
       {% if pool_questions.is_non_resident and "forbid_enrolment_limited_course_for_non_resident" in pool_questions %}
-        <p class="alert alert-warning">
+        <p class="alert alert-warning mt-1">
           {{ pool_questions.forbid_enrolment_limited_course_for_non_resident|safe }}
         </p>
       {% endif %}
