@@ -31,7 +31,7 @@ import phonenumbers
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils.translation import get_language, gettext_lazy as _, gettext
+from django.utils.translation import get_language, gettext_lazy as _, gettext, pgettext_lazy
 
 from admission.constants import MINIMUM_BIRTH_YEAR
 from admission.services.campus import AdmissionCampusService
@@ -60,6 +60,20 @@ JPEG_MIME_TYPE = 'image/jpeg'
 PNG_MIME_TYPE = 'image/png'
 IMAGE_MIME_TYPES = [JPEG_MIME_TYPE, PNG_MIME_TYPE]
 DEFAULT_MIME_TYPES = [PDF_MIME_TYPE] + IMAGE_MIME_TYPES
+LOWERCASE_MONTHS = {
+    1: pgettext_lazy('admission', 'January'),
+    2: pgettext_lazy('admission', 'February'),
+    3: pgettext_lazy('admission', 'March'),
+    4: pgettext_lazy('admission', 'April'),
+    5: pgettext_lazy('admission', 'May'),
+    6: pgettext_lazy('admission', 'June'),
+    7: pgettext_lazy('admission', 'July'),
+    8: pgettext_lazy('admission', 'August'),
+    9: pgettext_lazy('admission', 'September'),
+    10: pgettext_lazy('admission', 'October'),
+    11: pgettext_lazy('admission', 'November'),
+    12: pgettext_lazy('admission', 'December'),
+}
 
 
 def get_country_initial_choices(iso_code=None, person=None, loaded_country=None):
@@ -354,6 +368,8 @@ class PhoneField(forms.CharField):
     widget = PhoneWidget
 
     def clean(self, value):
+        value = super().clean(value)
+
         if not value:
             return ''
         try:

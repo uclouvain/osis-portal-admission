@@ -124,6 +124,11 @@
       {% if form.is_non_resident %}
         {% panel _("Enrolment in limited enrolment bachelor's course") %}
           {% bootstrap_field form.is_non_resident form_group_class="form-group required_field" %}
+          {% if forbid_enrolment_limited_course_for_non_resident %}
+            <p class="alert alert-warning" id="non-resident-error">
+              {{ forbid_enrolment_limited_course_for_non_resident|safe }}
+            </p>
+          {% endif %}
         {% endpanel %}
       {% endif %}
 
@@ -216,6 +221,14 @@
     });
 
     {% if forms.1 and forms.1.is_non_resident %}
+      {% if forbid_enrolment_limited_course_for_non_resident %}
+        $('#non-resident-error').dependsOn({
+          'input[name=pool_questions-is_non_resident]': {
+            values: ['True'],
+          },
+        });
+      {% endif %}
+
       {% if forms.1.is_external_modification or forms.1.is_external_reorientation %}
         {# Whole panel depends on is_non_resident question #}
         $('#panel-modification, #panel-reorientation').dependsOn({

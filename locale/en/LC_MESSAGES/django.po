@@ -404,6 +404,10 @@ msgctxt "admission decision"
 msgid "Approved"
 msgstr ""
 
+msgctxt "admission"
+msgid "April"
+msgstr ""
+
 msgid "Are you a dual degree student?"
 msgstr ""
 
@@ -477,6 +481,10 @@ msgid "Attachments"
 msgstr ""
 
 msgid "Attestation of the communication"
+msgstr ""
+
+msgctxt "admission"
+msgid "August"
 msgstr ""
 
 msgid "Authors"
@@ -1022,6 +1030,10 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
+msgctxt "admission"
+msgid "December"
+msgstr ""
+
 msgid "Decision"
 msgstr ""
 
@@ -1308,6 +1320,10 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
+msgctxt "admission"
+msgid "February"
+msgstr ""
+
 msgid "Feedback from FAC"
 msgstr ""
 
@@ -1351,6 +1367,9 @@ msgid ""
 msgstr ""
 
 msgid "Foreign diploma"
+msgstr ""
+
+msgid "Form link"
 msgstr ""
 
 msgid "Former UCLouvain student"
@@ -1747,6 +1766,10 @@ msgstr "Jury declined by CDD"
 msgid "JURY_SOUMIS"
 msgstr "Jury submitted"
 
+msgctxt "admission"
+msgid "January"
+msgstr ""
+
 msgid "Joint research project (ARC)"
 msgstr "ARC - Action de Recherche Concertée"
 
@@ -1757,6 +1780,14 @@ msgid "Joint supervision request"
 msgstr ""
 
 msgid "Journal or publishing house name"
+msgstr ""
+
+msgctxt "admission"
+msgid "July"
+msgstr ""
+
+msgctxt "admission"
+msgid "June"
 msgstr ""
 
 msgid "Jury composition"
@@ -1846,6 +1877,10 @@ msgid "Mandatory languages are missing."
 msgstr ""
 
 msgctxt "admission"
+msgid "March"
+msgstr ""
+
+msgctxt "admission"
 msgid "Married"
 msgstr ""
 
@@ -1861,6 +1896,10 @@ msgid "Master and Specialised master"
 msgstr ""
 
 msgid "Maximum number of documents"
+msgstr ""
+
+msgctxt "admission"
+msgid "May"
 msgstr ""
 
 msgid "Member not found"
@@ -2028,6 +2067,10 @@ msgctxt "admission"
 msgid "Not submitted"
 msgstr ""
 
+msgctxt "admission"
+msgid "November"
+msgstr ""
+
 msgctxt "address"
 msgid "Number"
 msgstr ""
@@ -2036,6 +2079,10 @@ msgid "Number of credits earned at the end of the academic year."
 msgstr ""
 
 msgid "Number of days participating"
+msgstr ""
+
+msgctxt "admission"
+msgid "October"
 msgstr ""
 
 msgid ""
@@ -2653,6 +2700,10 @@ msgctxt "admission"
 msgid "Separated"
 msgstr ""
 
+msgctxt "admission"
+msgid "September"
+msgstr ""
+
 msgid "Services"
 msgstr ""
 
@@ -3237,9 +3288,9 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Would you like to join the <a href='https://uclouvain.be/fr/etudier/sport/le-"
-"sport-uclouvain.html' target='_blank'>sports activities</a>? If so, the cost "
-"of membership will be added to your tuition fee."
+"Would you like to join the <a href='https://uclouvain.be/en/study/sport' "
+"target='_blank'>sports activities</a>? If so, the cost of membership will be "
+"added to your tuition fee."
 msgstr ""
 
 msgid ""
@@ -3425,6 +3476,11 @@ msgstr ""
 msgid ""
 "Your enrolment cannot be confirmed. All of the following requirements must "
 "be met."
+msgstr ""
+
+msgid ""
+"Your opinion matters to us. Once you have submitted your application, can "
+"you fill in the form at the following link?"
 msgstr ""
 
 msgid "Your participation in the event"

@@ -55,6 +55,8 @@
     {% include "template_messages.html" %}
   </div>
 
+  {% include 'admission/includes/test_session_message.html' %}
+
   {% if doctorate_propositions %}
     <h3>{% trans "PhD" %}</h3>
     {% for admission in doctorate_propositions %}

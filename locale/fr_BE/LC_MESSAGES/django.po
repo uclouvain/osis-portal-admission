@@ -474,6 +474,10 @@ msgctxt "admission decision"
 msgid "Approved"
 msgstr "Approuvée"
 
+msgctxt "admission"
+msgid "April"
+msgstr "avril"
+
 msgid "Are you a dual degree student?"
 msgstr "Êtes-vous en double diplomation ?"
 
@@ -560,6 +564,10 @@ msgstr "Pièces jointes"
 
 msgid "Attestation of the communication"
 msgstr "Attestation de communication"
+
+msgctxt "admission"
+msgid "August"
+msgstr "août"
 
 msgid "Authors"
 msgstr "Auteurs et autrices"
@@ -1186,6 +1194,10 @@ msgstr "Date à laquelle vous pensez obtenir votre diplôme."
 msgid "Day"
 msgstr "Jour"
 
+msgctxt "admission"
+msgid "December"
+msgstr "décembre"
+
 msgid "Decision"
 msgstr "Décision"
 
@@ -1486,6 +1498,10 @@ msgstr "FRIA"
 msgid "Failed"
 msgstr "Échec"
 
+msgctxt "admission"
+msgid "February"
+msgstr "février"
+
 msgid "Feedback from FAC"
 msgstr "Retour de FAC"
 
@@ -1538,6 +1554,9 @@ msgstr ""
 
 msgid "Foreign diploma"
 msgstr "Diplôme étranger"
+
+msgid "Form link"
+msgstr "Lien vers le formulaire"
 
 msgid "Former UCLouvain student"
 msgstr "Ancien étudiant UCLouvain"
@@ -2012,6 +2031,10 @@ msgstr "Jury refusé par CDD"
 msgid "JURY_SOUMIS"
 msgstr "Jury soumis"
 
+msgctxt "admission"
+msgid "January"
+msgstr "janvier"
+
 msgid "Joint research project (ARC)"
 msgstr "ARC - Action de Recherche Concertée"
 
@@ -2023,6 +2046,14 @@ msgstr "Demande d'ouverture de cotutelle"
 
 msgid "Journal or publishing house name"
 msgstr "Nom de la revue ou de la maison d'édition"
+
+msgctxt "admission"
+msgid "July"
+msgstr "juillet"
+
+msgctxt "admission"
+msgid "June"
+msgstr "juin"
 
 msgid "Jury composition"
 msgstr "Composition du jury"
@@ -2111,6 +2142,10 @@ msgid "Mandatory languages are missing."
 msgstr "Des langues obligatoires sont manquantes."
 
 msgctxt "admission"
+msgid "March"
+msgstr "mars"
+
+msgctxt "admission"
 msgid "Married"
 msgstr "Marié·e"
 
@@ -2127,6 +2162,10 @@ msgstr "Master et Master de spécialisation"
 
 msgid "Maximum number of documents"
 msgstr "Nombre maximum de documents"
+
+msgctxt "admission"
+msgid "May"
+msgstr "mai"
 
 msgid "Member not found"
 msgstr "Membre non trouvé"
@@ -2302,6 +2341,10 @@ msgctxt "admission"
 msgid "Not submitted"
 msgstr "Non soumis"
 
+msgctxt "admission"
+msgid "November"
+msgstr "novembre"
+
 msgctxt "address"
 msgid "Number"
 msgstr "Numéro"
@@ -2311,6 +2354,10 @@ msgstr "Nombre de crédits réussis au terme de l'année académique."
 
 msgid "Number of days participating"
 msgstr "Nombre de jours de participation"
+
+msgctxt "admission"
+msgid "October"
+msgstr "octobre"
 
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
@@ -2975,6 +3022,10 @@ msgstr ""
 msgctxt "admission"
 msgid "Separated"
 msgstr "Séparé·e"
+
+msgctxt "admission"
+msgid "September"
+msgstr "septembre"
 
 msgid "Services"
 msgstr "Services"
@@ -3647,14 +3698,13 @@ msgstr ""
 "à un éventuel remboursement ?"
 
 msgid ""
-"Would you like to join the <a href='https://uclouvain.be/fr/etudier/sport/le-"
-"sport-uclouvain.html' target='_blank'>sports activities</a>? If so, the cost "
-"of membership will be added to your tuition fee."
+"Would you like to join the <a href='https://uclouvain.be/en/study/sport' "
+"target='_blank'>sports activities</a>? If so, the cost of membership will be "
+"added to your tuition fee."
 msgstr ""
 "Désirez-vous l'affiliation aux <a href='https://uclouvain.be/fr/etudier/"
-"sport/le-sport-uclouvain.html' target='_blank'>activités sportives</a> ? "
-"Dans l'affirmative, le coût de cette affiliation sera ajouté à vos droits "
-"d'inscription."
+"sport' target='_blank'>activités sportives</a> ? Dans l'affirmative, le coût "
+"de cette affiliation sera ajouté à vos droits d'inscription."
 
 msgid ""
 "Would you like to join the sport activities? If so, the cost of membership "
@@ -3879,6 +3929,13 @@ msgid ""
 msgstr ""
 "Votre demande d'inscription ne peut être confirmée. Certains éléments sont "
 "manquants."
+
+msgid ""
+"Your opinion matters to us. Once you have submitted your application, can "
+"you fill in the form at the following link?"
+msgstr ""
+"Votre avis est important pour nous. Après avoir envoyé votre inscription, "
+"pourrez-vous compléter le formulaire qui se trouve à l'adresse suivante ?"
 
 msgid "Your participation in the event"
 msgstr "Votre participation à l'événement"

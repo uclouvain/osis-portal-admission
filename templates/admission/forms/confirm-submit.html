@@ -190,7 +190,7 @@
 
                     {% else %}
                       {% for error in errors %}
-                        <li>{{ error }}</li>
+                        <li>{{ error|safe }}</li>
                       {% endfor %}
                     {% endif %}
 

@@ -110,6 +110,30 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, _("Enrolment in limited enrolment bachelor's course"))
 
+    def test_get_page_with_residency_when_forbidden(self):
+        # Not forbidden
+        self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
+            'reorientation_pool_end_date': None,
+            'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'is_non_resident': True,
+        }
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotContains(response, 'This enrolment is forbidden.')
+
+        # Forbidden
+        self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
+            'reorientation_pool_end_date': None,
+            'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'is_non_resident': True,
+            'forbid_enrolment_limited_course_for_non_resident': 'This enrolment is forbidden.',
+        }
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'This enrolment is forbidden.')
+
 
 class ContinuingEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
     @classmethod

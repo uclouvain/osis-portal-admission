@@ -84,6 +84,9 @@ class SpecificQuestionsFormView(
         if self.pool_questions and self.display_pool_questions_form:
             kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
             kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
+            kwargs['forbid_enrolment_limited_course_for_non_resident'] = self.pool_questions.get(
+                'forbid_enrolment_limited_course_for_non_resident'
+            )
         return super().get_context_data(**kwargs)
 
     def get_forms(self):
