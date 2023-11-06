@@ -390,3 +390,7 @@ body, html {
   background-color: #d9edf7;
   color: #31708f;
 }
+
+.mt-1 {
+  margin-top: 1em;
+}

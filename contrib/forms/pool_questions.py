@@ -74,8 +74,14 @@ class PoolQuestionsForm(forms.Form):
     )
     registration_change_form = FileUploadField(max_files=1, required=False)
     is_non_resident = forms.NullBooleanField(
-        label=_("Are you a non-resident (as defined by government decree)?"),
-        widget=BooleanRadioSelect(),
+        label=_("You are applying as ..."),
+        widget=forms.RadioSelect(
+            choices=(
+                (False, _("Resident (as defined by government decree)")),
+                (True, _("Non-resident (as defined by government decree)")),
+            ),
+            attrs={'autocomplete': "off"},
+        ),
         required=False,
     )
 

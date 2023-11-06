@@ -411,9 +411,6 @@ msgstr ""
 msgid "Are you a dual degree student?"
 msgstr ""
 
-msgid "Are you a non-resident (as defined by government decree)?"
-msgstr ""
-
 msgid "Are you an Erasmus Mundus student?"
 msgstr ""
 
@@ -2054,6 +2051,9 @@ msgstr ""
 msgid "Non-profit"
 msgstr ""
 
+msgid "Non-resident (as defined by government decree)"
+msgstr ""
+
 msgid "Non-university institution"
 msgstr ""
 
@@ -2579,6 +2579,9 @@ msgid "Research seminar"
 msgstr ""
 
 msgid "Resend invitation"
+msgstr ""
+
+msgid "Resident (as defined by government decree)"
 msgstr ""
 
 msgid "Result"
@@ -3371,6 +3374,15 @@ msgstr ""
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 
+msgid "You are applying as ..."
+msgstr ""
+
+msgid "You are applying as non-resident (as defined by government decree)."
+msgstr ""
+
+msgid "You are applying as resident (as defined by government decree)."
+msgstr ""
+
 msgid ""
 "You are considered a long-term resident if you hold a residence permit valid "
 "for at least 5 years."
@@ -3400,6 +3412,11 @@ msgid "You cannot enter a language more than once, please correct the form."
 msgstr ""
 
 msgid "You cannot pay the application fee now."
+msgstr ""
+
+msgid ""
+"You do not specify if you are applying as resident or non-resident (as "
+"defined by government decree)."
 msgstr ""
 
 msgid "You have now reached the application confirmation tab."

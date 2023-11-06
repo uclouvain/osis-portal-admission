@@ -481,9 +481,6 @@ msgstr "avril"
 msgid "Are you a dual degree student?"
 msgstr "Êtes-vous en double diplomation ?"
 
-msgid "Are you a non-resident (as defined by government decree)?"
-msgstr "Êtes-vous non-résident (au sens du décret) ?"
-
 msgid "Are you an Erasmus Mundus student?"
 msgstr "Êtes-vous Erasmus Mundus ?"
 
@@ -2328,6 +2325,9 @@ msgstr "Activités non-académiques"
 msgid "Non-profit"
 msgstr "Associatif"
 
+msgid "Non-resident (as defined by government decree)"
+msgstr "Non-résident (au sens du Décret)"
+
 msgid "Non-university institution"
 msgstr "Etablissement non-universitaire"
 
@@ -2898,6 +2898,9 @@ msgstr "Séminaire de recherche"
 
 msgid "Resend invitation"
 msgstr "Renvoyer une invitation"
+
+msgid "Resident (as defined by government decree)"
+msgstr "Résident (au sens du Décret)"
 
 msgid "Result"
 msgstr "Résultat"
@@ -3791,6 +3794,15 @@ msgstr ""
 "Vous semblez avoir des modifications non enregistrées, celles-ci seront "
 "perdues."
 
+msgid "You are applying as ..."
+msgstr "Postulez-vous en tant que ..."
+
+msgid "You are applying as non-resident (as defined by government decree)."
+msgstr "Vous postulez en tant que non-résident (au sens du Décret)."
+
+msgid "You are applying as resident (as defined by government decree)."
+msgstr "Vous postulez en tant que résident (au sens du Décret)."
+
 msgid ""
 "You are considered a long-term resident if you hold a residence permit valid "
 "for at least 5 years."
@@ -3831,6 +3843,13 @@ msgstr ""
 
 msgid "You cannot pay the application fee now."
 msgstr "Vous ne pouvez pas payer les frais de dossier maintenant."
+
+msgid ""
+"You do not specify if you are applying as resident or non-resident (as "
+"defined by government decree)."
+msgstr ""
+"Vous n'avez pas indiqué si vous postulez en tant que résident ou non-"
+"résident (au sens du Décret)."
 
 msgid "You have now reached the application confirmation tab."
 msgstr ""
