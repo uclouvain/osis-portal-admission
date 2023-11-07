@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
+from typing import List, Optional
 
 from django import forms
 from django.core.exceptions import ValidationError, ImproperlyConfigured
@@ -72,6 +72,7 @@ class ConfigurableFormItemWidget(forms.MultiWidget):
         context['current_language'] = self.current_language
         context['is_bound'] = self.is_bound
         context['group_fields_by_tab'] = self.group_fields_by_tab
+        context['group_fields_by_part_ids'] = self.group_fields_by_part_ids
         return context
 
     def __init__(
@@ -80,6 +81,7 @@ class ConfigurableFormItemWidget(forms.MultiWidget):
         fields: List[forms.Field],
         is_bound=False,
         group_fields_by_tab=False,
+        group_fields_by_part_ids=None,
         **kwargs,
     ):
         self.field_configurations = field_configurations
@@ -87,6 +89,7 @@ class ConfigurableFormItemWidget(forms.MultiWidget):
         self.current_language = get_language()
         self.is_bound = is_bound
         self.group_fields_by_tab = group_fields_by_tab
+        self.group_fields_by_part_ids = group_fields_by_part_ids
 
         super().__init__(**kwargs)
 
@@ -165,7 +168,7 @@ def _get_field_from_configuration(configuration, current_language, required_docu
 
     elif form_item_type == TypeItemFormulaire.DOCUMENT.name:
         default_field_params = _get_default_field_params(configuration, current_language)
-        default_field_params['required'] = required_documents_on_form_submit
+        default_field_params['required'] = required_documents_on_form_submit and default_field_params['required']
         field = FileUploadField(
             **default_field_params,
             max_files=configuration['configuration'].get(
@@ -214,6 +217,7 @@ class ConfigurableFormItemField(forms.MultiValueField):
         configurations: List[dict],
         required_documents_on_form_submit=False,
         group_fields_by_tab=False,
+        group_fields_by_part_ids=None,
         **kwargs,
     ):
         self.field_configurations = configurations
@@ -239,6 +243,7 @@ class ConfigurableFormItemField(forms.MultiValueField):
                 fields=fields,
                 is_bound=kwargs.pop('is_bound'),
                 group_fields_by_tab=group_fields_by_tab,
+                group_fields_by_part_ids=group_fields_by_part_ids,
             ),
             require_all_fields=False,
             required=False,
@@ -293,21 +298,44 @@ class ConfigurableFormMixin(forms.Form):
     configurable_form_field_name = 'specific_question_answers'  # Name of the form field containing several values
     required_documents_on_form_submit = False
     group_fields_by_tab = False
+    group_fields_by_part_ids: Optional[List] = None
+    several_fields = False
 
     def __init__(self, *args, form_item_configurations, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields[self.configurable_form_field_name] = ConfigurableFormItemField(
-            configurations=form_item_configurations,
-            required_documents_on_form_submit=self.required_documents_on_form_submit,
-            group_fields_by_tab=self.group_fields_by_tab,
-            is_bound=self.is_bound,
-        )
+        self.form_items_configurations = form_item_configurations
+
+        if form_item_configurations and type(form_item_configurations[0]) is list:
+            # A list of list of configurations is passed -> we create one multiple field for each list of configurations
+            self.several_fields = True
+            for index, configurations in enumerate(form_item_configurations):
+                self.fields[f'{self.configurable_form_field_name}__{index}'] = ConfigurableFormItemField(
+                    configurations=configurations,
+                    required_documents_on_form_submit=self.required_documents_on_form_submit,
+                    group_fields_by_tab=self.group_fields_by_tab,
+                    is_bound=self.is_bound,
+                )
+        else:
+            self.fields[self.configurable_form_field_name] = ConfigurableFormItemField(
+                configurations=form_item_configurations,
+                required_documents_on_form_submit=self.required_documents_on_form_submit,
+                group_fields_by_tab=self.group_fields_by_tab,
+                is_bound=self.is_bound,
+            )
 
     def clean(self):
         cleaned_data = super().clean()
 
         initial_answers = self.initial.get(self.configurable_form_field_name)
+
+        if self.several_fields:
+            # Merge the data specified in each form field
+            cleaned_data[self.configurable_form_field_name] = {}
+            for index in range(len(self.form_items_configurations)):
+                cleaned_data[self.configurable_form_field_name].update(
+                    cleaned_data.pop(f'{self.configurable_form_field_name}__{index}', {})
+                )
 
         if initial_answers and self.configurable_form_field_name in cleaned_data:
             # Merge the initial data containing answers of other tabs with the new answers

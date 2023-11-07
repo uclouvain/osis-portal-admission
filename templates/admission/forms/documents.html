@@ -26,17 +26,29 @@
 {% endcomment %}
 
 {% block form %}
-  {% panel _('Documents to complete') %}
-    <p id="documents-to-complete-header">
-      {% blocktranslate count counter=form.fields.reponses_documents_a_completer.fields|length trimmed %}
-        As part of your application, one document must be uploaded to continue the enrolment process.
-        {% plural %}
-        As part of your application, several documents must be uploaded to continue the enrolment process.
-      {% endblocktranslate %}
-    </p>
-    {% bootstrap_form_errors form %}
-    {% bootstrap_field form.reponses_documents_a_completer show_label=False error_css_class='' %}
-  {% endpanel %}
+  {% bootstrap_form_errors form %}
+
+  {% if form.fields.reponses_documents_a_completer__0.fields %}
+    {% blocktranslate with deadline=deadline trimmed count counter=form.fields.reponses_documents_a_completer__0.fields|length asvar panel_title %}
+      One document must be uploaded to continue the enrolment process before {{ deadline }}.
+      {% plural %}
+      Several documents must be uploaded to continue the enrolment process before {{ deadline }}.
+    {% endblocktranslate %}
+    {% panel panel_title %}
+      {% bootstrap_field form.reponses_documents_a_completer__0 show_label=False error_css_class='' %}
+    {% endpanel %}
+  {% endif %}
+
+  {% if form.fields.reponses_documents_a_completer__1.fields %}
+    {% blocktranslate trimmed count counter=form.fields.reponses_documents_a_completer__1.fields|length asvar panel_title %}
+      One document must be uploaded as soon as possible.
+      {% plural %}
+      Several documents must be uploaded as soon as possible.
+    {% endblocktranslate %}
+    {% panel panel_title %}
+      {% bootstrap_field form.reponses_documents_a_completer__1 show_label=False error_css_class='' %}
+    {% endpanel %}
+  {% endif %}
 
 {% endblock %}
 
@@ -46,9 +58,6 @@
     fieldset legend {
       font-size: 1.2em;
       font-weight: bold;
-    }
-    #documents-to-complete-header {
-      margin-bottom: 1.5em;
     }
   </style>
 {% endblock %}
