@@ -571,7 +571,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'end_date': datetime.date(2022, 1, 31),
                 'activity': 'Activity name',
                 'role': '',
-                'certificate': [],
+                'certificate': ['f1.pdf'],
                 'type': ActivityType.OTHER.name,
                 'institute_name': '',
                 'sector': '',

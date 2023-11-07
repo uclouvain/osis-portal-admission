@@ -481,9 +481,6 @@ msgstr "avril"
 msgid "Are you a dual degree student?"
 msgstr "Êtes-vous en double diplomation ?"
 
-msgid "Are you a non-resident (as defined by government decree)?"
-msgstr "Êtes-vous non-résident (au sens du décret) ?"
-
 msgid "Are you an Erasmus Mundus student?"
 msgstr "Êtes-vous Erasmus Mundus ?"
 
@@ -734,6 +731,13 @@ msgstr "Certificat de connaissance des langues"
 msgid "Certificate of legal cohabitation"
 msgstr "Attestation de cohabitation légale"
 
+msgid ""
+"Certificate of participation in a language study abroad for the period "
+"concerned"
+msgstr ""
+"Attestation de participation à un séjour linguistique pour la période "
+"concernée"
+
 msgid "Certificate of participation in the presentation"
 msgstr "Attestation de participation à l'exposé"
 
@@ -776,8 +780,9 @@ msgstr[1] ""
 "Attestations stipulant l'absence de dettes vis-à-vis des établissements "
 "fréquentés durant l'année académique %(academic_year)s : %(names)s."
 
-msgid "Certificate, with dates, justifying the period concerned"
-msgstr "Attestation, avec mention des dates, justifiant la période concernée"
+msgid "Certificate, with dates, justifying your volunteering activities"
+msgstr ""
+"Attestation, avec mention des dates, justifiant vos activités de volontariat"
 
 msgid ""
 "Certification and short programmes (continuing education) do not allow for "
@@ -1502,6 +1507,9 @@ msgctxt "admission"
 msgid "February"
 msgstr "février"
 
+msgid "Feedback form link"
+msgstr "Lien vers le formulaire de feedback"
+
 msgid "Feedback from FAC"
 msgstr "Retour de FAC"
 
@@ -1554,9 +1562,6 @@ msgstr ""
 
 msgid "Foreign diploma"
 msgstr "Diplôme étranger"
-
-msgid "Form link"
-msgstr "Lien vers le formulaire"
 
 msgid "Former UCLouvain student"
 msgstr "Ancien étudiant UCLouvain"
@@ -2000,6 +2005,10 @@ msgctxt "admission"
 msgid "Internship"
 msgstr "Stage"
 
+msgid "Internship certificate, with dates, justifying the period concerned"
+msgstr ""
+"Attestation de stage, avec mention des dates, justifiant la période concernée"
+
 msgid "Invalid phone number"
 msgstr "Numéro de téléphone invalide"
 
@@ -2327,6 +2336,9 @@ msgstr "Activités non-académiques"
 
 msgid "Non-profit"
 msgstr "Associatif"
+
+msgid "Non-resident (as defined by government decree)"
+msgstr "Non-résident (au sens du Décret)"
 
 msgid "Non-university institution"
 msgstr "Etablissement non-universitaire"
@@ -2898,6 +2910,9 @@ msgstr "Séminaire de recherche"
 
 msgid "Resend invitation"
 msgstr "Renvoyer une invitation"
+
+msgid "Resident (as defined by government decree)"
+msgstr "Résident (au sens du Décret)"
 
 msgid "Result"
 msgstr "Résultat"
@@ -3494,10 +3509,6 @@ msgstr "Volume horaire total"
 msgid "Total number of credits registered in your annual programme (PAE)."
 msgstr "Nombre total des crédits inscrits dans votre programme d'année (PAE)."
 
-msgid "Training certificate, with dates, justifying the period concerned"
-msgstr ""
-"Attestation de stage, avec mention des dates, justifiant la période concernée"
-
 msgid "Transcript"
 msgstr "Relevé de notes"
 
@@ -3791,6 +3802,15 @@ msgstr ""
 "Vous semblez avoir des modifications non enregistrées, celles-ci seront "
 "perdues."
 
+msgid "You are applying as ..."
+msgstr "Postulez-vous en tant que ..."
+
+msgid "You are applying as non-resident (as defined by government decree)."
+msgstr "Vous postulez en tant que non-résident (au sens du Décret)."
+
+msgid "You are applying as resident (as defined by government decree)."
+msgstr "Vous postulez en tant que résident (au sens du Décret)."
+
 msgid ""
 "You are considered a long-term resident if you hold a residence permit valid "
 "for at least 5 years."
@@ -3831,6 +3851,13 @@ msgstr ""
 
 msgid "You cannot pay the application fee now."
 msgstr "Vous ne pouvez pas payer les frais de dossier maintenant."
+
+msgid ""
+"You do not specify if you are applying as resident or non-resident (as "
+"defined by government decree)."
+msgstr ""
+"Vous n'avez pas indiqué si vous postulez en tant que résident ou non-"
+"résident (au sens du Décret)."
 
 msgid "You have now reached the application confirmation tab."
 msgstr ""
@@ -3932,10 +3959,11 @@ msgstr ""
 
 msgid ""
 "Your opinion matters to us. Once you have submitted your application, can "
-"you fill in the form at the following link?"
+"you fill in the feedback form at the following link?"
 msgstr ""
 "Votre avis est important pour nous. Après avoir envoyé votre inscription, "
-"pourrez-vous compléter le formulaire qui se trouve à l'adresse suivante ?"
+"pourrez-vous compléter le formulaire de feedback qui se trouve à l'adresse "
+"suivante ?"
 
 msgid "Your participation in the event"
 msgstr "Votre participation à l'événement"

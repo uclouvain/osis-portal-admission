@@ -411,9 +411,6 @@ msgstr ""
 msgid "Are you a dual degree student?"
 msgstr ""
 
-msgid "Are you a non-resident (as defined by government decree)?"
-msgstr ""
-
 msgid "Are you an Erasmus Mundus student?"
 msgstr ""
 
@@ -641,6 +638,11 @@ msgstr ""
 msgid "Certificate of legal cohabitation"
 msgstr ""
 
+msgid ""
+"Certificate of participation in a language study abroad for the period "
+"concerned"
+msgstr ""
+
 msgid "Certificate of participation in the presentation"
 msgstr ""
 
@@ -672,7 +674,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Certificate, with dates, justifying the period concerned"
+msgid "Certificate, with dates, justifying your volunteering activities"
 msgstr ""
 
 msgid ""
@@ -1324,6 +1326,9 @@ msgctxt "admission"
 msgid "February"
 msgstr ""
 
+msgid "Feedback form link"
+msgstr ""
+
 msgid "Feedback from FAC"
 msgstr ""
 
@@ -1367,9 +1372,6 @@ msgid ""
 msgstr ""
 
 msgid "Foreign diploma"
-msgstr ""
-
-msgid "Form link"
 msgstr ""
 
 msgid "Former UCLouvain student"
@@ -1735,6 +1737,9 @@ msgctxt "admission"
 msgid "Internship"
 msgstr ""
 
+msgid "Internship certificate, with dates, justifying the period concerned"
+msgstr ""
+
 msgid "Invalid phone number"
 msgstr ""
 
@@ -2052,6 +2057,9 @@ msgid "Non-academic activities"
 msgstr ""
 
 msgid "Non-profit"
+msgstr ""
+
+msgid "Non-resident (as defined by government decree)"
 msgstr ""
 
 msgid "Non-university institution"
@@ -2581,6 +2589,9 @@ msgstr ""
 msgid "Resend invitation"
 msgstr ""
 
+msgid "Resident (as defined by government decree)"
+msgstr ""
+
 msgid "Result"
 msgstr ""
 
@@ -3097,9 +3108,6 @@ msgstr ""
 msgid "Total number of credits registered in your annual programme (PAE)."
 msgstr ""
 
-msgid "Training certificate, with dates, justifying the period concerned"
-msgstr ""
-
 msgid "Transcript"
 msgstr ""
 
@@ -3371,6 +3379,15 @@ msgstr ""
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 
+msgid "You are applying as ..."
+msgstr ""
+
+msgid "You are applying as non-resident (as defined by government decree)."
+msgstr ""
+
+msgid "You are applying as resident (as defined by government decree)."
+msgstr ""
+
 msgid ""
 "You are considered a long-term resident if you hold a residence permit valid "
 "for at least 5 years."
@@ -3400,6 +3417,11 @@ msgid "You cannot enter a language more than once, please correct the form."
 msgstr ""
 
 msgid "You cannot pay the application fee now."
+msgstr ""
+
+msgid ""
+"You do not specify if you are applying as resident or non-resident (as "
+"defined by government decree)."
 msgstr ""
 
 msgid "You have now reached the application confirmation tab."
@@ -3480,7 +3502,7 @@ msgstr ""
 
 msgid ""
 "Your opinion matters to us. Once you have submitted your application, can "
-"you fill in the form at the following link?"
+"you fill in the feedback form at the following link?"
 msgstr ""
 
 msgid "Your participation in the event"
