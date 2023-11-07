@@ -1507,6 +1507,9 @@ msgctxt "admission"
 msgid "February"
 msgstr "février"
 
+msgid "Feedback form link"
+msgstr "Lien vers le formulaire de feedback"
+
 msgid "Feedback from FAC"
 msgstr "Retour de FAC"
 
@@ -1559,9 +1562,6 @@ msgstr ""
 
 msgid "Foreign diploma"
 msgstr "Diplôme étranger"
-
-msgid "Form link"
-msgstr "Lien vers le formulaire"
 
 msgid "Former UCLouvain student"
 msgstr "Ancien étudiant UCLouvain"
