@@ -638,6 +638,11 @@ msgstr ""
 msgid "Certificate of legal cohabitation"
 msgstr ""
 
+msgid ""
+"Certificate of participation in a language study abroad for the period "
+"concerned"
+msgstr ""
+
 msgid "Certificate of participation in the presentation"
 msgstr ""
 
@@ -669,7 +674,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Certificate, with dates, justifying the period concerned"
+msgid "Certificate, with dates, justifying your volunteering activities"
 msgstr ""
 
 msgid ""
@@ -1730,6 +1735,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Internship"
+msgstr ""
+
+msgid "Internship certificate, with dates, justifying the period concerned"
 msgstr ""
 
 msgid "Invalid phone number"
@@ -3098,9 +3106,6 @@ msgid "Total hourly volume"
 msgstr ""
 
 msgid "Total number of credits registered in your annual programme (PAE)."
-msgstr ""
-
-msgid "Training certificate, with dates, justifying the period concerned"
 msgstr ""
 
 msgid "Transcript"
