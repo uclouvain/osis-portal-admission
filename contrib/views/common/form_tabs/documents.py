@@ -66,9 +66,17 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
             uuid=self.admission_uuid,
         )
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['deadline'] = self.specific_questions['deadline']
+        return context_data
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['form_item_configurations'] = self.specific_questions
+        kwargs['form_item_configurations'] = [
+            self.specific_questions['immediate_requested_documents'],
+            self.specific_questions['later_requested_documents'],
+        ]
         return kwargs
 
     def call_webservice(self, data):

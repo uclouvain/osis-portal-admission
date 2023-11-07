@@ -490,6 +490,7 @@ class GlobalPropositionBusinessException(Enum):
     DocumentsCompletesDifferentsDesReclamesException = "ADMISSION-18"
     PosteDiplomatiqueNonTrouveException = "ADMISSION-19"
     ResidenceAuSensDuDecretNonDisponiblePourInscriptionException = "ADMISSION-20"
+    DocumentsReclamesImmediatementNonCompletesException = "ADMISSION-21"
 
 
 class FormationGeneraleBusinessException(Enum):

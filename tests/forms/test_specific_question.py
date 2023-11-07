@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -350,3 +350,177 @@ class ConfigurableFormItemFieldTestCase(TestCase):
         self.assertIn('value="My response to the question 1."', form_p)
         self.assertIn('My response to the question 2.</textarea>', form_p)
         self.assertIn('data-values="file:token,foobar"', form_p)
+
+
+class ConfigurableMultipleFormItemFieldTestCase(TestCase):
+    first_uuid = uuid.uuid4()
+    default_translated_value = {'en': '', 'fr-be': ''}
+
+    @classmethod
+    @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/', LANGUAGE_CODE='en')
+    def setUpTestData(cls):
+        field_configurations_0 = [
+            {
+                'uuid': 'fe254203-17c7-47d6-95e4-3c5c532da552',
+                'type': 'TEXTE',
+                'required': False,
+                'title': {'en': 'Text field 1', 'fr-be': 'Champ texte 1'},
+                'help_text': {'en': 'Write here', 'fr-be': 'Ecrivez ici'},
+                'text': {'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                'configuration': {
+                    'TAILLE_TEXTE': 'COURT',
+                },
+                'values': [],
+            },
+        ]
+        field_configurations_1 = [
+            {
+                'uuid': 'fe254203-17c7-47d6-95e4-3c5c532da553',
+                'type': 'TEXTE',
+                'required': False,
+                'title': {'en': 'Text field 2', 'fr-be': 'Champ texte 2'},
+                'help_text': {'en': 'Write here', 'fr-be': 'Ecrivez ici'},
+                'text': {'en': 'Detailed data', 'fr-be': 'Données détaillées'},
+                'configuration': {
+                    'TAILLE_TEXTE': 'LONG',
+                },
+                'values': [],
+            },
+        ]
+
+        form = ConfigurableFormMixin(
+            initial={
+                'specific_question_answers': {
+                    'fe254203-17c7-47d6-95e4-3c5c532da552': 'My response to the question 1.',
+                    'fe254203-17c7-47d6-95e4-3c5c532da553': 'My response to the question 2.',
+                    'fe254203-17c7-47d6-95e4-3c5c532da554': ['file:token', str(cls.first_uuid)],
+                    'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
+                    'fe254203-17c7-47d6-95e4-3c5c532da556': '1',
+                    'fe254203-17c7-47d6-95e4-3c5c532da557': ['1', '2'],
+                    'fe254203-17c7-47d6-95e4-3c5c532da558': '1',
+                },
+            },
+            form_item_configurations=[
+                field_configurations_0,
+                field_configurations_1,
+            ],
+        )
+
+        cls.first_fields = form.fields['specific_question_answers__0'].fields
+        cls.first_widgets = form.fields['specific_question_answers__0'].widget.widgets
+        cls.second_fields = form.fields['specific_question_answers__1'].fields
+        cls.second_widgets = form.fields['specific_question_answers__1'].widget.widgets
+
+        cls.form = form
+        cls.first_field_configurations = field_configurations_0
+        cls.second_field_configurations = field_configurations_1
+
+    def test_configurable_form_with_text_field(self):
+        # Short text
+        field = self.first_fields[0]
+        widget = self.first_widgets[0]
+
+        # Check field
+        self.assertIsInstance(field, forms.CharField)
+        self.assertFalse(field.required)
+        self.assertEqual(field.label, 'Text field 1')
+        self.assertEqual(field.help_text, 'Detailed data')
+
+        # Check widget
+        self.assertIsInstance(widget, forms.TextInput)
+        self.assertEqual(widget.attrs['placeholder'], 'Write here')
+
+        # Short text
+        field = self.second_fields[0]
+        widget = self.second_widgets[0]
+
+        # Check field
+        self.assertIsInstance(field, forms.CharField)
+        self.assertFalse(field.required)
+        self.assertEqual(field.label, 'Text field 2')
+        self.assertEqual(field.help_text, 'Detailed data')
+
+        # Check widget
+        self.assertIsInstance(widget, forms.Textarea)
+        self.assertEqual(widget.attrs['placeholder'], 'Write here')
+
+    def test_configurable_form_with_valid_data(self):
+        # Only answer to the first question
+        form = ConfigurableFormMixin(
+            data={
+                'specific_question_answers__0_0': 'My response to the question 1',
+            },
+            form_item_configurations=[
+                self.first_field_configurations,
+                self.second_field_configurations,
+            ],
+            initial={
+                'specific_question_answers': {
+                    'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
+                },
+            },
+        )
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.cleaned_data,
+            {
+                'specific_question_answers': {
+                    'fe254203-17c7-47d6-95e4-3c5c532da552': 'My response to the question 1',
+                    'fe254203-17c7-47d6-95e4-3c5c532da553': '',
+                    'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
+                }
+            },
+        )
+        # Only answer to the second question
+        form = ConfigurableFormMixin(
+            data={
+                'specific_question_answers__1_0': 'My response to the question 2',
+            },
+            form_item_configurations=[
+                self.first_field_configurations,
+                self.second_field_configurations,
+            ],
+            initial={
+                'specific_question_answers': {
+                    'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
+                },
+            },
+        )
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.cleaned_data,
+            {
+                'specific_question_answers': {
+                    'fe254203-17c7-47d6-95e4-3c5c532da552': '',
+                    'fe254203-17c7-47d6-95e4-3c5c532da553': 'My response to the question 2',
+                    'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
+                }
+            },
+        )
+        # Answer to both questions
+        form = ConfigurableFormMixin(
+            data={
+                'specific_question_answers__0_0': 'My response to the question 1',
+                'specific_question_answers__1_0': 'My response to the question 2',
+            },
+            form_item_configurations=[
+                self.first_field_configurations,
+                self.second_field_configurations,
+            ],
+            initial={
+                'specific_question_answers': {
+                    'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
+                },
+            },
+        )
+        self.assertTrue(form.is_valid())
+        self.assertEqual(
+            form.cleaned_data,
+            {
+                'specific_question_answers': {
+                    'fe254203-17c7-47d6-95e4-3c5c532da552': 'My response to the question 1',
+                    'fe254203-17c7-47d6-95e4-3c5c532da553': 'My response to the question 2',
+                    'fe254203-17c7-47d6-95e4-3c5c532da555': 'My response in another tab',
+                }
+            },
+        )
