@@ -3502,7 +3502,7 @@ msgstr ""
 
 msgid ""
 "Your opinion matters to us. Once you have submitted your application, can "
-"you fill in the form at the following link?"
+"you fill in the feedback form at the following link?"
 msgstr ""
 
 msgid "Your participation in the event"
