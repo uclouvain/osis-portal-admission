@@ -734,6 +734,13 @@ msgstr "Certificat de connaissance des langues"
 msgid "Certificate of legal cohabitation"
 msgstr "Attestation de cohabitation légale"
 
+msgid ""
+"Certificate of participation in a language study abroad for the period "
+"concerned"
+msgstr ""
+"Attestation de participation à un séjour linguistique pour la période "
+"concernée"
+
 msgid "Certificate of participation in the presentation"
 msgstr "Attestation de participation à l'exposé"
 
@@ -776,8 +783,9 @@ msgstr[1] ""
 "Attestations stipulant l'absence de dettes vis-à-vis des établissements "
 "fréquentés durant l'année académique %(academic_year)s : %(names)s."
 
-msgid "Certificate, with dates, justifying the period concerned"
-msgstr "Attestation, avec mention des dates, justifiant la période concernée"
+msgid "Certificate, with dates, justifying your volunteering activities"
+msgstr ""
+"Attestation, avec mention des dates, justifiant vos activités de volontariat"
 
 msgid ""
 "Certification and short programmes (continuing education) do not allow for "
@@ -1999,6 +2007,10 @@ msgstr "Bourse internationale"
 msgctxt "admission"
 msgid "Internship"
 msgstr "Stage"
+
+msgid "Internship certificate, with dates, justifying the period concerned"
+msgstr ""
+"Attestation de stage, avec mention des dates, justifiant la période concernée"
 
 msgid "Invalid phone number"
 msgstr "Numéro de téléphone invalide"
@@ -3493,10 +3505,6 @@ msgstr "Volume horaire total"
 
 msgid "Total number of credits registered in your annual programme (PAE)."
 msgstr "Nombre total des crédits inscrits dans votre programme d'année (PAE)."
-
-msgid "Training certificate, with dates, justifying the period concerned"
-msgstr ""
-"Attestation de stage, avec mention des dates, justifiant la période concernée"
 
 msgid "Transcript"
 msgstr "Relevé de notes"

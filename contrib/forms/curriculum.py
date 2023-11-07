@@ -265,7 +265,6 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
                 cleaned_data[field] = ''
 
         if activity_type == ActivityType.OTHER.name:
-            cleaned_data['certificate'] = []
             if not cleaned_data['activity']:
                 self.add_error('activity', FIELD_REQUIRED_MESSAGE)
         else:
