@@ -55,7 +55,7 @@
     {% include "template_messages.html" %}
   </div>
 
-  {% if doctorate_propositions or general_education_propositions or continuing_education_propositions %}
+  {% if has_submitted_a_proposition %}
     {% include 'admission/includes/test_session_message.html' %}
   {% endif %}
 

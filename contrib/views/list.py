@@ -23,11 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import itertools
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from admission.constants import PROPOSITION_JUST_SUBMITTED
-from admission.contrib.enums import CANCELLED_STATUSES, TO_COMPLETE_STATUSES
+from admission.contrib.enums import CANCELLED_STATUSES, TO_COMPLETE_STATUSES, IN_PROGRESS_STATUSES
 from admission.services.proposition import AdmissionPropositionService
 from admission.templatetags.admission import TAB_TREES, can_make_action
 
@@ -48,6 +50,15 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
         context["doctorate_propositions"] = result.doctorate_propositions
         context["continuing_education_propositions"] = result.continuing_education_propositions
         context["general_education_propositions"] = result.general_education_propositions
+        context['has_submitted_a_proposition'] = any(
+            proposition
+            for proposition in itertools.chain(
+                result.doctorate_propositions,
+                result.continuing_education_propositions,
+                result.general_education_propositions,
+            )
+            if proposition.statut not in IN_PROGRESS_STATUSES
+        )
         context["global_links"] = result.links
         context["can_create_proposition"] = can_make_action(result, 'create_training_choice')
         context["creation_error_message"] = result.links['create_training_choice'].get('error', '')
