@@ -169,7 +169,11 @@
           {% else %}
             <div class="col-md-6">
               {% translate 'Grade' context 'admission' as grade_label %}
-              {% field_data grade_label experience.obtained_grade.value|enum_display:'Grade' %}
+              {% if experience.obtained_grade.value %}
+                {% field_data grade_label experience.obtained_grade.value|enum_display:'Grade' %}
+              {% else %}
+                {% field_data grade_label experience.other_obtained_grade %}
+              {% endif %}
             </div>
             </div>
             {% if view.is_doctorate %}

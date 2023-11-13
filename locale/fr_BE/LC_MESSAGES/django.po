@@ -1602,6 +1602,10 @@ msgctxt "admission"
 msgid "Grade"
 msgstr "Mention obtenue"
 
+msgctxt "admission other"
+msgid "Grade"
+msgstr "Mention"
+
 msgid "Grounds for denied"
 msgstr "Motif de refus"
 
@@ -2457,6 +2461,10 @@ msgstr "Autre type d'enseignement"
 
 msgid "Other given names"
 msgstr "Autres prénoms"
+
+msgctxt "admission"
+msgid "Other grade"
+msgstr "Autre mention"
 
 msgid "Other institute"
 msgstr "Autre établissement"

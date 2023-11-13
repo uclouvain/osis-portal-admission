@@ -336,6 +336,8 @@ EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS = {
     'linguistic_regime',
     'transcript_type',
     'obtained_grade',
+    'has_other_obtained_grade',
+    'other_obtained_grade',
     'graduate_degree_translation',
     'transcript',
     'transcript_translation',
@@ -439,6 +441,14 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     obtained_grade = forms.ChoiceField(
         choices=EMPTY_CHOICE + Grade.choices(),
         label=pgettext_lazy('admission', 'Grade'),
+        required=False,
+    )
+    has_other_obtained_grade = forms.BooleanField(
+        label=pgettext_lazy('admission', 'Other grade'),
+        required=False,
+    )
+    other_obtained_grade = forms.CharField(
+        label=pgettext_lazy('admission other', 'Grade'),
         required=False,
     )
     graduate_degree = FileUploadField(
@@ -551,6 +561,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         if self.initial:
             self.initial['other_program'] = bool(self.initial.get('education_name'))
             self.initial['other_institute'] = bool(self.initial.get('institute_name'))
+            self.initial['has_other_obtained_grade'] = bool(self.initial.get('other_obtained_grade'))
 
     def clean(self):
         cleaned_data = super().clean()
@@ -588,13 +599,22 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     def clean_data_diploma(self, cleaned_data, obtained_diploma):
         if obtained_diploma:
             for field in [
-                'obtained_grade',
                 'expected_graduation_date',
                 'dissertation_title',
                 'dissertation_score',
             ]:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
+
+            if cleaned_data.get('has_other_obtained_grade'):
+                cleaned_data['obtained_grade'] = ''
+                if not cleaned_data.get('other_obtained_grade'):
+                    self.add_error('other_obtained_grade', FIELD_REQUIRED_MESSAGE)
+            else:
+                cleaned_data['other_obtained_grade'] = ''
+                if not cleaned_data.get('obtained_grade'):
+                    self.add_error('obtained_grade', FIELD_REQUIRED_MESSAGE)
+
         else:
             cleaned_data['expected_graduation_date'] = None
             cleaned_data['dissertation_title'] = ''
@@ -603,6 +623,8 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
             cleaned_data['graduate_degree'] = []
             cleaned_data['graduate_degree_translation'] = []
             cleaned_data['rank_in_diploma'] = ''
+            cleaned_data['other_obtained_grade'] = ''
+            cleaned_data['has_other_obtained_grade'] = None
 
     def clean_data_institute(self, cleaned_data):
         institute = cleaned_data.get('institute')

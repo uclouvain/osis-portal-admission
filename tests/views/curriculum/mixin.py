@@ -155,6 +155,7 @@ class MixinTestCase(TestCase):
             transcript_type=TranscriptType(value='ONE_FOR_ALL_YEARS'),
             obtained_diploma=True,
             obtained_grade=Grade(value='GREAT_DISTINCTION'),
+            other_obtained_grade='',
             graduate_degree=['f1.pdf'],
             graduate_degree_translation=['f11.pdf'],
             transcript=['f2.pdf'],

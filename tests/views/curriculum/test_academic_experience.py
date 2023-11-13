@@ -247,6 +247,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check that the right API calls are done
         self.mockapi.retrieve_educational_experience_admission.assert_called()
 
+        self.maxDiff = None
+
         # Check the context data
         # Base form
         base_form = response.context.get('base_form')
@@ -281,6 +283,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'other_institute': True,
                 'can_be_updated': ANY,
                 'valuated_from_trainings': ANY,
+                'other_obtained_grade': '',
+                'has_other_obtained_grade': False,
             },
         )
         # Check the choices of the fields
@@ -362,6 +366,17 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             },
         )
         self.assertEqual(forms[2].fields['result'].choices, past_choices)
+
+        # Check with another grade
+        self.mockapi.retrieve_educational_experience_admission.return_value.other_obtained_grade = 'Other'
+
+        response = self.client.get(self.admission_update_url)
+
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+        base_form = response.context.get('base_form')
+
+        self.assertEqual(base_form.initial['has_other_obtained_grade'], True)
 
     def test_with_admission_on_update_experience_form_is_forbidden_with_doctorate_and_valuated_by_doctorate(self):
         # Valuated by a doctorate admission
@@ -835,6 +850,140 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             forms_by_year[2006].errors.get('acquired_credit_number', []),
         )
 
+    def test_with_admission_on_update_experience_post_other_grade(self):
+        # Specify an other grade
+        response = self.client.post(
+            self.admission_update_url,
+            data={
+                **self.all_form_data,
+                'base_form-other_obtained_grade': 'Other grade',
+                'base_form-has_other_obtained_grade': True,
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
+        )
+
+        # Check that the API calls are done
+        self.mockapi.update_educational_experience_admission.assert_called_once_with(
+            uuid=self.proposition.uuid,
+            experience_id=self.educational_experience.uuid,
+            educational_experience={
+                'start': '2018',
+                'end': '2020',
+                'country': 'BE',
+                'institute_name': 'UCL',
+                'institute_address': 'Louvain-La-Neuve',
+                'institute': None,
+                'program': None,
+                'education_name': 'Other computer science',
+                'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
+                'linguistic_regime': None,
+                'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
+                'obtained_diploma': True,
+                'obtained_grade': '',
+                'other_obtained_grade': 'Other grade',
+                'graduate_degree': ['f1_new.pdf'],
+                'graduate_degree_translation': [],
+                'transcript': ['f2.pdf'],
+                'transcript_translation': [],
+                'rank_in_diploma': '10 on 100',
+                'expected_graduation_date': datetime.date(2022, 1, 1),
+                'dissertation_title': 'The new title',
+                'dissertation_score': 'A',
+                'dissertation_summary': ['f3.pdf'],
+                'educationalexperienceyear_set': [
+                    {
+                        'academic_year': 2020,
+                        'result': Result.SUCCESS.name,
+                        'registered_credit_number': 150.0,
+                        'acquired_credit_number': 100.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                    {
+                        'academic_year': 2018,
+                        'result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+                        'registered_credit_number': 150.0,
+                        'acquired_credit_number': 100.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                ],
+            },
+            **self.api_default_params,
+        )
+        # Choose an existing grade and specify an other grade
+        response = self.client.post(
+            self.admission_update_url,
+            data={
+                **self.all_form_data,
+                'base_form-other_obtained_grade': 'Other grade',
+                'base_form-has_other_obtained_grade': '',
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response,
+            expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
+            + '#academic-activities',
+        )
+
+        # Check that the API calls are done
+        self.mockapi.update_educational_experience_admission.assert_called_with(
+            uuid=self.proposition.uuid,
+            experience_id=self.educational_experience.uuid,
+            educational_experience={
+                'start': '2018',
+                'end': '2020',
+                'country': 'BE',
+                'institute_name': 'UCL',
+                'institute_address': 'Louvain-La-Neuve',
+                'institute': None,
+                'program': None,
+                'education_name': 'Other computer science',
+                'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
+                'linguistic_regime': None,
+                'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
+                'obtained_diploma': True,
+                'obtained_grade': Grade.GREAT_DISTINCTION.name,
+                'other_obtained_grade': '',
+                'graduate_degree': ['f1_new.pdf'],
+                'graduate_degree_translation': [],
+                'transcript': ['f2.pdf'],
+                'transcript_translation': [],
+                'rank_in_diploma': '10 on 100',
+                'expected_graduation_date': datetime.date(2022, 1, 1),
+                'dissertation_title': 'The new title',
+                'dissertation_score': 'A',
+                'dissertation_summary': ['f3.pdf'],
+                'educationalexperienceyear_set': [
+                    {
+                        'academic_year': 2020,
+                        'result': Result.SUCCESS.name,
+                        'registered_credit_number': 150.0,
+                        'acquired_credit_number': 100.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                    {
+                        'academic_year': 2018,
+                        'result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+                        'registered_credit_number': 150.0,
+                        'acquired_credit_number': 100.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                ],
+            },
+            **self.api_default_params,
+        )
+
     def test_with_admission_on_update_experience_post_form_for_be_country(self):
         response = self.client.post(
             self.admission_update_url,
@@ -866,6 +1015,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,
+                'other_obtained_grade': '',
                 'graduate_degree': ['f1_new.pdf'],
                 'graduate_degree_translation': [],
                 'transcript': ['f2.pdf'],
@@ -928,6 +1078,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
                 'obtained_grade': Grade.GREAT_DISTINCTION.name,
+                'other_obtained_grade': '',
                 'graduate_degree': ['f1_new.pdf'],
                 'graduate_degree_translation': [],
                 'transcript': ['f2.pdf'],
@@ -1002,6 +1153,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': 'Title',
                 'dissertation_score': '15/20',
                 'dissertation_summary': ['foobar'],
+                'other_obtained_grade': '',
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
@@ -1068,6 +1220,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': 'The new title',
                 'dissertation_score': 'A',
                 'dissertation_summary': ['f3.pdf'],
+                'other_obtained_grade': '',
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
@@ -1139,6 +1292,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': '',
                 'dissertation_score': '',
                 'dissertation_summary': [],
+                'other_obtained_grade': '',
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
@@ -1211,6 +1365,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': '',
                 'dissertation_score': '',
                 'dissertation_summary': [],
+                'other_obtained_grade': '',
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,
@@ -1276,6 +1431,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': 'The new title',
                 'dissertation_score': 'A',
                 'dissertation_summary': ['f3.pdf'],
+                'other_obtained_grade': '',
                 'educationalexperienceyear_set': [
                     {
                         'academic_year': 2020,

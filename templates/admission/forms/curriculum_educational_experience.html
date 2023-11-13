@@ -163,8 +163,18 @@
         <div class="col-md-6 required_field">
           {% bootstrap_field base_form.obtained_diploma %}
         </div>
+      </div>
+      <div class="row vertical-align">
         <div id="obtained-grade" class="col-md-6 diploma-year-field required_field">
           {% bootstrap_field base_form.obtained_grade %}
+        </div>
+        <div class="col-md-6 diploma-year-field">
+          {% bootstrap_field base_form.has_other_obtained_grade %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 required_field diploma-year-field">
+          {% bootstrap_field base_form.other_obtained_grade %}
         </div>
       </div>
       <div class="row diploma-year-field">
@@ -584,6 +594,17 @@
              {# Graduate fields #}
              $('.diploma-year-field').dependsOn({
                  'input[name=base_form-obtained_diploma]': { values: ['True'] },
+             });
+
+             $('#id_base_form-other_obtained_grade').dependsOn({
+                 'input[name=base_form-has_other_obtained_grade]': { checked: true },
+             });
+
+             $('#id_base_form-obtained_grade').dependsOn({
+                 'input[name=base_form-has_other_obtained_grade]': { checked: false },
+             }, {
+               valueOnDisable: '',
+               hide: false,
              });
 
              {# Display the options of the end date depending on the start date #}
