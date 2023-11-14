@@ -1,0 +1,17 @@
+[run]
+branch = True
+source = admission
+omit =
+    */migrations/*
+    */tests/*
+    */management/*
+    */admin.py
+
+[report]
+skip_covered = True
+show_missing = True
+sort = Miss
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError
+    if settings.DEBUG:

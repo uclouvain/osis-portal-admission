@@ -1,0 +1,358 @@
+{% extends base_template %}
+{% load bootstrap3 i18n static admission waffle_tags %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block tab_content %}
+  <div>
+    <div class="alert alert-info confirmation-header text-justify">
+      <p>{% trans "You have now reached the application confirmation tab." %}</p>
+      <p>
+        {% blocktranslate trimmed %}
+          Before sending your application, please check the data you have entered for any errors or omissions.
+        {% endblocktranslate %}
+      </p>
+
+      {% url base_namespace|add_str:':pdf-recap' admission.uuid as pdf_url %}
+      <p>
+        <a
+            class="btn btn-primary"
+            href="{{ pdf_url }}"
+            target="_blank"
+        >
+          {% translate "View summary" %}
+          <i class="fa-solid fa-file-pdf"></i>
+        </a>
+      </p>
+      <p>
+        {% translate "If everything appears correct, send your enrolment request below." %}
+      </p>
+    </div>
+
+    {% switch 'debug' %}
+      {% firstof admission.doctorat.annee admission.formation.annee as annee %}
+      {% field_data _('Academic year') annee|get_academic_year css_class='debug-content' %}
+      {% field_data _('Specific academic year') admission.annee_calculee|get_academic_year css_class='debug-content' %}
+      {% field_data _('Determined pool') admission.pot_calcule css_class='debug-content' %}
+    {% endswitch %}
+
+    {% if missing_confirmation_conditions %}
+      {% url base_namespace|add:':update:training-choice' admission.uuid as training_choice_url %}
+      {% url base_namespace|add:':update:curriculum' admission.uuid as cv_url %}
+
+      <p class="alert alert-danger">
+        {% trans "Your enrolment cannot be confirmed. All of the following requirements must be met." %}
+      </p>
+
+      <table class="table table-bordered">
+        {% for tab_name, tab in missing_confirmation_conditions.items %}
+          <tr class="errors-tab">
+            <td>
+              {% if tab.errors %}
+                <p class="tab-name">
+                  <i class="fa fa-times text-danger"></i>
+                  {% if admission|can_update_tab:tab_name %}
+                    {% url base_namespace|add:':update:'|add:tab_name admission.uuid as url %}
+                  {% else %}
+                    {% url base_namespace|add:':'|add:tab_name admission.uuid as url %}
+                  {% endif %}
+                  <a href="{{ url }}">{{ tab.label }}</a>
+                </p>
+                <ul>
+                  {% for error_code, errors in tab.errors.items %}
+                    {# Pool non-resident contingenté non-ouvert #}
+                    {% if error_code == 'ADMISSION-10' %}
+                      <li>
+                        {# TODO message #}
+                        <p>
+                          {% blocktrans with start_date=pool_start_date|date:'d/m/Y' end_date=pool_end_date|date:'d/m/Y' trimmed %}
+                            If you are applying for a limited enrolment bachelor's course, the application can only be
+                            submitted during the period from {{ start_date }} to {{ end_date }}.
+                          {% endblocktrans %}</p>
+                      </li>
+
+                      {# Pool non déterminé #}
+                    {% elif error_code == 'ADMISSION-12' %}
+                      <li>
+                        {# TODO url #}
+                        <p>{% blocktrans with url="#" trimmed %}
+                          Unexpected error, please <a href="{{ url }}">contact service desk</a>.
+                        {% endblocktrans %}</p>
+                      </li>
+
+                      {# Conditions d'accès non remplies #}
+                    {% elif error_code == 'ADMISSION-2' %}
+                      <li>
+                        <p>{% trans "Your application cannot be confirmed. The admission requirements do not appear to have been met." %}</p>
+                        <div class="panel panel-default">
+                          <div class="panel-heading">{% trans "Eligibility requirements" %}</div>
+                          {% if admission.doctorat %}
+                            {% display admission.doctorat.intitule as training_title %}
+                          {% else %}
+                            {% display admission.formation.intitule as training_title %}
+                          {% endif %}
+                          <div class="panel-body">
+                            {% blocktrans with url=access_conditions_url course_title=training_title trimmed %}
+                              <p>
+                                On the basis of the information you have provided on your previous experience, you do
+                                not appear to meet the
+                                <a href="{{ url }}" target="_blank">eligibility requirements for the course</a>
+                                <em>{{ course_title }}</em>.
+                              </p>
+                              <p>Please check your previous course data or choose another course.</p>
+                            {% endblocktrans %}
+                            <div class="text-right">
+                              <a href="{{ cv_url }}" class="btn btn-primary">
+                                <span class="fa fa-person-walking-luggage"></span>
+                                {% trans "Check my previous experience" %}
+                              </a>
+                              {% if current_context != 'doctorate' %}
+                                <a href="{{ training_choice_url }}" class="btn btn-primary">
+                                  <span class="fa fa-person-chalkboard"></span>
+                                  {% trans "Choose another course" %}
+                                </a>
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+
+                      {# Formation non organisée #}
+                    {% elif error_code == 'ADMISSION-7' %}
+                      <li>
+                        <p>{% trans "Your application cannot be confirmed. The desired course is not offered." %}</p>
+                        <div class="panel panel-default">
+                          <div class="panel-heading">{% trans "Course not offered" %}</div>
+                          {% if admission.doctorat %}
+                            {% display admission.doctorat.intitule as training_title %}
+                          {% else %}
+                            {% display admission.formation.intitule as training_title %}
+                          {% endif %}
+                          <div class="panel-body">
+                            {% blocktrans with url=calendar_url year=admission.annee_calculee|get_academic_year trimmed %}
+                              <p>
+                                On the basis of the <a href="{{ url }}" target="_blank">enrolment calendar</a>
+                                and the information you have provided, your application will be considered for the
+                                <strong>{{ year }}</strong> academic year.
+                              </p>
+                              <p>
+                                Unfortunately, the training you have selected, <em>{{ training_title }}</em>, will not
+                                be organised in {{ year }}.
+                              </p>
+                              <p>We invite you to choose another training.</p>
+                            {% endblocktrans %}
+                            <div class="text-right">
+                              <a href="{{ training_choice_url }}" class="btn btn-primary">
+                                <span class="fa fa-person-chalkboard"></span>
+                                {% trans "Choose another course" %}
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+
+                      {# The required period in the CV is not completed #}
+                    {% elif error_code == 'PROPOSITION-35' %}
+                      <li>
+                        {% blocktranslate trimmed count nb=errors|length %}
+                          The following period must be justified in the curriculum:
+                          {% plural %}
+                          The following periods must be justified in the curriculum:
+                        {% endblocktranslate %}
+                        <ul>
+                          {% for error in errors %}
+                            <li>{{ error }}</li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+
+                    {% else %}
+                      {% for error in errors %}
+                        <li>{{ error|safe }}</li>
+                      {% endfor %}
+                    {% endif %}
+
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="tab-name">
+                  <i class="fa fa-check text-success"></i>
+                  {{ tab.label }}
+                </p>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+
+    {% else %}
+      <p class="alert alert-success">
+        {% trans "Your application is complete and may be submitted." %}
+      </p>
+      <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
+        {% csrf_token %}
+        {% for field in confirmation_form.hidden_fields %}
+          {% bootstrap_field field %}
+        {% endfor %}
+
+        {% if confirmation_form.hors_delai %}
+          {% panel _("Academic year") %}
+            {% bootstrap_field confirmation_form.hors_delai %}
+          {% endpanel %}
+        {% endif %}
+
+        {% panel _("Approvals") %}
+          {% for field in confirmation_form %}
+            {% if field.name not in special_fields %}
+              {% bootstrap_field field %}
+            {% endif %}
+          {% endfor %}
+        {% endpanel %}
+
+
+        {% if confirmation_form.justificatifs and confirmation_form.declaration_sur_lhonneur %}
+          {% panel _("Commitment and declaration") %}
+            {% bootstrap_field confirmation_form.justificatifs %}
+            {% bootstrap_field_no_post_widget_render confirmation_form.declaration_sur_lhonneur %}
+            {% if confirmation_form.droits_inscription_iufc %}
+              {% bootstrap_field confirmation_form.droits_inscription_iufc %}
+            {% endif %}
+          {% endpanel %}
+        {% endif %}
+
+        <p class="alert alert-info confirmation-warning">
+          {% blocktrans trimmed %}
+            Any false declaration or wilful omission in the compilation of application files constitutes enrolment
+            fraud and will result in exclusion from higher education studies in the French Community of Belgium
+            pursuant to Article 95/2 of the Decree of 7 November 2013. Anyone suspected of fraud has the right to
+            defend themselves and present their case (Articles 16 and 17, Section 3 of Chapter 1 of Title III of the
+            UCLouvain Academic Regulations and Procedures).
+          {% endblocktrans %}
+        </p>
+        <div
+            id="submit-button-wrapper"
+            class="pull-right"
+            title="{% trans "Sending the request requires your agreement with all of the following elements" %}"
+        >
+          <button
+              type="button"
+              class="btn btn-primary"
+              disabled="disabled"
+              data-toggle="modal"
+              data-target="#confirmModal"
+          >
+            <i class="fa fa-paper-plane"></i>
+            {% trans "Send" %}
+          </button>
+        </div>
+
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="confirmModalLabel">{% trans "Submission confirmation" %}</h4>
+              </div>
+              <div class="modal-body">
+                {% if current_context == 'continuing-education' %}
+                  <p>{% trans "Your application will be sent to the University Institute for Continuing Education." %}</p>
+                {% elif confirmation_form.fields.frais_dossier %}
+                  <p>{% trans "After payment, your application will be sent to the UCLouvain Enrolment Office." %}</p>
+                {% else %}
+                  <p>{% trans "Your application will be sent to the UCLouvain Enrolment Office." %}</p>
+                {% endif %}
+                <p><strong>{% trans "Confirm submission?" %}</strong></p>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success">{% trans "Yes, send" %}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "No" %}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+
+  <style>
+    .confirmation-header {
+      padding: 1em;
+    }
+
+    .tab-name {
+      margin: 0.5em;
+      font-weight: bold;
+    }
+
+    .confirmation-warning {
+      margin: 2em 0;
+    }
+
+    .checkbox ul {
+      padding-left: 2em;
+    }
+
+    .form-group .help-block {
+      color: inherit;
+    }
+
+    #submit-button-wrapper .btn[disabled] {
+      /* don't let button block mouse events from reaching wrapper */
+      pointer-events: none;
+    }
+  </style>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+
+  <script type="application/javascript">
+      $(function () {
+          const form = $('#confirmation-form')[0];
+          const $submitWrapper = $('#submit-button-wrapper');
+          const formButton = $('button[type="button"]', form).first();
+          $submitWrapper.tooltip();
+
+          {% if missing_confirmation_conditions %}
+              formButton.prop('disabled', true);
+          {% else %}
+              $('input[type="checkbox"], input[type="radio"]', form).change(function () {
+                  formButton.prop('disabled', !form.checkValidity());
+                  if (form.checkValidity()) {
+                      $submitWrapper.tooltip('destroy');
+                  } else {
+                      $submitWrapper.tooltip();
+                  }
+              })
+              formButton.prop('disabled', !form.checkValidity());
+          {% endif %}
+      })
+  </script>
+{% endblock %}

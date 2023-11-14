@@ -1,0 +1,224 @@
+{% extends "layout.html" %}
+{% load bootstrap3 i18n static admission enums %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% comment "Usage" %}
+  `tab_layout.html` gère le layout des formulaires et des détails, ceci implique
+  - si la variable `form` est présente, le {% block form %} est affiché
+  - si dans `form` il y a des `visible_fields`, la balise
+  <form> est ajoutée
+  ainsi que les boutons de soumission dans les onglets et en bas de page
+{% endcomment %}
+
+
+{% block style %}
+  <link href="{% static "admission/admission.css" %}" rel="stylesheet" />
+  {% if form %}
+    {{ form.media.css }}
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {% if form %}
+    {{ form.media.js }}
+  {% endif %}
+  <script src="{% static 'admission/admission.js' %}"></script>
+  <script src="{% static 'admission/popover.js' %}"></script>
+{% endblock %}
+
+{% block breadcrumb_area %}
+  {% if admission and admission.matricule_candidat != user.person.global_id %}
+    {% url 'admission:supervised-list' as list_url %}
+  {% else %}
+    {% url 'admission:list' as list_url %}
+  {% endif %}
+  <ol class="breadcrumb">
+    <li>
+      <a href="{{ list_url }}">{% trans "Admissions" %}</a>
+    </li>
+    {% if admission %}
+      <li class="active">
+        {% block breadcrumb_title %}{% endblock %}
+      </li>
+    {% else %}
+      <li class="active">{% trans "Create new admission" %}</li>
+    {% endif %}
+  </ol>
+{% endblock %}
+
+{% block content %}
+  {% if form %}
+    {% include "admission/modal/prevent_quitting_modal.html" %}
+  {% endif %}
+
+  {% if admission and admission.matricule_candidat != user.person.global_id and admission.matricule_doctorant != user.person.global_id %}
+    {% url 'admission:supervised-list' as list_url %}
+  {% else %}
+    {% url 'admission:list' as list_url %}
+  {% endif %}
+
+  {# Header page title #}
+  <div class="page-header h3 clearfix">
+    <span class="d-inline-block">
+      {% if admission %}
+        {% block header_title %}{% endblock %}
+      {% else %}
+        {% trans "Create new admission" %}
+      {% endif %}
+    </span>
+    {% if user.is_authenticated %}
+      <a href="{{ list_url }}" class="pull-right h5 text-primary">
+        <span class="fa fa-stream"></span>
+        {% trans "Back to applications" %}
+      </a>
+    {% endif %}
+  </div>
+
+  {# Well #}
+  {% block well %}
+    <div class="well">
+      <div>
+        {% trans "Reference:" %}
+        {% if not admission %}
+          {% trans 'No reference at present, see "Course options" tab' %}
+        {% else %}
+          {{ doctorate_title }} ({{ admission.reference }})
+        {% endif %}
+      </div>
+      <div>
+        {% trans "Status:" %}
+        {% if not admission %}
+          {% trans "Not submitted" context 'admission' %}
+        {% else %}
+          {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
+        {% endif %}
+      </div>
+    </div>
+  {% endblock well %}
+
+  {% if not admission or admission.status in IN_PROGRESS_STATUSES %}
+    <p><em>
+      {% blocktrans trimmed %}
+        The online application is comprised of several tabs. The application can
+        only be validated once all the tabs have been successfully completed.
+        The icons indicate the progress of your application, which can be interrupted and resumed at any time.
+      {% endblocktrans %}
+    </em></p>
+  {% endif %}
+
+  {% block template_messages %}
+    <div id="template-messages-container">
+      {% include "template_messages.html" %}
+    </div>
+  {% endblock %}
+
+  {% url base_namespace|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
+  {% url base_namespace|add:":update:"|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
+
+  {% block tabs_content %}
+    {% get_current_tab as current_tab %}
+
+    {% if form.visible_fields or force_form %}
+      {# Display the form if needed #}
+      <form class="osis-form" method="post" action="">
+      {% csrf_token %}
+    {% elif change_url and change_url != request.path and admission|can_update_tab:current_tab %}
+      {# Display the edit button if accessible #}
+      <div class="text-right visible-xs visible-sm">
+        <a href="{{ change_url }}" class="btn btn-primary">
+          <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+          {% trans 'Edit' %}
+        </a>
+      </div>
+    {% endif %}
+
+  {% block form_content %}
+    {% current_subtabs as subtabs %}
+
+    {% admission_tabs admission with_submit=form.visible_fields %}
+
+    {% if subtabs|length > 1 %}
+      {# If there are multiple subtabs, display them on the side #}
+      <div id="subtabs-row" class="row">
+      <div id="subtabs" class="col-md-2 visible-md visible-lg">
+        {% get_current_parent_tab as current_parent %}
+        <div id="subtab-current-parent">{{ current_parent.label }}</div>
+        <hr>
+        {% admission_subtabs admission %}
+      </div>
+    {% endif %}
+
+  <div class="{% if subtabs|length > 1 %}col-md-10 {% endif %}{% if form %}quitting-context-excluded{% endif %}">
+    {% block tab_content %}
+      {% if form.visible_fields or force_form %}
+        {# Form and form buttons #}
+        {% block form %}{% endblock %}
+        {% block submit_button_bottom %}
+          {% get_current_tab as current_tab %}
+          <div class="text-right form-group">
+            {% block submit_button %}
+              <button
+                type="submit" class="btn btn-default"
+                {% if cancel_url and not admission|can_update_tab:current_tab %}
+                disabled
+                {% endif %}
+              >
+                <i class="fa-solid fa-floppy-disk"></i>
+                {% trans "Save" context 'admission' %}
+              </button>
+            {% endblock submit_button %}
+            {% block submit_and_continue %}
+              {% if not admission or admission.statut in IN_PROGRESS_STATUSES %}
+                <button
+                  type="submit" class="btn btn-primary"
+                  name="_submit_and_continue"
+                  {% if cancel_url and not admission|can_update_tab:current_tab %}
+                  disabled
+                  {% endif %}
+                >
+                  {% block submit_and_continue_content %}
+                    <i class="fa-solid fa-forward-step"></i>
+                    {% trans "Save and continue" %}
+                  {% endblock %}
+                </button>
+              {% endif %}
+            {% endblock %}
+          </div>
+        {% endblock submit_button_bottom %}
+      {% endif %}
+    {% endblock %}
+  </div>
+  {% if subtabs|length > 1 %}
+    {# End sibling tabs #}
+    </div>
+  {% endif %}
+
+  {% endblock form_content %}
+  {% if form.visible_fields or force_form %}</form>{% endif %}
+  {% endblock tabs_content %}
+  {% block extra_content %}{% endblock %}
+{% endblock %}

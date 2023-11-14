@@ -1,0 +1,61 @@
+{% load static i18n admission %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+<div class="dashboard-admission">
+    <div class="dashboard-grid dashboard-fixed-placement" >
+
+        {% get_dashboard_links as links %}
+        {% if 'url' in links.list_propositions %}
+        <div class="grid-item">
+            <i class="far fa-address-card" style="grid-area: icon;"></i>
+            <h4 class="media-heading" style="grid-area: title;">
+                <a href="{% url 'admission:list' %}" id="lnk_admission">
+                    {% trans 'My application' context 'admission' %}
+                </a>
+            </h4>
+            <div class="description" style="grid-area: description;">
+                <p>{% trans 'Create and manage my UCLouvain application' %}.</p>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'url' in links.list_supervised %}
+        <div class="grid-item">
+            <i class="far fa-address-card" style="grid-area: icon;"></i>
+                <h4 class="media-heading" style="grid-area: title;">
+                    <a
+                            href="{% url 'admission:supervised-list' %}"
+                            id="lnk_member_admission"
+                    >
+                        {% trans 'Management of PhDs' %}
+                    </a>
+                </h4>
+            <div class="description" style="grid-area: description;">
+                <p>{% trans "Access my PhD students' files" %}.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>

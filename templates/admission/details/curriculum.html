@@ -1,0 +1,356 @@
+{% extends base_template %}
+{% load bootstrap3 i18n static admission enums %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block form %}
+  {% if view.kwargs.pk %}
+    {% url base_namespace|add:':update:curriculum:educational_create' view.kwargs.pk as curriculum_educational_create_url %}
+    {% url base_namespace|add:':update:curriculum:professional_create' view.kwargs.pk as curriculum_professional_create_url %}
+  {% else %}
+    {% url 'admission:create:curriculum:educational_create' as curriculum_educational_create_url %}
+    {% url 'admission:create:curriculum:professional_create' as curriculum_professional_create_url %}
+  {% endif %}
+
+  {% blocktranslate trimmed asvar global_info_p1 %}
+    <strong>Academic course</strong>: any higher education course leading to a bachelor's, master's, advanced master's,
+    or PhD degree.
+  {% endblocktranslate %}
+
+  {% blocktranslate trimmed asvar global_info_p2 %}
+    Enter all of your academic courses, even those you failed or abandoned
+    (with the exception of those taken at UCLouvain).
+  {% endblocktranslate %}
+
+  {% blocktranslate trimmed asvar global_info_p3 %}
+    <strong>Adding an academic course</strong>: to add an academic course to the curriculum, enter the course start
+    and end years (e.g. start 2018-2019, end 2021-2022).
+  {% endblocktranslate %}
+
+  {% blocktranslate trimmed asvar global_info_p4 %}
+    <strong>Non-academic activity</strong>: any professional or private activity that you have previously carried out.
+    Example: work, unemployment, voluntary work, internship, job search, sabbatical year, etc.
+    You can also indicate your non-academic training (language classes, individual classes, certificate,
+    short course, etc.).
+  {% endblocktranslate %}
+
+
+  <div class="alert alert-info flex-container-align-no-wrap" role="alert">
+    <div>
+      <p>
+        {% if view.is_continuing %}
+          {% blocktranslate trimmed %}
+            Provide the details of your most recent academic course and your most recent non-academic experience.
+          {% endblocktranslate %}
+        {% elif need_to_complete %}
+          {% blocktranslate trimmed with date=minimal_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
+            Please enter all academic courses you have attended. For non-academic activities, please enter
+            all those that have taken place since {{ date }}.
+          {% endblocktranslate %}
+        {% else %}
+          {% translate "On the basis of the information you have provided, it is not necessary to enter your academic courses and non-academic activities below." %}
+        {% endif %}
+      </p>
+    </div>
+    {% if educational_experiences or professional_experiences %}
+      <div>
+        <a
+            tabindex="0"
+            class="fa fa-info-circle popover-buttons"
+            data-content="<p>{{ global_info_p1 }}</p><p>{{ global_info_p2 }}</p><p>{{ global_info_p3 }}</p><p>{{ global_info_p4 }}</p>"
+            role="button"
+        ></a>
+      </div>
+    {% endif %}
+  </div>
+  {% if educational_experiences or professional_experiences %}
+    {% if missing_periods_messages %}
+      <div class="alert alert-warning" role="alert">
+        {% blocktranslate trimmed count missing_periods_messages=list|length %}
+          The following period must be justified in the curriculum:
+          {% plural %}
+          The following periods must be justified in the curriculum:
+        {% endblocktranslate %}
+        <ul>
+          {% for message in missing_periods_messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="alert alert-info">
+      <p>{{ global_info_p1|safe }}</p>
+      <p>{{ global_info_p2|safe }}</p>
+      <p>{{ global_info_p3|safe }}</p>
+      <p>{{ global_info_p4|safe }}</p>
+    </div>
+  {% endif %}
+  <div id="academic-activities" class="panel panel-default scroll-with-margin">
+    <div class="panel-heading flex-container">
+      <div class="panel-title">{% translate "Academic courses" %}</div>
+      {% if form %}
+        <a
+            href="{{ curriculum_educational_create_url }}#curriculum-header"
+            class="btn btn-primary"
+            aria-label="{% trans "Add an academic experience" %}"
+            title="{% trans "Add an academic experience" %}"
+        >
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          {% trans "Add" %}
+        </a>
+      {% endif %}
+    </div>
+    <div class="panel-body">
+      {% if educational_experiences %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="width: 5px;"></th>
+              <th style="width: 150px;">{% translate "Period" %}</th>
+              <th>{% translate "Course" context 'admission' %}</th>
+              <th>{% translate "Institute" %}</th>
+              <th class="action-container">{% translate "Actions" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for educational_experience in educational_experiences %}
+              {% if view.kwargs.pk %}
+                {% url base_namespace|add:':update:curriculum:educational_update' view.kwargs.pk educational_experience.uuid as experience_update_url %}
+                {% url base_namespace|add:':curriculum:educational_read' view.kwargs.pk educational_experience.uuid as experience_read_url %}
+                {% url base_namespace|add:':update:curriculum:educational_delete' view.kwargs.pk educational_experience.uuid as experience_delete_url %}
+              {% else %}
+                {% url 'admission:create:curriculum:educational_update' educational_experience.uuid as experience_update_url %}
+                {% url 'admission:create:curriculum:educational_read' educational_experience.uuid as experience_read_url %}
+                {% url 'admission:create:curriculum:educational_delete' educational_experience.uuid as experience_delete_url %}
+              {% endif %}
+              <tr>
+                <td>
+                  {% if incomplete_experiences|get_item:educational_experience.uuid %}
+                    <i class="fa-solid fa-triangle-exclamation text-danger" title="{% translate 'Incomplete' %}"></i>
+                  {% else %}
+                    <i class="fa-solid fa-check text-success" title="{% translate 'Full' %}"></i>
+                  {% endif %}
+                </td>
+                <td>
+                  {% for educational_experience_year in educational_experience.educationalexperienceyear_set %}
+                    {{ educational_experience_year.academic_year|get_academic_year }}<br>
+                  {% endfor %}
+                </td>
+                <td><span>{{ educational_experience.education_name }}</span></td>
+                <td><span>{{ educational_experience.institute_name }}</span></td>
+                <td class="action-container">
+                  <div class="btn-toolbar" role="group">
+                    {% if form and educational_experience.can_be_updated %}
+                      <a
+                          href="{{ experience_update_url }}#curriculum-header"
+                          class="btn btn-info"
+                          aria-label="{% translate "Update experience" %}"
+                          title="{% translate "Update experience" %}"
+                      >
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                      </a>
+                      {% if not educational_experience.valuated_from_trainings %}
+                        <a
+                            href="{{ experience_delete_url }}#curriculum-header"
+                            class="btn btn-danger"
+                            aria-label="{% translate "Remove experience" %}"
+                            title="{% translate "Remove experience" %}"
+                        >
+                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
+                      {% endif %}
+                    {% else %}
+                      <a
+                          href="{{ experience_read_url }}#curriculum-header"
+                          class="btn btn-info"
+                          aria-label="{% translate "Access experience details" %}"
+                          title="{% translate "Access experience details" %}"
+                      >
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      </a>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            <tr></tr>
+          </tbody>
+        </table>
+        {% if incomplete_experiences %}
+          <p class="alert alert-danger">
+            {% blocktranslate trimmed with icon="<i class='fa-solid fa-triangle-exclamation'></i>" %}
+              Academic courses prefixed with {{ icon }} are incomplete.
+            {% endblocktranslate %}
+          </p>
+        {% endif %}
+      {% else %}
+        {% trans "The CV does not yet contain any academic course." %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div id="non-academic-activities" class="panel panel-default scroll-with-margin">
+    <div class="panel-heading flex-container">
+      <div class="panel-title">{% translate "Non-academic activities" %}</div>
+      {% if form %}
+        <a
+            href="{{ curriculum_professional_create_url }}#curriculum-header"
+            class="btn btn-primary"
+            aria-label="{% translate "Add a non-academic experience" %}"
+            title="{% translate "Add a non-academic experience" %}"
+        >
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          {% trans "Add" %}
+        </a>
+      {% endif %}
+    </div>
+    <div class="panel-body">
+      {% if professional_experiences %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="width: 150px;">{% translate "Period" %}</th>
+              <th>{% translate "Activity type" %}</th>
+              <th class="action-container">{% translate "Actions" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for professional_experience in professional_experiences %}
+              {% if view.kwargs.pk %}
+                {% url base_namespace|add:':update:curriculum:professional_update' view.kwargs.pk professional_experience.uuid as experience_update_url %}
+                {% url base_namespace|add:':curriculum:professional_read' view.kwargs.pk professional_experience.uuid as experience_read_url %}
+                {% url base_namespace|add:':update:curriculum:professional_delete' view.kwargs.pk professional_experience.uuid as experience_delete_url %}
+              {% else %}
+                {% url 'admission:create:curriculum:professional_update' professional_experience.uuid as experience_update_url %}
+                {% url 'admission:create:curriculum:professional_read' professional_experience.uuid as experience_read_url %}
+                {% url 'admission:create:curriculum:professional_delete' professional_experience.uuid as experience_delete_url %}
+              {% endif %}
+              <tr>
+                <td>
+                  {% with start_date=professional_experience.start_date|date:"YEAR_MONTH_FORMAT"|capfirst end_date=professional_experience.end_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
+                    {{ start_date }}
+                    {% if start_date != end_date %}
+                      {% translate 'to' context 'admission-date' %}
+                      <br>{{ end_date }}
+                    {% endif %}
+                  {% endwith %}
+                </td>
+                <td><span>{{ professional_experience.type.value|enum_display:'ActivityType' }}</span></td>
+                <td class="action-container">
+                  <div class="btn-toolbar" role="group">
+                    {% if form and not professional_experience.valuated_from_trainings %}
+                      <a
+                          href="{{ experience_update_url }}#curriculum-header"
+                          class="btn btn-info"
+                          aria-label="{% translate "Update experience" %}"
+                          title="{% translate "Update experience" %}"
+                      >
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                      </a>
+                      <a
+                          href="{{ experience_delete_url }}#curriculum-header"
+                          class="btn btn-danger"
+                          aria-label="{% translate "Remove experience" %}"
+                          title="{% translate "Remove experience" %}"
+                      >
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      </a>
+                    {% else %}
+                      <a
+                          href="{{ experience_read_url }}#curriculum-header"
+                          class="btn btn-info"
+                          aria-label="{% translate "Access experience details" %}"
+                          title="{% translate "Access experience details" %}"
+                      >
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      </a>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            <tr></tr>
+          </tbody>
+        </table>
+      {% else %}
+        {% trans "The CV does not yet contain any non-academic activity." %}
+      {% endif %}
+    </div>
+  </div>
+  {% if form %}
+    {% if form.visible_fields %}
+      {% panel _('Specific aspects') %}
+        {% bootstrap_form_errors form %}
+        {% block attachments_fields %}
+        {% endblock %}
+        {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
+      {% endpanel %}
+    {% endif %}
+  {% else %}
+    {% block specific_question_answers %}
+    {% endblock %}
+  {% endif %}
+
+  {% if display_access_conditions_message %}
+    {% include 'admission/modal/admission_requirements_not_met_message_modal.html' %}
+  {% endif %}
+{% endblock %}
+
+{% block submit_button_bottom %}
+  {% if form %}{{ block.super }}{% endif %}
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    td {
+      vertical-align: middle !important;
+    }
+
+    .action-container {
+      text-align: right;
+      width: 150px;
+    }
+
+    .action-container > div {
+      display: inline-block;
+    }
+  </style>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {% if form %}
+    <script type="application/javascript">
+        $(function () {
+            document.dispatchEvent(new Event('refreshFormInitial'));
+            {% if display_access_conditions_message %}
+                $('#missing-requirements-modal').modal('show');
+            {% endif %}
+        });
+    </script>
+  {% endif %}
+{% endblock %}

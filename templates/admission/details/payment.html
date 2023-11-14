@@ -1,0 +1,69 @@
+{% extends base_template %}
+{% load i18n static admission enums %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block tabs_content %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p class="panel-title">
+        {% translate 'Payment of the application fee'%}
+      </p>
+    </div>
+    <div class="panel-body">
+      {% if already_paid %}
+        <p>
+          {% translate 'It seems that you paid the application fee.' %}
+          {% if can_pay %}
+            {% translate 'The application will be updated soon to take that into account.' %}
+          {% endif %}
+        </p>
+        <table class="table table-bordered">
+          <caption>{% translate 'List of payments related to this application' %}</caption>
+          <thead>
+            <tr>
+              <th>{% translate 'Creation date' %}</th>
+              <th>{% translate 'Amount' %}</th>
+            </tr>
+          </thead>
+          {% for payment in payments %}
+            <tr>
+              <td>
+                {{ payment.date_creation }}
+              </td>
+              <td>{% blocktranslate with amount=payment.montant%}E{{ amount }}{% endblocktranslate %}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% elif can_pay %}
+        <p>{% translate "Are you sure you want to pay them?" %}</p>
+        <a class="btn btn-primary" href="{{ request.path }}">{% translate 'Confirm' %}</a>
+        <a href="{% url 'admission:list' %}">{% trans "Back to applications" %}</a>
+      {% else %}
+        <p>{% translate 'You cannot pay the application fee now.' %}</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

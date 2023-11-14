@@ -1,0 +1,243 @@
+{% extends base_template %}
+{% load bootstrap3 admission i18n %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block form %}
+  {# Specific questions #}
+  {% with form=forms.0 %}
+    {% bootstrap_form_errors form %}
+
+    {% if view.is_general and view.display_visa_question %}
+      {% panel _('Visa') %}
+        <p>
+          {% blocktranslate trimmed %}
+            On the basis of the information you have provided, you will need to apply for a student visa if your
+            application to attend our university is accepted (i.e. if UCLouvain sends you an "enrolment
+            authorisation"). Please read the student
+            <a href="https://uclouvain.be/en/study/inscriptions/welcome-to-international-students.html" target="_blank">
+              visa
+            </a> application information.
+          {% endblocktranslate %}
+        </p>
+        <div class="row">
+          <div class="col-md-6 required_field">
+           {% bootstrap_field form.poste_diplomatique %}
+          </div>
+        </div>
+      {% endpanel %}
+    {% endif %}
+
+    {% panel _('Specific aspects') %}
+      {% if view.is_continuing %}
+        {% if admission.pays_nationalite_ue_candidat == False %}
+          <p class="alert alert-info text-justify">
+            {% blocktranslate trimmed %}
+              Certification and short programmes (continuing education) do not allow for obtaining a visa and residence
+              permit in Belgium. More information:
+              <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
+            {% endblocktranslate %}
+          </p>
+          {% bootstrap_field form.copie_titre_sejour %}
+        {% endif %}
+        {% bootstrap_field form.inscription_a_titre form_group_class='form-group required_field' %}
+        <div id="professional-container">
+          {% bootstrap_field form.nom_siege_social placeholder='' form_group_class='form-group required_field' %}
+          <div class="row">
+            <div class="col-md-6 required_field">
+              {% bootstrap_field form.numero_unique_entreprise placeholder='' %}
+            </div>
+            <div class="col-md-6 required_field">
+              {% bootstrap_field form.numero_tva_entreprise placeholder='' %}
+            </div>
+          </div>
+          {% bootstrap_field form.adresse_mail_professionnelle placeholder='' form_group_class='form-group required_field' %}
+          {% bootstrap_field form.type_adresse_facturation form_group_class='form-group required_field' %}
+          {% panel _("Billing address") id="billing-address-container" %}
+            {% bootstrap_field form.adresse_facturation_destinataire placeholder='' %}
+            <div class="row">
+                <div class="col-md-4 required_field formatted-field">
+                  {% bootstrap_field form.street %}
+                </div>
+                <div class="col-md-4 required_field">
+                  {% bootstrap_field form.street_number placeholder="" %}
+                </div>
+                <div class="col-md-4">
+                  {% bootstrap_field form.postal_box placeholder="" %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 required_field">
+                  {% bootstrap_field form.country %}
+                </div>
+                <div id="not-be-form-address">
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.postal_code placeholder="" %}
+                    </div>
+                    <div class="col-md-4 required_field formatted-field">
+                      {% bootstrap_field_with_tooltip form.city %}
+                    </div>
+                </div>
+                <div id="be-form-address">
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.be_postal_code placeholder="" %}
+                    </div>
+                    <div class="col-md-4 required_field">
+                      {% bootstrap_field form.be_city placeholder="" %}
+                    </div>
+                </div>
+            </div>
+          {% endpanel %}
+        </div>
+      {% endif %}
+      {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
+      {% bootstrap_field form.documents_additionnels %}
+    {% endpanel %}
+  {% endwith %}
+
+  {# Pool questions #}
+  {% if forms.1 %}
+    {% with form=forms.1 %}
+
+      {% if form.is_non_resident %}
+        {% panel _("Enrolment in limited enrolment bachelor's course") %}
+          {% bootstrap_field form.is_non_resident form_group_class="form-group required_field" %}
+          {% if forbid_enrolment_limited_course_for_non_resident %}
+            <p class="alert alert-warning" id="non-resident-error">
+              {{ forbid_enrolment_limited_course_for_non_resident|safe }}
+            </p>
+          {% endif %}
+        {% endpanel %}
+      {% endif %}
+
+      {% if form.is_external_modification %}
+        {% panel _("Change of enrolment") id="panel-modification" %}
+          {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
+          <div class="belgian-bachelor-children">
+            {% bootstrap_field form.is_external_modification form_group_class="form-group required_field" %}
+
+            <div class="registration-change-form">
+              <p>{% blocktrans trimmed with date=modification_pool_end_date|date:'d/m/Y H:i' %}
+                If you wish to change your application, you must confirm your application before {{ date }}.
+              {% endblocktrans %}</p>
+              {% bootstrap_field form.registration_change_form form_group_class="form-group required_field" %}
+            </div>
+          </div>
+        {% endpanel %}
+
+      {% elif form.is_external_reorientation %}
+        {% panel _("Course change") id="panel-reorientation" %}
+          {% bootstrap_field form.is_belgian_bachelor form_group_class="form-group required_field" %}
+          <div class="belgian-bachelor-children">
+            {% bootstrap_field form.is_external_reorientation form_group_class="form-group required_field" %}
+
+            <div class="regular-registration-proof">
+              <p>{% blocktrans trimmed with date=reorientation_pool_end_date|date:'d/m/Y H:i' %}
+                If you are applying for a change of course, you must confirm your application before {{ date }}.
+              {% endblocktrans %}</p>
+              {% bootstrap_field form.regular_registration_proof form_group_class="form-group required_field" %}
+            </div>
+          </div>
+        {% endpanel %}
+
+      {% endif %}
+
+    {% endwith %}
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {% for form in forms %}{{ form.media }}{% endfor %}
+
+  <script>
+  $(function () {
+    {% if view.is_continuing %}
+      $('#professional-container').dependsOn({
+        'input[name="specific_questions-inscription_a_titre"]': { values: ['PROFESSIONNEL'] },
+      });
+      $('#billing-address-container').dependsOn({
+        'input[name="specific_questions-type_adresse_facturation"]': { values: ['AUTRE'] },
+      });
+      const beIsoCode = '{{BE_ISO_CODE}}';
+      $('#be-form-address').dependsOn({
+          '#id_specific_questions-country': { values: [beIsoCode] },
+      });
+      $('#not-be-form-address').dependsOn({
+          '#id_specific_questions-country': { not: [beIsoCode] },
+      });
+
+      // BE city depends on postal code
+      const cityResidentialCheck = $('#id_specific_questions-be_city').dependsOn({
+          '#id_specific_questions-country': { values: [beIsoCode] },
+          '#id_specific_questions-be_postal_code': { not: [''] },
+      }, { valueOnDisable: '', hide: false });
+      $('#id_specific_questions-be_postal_code').on('keydown', function () {
+          cityResidentialCheck.check()
+          $('#id_specific_questions-be_city').val('').trigger('change');
+      });
+
+      // "city" and "postal code" depends on "country"
+      $('#id_specific_questions-city, #id_specific_questions-postal_code').dependsOn({
+          '#id_specific_questions-country': { not: [null] },
+      }, { valueOnDisable: '', hide: false });
+    {% endif %}
+
+    const $belgianChildren = $('.belgian-bachelor-children');
+    $belgianChildren.length && $belgianChildren.dependsOn({
+      'input[name=pool_questions-is_belgian_bachelor]': { values: ['True'] },
+    });
+
+    const $registrationForm = $('.registration-change-form');
+    $registrationForm.length && $registrationForm.dependsOn({
+      'input[name=pool_questions-is_external_modification]': { values: ['True'] },
+    });
+
+    const $registrationProof = $('.regular-registration-proof');
+    $registrationProof.length && $registrationProof.dependsOn({
+      'input[name=pool_questions-is_external_reorientation]': { values: ['True'] },
+    });
+
+    {% if forms.1 and forms.1.is_non_resident %}
+      {% if forbid_enrolment_limited_course_for_non_resident %}
+        $('#non-resident-error').dependsOn({
+          'input[name=pool_questions-is_non_resident]': {
+            values: ['True'],
+          },
+        });
+      {% endif %}
+
+      {% if forms.1.is_external_modification or forms.1.is_external_reorientation %}
+        {# Whole panel depends on is_non_resident question #}
+        $('#panel-modification, #panel-reorientation').dependsOn({
+          'input[name=pool_questions-is_non_resident]': {
+            values: ['False'],
+          },
+        });
+      {% endif %}
+    {% endif %}
+  });
+  </script>
+{% endblock %}
