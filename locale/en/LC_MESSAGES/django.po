@@ -1317,9 +1317,6 @@ msgctxt "admission"
 msgid "February"
 msgstr ""
 
-msgid "Feedback form link"
-msgstr ""
-
 msgid "Feedback from FAC"
 msgstr ""
 
@@ -3513,11 +3510,6 @@ msgstr ""
 msgid ""
 "Your enrolment cannot be confirmed. All of the following requirements must "
 "be met."
-msgstr ""
-
-msgid ""
-"Your opinion matters to us. Once you have submitted your application, can "
-"you fill in the feedback form at the following link?"
 msgstr ""
 
 msgid "Your participation in the event"
