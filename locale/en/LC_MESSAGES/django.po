@@ -462,15 +462,6 @@ msgstr ""
 msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
 
-msgid ""
-"As part of your application, one document must be uploaded to continue the "
-"enrolment process."
-msgid_plural ""
-"As part of your application, several documents must be uploaded to continue "
-"the enrolment process."
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "At least one academic year is required."
 msgstr ""
 
@@ -1672,6 +1663,9 @@ msgid ""
 "before %(date)s."
 msgstr ""
 
+msgid "Immediately"
+msgstr ""
+
 msgid "Important information:"
 msgstr ""
 
@@ -1817,6 +1811,12 @@ msgid "Language study abroad"
 msgstr ""
 
 msgid "Last name / First name / Global id"
+msgstr ""
+
+msgid "Later > blocking"
+msgstr ""
+
+msgid "Later > non-blocking"
 msgstr ""
 
 msgid "Lead supervisor"
@@ -2116,6 +2116,21 @@ msgid ""
 "international-students.html\" target=\"_blank\"> visa </a> application "
 "information."
 msgstr ""
+
+msgid "One document must be uploaded as soon as possible."
+msgid_plural "Several documents must be uploaded as soon as possible."
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid ""
+"One document must be uploaded to continue the enrolment process before "
+"%(deadline)s."
+msgid_plural ""
+"Several documents must be uploaded to continue the enrolment process before "
+"%(deadline)s."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Online"
 msgstr ""
