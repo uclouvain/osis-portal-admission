@@ -1494,9 +1494,6 @@ msgctxt "admission"
 msgid "February"
 msgstr "février"
 
-msgid "Feedback form link"
-msgstr "Lien vers le formulaire de feedback"
-
 msgid "Feedback from FAC"
 msgstr "Retour de FAC"
 
@@ -3971,14 +3968,6 @@ msgid ""
 msgstr ""
 "Votre demande d'inscription ne peut être confirmée. Certains éléments sont "
 "manquants."
-
-msgid ""
-"Your opinion matters to us. Once you have submitted your application, can "
-"you fill in the feedback form at the following link?"
-msgstr ""
-"Votre avis est important pour nous. Après avoir envoyé votre inscription, "
-"pourrez-vous compléter le formulaire de feedback qui se trouve à l'adresse "
-"suivante ?"
 
 msgid "Your participation in the event"
 msgstr "Votre participation à l'événement"
