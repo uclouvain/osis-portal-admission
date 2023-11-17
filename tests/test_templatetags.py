@@ -27,6 +27,7 @@ import uuid
 from unittest.mock import Mock, patch
 
 from django.core.exceptions import ImproperlyConfigured
+from django import forms
 from django.template import Context, Template
 from django.test import RequestFactory, TestCase
 from django.test.utils import override_settings
@@ -41,7 +42,7 @@ from admission.contrib.enums import (
     TrainingType,
 )
 from admission.contrib.enums.specific_question import TypeItemFormulaire
-from admission.contrib.forms import PDF_MIME_TYPE
+from admission.contrib.forms import PDF_MIME_TYPE, AdmissionFileUploadField
 from admission.templatetags.admission import (
     TAB_TREES,
     Tab,
@@ -55,6 +56,9 @@ from admission.templatetags.admission import (
     multiple_field_data,
     interpolate,
     admission_status,
+    value_if_all,
+    value_if_any,
+    form_fields_are_empty,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
@@ -303,6 +307,13 @@ class TemplateTagsTestCase(TestCase):
 
 
 class DisplayTagTestCase(TestCase):
+    class TestForm(forms.Form):
+        boolean_field = forms.BooleanField()
+        char_field = forms.CharField()
+        integer_field = forms.IntegerField()
+        float_field = forms.FloatField()
+        file_field = AdmissionFileUploadField()
+
     def test_comma(self):
         self.assertEqual(display('', ',', None), '')
         self.assertEqual(display('', ',', 0), '')
@@ -342,6 +353,84 @@ class DisplayTagTestCase(TestCase):
         self.assertEqual(strip(' coucou '), 'coucou')
         self.assertEqual(strip(0), 0)
         self.assertEqual(strip(None), None)
+
+    def test_value_if_all(self):
+        self.assertEqual(value_if_all('value'), 'value')
+        self.assertEqual(value_if_all('value', True), 'value')
+        self.assertEqual(value_if_all('value', False), '')
+        self.assertEqual(value_if_all('value', None), '')
+        self.assertEqual(value_if_all('value', True, True, False), '')
+
+    def test_value_if_any(self):
+        self.assertEqual(value_if_any('value'), '')
+        self.assertEqual(value_if_any('value', True), 'value')
+        self.assertEqual(value_if_any('value', False), '')
+        self.assertEqual(value_if_any('value', None), '')
+        self.assertEqual(value_if_any('value', True, False, False), 'value')
+        self.assertEqual(value_if_any('value', False, False, False), '')
+
+    def test_form_fields_are_empty(self):
+        # Initial values that are not empty and truthy
+        values = {
+            'boolean_field': True,
+            'char_field': 'foo',
+            'integer_field': 42,
+            'float_field': 3.14,
+            'file_field': ['tmp'],
+        }
+        form = self.TestForm(initial=values)
+        self.assertFalse(form_fields_are_empty(form, 'boolean_field'))
+        self.assertFalse(form_fields_are_empty(form, 'char_field'))
+        self.assertFalse(form_fields_are_empty(form, 'integer_field'))
+        self.assertFalse(form_fields_are_empty(form, 'float_field'))
+        self.assertFalse(form_fields_are_empty(form, 'file_field'))
+
+        # Submitted values that are not empty but eventually falsy
+        values = {
+            'boolean_field': False,
+            'char_field': 'foo',
+            'integer_field': 0,
+            'float_field': 0.0,
+            'file_field': ['tmp'],
+        }
+
+        form = self.TestForm(data=values)
+
+        self.assertFalse(form_fields_are_empty(form, 'boolean_field'))
+        self.assertFalse(form_fields_are_empty(form, 'char_field'))
+        self.assertFalse(form_fields_are_empty(form, 'integer_field'))
+        self.assertFalse(form_fields_are_empty(form, 'float_field'))
+        self.assertFalse(form_fields_are_empty(form, 'file_field'))
+
+        # No submitted values
+        form = self.TestForm()
+
+        self.assertTrue(form_fields_are_empty(form, 'boolean_field'))
+        self.assertTrue(form_fields_are_empty(form, 'char_field'))
+        self.assertTrue(form_fields_are_empty(form, 'integer_field'))
+        self.assertTrue(form_fields_are_empty(form, 'float_field'))
+        self.assertTrue(form_fields_are_empty(form, 'file_field'))
+
+        # Submitted values that are empty
+        values = {
+            'boolean_field': None,
+            'char_field': '',
+            'integer_field': None,
+            'float_field': None,
+            'file_field': [],
+        }
+
+        form = self.TestForm(initial=values)
+
+        self.assertTrue(form_fields_are_empty(form, 'boolean_field'))
+        self.assertTrue(form_fields_are_empty(form, 'char_field'))
+        self.assertTrue(form_fields_are_empty(form, 'integer_field'))
+        self.assertTrue(form_fields_are_empty(form, 'float_field'))
+        self.assertTrue(form_fields_are_empty(form, 'file_field'))
+
+        self.assertTrue(
+            form_fields_are_empty(form, 'boolean_field', 'char_field', 'integer_field', 'float_field', 'file_field'),
+        )
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/', LANGUAGE_CODE='en')
