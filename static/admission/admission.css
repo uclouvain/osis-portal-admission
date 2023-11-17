@@ -394,3 +394,7 @@ body, html {
 .mt-1 {
   margin-top: 1em;
 }
+
+.required_field.empty-file-upload label, .required_field .empty-file-upload:first-child label {
+  color: #a94442;
+}
