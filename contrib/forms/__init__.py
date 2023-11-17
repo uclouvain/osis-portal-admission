@@ -236,10 +236,20 @@ RadioBooleanField = partial(
 )
 
 
+class AdmissionFileBoundField(forms.BoundField):
+    @property
+    def bound_css_class(self):
+        if self.value() in self.field.empty_values:
+            return 'empty-file-upload'
+
+
 class AdmissionFileUploadField(FileUploadField):
     def __init__(self, **kwargs):
         kwargs.setdefault('mimetypes', DEFAULT_MIME_TYPES)
         super().__init__(**kwargs)
+
+    def get_bound_field(self, form, field_name):
+        return AdmissionFileBoundField(form=form, field=self, name=field_name)
 
 
 def get_example_text(example: str):
