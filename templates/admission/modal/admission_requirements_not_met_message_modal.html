@@ -1,0 +1,65 @@
+{% extends 'admission/modal/modal.html' %}
+{% load bootstrap3 i18n admission %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block modal_id %}missing-requirements-modal{% endblock %}
+
+{% block modal_title %}{% trans "Eligibility requirements" %}{% endblock %}
+
+{% block modal_body %}
+  {% if admission.doctorat %}
+    {% display admission.doctorat.intitule as training_title %}
+  {% else %}
+    {% display admission.formation.intitule as training_title %}
+  {% endif %}
+  {% blocktrans with url=access_conditions_url course_title=training_title trimmed %}
+    <p>
+      On the basis of the information you have provided on your previous experience, you do
+      not appear to meet the
+      <a href="{{ url }}" target="_blank">eligibility requirements for the course</a>
+      <em>{{ course_title }}</em>.
+    </p>
+    <p>Please check your previous course data or choose another course.</p>
+  {% endblocktrans %}
+{% endblock %}
+
+{% block modal_footer %}
+  <div class="text-right">
+    <button class="btn btn-primary" data-dismiss="modal">
+      <span class="fa fa-person-walking-luggage"></span>
+      {% trans "Check my previous experience" %}
+    </button>
+    {% if current_context != 'doctorate' %}
+      <a
+          href="{% url base_namespace|add:':update:training-choice' admission.uuid %}"
+          class="btn btn-primary"
+      >
+        <span class="fa fa-person-chalkboard"></span>
+        {% trans "Choose another course" %}
+      </a>
+    {% endif %}
+  </div>
+{% endblock %}

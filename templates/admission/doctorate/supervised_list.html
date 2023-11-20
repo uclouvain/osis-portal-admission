@@ -1,0 +1,82 @@
+{% extends "layout.html" %}{% load bootstrap3 i18n static admission enums %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2022 Université catholique de Louvain
+  (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block content %}
+  <div class="page-header">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>{% trans "Management of PhDs" %}</h2>
+      </div>
+    </div>
+  </div>
+
+  {% for admission in admissions %}
+    {% if admission.statut != 'ANNULEE' %}
+      {% panel additional_class="admission-item" cy_matricule=admission.matricule_candidat cy_type="doctorat" cy_state=admission.statut %}
+        <h3 style="margin-top: 0">
+          {{ admission.prenom_candidat }} {{ admission.nom_candidat }}
+          ({{ admission.reference }})
+          {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
+          <div><small>{{ doctorate_title }}
+            - {{ admission.intitule_secteur_formation }}</small></div>
+        </h3>
+        <div>
+          <em>{% trans "Created on:" context "an admission" %} {{ admission.creee_le }}</em>
+        </div>
+        <div>
+          <em>
+            {% trans "Status:" %}
+            {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
+          </em>
+        </div>
+
+        {% footer %}
+
+        <div class="dropdown pull-right">
+          <button
+            type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <span class="glyphicon glyphicon-eye-open"></span>
+            {% trans "View" %}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            {% for parent, subtabs in tab_tree.items %}
+              {% for subtab in subtabs %}
+                {% include 'admission/admission_tab_entry.html' with base_namespace="admission:doctorate" admission_uuid=admission.uuid tab=subtab no_status=True %}
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endpanel %}
+    {% endif %}
+  {% endfor %}
+{% endblock %}

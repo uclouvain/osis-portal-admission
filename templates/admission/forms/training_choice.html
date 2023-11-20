@@ -1,0 +1,259 @@
+{% extends base_template %}
+{% load bootstrap3 i18n admission static %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block form %}
+  {% bootstrap_form_errors form %}
+
+  {% panel _('Choose your course') %}
+
+    <div class="row">
+      <div class="col-md-6 required_field">
+        {% bootstrap_field form.training_type %}
+      </div>
+      <div class="col-md-6 required_field">
+        {% bootstrap_field form.campus %}
+      </div>
+    </div>
+
+    <div id="training-container">
+      <div id="general-education-training-container" class="required_field">
+        {% bootstrap_field form.general_education_training %}
+      </div>
+
+      <div id="mixed-training-container" class="required_field">
+        {% bootstrap_field form.mixed_training %}
+      </div>
+
+      <div id="doctorate-training-container">
+        <div class="required_field">
+          {% bootstrap_field form.admission_type %}
+        </div>
+        <div class="required_field" id="pre-admission-justification">
+          <p class="well">
+            {% blocktrans trimmed %}
+              Extract from the Doctoral Regulations (Article 2.1):<br />
+              "Pre-admission is an optional stage of the doctoral programme. It aims to allow the candidate to complete
+              the administrative and social formalities that would require a prior registration for the doctorate. [...]
+              Pre-admission is valid for a maximum period of 12 months. Recourse to a pre-admission phase must be
+              justified, the objectives to be achieved planned and the duration of the pre-admission period fixed in
+              accordance with them. Unless exceptionally authorised by the CSD, FRIA or FNRS scholarship holders and, in
+              general, doctoral candidates engaged in a research project that has already been defined, are not
+              authorised to take a pre-admission phase for a doctorate."
+              <br /> Please also consult the special provisions of the field for all pre-admission conditions.
+            {% endblocktrans %}
+          </p>
+          {% bootstrap_field form.justification %}
+      </div>
+        <div class="required_field">
+          {% bootstrap_field form.sector %}
+        </div>
+        <div class="required_field" id="doctorate-training-field">
+          {% bootstrap_field form.doctorate_training %}
+        </div>
+        <div class="required_field" id="cde-container">
+          {% bootstrap_field form.proximity_commission_cde %}
+        </div>
+        <div class="required_field" id="cdss-container">
+          {% bootstrap_field form.proximity_commission_cdss %}
+        </div>
+        <div class="required_field" id="sous-domaine-container">
+          {% bootstrap_field form.science_sub_domain %}
+        </div>
+      </div>
+
+    </div>
+  {% endpanel %}
+
+  {% translate 'Specific profile' context 'admission' as specific_profile_title %}
+  {% panel specific_profile_title id="student-profile" %}
+    <div class="required_field">
+      {% bootstrap_field_with_tooltip form.has_double_degree_scholarship %}
+      <div id="double-degree-scholarship-field">
+        {% bootstrap_field form.double_degree_scholarship show_label=False %}
+      </div>
+    </div>
+    <div class="required_field">
+      {% bootstrap_field_with_tooltip form.has_international_scholarship %}
+      <div id="international-scholarship-field">
+        {% bootstrap_field form.international_scholarship show_label=False %}
+      </div>
+    </div>
+    <div class="required_field">
+      {% bootstrap_field_with_tooltip form.has_erasmus_mundus_scholarship %}
+      <div id="erasmus-scholarship-field">
+        {% bootstrap_field form.erasmus_mundus_scholarship show_label=False %}
+      </div>
+    </div>
+  {% endpanel %}
+
+  {% if form.specific_question_answers.field.fields %}
+    {% panel _('Specific aspects') %}
+      {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
+    {% endpanel %}
+  {% endif %}
+
+  {% if just_submitted %}
+    {% include "admission/modal/just_submitted_modal.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script>
+      $(function () {
+          const isTruthy = val => !!val;
+          const defaultOptions = {
+              duration: 0,
+          };
+          const GENERAL_EDUCATION_TYPES = {{ GENERAL_EDUCATION_TYPES|safe }};
+          const COMMISSIONS_CDE_CLSM = {{ COMMISSIONS_CDE_CLSM|safe }};
+          const COMMISSION_CDSS = '{{ COMMISSION_CDSS }}'
+          const SCIENCE_DOCTORATE = '{{ SCIENCE_DOCTORATE }}'
+
+          // Training part
+
+          $('#training-container').dependsOn({
+              '#id_training_type': { isTruthy },
+          }, defaultOptions);
+
+          // Clean fields when updating the training type or campus
+          $('#id_training_type, #id_campus').on('change', function() {
+              $('#id_general_education_training, #id_sector, #id_mixed_training').val('').change();
+          });
+
+          // General education
+
+          $('#general-education-training-container').dependsOn({
+              '#id_training_type': { values: GENERAL_EDUCATION_TYPES },
+          }, defaultOptions);
+
+          // Continuing education
+
+          $('#mixed-training-container').dependsOn({
+              '#id_training_type': { values: ['CERTIFICAT_ATTESTATION'] },
+          }, defaultOptions);
+
+          // Doctorate education
+
+          $('#doctorate-training-container').dependsOn({
+              '#id_training_type': { values: ['DOCTORAT'] },
+          }, defaultOptions);
+
+          $('#pre-admission-justification').dependsOn({
+              'input[name="admission_type"]': { values: ['PRE_ADMISSION'] },
+          }, defaultOptions);
+
+          $('#id_sector').change(function() {
+              $('#id_doctorate_training').val('').change();
+          });
+
+          $('#doctorate-training-field').dependsOn({
+              '#id_sector': { isTruthy },
+          }, defaultOptions);
+
+          $('#cde-container').dependsOn({
+              '#id_doctorate_training': {
+                  changed: function () {
+                      const doctorate = $('#id_doctorate_training');
+                      if (doctorate.hasClass('select2-hidden-accessible')) {
+                          const data = doctorate.select2('data');
+                          if (data.length && COMMISSIONS_CDE_CLSM.includes(data[0].sigle_entite_gestion)) {
+                              return true;
+                          }
+                      }
+                  },
+              },
+          }, defaultOptions);
+
+          $('#cdss-container').dependsOn({
+              '#id_doctorate_training': {
+                  changed: function () {
+                      const doctorate = $('#id_doctorate_training');
+                      if (doctorate.hasClass('select2-hidden-accessible')) {
+                          const data = doctorate.select2('data');
+                          if (data.length && data[0].sigle_entite_gestion === COMMISSION_CDSS) {
+                              return true;
+                          }
+                      }
+                  },
+              },
+          }, defaultOptions);
+
+          $('#sous-domaine-container').dependsOn({
+              '#id_doctorate_training': {
+                  changed: function () {
+                      const doctorate = $('#id_doctorate_training');
+                      if (doctorate.hasClass('select2-hidden-accessible')) {
+                          const data = doctorate.select2('data');
+                          if (data.length && data[0].sigle === SCIENCE_DOCTORATE) {
+                              return true;
+                          }
+                      }
+                  },
+              },
+          }, defaultOptions);
+
+          // Student profile part
+
+          // Display right scholaships depending on the training type
+
+          $('#student-profile').dependsOn({
+              '#id_training_type': {
+                  values: ['MASTER'],
+              },
+          }, defaultOptions);
+
+          // Display scholarship search fields when it's required
+
+          $('#double-degree-scholarship-field').dependsOn({
+              'input[name="has_double_degree_scholarship"]': {
+                  values: ['True'],
+              },
+          }, defaultOptions);
+
+          $('#international-scholarship-field').dependsOn({
+              'input[name="has_international_scholarship"]': {
+                  values: ['True'],
+              },
+          }, defaultOptions);
+
+          $('#erasmus-scholarship-field').dependsOn({
+              'input[name="has_erasmus_mundus_scholarship"]': {
+                  values: ['True'],
+              },
+          }, defaultOptions);
+
+          document.dispatchEvent(new Event('refreshFormInitial'));
+      });
+
+      // Prevent to submit data from form inputs in disabled containers
+      $('form').on('submit', function() {
+          $(this).find('div[disabled] *').prop('disabled', true);
+      })
+
+  </script>
+{% endblock %}

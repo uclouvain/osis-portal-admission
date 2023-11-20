@@ -1,0 +1,68 @@
+{% extends base_template %}
+{% load i18n static admission bootstrap3 %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+
+{% block form_content %}
+  {% url request.resolver_match.namespace pk=view.kwargs.pk as back_url %}
+  {% admission_tabs doctorate %}
+  <div id="subtabs-row" class="row">
+    <div id="subtabs" class="col-md-2 visible-md visible-lg">
+      {% admission_subtabs doctorate %}
+    </div>
+    <div class="col-md-10">
+      <div class="quitting-context-excluded">
+        {% include form.template_name %}
+      </div>
+      <div class="text-right form-group">
+        <a href="{{ back_url }}" class="text-danger">
+          {% trans "Cancel" %}
+        </a>
+        <button type="submit" class="btn btn-primary">
+          {% trans "Save" context 'admission'  %}
+        </button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script>
+  $(function () {
+    {# Scripts cannot be inside form includes as dependsOn is included in form.media #}
+    $('#container_start_date a.popover-buttons').length && $('#container_start_date a.popover-buttons').dependsOn({
+      '#id_organizing_institution_0': { values: ['UCLouvain'] },
+    });
+    $('#id_academic_year').change(function () {
+      $('#id_learning_unit_year').val(null).trigger('change');
+    });
+    $('.acceptation-proof').length && $('.acceptation-proof').dependsOn({
+      '#id_committee': { values: ['YES'] },
+    }, { valueOnDisable: '' });
+  });
+  </script>
+{% endblock %}

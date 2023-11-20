@@ -1,0 +1,48 @@
+{% extends base_template %}
+
+{% load i18n admission waffle_tags enums %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block tab_content %}
+  {% panel _('Choose your course') %}
+    {% field_data _("Admission type") admission.type_admission|enum_display:'AdmissionType' %}
+    {% if admission.justification %}
+      {% field_data _("Brief justification") admission.justification|linebreaks %}
+    {% endif %}
+    {% field_data _("Sector") admission.intitule_secteur_formation %}
+    {% field_data _('Course name') admission.doctorat.intitule %}
+    {% field_data _('Campus') admission.doctorat.campus %}
+    {% if admission.commission_proximite %}
+      {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixCommissionProximiteCDEouCLSM'|enum_display:'ChoixCommissionProximiteCDSS'|enum_display:'ChoixSousDomaineSciences' %}
+    {% endif %}
+    {% switch 'debug' %}
+      {% field_data _('Academic year') admission.doctorat.annee|get_academic_year css_class='debug-content' %}
+    {% endswitch %}
+  {% endpanel %}
+
+  {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
+
+{% endblock %}
