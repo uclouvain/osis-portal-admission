@@ -1,5 +1,3 @@
-{% load static i18n admission %}
-
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
   * designed to manage the core business of higher education institutions,
@@ -23,39 +21,3 @@
   * at the root of the source code of this program.  If not,
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-<div class="dashboard-admission">
-    <div class="dashboard-grid dashboard-fixed-placement" >
-
-        {% get_dashboard_links as links %}
-        {% if 'url' in links.list_propositions %}
-        <div class="grid-item">
-            <i class="far fa-address-card" style="grid-area: icon;"></i>
-            <h4 class="media-heading" style="grid-area: title;">
-                <a href="{% url 'admission:list' %}" id="lnk_admission">
-                    {% trans 'My application' context 'admission' %}
-                </a>
-            </h4>
-            <div class="description" style="grid-area: description;">
-                <p>{% trans 'Create and manage my UCLouvain application' %}.</p>
-            </div>
-        </div>
-        {% endif %}
-        {% if 'url' in links.list_supervised %}
-        <div class="grid-item">
-            <i class="far fa-address-card" style="grid-area: icon;"></i>
-                <h4 class="media-heading" style="grid-area: title;">
-                    <a
-                            href="{% url 'admission:supervised-list' %}"
-                            id="lnk_member_admission"
-                    >
-                        {% trans 'Management of PhDs' %}
-                    </a>
-                </h4>
-            <div class="description" style="grid-area: description;">
-                <p>{% trans "Access my PhD students' files" %}.</p>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-</div>
