@@ -74,7 +74,9 @@
       </div>
     </div>
 
-    {% bootstrap_field form.id_photo form_group_class="form-group required_field" %}
+    <div>
+      {% bootstrap_field_with_tooltip form.id_photo classes="required_field" %}
+    </div>
 
     <div class="row">
       <div class="col-md-4">
