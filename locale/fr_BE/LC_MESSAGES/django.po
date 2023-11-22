@@ -448,6 +448,11 @@ msgstr ""
 "ses moyens (Article 16 et 17 - Section 3 du Chapitre 1 du Titre III du "
 "Règlement général des études et des examens de l'UCLouvain)."
 
+msgid "Any other assessment system that is not based on a credit system."
+msgstr ""
+"Tout autre système d’évaluation qui ne se base pas sur l’évaluation par "
+"crédit."
+
 msgid "Application accepted"
 msgstr "Inscription autorisée"
 
@@ -539,6 +544,15 @@ msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
 "Êtes-vous l'enfant d'un membre du personnel de l'UCLouvain ou de l'entité "
 "Martin V ?"
+
+msgid ""
+"Assessment is also based on the credit system, which quantifies the workload "
+"involved in a class. Depending on the country, a full year of study is "
+"equivalent to a defined number of credits (e.g. 30 credits)."
+msgstr ""
+"Évaluation également basée sur le système de crédits qui quantifie la charge "
+"de travail que représente un cours. En fonction du pays, une année complète "
+"d’études équivaut à un nombre défini de crédit (exemple : 30 crédits)."
 
 msgid "At least one academic year is required."
 msgstr "Au-moins une année académique est requise."
@@ -703,12 +717,6 @@ msgstr "Certificat et attestation"
 msgid "Certificate for children of staff"
 msgstr "Attestation enfant du personnel"
 
-msgid ""
-"Certificate justifying and mentioning your activity for the period concerned"
-msgstr ""
-"Attestation justifiant votre activité, mentionnant cette activité, pour la "
-"période concernée"
-
 msgid "Certificate of achievement"
 msgstr "Attestation de réussite"
 
@@ -743,7 +751,7 @@ msgid ""
 "November)"
 msgstr ""
 "Attestation d'inscription régulière pour l'année académique %(year)s de "
-"l'établissement dans lequel vous êtes actuellement inscrit(e) (datée au plus "
+"l'établissement dans lequel vous êtes actuellement inscrit·e (datée au plus "
 "tôt au 1er novembre)"
 
 msgid ""
@@ -867,9 +875,6 @@ msgstr "Formation complémentaire"
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
 
-msgid "Complete the proposition"
-msgstr "Compléter la proposition"
-
 msgid "Completed (by student) for FAC"
 msgstr "Complétée (par étudiant) pour Fac"
 
@@ -916,6 +921,9 @@ msgstr "Langue de contact"
 
 msgid "Context"
 msgstr "Contexte"
+
+msgid "Continue"
+msgstr "Continuer"
 
 msgid "Continuing education"
 msgstr "Formation continue"
@@ -1308,6 +1316,9 @@ msgstr "Documents à compléter"
 msgid "Does not have a doctor title"
 msgstr "N'est pas porteur du titre de docteur"
 
+msgid "Dossier numero:"
+msgstr "Numéro de dossier :"
+
 msgid "Download as PDF"
 msgstr "Télécharger en tant que PDF"
 
@@ -1345,6 +1356,19 @@ msgstr "ECTS ajoutés"
 msgid "ECTS credits"
 msgstr "Crédits ECTS"
 
+msgid ""
+"ECTS credits are a European unit of measurement that assesses the workload "
+"represented by a class within a course. A full year of study is generally "
+"equivalent to 60 credits. The ECTS system has been introduced in most "
+"European countries but is also increasingly used in other countries."
+msgstr ""
+"Les crédits ECTS représentent une unité de mesure <span class='text-"
+"decoration-underline'>européenne</span> qui évalue la charge de travail que "
+"représente un cours au sein d’un programme d’études. Une année complète "
+"d’études équivaut généralement à 60 crédits. Le système ECTS a été mis en "
+"place dans la plupart des pays européens mais est également utilisé de plus "
+"en plus dans d’autres pays."
+
 msgid "ECTS for participating"
 msgstr "ECTS pour la participation"
 
@@ -1353,10 +1377,6 @@ msgstr "ECTS pour la participation"
 
 msgid "Edit"
 msgstr "Modifier"
-
-msgctxt "edit"
-msgid "Edit"
-msgstr "Éditer"
 
 #, python-format
 msgid "Edit <em>%(category)s</em> activity."
@@ -1548,7 +1568,7 @@ msgid "Foreign diploma"
 msgstr "Diplôme étranger"
 
 msgid "Former UCLouvain student"
-msgstr "Ancien étudiant UCLouvain"
+msgstr "Ancien·ne étudiant·e UCLouvain"
 
 msgid "French"
 msgstr "Français"
@@ -1625,7 +1645,7 @@ msgstr ""
 "française de Belgique ?"
 
 msgid "Have you previously enrolled at UCLouvain?"
-msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
+msgstr "Avez-vous déjà été inscrit·e à l'UCLouvain antérieurement ?"
 
 msgid "Have you previously enrolled for a PhD?"
 msgstr ""
@@ -2201,6 +2221,10 @@ msgstr "Modification d'une activité non-académique"
 msgid "Modification of an academic activity"
 msgstr "Modification d'une formation académique"
 
+msgctxt "edit"
+msgid "Modify"
+msgstr "Modifier"
+
 msgid "Month"
 msgstr "Mois"
 
@@ -2667,6 +2691,19 @@ msgstr ""
 "Veuillez sélectionner la première situation d’assimilation qui vous "
 "correspond"
 
+msgid ""
+"Please select the assessment system used by the institution where you "
+"studied. The assessment system is usually indicated <strong>on your "
+"transcripts or diploma supplements</strong>."
+msgstr ""
+"Veuillez sélectionner le système d'évaluation au sein de l'établissement "
+"dans lequel vous avez suivi vos études. Le système d'évaluation est "
+"généralement mentionné <strong>sur vos relevés de notes ou sur vos "
+"suppléments de diplôme</strong>."
+
+msgid "Post-dated certificate justifying your activity mentioned above"
+msgstr "Attestation postdatée justifiant votre activité mentionnée ci-dessus"
+
 msgid "Postal address"
 msgstr "Adresse de correspondance"
 
@@ -2994,6 +3031,12 @@ msgid "Search for an EU code (outside the EU of the form)"
 msgstr "Rechercher un code UE (hors UE du formulaire)"
 
 msgid ""
+"Search for your course title using a word from the title (e.g. management)"
+msgstr ""
+"Recherchez l'intitulé de votre formation via un mot de l'intitulé (ex: "
+"gestion)"
+
+msgid ""
 "Secondary education in Belgium is the level of education between the end of "
 "primary school and the beginning of higher education."
 msgstr ""
@@ -3039,6 +3082,9 @@ msgstr "Type de sélection"
 
 msgid "Send"
 msgstr "Envoyer"
+
+msgid "Send documents"
+msgstr "Envoyer des documents"
 
 msgid ""
 "Sending the request requires your agreement with all of the following "
@@ -3885,7 +3931,7 @@ msgstr ""
 
 msgid "You have now reached the application confirmation tab."
 msgstr ""
-"Vous voici arrivé(e) sur l'onglet de confirmation de votre demande "
+"Vous voici arrivé·e sur l'onglet de confirmation de votre demande "
 "d'inscription."
 
 #, python-format

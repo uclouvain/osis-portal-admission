@@ -94,7 +94,7 @@
           {% bootstrap_field base_form.transcript_type %}
         </div>
         <div class="col-md-6 required_field">
-          {% bootstrap_field base_form.evaluation_type %}
+          {% bootstrap_field_with_tooltip base_form.evaluation_type %}
         </div>
       </div>
 
@@ -114,7 +114,7 @@
             <th style="width: 140px;">
               <span>{% translate 'Academic year' %}</span>
               <a
-                  class="fa fa-info-circle popover-buttons"
+                  class="fa fa-question-circle popover-buttons"
                   role="button"
                   tabindex="0"
                   data-content="{% blocktrans trimmed %}
@@ -127,7 +127,7 @@
             <th class="required_text" style="width: 150px;">
               <span>{% translate 'Registered credits' %}</span>
               <a
-                  class="fa fa-info-circle popover-buttons"
+                  class="fa fa-question-circle popover-buttons"
                   role="button"
                   tabindex="0"
                   data-content="{% translate "Total number of credits registered in your annual programme (PAE)." %}"
@@ -137,7 +137,7 @@
             <th class="required_text" style="width: 150px;">
               <span>{% translate 'Credits earned' %}</span>
               <a
-                  class="fa fa-info-circle popover-buttons"
+                  class="fa fa-question-circle popover-buttons"
                   role="button"
                   tabindex="0"
                   data-content="{% translate "Number of credits earned at the end of the academic year." %}"
@@ -471,7 +471,7 @@
              });
 
              {# Evaluation system field #}
-             evaluationType.dependsOn({
+             $('#container_evaluation_type').dependsOn({
                  '#id_base_form-country': { is_truthy, not: [beIsoCode] },
              }, {
                  disable: false,

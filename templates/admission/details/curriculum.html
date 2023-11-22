@@ -74,16 +74,6 @@
         {% endif %}
       </p>
     </div>
-    {% if educational_experiences or professional_experiences %}
-      <div>
-        <a
-            tabindex="0"
-            class="fa fa-info-circle popover-buttons"
-            data-content="<p>{{ global_info_p1 }}</p><p>{{ global_info_p2 }}</p><p>{{ global_info_p3 }}</p><p>{{ global_info_p4 }}</p>"
-            role="button"
-        ></a>
-      </div>
-    {% endif %}
   </div>
   {% if educational_experiences or professional_experiences %}
     {% if missing_periods_messages %}
@@ -100,17 +90,20 @@
         </ul>
       </div>
     {% endif %}
-  {% else %}
-    <div class="alert alert-info">
-      <p>{{ global_info_p1|safe }}</p>
-      <p>{{ global_info_p2|safe }}</p>
-      <p>{{ global_info_p3|safe }}</p>
-      <p>{{ global_info_p4|safe }}</p>
-    </div>
   {% endif %}
   <div id="academic-activities" class="panel panel-default scroll-with-margin">
     <div class="panel-heading flex-container">
-      <div class="panel-title">{% translate "Academic courses" %}</div>
+      <div class="panel-title">
+        {% translate "Academic courses" %}
+        {% if educational_experiences %}
+          <a
+              tabindex="0"
+              class="fa fa-question-circle popover-buttons"
+              data-content="<p>{{ global_info_p1 }}</p>"
+              role="button"
+          ></a>
+        {% endif %}
+      </div>
       {% if form %}
         <a
             href="{{ curriculum_educational_create_url }}#curriculum-header"
@@ -125,6 +118,8 @@
     </div>
     <div class="panel-body">
       {% if educational_experiences %}
+        <p>{{ global_info_p2|safe }}</p>
+        <p>{{ global_info_p3|safe }}</p>
         <table class="table table-striped">
           <thead>
             <tr>
@@ -208,13 +203,28 @@
         {% endif %}
       {% else %}
         {% trans "The CV does not yet contain any academic course." %}
+        <div class="alert alert-info">
+          <p>{{ global_info_p1|safe }}</p>
+        </div>
+        <p>{{ global_info_p2|safe }}</p>
+        <p>{{ global_info_p3|safe }}</p>
       {% endif %}
     </div>
   </div>
 
   <div id="non-academic-activities" class="panel panel-default scroll-with-margin">
     <div class="panel-heading flex-container">
-      <div class="panel-title">{% translate "Non-academic activities" %}</div>
+      <div class="panel-title">
+        {% translate "Non-academic activities" %}
+        {% if educational_experiences %}
+          <a
+              tabindex="0"
+              class="fa fa-question-circle popover-buttons"
+              data-content="<p>{{ global_info_p4 }}</p>"
+              role="button"
+          ></a>
+        {% endif %}
+      </div>
       {% if form %}
         <a
             href="{{ curriculum_professional_create_url }}#curriculum-header"
@@ -232,6 +242,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
+              <th style="width: 5px;"></th>
               <th style="width: 150px;">{% translate "Period" %}</th>
               <th>{% translate "Activity type" %}</th>
               <th class="action-container">{% translate "Actions" %}</th>
@@ -249,6 +260,9 @@
                 {% url 'admission:create:curriculum:professional_delete' professional_experience.uuid as experience_delete_url %}
               {% endif %}
               <tr>
+                <td>
+                  <i class="fa-solid fa-check text-success" title="{% translate 'Full' %}"></i>
+                </td>
                 <td>
                   {% with start_date=professional_experience.start_date|date:"YEAR_MONTH_FORMAT"|capfirst end_date=professional_experience.end_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
                     {{ start_date }}
@@ -297,6 +311,9 @@
         </table>
       {% else %}
         {% trans "The CV does not yet contain any non-academic activity." %}
+        <p class="alert alert-info">
+          {{ global_info_p4|safe }}
+        </p>
       {% endif %}
     </div>
   </div>
@@ -337,6 +354,15 @@
 
     .action-container > div {
       display: inline-block;
+    }
+
+    .panel-title a {
+      font-size: initial;
+    }
+
+    .panel-body .alert {
+      margin-top: 1em;
+      margin-bottom: 1em;
     }
   </style>
 {% endblock %}

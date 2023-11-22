@@ -193,8 +193,8 @@ TAB_TREES = {
             Tab('curriculum', _('Curriculum')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
-            Tab('specific-questions', _('Specific aspects')),
             Tab('accounting', _('Accounting')),
+            Tab('specific-questions', _('Specific aspects')),
         ],
         Tab('confirm-submit', _('Finalise application'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
