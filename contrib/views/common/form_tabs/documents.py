@@ -26,6 +26,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView
 
 from admission.contrib.enums.specific_question import Onglets
@@ -55,6 +56,11 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
         'general-education': AdmissionPropositionService.update_general_education_documents,
     }
     form_class = CompleteDocumentsForm
+    extra_context = {
+        'submit_class': 'btn btn-primary',
+        'submit_label': gettext_lazy('Send'),
+        'submit_icon': 'fa-paper-plane',
+    }
 
     def has_permission(self):
         return can_update_tab(admission=self.admission, tab='documents')

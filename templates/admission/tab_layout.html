@@ -71,6 +71,8 @@
 {% endblock %}
 
 {% block content %}
+  {% trans "Save" context 'admission' as save_label %}
+
   {% if form %}
     {% include "admission/modal/prevent_quitting_modal.html" %}
   {% endif %}
@@ -182,13 +184,13 @@
           <div class="text-right form-group">
             {% block submit_button %}
               <button
-                type="submit" class="btn btn-default"
+                type="submit" class="{{ submit_class|default:'btn btn-default' }}"
                 {% if cancel_url and not admission|can_update_tab:current_tab %}
                 disabled
                 {% endif %}
               >
-                <i class="fa-solid fa-floppy-disk"></i>
-                {% trans "Save" context 'admission' %}
+                <i class="fa-solid {{ submit_icon|default:'fa-floppy-disk' }}"></i>
+                {{ submit_label|default:save_label }}
               </button>
             {% endblock submit_button %}
             {% block submit_and_continue %}
