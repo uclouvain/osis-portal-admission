@@ -1317,9 +1317,6 @@ msgctxt "admission"
 msgid "February"
 msgstr ""
 
-msgid "Feedback form link"
-msgstr ""
-
 msgid "Feedback from FAC"
 msgstr ""
 
@@ -2977,6 +2974,13 @@ msgid "The person concerned"
 msgstr ""
 
 msgid ""
+"The photo must follow the following rules:<ul>  <li>JPEG or PNG file (.jpg, ."
+"jpeg ou .png) up to 10MB</li>  <li>Identity photo format with a blank "
+"background</li>  <li>Centered on your bare face</li>  <li>Recent and in "
+"colour</li>  <li>Without any filter nor any contour</li></ul>"
+msgstr ""
+
+msgid ""
 "The secondary school diploma is the Certificat d'Enseignement Secondaire "
 "Superieur (CESS, Certificate of Higher Secondary Education). It is commonly "
 "referred to in many countries as the baccalaureat."
@@ -3513,11 +3517,6 @@ msgstr ""
 msgid ""
 "Your enrolment cannot be confirmed. All of the following requirements must "
 "be met."
-msgstr ""
-
-msgid ""
-"Your opinion matters to us. Once you have submitted your application, can "
-"you fill in the feedback form at the following link?"
 msgstr ""
 
 msgid "Your participation in the event"

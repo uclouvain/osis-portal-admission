@@ -690,10 +690,27 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
             **self.default_kwargs,
         )
 
-        # Check response context
-        self.assertIn('form', response.context)
-        for field in ['graduated_from_high_school', 'graduated_from_high_school_year']:
-            self.assertTrue(response.context['form'].fields[field].disabled)
+        # Check response context -> all fields are disabled except the one related to the specific questions
+        self.assertIn('main_form', response.context)
+        main_form = response.context['main_form']
+
+        for field in main_form.fields:
+            if field != 'specific_question_answers':
+                self.assertTrue(main_form.fields[field].disabled, field)
+            else:
+                self.assertFalse(main_form.fields[field].disabled, field)
+
+        self.assertIn('belgian_diploma_form', response.context)
+        belgian_form = response.context['belgian_diploma_form']
+
+        for field in belgian_form.fields:
+            self.assertTrue(belgian_form.fields[field].disabled, field)
+
+        self.assertIn('foreign_diploma_form', response.context)
+        foreign_form = response.context['foreign_diploma_form']
+
+        for field in foreign_form.fields:
+            self.assertTrue(foreign_form.fields[field].disabled, field)
 
     def test_bachelor_form_empty(self):
         self.proposition.formation.type = TrainingType.BACHELOR.name
