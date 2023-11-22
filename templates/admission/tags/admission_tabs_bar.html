@@ -101,7 +101,7 @@
           disabled
           {% endif %}
         >
-          <i class="fa-solid fa-floppy-disk"></i>
+          <i class="fa-solid {{ submit_icon|default:'fa-floppy-disk' }}"></i>
           {{ submit_label|default:save_label }}
         </button>
       </div>
@@ -128,7 +128,7 @@
         disabled
         {% endif %}
       >
-        <i class="fa-solid fa-floppy-disk"></i>
+        <i class="fa-solid {{ submit_icon|default:'fa-floppy-disk' }}"></i>
         {{ submit_label|default:save_label }}
       </button>
     </div>
