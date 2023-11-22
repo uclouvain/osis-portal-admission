@@ -411,3 +411,12 @@ body, html {
 .fst-italic {
   font-style: italic;
 }
+
+.text-decoration-underline {
+  text-decoration: underline;
+}
+
+.fst-bold-underline {
+  text-decoration: underline;
+  font-weight: 700;
+}

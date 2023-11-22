@@ -76,4 +76,18 @@
             {% field_data _('Emergency contact (telephone number)') coordonnees.emergency_contact_phone "col-md-6" %}
         </div>
     {% endpanel %}
+
+    {% if not admission|can_update_tab:"coordonnees" %}
+      <a
+          class="btn btn-primary pull-right"
+          {% if view.kwargs.pk %}
+          href="{% url base_namespace|add:':training-choice' view.kwargs.pk %}"
+          {% else %}
+          href="{% url base_namespace|add:':training-choice' %}"
+          {% endif %}
+      >
+        <i class="fa-solid fa-forward-step"></i>
+      {% trans "Continue" %}
+      </a>
+    {% endif %}
 {% endblock %}
