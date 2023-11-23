@@ -56,25 +56,25 @@
     short course, etc.).
   {% endblocktranslate %}
 
+  {% if view.is_continuing %}
+    <p class="alert alert-info" role="alert">
+      {% blocktranslate trimmed %}
+        Provide the details of your most recent academic course and your most recent non-academic experience.
+      {% endblocktranslate %}
+    </p>
+  {% elif need_to_complete %}
+    <p class="alert alert-info" role="alert">
+      {% blocktranslate trimmed with date=minimal_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
+        Please enter all academic courses you have attended. For non-academic activities, please enter
+        all those that have taken place since {{ date }}.
+      {% endblocktranslate %}
+    </p>
+  {% elif not access_conditions_not_met %}
+    <p class="alert alert-info" role="alert">
+      {% translate "On the basis of the information you have provided, it is not necessary to enter your academic courses and non-academic activities below." %}
+    </p>
+  {% endif %}
 
-  <div class="alert alert-info flex-container-align-no-wrap" role="alert">
-    <div>
-      <p>
-        {% if view.is_continuing %}
-          {% blocktranslate trimmed %}
-            Provide the details of your most recent academic course and your most recent non-academic experience.
-          {% endblocktranslate %}
-        {% elif need_to_complete %}
-          {% blocktranslate trimmed with date=minimal_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
-            Please enter all academic courses you have attended. For non-academic activities, please enter
-            all those that have taken place since {{ date }}.
-          {% endblocktranslate %}
-        {% else %}
-          {% translate "On the basis of the information you have provided, it is not necessary to enter your academic courses and non-academic activities below." %}
-        {% endif %}
-      </p>
-    </div>
-  </div>
   {% if educational_experiences or professional_experiences %}
     {% if missing_periods_messages %}
       <div class="alert alert-warning" role="alert">
