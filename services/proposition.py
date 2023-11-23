@@ -54,6 +54,7 @@ __all__ = [
     "TAB_OF_BUSINESS_EXCEPTION",
     "BUSINESS_EXCEPTIONS_BY_TAB",
     "PropositionBusinessException",
+    "GlobalPropositionBusinessException",
 ]
 
 
