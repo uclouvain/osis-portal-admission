@@ -121,6 +121,7 @@ textarea {
   margin-left: 5px;
   font-size: 1.25em;
   vertical-align: -.075em;
+  color: #337ab7 !important;
 }
 
 .popover {
