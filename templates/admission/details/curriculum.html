@@ -99,7 +99,7 @@
           <a
               tabindex="0"
               class="fa fa-question-circle popover-buttons"
-              data-content="<p>{{ global_info_p1 }}</p>"
+              data-content="<p>{{ global_info_p1 }}</p><p>{{ global_info_p2 }}</p><p>{{ global_info_p3 }}</p>"
               role="button"
           ></a>
         {% endif %}
@@ -118,8 +118,6 @@
     </div>
     <div class="panel-body">
       {% if educational_experiences %}
-        <p>{{ global_info_p2|safe }}</p>
-        <p>{{ global_info_p3|safe }}</p>
         <table class="table table-striped">
           <thead>
             <tr>
@@ -205,9 +203,9 @@
         {% trans "The CV does not yet contain any academic course." %}
         <div class="alert alert-info">
           <p>{{ global_info_p1|safe }}</p>
+          <p>{{ global_info_p2|safe }}</p>
+          <p>{{ global_info_p3|safe }}</p>
         </div>
-        <p>{{ global_info_p2|safe }}</p>
-        <p>{{ global_info_p3|safe }}</p>
       {% endif %}
     </div>
   </div>
