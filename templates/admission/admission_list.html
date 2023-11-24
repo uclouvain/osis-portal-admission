@@ -98,3 +98,8 @@
     }
   </style>
 {% endblock %}
+
+{% block footer %}
+  {% include "admission/includes/footer.html" %}
+  {{ block.super }}
+{% endblock %}

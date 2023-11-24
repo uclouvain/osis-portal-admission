@@ -224,3 +224,8 @@
   {% endblock tabs_content %}
   {% block extra_content %}{% endblock %}
 {% endblock %}
+
+{% block footer %}
+  {% include "admission/includes/footer.html" %}
+  {{ block.super }}
+{% endblock %}

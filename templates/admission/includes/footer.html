@@ -1,5 +1,4 @@
-{% extends "layout.html" %}
-{% load bootstrap3 i18n static admission enums %}
+{% load i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -8,7 +7,8 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2023 Université catholique de Louvain
+  (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -25,15 +25,11 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block content %}
-  {% block template_messages %}
-    <div id="template-messages-container">
-      {% include "template_messages.html" %}
-    </div>
-  {% endblock %}
-{% endblock %}
-
-{% block footer %}
-  {% include "admission/includes/footer.html" %}
-  {{ block.super }}
-{% endblock %}
+<p class="text-center">
+  {% blocktranslate trimmed %}
+    An administrative question about your dossier?
+    <a href="https://uclouvain.be/en/study/inscriptions/frequently-asked-questions.html" target="_blank">Contact the Enrolment Office</a> -
+    A technical or IT problem?
+    <a href="http://uclouvain.be/8282" target="_blank">Contact the Service Desk</a>
+  {% endblocktranslate %}
+</p>
