@@ -141,8 +141,11 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
     class Media:
         js = ("js/dependsOn.min.js",)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, person, is_valuated, *args, **kwargs):
+        # Set is_valuated to False as we disable the fields in this subclass
+        super().__init__(person, is_valuated=False, *args, **kwargs)
+
+        self.is_valuated = is_valuated
 
         belgian_diploma = self.initial.get("belgian_diploma")
         foreign_diploma = self.initial.get("foreign_diploma")
@@ -159,12 +162,15 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
             self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
                 "first_cycle_admission_exam"
             )
+        disable_fields_if_valuated(is_valuated, self.fields, {self.configurable_form_field_name})
 
     def clean(self):
         cleaned_data = super().clean()
 
-        if cleaned_data.get("graduated_from_high_school") in HAS_DIPLOMA_CHOICES and not cleaned_data.get(
-            "diploma_type"
+        if (
+            not self.is_valuated
+            and cleaned_data.get("graduated_from_high_school") in HAS_DIPLOMA_CHOICES
+            and not cleaned_data.get("diploma_type")
         ):
             self.add_error('diploma_type', FIELD_REQUIRED_MESSAGE)
 

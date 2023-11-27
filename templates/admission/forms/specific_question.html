@@ -44,77 +44,11 @@
         </p>
         <div class="row">
           <div class="col-md-6 required_field">
-           {% bootstrap_field form.poste_diplomatique %}
+            {% bootstrap_field form.poste_diplomatique %}
           </div>
         </div>
       {% endpanel %}
     {% endif %}
-
-    {% panel _('Specific aspects') %}
-      {% if view.is_continuing %}
-        {% if admission.pays_nationalite_ue_candidat == False %}
-          <p class="alert alert-info text-justify">
-            {% blocktranslate trimmed %}
-              Certification and short programmes (continuing education) do not allow for obtaining a visa and residence
-              permit in Belgium. More information:
-              <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
-            {% endblocktranslate %}
-          </p>
-          {% bootstrap_field form.copie_titre_sejour %}
-        {% endif %}
-        {% bootstrap_field form.inscription_a_titre form_group_class='form-group required_field' %}
-        <div id="professional-container">
-          {% bootstrap_field form.nom_siege_social placeholder='' form_group_class='form-group required_field' %}
-          <div class="row">
-            <div class="col-md-6 required_field">
-              {% bootstrap_field form.numero_unique_entreprise placeholder='' %}
-            </div>
-            <div class="col-md-6 required_field">
-              {% bootstrap_field form.numero_tva_entreprise placeholder='' %}
-            </div>
-          </div>
-          {% bootstrap_field form.adresse_mail_professionnelle placeholder='' form_group_class='form-group required_field' %}
-          {% bootstrap_field form.type_adresse_facturation form_group_class='form-group required_field' %}
-          {% panel _("Billing address") id="billing-address-container" %}
-            {% bootstrap_field form.adresse_facturation_destinataire placeholder='' %}
-            <div class="row">
-                <div class="col-md-4 required_field formatted-field">
-                  {% bootstrap_field form.street %}
-                </div>
-                <div class="col-md-4 required_field">
-                  {% bootstrap_field form.street_number placeholder="" %}
-                </div>
-                <div class="col-md-4">
-                  {% bootstrap_field form.postal_box placeholder="" %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 required_field">
-                  {% bootstrap_field form.country %}
-                </div>
-                <div id="not-be-form-address">
-                    <div class="col-md-4 required_field">
-                      {% bootstrap_field form.postal_code placeholder="" %}
-                    </div>
-                    <div class="col-md-4 required_field formatted-field">
-                      {% bootstrap_field_with_tooltip form.city %}
-                    </div>
-                </div>
-                <div id="be-form-address">
-                    <div class="col-md-4 required_field">
-                      {% bootstrap_field form.be_postal_code placeholder="" %}
-                    </div>
-                    <div class="col-md-4 required_field">
-                      {% bootstrap_field form.be_city placeholder="" %}
-                    </div>
-                </div>
-            </div>
-          {% endpanel %}
-        </div>
-      {% endif %}
-      {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
-      {% bootstrap_field form.documents_additionnels %}
-    {% endpanel %}
   {% endwith %}
 
   {# Pool questions #}
@@ -166,6 +100,74 @@
 
     {% endwith %}
   {% endif %}
+
+  {% with form=forms.0 %}
+    {% panel _('Specific aspects') %}
+      {% if view.is_continuing %}
+        {% if admission.pays_nationalite_ue_candidat == False %}
+          <p class="alert alert-info text-justify">
+            {% blocktranslate trimmed %}
+              Certification and short programmes (continuing education) do not allow for obtaining a visa and residence
+              permit in Belgium. More information:
+              <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
+            {% endblocktranslate %}
+          </p>
+          {% bootstrap_field form.copie_titre_sejour %}
+        {% endif %}
+        {% bootstrap_field form.inscription_a_titre form_group_class='form-group required_field' %}
+        <div id="professional-container">
+          {% bootstrap_field form.nom_siege_social placeholder='' form_group_class='form-group required_field' %}
+          <div class="row">
+            <div class="col-md-6 required_field">
+              {% bootstrap_field form.numero_unique_entreprise placeholder='' %}
+            </div>
+            <div class="col-md-6 required_field">
+              {% bootstrap_field form.numero_tva_entreprise placeholder='' %}
+            </div>
+          </div>
+          {% bootstrap_field form.adresse_mail_professionnelle placeholder='' form_group_class='form-group required_field' %}
+          {% bootstrap_field form.type_adresse_facturation form_group_class='form-group required_field' %}
+          {% panel _("Billing address") id="billing-address-container" %}
+            {% bootstrap_field form.adresse_facturation_destinataire placeholder='' %}
+            <div class="row">
+              <div class="col-md-4 required_field formatted-field">
+                {% bootstrap_field form.street %}
+              </div>
+              <div class="col-md-4 required_field">
+                {% bootstrap_field form.street_number placeholder="" %}
+              </div>
+              <div class="col-md-4">
+                {% bootstrap_field form.postal_box placeholder="" %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 required_field">
+                {% bootstrap_field form.country %}
+              </div>
+              <div id="not-be-form-address">
+                <div class="col-md-4 required_field">
+                  {% bootstrap_field form.postal_code placeholder="" %}
+                </div>
+                <div class="col-md-4 required_field formatted-field">
+                  {% bootstrap_field_with_tooltip form.city %}
+                </div>
+              </div>
+              <div id="be-form-address">
+                <div class="col-md-4 required_field">
+                  {% bootstrap_field form.be_postal_code placeholder="" %}
+                </div>
+                <div class="col-md-4 required_field">
+                  {% bootstrap_field form.be_city placeholder="" %}
+                </div>
+              </div>
+            </div>
+          {% endpanel %}
+        </div>
+      {% endif %}
+      {% bootstrap_field form.reponses_questions_specifiques show_label=False error_css_class='' %}
+      {% bootstrap_field form.documents_additionnels %}
+    {% endpanel %}
+  {% endwith %}
 {% endblock %}
 
 {% block script %}

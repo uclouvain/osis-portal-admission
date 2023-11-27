@@ -399,6 +399,19 @@ msgstr "Tout"
 msgid "Amount"
 msgstr "Montant"
 
+msgid ""
+"An administrative question about your dossier? <a href=\"https://uclouvain."
+"be/en/study/inscriptions/frequently-asked-questions.html\" "
+"target=\"_blank\">Contact the Enrolment Office</a> - A technical or IT "
+"problem? <a href=\"http://uclouvain.be/8282\" target=\"_blank\">Contact the "
+"Service Desk</a>"
+msgstr ""
+"Une question administrative concernant votre dossier ? <a href=\"https://"
+"uclouvain.be/fr/etudier/inscriptions/questions-frequemment-posees.html\" "
+"target=\"_blank\">Contactez le Service des inscriptions</a> - Un problème "
+"technique ou informatique ? <a href=\"http://uclouvain.be/8282\" "
+"target=\"_blank\">Contactez le Service Desk</a>"
+
 msgid "An error has occurred, please check fields and try again."
 msgstr "Une erreur est survenue, veuillez vérifier les valeurs et réessayer."
 
@@ -447,6 +460,11 @@ msgstr ""
 "Celui qui est suspecté de fraude est invité à s'expliquer et à faire valoir "
 "ses moyens (Article 16 et 17 - Section 3 du Chapitre 1 du Titre III du "
 "Règlement général des études et des examens de l'UCLouvain)."
+
+msgid "Any other assessment system that is not based on a credit system."
+msgstr ""
+"Tout autre système d’évaluation qui ne se base pas sur l’évaluation par "
+"crédit."
 
 msgid "Application accepted"
 msgstr "Inscription autorisée"
@@ -541,17 +559,13 @@ msgstr ""
 "Martin V ?"
 
 msgid ""
-"As part of your application, one document must be uploaded to continue the "
-"enrolment process."
-msgid_plural ""
-"As part of your application, several documents must be uploaded to continue "
-"the enrolment process."
-msgstr[0] ""
-"Dans le cadre de votre demande, un document doit être téléversé pour "
-"poursuivre le processus d'inscription."
-msgstr[1] ""
-"Dans le cadre de votre demande, plusieurs documents doivent être téléversés "
-"pour poursuivre le processus d'inscription."
+"Assessment is also based on the credit system, which quantifies the workload "
+"involved in a class. Depending on the country, a full year of study is "
+"equivalent to a defined number of credits (e.g. 30 credits)."
+msgstr ""
+"Évaluation également basée sur le système de crédits qui quantifie la charge "
+"de travail que représente un cours. En fonction du pays, une année complète "
+"d’études équivaut à un nombre défini de crédit (exemple : 30 crédits)."
 
 msgid "At least one academic year is required."
 msgstr "Au-moins une année académique est requise."
@@ -716,12 +730,6 @@ msgstr "Certificat et attestation"
 msgid "Certificate for children of staff"
 msgstr "Attestation enfant du personnel"
 
-msgid ""
-"Certificate justifying and mentioning your activity for the period concerned"
-msgstr ""
-"Attestation justifiant votre activité, mentionnant cette activité, pour la "
-"période concernée"
-
 msgid "Certificate of achievement"
 msgstr "Attestation de réussite"
 
@@ -756,7 +764,7 @@ msgid ""
 "November)"
 msgstr ""
 "Attestation d'inscription régulière pour l'année académique %(year)s de "
-"l'établissement dans lequel vous êtes actuellement inscrit(e) (datée au plus "
+"l'établissement dans lequel vous êtes actuellement inscrit·e (datée au plus "
 "tôt au 1er novembre)"
 
 msgid ""
@@ -880,9 +888,6 @@ msgstr "Formation complémentaire"
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
 
-msgid "Complete the proposition"
-msgstr "Compléter la proposition"
-
 msgid "Completed (by student) for FAC"
 msgstr "Complétée (par étudiant) pour Fac"
 
@@ -929,6 +934,9 @@ msgstr "Langue de contact"
 
 msgid "Context"
 msgstr "Contexte"
+
+msgid "Continue"
+msgstr "Continuer"
 
 msgid "Continuing education"
 msgstr "Formation continue"
@@ -1321,6 +1329,9 @@ msgstr "Documents à compléter"
 msgid "Does not have a doctor title"
 msgstr "N'est pas porteur du titre de docteur"
 
+msgid "Dossier numero:"
+msgstr "Numéro de dossier :"
+
 msgid "Download as PDF"
 msgstr "Télécharger en tant que PDF"
 
@@ -1358,6 +1369,19 @@ msgstr "ECTS ajoutés"
 msgid "ECTS credits"
 msgstr "Crédits ECTS"
 
+msgid ""
+"ECTS credits are a European unit of measurement that assesses the workload "
+"represented by a class within a course. A full year of study is generally "
+"equivalent to 60 credits. The ECTS system has been introduced in most "
+"European countries but is also increasingly used in other countries."
+msgstr ""
+"Les crédits ECTS représentent une unité de mesure <span class='text-"
+"decoration-underline'>européenne</span> qui évalue la charge de travail que "
+"représente un cours au sein d’un programme d’études. Une année complète "
+"d’études équivaut généralement à 60 crédits. Le système ECTS a été mis en "
+"place dans la plupart des pays européens mais est également utilisé de plus "
+"en plus dans d’autres pays."
+
 msgid "ECTS for participating"
 msgstr "ECTS pour la participation"
 
@@ -1366,10 +1390,6 @@ msgstr "ECTS pour la participation"
 
 msgid "Edit"
 msgstr "Modifier"
-
-msgctxt "edit"
-msgid "Edit"
-msgstr "Éditer"
 
 #, python-format
 msgid "Edit <em>%(category)s</em> activity."
@@ -1507,9 +1527,6 @@ msgctxt "admission"
 msgid "February"
 msgstr "février"
 
-msgid "Feedback form link"
-msgstr "Lien vers le formulaire de feedback"
-
 msgid "Feedback from FAC"
 msgstr "Retour de FAC"
 
@@ -1564,7 +1581,7 @@ msgid "Foreign diploma"
 msgstr "Diplôme étranger"
 
 msgid "Former UCLouvain student"
-msgstr "Ancien étudiant UCLouvain"
+msgstr "Ancien·ne étudiant·e UCLouvain"
 
 msgid "French"
 msgstr "Français"
@@ -1641,7 +1658,7 @@ msgstr ""
 "française de Belgique ?"
 
 msgid "Have you previously enrolled at UCLouvain?"
-msgstr "Avez-vous déjà été inscrit à l'UCLouvain antérieurement ?"
+msgstr "Avez-vous déjà été inscrit·e à l'UCLouvain antérieurement ?"
 
 msgid "Have you previously enrolled for a PhD?"
 msgstr ""
@@ -1936,6 +1953,9 @@ msgstr ""
 "Dans le cadre d'une modification d'inscription externe, vous devez "
 "impérativement confirmer votre demande avant le %(date)s."
 
+msgid "Immediately"
+msgstr "Immédiatement"
+
 msgid "Important information:"
 msgstr "Informations importantes :"
 
@@ -2088,6 +2108,12 @@ msgstr "Séjour linguistique"
 msgid "Last name / First name / Global id"
 msgstr "Nom / Prénom / ID Global"
 
+msgid "Later > blocking"
+msgstr "Ultérieurement > bloquant"
+
+msgid "Later > non-blocking"
+msgstr "Ultérieurement > non-bloquant"
+
 msgid "Lead supervisor"
 msgstr "Promoteur de référence"
 
@@ -2207,6 +2233,10 @@ msgstr "Modification d'une activité non-académique"
 
 msgid "Modification of an academic activity"
 msgstr "Modification d'une formation académique"
+
+msgctxt "edit"
+msgid "Modify"
+msgstr "Modifier"
 
 msgid "Month"
 msgstr "Mois"
@@ -2409,6 +2439,25 @@ msgstr ""
 "informations relatives à la demande de<a href=\"https://uclouvain.be/fr/"
 "etudier/inscriptions/bienvenue-aux-etudiants-internationaux-et-aux-"
 "etudiantes-internationales.html\" target=\"_blank\"> visa </a>."
+
+msgid "One document must be uploaded as soon as possible."
+msgid_plural "Several documents must be uploaded as soon as possible."
+msgstr[0] "Un document doit être téléversé dès que possible."
+msgstr[1] "Plusieurs documents doivent être téléversés dès que possible."
+
+#, python-format
+msgid ""
+"One document must be uploaded to continue the enrolment process before "
+"%(deadline)s."
+msgid_plural ""
+"Several documents must be uploaded to continue the enrolment process before "
+"%(deadline)s."
+msgstr[0] ""
+"Un document doit être téléversé pour poursuivre le processus d'inscription "
+"avant le %(deadline)s."
+msgstr[1] ""
+"Plusieurs documents doivent être téléversés pour poursuivre le processus "
+"d'inscription avant le %(deadline)s."
 
 msgid "Online"
 msgstr "En ligne"
@@ -2654,6 +2703,19 @@ msgid ""
 msgstr ""
 "Veuillez sélectionner la première situation d’assimilation qui vous "
 "correspond"
+
+msgid ""
+"Please select the assessment system used by the institution where you "
+"studied. The assessment system is usually indicated <strong>on your "
+"transcripts or diploma supplements</strong>."
+msgstr ""
+"Veuillez sélectionner le système d'évaluation au sein de l'établissement "
+"dans lequel vous avez suivi vos études. Le système d'évaluation est "
+"généralement mentionné <strong>sur vos relevés de notes ou sur vos "
+"suppléments de diplôme</strong>."
+
+msgid "Post-dated certificate justifying your activity mentioned above"
+msgstr "Attestation postdatée justifiant votre activité mentionnée ci-dessus"
 
 msgid "Postal address"
 msgstr "Adresse de correspondance"
@@ -2982,6 +3044,12 @@ msgid "Search for an EU code (outside the EU of the form)"
 msgstr "Rechercher un code UE (hors UE du formulaire)"
 
 msgid ""
+"Search for your course title using a word from the title (e.g. management)"
+msgstr ""
+"Recherchez l'intitulé de votre formation via un mot de l'intitulé (ex: "
+"gestion)"
+
+msgid ""
 "Secondary education in Belgium is the level of education between the end of "
 "primary school and the beginning of higher education."
 msgstr ""
@@ -3027,6 +3095,9 @@ msgstr "Type de sélection"
 
 msgid "Send"
 msgstr "Envoyer"
+
+msgid "Send documents"
+msgstr "Envoyer des documents"
 
 msgid ""
 "Sending the request requires your agreement with all of the following "
@@ -3340,6 +3411,18 @@ msgstr ""
 
 msgid "The person concerned"
 msgstr "La personne concernée"
+
+msgid ""
+"The photo must follow the following rules:<ul>  <li>JPEG or PNG file (.jpg, ."
+"jpeg ou .png) up to 10MB</li>  <li>Identity photo format with a blank "
+"background</li>  <li>Centered on your bare face</li>  <li>Recent and in "
+"colour</li>  <li>Without any filter nor any contour</li></ul>"
+msgstr ""
+"La photo doit suivre les règles suivantes :<ul>  <li>Fichier JPEG ou PNG (."
+"jpg, .jpeg ou .png) de maximum 10Mo</li><li>Format photo d'identité sur fond "
+"blanc</li>  <li>Centré sur votre visage dégagé et de face</li>  <li>Photo "
+"récente en couleur</li>  <li>Aucun filtre appliqué ni trace de contour</li></"
+"ul>"
 
 msgid ""
 "The secondary school diploma is the Certificat d'Enseignement Secondaire "
@@ -3861,7 +3944,7 @@ msgstr ""
 
 msgid "You have now reached the application confirmation tab."
 msgstr ""
-"Vous voici arrivé(e) sur l'onglet de confirmation de votre demande "
+"Vous voici arrivé·e sur l'onglet de confirmation de votre demande "
 "d'inscription."
 
 #, python-format
@@ -3956,14 +4039,6 @@ msgid ""
 msgstr ""
 "Votre demande d'inscription ne peut être confirmée. Certains éléments sont "
 "manquants."
-
-msgid ""
-"Your opinion matters to us. Once you have submitted your application, can "
-"you fill in the feedback form at the following link?"
-msgstr ""
-"Votre avis est important pour nous. Après avoir envoyé votre inscription, "
-"pourrez-vous compléter le formulaire de feedback qui se trouve à l'adresse "
-"suivante ?"
 
 msgid "Your participation in the event"
 msgstr "Votre participation à l'événement"

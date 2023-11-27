@@ -346,6 +346,14 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
+msgid ""
+"An administrative question about your dossier? <a href=\"https://uclouvain."
+"be/en/study/inscriptions/frequently-asked-questions.html\" "
+"target=\"_blank\">Contact the Enrolment Office</a> - A technical or IT "
+"problem? <a href=\"http://uclouvain.be/8282\" target=\"_blank\">Contact the "
+"Service Desk</a>"
+msgstr ""
+
 msgid "An error has occurred, please check fields and try again."
 msgstr ""
 
@@ -376,6 +384,9 @@ msgid ""
 "right to defend themselves and present their case (Articles 16 and 17, "
 "Section 3 of Chapter 1 of Title III of the UCLouvain Academic Regulations "
 "and Procedures)."
+msgstr ""
+
+msgid "Any other assessment system that is not based on a credit system."
 msgstr ""
 
 msgid "Application accepted"
@@ -463,13 +474,10 @@ msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
 
 msgid ""
-"As part of your application, one document must be uploaded to continue the "
-"enrolment process."
-msgid_plural ""
-"As part of your application, several documents must be uploaded to continue "
-"the enrolment process."
-msgstr[0] ""
-msgstr[1] ""
+"Assessment is also based on the credit system, which quantifies the workload "
+"involved in a class. Depending on the country, a full year of study is "
+"equivalent to a defined number of credits (e.g. 30 credits)."
+msgstr ""
 
 msgid "At least one academic year is required."
 msgstr ""
@@ -625,10 +633,6 @@ msgstr "Certificate"
 msgid "Certificate for children of staff"
 msgstr ""
 
-msgid ""
-"Certificate justifying and mentioning your activity for the period concerned"
-msgstr ""
-
 msgid "Certificate of achievement"
 msgstr ""
 
@@ -768,9 +772,6 @@ msgstr ""
 msgid "Complementary training proposition"
 msgstr ""
 
-msgid "Complete the proposition"
-msgstr ""
-
 msgid "Completed (by student) for FAC"
 msgstr ""
 
@@ -813,6 +814,9 @@ msgid "Contact language"
 msgstr ""
 
 msgid "Context"
+msgstr ""
+
+msgid "Continue"
 msgstr ""
 
 msgid "Continuing education"
@@ -1150,6 +1154,9 @@ msgstr ""
 msgid "Does not have a doctor title"
 msgstr ""
 
+msgid "Dossier numero:"
+msgstr ""
+
 msgid "Download as PDF"
 msgstr ""
 
@@ -1184,16 +1191,19 @@ msgstr ""
 msgid "ECTS credits"
 msgstr ""
 
+msgid ""
+"ECTS credits are a European unit of measurement that assesses the workload "
+"represented by a class within a course. A full year of study is generally "
+"equivalent to 60 credits. The ECTS system has been introduced in most "
+"European countries but is also increasingly used in other countries."
+msgstr ""
+
 msgid "ECTS for participating"
 msgstr ""
 
 msgid "ECTS for the participation"
 msgstr ""
 
-msgid "Edit"
-msgstr ""
-
-msgctxt "edit"
 msgid "Edit"
 msgstr ""
 
@@ -1324,9 +1334,6 @@ msgstr ""
 
 msgctxt "admission"
 msgid "February"
-msgstr ""
-
-msgid "Feedback form link"
 msgstr ""
 
 msgid "Feedback from FAC"
@@ -1672,6 +1679,9 @@ msgid ""
 "before %(date)s."
 msgstr ""
 
+msgid "Immediately"
+msgstr ""
+
 msgid "Important information:"
 msgstr ""
 
@@ -1819,6 +1829,12 @@ msgstr ""
 msgid "Last name / First name / Global id"
 msgstr ""
 
+msgid "Later > blocking"
+msgstr ""
+
+msgid "Later > non-blocking"
+msgstr ""
+
 msgid "Lead supervisor"
 msgstr ""
 
@@ -1933,6 +1949,10 @@ msgid "Modification of a non-academic activity"
 msgstr ""
 
 msgid "Modification of an academic activity"
+msgstr ""
+
+msgctxt "edit"
+msgid "Modify"
 msgstr ""
 
 msgid "Month"
@@ -2116,6 +2136,21 @@ msgid ""
 "international-students.html\" target=\"_blank\"> visa </a> application "
 "information."
 msgstr ""
+
+msgid "One document must be uploaded as soon as possible."
+msgid_plural "Several documents must be uploaded as soon as possible."
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid ""
+"One document must be uploaded to continue the enrolment process before "
+"%(deadline)s."
+msgid_plural ""
+"Several documents must be uploaded to continue the enrolment process before "
+"%(deadline)s."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Online"
 msgstr ""
@@ -2342,6 +2377,15 @@ msgstr ""
 
 msgid ""
 "Please select the Belgian student status situation that most applies to you"
+msgstr ""
+
+msgid ""
+"Please select the assessment system used by the institution where you "
+"studied. The assessment system is usually indicated <strong>on your "
+"transcripts or diploma supplements</strong>."
+msgstr ""
+
+msgid "Post-dated certificate justifying your activity mentioned above"
 msgstr ""
 
 msgid "Postal address"
@@ -2660,6 +2704,10 @@ msgid "Search for an EU code (outside the EU of the form)"
 msgstr ""
 
 msgid ""
+"Search for your course title using a word from the title (e.g. management)"
+msgstr ""
+
+msgid ""
 "Secondary education in Belgium is the level of education between the end of "
 "primary school and the beginning of higher education."
 msgstr ""
@@ -2700,6 +2748,9 @@ msgid "Selection type"
 msgstr ""
 
 msgid "Send"
+msgstr ""
+
+msgid "Send documents"
 msgstr ""
 
 msgid ""
@@ -2959,6 +3010,13 @@ msgid ""
 msgstr ""
 
 msgid "The person concerned"
+msgstr ""
+
+msgid ""
+"The photo must follow the following rules:<ul>  <li>JPEG or PNG file (.jpg, ."
+"jpeg ou .png) up to 10MB</li>  <li>Identity photo format with a blank "
+"background</li>  <li>Centered on your bare face</li>  <li>Recent and in "
+"colour</li>  <li>Without any filter nor any contour</li></ul>"
 msgstr ""
 
 msgid ""
@@ -3500,11 +3558,6 @@ msgid ""
 "be met."
 msgstr ""
 
-msgid ""
-"Your opinion matters to us. Once you have submitted your application, can "
-"you fill in the feedback form at the following link?"
-msgstr ""
-
 msgid "Your participation in the event"
 msgstr ""
 
@@ -3548,7 +3601,7 @@ msgstr ""
 
 msgctxt "diploma_type"
 msgid "foreign"
-msgstr "foreign diploma"
+msgstr "Foreign diploma"
 
 #, python-format
 msgid "from %(start)s to %(end)s"

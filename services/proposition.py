@@ -54,6 +54,7 @@ __all__ = [
     "TAB_OF_BUSINESS_EXCEPTION",
     "BUSINESS_EXCEPTIONS_BY_TAB",
     "PropositionBusinessException",
+    "GlobalPropositionBusinessException",
 ]
 
 
@@ -490,6 +491,7 @@ class GlobalPropositionBusinessException(Enum):
     DocumentsCompletesDifferentsDesReclamesException = "ADMISSION-18"
     PosteDiplomatiqueNonTrouveException = "ADMISSION-19"
     ResidenceAuSensDuDecretNonDisponiblePourInscriptionException = "ADMISSION-20"
+    DocumentsReclamesImmediatementNonCompletesException = "ADMISSION-21"
 
 
 class FormationGeneraleBusinessException(Enum):

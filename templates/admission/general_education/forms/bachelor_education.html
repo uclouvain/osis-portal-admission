@@ -47,7 +47,13 @@
       {% bootstrap_field main_form.graduated_from_high_school_year form_group_class="form-group required_field" %}
     </div>
 
-    {% bootstrap_field main_form.diploma_type form_group_class="form-group required_field" %}
+    {% if is_valuated %}
+      {% form_fields_are_empty main_form 'diploma_type' as main_form_is_empty %}
+    {% endif %}
+
+    <div class="{% value_if_all 'hidden' main_form_is_empty %}">
+      {% bootstrap_field main_form.diploma_type form_group_class="form-group required_field" %}
+    </div>
 
     {% panel _("Foreign diploma") id="foreign-diploma" %}
 
@@ -57,7 +63,7 @@
           {% bootstrap_label field.label label_for=field.html_name label_class='control-label' %}
           <a
               tabindex="0"
-              class="fa fa-info-circle popover-buttons"
+              class="fa fa-question-circle popover-buttons"
               data-content="<p>{{ field.help_text }}</p>"
               role="button"
           ></a>
@@ -157,7 +163,14 @@
       {% endwith %}
     {% endpanel %}
 
-    {% panel _("Attachments") id="attachments" %}
+    {% if is_valuated %}
+      {% form_fields_are_empty main_form 'high_school_diploma' as main_form_is_empty %}
+      {% form_fields_are_empty foreign_diploma_form 'high_school_diploma_translation' 'high_school_transcript' 'high_school_transcript_translation' as foreign_diploma_form_is_empty %}
+    {% endif %}
+
+    {% value_if_all 'hidden' main_form_is_empty foreign_diploma_form_is_empty as all_empty_class %}
+
+    {% panel _("Attachments") id="attachments" additional_class=all_empty_class %}
       <div id="high-school-diploma" class="row">
         <div class="col-md-6">
           {% bootstrap_field_with_tooltip main_form.high_school_diploma classes="required_field" %}
