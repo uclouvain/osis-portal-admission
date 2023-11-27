@@ -40,6 +40,8 @@ from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
+from admission.services.proposition import GlobalPropositionBusinessException
+
 
 __all__ = ['AdmissionCurriculumDetailView']
 
@@ -76,6 +78,10 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
         context_data['educational_experiences'] = curriculum.educational_experiences
         context_data['minimal_date'] = curriculum.minimal_date
         context_data['need_to_complete'] = curriculum.minimal_date <= curriculum.maximal_date
+        context_data['access_conditions_not_met'] = any(
+            error.get('status_code') == GlobalPropositionBusinessException.ConditionsAccessNonRempliesException.value
+            for error in self.admission.erreurs
+        )
         context_data['missing_periods_messages'] = curriculum.incomplete_periods
         context_data['incomplete_experiences'] = curriculum.incomplete_experiences
         context_data['display_curriculum'] = self.display_curriculum

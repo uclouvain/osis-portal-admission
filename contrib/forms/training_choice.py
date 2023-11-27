@@ -98,6 +98,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         initial=EMPTY_VALUE,
         label=_('Campus (optional)'),
         widget=autocomplete.Select2,
+        required=False,
     )
 
     # General education
@@ -109,6 +110,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             forward=['training_type', 'campus'],
             attrs={
                 'data-html': True,
+                'data-placeholder': _('Search for your course title using a word from the title (e.g. management)'),
             },
         ),
     )
@@ -122,6 +124,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             forward=['training_type', 'campus'],
             attrs={
                 'data-html': True,
+                'data-placeholder': _('Search for your course title using a word from the title (e.g. management)'),
             },
         ),
     )
@@ -160,6 +163,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             forward=['sector', 'campus'],
             attrs={
                 'data-html': True,
+                'data-placeholder': _('Search for your course title using a word from the title (e.g. management)'),
             },
         ),
     )

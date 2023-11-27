@@ -346,6 +346,14 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
+msgid ""
+"An administrative question about your dossier? <a href=\"https://uclouvain."
+"be/en/study/inscriptions/frequently-asked-questions.html\" "
+"target=\"_blank\">Contact the Enrolment Office</a> - A technical or IT "
+"problem? <a href=\"http://uclouvain.be/8282\" target=\"_blank\">Contact the "
+"Service Desk</a>"
+msgstr ""
+
 msgid "An error has occurred, please check fields and try again."
 msgstr ""
 
@@ -376,6 +384,9 @@ msgid ""
 "right to defend themselves and present their case (Articles 16 and 17, "
 "Section 3 of Chapter 1 of Title III of the UCLouvain Academic Regulations "
 "and Procedures)."
+msgstr ""
+
+msgid "Any other assessment system that is not based on a credit system."
 msgstr ""
 
 msgid "Application accepted"
@@ -460,6 +471,12 @@ msgid "Are you sure you want to request signatures for this admission?"
 msgstr ""
 
 msgid "Are you the child of a UCLouvain or Martin V staff member?"
+msgstr ""
+
+msgid ""
+"Assessment is also based on the credit system, which quantifies the workload "
+"involved in a class. Depending on the country, a full year of study is "
+"equivalent to a defined number of credits (e.g. 30 credits)."
 msgstr ""
 
 msgid "At least one academic year is required."
@@ -616,10 +633,6 @@ msgstr "Certificate"
 msgid "Certificate for children of staff"
 msgstr ""
 
-msgid ""
-"Certificate justifying and mentioning your activity for the period concerned"
-msgstr ""
-
 msgid "Certificate of achievement"
 msgstr ""
 
@@ -759,9 +772,6 @@ msgstr ""
 msgid "Complementary training proposition"
 msgstr ""
 
-msgid "Complete the proposition"
-msgstr ""
-
 msgid "Completed (by student) for FAC"
 msgstr ""
 
@@ -804,6 +814,9 @@ msgid "Contact language"
 msgstr ""
 
 msgid "Context"
+msgstr ""
+
+msgid "Continue"
 msgstr ""
 
 msgid "Continuing education"
@@ -1141,6 +1154,9 @@ msgstr ""
 msgid "Does not have a doctor title"
 msgstr ""
 
+msgid "Dossier numero:"
+msgstr ""
+
 msgid "Download as PDF"
 msgstr ""
 
@@ -1175,16 +1191,19 @@ msgstr ""
 msgid "ECTS credits"
 msgstr ""
 
+msgid ""
+"ECTS credits are a European unit of measurement that assesses the workload "
+"represented by a class within a course. A full year of study is generally "
+"equivalent to 60 credits. The ECTS system has been introduced in most "
+"European countries but is also increasingly used in other countries."
+msgstr ""
+
 msgid "ECTS for participating"
 msgstr ""
 
 msgid "ECTS for the participation"
 msgstr ""
 
-msgid "Edit"
-msgstr ""
-
-msgctxt "edit"
 msgid "Edit"
 msgstr ""
 
@@ -1932,6 +1951,10 @@ msgstr ""
 msgid "Modification of an academic activity"
 msgstr ""
 
+msgctxt "edit"
+msgid "Modify"
+msgstr ""
+
 msgid "Month"
 msgstr ""
 
@@ -2356,6 +2379,15 @@ msgid ""
 "Please select the Belgian student status situation that most applies to you"
 msgstr ""
 
+msgid ""
+"Please select the assessment system used by the institution where you "
+"studied. The assessment system is usually indicated <strong>on your "
+"transcripts or diploma supplements</strong>."
+msgstr ""
+
+msgid "Post-dated certificate justifying your activity mentioned above"
+msgstr ""
+
 msgid "Postal address"
 msgstr ""
 
@@ -2672,6 +2704,10 @@ msgid "Search for an EU code (outside the EU of the form)"
 msgstr ""
 
 msgid ""
+"Search for your course title using a word from the title (e.g. management)"
+msgstr ""
+
+msgid ""
 "Secondary education in Belgium is the level of education between the end of "
 "primary school and the beginning of higher education."
 msgstr ""
@@ -2712,6 +2748,9 @@ msgid "Selection type"
 msgstr ""
 
 msgid "Send"
+msgstr ""
+
+msgid "Send documents"
 msgstr ""
 
 msgid ""
@@ -3562,7 +3601,7 @@ msgstr ""
 
 msgctxt "diploma_type"
 msgid "foreign"
-msgstr "foreign diploma"
+msgstr "Foreign diploma"
 
 #, python-format
 msgid "from %(start)s to %(end)s"

@@ -121,6 +121,7 @@ textarea {
   margin-left: 5px;
   font-size: 1.25em;
   vertical-align: -.075em;
+  color: #337ab7 !important;
 }
 
 .popover {
@@ -410,4 +411,13 @@ body, html {
 
 .fst-italic {
   font-style: italic;
+}
+
+.text-decoration-underline {
+  text-decoration: underline;
+}
+
+.fst-bold-underline {
+  text-decoration: underline;
+  font-weight: 700;
 }
