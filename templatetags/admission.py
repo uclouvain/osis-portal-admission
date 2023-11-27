@@ -193,8 +193,8 @@ TAB_TREES = {
             Tab('curriculum', _('Curriculum')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
-            Tab('specific-questions', _('Specific aspects')),
             Tab('accounting', _('Accounting')),
+            Tab('specific-questions', _('Specific aspects')),
         ],
         Tab('confirm-submit', _('Finalise application'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
@@ -774,3 +774,21 @@ def diplomatic_post_name(diplomatic_post):
     """Get the name of a diplomatic post"""
     if diplomatic_post:
         return getattr(diplomatic_post, 'nom_francais' if get_language() == settings.LANGUAGE_CODE else 'nom_anglais')
+
+
+@register.simple_tag
+def form_fields_are_empty(form, *fields):
+    """Return True if the form fields are empty."""
+    return all(form[field_name].value() in form[field_name].field.empty_values for field_name in fields)
+
+
+@register.simple_tag
+def value_if_all(value, *conditions):
+    """Return the value if all conditions are true."""
+    return value if all(conditions) else ''
+
+
+@register.simple_tag
+def value_if_any(value, *conditions):
+    """Return the value if any condition is true."""
+    return value if any(conditions) else ''

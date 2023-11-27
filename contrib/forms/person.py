@@ -212,8 +212,20 @@ class DoctorateAdmissionPersonForm(forms.Form):
     id_photo = FileUploadField(
         required=False,
         label=_("Identification photo"),
+        help_text=_(
+            "The photo must follow the following rules:"
+            "<ul>"
+            "  <li>JPEG or PNG file (.jpg, .jpeg ou .png) up to 10MB</li>"
+            "  <li>Identity photo format with a blank background</li>"
+            "  <li>Centered on your bare face</li>"
+            "  <li>Recent and in colour</li>"
+            "  <li>Without any filter nor any contour</li>"
+            "</ul>"
+        ),
         max_files=1,
         mimetypes=IMAGE_MIME_TYPES,
+        with_cropping=True,
+        cropping_options={'aspectRatio': 0.766},
     )
 
     # Already registered

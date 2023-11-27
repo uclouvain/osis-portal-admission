@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import translation
 from django.utils.functional import cached_property
 from django.utils.translation import activate
@@ -40,11 +40,10 @@ from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
-
-__all__ = ['AdmissionPersonFormView']
-
 from admission.services.proposition import BelgianNissBusinessException, AdmissionPropositionService
 from admission.templatetags.admission import can_make_action
+
+__all__ = ['AdmissionPersonFormView']
 
 
 class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -70,6 +69,8 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         if not self.admission_uuid:
             permissions = AdmissionPropositionService.list_proposition_create_permissions(request.user.person)
             if not can_make_action(permissions, 'create_person'):
+                if self.request.GET.get('from_redirection') and can_make_action(permissions, 'create_training_choice'):
+                    return redirect(self.request.resolver_match.namespace + ':training-choice')
                 person = self.person_info
                 context = super().get_context_data(
                     with_submit=False,

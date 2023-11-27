@@ -26,6 +26,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView
 
 from admission.contrib.enums.specific_question import Onglets
@@ -55,6 +56,11 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
         'general-education': AdmissionPropositionService.update_general_education_documents,
     }
     form_class = CompleteDocumentsForm
+    extra_context = {
+        'submit_class': 'btn btn-primary',
+        'submit_label': gettext_lazy('Send'),
+        'submit_icon': 'fa-paper-plane',
+    }
 
     def has_permission(self):
         return can_update_tab(admission=self.admission, tab='documents')
@@ -66,9 +72,17 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
             uuid=self.admission_uuid,
         )
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['deadline'] = self.specific_questions['deadline']
+        return context_data
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['form_item_configurations'] = self.specific_questions
+        kwargs['form_item_configurations'] = [
+            self.specific_questions['immediate_requested_documents'],
+            self.specific_questions['later_requested_documents'],
+        ]
         return kwargs
 
     def call_webservice(self, data):

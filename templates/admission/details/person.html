@@ -93,4 +93,18 @@
             {% field_data _('Have you previously enrolled at UCLouvain?') _('No') %}
         {% endif %}
     {% endpanel %}
+
+    {% if not admission|can_update_tab:"person" %}
+      <a
+          class="btn btn-primary pull-right"
+          {% if view.kwargs.pk %}
+          href="{% url base_namespace|add:':training-choice' view.kwargs.pk %}"
+          {% else %}
+          href="{% url base_namespace|add:':training-choice' %}"
+          {% endif %}
+      >
+        <i class="fa-solid fa-forward-step"></i>
+      {% trans "Continue" %}
+      </a>
+    {% endif %}
 {% endblock %}

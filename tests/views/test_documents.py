@@ -23,13 +23,17 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 import uuid
 from unittest.mock import ANY, MagicMock, patch
 
 from django.core.exceptions import ValidationError
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
-from osis_admission_sdk.model.document_specific_question import DocumentSpecificQuestion
+from osis_admission_sdk.model.document_specific_questions_list import DocumentSpecificQuestionsList
+from osis_admission_sdk.model.document_specific_questions_list_immediate_requested_documents import (
+    DocumentSpecificQuestionsListImmediateRequestedDocuments,
+)
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
@@ -68,8 +72,8 @@ class DocumentsFormViewTestCase(TestCase):
             reponses_questions_specifiques={},
         )
 
-        cls.documents_to_complete_configuration = [
-            DocumentSpecificQuestion(
+        cls.documents_to_complete_immediately_configurations = [
+            DocumentSpecificQuestionsListImmediateRequestedDocuments(
                 uuid='CURRICULUM.MON_DOCUMENT_1',
                 type=TypeItemFormulaire.DOCUMENT.name,
                 title={
@@ -89,7 +93,7 @@ class DocumentsFormViewTestCase(TestCase):
                 tab_name='Curriculum',
                 required=True,
             ),
-            DocumentSpecificQuestion(
+            DocumentSpecificQuestionsListImmediateRequestedDocuments(
                 uuid='CHOIX_FORMATION.MON_DOCUMENT_2',
                 type=TypeItemFormulaire.DOCUMENT.name,
                 title={
@@ -110,6 +114,28 @@ class DocumentsFormViewTestCase(TestCase):
                 required=True,
             ),
         ]
+        cls.documents_to_complete_later_configurations = [
+            DocumentSpecificQuestionsListImmediateRequestedDocuments(
+                uuid='CURRICULUM.MON_DOCUMENT_3',
+                type=TypeItemFormulaire.DOCUMENT.name,
+                title={
+                    'fr-be': 'Troisième document',
+                    'en': 'Third document',
+                },
+                text={
+                    'fr-be': 'La troisième raison',
+                    'en': 'The third reason',
+                },
+                help_text={},
+                configuration={
+                    CleConfigurationItemFormulaire.TYPES_MIME_FICHIER.name: [PDF_MIME_TYPE],
+                },
+                values=[],
+                tab='CURRICULUM',
+                tab_name='Curriculum',
+                required=False,
+            ),
+        ]
 
         cls.url = resolve_url('admission:general-education:update:documents', pk=cls.proposition.uuid)
         cls.confirm_url = resolve_url('admission:general-education:update:confirm-documents', pk=cls.proposition.uuid)
@@ -128,8 +154,10 @@ class DocumentsFormViewTestCase(TestCase):
         self.mock_proposition_api = propositions_api_patcher.start()
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = self.proposition
-        self.mock_proposition_api.return_value.list_general_documents.return_value = (
-            self.documents_to_complete_configuration
+        self.mock_proposition_api.return_value.list_general_documents.return_value = DocumentSpecificQuestionsList(
+            immediate_requested_documents=self.documents_to_complete_immediately_configurations,
+            later_requested_documents=self.documents_to_complete_later_configurations,
+            deadline=datetime.date(2023, 1, 1),
         )
 
         self.addCleanup(propositions_api_patcher.stop)
@@ -145,6 +173,7 @@ class DocumentsFormViewTestCase(TestCase):
                 'mimetype': {
                     'pdf_file': PDF_MIME_TYPE,
                     'jpeg_file': JPEG_MIME_TYPE,
+                    'facultative_pdf_file': PDF_MIME_TYPE,
                 }[token],
             },
         )
@@ -170,38 +199,44 @@ class DocumentsFormViewTestCase(TestCase):
         )
 
         form = response.context['form']
-        fields = form.fields['reponses_documents_a_completer'].fields
-        self.assertEqual(len(fields), 2)
+        mandatory_fields = form.fields['reponses_documents_a_completer__0'].fields
+        self.assertEqual(len(mandatory_fields), 2)
 
-        self.assertEqual(fields[0].mimetypes, [PDF_MIME_TYPE])
-        self.assertEqual(fields[0].required, True)
+        self.assertEqual(mandatory_fields[0].mimetypes, [PDF_MIME_TYPE])
+        self.assertEqual(mandatory_fields[0].required, True)
 
-        self.assertEqual(fields[1].mimetypes, [JPEG_MIME_TYPE])
-        self.assertEqual(fields[1].required, True)
+        self.assertEqual(mandatory_fields[1].mimetypes, [JPEG_MIME_TYPE])
+        self.assertEqual(mandatory_fields[1].required, True)
+
+        facultative_fields = form.fields['reponses_documents_a_completer__1'].fields
+        self.assertEqual(len(facultative_fields), 1)
+
+        self.assertEqual(facultative_fields[0].mimetypes, [PDF_MIME_TYPE])
+        self.assertEqual(facultative_fields[0].required, False)
 
     def test_submit_document_form(self):
         # Submit an invalid form
         response = self.client.post(
             self.url,
             data={
-                'reponses_documents_a_completer_0_0': ['pdf_file'],
+                'reponses_documents_a_completer__0_0_0': ['pdf_file'],
             },
         )
 
         self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
-        fields = form.fields['reponses_documents_a_completer'].fields
+        fields = form.fields['reponses_documents_a_completer__0'].fields
         self.assertFalse(form.is_valid())
-        self.assertTrue('reponses_documents_a_completer' in form.errors)
+        self.assertTrue('reponses_documents_a_completer__0' in form.errors)
         self.assertIn(ValidationError(FIELD_REQUIRED_MESSAGE), getattr(fields[1], 'errors', []))
 
-        # Submit a valid form
+        # Submit a valid form with only mandatory fields
         response = self.client.post(
             self.url,
             data={
-                'reponses_documents_a_completer_0_0': ['pdf_file'],
-                'reponses_documents_a_completer_1_0': ['jpeg_file'],
+                'reponses_documents_a_completer__0_0_0': ['pdf_file'],
+                'reponses_documents_a_completer__0_1_0': ['jpeg_file'],
             },
         )
 
@@ -214,6 +249,32 @@ class DocumentsFormViewTestCase(TestCase):
                 'reponses_documents_a_completer': {
                     'CURRICULUM.MON_DOCUMENT_1': ['pdf_file'],
                     'CHOIX_FORMATION.MON_DOCUMENT_2': ['jpeg_file'],
+                    'CURRICULUM.MON_DOCUMENT_3': [],
+                },
+            },
+            **self.default_kwargs,
+        )
+
+        # Submit a valid form with mandatory and facultative fields
+        response = self.client.post(
+            self.url,
+            data={
+                'reponses_documents_a_completer__0_0_0': ['pdf_file'],
+                'reponses_documents_a_completer__0_1_0': ['jpeg_file'],
+                'reponses_documents_a_completer__1_0_0': ['facultative_pdf_file'],
+            },
+        )
+
+        self.assertRedirects(response, self.confirm_url)
+
+        # Check API calls
+        self.mock_proposition_api.return_value.create_general_documents.assert_called_with(
+            uuid=self.proposition.uuid,
+            completer_emplacements_documents_par_candidat_command={
+                'reponses_documents_a_completer': {
+                    'CURRICULUM.MON_DOCUMENT_1': ['pdf_file'],
+                    'CHOIX_FORMATION.MON_DOCUMENT_2': ['jpeg_file'],
+                    'CURRICULUM.MON_DOCUMENT_3': ['facultative_pdf_file'],
                 },
             },
             **self.default_kwargs,

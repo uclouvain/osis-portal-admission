@@ -55,10 +55,6 @@
     {% include "template_messages.html" %}
   </div>
 
-  {% if doctorate_propositions or general_education_propositions or continuing_education_propositions %}
-    {% include 'admission/includes/test_session_message.html' %}
-  {% endif %}
-
   {% if doctorate_propositions %}
     <h3>{% trans "PhD" %}</h3>
     {% for admission in doctorate_propositions %}
@@ -101,4 +97,9 @@
       margin: 0;
     }
   </style>
+{% endblock %}
+
+{% block footer %}
+  {% include "admission/includes/footer.html" %}
+  {{ block.super }}
 {% endblock %}

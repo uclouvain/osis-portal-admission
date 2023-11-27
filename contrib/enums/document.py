@@ -23,13 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.views.generic import RedirectView
+from django.utils.translation import gettext_lazy as _
+from base.models.utils.utils import ChoiceEnum
 
-__all__ = ['AdmissionCreateRedirectView']
 
-
-class AdmissionCreateRedirectView(RedirectView):
-    pattern_name = 'admission:create:person'
-
-    def get_redirect_url(self, *args, **kwargs):
-        return super().get_redirect_url(*args, **kwargs) + '?from_redirection=1'
+class StatutReclamationEmplacementDocument(ChoiceEnum):
+    IMMEDIATEMENT = _('Immediately')
+    ULTERIEUREMENT_BLOQUANT = _('Later > blocking')
+    ULTERIEUREMENT_NON_BLOQUANT = _('Later > non-blocking')

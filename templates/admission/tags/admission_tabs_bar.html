@@ -34,6 +34,8 @@
 {% endcomment %}
 {% trans "Save" context 'admission' as save_label %}
 
+{% url base_namespace|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
+
 <div class="form-group">
   {# Nav for mobile display #}
   <nav class="navbar navbar-default visible-xs visible-sm">
@@ -95,11 +97,11 @@
       <div class="text-right visible-md visible-lg">
         <button
           type="submit" class="btn btn-primary"
-          {% if not admission|can_update_tab:current_tab %}
+          {% if cancel_url and not admission|can_update_tab:current_tab %}
           disabled
           {% endif %}
         >
-          <i class="fa-solid fa-floppy-disk"></i>
+          <i class="fa-solid {{ submit_icon|default:'fa-floppy-disk' }}"></i>
           {{ submit_label|default:save_label }}
         </button>
       </div>
@@ -122,11 +124,11 @@
     <div class="text-right visible-xs visible-sm">
       <button
         type="submit" class="btn btn-primary"
-        {% if not admission|can_update_tab:current_tab %}
+        {% if cancel_url and not admission|can_update_tab:current_tab %}
         disabled
         {% endif %}
       >
-        <i class="fa-solid fa-floppy-disk"></i>
+        <i class="fa-solid {{ submit_icon|default:'fa-floppy-disk' }}"></i>
         {{ submit_label|default:save_label }}
       </button>
     </div>

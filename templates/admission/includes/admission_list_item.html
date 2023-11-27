@@ -61,11 +61,13 @@
     {% if admission|can_update_tab:'documents' %}
       <a class="btn btn-default pull-right" href="{% url base_namespace|add:':update:documents' admission.uuid %}">
         <span class="fas fa-pencil"></span>
-        {% translate "Complete the proposition" %}
+        {% translate "Send documents" %}
       </a>
     {% endif %}
 
-    {% if admission|can_make_action:'retrieve_person' %}
+    {% if not admission|can_update_tab:'person' and admission|can_update_tab:'training-choice' and admission|can_read_tab:'training-choice' %}
+      {% url base_namespace|add:':training-choice' admission.uuid as edit_url %}
+    {% elif admission|can_make_action:'retrieve_person' %}
       {% url base_namespace|add:':person' admission.uuid as edit_url %}
     {% elif admission|can_make_action:'retrieve_proposition' %}
       {% url base_namespace admission.uuid as edit_url %}
@@ -73,7 +75,7 @@
     {% if edit_url %}
       <a class="btn btn-default pull-right" href="{{ edit_url }}">
         <span class="fas fa-pencil"></span>
-        {% trans "Edit" context 'edit' %}
+        {% trans "Modify" context 'edit' %}
       </a>
     {% endif %}
 
