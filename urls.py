@@ -33,6 +33,7 @@ from admission.contrib.views.common.form_tabs.education import AdmissionEducatio
 from admission.contrib.views.common.form_tabs.languages import AdmissionLanguagesFormView
 from admission.contrib.views.common.form_tabs.person import AdmissionPersonFormView
 from admission.contrib.views.common.form_tabs.training_choice import AdmissionTrainingChoiceFormView
+from admission.contrib.views.lang import ChangeLanguageView
 from osis_common.utils.file_router import FileRouter
 
 app_name = 'admission'
@@ -57,6 +58,7 @@ urlpatterns += [
             )
         ),
     ),
+    path('lang/<str:ui_language>', ChangeLanguageView.as_view(), name=ChangeLanguageView.name),
 ]
 
 if settings.DEBUG:
