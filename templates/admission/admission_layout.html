@@ -1,0 +1,5 @@
+{% extends "layout.html" %}
+
+{% block lang %}
+    <li><a href="{% url 'admission:change_language' lang.0 %}">{{ lang.0 }}</a></li>
+{% endblock %}
