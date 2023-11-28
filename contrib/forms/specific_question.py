@@ -27,6 +27,7 @@ from typing import List, Optional
 
 from django import forms
 from django.core.exceptions import ValidationError, ImproperlyConfigured
+from django.utils.safestring import mark_safe
 from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.contrib.enums import TypeChampSelectionFormulaire
@@ -115,7 +116,7 @@ def _get_default_field_params(configuration: dict, current_language: str):
     """Return the default field params based on the field configuration and a specific language."""
     return {
         'required': configuration['required'],
-        'label': configuration['title'].get(current_language, ''),
+        'label': mark_safe(configuration['title'].get(current_language, '')),
         'help_text': configuration['text'].get(current_language, ''),
         'error_messages': {
             'incomplete': _('Please complete this field: {}').format(configuration['title'].get(current_language)),
