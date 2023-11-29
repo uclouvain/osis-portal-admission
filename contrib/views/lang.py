@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.utils import translation
 from django.views import View
@@ -30,7 +31,7 @@ from django.views import View
 from base.models import person
 
 
-class ChangeLanguageView(View):
+class ChangeLanguageView(LoginRequiredMixin, View):
 
     name = 'change_language'
 
