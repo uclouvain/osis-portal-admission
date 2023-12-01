@@ -104,14 +104,17 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
     nom_siege_social = forms.CharField(
         label=_('Head office name'),
         required=False,
+        max_length=255,
     )
     numero_unique_entreprise = forms.CharField(
         label=_('Unique business number'),
         required=False,
+        max_length=255,
     )
     numero_tva_entreprise = forms.CharField(
         label=_('VAT number'),
         required=False,
+        max_length=255,
     )
     adresse_mail_professionnelle = forms.EmailField(
         label=_('Please enter your work email address'),
@@ -128,6 +131,7 @@ class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAd
     adresse_facturation_destinataire = forms.CharField(
         label=_('To the attention of'),
         required=False,
+        max_length=255,
     )
     documents_additionnels = FileUploadField(
         label=_(

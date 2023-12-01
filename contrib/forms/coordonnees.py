@@ -49,10 +49,12 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
     )
     phone_mobile = PhoneField(
         label=__('admission', "Telephone (mobile)"),
+        max_length=30,
     )
     emergency_contact_phone = PhoneField(
         required=False,
         label=_("Emergency contact (telephone number)"),
+        max_length=30,
     )
 
     class Media:
@@ -77,12 +79,22 @@ class DoctorateAdmissionAddressForm(forms.Form):
                 "placeholder": get_example_text('Rue des ponts'),
             },
         ),
+        max_length=255,
     )
-    street_number = forms.CharField(required=False, label=__("address", "Number"))
-    postal_box = forms.CharField(required=False, label=_("Box"))
+    street_number = forms.CharField(
+        required=False,
+        label=__("address", "Number"),
+        max_length=20,
+    )
+    postal_box = forms.CharField(
+        required=False,
+        label=_("Box"),
+        max_length=20,
+    )
     postal_code = forms.CharField(
         required=False,
         label=_("Postcode"),
+        max_length=20,
     )
     city = forms.CharField(
         required=False,
@@ -92,6 +104,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
                 "placeholder": get_example_text('Louvain-la-Neuve'),
             },
         ),
+        max_length=255,
     )
     country = forms.CharField(
         required=False,
@@ -107,6 +120,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
     be_postal_code = forms.CharField(
         required=False,
         label=_("Postcode"),
+        max_length=20,
     )
     be_city = forms.CharField(
         required=False,
@@ -115,6 +129,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
             url="admission:autocomplete:city",
             forward=(forward.Field('be_postal_code', 'postal_code'),),
         ),
+        max_length=255,
     )
 
     def __init__(self, person=None, check_coordinates_fields=True, *args, **kwargs):
