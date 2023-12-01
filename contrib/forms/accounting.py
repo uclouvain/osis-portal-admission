@@ -365,6 +365,7 @@ class AccountingForm(forms.Form):
     numero_compte_autre_format = forms.CharField(
         label=_('Account number'),
         required=False,
+        max_length=255,
     )
     code_bic_swift_banque = BICFormField(
         label=_('BIC/SWIFT code identifying the bank from which the account originates'),
@@ -389,10 +390,12 @@ class AccountingForm(forms.Form):
     prenom_titulaire_compte = forms.CharField(
         label=_('Account holder first name'),
         required=False,
+        max_length=128,
     )
     nom_titulaire_compte = forms.CharField(
         label=_('Account holder surname'),
         required=False,
+        max_length=128,
     )
 
     def __init__(self, is_general_admission, with_assimilation, **kwargs):
