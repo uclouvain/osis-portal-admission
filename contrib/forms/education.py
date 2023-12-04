@@ -196,6 +196,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
     educational_other = forms.CharField(
         label=_("Name of the education type"),
         required=False,
+        max_length=75,
     )
     institute = forms.CharField(
         label=_("Institute"),
@@ -216,10 +217,12 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
     other_institute_name = forms.CharField(
         label=_("Other institute name"),
         required=False,
+        max_length=500,
     )
     other_institute_address = forms.CharField(
         label=_("Other institute address"),
         required=False,
+        max_length=500,
     )
 
     def __init__(self, person, is_valuated, *args, **kwargs):
@@ -291,6 +294,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     other_linguistic_regime = forms.CharField(
         label=_("If other language regime, specify"),
         required=False,
+        max_length=25,
     )
     country = forms.CharField(
         label=_("Organising country"),

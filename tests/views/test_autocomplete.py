@@ -557,6 +557,34 @@ class AutocompleteTestCase(TestCase):
         ]
         self.assertDictEqual(response.json(), {'results': results})
 
+        api.return_value.list_formation_generale_dtos.assert_called_with(
+            type=TypeFormation.MASTER.name,
+            acronym_or_name='ar',
+            campus='',
+            **DEFAULT_API_PARAMS,
+        )
+        response = self.client.get(
+            url, {'forward': json.dumps({'training_type': TypeFormation.MASTER.name, 'campus': None}), 'q': 'ar'}
+        )
+        results = [
+            {
+                'id': 'FOOBAR-2021',
+                'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
+            },
+            {
+                'id': 'BARBAZ-2021',
+                'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
+            },
+        ]
+        self.assertDictEqual(response.json(), {'results': results})
+
+        api.return_value.list_formation_generale_dtos.assert_called_with(
+            type=TypeFormation.MASTER.name,
+            acronym_or_name='ar',
+            campus='',
+            **DEFAULT_API_PARAMS,
+        )
+
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     @override_switch('admission-iufc', active=True)
     def test_autocomplete_mixed_education_training(self, api):
