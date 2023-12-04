@@ -117,7 +117,7 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
     urlpatterns = 'doctorate'
 
     def get_list(self):
-        selected_campus = self.forwarded.get('campus', EMPTY_VALUE)
+        selected_campus = self.forwarded.get('campus') or EMPTY_VALUE
         return AdmissionAutocompleteService.get_doctorates(
             person=self.request.user.person,
             sigle=self.forwarded['sector'],
@@ -145,7 +145,7 @@ class GeneralEducationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListV
     urlpatterns = 'general-education'
 
     def get_list(self):
-        selected_campus = self.forwarded.get('campus', EMPTY_VALUE)
+        selected_campus = self.forwarded.get('campus') or EMPTY_VALUE
         return AdmissionAutocompleteService.get_general_education_trainings(
             person=self.request.user.person,
             training_type=self.forwarded.get('training_type'),
@@ -171,7 +171,7 @@ class MixedTrainingAutocomplete(GeneralEducationAutocomplete):
     urlpatterns = 'mixed-training'
 
     def get_list(self):
-        selected_campus = self.forwarded.get('campus', EMPTY_VALUE)
+        selected_campus = self.forwarded.get('campus') or EMPTY_VALUE
         if not switch_is_active('admission-iufc'):
             iufc_trainings = []
         else:
