@@ -62,6 +62,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
                 "placeholder": get_example_text('Maria'),
             },
         ),
+        max_length=50,
     )
     middle_name = forms.CharField(
         required=False,
@@ -75,6 +76,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
                 "placeholder": get_example_text("Pierre, Paul, Jacques"),
             },
         ),
+        max_length=50,
     )
     last_name = forms.CharField(
         required=False,
@@ -84,6 +86,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
                 "placeholder": get_example_text("Smith"),
             },
         ),
+        max_length=50,
     )
     sex = forms.ChoiceField(
         label=_("Sex"),
@@ -129,6 +132,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
                 "placeholder": get_example_text('Louvain-la-Neuve'),
             },
         ),
+        max_length=255,
     )
     country_of_citizenship = forms.CharField(
         label=_("Country of citizenship"),
@@ -207,8 +211,16 @@ class DoctorateAdmissionPersonForm(forms.Form):
             },
         ),
     )
-    id_card_number = forms.CharField(required=False, label=_("Identity card number"))
-    passport_number = forms.CharField(required=False, label=_("Passport number"))
+    id_card_number = forms.CharField(
+        required=False,
+        label=_("Identity card number"),
+        max_length=255,
+    )
+    passport_number = forms.CharField(
+        required=False,
+        label=_("Passport number"),
+        max_length=255,
+    )
     id_photo = FileUploadField(
         required=False,
         label=_("Identification photo"),

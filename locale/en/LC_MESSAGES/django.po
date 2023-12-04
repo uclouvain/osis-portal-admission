@@ -3085,6 +3085,10 @@ msgstr ""
 msgid "This field is required."
 msgstr ""
 
+#, python-brace-format
+msgid "This field must be less that {length} characters."
+msgstr ""
+
 msgid ""
 "This is a temporary title and it will be modifiable later depending on the "
 "jury analysis."

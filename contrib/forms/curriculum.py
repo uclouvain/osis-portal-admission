@@ -205,6 +205,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
                 'placeholder': _('e.g.: Librarian'),
             },
         ),
+        max_length=255,
     )
     sector = forms.ChoiceField(
         choices=EMPTY_CHOICE + ActivitySector.choices(),
@@ -214,6 +215,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
     institute_name = forms.CharField(
         label=_('Employer'),
         required=False,
+        max_length=255,
     )
     certificate = FileUploadField(
         label=_('Certificate'),
@@ -222,6 +224,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
     activity = forms.CharField(
         label=_('Activity'),
         required=False,
+        max_length=255,
     )
 
     def __init__(self, is_continuing, *args, **kwargs):
@@ -384,10 +387,12 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     institute_name = forms.CharField(
         label=_('Institute name'),
         required=False,
+        max_length=255,
     )
     institute_address = forms.CharField(
         label=_('Institute address'),
         required=False,
+        max_length=255,
     )
     institute = forms.CharField(
         empty_value=None,
@@ -417,6 +422,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     education_name = forms.CharField(
         label=_('Course name'),
         required=False,
+        max_length=255,
     )
     evaluation_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + EvaluationSystem.choices(),
@@ -488,6 +494,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
                 'placeholder': _('e.g.: 5th out of 30'),
             },
         ),
+        max_length=30,
     )
     expected_graduation_date = forms.DateField(
         help_text=_('Date on which you expect to graduate.'),
@@ -503,6 +510,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
                 'rows': 3,
             },
         ),
+        max_length=255,
     )
     dissertation_score = forms.CharField(
         label=_('Dissertation mark'),
@@ -512,6 +520,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
                 'placeholder': get_example_text('15/20'),
             },
         ),
+        max_length=30,
     )
     dissertation_summary = FileUploadField(
         label=_('Dissertation summary'),
