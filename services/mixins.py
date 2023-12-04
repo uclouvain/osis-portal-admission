@@ -23,15 +23,20 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import re
 from copy import copy
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk import OpenApiException
 
 from admission.contrib.enums import IN_PROGRESS_STATUSES
 from base.models.person import Person
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException, api_exception_handler
+
+
+INVALID_LENGTH_RE = re.compile('Invalid value for `([^`]+)`, length must be less than or equal to `([^`]+)`')
 
 
 class WebServiceFormMixin:
@@ -66,6 +71,17 @@ class WebServiceFormMixin:
             return self.form_invalid(form)
         except PermissionDenied as e:
             form.add_error(None, str(e))
+            return self.form_invalid(form)
+        except OpenApiException as e:
+            # We try to be smart about the error
+            invalid_length = INVALID_LENGTH_RE.match(str(e))
+            if invalid_length is not None and invalid_length.group(1) in form.fields:
+                form.add_error(
+                    invalid_length.group(1),
+                    _("This field must be less that {length} characters.").format(length=invalid_length.group(2)),
+                )
+            else:
+                form.add_error(None, str(e))
             return self.form_invalid(form)
         return super().form_valid(form)
 
