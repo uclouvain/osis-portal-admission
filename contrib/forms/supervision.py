@@ -55,14 +55,17 @@ class DoctorateAdmissionMemberSupervisionForm(forms.Form):
     prenom = forms.CharField(
         label=_("First name"),
         required=False,
+        max_length=50,
     )
     nom = forms.CharField(
         label=_("Surname"),
         required=False,
+        max_length=50,
     )
     email = forms.EmailField(
         label=pgettext_lazy("admission", "Email"),
         required=False,
+        max_length=255,
     )
     est_docteur = forms.BooleanField(
         label=_("Holder of a PhD with thesis"),
@@ -72,10 +75,12 @@ class DoctorateAdmissionMemberSupervisionForm(forms.Form):
     institution = forms.CharField(
         label=_("Institution"),
         required=False,
+        max_length=255,
     )
     ville = forms.CharField(
         label=_("City"),
         required=False,
+        max_length=255,
     )
     pays = forms.CharField(
         label=_("Country"),

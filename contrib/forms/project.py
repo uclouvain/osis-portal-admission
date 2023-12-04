@@ -121,6 +121,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     autre_bourse_recherche = forms.CharField(
         label=_("If other scholarship, specify"),
         required=False,
+        max_length=255,
     )
     bourse_date_debut = forms.DateField(
         label=_("Scholarship start date"),
@@ -162,10 +163,12 @@ class DoctorateAdmissionProjectForm(forms.Form):
             "If known, indicate the name of the laboratory, clinical department or research centre where the thesis "
             "will be carried out"
         ),
+        max_length=255,
     )
     titre_projet = forms.CharField(
         label=_("Project title (max. 100 characters)"),
         required=False,
+        max_length=1023,
     )
     resume_projet = forms.CharField(
         label=_("Project resume (max. 2000 characters)"),
@@ -213,10 +216,12 @@ class DoctorateAdmissionProjectForm(forms.Form):
     institution = forms.CharField(
         label=_("Institution"),
         required=False,
+        max_length=255,
     )
     domaine_these = forms.CharField(
         label=_("Thesis field"),
         required=False,
+        max_length=255,
     )
     non_soutenue = forms.BooleanField(
         label=_("No defense"),
@@ -231,6 +236,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("No defense reason"),
         widget=forms.Textarea(attrs={'rows': 2}),
         required=False,
+        max_length=255,
     )
 
     class Media:
