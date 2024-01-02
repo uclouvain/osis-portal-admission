@@ -95,6 +95,9 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr ""
 
+msgid ":"
+msgstr ""
+
 #, python-format
 msgid ""
 "<a href=\"%(enrollment_url)s\">Go to course enrolment</a> or <a "
@@ -1145,10 +1148,28 @@ msgstr ""
 msgid "Document"
 msgstr ""
 
+msgid "Document that must be uploaded as soon as possible"
+msgid_plural "Documents that must be uploaded as soon as possible"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid ""
+"Document that must be uploaded before %(deadline)s for the continuation of "
+"the enrolment process:"
+msgid_plural ""
+"Documents that must be uploaded before %(deadline)s for the continuation of "
+"the enrolment process:"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Documents"
 msgstr ""
 
 msgid "Documents to complete"
+msgstr ""
+
+msgid "Documents to upload"
 msgstr ""
 
 msgid "Does not have a doctor title"
@@ -1640,6 +1661,11 @@ msgid ""
 "If you are applying for a limited enrolment bachelor's course, the "
 "application can only be submitted during the period from %(start_date)s to "
 "%(end_date)s."
+msgstr ""
+
+msgid ""
+"If you do not have all the documents below, we invite you to send us the "
+"documents that you have."
 msgstr ""
 
 msgid ""
@@ -2137,21 +2163,6 @@ msgid ""
 "information."
 msgstr ""
 
-msgid "One document must be uploaded as soon as possible."
-msgid_plural "Several documents must be uploaded as soon as possible."
-msgstr[0] ""
-msgstr[1] ""
-
-#, python-format
-msgid ""
-"One document must be uploaded to continue the enrolment process before "
-"%(deadline)s."
-msgid_plural ""
-"Several documents must be uploaded to continue the enrolment process before "
-"%(deadline)s."
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Online"
 msgstr ""
 
@@ -2313,7 +2324,7 @@ msgstr ""
 msgid "Please choose the institute or specify another institute"
 msgstr ""
 
-msgid "Please choosee the language regime or specify another regime."
+msgid "Please choose the language regime or specify another regime."
 msgstr ""
 
 msgid ""
@@ -2792,6 +2803,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Single"
+msgstr ""
+
+msgid "Some required documents are missing."
 msgstr ""
 
 msgid "Speaker"

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -389,7 +389,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         cleaned_data = super().clean()
 
         if not cleaned_data.get("linguistic_regime") and not cleaned_data.get("other_linguistic_regime"):
-            self.add_error("linguistic_regime", _("Please choosee the language regime or specify another regime."))
+            self.add_error("linguistic_regime", _("Please choose the language regime or specify another regime."))
 
         if cleaned_data.get('foreign_diploma_type') == ForeignDiplomaTypes.NATIONAL_BACHELOR.name:
             # Equivalence
