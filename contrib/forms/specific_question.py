@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -73,7 +73,6 @@ class ConfigurableFormItemWidget(forms.MultiWidget):
         context['current_language'] = self.current_language
         context['is_bound'] = self.is_bound
         context['group_fields_by_tab'] = self.group_fields_by_tab
-        context['group_fields_by_part_ids'] = self.group_fields_by_part_ids
         return context
 
     def __init__(
@@ -82,7 +81,6 @@ class ConfigurableFormItemWidget(forms.MultiWidget):
         fields: List[forms.Field],
         is_bound=False,
         group_fields_by_tab=False,
-        group_fields_by_part_ids=None,
         **kwargs,
     ):
         self.field_configurations = field_configurations
@@ -90,7 +88,6 @@ class ConfigurableFormItemWidget(forms.MultiWidget):
         self.current_language = get_language()
         self.is_bound = is_bound
         self.group_fields_by_tab = group_fields_by_tab
-        self.group_fields_by_part_ids = group_fields_by_part_ids
 
         super().__init__(**kwargs)
 
@@ -218,7 +215,7 @@ class ConfigurableFormItemField(forms.MultiValueField):
         configurations: List[dict],
         required_documents_on_form_submit=False,
         group_fields_by_tab=False,
-        group_fields_by_part_ids=None,
+        plain_help_text=False,
         **kwargs,
     ):
         self.field_configurations = configurations
@@ -233,6 +230,7 @@ class ConfigurableFormItemField(forms.MultiValueField):
             setattr(field, 'is_required', configuration['required'])
             setattr(field, 'tab', configuration.get('tab'))
             setattr(field, 'tab_name', configuration.get('tab_name'))
+            setattr(field, 'plain_help_text', plain_help_text)
             fields.append(field)
             widgets.append(field.widget)
 
@@ -244,7 +242,6 @@ class ConfigurableFormItemField(forms.MultiValueField):
                 fields=fields,
                 is_bound=kwargs.pop('is_bound'),
                 group_fields_by_tab=group_fields_by_tab,
-                group_fields_by_part_ids=group_fields_by_part_ids,
             ),
             require_all_fields=False,
             required=False,
@@ -297,10 +294,9 @@ class ConfigurableFormMixin(forms.Form):
     """Form whose some fields will be automatically created on the basis of a configuration."""
 
     configurable_form_field_name = 'specific_question_answers'  # Name of the form field containing several values
-    required_documents_on_form_submit = False
-    group_fields_by_tab = False
-    group_fields_by_part_ids: Optional[List] = None
-    several_fields = False
+    required_documents_on_form_submit = False  # If true, documents are required on form submit
+    group_fields_by_tab = False  # If true, fields are grouped by tab
+    plain_help_text = False  # If true, help text is displayed in plain text instead inside a tooltip
 
     def __init__(self, *args, form_item_configurations, **kwargs):
         super().__init__(*args, **kwargs)
@@ -316,13 +312,16 @@ class ConfigurableFormMixin(forms.Form):
                     required_documents_on_form_submit=self.required_documents_on_form_submit,
                     group_fields_by_tab=self.group_fields_by_tab,
                     is_bound=self.is_bound,
+                    plain_help_text=self.plain_help_text,
                 )
         else:
+            self.several_fields = False
             self.fields[self.configurable_form_field_name] = ConfigurableFormItemField(
                 configurations=form_item_configurations,
                 required_documents_on_form_submit=self.required_documents_on_form_submit,
                 group_fields_by_tab=self.group_fields_by_tab,
                 is_bound=self.is_bound,
+                plain_help_text=self.plain_help_text,
             )
 
     def clean(self):

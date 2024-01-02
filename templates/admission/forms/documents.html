@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -28,36 +28,65 @@
 {% block form %}
   {% bootstrap_form_errors form %}
 
-  {% if form.fields.reponses_documents_a_completer__0.fields %}
-    {% blocktranslate with deadline=deadline trimmed count counter=form.fields.reponses_documents_a_completer__0.fields|length asvar panel_title %}
-      One document must be uploaded to continue the enrolment process before {{ deadline }}.
-      {% plural %}
-      Several documents must be uploaded to continue the enrolment process before {{ deadline }}.
-    {% endblocktranslate %}
-    {% panel panel_title %}
-      {% bootstrap_field form.reponses_documents_a_completer__0 show_label=False error_css_class='' %}
-    {% endpanel %}
-  {% endif %}
+  {% panel _('Documents to upload') %}
+    {% if form.fields.reponses_documents_a_completer__0.fields %}
+      {% blocktranslate with deadline=deadline trimmed count counter=form.fields.reponses_documents_a_completer__0.fields|length asvar first_section_title %}
+        Document that must be uploaded before {{ deadline }} for the continuation of the enrolment process:
+        {% plural %}
+        Documents that must be uploaded before {{ deadline }} for the continuation of the enrolment process:
+      {% endblocktranslate %}
+      <div>
+        <p class="section_title">
+          <strong>{{ first_section_title }}</strong>
+        </p>
+        {% bootstrap_field form.reponses_documents_a_completer__0 show_label=False error_css_class='' %}
+      </div>
+    {% endif %}
 
-  {% if form.fields.reponses_documents_a_completer__1.fields %}
-    {% blocktranslate trimmed count counter=form.fields.reponses_documents_a_completer__1.fields|length asvar panel_title %}
-      One document must be uploaded as soon as possible.
-      {% plural %}
-      Several documents must be uploaded as soon as possible.
-    {% endblocktranslate %}
-    {% panel panel_title %}
-      {% bootstrap_field form.reponses_documents_a_completer__1 show_label=False error_css_class='' %}
-    {% endpanel %}
-  {% endif %}
-
+    {% if form.fields.reponses_documents_a_completer__1.fields %}
+      {% blocktranslate trimmed count counter=form.fields.reponses_documents_a_completer__1.fields|length asvar second_section_title %}
+        Document that must be uploaded as soon as possible
+        {% plural %}
+        Documents that must be uploaded as soon as possible
+      {% endblocktranslate %}
+      <div>
+        <p class="section_title">
+          <strong>{{ second_section_title }}</strong>
+          <a
+              tabindex="0"
+              class="fa fa-question-circle popover-buttons"
+              data-content="{% translate 'If you do not have all the documents below, we invite you to send us the documents that you have.' %}"
+              data-placement="auto top"
+              data-toggle="popover"
+              data-trigger="focus"
+              role="button"
+          ></a>
+          {% translate ':' %}
+        </p>
+        {% bootstrap_field form.reponses_documents_a_completer__1 show_label=False error_css_class='' %}
+      </div>
+    {% endif %}
+  {% endpanel %}
 {% endblock %}
 
 {% block style %}
   {{ block.super }}
   <style>
-    fieldset legend {
-      font-size: 1.2em;
-      font-weight: bold;
+    .multi-widget fieldset legend {
+      font-size: 1.1em;
+      margin-bottom: 0;
+      padding: 1em;
+      border: 1px solid #ddd;
     }
+
+    .multi-widget fieldset > .form-group {
+      padding: 1em 1em 0 1em;
+      border: 1px solid #ddd;
+    }
+
+    .section_title .popover-buttons {
+      margin-left: 0;
+    }
+
   </style>
 {% endblock %}

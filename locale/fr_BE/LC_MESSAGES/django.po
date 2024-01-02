@@ -105,6 +105,9 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr "%(state)s le %(date)s"
 
+msgid ":"
+msgstr " :"
+
 #, python-format
 msgid ""
 "<a href=\"%(enrollment_url)s\">Go to course enrolment</a> or <a "
@@ -1320,11 +1323,33 @@ msgstr "Docteur"
 msgid "Document"
 msgstr "Document"
 
+msgid "Document that must be uploaded as soon as possible"
+msgid_plural "Documents that must be uploaded as soon as possible"
+msgstr[0] "Document à fournir dès que possible"
+msgstr[1] "Documents à fournir dès que possible"
+
+#, python-format
+msgid ""
+"Document that must be uploaded before %(deadline)s for the continuation of "
+"the enrolment process:"
+msgid_plural ""
+"Documents that must be uploaded before %(deadline)s for the continuation of "
+"the enrolment process:"
+msgstr[0] ""
+"Document à fournir obligatoirement avant le %(deadline)s pour la poursuite "
+"du traitement de votre inscription :"
+msgstr[1] ""
+"Documents à fournir obligatoirement avant le %(deadline)s pour la poursuite "
+"du traitement de votre inscription :"
+
 msgid "Documents"
 msgstr "Documents"
 
 msgid "Documents to complete"
 msgstr "Documents à compléter"
+
+msgid "Documents to upload"
+msgstr "Documents à fournir"
 
 msgid "Does not have a doctor title"
 msgstr "N'est pas porteur du titre de docteur"
@@ -1897,6 +1922,13 @@ msgstr ""
 "soumise que pendant la période du %(start_date)s au %(end_date)s."
 
 msgid ""
+"If you do not have all the documents below, we invite you to send us the "
+"documents that you have."
+msgstr ""
+"Si vous n'êtes pas en possession de tous les documents ci-dessous, nous vous "
+"invitons à déjà envoyer les documents dont vous disposez."
+
+msgid ""
 "If you do not have an equivalency certificate, you must apply for one in "
 "strict accordance with the instructions of the <a href='http://www."
 "equivalences.cfwb.be' target='_blank'> French Community of Belgium.</a>."
@@ -2440,25 +2472,6 @@ msgstr ""
 "etudier/inscriptions/bienvenue-aux-etudiants-internationaux-et-aux-"
 "etudiantes-internationales.html\" target=\"_blank\"> visa </a>."
 
-msgid "One document must be uploaded as soon as possible."
-msgid_plural "Several documents must be uploaded as soon as possible."
-msgstr[0] "Un document doit être téléversé dès que possible."
-msgstr[1] "Plusieurs documents doivent être téléversés dès que possible."
-
-#, python-format
-msgid ""
-"One document must be uploaded to continue the enrolment process before "
-"%(deadline)s."
-msgid_plural ""
-"Several documents must be uploaded to continue the enrolment process before "
-"%(deadline)s."
-msgstr[0] ""
-"Un document doit être téléversé pour poursuivre le processus d'inscription "
-"avant le %(deadline)s."
-msgstr[1] ""
-"Plusieurs documents doivent être téléversés pour poursuivre le processus "
-"d'inscription avant le %(deadline)s."
-
 msgid "Online"
 msgstr "En ligne"
 
@@ -2624,7 +2637,7 @@ msgstr ""
 msgid "Please choose the institute or specify another institute"
 msgstr "Veuillez définir l'établissement ou précisez un autre établissement"
 
-msgid "Please choosee the language regime or specify another regime."
+msgid "Please choose the language regime or specify another regime."
 msgstr "Veuillez définir le régime linguistique ou précisez un autre régime."
 
 msgid ""
@@ -3140,6 +3153,9 @@ msgstr "Demandes de signature envoyées"
 msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
+
+msgid "Some required documents are missing."
+msgstr "Certains documents indispensables ne sont pas présents."
 
 msgid "Speaker"
 msgstr "Orateur ou oratrice"
