@@ -22,13 +22,13 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-{% if field.is_hidden %}
-  {% bootstrap_field field %}
-{% else %}
-  <div
-      id="container_{{ field.name }}"
-      class="field-with-tooltip form-group {{ classes }} {% if field.errors %}has-error{% elif field.form.is_bound %}has-success{% endif %}"
-  >
+<div
+    id="container_{{ field.name }}"
+    class="field-with-tooltip form-group {{ classes }} {% if field.errors %}has-error{% elif field.form.is_bound %}has-success{% endif %}"
+>
+  {% if field.is_hidden %}
+    {% bootstrap_field field %}
+  {% else %}
     <div class="label-container">
       <label class="control-label" for="{{ field.id_for_label }}">
         {{ field.label }}
@@ -46,5 +46,5 @@
       ></a>
     </div>
     {% bootstrap_field field show_help=False label='' %}
-  </div>
-{% endif %}
+  {% endif %}
+</div>
