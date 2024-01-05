@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
 import itertools
 from typing import List
 
@@ -159,6 +160,7 @@ class GeneralEducationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListV
             dict(
                 id="{result.sigle}-{result.annee}".format(result=result),
                 text=format_method(result),
+                training_type=result.type,
             )
             for result in results
         ]
