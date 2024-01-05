@@ -1704,6 +1704,9 @@ msgstr ""
 msgid "Household composition, or copy of your birth certificate"
 msgstr "Composition de ménage, ou copie de votre acte de naissance"
 
+msgid "How did you find out about this course?"
+msgstr "Comment avez-vous connu l'existence de cette formation ?"
+
 msgid ""
 "I am a long-term resident of the European Union outside Belgium (Belgian "
 "student status category 7)"
@@ -2279,6 +2282,9 @@ msgstr "Dernière année d'inscription"
 msgid "Motivation for joint supervision"
 msgstr "Motivation de la cotutelle"
 
+msgid "Motivations"
+msgstr "Motivations"
+
 msgctxt "admission"
 msgid "My application"
 msgstr "Ma demande d'inscription"
@@ -2471,6 +2477,9 @@ msgstr ""
 "informations relatives à la demande de<a href=\"https://uclouvain.be/fr/"
 "etudier/inscriptions/bienvenue-aux-etudiants-internationaux-et-aux-"
 "etudiantes-internationales.html\" target=\"_blank\"> visa </a>."
+
+msgid "On the press"
+msgstr "Dans la presse"
 
 msgid "Online"
 msgstr "En ligne"
@@ -3695,6 +3704,36 @@ msgstr "Numéro de TVA"
 
 msgid "Validated"
 msgstr "Validé"
+
+msgid "Via Facebook"
+msgstr "Sur Facebook"
+
+msgid "Via LinkedIn"
+msgstr "Sur LinkedIn"
+
+msgid "Via MOOCs"
+msgstr "Par les Moocs"
+
+msgid "Via a personalized letter"
+msgstr "Par courrier personnalisé"
+
+msgid "Via an emailing"
+msgstr "Par un emailing"
+
+msgid "Via former students"
+msgstr "Par des anciens étudiants"
+
+msgid "Via friends"
+msgstr "Par des amis"
+
+msgid "Via the website of UCLouvain"
+msgstr "Par le site web de l'UCLouvain"
+
+msgid "Via the website of the continuing education"
+msgstr "Par le site de la formation continue"
+
+msgid "Via word of mouth"
+msgstr "Par le bouche à oreille"
 
 msgid "View"
 msgstr "Voir"

@@ -23,29 +23,21 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-"""
-ChoixStatutPropositionDoctorale
-    > Enrolled: The student/doctoral researcher has paid his minerval.
 
-ChoixStatutDoctorat
-    > Admitted: The phd student is allowed to register.
-"""
-from .accounting import *
-from .actor import *
-from .admission_type import *
-from .curriculum import *
-from .doctorat import *
-from .experience_precedente import *
-from .financement import *
-from .jury import *
-from .languages_knowledge import *
-from .person import *
-from .projet import *
-from .proximity_commission import *
-from .scholarship import *
-from .secondary_studies import *
-from .specific_question import *
-from .supervision import *
-from .training import *
-from .training_choice import *
-from .ways_find_out_about_the_course import *
+from django.utils.translation import gettext_lazy as _
+from base.models.utils.utils import ChoiceEnum
+
+
+class ChoixMoyensDecouverteFormation(ChoiceEnum):
+    SITE_WEB_UCLOUVAIN = _("Via the website of UCLouvain")
+    SITE_FORMATION_CONTINUE = _("Via the website of the continuing education")
+    PRESSE = _("On the press")
+    FACEBOOK = _("Via Facebook")
+    LINKEDIN = _("Via LinkedIn")
+    COURRIER_PERSONNALISE = _("Via a personalized letter")
+    EMAILING = _("Via an emailing")
+    BOUCHE_A_OREILLE = _("Via word of mouth")
+    AMIS = _("Via friends")
+    ANCIENS_ETUDIANTS = _("Via former students")
+    MOOCS = _("Via MOOCs")
+    AUTRE = _("Other")
