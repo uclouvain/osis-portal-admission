@@ -70,7 +70,7 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
             for field in form.fields['reponses_documents_a_completer__0'].fields
             for errors in getattr(field, 'errors', [])
         ):
-            self.error_message = _('Some required documents are missing.')
+            self.error_message = _('Required documents are missing.')
         return super().form_invalid(form)
 
     def has_permission(self):

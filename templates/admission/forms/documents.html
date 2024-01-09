@@ -28,12 +28,12 @@
 {% block form %}
   {% bootstrap_form_errors form %}
 
-  {% panel _('Documents to upload') %}
+  {% panel _('Missing documents') %}
     {% if form.fields.reponses_documents_a_completer__0.fields %}
       {% blocktranslate with deadline=deadline trimmed count counter=form.fields.reponses_documents_a_completer__0.fields|length asvar first_section_title %}
-        Document that must be uploaded before {{ deadline }} for the continuation of the enrolment process:
+        Document which must be received by {{ deadline }} for your enrolment to be processed:
         {% plural %}
-        Documents that must be uploaded before {{ deadline }} for the continuation of the enrolment process:
+        Documents which must be received by {{ deadline }} for your enrolment to be processed:
       {% endblocktranslate %}
       <div>
         <p class="section_title">
@@ -45,9 +45,9 @@
 
     {% if form.fields.reponses_documents_a_completer__1.fields %}
       {% blocktranslate trimmed count counter=form.fields.reponses_documents_a_completer__1.fields|length asvar second_section_title %}
-        Document that must be uploaded as soon as possible
+        Document which must be received as soon as possible
         {% plural %}
-        Documents that must be uploaded as soon as possible
+        Documents which must be received as soon as possible
       {% endblocktranslate %}
       <div>
         <p class="section_title">
@@ -55,7 +55,7 @@
           <a
               tabindex="0"
               class="fa fa-question-circle popover-buttons"
-              data-content="{% translate 'If you do not have all the documents below, we invite you to send us the documents that you have.' %}"
+              data-content="{% translate 'If you do not have all the documents listed below, please send those you do have.' %}"
               data-placement="auto top"
               data-toggle="popover"
               data-trigger="focus"

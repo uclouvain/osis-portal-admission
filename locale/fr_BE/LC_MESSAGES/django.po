@@ -1323,18 +1323,18 @@ msgstr "Docteur"
 msgid "Document"
 msgstr "Document"
 
-msgid "Document that must be uploaded as soon as possible"
-msgid_plural "Documents that must be uploaded as soon as possible"
+msgid "Document which must be received as soon as possible"
+msgid_plural "Documents which must be received as soon as possible"
 msgstr[0] "Document à fournir dès que possible"
 msgstr[1] "Documents à fournir dès que possible"
 
 #, python-format
 msgid ""
-"Document that must be uploaded before %(deadline)s for the continuation of "
-"the enrolment process:"
+"Document which must be received by %(deadline)s for your enrolment to be "
+"processed:"
 msgid_plural ""
-"Documents that must be uploaded before %(deadline)s for the continuation of "
-"the enrolment process:"
+"Documents which must be received by %(deadline)s for your enrolment to be "
+"processed:"
 msgstr[0] ""
 "Document à fournir obligatoirement avant le %(deadline)s pour la poursuite "
 "du traitement de votre inscription :"
@@ -1344,12 +1344,6 @@ msgstr[1] ""
 
 msgid "Documents"
 msgstr "Documents"
-
-msgid "Documents to complete"
-msgstr "Documents à compléter"
-
-msgid "Documents to upload"
-msgstr "Documents à fournir"
 
 msgid "Does not have a doctor title"
 msgstr "N'est pas porteur du titre de docteur"
@@ -1925,8 +1919,8 @@ msgstr ""
 "soumise que pendant la période du %(start_date)s au %(end_date)s."
 
 msgid ""
-"If you do not have all the documents below, we invite you to send us the "
-"documents that you have."
+"If you do not have all the documents listed below, please send those you do "
+"have."
 msgstr ""
 "Si vous n'êtes pas en possession de tous les documents ci-dessous, nous vous "
 "invitons à déjà envoyer les documents dont vous disposez."
@@ -2262,6 +2256,9 @@ msgid ""
 msgstr ""
 "Formule 2 (La défense et la soutenance sont organisées le même jour, et "
 "soumises à une condition de recevabilité)"
+
+msgid "Missing documents"
+msgstr "Documents à fournir"
 
 msgid "Modification of a non-academic activity"
 msgstr "Modification d'une activité non-académique"
@@ -2976,6 +2973,9 @@ msgstr "Demander une nouvelle échéance pour l'épreuve de confirmation"
 msgid "Request signatures"
 msgstr "Demander les signatures"
 
+msgid "Required documents are missing."
+msgstr "Certains documents indispensables ne sont pas présents."
+
 msgid "Research institute"
 msgstr "Institut de recherche"
 
@@ -3162,9 +3162,6 @@ msgstr "Demandes de signature envoyées"
 msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
-
-msgid "Some required documents are missing."
-msgstr "Certains documents indispensables ne sont pas présents."
 
 msgid "Speaker"
 msgstr "Orateur ou oratrice"
