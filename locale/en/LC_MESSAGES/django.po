@@ -1148,28 +1148,22 @@ msgstr ""
 msgid "Document"
 msgstr ""
 
-msgid "Document that must be uploaded as soon as possible"
-msgid_plural "Documents that must be uploaded as soon as possible"
+msgid "Document which must be received as soon as possible"
+msgid_plural "Documents which must be received as soon as possible"
 msgstr[0] ""
 msgstr[1] ""
 
 #, python-format
 msgid ""
-"Document that must be uploaded before %(deadline)s for the continuation of "
-"the enrolment process:"
+"Document which must be received by %(deadline)s for your enrolment to be "
+"processed:"
 msgid_plural ""
-"Documents that must be uploaded before %(deadline)s for the continuation of "
-"the enrolment process:"
+"Documents which must be received by %(deadline)s for your enrolment to be "
+"processed:"
 msgstr[0] ""
 msgstr[1] ""
 
 msgid "Documents"
-msgstr ""
-
-msgid "Documents to complete"
-msgstr ""
-
-msgid "Documents to upload"
 msgstr ""
 
 msgid "Does not have a doctor title"
@@ -1667,8 +1661,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"If you do not have all the documents below, we invite you to send us the "
-"documents that you have."
+"If you do not have all the documents listed below, please send those you do "
+"have."
 msgstr ""
 
 msgid ""
@@ -1972,6 +1966,9 @@ msgstr ""
 msgid ""
 "Method 2 (The private defense and the public defense are organised the same "
 "day, and subjected to an admissibility condition)"
+msgstr ""
+
+msgid "Missing documents"
 msgstr ""
 
 msgid "Modification of a non-academic activity"
@@ -2634,6 +2631,9 @@ msgstr ""
 msgid "Request signatures"
 msgstr ""
 
+msgid "Required documents are missing."
+msgstr ""
+
 msgid "Research institute"
 msgstr ""
 
@@ -2812,9 +2812,6 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Single"
-msgstr ""
-
-msgid "Some required documents are missing."
 msgstr ""
 
 msgid "Speaker"

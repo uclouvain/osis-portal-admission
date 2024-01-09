@@ -233,7 +233,7 @@ class DocumentsFormViewTestCase(TestCase):
         self.assertIn(ValidationError(FIELD_REQUIRED_MESSAGE), getattr(fields[1], 'errors', []))
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(messages[0].message, gettext_lazy('Some required documents are missing.'))
+        self.assertEqual(messages[0].message, gettext_lazy('Required documents are missing.'))
 
         # Submit a valid form with only mandatory fields
         response = self.client.post(
