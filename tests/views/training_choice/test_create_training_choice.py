@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ from rest_framework import status
 from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import AdmissionType, TypeFormationChoisissable
+from admission.contrib.enums import AdmissionType, TypeFormationChoisissable, ChoixMoyensDecouverteFormation
 from admission.contrib.enums.training_choice import TypeFormation
 from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
@@ -103,11 +103,31 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertTrue('mixed_training' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['mixed_training'])
 
+    def test_continuing_education_form_submitting_without_motivation_and_way_of_founding_the_training(self):
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR2-2020',
+        }
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('motivations', []))
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('ways_to_find_out_about_the_course', []))
+
     def test_continuing_education_form_submitting(self):
         data = {
             'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
             'campus': EMPTY_VALUE,
             'mixed_training': 'TR2-2020',
+            'motivations': 'My motivation',
+            'ways_to_find_out_about_the_course': [
+                ChoixMoyensDecouverteFormation.FACEBOOK.name,
+                ChoixMoyensDecouverteFormation.LINKEDIN.name,
+            ],
         }
         response = self.client.post(self.url, data=data)
 
@@ -116,6 +136,11 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'sigle_formation': 'TR2',
                 'annee_formation': 2020,
                 'matricule_candidat': self.person.global_id,
+                'motivations': 'My motivation',
+                'moyens_decouverte_formation': [
+                    ChoixMoyensDecouverteFormation.FACEBOOK.name,
+                    ChoixMoyensDecouverteFormation.LINKEDIN.name,
+                ],
             },
             **self.default_kwargs,
         )

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ from unittest.mock import ANY, MagicMock, patch
 from django.core.exceptions import ValidationError
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
+from django.utils.translation import gettext_lazy
 from osis_admission_sdk.model.document_specific_questions_list import DocumentSpecificQuestionsList
 from osis_admission_sdk.model.document_specific_questions_list_immediate_requested_documents import (
     DocumentSpecificQuestionsListImmediateRequestedDocuments,
@@ -230,6 +231,9 @@ class DocumentsFormViewTestCase(TestCase):
         self.assertFalse(form.is_valid())
         self.assertTrue('reponses_documents_a_completer__0' in form.errors)
         self.assertIn(ValidationError(FIELD_REQUIRED_MESSAGE), getattr(fields[1], 'errors', []))
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].message, gettext_lazy('Required documents are missing.'))
 
         # Submit a valid form with only mandatory fields
         response = self.client.post(
