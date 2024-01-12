@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -477,11 +477,12 @@ def has_error_in_tab(context, admission, tab):
 
 
 @register.inclusion_tag('admission/tags/bootstrap_field_with_tooltip.html')
-def bootstrap_field_with_tooltip(field, classes='', show_help=False):
+def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False):
     return {
         'field': field,
         'classes': classes,
         'show_help': show_help,
+        'html_tooltip': html_tooltip,
     }
 
 

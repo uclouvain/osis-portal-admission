@@ -95,6 +95,9 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr ""
 
+msgid ":"
+msgstr ""
+
 #, python-format
 msgid ""
 "<a href=\"%(enrollment_url)s\">Go to course enrolment</a> or <a "
@@ -1145,10 +1148,22 @@ msgstr ""
 msgid "Document"
 msgstr ""
 
-msgid "Documents"
-msgstr ""
+msgid "Document which must be received as soon as possible"
+msgid_plural "Documents which must be received as soon as possible"
+msgstr[0] ""
+msgstr[1] ""
 
-msgid "Documents to complete"
+#, python-format
+msgid ""
+"Document which must be received by %(deadline)s for your enrolment to be "
+"processed:"
+msgid_plural ""
+"Documents which must be received by %(deadline)s for your enrolment to be "
+"processed:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Documents"
 msgstr ""
 
 msgid "Does not have a doctor title"
@@ -1471,6 +1486,9 @@ msgstr ""
 msgid "Household composition, or copy of your birth certificate"
 msgstr ""
 
+msgid "How did you find out about this course?"
+msgstr ""
+
 msgid ""
 "I am a long-term resident of the European Union outside Belgium (Belgian "
 "student status category 7)"
@@ -1640,6 +1658,11 @@ msgid ""
 "If you are applying for a limited enrolment bachelor's course, the "
 "application can only be submitted during the period from %(start_date)s to "
 "%(end_date)s."
+msgstr ""
+
+msgid ""
+"If you do not have all the documents listed below, please send those you do "
+"have."
 msgstr ""
 
 msgid ""
@@ -1945,6 +1968,9 @@ msgid ""
 "day, and subjected to an admissibility condition)"
 msgstr ""
 
+msgid "Missing documents"
+msgstr ""
+
 msgid "Modification of a non-academic activity"
 msgstr ""
 
@@ -1962,6 +1988,9 @@ msgid "Most recent year of enrolment"
 msgstr ""
 
 msgid "Motivation for joint supervision"
+msgstr ""
+
+msgid "Motivations"
 msgstr ""
 
 msgctxt "admission"
@@ -2137,20 +2166,8 @@ msgid ""
 "information."
 msgstr ""
 
-msgid "One document must be uploaded as soon as possible."
-msgid_plural "Several documents must be uploaded as soon as possible."
-msgstr[0] ""
-msgstr[1] ""
-
-#, python-format
-msgid ""
-"One document must be uploaded to continue the enrolment process before "
-"%(deadline)s."
-msgid_plural ""
-"Several documents must be uploaded to continue the enrolment process before "
-"%(deadline)s."
-msgstr[0] ""
-msgstr[1] ""
+msgid "On the press"
+msgstr ""
 
 msgid "Online"
 msgstr ""
@@ -2313,7 +2330,7 @@ msgstr ""
 msgid "Please choose the institute or specify another institute"
 msgstr ""
 
-msgid "Please choosee the language regime or specify another regime."
+msgid "Please choose the language regime or specify another regime."
 msgstr ""
 
 msgid ""
@@ -2612,6 +2629,9 @@ msgid "Request a new confirmation exam deadline"
 msgstr ""
 
 msgid "Request signatures"
+msgstr ""
+
+msgid "Required documents are missing."
 msgstr ""
 
 msgid "Research institute"
@@ -3248,6 +3268,36 @@ msgid "VAT number"
 msgstr ""
 
 msgid "Validated"
+msgstr ""
+
+msgid "Via Facebook"
+msgstr ""
+
+msgid "Via LinkedIn"
+msgstr ""
+
+msgid "Via MOOCs"
+msgstr ""
+
+msgid "Via a personalized letter"
+msgstr ""
+
+msgid "Via an emailing"
+msgstr ""
+
+msgid "Via former students"
+msgstr ""
+
+msgid "Via friends"
+msgstr ""
+
+msgid "Via the website of UCLouvain"
+msgstr ""
+
+msgid "Via the website of the continuing education"
+msgstr ""
+
+msgid "Via word of mouth"
 msgstr ""
 
 msgid "View"

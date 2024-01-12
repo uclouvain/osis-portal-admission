@@ -105,6 +105,9 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr "%(state)s le %(date)s"
 
+msgid ":"
+msgstr " :"
+
 #, python-format
 msgid ""
 "<a href=\"%(enrollment_url)s\">Go to course enrolment</a> or <a "
@@ -1320,11 +1323,27 @@ msgstr "Docteur"
 msgid "Document"
 msgstr "Document"
 
+msgid "Document which must be received as soon as possible"
+msgid_plural "Documents which must be received as soon as possible"
+msgstr[0] "Document à fournir dès que possible"
+msgstr[1] "Documents à fournir dès que possible"
+
+#, python-format
+msgid ""
+"Document which must be received by %(deadline)s for your enrolment to be "
+"processed:"
+msgid_plural ""
+"Documents which must be received by %(deadline)s for your enrolment to be "
+"processed:"
+msgstr[0] ""
+"Document à fournir obligatoirement avant le %(deadline)s pour la poursuite "
+"du traitement de votre inscription :"
+msgstr[1] ""
+"Documents à fournir obligatoirement avant le %(deadline)s pour la poursuite "
+"du traitement de votre inscription :"
+
 msgid "Documents"
 msgstr "Documents"
-
-msgid "Documents to complete"
-msgstr "Documents à compléter"
 
 msgid "Does not have a doctor title"
 msgstr "N'est pas porteur du titre de docteur"
@@ -1679,6 +1698,9 @@ msgstr ""
 msgid "Household composition, or copy of your birth certificate"
 msgstr "Composition de ménage, ou copie de votre acte de naissance"
 
+msgid "How did you find out about this course?"
+msgstr "Comment avez-vous connu l'existence de cette formation ?"
+
 msgid ""
 "I am a long-term resident of the European Union outside Belgium (Belgian "
 "student status category 7)"
@@ -1895,6 +1917,13 @@ msgid ""
 msgstr ""
 "Vous vous inscrivez dans un bachelor contingenté, la demande ne peut être "
 "soumise que pendant la période du %(start_date)s au %(end_date)s."
+
+msgid ""
+"If you do not have all the documents listed below, please send those you do "
+"have."
+msgstr ""
+"Si vous n'êtes pas en possession de tous les documents ci-dessous, nous vous "
+"invitons à déjà envoyer les documents dont vous disposez."
 
 msgid ""
 "If you do not have an equivalency certificate, you must apply for one in "
@@ -2228,6 +2257,9 @@ msgstr ""
 "Formule 2 (La défense et la soutenance sont organisées le même jour, et "
 "soumises à une condition de recevabilité)"
 
+msgid "Missing documents"
+msgstr "Documents à fournir"
+
 msgid "Modification of a non-academic activity"
 msgstr "Modification d'une activité non-académique"
 
@@ -2246,6 +2278,9 @@ msgstr "Dernière année d'inscription"
 
 msgid "Motivation for joint supervision"
 msgstr "Motivation de la cotutelle"
+
+msgid "Motivations"
+msgstr "Motivations"
 
 msgctxt "admission"
 msgid "My application"
@@ -2440,24 +2475,8 @@ msgstr ""
 "etudier/inscriptions/bienvenue-aux-etudiants-internationaux-et-aux-"
 "etudiantes-internationales.html\" target=\"_blank\"> visa </a>."
 
-msgid "One document must be uploaded as soon as possible."
-msgid_plural "Several documents must be uploaded as soon as possible."
-msgstr[0] "Un document doit être téléversé dès que possible."
-msgstr[1] "Plusieurs documents doivent être téléversés dès que possible."
-
-#, python-format
-msgid ""
-"One document must be uploaded to continue the enrolment process before "
-"%(deadline)s."
-msgid_plural ""
-"Several documents must be uploaded to continue the enrolment process before "
-"%(deadline)s."
-msgstr[0] ""
-"Un document doit être téléversé pour poursuivre le processus d'inscription "
-"avant le %(deadline)s."
-msgstr[1] ""
-"Plusieurs documents doivent être téléversés pour poursuivre le processus "
-"d'inscription avant le %(deadline)s."
+msgid "On the press"
+msgstr "Dans la presse"
 
 msgid "Online"
 msgstr "En ligne"
@@ -2624,7 +2643,7 @@ msgstr ""
 msgid "Please choose the institute or specify another institute"
 msgstr "Veuillez définir l'établissement ou précisez un autre établissement"
 
-msgid "Please choosee the language regime or specify another regime."
+msgid "Please choose the language regime or specify another regime."
 msgstr "Veuillez définir le régime linguistique ou précisez un autre régime."
 
 msgid ""
@@ -2953,6 +2972,9 @@ msgstr "Demander une nouvelle échéance pour l'épreuve de confirmation"
 
 msgid "Request signatures"
 msgstr "Demander les signatures"
+
+msgid "Required documents are missing."
+msgstr "Certains documents indispensables ne sont pas présents."
 
 msgid "Research institute"
 msgstr "Institut de recherche"
@@ -3679,6 +3701,36 @@ msgstr "Numéro de TVA"
 
 msgid "Validated"
 msgstr "Validé"
+
+msgid "Via Facebook"
+msgstr "Sur Facebook"
+
+msgid "Via LinkedIn"
+msgstr "Sur LinkedIn"
+
+msgid "Via MOOCs"
+msgstr "Par les Moocs"
+
+msgid "Via a personalized letter"
+msgstr "Par courrier personnalisé"
+
+msgid "Via an emailing"
+msgstr "Par un emailing"
+
+msgid "Via former students"
+msgstr "Par des anciens étudiants"
+
+msgid "Via friends"
+msgstr "Par des amis"
+
+msgid "Via the website of UCLouvain"
+msgstr "Par le site web de l'UCLouvain"
+
+msgid "Via the website of the continuing education"
+msgstr "Par le site de la formation continue"
+
+msgid "Via word of mouth"
+msgstr "Par le bouche à oreille"
 
 msgid "View"
 msgstr "Voir"

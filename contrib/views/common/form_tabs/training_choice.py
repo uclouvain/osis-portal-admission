@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
 from typing import Optional
 
 from django.contrib import messages
@@ -66,6 +67,7 @@ class AdmissionTrainingChoiceFormView(
     form_class = TrainingChoiceForm
     extra_context = {
         'GENERAL_EDUCATION_TYPES': list(TYPES_FORMATION_GENERALE),
+        'CONTINUING_EDUCATION_TYPES': OSIS_ADMISSION_EDUCATION_TYPES_MAPPING[TypeFormation.FORMATION_CONTINUE.name],
         'COMMISSIONS_CDE_CLSM': COMMISSIONS_CDE_CLSM,
         'COMMISSION_CDSS': COMMISSION_CDSS,
         'SCIENCE_DOCTORATE': SCIENCE_DOCTORATE,
@@ -149,6 +151,8 @@ class AdmissionTrainingChoiceFormView(
         return {
             'sigle_formation': training_acronym,
             'annee_formation': int(training_year),
+            'motivations': data.get('motivations'),
+            'moyens_decouverte_formation': data.get('ways_to_find_out_about_the_course'),
         }
 
     def call_webservice(self, data):
@@ -228,4 +232,6 @@ class AdmissionTrainingChoiceFormView(
             return {
                 'mixed_training': get_training_id(self.admission.formation),
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
+                'motivations': self.admission.motivations,
+                'ways_to_find_out_about_the_course': self.admission.moyens_decouverte_formation,
             }

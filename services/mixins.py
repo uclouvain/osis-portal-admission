@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -44,6 +44,7 @@ class WebServiceFormMixin:
 
     def __init__(self, *args, **kwargs):
         self._error_mapping = {exc.value: field for exc, field in self.error_mapping.items()}
+        self.error_message = _("Please correct the errors below")
         super().__init__(*args, **kwargs)
 
     def prepare_data(self, data):
@@ -51,7 +52,7 @@ class WebServiceFormMixin:
 
     def form_invalid(self, form):
         # On error, display global message
-        messages.error(self.request, _("Please correct the errors below"))
+        messages.error(self.request, self.error_message)
         return super().form_invalid(form)
 
     def handle_form_exception(self, form, exception):
