@@ -28,11 +28,15 @@ import json
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
+from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+    InformationsSpecifiquesFormationContinueDTO,
+)
 from rest_framework import status
 from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import AdmissionType, TypeFormationChoisissable, ChoixMoyensDecouverteFormation
+from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
 
@@ -238,7 +242,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
             ],
         )
 
-    def test_form_submitting_missing_fields(self):
+    def test_form_submitting_missing_fields_with_long_training(self):
         # The training is missing
         data = {
             'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
@@ -261,6 +265,34 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('motivations', []))
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('ways_to_find_out_about_the_course', []))
 
+    def test_form_submitting_missing_fields_with_short_training(self):
+        # For short courses, the ways of finding out about the course is not required
+        mock_continuing_api = self.mock_continuing_education_api.return_value
+        mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
+            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+                sigle_formation='TR2',
+                annee=2020,
+                aide_a_la_formation=True,
+                inscription_au_role_obligatoire=False,
+                etat=StateIUFC.OPEN.name,
+            )
+        )
+
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR2-2020',
+        }
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+        self.assertIn('motivations', form.errors)
+        self.assertNotIn('ways_to_find_out_about_the_course', form.errors)
+
     def test_form_submitting_other_context(self):
         data = {
             'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
@@ -280,7 +312,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
             form.errors['__all__'][0],
         )
 
-    def test_form_submitting_valid_data(self):
+    def test_form_submitting_valid_data_with_long_training(self):
         data = {
             'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
             'campus': EMPTY_VALUE,
@@ -308,6 +340,49 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                     ChoixMoyensDecouverteFormation.FACEBOOK.name,
                     ChoixMoyensDecouverteFormation.COURRIER_PERSONNALISE.name,
                 ],
+            },
+            **self.default_kwargs,
+        )
+
+        self.assertRedirects(response, self.url)
+
+    def test_form_submitting_valid_data_with_short_training(self):
+        # For short courses, the ways of finding out about the course is not required
+        mock_continuing_api = self.mock_continuing_education_api.return_value
+        mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
+            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+                sigle_formation='TR2',
+                annee=2020,
+                aide_a_la_formation=True,
+                inscription_au_role_obligatoire=False,
+                etat=StateIUFC.OPEN.name,
+            )
+        )
+
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR2-2020',
+            'specific_question_answers_1': 'Answer',
+            'motivations': 'Motivation',
+            'ways_to_find_out_about_the_course': [
+                ChoixMoyensDecouverteFormation.FACEBOOK.name,
+                ChoixMoyensDecouverteFormation.COURRIER_PERSONNALISE.name,
+            ],
+        }
+        response = self.client.post(self.url, data=data)
+
+        self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_choix_formation_continue_command={
+                'uuid_proposition': self.proposition_uuid,
+                'sigle_formation': 'TR2',
+                'annee_formation': 2020,
+                'reponses_questions_specifiques': {
+                    self.first_question_uuid: 'Answer',
+                },
+                'motivations': 'Motivation',
+                'moyens_decouverte_formation': '',
             },
             **self.default_kwargs,
         )

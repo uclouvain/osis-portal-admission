@@ -67,7 +67,7 @@
             {% endblocktrans %}
           </p>
           {% bootstrap_field form.justification %}
-      </div>
+        </div>
         <div class="required_field">
           {% bootstrap_field form.sector %}
         </div>
@@ -110,17 +110,15 @@
     </div>
   {% endpanel %}
 
-  <div class="continuing-fields">
-    <div class="row">
-      <div class="col-md-12 required_field">
-        {% bootstrap_field form.motivations placeholder='' %}
-      </div>
+  <div class="row continuing-fields">
+    <div class="col-md-12 required_field">
+      {% bootstrap_field form.motivations placeholder='' %}
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-12 required_field">
-        {% bootstrap_field form.ways_to_find_out_about_the_course %}
-      </div>
+  <div class="row long-continuing-fields">
+    <div class="col-md-12 required_field">
+      {% bootstrap_field form.ways_to_find_out_about_the_course %}
     </div>
   </div>
 
@@ -186,16 +184,31 @@
                   '#id_training_type': {values: ['CERTIFICAT_ATTESTATION']},
               }, defaultOptions);
 
-              $('.continuing-fields').dependsOn({
-                  '#id_mixed_training': {
-                      changed: function () {
-                          const data = $('#id_mixed_training').select2('data');
-                          if (data.length && CONTINUING_EDUCATION_TYPES.includes(data[0].training_type)) {
-                              return true;
-                          }
-                      },
-                  },
-              }, defaultOptions);
+              $('#id_mixed_training').on('change', async function(event){
+                  const data = $(this).select2('data');
+
+                  const continuingFields = $('.continuing-fields');
+                  const longContinuingFields = $('.long-continuing-fields');
+
+                  // The fields are displayed only if it is a continuing education course
+                  if (data.length && CONTINUING_EDUCATION_TYPES.includes(data[0].training_type)) {
+                      // And more specifically if is a long course
+                      await $.get({
+                          url: '{% url 'admission:retrieve_continuing_education_information' %}',
+                          data: { 'training': data[0].id },
+                          success: function(returned_data) {
+                              longContinuingFields.toggle(returned_data.inscription_au_role_obligatoire === true);
+                          },
+                      }).fail(function() {
+                          longContinuingFields.hide();
+                      }).always(function() {
+                          continuingFields.show();
+                      });
+                  } else {
+                      continuingFields.hide();
+                      longContinuingFields.hide();
+                  }
+              }).change();
 
               // Doctorate education
 
