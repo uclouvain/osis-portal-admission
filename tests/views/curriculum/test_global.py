@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -747,6 +747,13 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
     def test_with_admission_on_reading_curriculum_is_loaded_with_certificate_of_participation(self):
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+    def test_with_admission_on_reading_curriculum_is_loaded_with_short_training(self):
+        mock_continuing_proposition = self.mock_proposition_api.return_value.retrieve_continuing_education_proposition
+        mock_continuing_proposition.return_value.inscription_au_role_obligatoire = False
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_first_cycle_certificate(self):
