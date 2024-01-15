@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -50,6 +50,7 @@ from admission.contrib.enums.training_choice import (
     TypeFormation,
     TypeFormationChoisissable,
 )
+from admission.contrib.enums.ways_find_out_about_the_course import ChoixMoyensDecouverteFormation
 from admission.contrib.forms import (
     EMPTY_CHOICE,
     EMPTY_VALUE,
@@ -186,6 +187,25 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         required=False,
     )
 
+    # Continuing education
+    motivations = forms.CharField(
+        label=_('Motivations'),
+        widget=forms.Textarea(
+            attrs={
+                'rows': 6,
+            }
+        ),
+        max_length=1000,
+        required=False,
+    )
+
+    ways_to_find_out_about_the_course = forms.MultipleChoiceField(
+        label=_('How did you find out about this course?'),
+        required=False,
+        choices=ChoixMoyensDecouverteFormation.choices(),
+        widget=forms.CheckboxSelectMultiple,
+    )
+
     # Scholarship
 
     has_double_degree_scholarship = RadioBooleanField(
@@ -311,6 +331,9 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                 self.continuing_education_training_obj = training
             else:
                 self.general_education_training_obj = training
+            # Provide additional data used in the template
+            self.fields['mixed_training'].training_type = training['education_group_type']
+
         elif doctorate_training:
             self.doctorate_training_obj = get_training(person=self.person, training=doctorate_training)
             doctorate_choices = get_training_choices(training=self.doctorate_training_obj)
@@ -449,6 +472,10 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         if training_type == TypeFormation.FORMATION_CONTINUE.name:
             if not cleaned_data.get('mixed_training'):
                 self.add_error('mixed_training', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get('motivations'):
+                self.add_error('motivations', FIELD_REQUIRED_MESSAGE)
+            if not cleaned_data.get('ways_to_find_out_about_the_course'):
+                self.add_error('ways_to_find_out_about_the_course', FIELD_REQUIRED_MESSAGE)
 
     def clean_doctorate(self, training_type, cleaned_data):
         if training_type == TypeFormation.DOCTORAT.name:

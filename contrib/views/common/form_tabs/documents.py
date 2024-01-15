@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,12 +23,14 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.utils.translation import gettext as _
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView
 
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms.documents import CompleteDocumentsForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -61,6 +63,15 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
         'submit_label': gettext_lazy('Send'),
         'submit_icon': 'fa-paper-plane',
     }
+
+    def form_invalid(self, form):
+        if any(
+            FIELD_REQUIRED_MESSAGE in errors
+            for field in form.fields['reponses_documents_a_completer__0'].fields
+            for errors in getattr(field, 'errors', [])
+        ):
+            self.error_message = _('Required documents are missing.')
+        return super().form_invalid(form)
 
     def has_permission(self):
         return can_update_tab(admission=self.admission, tab='documents')
