@@ -395,7 +395,7 @@ msgstr ""
 msgid "Application accepted"
 msgstr ""
 
-msgid "Application confirmed (by student)"
+msgid "Application confirmed"
 msgstr ""
 
 msgid "Application denied"
@@ -775,10 +775,10 @@ msgstr ""
 msgid "Complementary training proposition"
 msgstr ""
 
-msgid "Completed (by student) for FAC"
+msgid "Completed for FAC"
 msgstr ""
 
-msgid "Completed (by student) for SIC"
+msgid "Completed for SIC"
 msgstr ""
 
 msgid "Confirm"
@@ -3149,10 +3149,10 @@ msgstr ""
 msgid "Title of the communication"
 msgstr ""
 
-msgid "To be completed (by student) for Fac"
+msgid "To be completed for Fac"
 msgstr ""
 
-msgid "To be completed (by student) for the Enrolment Office (SIC)"
+msgid "To be completed for the Enrolment Office (SIC)"
 msgstr ""
 
 msgid ""

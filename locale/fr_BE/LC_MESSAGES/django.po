@@ -472,8 +472,8 @@ msgstr ""
 msgid "Application accepted"
 msgstr "Inscription autorisée"
 
-msgid "Application confirmed (by student)"
-msgstr "Demande confirmée (par étudiant)"
+msgid "Application confirmed"
+msgstr "Demande confirmée"
 
 msgid "Application denied"
 msgstr "Inscription refusée"
@@ -891,11 +891,11 @@ msgstr "Formation complémentaire"
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
 
-msgid "Completed (by student) for FAC"
-msgstr "Complétée (par étudiant) pour Fac"
+msgid "Completed for FAC"
+msgstr "Complétée pour Fac"
 
-msgid "Completed (by student) for SIC"
-msgstr "Complétée (par étudiant) pour SIC"
+msgid "Completed for SIC"
+msgstr "Complétée pour SIC"
 
 msgid "Confirm"
 msgstr "Confirmer"
@@ -3566,11 +3566,11 @@ msgstr "Titre"
 msgid "Title of the communication"
 msgstr "Titre de la communication"
 
-msgid "To be completed (by student) for Fac"
-msgstr "A compléter (par étudiant) pour Fac"
+msgid "To be completed for Fac"
+msgstr "A compléter pour Fac"
 
-msgid "To be completed (by student) for the Enrolment Office (SIC)"
-msgstr "A compléter (par étudiant) pour SIC"
+msgid "To be completed for the Enrolment Office (SIC)"
+msgstr "A compléter pour SIC"
 
 msgid ""
 "To be uploaded if you have a F.R.S.-FNRS (including Televie), FRIA or FRESH "
