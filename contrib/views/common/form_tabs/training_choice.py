@@ -148,6 +148,7 @@ class AdmissionTrainingChoiceFormView(
             'annee_formation': int(training_year),
             'motivations': data.get('motivations'),
             'moyens_decouverte_formation': data.get('ways_to_find_out_about_the_course'),
+            'marque_d_interet': data.get('interested_mark'),
         }
 
     def call_webservice(self, data):
@@ -229,4 +230,5 @@ class AdmissionTrainingChoiceFormView(
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
                 'motivations': self.admission.motivations,
                 'ways_to_find_out_about_the_course': self.admission.moyens_decouverte_formation,
+                'interested_mark': self.admission.marque_d_interet,
             }

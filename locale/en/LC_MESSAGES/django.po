@@ -1529,6 +1529,9 @@ msgstr ""
 msgid "I am an asylum seeker"
 msgstr ""
 
+msgid "I am interested in this course even if it is closed"
+msgstr ""
+
 msgid ""
 "I am supported by the CPAS or by a CPAS home or nominated by the CPAS "
 "(Belgian student status category 4)"
@@ -3462,6 +3465,9 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+msgid "Yes, I am interested in this course"
+msgstr ""
+
 msgid "Yes, an account number in IBAN format"
 msgstr ""
 
@@ -3604,6 +3610,13 @@ msgid ""
 "Your application cannot be confirmed. The desired course is not offered."
 msgstr ""
 
+#, python-format
+msgid ""
+"Your application cannot be submitted because the %(program)s course is "
+"closed. You can express your interest by ticking the box below or contacting "
+"a course administrator: %(program_managers)s."
+msgstr ""
+
 msgid "Your application has been submitted"
 msgstr ""
 
@@ -3676,6 +3689,9 @@ msgstr "Foreign diploma"
 
 #, python-format
 msgid "from %(start)s to %(end)s"
+msgstr ""
+
+msgid "no manager email address found"
 msgstr ""
 
 msgid "the person concerned"
