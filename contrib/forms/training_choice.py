@@ -43,6 +43,7 @@ from admission.contrib.enums import (
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
+from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.enums.training_choice import (
     ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE,
     ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE,
@@ -205,6 +206,12 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         required=False,
         choices=ChoixMoyensDecouverteFormation.choices(),
         widget=forms.CheckboxSelectMultiple,
+    )
+
+    interested_mark = forms.NullBooleanField(
+        label=_('Yes, I am interested in this course'),
+        required=False,
+        widget=forms.CheckboxInput,
     )
 
     # Scholarship
@@ -489,8 +496,13 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                         self.add_error('ways_to_find_out_about_the_course', FIELD_REQUIRED_MESSAGE)
                 else:
                     cleaned_data['ways_to_find_out_about_the_course'] = []
+
+                if not additional_training_information.etat == StateIUFC.CLOSED.name:
+                    cleaned_data['interested_mark'] = None
+
             else:
                 cleaned_data['ways_to_find_out_about_the_course'] = []
+                cleaned_data['interested_mark'] = None
 
     def clean_doctorate(self, training_type, cleaned_data):
         if training_type == TypeFormation.DOCTORAT.name:

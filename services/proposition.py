@@ -519,6 +519,7 @@ class FormationContinueBusinessException(Enum):
     ExperiencesCurriculumNonRenseigneesException = "FORMATION-CONTINUE-3"
     InformationsComplementairesNonRenseigneesException = "FORMATION-CONTINUE-4"
     ChoixDeFormationNonRenseigneException = "FORMATION-CONTINUE-5"
+    FormationEstFermeeException = "FORMATION-CONTINUE-6"
 
 
 class JuryBusinessException(Enum):
@@ -590,6 +591,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.BourseNonTrouveeException,
         GlobalPropositionBusinessException.FormationNonTrouveeException,
         FormationContinueBusinessException.ChoixDeFormationNonRenseigneException,
+        FormationContinueBusinessException.FormationEstFermeeException,
     },
     'cotutelle': {
         PropositionBusinessException.CotutelleNonCompleteException,

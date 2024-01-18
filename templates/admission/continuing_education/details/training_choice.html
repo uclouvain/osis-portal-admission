@@ -37,6 +37,11 @@
 
   {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
 
+  {% if admission.etat_formation == 'CLOSED' %}
+    {% field_data _('I am interested in this course even if it is closed') admission.marque_d_interet %}
+  {% endif %}
+
+
   {% field_data _('Motivations') admission.motivations %}
 
   {% if admission.inscription_au_role_obligatoire == True %}
