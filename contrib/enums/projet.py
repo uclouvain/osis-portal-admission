@@ -48,16 +48,12 @@ class ChoixStatutPropositionGenerale(ChoiceEnum):
     FRAIS_DOSSIER_EN_ATTENTE = _('Pending application fee')
     CONFIRMEE = _('Application confirmed (by student)')
     ANNULEE = _('Cancelled application')
-    A_COMPLETER_POUR_SIC = _('To be completed (by student) for the Enrolment Office (SIC)')
-    COMPLETEE_POUR_SIC = _('Completed (by student) for SIC')
-    TRAITEMENT_FAC = _('Processing by Fac/PhD Committee')
-    A_COMPLETER_POUR_FAC = _('To be completed (by student) for Fac')
-    COMPLETEE_POUR_FAC = _('Completed (by student) for FAC')
-    RETOUR_DE_FAC = _('Feedback from FAC')
-    ATTENTE_VALIDATION_DIRECTION = _('Awaiting management approval')
     INSCRIPTION_AUTORISEE = _('Application accepted')
     INSCRIPTION_REFUSEE = _('Application denied')
     CLOTUREE = _('Closed')
+    # More detailed status are hidden by osis
+    A_COMPLETER = _('To be completed')
+    TRAITEMENT_UCLOUVAIN_EN_COURS = _('UCLouvain processing in progress')
 
 
 class ChoixStatutPropositionContinue(ChoiceEnum):
@@ -80,10 +76,4 @@ CANCELLED_STATUSES = {
     ChoixStatutPropositionDoctorale.ANNULEE.name,
     ChoixStatutPropositionGenerale.ANNULEE.name,
     ChoixStatutPropositionContinue.ANNULEE.name,
-}
-
-
-TO_COMPLETE_STATUSES = {
-    ChoixStatutPropositionGenerale.A_COMPLETER_POUR_SIC.name,
-    ChoixStatutPropositionGenerale.A_COMPLETER_POUR_FAC.name,
 }
