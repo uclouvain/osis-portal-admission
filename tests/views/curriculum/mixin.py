@@ -291,6 +291,8 @@ class MixinTestCase(TestCase):
             formation=PropositionSearchFormation._from_openapi_data(
                 annee=2020,
                 intitule='Formation',
+                intitule_fr='Formation',
+                intitule_en='Course',
                 campus='Louvain-La-Neuve',
                 sigle='TR1',
                 type=TrainingType.MASTER_M1.name,
@@ -334,6 +336,8 @@ class MixinTestCase(TestCase):
             formation=PropositionSearchFormation._from_openapi_data(
                 annee=2020,
                 intitule='Formation',
+                intitule_fr='Formation',
+                intitule_en='Course',
                 campus='Louvain-La-Neuve',
                 sigle='TR2',
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
