@@ -522,6 +522,10 @@ msgstr ""
 msgid "Back to overview"
 msgstr ""
 
+msgctxt "admission"
+msgid "Back to page"
+msgstr ""
+
 msgid "Bank account"
 msgstr ""
 

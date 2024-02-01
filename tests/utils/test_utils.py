@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -124,6 +124,8 @@ class UtilsTestCase(TestCase):
             intitule='Certificat en informatique',
             annee=2020,
             type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+            intitule_en='Computer science certificate',
+            intitule_fr='Certificat en informatique',
             code_domaine='10C',
             sigle_entite_gestion='CMC',
             campus_inscription='Mons',
@@ -141,6 +143,8 @@ class UtilsTestCase(TestCase):
             intitule='Master en informatique',
             annee=2020,
             type=TrainingType.MASTER_M1.name,
+            intitule_en='Computer science master',
+            intitule_fr='Master en informatique',
             code_domaine='10C',
             sigle_entite_gestion='CMG',
             campus_inscription='Mons',

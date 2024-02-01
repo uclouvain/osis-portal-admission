@@ -521,6 +521,8 @@ class AutocompleteTestCase(TestCase):
             FormationGeneraleDTO(
                 sigle='FOOBAR',
                 intitule='Foobar',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.MASTER_M1.name,
@@ -532,6 +534,8 @@ class AutocompleteTestCase(TestCase):
             FormationGeneraleDTO(
                 sigle='BARBAZ',
                 intitule='Barbaz',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.MASTER_M1.name,
@@ -596,6 +600,8 @@ class AutocompleteTestCase(TestCase):
             FormationContinueDTO(
                 sigle='CONFOOBAR',
                 intitule='Foobar',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
@@ -607,6 +613,8 @@ class AutocompleteTestCase(TestCase):
             FormationContinueDTO(
                 sigle='CONBARBAZ',
                 intitule='Barbaz',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
@@ -620,6 +628,8 @@ class AutocompleteTestCase(TestCase):
             FormationGeneraleDTO(
                 sigle='GENFOOBAR',
                 intitule='Foobar',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.CERTIFICATE.name,
@@ -631,6 +641,8 @@ class AutocompleteTestCase(TestCase):
             FormationGeneraleDTO(
                 sigle='GENBARBAZ',
                 intitule='Barbaz',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.CERTIFICATE.name,
