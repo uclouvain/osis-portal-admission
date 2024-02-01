@@ -73,11 +73,6 @@ class AdmissionTrainingChoiceFormView(
         'SCIENCE_DOCTORATE': SCIENCE_DOCTORATE,
     }
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['force_click_on_form_button'] = not bool(self.admission_uuid)
-        return context_data
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.created_uuid: Optional[str] = None
