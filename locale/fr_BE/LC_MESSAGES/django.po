@@ -472,8 +472,8 @@ msgstr ""
 msgid "Application accepted"
 msgstr "Inscription autorisée"
 
-msgid "Application confirmed (by student)"
-msgstr "Demande confirmée (par étudiant)"
+msgid "Application confirmed"
+msgstr "Demande confirmée"
 
 msgid "Application denied"
 msgstr "Inscription refusée"
@@ -609,6 +609,10 @@ msgstr "Retour aux demandes"
 
 msgid "Back to overview"
 msgstr "Retour à la vue d'ensemble"
+
+msgctxt "admission"
+msgid "Back to page"
+msgstr "Revenir à la page"
 
 msgid "Bank account"
 msgstr "Compte bancaire"

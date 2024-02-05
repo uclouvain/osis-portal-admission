@@ -395,7 +395,7 @@ msgstr ""
 msgid "Application accepted"
 msgstr ""
 
-msgid "Application confirmed (by student)"
+msgid "Application confirmed"
 msgstr ""
 
 msgid "Application denied"
@@ -520,6 +520,10 @@ msgid "Back to applications"
 msgstr ""
 
 msgid "Back to overview"
+msgstr ""
+
+msgctxt "admission"
+msgid "Back to page"
 msgstr ""
 
 msgid "Bank account"
