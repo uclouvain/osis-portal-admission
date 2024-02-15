@@ -734,6 +734,13 @@ msgstr "Certificat et attestation"
 msgid "Certificate for children of staff"
 msgstr "Attestation enfant du personnel"
 
+msgid ""
+"Certificate justifying your activity, mentioning this activity, for the "
+"period concerned"
+msgstr ""
+"Attestation justifiant votre activité, mentionnant cette activité, pour la "
+"période concernée"
+
 msgid "Certificate of achievement"
 msgstr "Attestation de réussite"
 
@@ -2724,9 +2731,6 @@ msgstr ""
 "dans lequel vous avez suivi vos études. Le système d'évaluation est "
 "généralement mentionné <strong>sur vos relevés de notes ou sur vos "
 "suppléments de diplôme</strong>."
-
-msgid "Post-dated certificate justifying your activity mentioned above"
-msgstr "Attestation postdatée justifiant votre activité mentionnée ci-dessus"
 
 msgid "Postal address"
 msgstr "Adresse de correspondance"
