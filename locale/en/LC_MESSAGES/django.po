@@ -637,6 +637,11 @@ msgstr "Certificate"
 msgid "Certificate for children of staff"
 msgstr ""
 
+msgid ""
+"Certificate justifying your activity, mentioning this activity, for the "
+"period concerned"
+msgstr ""
+
 msgid "Certificate of achievement"
 msgstr ""
 
@@ -2392,9 +2397,6 @@ msgid ""
 "Please select the assessment system used by the institution where you "
 "studied. The assessment system is usually indicated <strong>on your "
 "transcripts or diploma supplements</strong>."
-msgstr ""
-
-msgid "Post-dated certificate justifying your activity mentioned above"
 msgstr ""
 
 msgid "Postal address"
