@@ -269,6 +269,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             formation={
                 'annee': 2020,
                 'intitule': 'Formation',
+                'intitule_fr': 'Formation',
+                'intitule_en': 'Course',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR1',
                 'type': TrainingType.MASTER_M1.name,
@@ -311,6 +313,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             formation={
                 'annee': 2020,
                 'intitule': 'Formation',
+                'intitule_fr': 'Formation',
+                'intitule_en': 'Course',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR0',
                 'type': TrainingType.BACHELOR.name,
@@ -340,6 +344,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             'formation': {
                 'annee': 2020,
                 'intitule': 'Formation',
+                'intitule_fr': 'Formation',
+                'intitule_en': 'Course',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR2',
                 'type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
@@ -382,6 +388,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             formation={
                 'annee': 2020,
                 'intitule': 'Formation',
+                'intitule_fr': 'Formation',
+                'intitule_en': 'Course',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR2',
                 'type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
@@ -520,6 +528,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             FormationContinueDTO(
                 sigle='FOOBAR',
                 intitule='Foobar',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
@@ -531,6 +541,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             FormationContinueDTO(
                 sigle='BARBAZ',
                 intitule='Barbaz',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
@@ -545,6 +557,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             FormationGeneraleDTO(
                 sigle='FOOBAR',
                 intitule='Foobar',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Louvain-La-Neuve",
                 type=TrainingType.MASTER_M1.name,
@@ -556,6 +570,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             FormationGeneraleDTO(
                 sigle='BARBAZ',
                 intitule='Barbaz',
+                intitule_fr='Foobar',
+                intitule_en='Foobar',
                 annee=2021,
                 campus="Mons",
                 type=TrainingType.MASTER_M1.name,

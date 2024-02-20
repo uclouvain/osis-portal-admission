@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class ChoixLangueRedactionThese(ChoiceEnum):
 class ChoixStatutPropositionDoctorale(ChoiceEnum):
     ANNULEE = _('Cancelled application')
     EN_BROUILLON = _('In draft form')
-    CONFIRMEE = _('Application confirmed (by student)')
+    CONFIRMEE = _('Application confirmed')
     EN_ATTENTE_DE_SIGNATURE = _('Waiting for signature')
     INSCRIPTION_AUTORISEE = _('Application accepted')
 
@@ -46,25 +46,21 @@ class ChoixStatutPropositionDoctorale(ChoiceEnum):
 class ChoixStatutPropositionGenerale(ChoiceEnum):
     EN_BROUILLON = _('In draft form')
     FRAIS_DOSSIER_EN_ATTENTE = _('Pending application fee')
-    CONFIRMEE = _('Application confirmed (by student)')
+    CONFIRMEE = _('Application confirmed')
     ANNULEE = _('Cancelled application')
-    A_COMPLETER_POUR_SIC = _('To be completed (by student) for the Enrolment Office (SIC)')
-    COMPLETEE_POUR_SIC = _('Completed (by student) for SIC')
-    TRAITEMENT_FAC = _('Processing by Fac/PhD Committee')
-    A_COMPLETER_POUR_FAC = _('To be completed (by student) for Fac')
-    COMPLETEE_POUR_FAC = _('Completed (by student) for FAC')
-    RETOUR_DE_FAC = _('Feedback from FAC')
-    ATTENTE_VALIDATION_DIRECTION = _('Awaiting management approval')
     INSCRIPTION_AUTORISEE = _('Application accepted')
     INSCRIPTION_REFUSEE = _('Application denied')
     CLOTUREE = _('Closed')
+    # More detailed status are hidden by osis
+    A_COMPLETER = _('To be completed')
+    TRAITEMENT_UCLOUVAIN_EN_COURS = _('UCLouvain processing in progress')
 
 
 class ChoixStatutPropositionContinue(ChoiceEnum):
     ANNULEE = _('Cancelled application')
     # During the enrolment step
     EN_BROUILLON = _('In draft form')
-    CONFIRMEE = _('Application confirmed (by student)')
+    CONFIRMEE = _('Application confirmed')
     # After the enrolment step
     INSCRIPTION_AUTORISEE = _('Application accepted')
 
@@ -80,10 +76,4 @@ CANCELLED_STATUSES = {
     ChoixStatutPropositionDoctorale.ANNULEE.name,
     ChoixStatutPropositionGenerale.ANNULEE.name,
     ChoixStatutPropositionContinue.ANNULEE.name,
-}
-
-
-TO_COMPLETE_STATUSES = {
-    ChoixStatutPropositionGenerale.A_COMPLETER_POUR_SIC.name,
-    ChoixStatutPropositionGenerale.A_COMPLETER_POUR_FAC.name,
 }

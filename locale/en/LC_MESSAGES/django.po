@@ -395,7 +395,7 @@ msgstr ""
 msgid "Application accepted"
 msgstr ""
 
-msgid "Application confirmed (by student)"
+msgid "Application confirmed"
 msgstr ""
 
 msgid "Application denied"
@@ -501,9 +501,6 @@ msgstr ""
 msgid "Awaiting approval"
 msgstr ""
 
-msgid "Awaiting management approval"
-msgstr ""
-
 msgid "B1"
 msgstr ""
 
@@ -523,6 +520,10 @@ msgid "Back to applications"
 msgstr ""
 
 msgid "Back to overview"
+msgstr ""
+
+msgctxt "admission"
+msgid "Back to page"
 msgstr ""
 
 msgid "Bank account"
@@ -634,6 +635,11 @@ msgid "Certificate and attestation"
 msgstr "Certificate"
 
 msgid "Certificate for children of staff"
+msgstr ""
+
+msgid ""
+"Certificate justifying your activity, mentioning this activity, for the "
+"period concerned"
 msgstr ""
 
 msgid "Certificate of achievement"
@@ -773,12 +779,6 @@ msgid "Complementary training"
 msgstr ""
 
 msgid "Complementary training proposition"
-msgstr ""
-
-msgid "Completed (by student) for FAC"
-msgstr ""
-
-msgid "Completed (by student) for SIC"
 msgstr ""
 
 msgid "Confirm"
@@ -1349,9 +1349,6 @@ msgstr ""
 
 msgctxt "admission"
 msgid "February"
-msgstr ""
-
-msgid "Feedback from FAC"
 msgstr ""
 
 msgctxt "female gender"
@@ -2402,9 +2399,6 @@ msgid ""
 "transcripts or diploma supplements</strong>."
 msgstr ""
 
-msgid "Post-dated certificate justifying your activity mentioned above"
-msgstr ""
-
 msgid "Postal address"
 msgstr ""
 
@@ -2437,9 +2431,6 @@ msgid "Previous research experience"
 msgstr ""
 
 msgid "Private"
-msgstr ""
-
-msgid "Processing by Fac/PhD Committee"
 msgstr ""
 
 msgid "Professional"
@@ -3149,10 +3140,7 @@ msgstr ""
 msgid "Title of the communication"
 msgstr ""
 
-msgid "To be completed (by student) for Fac"
-msgstr ""
-
-msgid "To be completed (by student) for the Enrolment Office (SIC)"
+msgid "To be completed"
 msgstr ""
 
 msgid ""
@@ -3223,6 +3211,9 @@ msgid "UCL_COURSE"
 msgstr "UCL Course"
 
 msgid "UCLouvain"
+msgstr ""
+
+msgid "UCLouvain processing in progress"
 msgstr ""
 
 msgid "Undecided"

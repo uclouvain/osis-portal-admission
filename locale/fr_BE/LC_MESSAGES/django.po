@@ -472,8 +472,8 @@ msgstr ""
 msgid "Application accepted"
 msgstr "Inscription autorisée"
 
-msgid "Application confirmed (by student)"
-msgstr "Demande confirmée (par étudiant)"
+msgid "Application confirmed"
+msgstr "Demande confirmée"
 
 msgid "Application denied"
 msgstr "Inscription refusée"
@@ -589,9 +589,6 @@ msgstr "Auteurs et autrices"
 msgid "Awaiting approval"
 msgstr "En attente de validation"
 
-msgid "Awaiting management approval"
-msgstr "En attente de validation de la direction"
-
 msgid "B1"
 msgstr "B1"
 
@@ -612,6 +609,10 @@ msgstr "Retour aux demandes"
 
 msgid "Back to overview"
 msgstr "Retour à la vue d'ensemble"
+
+msgctxt "admission"
+msgid "Back to page"
+msgstr "Revenir à la page"
 
 msgid "Bank account"
 msgstr "Compte bancaire"
@@ -732,6 +733,13 @@ msgstr "Certificat et attestation"
 
 msgid "Certificate for children of staff"
 msgstr "Attestation enfant du personnel"
+
+msgid ""
+"Certificate justifying your activity, mentioning this activity, for the "
+"period concerned"
+msgstr ""
+"Attestation justifiant votre activité, mentionnant cette activité, pour la "
+"période concernée"
 
 msgid "Certificate of achievement"
 msgstr "Attestation de réussite"
@@ -890,12 +898,6 @@ msgstr "Formation complémentaire"
 
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
-
-msgid "Completed (by student) for FAC"
-msgstr "Complétée (par étudiant) pour Fac"
-
-msgid "Completed (by student) for SIC"
-msgstr "Complétée (par étudiant) pour SIC"
 
 msgid "Confirm"
 msgstr "Confirmer"
@@ -1545,9 +1547,6 @@ msgstr "Échec"
 msgctxt "admission"
 msgid "February"
 msgstr "février"
-
-msgid "Feedback from FAC"
-msgstr "Retour de FAC"
 
 msgctxt "female gender"
 msgid "Female"
@@ -2733,9 +2732,6 @@ msgstr ""
 "généralement mentionné <strong>sur vos relevés de notes ou sur vos "
 "suppléments de diplôme</strong>."
 
-msgid "Post-dated certificate justifying your activity mentioned above"
-msgstr "Attestation postdatée justifiant votre activité mentionnée ci-dessus"
-
 msgid "Postal address"
 msgstr "Adresse de correspondance"
 
@@ -2769,9 +2765,6 @@ msgstr "Expérience précédente de recherche"
 
 msgid "Private"
 msgstr "Privé"
-
-msgid "Processing by Fac/PhD Committee"
-msgstr "Traitement en Fac/CDD"
 
 msgid "Professional"
 msgstr "Professionnel"
@@ -3566,11 +3559,8 @@ msgstr "Titre"
 msgid "Title of the communication"
 msgstr "Titre de la communication"
 
-msgid "To be completed (by student) for Fac"
-msgstr "A compléter (par étudiant) pour Fac"
-
-msgid "To be completed (by student) for the Enrolment Office (SIC)"
-msgstr "A compléter (par étudiant) pour SIC"
+msgid "To be completed"
+msgstr "À compléter"
 
 msgid ""
 "To be uploaded if you have a F.R.S.-FNRS (including Televie), FRIA or FRESH "
@@ -3652,6 +3642,9 @@ msgstr "Cours UCL"
 
 msgid "UCLouvain"
 msgstr "UCLouvain"
+
+msgid "UCLouvain processing in progress"
+msgstr "Traitement UCLouvain en cours"
 
 msgid "Undecided"
 msgstr "Non décidé"
