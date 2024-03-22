@@ -866,6 +866,10 @@ msgstr "Fermer"
 msgid "Closed"
 msgstr "Clôturée"
 
+msgctxt "iufc"
+msgid "Closed"
+msgstr "Fermée"
+
 msgid "Coming implementation."
 msgstr "Développement à venir."
 
@@ -945,6 +949,10 @@ msgstr "Continuer"
 
 msgid "Continuing education"
 msgstr "Formation continue"
+
+msgctxt "ways_hear_about_training"
+msgid "Continuing education website"
+msgstr "Par le site de la formation continue"
 
 msgid "Copy of \"orange card\" enrolment certificate"
 msgstr "Copie de l’attestation d’immatriculation « carte orange »"
@@ -1426,6 +1434,10 @@ msgctxt "admission"
 msgid "Email"
 msgstr "E-mail"
 
+msgctxt "ways_hear_about_training"
+msgid "Email"
+msgstr "Par un emailing"
+
 msgid "Emergency contact (telephone number)"
 msgstr "Contact en cas d'urgence (numéro de téléphone)"
 
@@ -1541,6 +1553,10 @@ msgstr "FRESH"
 msgid "FRIA"
 msgstr "FRIA"
 
+msgctxt "ways_hear_about_training"
+msgid "Facebook"
+msgstr "Sur Facebook"
+
 msgid "Failed"
 msgstr "Échec"
 
@@ -1601,8 +1617,16 @@ msgstr "Diplôme étranger"
 msgid "Former UCLouvain student"
 msgstr "Ancien·ne étudiant·e UCLouvain"
 
+msgctxt "ways_hear_about_training"
+msgid "Former students"
+msgstr "Par des anciens étudiants"
+
 msgid "French"
 msgstr "Français"
+
+msgctxt "ways_hear_about_training"
+msgid "Friends"
+msgstr "Par des amis"
 
 msgid "Full"
 msgstr "Complet"
@@ -1697,7 +1721,7 @@ msgstr ""
 msgid "Household composition, or copy of your birth certificate"
 msgstr "Composition de ménage, ou copie de votre acte de naissance"
 
-msgid "How did you find out about this course?"
+msgid "How did you hear about this course?"
 msgstr "Comment avez-vous connu l'existence de cette formation ?"
 
 msgid ""
@@ -1996,6 +2020,10 @@ msgstr "En présentiel"
 msgid "In progress"
 msgstr "En cours de demande"
 
+msgctxt "ways_hear_about_training"
+msgid "In the press"
+msgstr "Dans la presse"
+
 msgid "Incomplete"
 msgstr "Incomplet"
 
@@ -2164,6 +2192,10 @@ msgstr "Domicile légal"
 msgid "Letters of recommendation"
 msgstr "Lettres de recommandation"
 
+msgctxt "ways_hear_about_training"
+msgid "Linkedin"
+msgstr "Sur LinkedIn"
+
 msgid "List"
 msgstr "Liste"
 
@@ -2190,6 +2222,10 @@ msgstr "Membre"
 
 msgid "MIME file types"
 msgstr "Types de fichier MIME"
+
+msgctxt "ways_hear_about_training"
+msgid "MOOCs"
+msgstr "Par les Moocs"
 
 msgid "Main institute"
 msgstr "Institution principale"
@@ -2474,14 +2510,15 @@ msgstr ""
 "etudier/inscriptions/bienvenue-aux-etudiants-internationaux-et-aux-"
 "etudiantes-internationales.html\" target=\"_blank\"> visa </a>."
 
-msgid "On the press"
-msgstr "Dans la presse"
-
 msgid "Online"
 msgstr "En ligne"
 
 msgid "Online or in person"
 msgstr "En ligne ou en présentiel"
+
+msgctxt "iufc"
+msgid "Open"
+msgstr "Ouverte"
 
 msgid "Opinion on research mandate renewal"
 msgstr "Avis sur le renouvellement du mandat de recherche"
@@ -2495,6 +2532,10 @@ msgstr "Pays organisateur"
 msgid "Organising institution"
 msgstr "Institution organisatrice"
 
+msgid "Other"
+msgstr "Autre"
+
+msgctxt "ways_hear_about_training"
 msgid "Other"
 msgstr "Autre"
 
@@ -2603,6 +2644,10 @@ msgstr "Données personnelles"
 msgctxt "admission"
 msgid "Personal email"
 msgstr "E-mail privé"
+
+msgctxt "ways_hear_about_training"
+msgid "Personalised mail"
+msgstr "Par courrier personnalisé"
 
 msgid "PhD"
 msgstr "Doctorat"
@@ -3646,6 +3691,10 @@ msgstr "UCLouvain"
 msgid "UCLouvain processing in progress"
 msgstr "Traitement UCLouvain en cours"
 
+msgctxt "ways_hear_about_training"
+msgid "UCLouvain website"
+msgstr "Par le site web de l'UCLouvain"
+
 msgid "Undecided"
 msgstr "Non décidé"
 
@@ -3694,36 +3743,6 @@ msgstr "Numéro de TVA"
 
 msgid "Validated"
 msgstr "Validé"
-
-msgid "Via Facebook"
-msgstr "Sur Facebook"
-
-msgid "Via LinkedIn"
-msgstr "Sur LinkedIn"
-
-msgid "Via MOOCs"
-msgstr "Par les Moocs"
-
-msgid "Via a personalized letter"
-msgstr "Par courrier personnalisé"
-
-msgid "Via an emailing"
-msgstr "Par un emailing"
-
-msgid "Via former students"
-msgstr "Par des anciens étudiants"
-
-msgid "Via friends"
-msgstr "Par des amis"
-
-msgid "Via the website of UCLouvain"
-msgstr "Par le site web de l'UCLouvain"
-
-msgid "Via the website of the continuing education"
-msgstr "Par le site de la formation continue"
-
-msgid "Via word of mouth"
-msgstr "Par le bouche à oreille"
 
 msgid "View"
 msgstr "Voir"
@@ -3779,6 +3798,10 @@ msgstr "La plus grande distinction (90-100%)"
 
 msgid "With honours (70-79%)"
 msgstr "Distinction (70-79%)"
+
+msgctxt "ways_hear_about_training"
+msgid "Word of mouth"
+msgstr "Par le bouche à oreille"
 
 msgid "Work"
 msgstr "Travail"

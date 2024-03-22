@@ -76,6 +76,7 @@ from admission.contrib.enums.projet import (
     ChoixStatutPropositionGenerale,
     ChoixStatutPropositionContinue,
 )
+from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests import get_paginated_years
@@ -371,6 +372,9 @@ class MixinTestCase(TestCase):
             documents_additionnels=[],
             motivations='Motivation',
             moyens_decouverte_formation=[],
+            aide_a_la_formation=False,
+            inscription_au_role_obligatoire=True,
+            etat_formation=StateIUFC.OPEN.name,
         )
 
         cls.api_default_params = {
