@@ -637,6 +637,11 @@ msgstr "Certificate"
 msgid "Certificate for children of staff"
 msgstr ""
 
+msgid ""
+"Certificate justifying your activity, mentioning this activity, for the "
+"period concerned"
+msgstr ""
+
 msgid "Certificate of achievement"
 msgstr ""
 
@@ -2394,9 +2399,6 @@ msgid ""
 "transcripts or diploma supplements</strong>."
 msgstr ""
 
-msgid "Post-dated certificate justifying your activity mentioned above"
-msgstr ""
-
 msgid "Postal address"
 msgstr ""
 
@@ -3023,9 +3025,10 @@ msgstr ""
 
 msgid ""
 "The photo must follow the following rules:<ul>  <li>JPEG or PNG file (.jpg, ."
-"jpeg ou .png) up to 10MB</li>  <li>Identity photo format with a blank "
-"background</li>  <li>Centered on your bare face</li>  <li>Recent and in "
-"colour</li>  <li>Without any filter nor any contour</li></ul>"
+"jpeg ou .png) up to 10MB</li>  <li>Identity photo format with a "
+"<strong>blank background</strong></li>  <li>Centered on your <strong>bare "
+"face</strong></li>  <li>Recent and <strong>in colour</strong></li>  "
+"<li>Without any filter nor any contour</li></ul>"
 msgstr ""
 
 msgid ""
