@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -95,13 +95,13 @@
 
                       {# Pool non déterminé #}
                     {% elif error_code == 'ADMISSION-12' %}
-                      <li>
-                        {# TODO url #}
-                        <p>{% blocktrans with url="#" trimmed %}
-                          Unexpected error, please <a href="{{ url }}">contact service desk</a>.
-                        {% endblocktrans %}</p>
-                      </li>
-
+                      {% if missing_confirmations_conditions_number == 1 %}
+                        <li>
+                          <p>{% blocktrans trimmed with url="http://uclouvain.be/8282" %}
+                            Unexpected error, please <a href="{{ url }}" target="_blank">contact service desk</a>.
+                          {% endblocktrans %}</p>
+                        </li>
+                      {% endif %}
                       {# Conditions d'accès non remplies #}
                     {% elif error_code == 'ADMISSION-2' %}
                       <li>
