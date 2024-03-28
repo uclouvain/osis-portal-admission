@@ -3660,10 +3660,12 @@ msgstr ""
 "concernée"
 
 #, python-format
-msgid "Unexpected error, please <a href=\"%(url)s\">contact service desk</a>."
+msgid ""
+"Unexpected error, please <a href=\"%(url)s\" target=\"_blank\">contact "
+"service desk</a>."
 msgstr ""
-"Erreur inattendue, veuillez <a href=\"%(url)s\">contacter le service desk</"
-"a>."
+"Erreur inattendue, veuillez <a href=\"%(url)s\" target=\"_blank\">contacter "
+"le service desk</a>."
 
 msgid "Unique business number"
 msgstr "Numéro unique d'entreprise"
