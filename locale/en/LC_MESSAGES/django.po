@@ -3229,7 +3229,9 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "Unexpected error, please <a href=\"%(url)s\">contact service desk</a>."
+msgid ""
+"Unexpected error, please <a href=\"%(url)s\" target=\"_blank\">contact "
+"service desk</a>."
 msgstr ""
 
 msgid "Unique business number"
