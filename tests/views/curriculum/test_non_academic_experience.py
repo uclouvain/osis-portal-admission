@@ -587,7 +587,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             resolve_url(
                 self.admission_update_url,
                 pk=self.proposition.uuid,
-                experience_id=self.educational_experience.uuid,
+                experience_id=self.professional_experience.uuid,
             )
         )
 
@@ -597,7 +597,32 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             resolve_url(
                 self.admission_update_url,
                 pk=self.proposition.uuid,
-                experience_id=self.educational_experience.uuid,
+                experience_id=self.professional_experience.uuid,
+                data=self.all_form_data,
+            )
+        )
+
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+    def test_with_admission_on_update_epc_experience_is_forbidden(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
+        mock_retrieve.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(
+            resolve_url(
+                self.admission_update_url,
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+        response = self.client.post(
+            resolve_url(
+                self.admission_update_url,
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
                 data=self.all_form_data,
             )
         )
@@ -696,7 +721,21 @@ class CurriculumNonAcademicExperienceDeleteTestCase(MixinTestCase):
             resolve_url(
                 'admission:doctorate:update:curriculum:professional_delete',
                 pk=self.proposition.uuid,
-                experience_id=self.educational_experience.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+    def test_with_admission_on_delete_epc_experience_is_forbidden(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
+        mock_retrieve.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:update:curriculum:professional_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
             )
         )
 
