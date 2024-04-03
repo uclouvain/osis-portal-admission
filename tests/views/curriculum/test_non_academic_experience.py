@@ -128,6 +128,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'activity': self.professional_experience.activity,
                 'uuid': self.professional_experience.uuid,
                 'valuated_from_trainings': ANY,
+                'external_id': '',
             },
         )
 
