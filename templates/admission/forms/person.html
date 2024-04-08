@@ -74,8 +74,16 @@
       </div>
     </div>
 
-    <div>
-      {% bootstrap_field_with_tooltip form.id_photo classes="required_field" %}
+    <div class="required_field">
+      <label class="control-label" for="form.id_photo.id_for_label">{{ form.id_photo.label }}</label>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        {{ form.id_photo.help_text|safe }}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field form.id_photo show_label=False show_help=False %}
+      </div>
     </div>
 
     <div class="row">
