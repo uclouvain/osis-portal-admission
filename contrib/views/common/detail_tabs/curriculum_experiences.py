@@ -221,4 +221,4 @@ def experience_can_be_updated(experience, context):
             training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
             for training in experience.valuated_from_trainings
         )
-    )
+    ) and not getattr(experience, 'external_id', None)  # ... and if the experience doesn't come from EPC
