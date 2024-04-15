@@ -166,7 +166,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
         if self.experience_id:
             experience = self.professional_experience.to_dict()
 
-            if self.professional_experience.valuated_from_trainings:
+            if self.professional_experience.valuated_from_trainings or self.professional_experience.external_id:
                 raise PermissionDenied
 
             start_date = experience.pop('start_date')
@@ -197,7 +197,7 @@ class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFor
         context = super().get_context_data(**kwargs)
         context['experience'] = self.professional_experience
 
-        if self.professional_experience.valuated_from_trainings:
+        if self.professional_experience.valuated_from_trainings or self.professional_experience.external_id:
             raise PermissionDenied
 
         return context
@@ -224,7 +224,7 @@ class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumForm
 
         initialize_field_texts(self.person, [self.educational_experience], self.current_context)
 
-        if self.educational_experience.valuated_from_trainings:
+        if self.educational_experience.valuated_from_trainings or self.educational_experience.external_id:
             raise PermissionDenied
 
         context['experience'] = self.educational_experience
