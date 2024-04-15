@@ -229,6 +229,7 @@ class MixinTestCase(TestCase):
             uuid=str(uuid.uuid4()),
             certificate=[cls.document_uuid],
             valuated_from_trainings=[],
+            external_id='',
         )
 
         cls.lite_professional_experience = CurriculumDetailsProfessionalExperiences._from_openapi_data(
@@ -238,6 +239,7 @@ class MixinTestCase(TestCase):
             start_date=cls.professional_experience.start_date,
             end_date=cls.professional_experience.start_date,
             valuated_from_trainings=[],
+            external_id='',
         )
 
         # Proposition

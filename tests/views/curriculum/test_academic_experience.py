@@ -160,6 +160,20 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
 
         self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
+    def test_with_admission_on_delete_epc_experience_is_forbidden(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_educational_experience_admission
+        mock_retrieve.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:update:curriculum:educational_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
 
 @freezegun.freeze_time('2023-01-01')
 class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
@@ -374,6 +388,14 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
+    def test_with_admission_on_update_epc_experience_form_is_forbidden_with_doctorate(self):
+        self.mockapi.retrieve_educational_experience_admission.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
     def test_with_admission_on_update_experience_form_is_initialized_with_doctorate_and_valuated_by_general(self):
         editable_fields = EDUCATIONAL_EXPERIENCE_DOCTORATE_FIELDS
         self.mockapi.retrieve_educational_experience_admission.return_value.valuated_from_trainings = [
@@ -454,6 +476,15 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the request
         self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
 
+    def test_with_admission_on_update_epc_experience_form_is_forbidden_with_general(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
+        mock_retrieve_experience.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(self.general_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
     def test_with_admission_on_update_experience_form_is_forbidden_with_general_and_valuated_by_general(self):
         mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
         mock_retrieve_experience.return_value.valuated_from_trainings = [
@@ -526,6 +557,15 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         mock_retrieve_experience.return_value.valuated_from_trainings = [
             TypeFormation.DOCTORAT.name,
         ]
+
+        response = self.client.get(self.continuing_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+
+    def test_with_admission_on_update_epc_experience_form_is_forbidden_with_continuing(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_continuing_education_admission
+        mock_retrieve_experience.return_value.external_id = 'EPC_1'
 
         response = self.client.get(self.continuing_admission_update_url)
 
