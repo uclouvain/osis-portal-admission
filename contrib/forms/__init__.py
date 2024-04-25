@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -60,6 +60,7 @@ JPEG_MIME_TYPE = 'image/jpeg'
 PNG_MIME_TYPE = 'image/png'
 IMAGE_MIME_TYPES = [JPEG_MIME_TYPE, PNG_MIME_TYPE]
 DEFAULT_MIME_TYPES = [PDF_MIME_TYPE] + IMAGE_MIME_TYPES
+MAX_FILE_UPLOAD_SIZE = 1024 * 1024 * 10
 LOWERCASE_MONTHS = {
     1: pgettext_lazy('admission', 'January'),
     2: pgettext_lazy('admission', 'February'),
@@ -239,6 +240,8 @@ RadioBooleanField = partial(
 class AdmissionFileUploadField(FileUploadField):
     def __init__(self, **kwargs):
         kwargs.setdefault('mimetypes', DEFAULT_MIME_TYPES)
+        kwargs.setdefault('max_size', MAX_FILE_UPLOAD_SIZE)
+
         super().__init__(**kwargs)
 
 
