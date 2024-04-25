@@ -57,12 +57,14 @@ class ChoixStatutPropositionGenerale(ChoiceEnum):
 
 
 class ChoixStatutPropositionContinue(ChoiceEnum):
-    ANNULEE = _('Cancelled application')
-    # During the enrolment step
     EN_BROUILLON = _('In draft form')
     CONFIRMEE = _('Application confirmed')
-    # After the enrolment step
+    EN_ATTENTE = _('On hold')
+    INSCRIPTION_REFUSEE = _('Application denied')
+    ANNULEE = _('Cancelled application')
     INSCRIPTION_AUTORISEE = _('Application accepted')
+    CLOTUREE = _('Closed')
+    ANNULEE_PAR_GESTIONNAIRE = _('Cancelled application by a manager')
 
 
 IN_PROGRESS_STATUSES = {

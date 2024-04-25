@@ -725,6 +725,9 @@ msgstr "Annuler"
 msgid "Cancelled application"
 msgstr "Demande annulée"
 
+msgid "Cancelled application by a manager"
+msgstr "Demande annulée par un gestionnaire"
+
 msgid "Certificate"
 msgstr "Attestation"
 
@@ -2434,6 +2437,9 @@ msgstr "Nombre de jours de participation"
 msgctxt "admission"
 msgid "October"
 msgstr "octobre"
+
+msgid "On hold"
+msgstr "Mise en attente"
 
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
