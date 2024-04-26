@@ -1747,6 +1747,9 @@ msgstr "Je suis apatride"
 msgid "I am an asylum seeker"
 msgstr "Je suis demandeur d’asile"
 
+msgid "I am interested in this course even if it is closed"
+msgstr "Je marque mon intérêt pour cette formation même si celle-ci est fermée"
+
 msgid ""
 "I am supported by the CPAS or by a CPAS home or nominated by the CPAS "
 "(Belgian student status category 4)"
@@ -3912,6 +3915,9 @@ msgstr "Année sans inscription à la formation."
 msgid "Yes"
 msgstr "Oui"
 
+msgid "Yes, I am interested in this course"
+msgstr "Oui, je marque mon intérêt pour cette formation"
+
 msgid "Yes, an account number in IBAN format"
 msgstr "Oui, un numéro de compte au format IBAN"
 
@@ -4082,6 +4088,17 @@ msgstr ""
 "Votre demande d'inscription ne peut être confirmée. La formation demandée "
 "n'est pas organisée."
 
+#, python-format
+msgid ""
+"Your application cannot be submitted because the %(program)s course is "
+"closed. You can express your interest by ticking the box below or contacting "
+"a course administrator: %(program_managers)s."
+msgstr ""
+"Il n'est pas possible de soumettre votre dossier d'admission car la "
+"formation %(program)s est fermée. Vous pouvez marquer votre intérêt pour "
+"celle-ci en cochant la case ci-dessous ou contacter un·e gestionnaire de la "
+"formation : %(program_managers)s."
+
 msgid "Your application has been submitted"
 msgstr "Votre demande a bien été envoyée"
 
@@ -4166,6 +4183,9 @@ msgstr "étranger"
 #, python-format
 msgid "from %(start)s to %(end)s"
 msgstr "du %(start)s au %(end)s"
+
+msgid "no manager email address found"
+msgstr "aucune adresse email de gestionnaire n'a été trouvée"
 
 msgid "the person concerned"
 msgstr "la personne concernée"

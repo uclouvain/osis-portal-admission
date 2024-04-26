@@ -183,7 +183,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
     @classmethod
     def get_continuing_training_information(cls, **kwargs):
         acronym = kwargs.get('sigle')
-        year = kwargs.get('annee')
+        year = int(kwargs.get('annee'))
         try:
             return next(
                 training
