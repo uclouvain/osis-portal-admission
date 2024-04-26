@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -148,18 +148,23 @@ class ContinuingAdmissionCurriculumFileForm(ConfigurableFormMixin):
     curriculum = CurriculumField()
     equivalence_diplome = DiplomaEquivalenceField()
 
-    def __init__(self, display_equivalence: bool, *args, **kwargs):
+    def __init__(self, display_equivalence: bool, display_curriculum: bool, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if not display_equivalence:
             self.fields['equivalence_diplome'].disabled = True
             self.fields['equivalence_diplome'].widget = NoInput()
 
+        if not display_curriculum:
+            self.fields['curriculum'].disabled = True
+            self.fields['curriculum'].widget = NoInput()
+
     def clean(self):
         cleaned_data = super().clean()
 
-        if self.fields['equivalence_diplome'].disabled:
-            cleaned_data['equivalence_diplome'] = []
+        for field in ['curriculum', 'equivalence_diplome']:
+            if self.fields[field].disabled:
+                cleaned_data[field] = []
 
         return cleaned_data
 

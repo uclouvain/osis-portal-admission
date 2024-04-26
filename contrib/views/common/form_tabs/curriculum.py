@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -107,4 +107,6 @@ class AdmissionCurriculumFormView(
         if self.current_context == 'general-education':
             kwargs['display_curriculum'] = self.display_curriculum
             kwargs['has_belgian_diploma'] = self.has_belgian_diploma
+        elif self.current_context == 'continuing-education':
+            kwargs['display_curriculum'] = self.display_curriculum
         return kwargs
