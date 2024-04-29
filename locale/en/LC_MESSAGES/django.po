@@ -748,6 +748,10 @@ msgstr ""
 msgid "Closed"
 msgstr ""
 
+msgctxt "iufc"
+msgid "Closed"
+msgstr ""
+
 msgid "Coming implementation."
 msgstr ""
 
@@ -823,6 +827,10 @@ msgid "Continue"
 msgstr ""
 
 msgid "Continuing education"
+msgstr ""
+
+msgctxt "ways_hear_about_training"
+msgid "Continuing education website"
 msgstr ""
 
 msgid "Copy of \"orange card\" enrolment certificate"
@@ -1236,6 +1244,10 @@ msgctxt "admission"
 msgid "Email"
 msgstr ""
 
+msgctxt "ways_hear_about_training"
+msgid "Email"
+msgstr ""
+
 msgid "Emergency contact (telephone number)"
 msgstr ""
 
@@ -1344,6 +1356,10 @@ msgstr ""
 msgid "FRIA"
 msgstr ""
 
+msgctxt "ways_hear_about_training"
+msgid "Facebook"
+msgstr ""
+
 msgid "Failed"
 msgstr ""
 
@@ -1396,7 +1412,15 @@ msgstr ""
 msgid "Former UCLouvain student"
 msgstr ""
 
+msgctxt "ways_hear_about_training"
+msgid "Former students"
+msgstr ""
+
 msgid "French"
+msgstr ""
+
+msgctxt "ways_hear_about_training"
+msgid "Friends"
 msgstr ""
 
 msgid "Full"
@@ -1483,7 +1507,7 @@ msgstr ""
 msgid "Household composition, or copy of your birth certificate"
 msgstr ""
 
-msgid "How did you find out about this course?"
+msgid "How did you hear about this course?"
 msgstr ""
 
 msgid ""
@@ -1503,6 +1527,9 @@ msgid "I am a stateless person"
 msgstr ""
 
 msgid "I am an asylum seeker"
+msgstr ""
+
+msgid "I am interested in this course even if it is closed"
 msgstr ""
 
 msgid ""
@@ -1714,6 +1741,10 @@ msgstr ""
 msgid "In progress"
 msgstr ""
 
+msgctxt "ways_hear_about_training"
+msgid "In the press"
+msgstr ""
+
 msgid "Incomplete"
 msgstr ""
 
@@ -1877,6 +1908,10 @@ msgstr ""
 msgid "Letters of recommendation"
 msgstr ""
 
+msgctxt "ways_hear_about_training"
+msgid "Linkedin"
+msgstr ""
+
 msgid "List"
 msgstr ""
 
@@ -1902,6 +1937,10 @@ msgid "MEMBRE"
 msgstr ""
 
 msgid "MIME file types"
+msgstr ""
+
+msgctxt "ways_hear_about_training"
+msgid "MOOCs"
 msgstr ""
 
 msgid "Main institute"
@@ -2163,13 +2202,14 @@ msgid ""
 "information."
 msgstr ""
 
-msgid "On the press"
-msgstr ""
-
 msgid "Online"
 msgstr ""
 
 msgid "Online or in person"
+msgstr ""
+
+msgctxt "iufc"
+msgid "Open"
 msgstr ""
 
 msgid "Opinion on research mandate renewal"
@@ -2184,6 +2224,10 @@ msgstr ""
 msgid "Organising institution"
 msgstr ""
 
+msgid "Other"
+msgstr ""
+
+msgctxt "ways_hear_about_training"
 msgid "Other"
 msgstr ""
 
@@ -2291,6 +2335,10 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Personal email"
+msgstr ""
+
+msgctxt "ways_hear_about_training"
+msgid "Personalised mail"
 msgstr ""
 
 msgid "PhD"
@@ -3217,6 +3265,10 @@ msgstr ""
 msgid "UCLouvain processing in progress"
 msgstr ""
 
+msgctxt "ways_hear_about_training"
+msgid "UCLouvain website"
+msgstr ""
+
 msgid "Undecided"
 msgstr ""
 
@@ -3262,36 +3314,6 @@ msgid "VAT number"
 msgstr ""
 
 msgid "Validated"
-msgstr ""
-
-msgid "Via Facebook"
-msgstr ""
-
-msgid "Via LinkedIn"
-msgstr ""
-
-msgid "Via MOOCs"
-msgstr ""
-
-msgid "Via a personalized letter"
-msgstr ""
-
-msgid "Via an emailing"
-msgstr ""
-
-msgid "Via former students"
-msgstr ""
-
-msgid "Via friends"
-msgstr ""
-
-msgid "Via the website of UCLouvain"
-msgstr ""
-
-msgid "Via the website of the continuing education"
-msgstr ""
-
-msgid "Via word of mouth"
 msgstr ""
 
 msgid "View"
@@ -3347,6 +3369,10 @@ msgid "With highest honours (90-100%)"
 msgstr ""
 
 msgid "With honours (70-79%)"
+msgstr ""
+
+msgctxt "ways_hear_about_training"
+msgid "Word of mouth"
 msgstr ""
 
 msgid "Work"
@@ -3437,6 +3463,9 @@ msgid "Year without enrolling in the course."
 msgstr ""
 
 msgid "Yes"
+msgstr ""
+
+msgid "Yes, I am interested in this course"
 msgstr ""
 
 msgid "Yes, an account number in IBAN format"
@@ -3581,6 +3610,13 @@ msgid ""
 "Your application cannot be confirmed. The desired course is not offered."
 msgstr ""
 
+#, python-format
+msgid ""
+"Your application cannot be submitted because the %(program)s course is "
+"closed. You can express your interest by ticking the box below or contacting "
+"a course administrator: %(program_managers)s."
+msgstr ""
+
 msgid "Your application has been submitted"
 msgstr ""
 
@@ -3653,6 +3689,9 @@ msgstr "Foreign diploma"
 
 #, python-format
 msgid "from %(start)s to %(end)s"
+msgstr ""
+
+msgid "no manager email address found"
 msgstr ""
 
 msgid "the person concerned"

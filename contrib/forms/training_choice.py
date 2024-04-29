@@ -43,6 +43,7 @@ from admission.contrib.enums import (
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
+from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.enums.training_choice import (
     ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE,
     ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE,
@@ -61,6 +62,7 @@ from admission.contrib.forms import (
 from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
+from admission.services.continuing_education import ContinuingEducationService
 from admission.services.education_group import TrainingsService
 from admission.services.scholarship import AdmissionScholarshipService
 from admission.utils import format_scholarship, split_training_id
@@ -200,10 +202,16 @@ class TrainingChoiceForm(ConfigurableFormMixin):
     )
 
     ways_to_find_out_about_the_course = forms.MultipleChoiceField(
-        label=_('How did you find out about this course?'),
+        label=_('How did you hear about this course?'),
         required=False,
         choices=ChoixMoyensDecouverteFormation.choices(),
         widget=forms.CheckboxSelectMultiple,
+    )
+
+    interested_mark = forms.NullBooleanField(
+        label=_('Yes, I am interested in this course'),
+        required=False,
+        widget=forms.CheckboxInput,
     )
 
     # Scholarship
@@ -411,6 +419,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         # Determine real training type
         if cleaned_data.get('training_type') == TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name:
             training = get_training(person=self.person, training=cleaned_data['mixed_training'])
+
             if training:
                 cleaned_data['training_type'] = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(
                     training['education_group_type']
@@ -474,8 +483,26 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                 self.add_error('mixed_training', FIELD_REQUIRED_MESSAGE)
             if not cleaned_data.get('motivations'):
                 self.add_error('motivations', FIELD_REQUIRED_MESSAGE)
-            if not cleaned_data.get('ways_to_find_out_about_the_course'):
-                self.add_error('ways_to_find_out_about_the_course', FIELD_REQUIRED_MESSAGE)
+
+            if self.continuing_education_training_obj:
+                additional_training_information = ContinuingEducationService.get_continuing_education_information(
+                    person=self.person,
+                    acronym=self.continuing_education_training_obj['acronym'],
+                    year=str(int(self.continuing_education_training_obj['academic_year'])),
+                )
+
+                if additional_training_information.inscription_au_role_obligatoire:
+                    if not cleaned_data.get('ways_to_find_out_about_the_course'):
+                        self.add_error('ways_to_find_out_about_the_course', FIELD_REQUIRED_MESSAGE)
+                else:
+                    cleaned_data['ways_to_find_out_about_the_course'] = []
+
+                if not additional_training_information.etat == StateIUFC.CLOSED.name:
+                    cleaned_data['interested_mark'] = None
+
+            else:
+                cleaned_data['ways_to_find_out_about_the_course'] = []
+                cleaned_data['interested_mark'] = None
 
     def clean_doctorate(self, training_type, cleaned_data):
         if training_type == TypeFormation.DOCTORAT.name:
