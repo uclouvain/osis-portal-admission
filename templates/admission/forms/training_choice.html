@@ -67,7 +67,7 @@
             {% endblocktrans %}
           </p>
           {% bootstrap_field form.justification %}
-      </div>
+        </div>
         <div class="required_field">
           {% bootstrap_field form.sector %}
         </div>
@@ -110,17 +110,28 @@
     </div>
   {% endpanel %}
 
-  <div class="continuing-fields">
-    <div class="row">
-      <div class="col-md-12 required_field">
-        {% bootstrap_field form.motivations placeholder='' %}
-      </div>
+  <div class="row">
+    <div class="col-md-12 closed-continuing-fields" style="display: none">
+      <p id="closed-continuing-alert" class="alert alert-danger">
+        {% blocktranslate with program='<span class="program-name">{}</span>' program_managers='<span class="program-managers">{}</span>' trimmed %}
+          Your application cannot be submitted because the {{ program }} course is closed.
+          You can express your interest by ticking the box below or contacting a course administrator:
+          {{ program_managers }}.
+        {% endblocktranslate %}
+      </p>
+      {% bootstrap_field form.interested_mark %}
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-12 required_field">
-        {% bootstrap_field form.ways_to_find_out_about_the_course %}
-      </div>
+  <div class="row continuing-fields">
+    <div class="col-md-12 required_field">
+      {% bootstrap_field form.motivations placeholder='' %}
+    </div>
+  </div>
+
+  <div class="row long-continuing-fields">
+    <div class="col-md-12 required_field">
+      {% bootstrap_field form.ways_to_find_out_about_the_course %}
     </div>
   </div>
 
@@ -148,6 +159,9 @@
           const COMMISSIONS_CDE_CLSM = {{ COMMISSIONS_CDE_CLSM|safe }};
           const COMMISSION_CDSS = '{{ COMMISSION_CDSS }}';
           const SCIENCE_DOCTORATE = '{{ SCIENCE_DOCTORATE }}';
+          const closedContinuingAlertMessage = $('#closed-continuing-alert');
+          const closedContinuingAlertMessageProgramName = closedContinuingAlertMessage.find('.program-name');
+          const closedContinuingAlertMessageProgramManagers = closedContinuingAlertMessage.find('.program-managers');
 
           const fieldsThatMustBeInitialized = new Set(['id_mixed_training']);
 
@@ -186,16 +200,56 @@
                   '#id_training_type': {values: ['CERTIFICAT_ATTESTATION']},
               }, defaultOptions);
 
-              $('.continuing-fields').dependsOn({
-                  '#id_mixed_training': {
-                      changed: function () {
-                          const data = $('#id_mixed_training').select2('data');
-                          if (data.length && CONTINUING_EDUCATION_TYPES.includes(data[0].training_type)) {
-                              return true;
-                          }
-                      },
-                  },
-              }, defaultOptions);
+              const continuingFields = $('.continuing-fields');
+              const longContinuingFields = $('.long-continuing-fields');
+              const closedContinuingFields = $('.closed-continuing-fields');
+
+              function toggleClosedContinuingFields(toggle, data=null) {
+                  /*
+                   * If the course is closed, we display a personalized alert message and a checkbox input
+                   * @param toggle: boolean - true if the course is closed, false otherwise
+                   * @param data: object - the data containing the info about the course
+                   */
+                  if (toggle) {
+                      closedContinuingAlertMessageProgramName.text(data.sigle_formation);
+                      closedContinuingAlertMessageProgramManagers.html(
+                          data.emails_gestionnaires.length ? data.emails_gestionnaires.map(
+                              email => `<a href="mailto:${email}">${email}</a>`
+                          ).join(', ') : "{% translate 'no manager email address found' %}"
+                      );
+                      closedContinuingFields.show();
+                  } else {
+                      closedContinuingFields.hide();
+                      closedContinuingAlertMessageProgramName.text('');
+                      closedContinuingAlertMessageProgramManagers.html('');
+                  }
+              }
+
+              $('#id_mixed_training').on('change', async function(event){
+                  const data = $(this).select2('data');
+
+                  // The fields are displayed only if it is a continuing education course
+                  if (data.length && CONTINUING_EDUCATION_TYPES.includes(data[0].training_type)) {
+                      // And more specifically if is a long course
+                      await $.get({
+                          url: '{% url 'admission:retrieve_continuing_education_information' %}',
+                          data: { 'training': data[0].id },
+                          success: function(returned_data) {
+                              toggleClosedContinuingFields(returned_data.etat === 'CLOSED', returned_data);
+                              longContinuingFields.toggle(returned_data.inscription_au_role_obligatoire === true);
+                          },
+                      }).fail(function() {
+                          longContinuingFields.hide();
+                          toggleClosedContinuingFields(false);
+                      }).always(function() {
+                          continuingFields.show();
+                      });
+                  } else {
+                      continuingFields.hide();
+                      longContinuingFields.hide();
+                      toggleClosedContinuingFields(false);
+                  }
+              }).change();
 
               // Doctorate education
 
