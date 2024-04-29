@@ -53,9 +53,11 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
     tab_of_specific_questions = Onglets.DOCUMENTS.name
     retrieve_service_mapping = {
         'general-education': AdmissionPropositionService.retrieve_general_education_documents,
+        'continuing-education': AdmissionPropositionService.retrieve_continuing_education_documents,
     }
     update_service_mapping = {
         'general-education': AdmissionPropositionService.update_general_education_documents,
+        'continuing-education': AdmissionPropositionService.update_continuing_education_documents,
     }
     form_class = CompleteDocumentsForm
     extra_context = {
