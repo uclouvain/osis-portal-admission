@@ -30,7 +30,6 @@ from unittest.mock import ANY, MagicMock, patch
 import mock
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
-from rest_framework.status import HTTP_200_OK
 
 from admission.constants import PROPOSITION_JUST_SUBMITTED
 from admission.contrib.enums import (
@@ -238,7 +237,7 @@ class AdmissionPaymentViewTestCase(TestCase):
         response = self.client.get(self.url)
 
         # Check response
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['payments'], [self.payments_as_list[0]])
         self.assertEqual(response.context['already_paid'], True)
         self.assertEqual(response.context['can_pay'], False)
@@ -392,7 +391,7 @@ class AdmissionPaymentViewTestCase(TestCase):
         response = self.client.get(self.url + '?from_mollie=1')
 
         # Check response
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['payments'], [self.payments_as_list[0]])
         self.assertEqual(response.context['already_paid'], True)
         self.assertEqual(response.context['can_pay'], False)
@@ -415,7 +414,7 @@ class AdmissionPaymentViewTestCase(TestCase):
         response = self.client.get(self.url + '?from_mollie=1')
 
         # Check response
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['payments'], [])
         self.assertEqual(response.context['already_paid'], False)
         self.assertEqual(response.context['can_pay'], False)
