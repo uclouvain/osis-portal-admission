@@ -27,7 +27,6 @@ from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
-from rest_framework import status
 
 from admission.contrib.enums import (
     RoleJury,
@@ -104,7 +103,7 @@ class JuryMembreUpdateTestCase(TestCase):
                 "email": 'email@example.org',
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.update_jury_member.assert_called()
         last_call_kwargs = self.mock_api.return_value.update_jury_member.call_args[1]
         self.assertIn("nom", last_call_kwargs['modifier_membre_command'])
@@ -153,7 +152,7 @@ class JuryMemberRemoveTestCase(TestCase):
 
     def test_jury_remove_post(self, *args):
         response = self.client.post(self.url)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.remove_jury_member.assert_called()
 
 
@@ -204,7 +203,7 @@ class JuryMemberChangeRoleTestCase(TestCase):
                 "role": RoleJury.PRESIDENT.name,
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.update_role_jury_member.assert_called()
         last_call_kwargs = self.mock_api.return_value.update_role_jury_member.call_args[1]
         self.assertIn("role", last_call_kwargs['modifier_role_membre_command'])

@@ -25,7 +25,6 @@
 # ##############################################################################
 
 from django.shortcuts import resolve_url
-from rest_framework import status
 
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
 
@@ -39,7 +38,7 @@ class GeneralAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingChoice
     def test_get_page(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
             uuid=self.proposition_uuid,
@@ -57,7 +56,7 @@ class ContinuingAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingCho
     def test_get_page(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,
@@ -74,7 +73,7 @@ class DoctorateAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
     def test_get_page(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,

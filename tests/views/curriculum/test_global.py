@@ -28,12 +28,11 @@ import datetime
 import freezegun
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
-from rest_framework.status import HTTP_200_OK
+from osis_admission_sdk.model.result import Result
 
 from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
 from admission.contrib.forms.curriculum import REQUIRED_FIELD_CLASS
 from admission.tests.views.curriculum.mixin import MixinTestCase
-from osis_admission_sdk.model.result import Result
 
 
 @freezegun.freeze_time('2023-01-01')
@@ -46,7 +45,7 @@ class CreateGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.create_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the API calls aren't done
         self.mock_person_api.return_value.retrieve_curriculum_details.assert_not_called()
@@ -69,7 +68,7 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the right API calls are done
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
@@ -105,7 +104,7 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
 
@@ -182,7 +181,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
 
         # Check that the right API calls are done
@@ -212,7 +211,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "dependsOn.min.js", count=1)
 
@@ -256,7 +255,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check the form
         form = response.context.get('form')
@@ -292,7 +291,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check the form
         form = response.context.get('form')
@@ -330,7 +329,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check the form
         form = response.context.get('form')
@@ -370,7 +369,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check the form
         form = response.context.get('form')
@@ -400,7 +399,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check the form
         form = response.context.get('form')
@@ -430,7 +429,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check the form
         form = response.context.get('form')
@@ -675,7 +674,7 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
 
         # Check that the right API calls are done
@@ -705,7 +704,7 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the right API calls are done
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.assert_called()
@@ -764,7 +763,7 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check the form
         form = response.context.get('form')
@@ -801,7 +800,7 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check the form
         form = response.context.get('form')

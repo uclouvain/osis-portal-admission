@@ -31,7 +31,6 @@ from django.utils.translation import gettext as _
 from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
 )
-from rest_framework import status
 from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
@@ -51,7 +50,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         response = self.client.get(self.url)
         form = response.context['form']
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "dependsOn.min.js", count=1)
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
@@ -214,7 +213,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         response = self.client.get(self.url)
         form = response.context['form']
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,
@@ -258,7 +257,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # The motivation and the ways of founding out about the training are missing
         response = self.client.post(self.url, data={'mixed_training': 'TR2-2020', **data})
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
         self.assertFalse(form.is_valid())
@@ -285,7 +284,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
 
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
         self.assertFalse(form.is_valid())
@@ -412,7 +411,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # With missing data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
 
@@ -425,7 +424,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # With complete data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
@@ -449,7 +448,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
 
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
@@ -488,7 +487,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # With missing data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
 
@@ -502,7 +501,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # With complete data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
@@ -525,7 +524,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
 
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
@@ -564,7 +563,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # With missing data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
 
@@ -578,7 +577,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # With complete data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
@@ -601,7 +600,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
 
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
@@ -640,7 +639,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # With missing data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
 
@@ -655,7 +654,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # With complete data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
             uuid=self.proposition_uuid,
@@ -685,7 +684,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         response = self.client.get(self.url)
         form = response.context['form']
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,

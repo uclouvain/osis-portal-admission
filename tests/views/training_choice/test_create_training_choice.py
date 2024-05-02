@@ -29,7 +29,6 @@ from django.utils.translation import gettext as _
 from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
 )
-from rest_framework import status
 from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
@@ -51,7 +50,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         response = self.client.get(self.url)
         form = response.context['form']
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "dependsOn.min.js", count=1)
 
         self.assertEqual(
@@ -116,7 +115,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('motivations', []))
@@ -175,7 +174,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         # With missing data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
 
@@ -188,7 +187,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         # With complete data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
             initier_proposition_continue_command={
@@ -208,7 +207,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
             initier_proposition_continue_command={
@@ -242,7 +241,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         # With missing data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
 
@@ -256,7 +255,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         # With complete data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
             initier_proposition_continue_command={
@@ -275,7 +274,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
             initier_proposition_continue_command={
@@ -309,7 +308,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         # With missing data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
 
@@ -323,7 +322,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         # With complete data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
             initier_proposition_continue_command={
@@ -342,7 +341,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
             initier_proposition_continue_command={
@@ -376,7 +375,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         # With missing data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
 
@@ -391,7 +390,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         # With complete data
         response = self.client.post(self.url, data=data)
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
             initier_proposition_continue_command={
