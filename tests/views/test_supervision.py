@@ -28,7 +28,8 @@ from unittest.mock import ANY, Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from rest_framework import status
+from osis_admission_sdk import ApiException
+from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
 
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from admission.contrib.enums.projet import ChoixStatutPropositionDoctorale
@@ -37,8 +38,6 @@ from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
 from base.tests.factories.person import PersonFactory
 from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
-from osis_admission_sdk import ApiException
-from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
 
 
 @override_settings(ADMISSION_TOKEN_EXTERNAL='api-token-external')
@@ -192,10 +191,10 @@ class SupervisionTestCase(TestCase):
             }
         )
         response = self.client.get(self.update_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.post(self.update_url, {'type': ActorType.CA_MEMBER.name, 'tutor': "0123456978"})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('__all__', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
 
@@ -206,7 +205,7 @@ class SupervisionTestCase(TestCase):
             'email': "test@test.fr",
         }
         response = self.client.post(self.update_url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.add_member.assert_called_with(
             uuid=self.pk,
             identifier_supervision_actor={
@@ -220,7 +219,7 @@ class SupervisionTestCase(TestCase):
         self.mock_api.return_value.add_member.reset_mock()
 
         response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name, 'person': "0123456978"})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('__all__', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
 
@@ -231,7 +230,7 @@ class SupervisionTestCase(TestCase):
             'email': "test@test.fr",
         }
         response = self.client.post(self.update_url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.add_member.assert_called_with(
             uuid=self.pk,
             identifier_supervision_actor={
@@ -250,7 +249,7 @@ class SupervisionTestCase(TestCase):
             'email': "test@test.fr",
         }
         response = self.client.post(self.update_url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(EXTERNAL_FIELDS) - 1, len(response.context['add_form'].errors))
         self.assertIn('prenom', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
@@ -272,7 +271,7 @@ class SupervisionTestCase(TestCase):
             **external_data,
         }
         response = self.client.post(self.update_url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.add_member.assert_called_with(
             uuid=self.pk,
             identifier_supervision_actor={
@@ -291,10 +290,10 @@ class SupervisionTestCase(TestCase):
             uuid="uuid-0123456978",
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.remove_member.assert_called()
 
     def test_should_edit_external_supervision_member(self):
@@ -317,13 +316,13 @@ class SupervisionTestCase(TestCase):
             }.items()
         }
         response = self.client.post(url, external_data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.detail_url)
         self.mock_api.return_value.edit_external_member.assert_not_called()
 
         external_data['member-uuid-0123456978-prenom'] = 'John'
         response = self.client.post(url, external_data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.detail_url)
         self.mock_api.return_value.edit_external_member.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
@@ -350,7 +349,7 @@ class SupervisionTestCase(TestCase):
             uuid="uuid-1234569780",
         )
         response = self.client.get(url, {})
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, 404)
 
         url = resolve_url(
             "admission:doctorate:remove-actor",
@@ -359,11 +358,11 @@ class SupervisionTestCase(TestCase):
             uuid="uuid-1234569780",
         )
         response = self.client.get(url, {})
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, 404)
 
         self.mock_api.return_value.retrieve_supervision.side_effect = ApiException
         response = self.client.get(url, {})
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, 404)
         self.mock_api.return_value.remove_member.assert_not_called()
 
     def test_should_approve_proposition(self):
@@ -378,7 +377,7 @@ class SupervisionTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.approve_proposition.assert_called_with(
             uuid=self.pk,
             approuver_proposition_command={
@@ -407,7 +406,7 @@ class SupervisionTestCase(TestCase):
         )
         self.client.force_login(PersonFactory(global_id='0123456978').user)
         response = self.client.post(self.detail_url, {'decision': DecisionApprovalEnum.APPROVED.name})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertFormError(response, "approval_form", 'institut_these', _('This field is required.'))
 
     def test_should_reject_proposition(self):
@@ -422,7 +421,7 @@ class SupervisionTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         self.mock_api.return_value.reject_proposition.assert_called_with(
             uuid=self.pk,
@@ -445,7 +444,7 @@ class SupervisionTestCase(TestCase):
                 'motif_refus': "The reason",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('decision', response.context['approval_form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
@@ -460,7 +459,7 @@ class SupervisionTestCase(TestCase):
                 'commentaire_externe': "The public comment",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('motif_refus', response.context['approval_form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
@@ -479,7 +478,7 @@ class SupervisionTestCase(TestCase):
         )
         self.mock_api.return_value.retrieve_verify_project.return_value = [{'detail': "Nope"}]
         response = self.client.get(self.update_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_api.return_value.retrieve_verify_project.assert_called()
         self.assertNotContains(response, _("Are you sure you want to request signatures for this admission?"))
         self.assertContains(response, "Nope")
@@ -492,7 +491,7 @@ class SupervisionTestCase(TestCase):
         )
         self.mock_api.return_value.retrieve_verify_project.return_value = []
         response = self.client.get(self.update_url, {})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_api.return_value.retrieve_verify_project.assert_called()
         self.assertContains(response, _("Are you sure you want to request signatures for this admission?"))
 
@@ -591,7 +590,7 @@ class SupervisionTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(self.mock_api.call_args[0][0].configuration.api_key, self.external_api_token_header)
         self.mock_api.return_value.approve_external_proposition.assert_called_with(
             uuid=self.pk,
@@ -616,7 +615,7 @@ class SupervisionTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(self.mock_api.call_args[0][0].configuration.api_key, self.external_api_token_header)
         self.mock_api.return_value.reject_external_proposition.assert_called_with(
             uuid=self.pk,
@@ -640,7 +639,7 @@ class SupervisionTestCase(TestCase):
                 'motif_refus': "The reason",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('decision', response.context['approval_form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
@@ -656,7 +655,7 @@ class SupervisionTestCase(TestCase):
                 'commentaire_externe': "The public comment",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('motif_refus', response.context['approval_form'].errors)
 
         self.mock_api.return_value.reject_proposition.assert_not_called()
