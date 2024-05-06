@@ -30,7 +30,6 @@ import freezegun
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from rest_framework import status
 
 from admission.contrib.enums import ChoixStatutPropositionGenerale
 from base.tests.factories.person import PersonFactory
@@ -118,7 +117,7 @@ class ConfirmSubmitTestCase(TestCase):
     def test_get_without_errors(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
         self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.assert_called()
 

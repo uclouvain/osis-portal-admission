@@ -28,7 +28,6 @@ from unittest.mock import Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from rest_framework import status
 
 from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.contrib.forms import PDF_MIME_TYPE
@@ -69,7 +68,7 @@ class CotutelleTestCase(TestCase):
             'update_cotutelle': {'error': 'no access'},
         }
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, 403)
 
     def test_cotutelle_get(self):
         url = resolve_url("admission:doctorate:cotutelle", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -127,7 +126,7 @@ class CotutelleTestCase(TestCase):
                 'autres_documents': [],
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.update_cotutelle.assert_called()
         last_call_kwargs = self.mock_api.return_value.update_cotutelle.call_args[1]
         self.assertIn("motivation", last_call_kwargs['definir_cotutelle_command'])
@@ -135,11 +134,11 @@ class CotutelleTestCase(TestCase):
 
     def test_cotutelle_update_without_data(self):
         response = self.client.post(self.url, {"cotutelle": "NO", "motivation": "Barbaz"})
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         last_call_kwargs = self.mock_api.return_value.update_cotutelle.call_args[1]
         self.assertEqual(last_call_kwargs['definir_cotutelle_command']['motivation'], "")
 
     def test_cotutelle_update_missing_data(self):
         response = self.client.post(self.url, {"cotutelle": "YES", "motivation": "Barbaz"})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'institution', _("This field is required."))

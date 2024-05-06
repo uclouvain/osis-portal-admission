@@ -28,7 +28,6 @@ from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
-from rest_framework import status
 
 from admission.contrib.enums import (
     FormuleDefense,
@@ -72,7 +71,7 @@ class JuryPreparationTestCase(TestCase):
             'update_jury_preparation': {'error': 'no access'},
         }
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, 403)
 
     def test_jury_get(self):
         url = resolve_url("admission:doctorate:jury-preparation", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -97,7 +96,7 @@ class JuryPreparationTestCase(TestCase):
                 "commentaire": "Foobar bis",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.update_jury_preparation.assert_called()
         last_call_kwargs = self.mock_api.return_value.update_jury_preparation.call_args[1]
         self.assertIn("titre_propose", last_call_kwargs['modifier_jury_command'])
@@ -178,7 +177,7 @@ class JuryTestCase(TestCase):
                 "email": 'email@example.org',
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.create_jury_members.assert_called()
         last_call_kwargs = self.mock_api.return_value.create_jury_members.call_args[1]
         self.assertIn("matricule", last_call_kwargs['ajouter_membre_command'])

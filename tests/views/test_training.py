@@ -29,15 +29,13 @@ from unittest.mock import Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from rest_framework import status
+from osis_admission_sdk import ApiException
+from osis_admission_sdk.model.seminar_communication import SeminarCommunication
 
 from admission.contrib.enums import CategorieActivite, ContexteFormation
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.enums.training import StatutActivite
-from admission.contrib.forms.training import INSTITUTION_UCL
 from base.tests.factories.person import PersonFactory
-from osis_admission_sdk import ApiException
-from osis_admission_sdk.model.seminar_communication import SeminarCommunication
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -168,7 +166,7 @@ class TrainingTestCase(TestCase):
             ),
         ]
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "Informatique")
         self.assertContains(response, "45")
@@ -176,13 +174,13 @@ class TrainingTestCase(TestCase):
     def test_complementary_training_list(self):
         url = resolve_url("admission:doctorate:complementary-training", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Informatique")
 
     def test_course_enrollment_list(self):
         url = resolve_url("admission:doctorate:course-enrollment", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Informatique")
 
     def test_create_wrong_category(self):
@@ -192,7 +190,7 @@ class TrainingTestCase(TestCase):
             category="UNKNOWN",
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, 404)
 
     def test_create(self):
         url = resolve_url(
@@ -201,7 +199,7 @@ class TrainingTestCase(TestCase):
             category=CategorieActivite.CONFERENCE.name,
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, _("Add a conference"))
 
@@ -227,7 +225,7 @@ class TrainingTestCase(TestCase):
             category=CategorieActivite.CONFERENCE.name,
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, _("Add a conference"))
 
@@ -237,7 +235,7 @@ class TrainingTestCase(TestCase):
             'end_date': '12/04/2023',
         }
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertFormError(
             response, "form", 'start_date', _("The start date must be earlier than or the same as the end date.")
         )
@@ -249,7 +247,7 @@ class TrainingTestCase(TestCase):
             category=CategorieActivite.COMMUNICATION.name,
         )
         response = self.client.get(f"{url}?parent=uuid-parent")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
     def test_update(self):
         url = resolve_url(
@@ -258,7 +256,7 @@ class TrainingTestCase(TestCase):
             activity_id="64d2e9e3-2537-4a12-a396-48763c5cdc60",
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Edit"))
 
         data = {
@@ -303,7 +301,7 @@ class TrainingTestCase(TestCase):
             activity_id="64d2e9e3-2537-4a12-a396-48763c5cdc60",
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Edit the communication of this conference"))
 
         data = {
@@ -329,7 +327,7 @@ class TrainingTestCase(TestCase):
         }
         self.mock_api.return_value.submit_training.return_value = data
         response = self.client.post(self.url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.url)
 
     def test_submit_with_errors(self):
@@ -342,18 +340,18 @@ class TrainingTestCase(TestCase):
         # Exception related to an activity
         self.mock_api.return_value.submit_training.side_effect = ApiException(
             http_resp=Mock(
-                status=status.HTTP_400_BAD_REQUEST,
+                status=400,
                 data='{"errors":[{"activite_id": "test", "detail": "Pas bon", "status_code": 0}]}',
             ),
         )
         response = self.client.post(self.url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertFormError(response, "activities_form", None, "Pas bon")
 
         # Any other exception
         self.mock_api.return_value.submit_training.side_effect = ApiException(
             http_resp=Mock(
-                status=status.HTTP_502_BAD_GATEWAY,
+                status=502,
             ),
         )
         with self.assertRaises(ApiException):
@@ -396,7 +394,7 @@ class TrainingTestCase(TestCase):
                 'learning_unit_year': 'ESA2004',
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
     def test_assent(self):
         url = resolve_url(
@@ -422,7 +420,7 @@ class TrainingTestCase(TestCase):
             'commentaire': "Ok",
         }
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
     def test_delete(self):
         url = resolve_url(
@@ -439,6 +437,6 @@ class TrainingTestCase(TestCase):
             reference_promoter_comment="",
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         response = self.client.post(url)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
