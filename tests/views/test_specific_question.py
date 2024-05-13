@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -82,7 +82,14 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.assertContains(response, _("Course change"))
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
+    @patch(
+        'osis_document.api.utils.get_remote_metadata',
+        return_value={
+            'name': 'myfile',
+            'mimetype': PDF_MIME_TYPE,
+            'size': 1,
+        },
+    )
     def test_get_page_with_modification(self, remote_metadata, remote_token):
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
@@ -389,7 +396,14 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         )
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
+    @patch(
+        'osis_document.api.utils.get_remote_metadata',
+        return_value={
+            'name': 'myfile',
+            'mimetype': PDF_MIME_TYPE,
+            'size': 1,
+        },
+    )
     def test_with_reorientation(self, *__):
         self.mock_proposition_api.return_value.list_doctorate_specific_questions.return_value = []
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
@@ -485,7 +499,14 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         )
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
+    @patch(
+        'osis_document.api.utils.get_remote_metadata',
+        return_value={
+            'name': 'myfile',
+            'mimetype': PDF_MIME_TYPE,
+            'size': 1,
+        },
+    )
     def test_with_modification(self, *__):
         self.mock_proposition_api.return_value.list_doctorate_specific_questions.return_value = []
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
