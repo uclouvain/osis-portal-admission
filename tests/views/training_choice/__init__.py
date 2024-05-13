@@ -26,9 +26,12 @@
 
 import uuid
 from django.test import TestCase
-from unittest.mock import Mock, ANY, patch
+from unittest.mock import Mock, ANY, patch, MagicMock
 
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+    InformationsSpecifiquesFormationContinueDTO,
+)
 
 from admission.contrib.enums import (
     ChoixStatutPropositionDoctorale,
@@ -37,6 +40,7 @@ from admission.contrib.enums import (
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
+from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
@@ -175,6 +179,25 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
     @classmethod
     def get_specific_questions(cls, **kwargs):
         return cls.specific_questions
+
+    @classmethod
+    def get_continuing_training_information(cls, **kwargs):
+        acronym = kwargs.get('sigle')
+        year = int(kwargs.get('annee'))
+        try:
+            return next(
+                training
+                for training in cls.continuing_trainings_informations
+                if training.sigle_formation == acronym and training.annee == year
+            )
+        except StopIteration:
+            return InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+                sigle_formation=acronym,
+                annee=int(year),
+                aide_a_la_formation=True,
+                inscription_au_role_obligatoire=True,
+                etat=StateIUFC.OPEN.name,
+            )
 
     @classmethod
     def get_countries(cls, **kwargs):
@@ -382,6 +405,9 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             'documents_additionnels': [],
             'motivations': 'Motivation',
             'moyens_decouverte_formation': [],
+            'aide_a_la_formation': False,
+            'inscription_au_role_obligatoire': True,
+            'etat_formation': StateIUFC.OPEN.name,
         }
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -428,6 +454,9 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             documents_additionnels=['uuid-documents-additionnels'],
             motivations='Motivation',
             moyens_decouverte_formation=[],
+            aide_a_la_formation=False,
+            inscription_au_role_obligatoire=True,
+            etat_formation=StateIUFC.OPEN.name,
         )
 
         cls.doctorate_proposition = Mock(
@@ -553,6 +582,23 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             ),
         ]
 
+        cls.continuing_trainings_informations = [
+            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+                sigle_formation='FOOBAR',
+                annee=2021,
+                aide_a_la_formation=True,
+                inscription_au_role_obligatoire=True,
+                etat=StateIUFC.OPEN.name,
+            ),
+            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+                sigle_formation='BARBAZ',
+                annee=2021,
+                aide_a_la_formation=True,
+                inscription_au_role_obligatoire=True,
+                etat=StateIUFC.OPEN.name,
+            ),
+        ]
+
         cls.general_trainings = [
             FormationGeneraleDTO(
                 sigle='FOOBAR',
@@ -654,6 +700,17 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_diplomatic_post_api = diplomatic_post_api_patcher.start()
         self.mock_diplomatic_post_api.return_value.retrieve_diplomatic_post.side_effect = self.get_diplomatic_post
         self.addCleanup(diplomatic_post_api_patcher.stop)
+
+        # Mock continuing education sdk api
+        continuing_education_api_patcher = patch(
+            "osis_admission_sdk.api.continuing_education_api.ContinuingEducationApi"
+        )
+        self.mock_continuing_education_api = continuing_education_api_patcher.start()
+        mock_continuing_api = self.mock_continuing_education_api.return_value
+        mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = (
+            self.get_continuing_training_information
+        )
+        self.addCleanup(continuing_education_api_patcher.stop)
 
         # Mock document api
         patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')

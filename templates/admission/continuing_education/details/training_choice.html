@@ -37,8 +37,15 @@
 
   {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
 
+  {% if admission.etat_formation == 'CLOSED' %}
+    {% field_data _('I am interested in this course even if it is closed') admission.marque_d_interet %}
+  {% endif %}
+
+
   {% field_data _('Motivations') admission.motivations %}
 
-  {% field_data _('How did you find out about this course?') admission.moyens_decouverte_formation|multiple_enum_display:'ChoixMoyensDecouverteFormation' %}
+  {% if admission.inscription_au_role_obligatoire == True %}
+    {% field_data _('How did you hear about this course?') admission.moyens_decouverte_formation|multiple_enum_display:'ChoixMoyensDecouverteFormation' %}
+  {% endif %}
 
 {% endblock %}

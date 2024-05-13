@@ -28,7 +28,6 @@ from unittest.mock import Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from rest_framework import status
 
 from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.tests.utils import MockLanguage
@@ -137,20 +136,20 @@ class LanguagesTestCase(TestCase):
             links={},
         )
         response = self.client.get(self.form_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<form class="osis-form"')
         self.assertContains(response, _("Save and continue"))
         self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
         self.mock_proposition_api.assert_called()
 
         response = self.client.post(self.form_url, {"form-INITIAL_FORMS": 0, "form-TOTAL_FORMS": 0})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
         self.assertFormsetError(response, "formset", None, None, _("Mandatory languages are missing."))
 
     def test_create(self):
         response = self.client.get(self.create_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.mock_person_api.return_value.list_language_knowledges.assert_not_called()
         self.mock_proposition_api.assert_not_called()
@@ -171,7 +170,7 @@ class LanguagesTestCase(TestCase):
                 "form-TOTAL_FORMS": 3,
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
         self.assertFormsetError(
             response,
@@ -195,13 +194,13 @@ class LanguagesTestCase(TestCase):
                 "form-TOTAL_FORMS": 2,
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
         self.assertFormsetError(response, "formset", 0, 'speaking_ability', _("This field is required."))
 
     def test_form_ok(self):
         response = self.client.post(self.form_url, self.data_ok)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_called()
         sent = self.mock_person_api.return_value.create_language_knowledge_admission.call_args[1]["language_knowledge"]
         self.assertEqual(
@@ -238,7 +237,7 @@ class LanguagesTestCase(TestCase):
     def test_update_admission_in_context(self):
         url = resolve_url('admission:doctorate:update:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
         self.mock_proposition_api.assert_called()
         self.assertIn('admission', response.context)
@@ -247,11 +246,11 @@ class LanguagesTestCase(TestCase):
         self.mock_person_api.return_value.list_language_knowledges.return_value = []
 
         response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
     def test_detail(self):
         response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "Français")
         self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()

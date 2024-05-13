@@ -28,7 +28,6 @@ from unittest.mock import Mock, patch, ANY
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
-from rest_framework.status import HTTP_302_FOUND
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.forms import PDF_MIME_TYPE
@@ -380,5 +379,5 @@ class DoctorateAdmissionConfirmationPaperCanvasExportViewTestCase(TestCase):
         )
 
         # Check the redirection
-        self.assertEqual(response.status_code, HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 'http://dummyurl/file/b-token')
