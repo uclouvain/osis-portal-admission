@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain
+  * Copyright (C) 2015-2024 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -33,9 +33,13 @@
 
   {% if is_valuated %}
     <div class="alert alert-warning">
-      {% blocktranslate trimmed %}
-        Your secondary education data can no longer be updated. To make changes, please contact the Enrolment Office.
-      {% endblocktranslate %}
+      {% if can_update_diploma %}
+        {% translate 'This experience has been partially completed so only few fields are editable.' %}
+      {% else %}
+        {% blocktranslate trimmed %}
+          Your secondary education data can no longer be updated. To make changes, please contact the Enrolment Office.
+        {% endblocktranslate %}
+      {% endif %}
     </div>
   {% endif %}
 
@@ -47,11 +51,7 @@
       {% bootstrap_field main_form.graduated_from_high_school_year form_group_class="form-group required_field" %}
     </div>
 
-    {% if is_valuated %}
-      {% form_fields_are_empty main_form 'diploma_type' as main_form_is_empty %}
-    {% endif %}
-
-    <div class="{% value_if_all 'hidden' main_form_is_empty %}">
+    <div>
       {% bootstrap_field main_form.diploma_type form_group_class="form-group required_field" %}
     </div>
 
@@ -163,14 +163,7 @@
       {% endwith %}
     {% endpanel %}
 
-    {% if is_valuated %}
-      {% form_fields_are_empty main_form 'high_school_diploma' as main_form_is_empty %}
-      {% form_fields_are_empty foreign_diploma_form 'high_school_diploma_translation' 'high_school_transcript' 'high_school_transcript_translation' as foreign_diploma_form_is_empty %}
-    {% endif %}
-
-    {% value_if_all 'hidden' main_form_is_empty foreign_diploma_form_is_empty as all_empty_class %}
-
-    {% panel _("Attachments") id="attachments" additional_class=all_empty_class %}
+    {% panel _("Attachments") id="attachments" %}
       <div id="high-school-diploma" class="row">
         <div class="col-md-6">
           {% bootstrap_field_with_tooltip main_form.high_school_diploma classes="required_field" %}
@@ -384,7 +377,7 @@
               });
 
               {# We need this as dependsOn enable some fields that are disabled at load page #}
-              {% if is_valuated %}
+              {% if not can_update_diploma %}
                   $('form.osis-form .form-group :input:not(button)').prop('disabled', true);
               {% endif %}
 

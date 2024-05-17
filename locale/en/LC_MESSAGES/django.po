@@ -3139,7 +3139,7 @@ msgid "This comment will be visible to all users with access to this page."
 msgstr ""
 
 msgid ""
-"This experience has been partially valuated so only few fields are editable."
+"This experience has been partially completed so only few fields are editable."
 msgstr ""
 
 msgid "This field is required if the first name is missing."
