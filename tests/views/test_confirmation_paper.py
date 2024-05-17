@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ from unittest.mock import Mock, patch, ANY
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
-from rest_framework.status import HTTP_302_FOUND
 
 from admission.contrib.enums.doctorat import ChoixStatutDoctorat
 from admission.contrib.forms import PDF_MIME_TYPE
@@ -180,7 +179,7 @@ class ConfirmationPaperFormViewTestCase(TestCase):
         self.addCleanup(patcher.stop)
         patcher = patch(
             'osis_document.api.utils.get_remote_metadata',
-            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()
         self.addCleanup(patcher.stop)
@@ -380,5 +379,5 @@ class DoctorateAdmissionConfirmationPaperCanvasExportViewTestCase(TestCase):
         )
 
         # Check the redirection
-        self.assertEqual(response.status_code, HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 'http://dummyurl/file/b-token')

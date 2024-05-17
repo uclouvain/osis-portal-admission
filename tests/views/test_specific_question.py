@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,14 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import uuid
 from datetime import datetime
 from unittest.mock import patch, ANY, MagicMock
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
-from rest_framework import status
-from rest_framework.status import HTTP_200_OK
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
@@ -58,7 +55,7 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
     def test_get_page(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,
@@ -81,11 +78,18 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         }
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Course change"))
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
+    @patch(
+        'osis_document.api.utils.get_remote_metadata',
+        return_value={
+            'name': 'myfile',
+            'mimetype': PDF_MIME_TYPE,
+            'size': 1,
+        },
+    )
     def test_get_page_with_modification(self, remote_metadata, remote_token):
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
@@ -96,7 +100,7 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         }
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, '30/03/2023 23:59')
 
     def test_get_page_with_residency(self):
@@ -107,7 +111,7 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         }
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Enrolment in limited enrolment bachelor's course"))
 
     def test_get_page_with_residency_when_forbidden(self):
@@ -119,7 +123,7 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         }
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, 'This enrolment is forbidden.')
 
         # Forbidden
@@ -131,7 +135,7 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         }
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'This enrolment is forbidden.')
 
 
@@ -144,7 +148,7 @@ class ContinuingEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingCho
     def test_get_page(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,
@@ -182,7 +186,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
     def test_get_page(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,
@@ -213,7 +217,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         main_form = response.context['forms'][0]
         self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
 
@@ -226,7 +230,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         main_form = response.context['forms'][0]
         self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
 
@@ -239,7 +243,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         main_form = response.context['forms'][0]
         self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
 
@@ -301,7 +305,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         self.mock_diplomatic_post_api.return_value.retrieve_diplomatic_post.assert_called_with(
             code=self.first_diplomatic_post.code,
@@ -358,7 +362,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         main_form = response.context['forms'][0]
 
@@ -392,7 +396,14 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         )
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
+    @patch(
+        'osis_document.api.utils.get_remote_metadata',
+        return_value={
+            'name': 'myfile',
+            'mimetype': PDF_MIME_TYPE,
+            'size': 1,
+        },
+    )
     def test_with_reorientation(self, *__):
         self.mock_proposition_api.return_value.list_doctorate_specific_questions.return_value = []
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
@@ -404,7 +415,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         }
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Course change"))
         self.assertContains(response, '30/12/2022 23:59')
 
@@ -488,7 +499,14 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         )
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
+    @patch(
+        'osis_document.api.utils.get_remote_metadata',
+        return_value={
+            'name': 'myfile',
+            'mimetype': PDF_MIME_TYPE,
+            'size': 1,
+        },
+    )
     def test_with_modification(self, *__):
         self.mock_proposition_api.return_value.list_doctorate_specific_questions.return_value = []
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
@@ -500,7 +518,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         }
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Change of enrolment"))
         self.assertContains(response, '30/03/2023 23:59')
 
@@ -592,7 +610,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
     def test_get_page(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,
@@ -633,7 +651,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         )
 
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         initial_data = response.context['forms'][0].initial
         self.assertEqual(
@@ -761,7 +779,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
             },
         )
 
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_not_called()
         form = response.context['form']
         self.assertFalse(form.is_valid())

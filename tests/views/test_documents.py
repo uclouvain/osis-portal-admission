@@ -171,6 +171,7 @@ class DocumentsFormViewTestCase(TestCase):
             "osis_document.api.utils.get_remote_metadata",
             side_effect=lambda token: {
                 "name": "myfile",
+                'size': 1,
                 'mimetype': {
                     'pdf_file': PDF_MIME_TYPE,
                     'jpeg_file': JPEG_MIME_TYPE,
