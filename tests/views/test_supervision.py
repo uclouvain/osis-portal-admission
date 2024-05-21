@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -515,7 +515,7 @@ class SupervisionTestCase(TestCase):
 
     @patch(
         'osis_document.api.utils.get_remote_metadata',
-        return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+        return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE, 'size': 1},
     )
     def test_should_approval_by_pdf_redirect_without_errors(self, *args):
         url = resolve_url("admission:doctorate:approve-by-pdf", pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
