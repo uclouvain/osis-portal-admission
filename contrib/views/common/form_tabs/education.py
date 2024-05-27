@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -76,6 +76,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['is_valuated'] = self.high_school_diploma['is_valuated']
+        context_data['can_update_diploma'] = self.high_school_diploma['can_update_diploma']
 
         if self.is_bachelor:
             context_data.update(self.get_forms(context_data))
@@ -114,6 +115,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
         kwargs = super().get_form_kwargs()
         kwargs["person"] = self.person
         kwargs["is_valuated"] = self.high_school_diploma["is_valuated"]
+        kwargs["can_update_diploma"] = self.high_school_diploma["can_update_diploma"]
         return kwargs
 
     def get_form_class(self):
@@ -137,7 +139,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             form.empty_permitted = False
 
     def post(self, request, *args, **kwargs):
-        if not self.is_bachelor or self.high_school_diploma['is_valuated']:
+        if not self.is_bachelor or not self.high_school_diploma['can_update_diploma']:
             return super().post(request, *args, **kwargs)
 
         forms = self.get_forms()
@@ -168,12 +170,17 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             initial = kwargs.pop("initial")
             kwargs.pop('form_item_configurations')
 
-            graduated_from_high_school = data and data.get("graduated_from_high_school") in HAS_DIPLOMA_CHOICES
-            got_belgian_diploma = graduated_from_high_school and data.get("diploma_type") == DiplomaTypes.BELGIAN.name
-            got_foreign_diploma = graduated_from_high_school and data.get("diploma_type") == DiplomaTypes.FOREIGN.name
+            main_form = context_data.pop('form') if 'form' in context_data else self.get_form()
+            graduated_from_high_school = main_form["graduated_from_high_school"].value() in HAS_DIPLOMA_CHOICES
+            got_belgian_diploma = (
+                graduated_from_high_school and data and data.get("diploma_type") == DiplomaTypes.BELGIAN.name
+            )
+            got_foreign_diploma = (
+                graduated_from_high_school and data and data.get("diploma_type") == DiplomaTypes.FOREIGN.name
+            )
 
             self.forms = {
-                "main_form": context_data.pop('form') if 'form' in context_data else self.get_form(),
+                "main_form": main_form,
                 "belgian_diploma_form": BachelorAdmissionEducationBelgianDiplomaForm(
                     person=self.person,
                     prefix="belgian_diploma",
@@ -212,8 +219,8 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
         data[diploma]["high_school_diploma"] = data.pop("high_school_diploma")
 
     def prepare_data(self, main_form_data):
-        # General education (except bachelor) and continuing education admission
-        if not self.is_bachelor or self.high_school_diploma['is_valuated']:
+        # General education (except bachelor when some data is missing) and continuing education admission
+        if not self.is_bachelor or not self.high_school_diploma['can_update_diploma']:
             return main_form_data
 
         # Bachelor admission
