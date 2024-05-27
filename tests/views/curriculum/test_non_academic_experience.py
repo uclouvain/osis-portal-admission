@@ -29,7 +29,6 @@ from unittest.mock import ANY
 import freezegun
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext
-from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN, HTTP_302_FOUND
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.curriculum import ActivityType, ActivitySector
@@ -48,7 +47,7 @@ class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
 
         # Check that the right API calls are done
@@ -105,7 +104,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         response = self.client.get(self.admission_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "dependsOn.min.js", count=1)
 
@@ -128,6 +127,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'activity': self.professional_experience.activity,
                 'uuid': self.professional_experience.uuid,
                 'valuated_from_trainings': ANY,
+                'external_id': '',
             },
         )
 
@@ -135,7 +135,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         response = self.client.get(self.continuing_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the right API calls are done
         self.mockapi.retrieve_professional_experience_continuing_education_admission.assert_called()
@@ -150,7 +150,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         response = self.client.get(self.general_update_url)
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the right API calls are done
         self.mockapi.retrieve_professional_experience_general_education_admission.assert_called()
@@ -159,7 +159,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         response = self.client.post(self.admission_update_url, data={})
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the API calls aren't done
         self.mockapi.update_professional_experience_admission.assert_not_called()
@@ -185,7 +185,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the API calls aren't done
         self.mockapi.update_professional_experience_admission.assert_not_called()
@@ -209,7 +209,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         # Check that the API calls aren't done
         self.mockapi.update_professional_experience_admission.assert_called()
@@ -224,7 +224,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         # Check that the API calls aren't done
         self.mockapi.update_professional_experience_admission.assert_called()
@@ -239,7 +239,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the API calls aren't done
         self.mockapi.update_professional_experience_admission.assert_not_called()
@@ -263,7 +263,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the API calls aren't done
         self.mockapi.update_professional_experience_admission.assert_not_called()
@@ -288,7 +288,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
         # Check the request
-        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the API calls aren't done
         self.mockapi.update_professional_experience_admission.assert_not_called()
@@ -587,22 +587,47 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             resolve_url(
                 self.admission_update_url,
                 pk=self.proposition.uuid,
-                experience_id=self.educational_experience.uuid,
+                experience_id=self.professional_experience.uuid,
             )
         )
 
-        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, 403)
 
         response = self.client.post(
             resolve_url(
                 self.admission_update_url,
                 pk=self.proposition.uuid,
-                experience_id=self.educational_experience.uuid,
+                experience_id=self.professional_experience.uuid,
                 data=self.all_form_data,
             )
         )
 
-        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, 403)
+
+    def test_with_admission_on_update_epc_experience_is_forbidden(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
+        mock_retrieve.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(
+            resolve_url(
+                self.admission_update_url,
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+        response = self.client.post(
+            resolve_url(
+                self.admission_update_url,
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+                data=self.all_form_data,
+            )
+        )
+
+        self.assertEqual(response.status_code, 403)
 
     # On create
     def test_with_admission_on_create_experience_post_form_for_other_activity(self):
@@ -696,8 +721,22 @@ class CurriculumNonAcademicExperienceDeleteTestCase(MixinTestCase):
             resolve_url(
                 'admission:doctorate:update:curriculum:professional_delete',
                 pk=self.proposition.uuid,
-                experience_id=self.educational_experience.uuid,
+                experience_id=self.professional_experience.uuid,
             )
         )
 
-        self.assertEqual(response.status_code, HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, 403)
+
+    def test_with_admission_on_delete_epc_experience_is_forbidden(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
+        mock_retrieve.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:update:curriculum:professional_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        self.assertEqual(response.status_code, 403)

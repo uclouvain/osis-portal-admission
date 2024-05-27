@@ -76,6 +76,7 @@ from admission.contrib.enums.projet import (
     ChoixStatutPropositionGenerale,
     ChoixStatutPropositionContinue,
 )
+from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests import get_paginated_years
@@ -229,6 +230,7 @@ class MixinTestCase(TestCase):
             uuid=str(uuid.uuid4()),
             certificate=[cls.document_uuid],
             valuated_from_trainings=[],
+            external_id='',
         )
 
         cls.lite_professional_experience = CurriculumDetailsProfessionalExperiences._from_openapi_data(
@@ -238,6 +240,7 @@ class MixinTestCase(TestCase):
             start_date=cls.professional_experience.start_date,
             end_date=cls.professional_experience.start_date,
             valuated_from_trainings=[],
+            external_id='',
         )
 
         # Proposition
@@ -371,6 +374,9 @@ class MixinTestCase(TestCase):
             documents_additionnels=[],
             motivations='Motivation',
             moyens_decouverte_formation=[],
+            aide_a_la_formation=False,
+            inscription_au_role_obligatoire=True,
+            etat_formation=StateIUFC.OPEN.name,
         )
 
         cls.api_default_params = {
@@ -446,7 +452,7 @@ class MixinTestCase(TestCase):
 
         patcher = patch(
             'osis_document.api.utils.get_remote_metadata',
-            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()
         self.addCleanup(patcher.stop)

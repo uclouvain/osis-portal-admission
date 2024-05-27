@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
-from rest_framework import status
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import ChoixTypeContratTravail, ChoixTypeFinancement
@@ -169,7 +168,7 @@ class ProjectViewTestCase(TestCase):
         self.addCleanup(patcher.stop)
         patcher = patch(
             "osis_document.api.utils.get_remote_metadata",
-            return_value={"name": "myfile", 'mimetype': PDF_MIME_TYPE},
+            return_value={"name": "myfile", 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()
         self.addCleanup(patcher.stop)
@@ -197,7 +196,7 @@ class ProjectViewTestCase(TestCase):
             'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
         }
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
 
@@ -213,14 +212,14 @@ class ProjectViewTestCase(TestCase):
             "commission_proximite": ChoixCommissionProximiteCDSS.ECLI.name,
         }
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "dependsOn.min.js", count=1)
 
         proposition.doctorat.sigle = SCIENCE_DOCTORATE
         proposition.to_dict.return_value["commission_proximite"] = ChoixSousDomaineSciences.CHEMISTRY.name
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         # Check that the thesis institute field is well initialized with existing value
         proposition.to_dict.return_value = {
@@ -230,14 +229,14 @@ class ProjectViewTestCase(TestCase):
             'lieu_these': 'A random postal address',
         }
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "A random postal address")
 
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
         }
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
     def test_update_no_permission(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -245,7 +244,7 @@ class ProjectViewTestCase(TestCase):
             'update_proposition': {'error': 'no access'},
         }
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, 403)
 
     def test_update_consistency_errors(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -276,7 +275,7 @@ class ProjectViewTestCase(TestCase):
             'eft': 80,
         }
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
@@ -291,7 +290,7 @@ class ProjectViewTestCase(TestCase):
             'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
         }
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
     def test_detail_redirect(self):
         url = resolve_url('admission:doctorate', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -314,7 +313,7 @@ class ProjectViewTestCase(TestCase):
             erreurs=[],
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "Something")
         self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
@@ -329,7 +328,7 @@ class ProjectViewTestCase(TestCase):
             erreurs=[],
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Proximity commission for experimental and clinical research (ECLI)"))
 
     def test_cancel(self):
@@ -339,11 +338,11 @@ class ProjectViewTestCase(TestCase):
             links={},
         )
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ChoixStatutPropositionDoctorale.EN_BROUILLON.value)
         self.mock_proposition_api.return_value.destroy_proposition.assert_not_called()
         response = self.client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_proposition_api.return_value.destroy_proposition.assert_called()
 
     def test_cancel_general_education_proposition(self):
@@ -354,7 +353,7 @@ class ProjectViewTestCase(TestCase):
         )
         response = self.client.get(url)
         self.mock_proposition_api.return_value.destroy_general_education_proposition.assert_not_called()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ChoixStatutPropositionGenerale.EN_BROUILLON.value)
         response = self.client.post(url, {})
         self.assertRedirects(response, expected_url=resolve_url('admission:list'))
@@ -368,7 +367,7 @@ class ProjectViewTestCase(TestCase):
         )
         response = self.client.get(url)
         self.mock_proposition_api.return_value.destroy_continuing_education_proposition.assert_not_called()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ChoixStatutPropositionContinue.EN_BROUILLON.value)
         response = self.client.post(url, {})
         self.assertRedirects(response, expected_url=resolve_url('admission:list'))

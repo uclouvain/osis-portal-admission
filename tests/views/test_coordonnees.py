@@ -29,7 +29,6 @@ from unittest.mock import Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase
 from django.utils.translation import gettext_lazy as _
-from rest_framework import status
 
 from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.tests.utils import MockCountry
@@ -114,7 +113,7 @@ class CoordonneesTestCase(TestCase):
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateNotUsed(response, 'admission/forms/coordonnees.html')
         self.assertTemplateUsed(response, 'admission/details/coordonnees.html')
 
@@ -122,7 +121,7 @@ class CoordonneesTestCase(TestCase):
         url = resolve_url('admission:create:coordonnees')
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateNotUsed(response, 'admission/details/coordonnees.html')
         self.assertTemplateUsed(response, 'admission/forms/coordonnees.html')
         self.mock_person_api.return_value.retrieve_coordonnees.assert_called()
@@ -131,7 +130,7 @@ class CoordonneesTestCase(TestCase):
         url = resolve_url('admission:create:coordonnees')
 
         response = self.client.post(url, {})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('city', response.context['residential'].errors)
         self.mock_person_api.return_value.update_coordonnees.assert_not_called()
 
@@ -144,7 +143,7 @@ class CoordonneesTestCase(TestCase):
                 "residential-country": "FR",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('city', response.context['residential'].errors)
         self.assertIn('phone_mobile', response.context['main_form'].errors)
 
@@ -163,7 +162,7 @@ class CoordonneesTestCase(TestCase):
                 "phone_mobile": "+32474123456",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['postal_code'], "1111")
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['city'], "Louvain-La-Neuve")
@@ -193,7 +192,7 @@ class CoordonneesTestCase(TestCase):
                 "emergency_contact_phone": "+32474123457",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
         self.assertEqual(
             last_call_kwargs["coordonnees"]["contact"],
@@ -223,7 +222,7 @@ class CoordonneesTestCase(TestCase):
         self.mock_get.return_value['contact']['city'] = "Liège"
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
         self.assertContains(response, "Belgique")
@@ -249,7 +248,7 @@ class CoordonneesTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
         self.assertFalse(form.is_valid())
@@ -263,26 +262,26 @@ class CoordonneesTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         form = response.context['form']
         self.assertFalse(form.is_valid())
         self.assertIn(_('Invalid phone number'), form.errors.get('phone_mobile', []))
 
         response = self.client.post(url, valid_data)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
     def test_detail(self):
         url = resolve_url('admission:doctorate:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         self.mock_get.return_value = {'residential': None, 'contact': None}
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         self.mock_get.return_value = {'residential': {'country': ""}, 'contact': {'country': ""}}
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Belgique")
         self.mock_person_api.return_value.retrieve_coordonnees_admission.assert_called()
         self.mock_person_api.return_value.retrieve_coordonnees_admission.resetMock()
@@ -291,7 +290,7 @@ class CoordonneesTestCase(TestCase):
         self.mock_get.return_value = {'residential': {'country': "FR"}, 'contact': {'country': "BE"}}
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Belgique")
         self.assertContains(response, "France")
         self.mock_person_api.return_value.retrieve_coordonnees_admission.assert_called()

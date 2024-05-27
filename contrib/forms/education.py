@@ -52,11 +52,18 @@ from admission.services.reference import CountriesService, AcademicYearService
 from osis_document.contrib.widgets import HiddenFileWidget
 
 
-def disable_fields_if_valuated(is_valuated, fields, fields_to_keep_enabled_names=None):
+def disable_fields(condition, fields, fields_to_keep_enabled_names=None):
+    """
+    Disable form fields if the condition is true.
+    @param condition: The condition to check.
+    @param fields: A dictionary of form fields.
+    @param fields_to_keep_enabled_names: A set of field names to keep enabled.
+    """
+
     if fields_to_keep_enabled_names is None:
         fields_to_keep_enabled_names = set()
 
-    if is_valuated:
+    if condition:
         for field in fields:
             if field not in fields_to_keep_enabled_names:
                 fields[field].disabled = True
@@ -86,8 +93,10 @@ class BaseAdmissionEducationForm(ConfigurableFormMixin):
         required=False,
     )
 
-    def __init__(self, person, is_valuated, *args, **kwargs):
+    def __init__(self, person, is_valuated, can_update_diploma, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.can_update_diploma = can_update_diploma
+        self.is_valuated = is_valuated
         academic_years = AcademicYearService.get_academic_years(person)
         self.current_year = AcademicYearService.get_current_academic_year(person, academic_years)
         self.fields["graduated_from_high_school_year"].widget.choices = get_past_academic_years_choices(
@@ -96,8 +105,18 @@ class BaseAdmissionEducationForm(ConfigurableFormMixin):
             current_year=self.current_year,
             academic_years=academic_years,
         )
-        self.fields["graduated_from_high_school"].choices = GotDiploma.choices_with_dynamic_year(self.current_year)
-        disable_fields_if_valuated(is_valuated, self.fields, {self.configurable_form_field_name})
+        self.fields['graduated_from_high_school'].choices = GotDiploma.choices_with_dynamic_year(self.current_year)
+
+        disable_fields(
+            condition=self.is_valuated,
+            fields={
+                field: self.fields[field]
+                for field in [
+                    'graduated_from_high_school_year',
+                    'graduated_from_high_school',
+                ]
+            },
+        )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -141,11 +160,8 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
     class Media:
         js = ("js/dependsOn.min.js",)
 
-    def __init__(self, person, is_valuated, *args, **kwargs):
-        # Set is_valuated to False as we disable the fields in this subclass
-        super().__init__(person, is_valuated=False, *args, **kwargs)
-
-        self.is_valuated = is_valuated
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         belgian_diploma = self.initial.get("belgian_diploma")
         foreign_diploma = self.initial.get("foreign_diploma")
@@ -162,13 +178,13 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
             self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
                 "first_cycle_admission_exam"
             )
-        disable_fields_if_valuated(is_valuated, self.fields, {self.configurable_form_field_name})
+        disable_fields(not self.can_update_diploma, self.fields, {self.configurable_form_field_name})
 
     def clean(self):
         cleaned_data = super().clean()
 
         if (
-            not self.is_valuated
+            self.can_update_diploma
             and cleaned_data.get("graduated_from_high_school") in HAS_DIPLOMA_CHOICES
             and not cleaned_data.get("diploma_type")
         ):
@@ -225,7 +241,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
         max_length=500,
     )
 
-    def __init__(self, person, is_valuated, *args, **kwargs):
+    def __init__(self, person, is_valuated, can_update_diploma, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial['other_institute'] = bool(self.initial.get('other_institute_name'))
         self.initial['has_other_educational_type'] = bool(self.initial.get('educational_other'))
@@ -234,7 +250,7 @@ class BachelorAdmissionEducationBelgianDiplomaForm(forms.Form):
             person,
         )
 
-        disable_fields_if_valuated(is_valuated, self.fields)
+        disable_fields(not can_update_diploma, self.fields)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -363,7 +379,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, is_med_dent_training, person, is_valuated, *args, **kwargs):
+    def __init__(self, is_med_dent_training, person, is_valuated, can_update_diploma, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.is_med_dent_training = is_med_dent_training
@@ -383,7 +399,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
             person,
         )
 
-        disable_fields_if_valuated(is_valuated, self.fields)
+        disable_fields(not can_update_diploma, self.fields)
 
     def clean(self):
         cleaned_data = super().clean()

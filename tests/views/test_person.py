@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ from django.conf import settings
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from rest_framework import status
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.person import CivilState
@@ -105,7 +104,7 @@ class PersonViewTestCase(TestCase):
         self.addCleanup(patcher.stop)
         patcher = patch(
             'osis_document.api.utils.get_remote_metadata',
-            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE},
+            return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()
         self.addCleanup(patcher.stop)
@@ -140,7 +139,7 @@ class PersonViewTestCase(TestCase):
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateNotUsed(response, 'admission/forms/person.html')
         self.assertTemplateUsed(response, 'admission/details/person.html')
 
@@ -158,7 +157,7 @@ class PersonViewTestCase(TestCase):
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'admission/forms/person.html')
         self.assertTemplateNotUsed(response, 'admission/details/person.html')
         self.assertContains(response, "osis-document.umd.min.js")
@@ -201,7 +200,7 @@ class PersonViewTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_person_api.return_value.update_person_identification.assert_called()
 
     def test_form_redirect_with_continue(self):
@@ -257,7 +256,7 @@ class PersonViewTestCase(TestCase):
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "John")
         self.assertContains(response, "FR")
         self.assertContains(response, "BE")
@@ -279,7 +278,7 @@ class PersonViewTestCase(TestCase):
                 'last_registration_id': '0123456A',
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
         self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
         self.assertFormError(response, 'form', 'first_name', _("This field is required if the surname is missing."))
@@ -295,7 +294,7 @@ class PersonViewTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'passport_expiry_date', _("This field is required."))
 
         response = self.client.post(
@@ -307,7 +306,7 @@ class PersonViewTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'id_card_expiry_date', _("This field is required."))
 
     def test_post_update(self):
@@ -393,7 +392,7 @@ class PersonViewTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
             person_identification={
@@ -430,7 +429,7 @@ class PersonViewTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
             person_identification={
@@ -466,7 +465,7 @@ class PersonViewTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
             person_identification={
@@ -505,7 +504,7 @@ class PersonViewTestCase(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
         self.mock_person_api.return_value.update_person_identification_admission.assert_called_with(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
             person_identification={
@@ -539,7 +538,7 @@ class PersonViewTestCase(TestCase):
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "Joe")
         self.mock_person_api.return_value.retrieve_person_identification_admission.assert_called()
@@ -553,7 +552,7 @@ class PersonViewTestCase(TestCase):
         )
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "John")
         self.assertContains(response, "Belgique")
         self.assertContains(response, "France")

@@ -273,7 +273,7 @@
                 <td><span>{{ professional_experience.type.value|enum_display:'ActivityType' }}</span></td>
                 <td class="action-container">
                   <div class="btn-toolbar" role="group">
-                    {% if form and not professional_experience.valuated_from_trainings %}
+                    {% if form and not professional_experience.valuated_from_trainings and not professional_experience.external_id %}
                       <a
                           href="{{ experience_update_url }}#curriculum-header"
                           class="btn btn-info"
