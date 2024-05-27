@@ -202,7 +202,14 @@ class TemplateTagsTestCase(TestCase):
         self.assertIn(str(_('Personal data')), rendered)
 
     @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
-    @patch('osis_document.api.utils.get_remote_metadata', return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE})
+    @patch(
+        'osis_document.api.utils.get_remote_metadata',
+        return_value={
+            'name': 'myfile',
+            'mimetype': PDF_MIME_TYPE,
+            'size': 1,
+        },
+    )
     def test_field_data_with_list(self, *args):
         template = Template("{% load admission %}{% field_data 'title' data %}")
         rendered = template.render(Context({'data': ['55375049-9d61-4c11-9f41-7460463a5ae3']}))
