@@ -2181,9 +2181,6 @@ msgctxt "admission"
 msgid "October"
 msgstr ""
 
-msgid "On hold"
-msgstr "Mise en attente"
-
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
 "enter your academic courses and non-academic activities below."
