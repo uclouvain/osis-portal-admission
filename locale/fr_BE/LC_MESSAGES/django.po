@@ -2477,9 +2477,6 @@ msgctxt "admission"
 msgid "October"
 msgstr "octobre"
 
-msgid "On hold"
-msgstr "Mise en attente"
-
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
 "enter your academic courses and non-academic activities below."
@@ -3554,10 +3551,10 @@ msgstr ""
 "page."
 
 msgid ""
-"This experience has been partially valuated so only few fields are editable."
+"This experience has been partially completed so only few fields are editable."
 msgstr ""
-"Cette expérience ayant déjà été partiellement valorisée, seuls quelques "
-"champs sont éditables."
+"Cette expérience ayant déjà été partiellement remplie, seuls quelques champs "
+"sont éditables."
 
 msgid "This field is required if the first name is missing."
 msgstr "Ce champ est obligatoire si le prénom est manquant."
