@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -82,6 +82,11 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
         )
 
     @cached_property
+    def professional_experience_can_be_updated(self) -> bool:
+        professional_experience = self.professional_experience
+        return bool(not professional_experience.valuated_from_trainings and not professional_experience.external_id)
+
+    @cached_property
     def educational_experience(self) -> EducationalExperience:
         return self.service_mapping[self.current_context].retrieve_educational_experience(
             experience_id=self.experience_id,
@@ -98,6 +103,7 @@ class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMix
         context = super().get_context_data(**kwargs)
         context['experience'] = self.professional_experience
         context['CURRICULUM_ACTIVITY_LABEL'] = CURRICULUM_ACTIVITY_LABEL
+        context['can_be_updated'] = self.professional_experience_can_be_updated
         return context
 
 
@@ -221,4 +227,8 @@ def experience_can_be_updated(experience, context):
             training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
             for training in experience.valuated_from_trainings
         )
-    ) and not getattr(experience, 'external_id', None)  # ... and if the experience doesn't come from EPC
+    ) and not getattr(
+        experience,
+        'external_id',
+        None,
+    )  # ... and if the experience doesn't come from EPC

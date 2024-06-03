@@ -2181,9 +2181,6 @@ msgctxt "admission"
 msgid "October"
 msgstr ""
 
-msgid "On hold"
-msgstr "Mise en attente"
-
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
 "enter your academic courses and non-academic activities below."
@@ -3042,6 +3039,16 @@ msgid ""
 msgstr ""
 
 msgid "The contact address I provided"
+msgstr ""
+
+msgid ""
+"The data related to this academic course can no longer be updated. To make "
+"changes, please contact the Enrolment Office."
+msgstr ""
+
+msgid ""
+"The data related to this non-academic activity can no longer be updated. To "
+"make changes, please contact the Enrolment Office."
 msgstr ""
 
 msgid ""

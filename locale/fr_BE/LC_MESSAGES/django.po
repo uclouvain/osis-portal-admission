@@ -2477,9 +2477,6 @@ msgctxt "admission"
 msgid "October"
 msgstr "octobre"
 
-msgid "On hold"
-msgstr "Mise en attente"
-
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
 "enter your academic courses and non-academic activities below."
@@ -3432,6 +3429,22 @@ msgstr ""
 
 msgid "The contact address I provided"
 msgstr "L'adresse de correspondance que j'ai fournie"
+
+msgid ""
+"The data related to this academic course can no longer be updated. To make "
+"changes, please contact the Enrolment Office."
+msgstr ""
+"Les informations relatives à cette formation académique ne sont plus "
+"modifiables. Si vous souhaitez y apporter des modifications, merci de "
+"contacter le service des inscriptions."
+
+msgid ""
+"The data related to this non-academic activity can no longer be updated. To "
+"make changes, please contact the Enrolment Office."
+msgstr ""
+"Les informations relatives à cette activité non-académique ne sont plus "
+"modifiables. Si vous souhaitez y apporter des modifications, merci de "
+"contacter le service des inscriptions."
 
 msgid ""
 "The declaration of you doctoral training activities must be consistent with "

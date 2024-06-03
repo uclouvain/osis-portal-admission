@@ -381,6 +381,21 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def retrieve_continuing_education_documents(cls, person: Person, uuid):
+        return APIClient().list_continuing_documents(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_continuing_education_documents(cls, person: Person, data, uuid):
+        return APIClient().create_continuing_documents(
+            completer_emplacements_documents_par_candidat_command=data,
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def open_application_fees_payment_after_submission(cls, person: Person, uuid):
         return APIClient().open_application_fees_payment_after_submission(
             uuid=uuid,

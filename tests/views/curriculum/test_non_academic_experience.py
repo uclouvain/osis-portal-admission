@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -49,12 +49,45 @@ class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
         # Check the request
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
+        self.assertFalse("ne sont plus modifiables" in response.rendered_content)
 
         # Check that the right API calls are done
         self.mock_person_api.return_value.retrieve_professional_experience_admission.assert_called()
 
         # Check the context data
         self.assertEqual(response.context.get('experience'), self.professional_experience)
+
+    def test_with_admission_on_reading_experience_valuated_by_epc(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
+        mock_retrieve.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:curriculum:professional_read',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("ne sont plus modifiables" in response.rendered_content)
+
+    def test_with_admission_on_reading_experience_valuated_by_admission(self):
+        mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
+        mock_retrieve.return_value.valuated_from_trainings = ['1']
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:curriculum:professional_read',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("ne sont plus modifiables" in response.rendered_content)
 
 
 @freezegun.freeze_time('2023-01-01')

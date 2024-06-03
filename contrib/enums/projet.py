@@ -59,12 +59,14 @@ class ChoixStatutPropositionGenerale(ChoiceEnum):
 class ChoixStatutPropositionContinue(ChoiceEnum):
     EN_BROUILLON = _('In draft form')
     CONFIRMEE = _('Application confirmed')
-    EN_ATTENTE = _('On hold')
     INSCRIPTION_REFUSEE = _('Application denied')
     ANNULEE = _('Cancelled application')
     INSCRIPTION_AUTORISEE = _('Application accepted')
     CLOTUREE = _('Closed')
     ANNULEE_PAR_GESTIONNAIRE = _('Cancelled application by a manager')
+    # More detailed status are hidden by osis
+    A_COMPLETER = _('To be completed')
+    TRAITEMENT_UCLOUVAIN_EN_COURS = _('UCLouvain processing in progress')
 
 
 IN_PROGRESS_STATUSES = {
