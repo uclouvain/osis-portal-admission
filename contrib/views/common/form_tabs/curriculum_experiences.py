@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -55,7 +55,6 @@ from admission.contrib.forms import (
     FORM_SET_PREFIX,
     OSIS_DOCUMENT_UPLOADER_CLASS,
     OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
-    EMPTY_CHOICE,
 )
 from admission.contrib.forms.curriculum import (
     AdmissionCurriculumEducationalExperienceForm,

@@ -501,6 +501,13 @@
                  manageTranslatedFields(country.val(), this.value);
              }).change();
 
+             {# Show that the annual attachments are required except when the result is pending #}
+             function toggleAnnualTranscriptRequiredClass(yearContainer) {
+                 yearContainer.find('.annual-transcript-file, .annual-transcript-translation-file').toggleClass(
+                     'required_field',
+                     yearContainer.find('.result option[value="WAITING_RESULT"]:selected').length === 0,
+                 );
+              }
 
              {# Display the right badges at page initialization #}
              const initializeYearlyTranscripts = function() {
@@ -535,6 +542,8 @@
                          const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
                          newAttachmentsToToggle.removeClass('hidden');
                      }
+
+                     toggleAnnualTranscriptRequiredClass(tbodyContainer);
                  });
              };
 
@@ -601,6 +610,11 @@
 
                  const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
                  newAttachmentsToToggle.toggleClass('hidden');
+             });
+
+             {# Show that the annual attachments are required except when the result is pending #}
+             $('#formset-container').on('change', '.result select', function(event) {
+                 toggleAnnualTranscriptRequiredClass($(event.target).closest('tbody'));
              });
 
              {# Display a badge specifying if the transcript and its translation have been uploaded #}
