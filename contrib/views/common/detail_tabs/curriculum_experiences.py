@@ -139,6 +139,7 @@ class AdmissionCurriculumEducationalExperienceDetailView(AdmissionCurriculumMixi
 
 def get_educational_experience_year_set_with_lost_years(educational_experience_year_set):
     educational_experience_year_set_with_lost_years = []
+    taken_years = {}
     start = None
     end = None
 
@@ -148,21 +149,20 @@ def get_educational_experience_year_set_with_lost_years(educational_experience_y
 
         taken_years = {experience['academic_year']: experience for experience in educational_experience_year_set}
 
-        educational_experience_year_set_with_lost_years = [
-            taken_years.get(
-                year,
-                {
+        for year in range(end, start - 1, -1):
+            if year not in taken_years:
+                taken_years[year] = {
                     'academic_year': year,
                     'is_enrolled': False,
-                },
-            )
-            for year in range(end, start - 1, -1)
-        ]
+                }
+
+            educational_experience_year_set_with_lost_years.append(taken_years[year])
 
     return {
         'start': start,
         'end': end,
         'educational_experience_year_set_with_lost_years': educational_experience_year_set_with_lost_years,
+        'educational_experience_year_set_with_lost_years_by_year': taken_years,
     }
 
 
