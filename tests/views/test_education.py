@@ -131,6 +131,7 @@ class BaseEducationTestCase(TestCase):
             "high_school_diploma_alternative": None,
             "is_vae_potential": False,
             "is_valuated": False,
+            "can_update_diploma": True,
         }
         person_api_ret.retrieve_high_school_diploma_general_education_admission.return_value.to_dict.return_value = (
             self.mock_retrieve_high_school_diploma_for_general
@@ -671,8 +672,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         form = response.context['belgian_diploma_form']
         self.assertFalse(form.initial['has_other_educational_type'])
 
-    def test_form_initialization_with_valuated_experience(self):
+    def test_form_initialization_with_valuated_experience_with_readonly_diploma(self):
         self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
+        self.mock_retrieve_high_school_diploma_for_general['can_update_diploma'] = False
         response = self.client.get(self.form_url)
 
         # Check response status
@@ -709,6 +711,48 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
 
         for field in foreign_form.fields:
             self.assertTrue(foreign_form.fields[field].disabled, field)
+
+    def test_form_initialization_with_valuated_experience_with_editable_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
+        self.mock_retrieve_high_school_diploma_for_general['can_update_diploma'] = True
+        response = self.client.get(self.form_url)
+
+        # Check response status
+        self.assertEqual(response.status_code, 200)
+
+        # Check api calls
+        self.mock_person_api.return_value.retrieve_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            **self.default_kwargs,
+        )
+
+        # Check response context -> all fields are disabled except the one related to the specific questions
+        self.assertIn('main_form', response.context)
+        main_form = response.context['main_form']
+
+        readonly_fields = {
+            'graduated_from_high_school',
+            'graduated_from_high_school_year',
+        }
+
+        for field in main_form.fields:
+            self.assertEqual(main_form.fields[field].disabled, field in readonly_fields)
+
+        self.assertIn('belgian_diploma_form', response.context)
+        belgian_form = response.context['belgian_diploma_form']
+
+        for field in belgian_form.fields:
+            self.assertFalse(belgian_form.fields[field].disabled, field)
+
+        self.assertIn('foreign_diploma_form', response.context)
+        foreign_form = response.context['foreign_diploma_form']
+
+        for field in foreign_form.fields:
+            self.assertFalse(foreign_form.fields[field].disabled, field)
 
     def test_bachelor_form_empty(self):
         self.proposition.formation.type = TrainingType.BACHELOR.name
@@ -765,6 +809,93 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 },
                 "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
+        )
+
+    def test_bachelor_form_with_valuated_experience_with_readonly_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
+        self.mock_retrieve_high_school_diploma_for_general['can_update_diploma'] = False
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school'] = GotDiploma.YES.name
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school_year'] = 2023
+        self.mock_retrieve_high_school_diploma_for_general['diploma_type'] = DiplomaTypes.BELGIAN.name
+
+        response = self.client.post(
+            self.form_url,
+            {
+                "graduated_from_high_school": GotDiploma.YES.name,
+                "diploma_type": DiplomaTypes.BELGIAN.name,
+                "high_school_diploma_0": "test",
+                "graduated_from_high_school_year": 2020,
+                "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
+                "belgian_diploma-institute": self.first_high_school_uuid,
+                "belgian_diploma-other_institute": False,
+                "belgian_diploma-other_institute_name": "Special school",
+                "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check api calls
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            high_school_diploma={
+                # Data that should not be updated
+                'graduated_from_high_school': GotDiploma.YES.name,
+                'graduated_from_high_school_year': 2023,
+                'diploma_type': DiplomaTypes.BELGIAN.name,
+                'high_school_diploma': [],
+                'first_cycle_admission_exam': [],
+                # Data that should be updated
+                'specific_question_answers': self.proposition.reponses_questions_specifiques,
+            },
+            **self.default_kwargs,
+        )
+
+    def test_bachelor_form_with_valuated_experience_with_editable_diploma(self):
+        self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
+        self.mock_retrieve_high_school_diploma_for_general['can_update_diploma'] = True
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school'] = GotDiploma.YES.name
+        self.mock_retrieve_high_school_diploma_for_general['graduated_from_high_school_year'] = 2020
+        self.mock_retrieve_high_school_diploma_for_general['diploma_type'] = DiplomaTypes.FOREIGN.name
+
+        response = self.client.post(
+            self.form_url,
+            {
+                "graduated_from_high_school": GotDiploma.YES.name,
+                "diploma_type": DiplomaTypes.BELGIAN.name,
+                "high_school_diploma_0": "test",
+                "graduated_from_high_school_year": 2020,
+                "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
+                "belgian_diploma-institute": self.first_high_school_uuid,
+                "belgian_diploma-other_institute": False,
+                "belgian_diploma-other_institute_name": "Special school",
+                "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check api calls
+        self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
+            uuid=self.proposition_uuid_str,
+            high_school_diploma={
+                # Data that should not be updated
+                'graduated_from_high_school': GotDiploma.YES.name,
+                'graduated_from_high_school_year': 2020,
+                # Data that should be updated
+                "belgian_diploma": {
+                    "academic_graduation_year": 2020,
+                    "community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
+                    "high_school_diploma": ["test"],
+                    "institute": self.first_high_school_uuid,
+                    # Clean other institute
+                    "other_institute_name": "",
+                    "other_institute_address": "",
+                    # Clean education type
+                    "educational_type": "",
+                    "educational_other": "",
+                },
+                'specific_question_answers': self.proposition.reponses_questions_specifiques,
+            },
+            **self.default_kwargs,
         )
 
     def test_bachelor_form_belgian_for_french_community(self):
