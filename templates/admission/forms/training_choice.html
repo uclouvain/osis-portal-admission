@@ -112,11 +112,11 @@
 
   <div class="row">
     <div class="col-md-12 closed-continuing-fields" style="display: none">
-      <p id="closed-continuing-alert" class="alert alert-danger">
-        {% blocktranslate with program='<span class="program-name">{}</span>' program_managers='<span class="program-managers">{}</span>' trimmed %}
-          Your application cannot be submitted because the {{ program }} course is closed.
-          You can express your interest by ticking the box below or contacting a course administrator:
-          {{ program_managers }}.
+      <p id="closed-continuing-alert" class="alert alert-danger text-justify">
+        {% blocktranslate with program='<span class="program-name"></span>' training_info_url='<a href="" target="_blank" class="training-info-url"></a>' trimmed %}
+          The enrolments for the {{ program }} course are closed.
+          To stay informed about the opening of enrolments for the next edition, tick the box below.
+          For any other information, please contact a course administrator: {{ training_info_url }}.
         {% endblocktranslate %}
       </p>
       {% bootstrap_field form.interested_mark %}
@@ -129,9 +129,16 @@
     </div>
   </div>
 
-  <div class="row long-continuing-fields">
-    <div class="col-md-12 required_field">
-      {% bootstrap_field form.ways_to_find_out_about_the_course %}
+  <div class="long-continuing-fields">
+    <div class="row">
+      <div class="col-md-12 required_field">
+        {% bootstrap_field form.ways_to_find_out_about_the_course %}
+      </div>
+    </div>
+    <div id="other-way-to-find-out-about-the-course-container" class="row">
+      <div class="col-md-12 required_field">
+        {% bootstrap_field form.other_way_to_find_out_about_the_course placeholder='' %}
+      </div>
     </div>
   </div>
 
@@ -161,7 +168,7 @@
           const SCIENCE_DOCTORATE = '{{ SCIENCE_DOCTORATE }}';
           const closedContinuingAlertMessage = $('#closed-continuing-alert');
           const closedContinuingAlertMessageProgramName = closedContinuingAlertMessage.find('.program-name');
-          const closedContinuingAlertMessageProgramManagers = closedContinuingAlertMessage.find('.program-managers');
+          const closedContinuingAlertMessageTrainingInfoURL = closedContinuingAlertMessage.find('.training-info-url');
 
           const fieldsThatMustBeInitialized = new Set(['id_mixed_training']);
 
@@ -212,16 +219,14 @@
                    */
                   if (toggle) {
                       closedContinuingAlertMessageProgramName.text(data.sigle_formation);
-                      closedContinuingAlertMessageProgramManagers.html(
-                          data.emails_gestionnaires.length ? data.emails_gestionnaires.map(
-                              email => `<a href="mailto:${email}">${email}</a>`
-                          ).join(', ') : "{% translate 'no manager email address found' %}"
-                      );
+                      closedContinuingAlertMessageTrainingInfoURL.text(data.lien_informations_pratiques_formation);
+                      closedContinuingAlertMessageTrainingInfoURL.prop('href', data.lien_informations_pratiques_formation);
                       closedContinuingFields.show();
                   } else {
                       closedContinuingFields.hide();
                       closedContinuingAlertMessageProgramName.text('');
-                      closedContinuingAlertMessageProgramManagers.html('');
+                      closedContinuingAlertMessageTrainingInfoURL.text('', '');
+                      closedContinuingAlertMessageTrainingInfoURL.prop('href', '');
                   }
               }
 
@@ -250,6 +255,10 @@
                       toggleClosedContinuingFields(false);
                   }
               }).change();
+
+              $('#other-way-to-find-out-about-the-course-container').dependsOn({
+                  'input[name="ways_to_find_out_about_the_course"][value="AUTRE"]': { checked: true}
+              }, defaultOptions);
 
               // Doctorate education
 

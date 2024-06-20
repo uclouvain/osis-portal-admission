@@ -377,6 +377,8 @@ class MixinTestCase(TestCase):
             aide_a_la_formation=False,
             inscription_au_role_obligatoire=True,
             etat_formation=StateIUFC.OPEN.name,
+            autre_moyen_decouverte_formation='Other way',
+            adresses_emails_gestionnaires_formation=['john.doe@example.be', 'joe.foe@example.be'],
         )
 
         cls.api_default_params = {

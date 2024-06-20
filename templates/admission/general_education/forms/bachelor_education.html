@@ -36,8 +36,8 @@
       {% if can_update_diploma %}
         {% translate 'This experience has been partially completed so only few fields are editable.' %}
       {% else %}
-        {% blocktranslate trimmed %}
-          Your secondary education data can no longer be updated. To make changes, please contact the Enrolment Office.
+        {% blocktranslate trimmed with recipient=_('the Enrolment Office') %}
+          Your secondary education data can no longer be updated. To make changes, please contact {{ recipient }}.
         {% endblocktranslate %}
       {% endif %}
     </div>

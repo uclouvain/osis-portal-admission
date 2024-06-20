@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain
+  * Copyright (C) 2015-2024 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -26,9 +26,16 @@
 {% endcomment %}
 
 <p class="text-center">
+  {% translate 'An administrative question about your dossier?' %}
+  {% if training_contact %}
+    {% blocktranslate with training_contact=training_contact %}Contact {{ training_contact }}{% endblocktranslate %}
+  {% else %}
+    {% blocktranslate trimmed %}
+      <a href="https://uclouvain.be/en/study/inscriptions/frequently-asked-questions.html" target="_blank">Contact the Enrolment Office</a>
+    {% endblocktranslate %}
+  {% endif %}
+   -
   {% blocktranslate trimmed %}
-    An administrative question about your dossier?
-    <a href="https://uclouvain.be/en/study/inscriptions/frequently-asked-questions.html" target="_blank">Contact the Enrolment Office</a> -
     A technical or IT problem?
     <a href="http://uclouvain.be/8282" target="_blank">Contact the Service Desk</a>
   {% endblocktranslate %}

@@ -45,7 +45,7 @@
   {% field_data _('Motivations') admission.motivations %}
 
   {% if admission.inscription_au_role_obligatoire == True %}
-    {% field_data _('How did you hear about this course?') admission.moyens_decouverte_formation|multiple_enum_display:'ChoixMoyensDecouverteFormation' %}
+    {% field_data _('How did you hear about this course?') admission|format_ways_to_find_out_about_the_course html_tag='ul' %}
   {% endif %}
 
 {% endblock %}

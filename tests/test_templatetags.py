@@ -25,7 +25,7 @@
 # ##############################################################################
 
 import uuid
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock
 
 from django.core.exceptions import ImproperlyConfigured
 from django import forms
@@ -41,6 +41,7 @@ from admission.contrib.enums import (
     ChoixStatutPropositionGenerale,
     ChoixStatutPropositionContinue,
     TrainingType,
+    ChoixMoyensDecouverteFormation,
 )
 from admission.contrib.enums.specific_question import TypeItemFormulaire
 from admission.contrib.forms import PDF_MIME_TYPE, AdmissionFileUploadField
@@ -60,6 +61,7 @@ from admission.templatetags.admission import (
     value_if_all,
     value_if_any,
     form_fields_are_empty,
+    format_ways_to_find_out_about_the_course,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
@@ -340,6 +342,48 @@ class TemplateTagsTestCase(TestCase):
             request.user = PersonFactory().user
             rendered = template.render(Context({'request': request}))
         self.assertNotIn('coucou', rendered)
+
+    def test_format_ways_to_find_out_about_the_course(self):
+        self.assertEqual(
+            format_ways_to_find_out_about_the_course(
+                MagicMock(
+                    moyens_decouverte_formation=[
+                        ChoixMoyensDecouverteFormation.SITE_FORMATION_CONTINUE.name,
+                        ChoixMoyensDecouverteFormation.ANCIENS_ETUDIANTS.name,
+                    ],
+                    autre_moyen_decouverte_formation='Other way',
+                )
+            ),
+            f'\t<li>{ChoixMoyensDecouverteFormation.SITE_FORMATION_CONTINUE.value}</li>\n'
+            f'\t<li>{ChoixMoyensDecouverteFormation.ANCIENS_ETUDIANTS.value}</li>',
+        )
+
+        self.assertEqual(
+            format_ways_to_find_out_about_the_course(
+                MagicMock(
+                    moyens_decouverte_formation=[
+                        ChoixMoyensDecouverteFormation.SITE_FORMATION_CONTINUE.name,
+                        ChoixMoyensDecouverteFormation.AUTRE.name,
+                    ],
+                    autre_moyen_decouverte_formation='Other way',
+                )
+            ),
+            f'\t<li>{ChoixMoyensDecouverteFormation.SITE_FORMATION_CONTINUE.value}</li>\n' f'\t<li>Other way</li>',
+        )
+
+        self.assertEqual(
+            format_ways_to_find_out_about_the_course(
+                MagicMock(
+                    moyens_decouverte_formation=[
+                        ChoixMoyensDecouverteFormation.SITE_FORMATION_CONTINUE.name,
+                        ChoixMoyensDecouverteFormation.AUTRE.name,
+                    ],
+                    autre_moyen_decouverte_formation='',
+                )
+            ),
+            f'\t<li>{ChoixMoyensDecouverteFormation.SITE_FORMATION_CONTINUE.value}</li>\n'
+            f'\t<li>{ChoixMoyensDecouverteFormation.AUTRE.value}</li>',
+        )
 
 
 class DisplayTagTestCase(TestCase):
