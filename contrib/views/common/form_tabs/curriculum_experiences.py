@@ -244,6 +244,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
 
         educational_experience = None
         all_educational_experience_years = None
+        all_educational_experience_years_by_year = {}
 
         if self.experience_id:
             educational_experience = self.educational_experience.to_dict()
@@ -261,6 +262,9 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
             all_educational_experience_years = all_years_config['educational_experience_year_set_with_lost_years']
             educational_experience['start'] = all_years_config['start']
             educational_experience['end'] = all_years_config['end']
+            all_educational_experience_years_by_year = all_years_config[
+                'educational_experience_year_set_with_lost_years_by_year'
+            ]
 
         base_form = AdmissionCurriculumEducationalExperienceForm(
             educational_experience=educational_experience,
@@ -286,6 +290,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
                 ),
                 'educational_experience': educational_experience,
                 'current_context': self.current_context,
+                'initial_years': all_educational_experience_years_by_year,
             },
         )
 
