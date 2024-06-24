@@ -38,7 +38,7 @@ from osis_reference_sdk.model.university import University
 from waffle import switch_is_active
 
 from admission.constants import BE_ISO_CODE
-from admission.contrib.enums import TypeFormation
+from admission.contrib.enums import TypeFormation, ForeignDiplomaTypes
 from admission.contrib.enums.diploma import StudyType
 from admission.contrib.forms import EMPTY_VALUE
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -65,6 +65,7 @@ from base.models.enums.entity_type import INSTITUTE
 __all__ = [
     "DoctorateAutocomplete",
     "CountryAutocomplete",
+    "CountryForEducationAutocomplete",
     "CityAutocomplete",
     "LanguageAutocomplete",
     "TutorAutocomplete",
@@ -243,6 +244,28 @@ class CountryAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autoco
             )
             for country in results
             if not self.forwarded.get('exclude_be', False) or country.iso_code != BE_ISO_CODE
+        ]
+
+
+class CountryForEducationAutocomplete(CountryAutocomplete):
+    urlpatterns = 'country-for-education'
+
+    def results(self, results):
+        exclude_be = self.forwarded.get('foreign_diploma_type') not in {
+            ForeignDiplomaTypes.EUROPEAN_BACHELOR.name,
+            ForeignDiplomaTypes.INTERNATIONAL_BACCALAUREATE.name,
+        }
+
+        country_name_field = 'name' if get_language() == settings.LANGUAGE_CODE else 'name_en'
+
+        return [
+            dict(
+                id=country.iso_code,
+                text=getattr(country, country_name_field, ''),
+                european_union=country.european_union,
+            )
+            for country in results
+            if not exclude_be or country.iso_code != BE_ISO_CODE
         ]
 
 

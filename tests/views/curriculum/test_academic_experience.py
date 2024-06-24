@@ -333,6 +333,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             base_form.fields['start'].choices,
             [EMPTY_CHOICE[0]]
             + [
+                (2016, '2016-2017'),
+                (2017, '2017-2018'),
                 (2018, '2018-2019'),
                 (2019, '2019-2020'),
                 (2020, '2020-2021'),
@@ -382,9 +384,11 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             forms[0].initial,
             {
                 'academic_year': 2020,
-                'graduate_degree': ['f1_2020.pdf'],
-                'graduate_degree_translation': ['f11_2020.pdf'],
+                'transcript': ['f1_2020.pdf'],
+                'transcript_translation': ['f11_2020.pdf'],
                 'result': Result.SUCCESS.name,
+                'acquired_credit_number': 10.0,
+                'registered_credit_number': 10.0,
             },
         )
         past_choices = list(EMPTY_CHOICE + Result.choices_for_past_years())
@@ -401,9 +405,11 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             forms[2].initial,
             {
                 'academic_year': 2018,
-                'graduate_degree': ['f1_2018.pdf'],
-                'graduate_degree_translation': ['f11_2018.pdf'],
+                'transcript': ['f1_2018.pdf'],
+                'transcript_translation': ['f11_2018.pdf'],
                 'result': Result.SUCCESS.name,
+                'acquired_credit_number': 20.0,
+                'registered_credit_number': 20.0,
             },
         )
         self.assertEqual(forms[2].fields['result'].choices, past_choices)
@@ -785,15 +791,15 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check that the API calls aren't done
-        # self.mockapi.update_educational_experience_admission.assert_not_called()
+        self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
-        # for field in [
-        #     'acquired_credit_number',
-        #     'registered_credit_number',
-        #     'result',
-        # ]:
-        #     self.assertFormsetError(response, 'year_formset', 0, field, errors=FIELD_REQUIRED_MESSAGE)
+        for field in [
+            'acquired_credit_number',
+            'registered_credit_number',
+            'result',
+        ]:
+            self.assertFormsetError(response, 'year_formset', 0, field, errors=FIELD_REQUIRED_MESSAGE)
 
         response = self.client.post(
             self.admission_update_url,
@@ -1077,14 +1083,263 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                     {
                         'academic_year': 2020,
                         'result': 'SUCCESS',
-                        'registered_credit_number': None,
-                        'acquired_credit_number': None,
+                        'registered_credit_number': 10.0,
+                        'acquired_credit_number': 10.0,
                         'transcript': [],
                         'transcript_translation': [],
                     },
                     {
                         'academic_year': 2018,
                         'result': 'SUCCESS',
+                        'registered_credit_number': 20.0,
+                        'acquired_credit_number': 20.0,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                ],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_update_experience_form_with_continuing(self):
+        response = self.client.post(
+            self.continuing_admission_update_url,
+            data={
+                'base_form-start': '2016',
+                'base_form-end': '2018',
+                'base_form-country': self.ue_country.iso_code,
+                'base_form-other_institute': False,
+                'base_form-institute_name': 'UCL',
+                'base_form-institute_address': 'Louvain-La-Neuve',
+                'base_form-institute': self.institute.uuid,
+                'base_form-program': self.second_diploma.uuid,
+                'base_form-other_program': False,
+                'base_form-education_name': 'New computer science',
+                'base_form-evaluation_type': EvaluationSystem.NON_EUROPEAN_CREDITS.name,
+                'base_form-linguistic_regime': self.language_without_translation.code,
+                'base_form-transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
+                'base_form-obtained_diploma': True,
+                'base_form-obtained_grade': Grade.GREATER_DISTINCTION.name,
+                'base_form-graduate_degree_0': ['f1_new_b.pdf'],
+                'base_form-graduate_degree_translation_0': ['f11_b.pdf'],
+                'base_form-transcript_0': ['f2_b.pdf'],
+                'base_form-transcript_translation_0': ['f22_b.pdf'],
+                'base_form-rank_in_diploma': '20 on 100',
+                'base_form-expected_graduation_date': datetime.date(2024, 1, 1),
+                'base_form-dissertation_title': 'The new title b',
+                'base_form-dissertation_score': 'B',
+                'base_form-dissertation_summary_0': ['f3_b.pdf'],
+                'year_formset-2016-is_enrolled': True,
+                'year_formset-2016-academic_year': '2016',
+                'year_formset-2016-acquired_credit_number': 160,
+                'year_formset-2016-registered_credit_number': 161,
+                'year_formset-2016-result': Result.SUCCESS.name,
+                'year_formset-2016-transcript_0': ['f1_2016.pdf'],
+                'year_formset-2016-transcript_translation_0': ['f11_2016.pdf'],
+                'year_formset-2017-is_enrolled': True,
+                'year_formset-2017-academic_year': '2017',
+                'year_formset-2017-acquired_credit_number': 170,
+                'year_formset-2017-registered_credit_number': 171,
+                'year_formset-2017-result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+                'year_formset-2017-transcript_0': ['f1_2017.pdf'],
+                'year_formset-2017-transcript_translation_0': ['f11_2017.pdf'],
+                'year_formset-2018-is_enrolled': True,
+                'year_formset-2018-academic_year': '2018',
+                'year_formset-2018-result': Result.FAILURE.name,
+                'year_formset-2018-acquired_credit_number': 180,
+                'year_formset-2018-registered_credit_number': 181,
+                'year_formset-2018-transcript_0': ['f1_2018.pdf'],
+                'year_formset-2018-transcript_translation_0': ['f11_2018.pdf'],
+                'year_formset-TOTAL_FORMS': '3',
+                'year_formset-INITIAL_FORMS': '3',
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(response=response, expected_url=self.continuing_admission_update_url)
+
+        # Check that the API calls are done
+        self.mockapi.update_educational_experience_continuing_education_admission.assert_called_once_with(
+            uuid=self.continuing_proposition.uuid,
+            experience_id=self.educational_experience.uuid,
+            educational_experience={
+                # Some fields can be updated
+                'start': '2016',
+                'end': '2018',
+                'country': 'FR',
+                'institute_name': '',
+                'institute_address': '',
+                'institute': self.institute.uuid,
+                'program': None,
+                'education_name': 'New computer science',
+                'obtained_diploma': True,
+                'graduate_degree': ['f1_new_b.pdf'],
+                # Some fields are readonly
+                'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
+                'linguistic_regime': self.language_without_translation.code,
+                'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
+                'obtained_grade': Grade.GREAT_DISTINCTION.name,
+                'graduate_degree_translation': [],
+                'transcript': ['f2.pdf'],
+                'transcript_translation': [],
+                'rank_in_diploma': '10 on 100',
+                'expected_graduation_date': datetime.date(2022, 8, 30),
+                'dissertation_title': 'Title',
+                'dissertation_score': '15/20',
+                'dissertation_summary': ['foobar'],
+                'educationalexperienceyear_set': [
+                    # Existing experience year
+                    {
+                        'academic_year': 2018,
+                        # Some fields are readonly
+                        'result': Result.SUCCESS.name,
+                        'registered_credit_number': 20,
+                        'acquired_credit_number': 20,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                    # Added experience years
+                    {
+                        'academic_year': 2017,
+                        # Some fields are readonly
+                        'result': '',
+                        'registered_credit_number': None,
+                        'acquired_credit_number': None,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                    {
+                        'academic_year': 2016,
+                        # Some fields are readonly
+                        'result': '',
+                        'registered_credit_number': None,
+                        'acquired_credit_number': None,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                ],
+            },
+            **self.api_default_params,
+        )
+
+    def test_with_admission_on_create_experience_form_with_continuing(self):
+        self.mockapi.create_educational_experience_continuing_education_admission.return_value = {
+            'uuid': self.educational_experience.uuid,
+        }
+
+        response = self.client.post(
+            resolve_url(
+                'admission:continuing-education:update:curriculum:educational_create',
+                pk=self.continuing_proposition.uuid,
+            ),
+            data={
+                'base_form-start': '2016',
+                'base_form-end': '2018',
+                'base_form-country': self.be_country.iso_code,
+                'base_form-other_institute': False,
+                'base_form-institute_name': 'UCL',
+                'base_form-institute_address': 'Louvain-La-Neuve',
+                'base_form-institute': self.institute.uuid,
+                'base_form-program': self.second_diploma.uuid,
+                'base_form-other_program': False,
+                'base_form-education_name': 'New computer science',
+                'base_form-evaluation_type': EvaluationSystem.NON_EUROPEAN_CREDITS.name,
+                'base_form-linguistic_regime': self.language_without_translation.code,
+                'base_form-transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
+                'base_form-obtained_diploma': True,
+                'base_form-obtained_grade': Grade.GREATER_DISTINCTION.name,
+                'base_form-graduate_degree_0': ['f1.pdf'],
+                'base_form-graduate_degree_translation_0': ['f11_b.pdf'],
+                'base_form-transcript_0': ['f2_b.pdf'],
+                'base_form-transcript_translation_0': ['f22_b.pdf'],
+                'base_form-rank_in_diploma': '20 on 100',
+                'base_form-expected_graduation_date': datetime.date(2024, 1, 1),
+                'base_form-dissertation_title': 'The new title b',
+                'base_form-dissertation_score': 'B',
+                'base_form-dissertation_summary_0': ['f3_b.pdf'],
+                'year_formset-2016-is_enrolled': True,
+                'year_formset-2016-academic_year': '2016',
+                'year_formset-2016-acquired_credit_number': 160,
+                'year_formset-2016-registered_credit_number': 161,
+                'year_formset-2016-result': Result.SUCCESS.name,
+                'year_formset-2016-transcript_0': ['f1_2016.pdf'],
+                'year_formset-2016-transcript_translation_0': ['f11_2016.pdf'],
+                'year_formset-2017-is_enrolled': True,
+                'year_formset-2017-academic_year': '2017',
+                'year_formset-2017-acquired_credit_number': 170,
+                'year_formset-2017-registered_credit_number': 171,
+                'year_formset-2017-result': Result.SUCCESS_WITH_RESIDUAL_CREDITS.name,
+                'year_formset-2017-transcript_0': ['f1_2017.pdf'],
+                'year_formset-2017-transcript_translation_0': ['f11_2017.pdf'],
+                'year_formset-2018-is_enrolled': True,
+                'year_formset-2018-academic_year': '2018',
+                'year_formset-2018-result': Result.FAILURE.name,
+                'year_formset-2018-acquired_credit_number': 180,
+                'year_formset-2018-registered_credit_number': 181,
+                'year_formset-2018-transcript_0': ['f1_2018.pdf'],
+                'year_formset-2018-transcript_translation_0': ['f11_2018.pdf'],
+                'year_formset-TOTAL_FORMS': '3',
+                'year_formset-INITIAL_FORMS': '0',
+            },
+        )
+
+        # Check the request
+        self.assertRedirects(
+            response=response, expected_url=self.continuing_admission_update_url + '#curriculum-header'
+        )
+
+        # Check that the API calls are done
+        self.mockapi.create_educational_experience_continuing_education_admission.assert_called_once_with(
+            uuid=self.continuing_proposition.uuid,
+            educational_experience={
+                # Some fields can be filled
+                'start': '2016',
+                'end': '2018',
+                'country': 'BE',
+                'institute_name': '',
+                'institute_address': '',
+                'institute': self.institute.uuid,
+                'program': self.second_diploma.uuid,
+                'education_name': '',
+                'obtained_diploma': True,
+                'graduate_degree': ['f1.pdf'],
+                # Some fields are readonly
+                'evaluation_type': 'ECTS_CREDITS',  # Automatically computed
+                'linguistic_regime': None,
+                'obtained_grade': '',
+                'graduate_degree_translation': [],
+                'transcript': [],
+                'transcript_translation': [],
+                'rank_in_diploma': '',
+                'expected_graduation_date': None,
+                'dissertation_title': '',
+                'dissertation_score': '',
+                'dissertation_summary': [],
+                'educationalexperienceyear_set': [
+                    # Existing experience year
+                    {
+                        'academic_year': 2018,
+                        # Some fields are readonly
+                        'result': '',
+                        'registered_credit_number': None,
+                        'acquired_credit_number': None,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                    # Added experience years
+                    {
+                        'academic_year': 2017,
+                        # Some fields are readonly
+                        'result': '',
+                        'registered_credit_number': None,
+                        'acquired_credit_number': None,
+                        'transcript': [],
+                        'transcript_translation': [],
+                    },
+                    {
+                        'academic_year': 2016,
+                        # Some fields are readonly
+                        'result': '',
                         'registered_credit_number': None,
                         'acquired_credit_number': None,
                         'transcript': [],
