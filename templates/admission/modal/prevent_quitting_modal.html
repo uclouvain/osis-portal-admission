@@ -113,6 +113,10 @@
     });
     window.addEventListener('beforeunload', function (e) {
       allForms.forEach(function (form) {
+        // Do not prevent hijack release
+        if (form.action.endsWith('/hijack/release/')) {
+          return ;
+        }
         if (window.preventQuitting && doCheckForm && doBrowserPrevent && formHasChanged(form, e)) {
           // Cancel the event
           e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
