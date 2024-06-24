@@ -696,6 +696,7 @@ MINIMUM_CREDIT_NUMBER = 0
 
 EDUCATIONAL_EXPERIENCE_YEAR_CONTINUING_FIELDS = {
     'academic_year',
+    'is_enrolled',
 }
 
 EDUCATIONAL_EXPERIENCE_YEAR_FIELDS = {
@@ -752,7 +753,7 @@ class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
         required=False,
     )
 
-    def __init__(self, current_year, prefix_index_start=0, **kwargs):
+    def __init__(self, current_year, prefix_index_start=0, initial_years=None, **kwargs):
         kwargs['fields_by_context'] = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
         super().__init__(**kwargs)
         academic_year = self.data.get(self.add_prefix('academic_year'), self.initial.get('academic_year'))
@@ -769,10 +770,23 @@ class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
 
 
 class BaseFormSetWithCustomFormIndex(BaseFormSet):
+    def current_index(self, index):
+        # The index of the form in the formset is based on the academic year
+        return self.form_kwargs.get('prefix_index_start') - index if isinstance(index, int) else index
+
     def add_prefix(self, index):
-        return super().add_prefix(
-            self.form_kwargs.get('prefix_index_start') - index if isinstance(index, int) else index
-        )
+        return super().add_prefix(self.current_index(index))
+
+    def get_form_kwargs(self, index):
+        form_kwargs = super().get_form_kwargs(index)
+
+        # Initialize the form with the correct academic year data
+        current_index = self.current_index(index)
+
+        if current_index is not None and 'initial' not in form_kwargs:
+            form_kwargs['initial'] = form_kwargs['initial_years'].get(current_index)
+
+        return form_kwargs
 
 
 AdmissionCurriculumEducationalExperienceYearFormSet = forms.formset_factory(

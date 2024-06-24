@@ -311,6 +311,11 @@
                   valueOnDisable: null,
               });
 
+              {# Country #}
+              $('input[name=foreign_diploma-foreign_diploma_type]').on('change', function() {
+                  $('#id_foreign_diploma-country').val('').change();
+              });
+
               {# Equivalence #}
               $('.equivalence-fields').dependsOn({
                   'input[name=foreign_diploma-foreign_diploma_type]': { values: ['NATIONAL_BACHELOR'] },
