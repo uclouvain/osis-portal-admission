@@ -163,7 +163,7 @@
           const closedContinuingAlertMessageProgramName = closedContinuingAlertMessage.find('.program-name');
           const closedContinuingAlertMessageProgramManagers = closedContinuingAlertMessage.find('.program-managers');
 
-          const fieldsThatMustBeInitialized = new Set(['id_mixed_training']);
+          const fieldsThatMustBeInitialized = new Set(['id_mixed_training', 'id_doctorate_training']);
 
           $(document).on('dal-element-initialized', function (e) {
               // We need to wait that select2 has been initialized as the display depends on some specific fields
