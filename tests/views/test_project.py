@@ -364,6 +364,7 @@ class ProjectViewTestCase(TestCase):
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = Mock(
             statut=ChoixStatutPropositionContinue.EN_BROUILLON.name,
             links={'destroy_proposition': {'url': 'ok'}},
+            adresses_emails_gestionnaires_formation=['john.doe@example.be'],
         )
         response = self.client.get(url)
         self.mock_proposition_api.return_value.destroy_continuing_education_proposition.assert_not_called()
