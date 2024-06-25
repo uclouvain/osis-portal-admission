@@ -408,6 +408,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             'aide_a_la_formation': False,
             'inscription_au_role_obligatoire': True,
             'etat_formation': StateIUFC.OPEN.name,
+            'autre_moyen_decouverte_formation': 'Autre',
+            'adresses_emails_gestionnaires_formation': ['john.doe@example.be', 'joe.foe@example.be'],
         }
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -457,6 +459,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             aide_a_la_formation=False,
             inscription_au_role_obligatoire=True,
             etat_formation=StateIUFC.OPEN.name,
+            autre_moyen_decouverte_formation='Other way',
+            adresses_emails_gestionnaires_formation=['john.doe@example.be', 'joe.foe@example.be'],
         )
 
         cls.doctorate_proposition = Mock(
@@ -589,6 +593,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 aide_a_la_formation=True,
                 inscription_au_role_obligatoire=True,
                 etat=StateIUFC.OPEN.name,
+                lien_informations_pratiques_formation='https://test.be/FOOBAR/2021/info',
             ),
             InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
                 sigle_formation='BARBAZ',
@@ -596,6 +601,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 aide_a_la_formation=True,
                 inscription_au_role_obligatoire=True,
                 etat=StateIUFC.OPEN.name,
+                lien_informations_pratiques_formation='https://test.be/BARBAZ/2021/info',
             ),
         ]
 

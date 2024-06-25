@@ -130,7 +130,9 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             'ways_to_find_out_about_the_course': [
                 ChoixMoyensDecouverteFormation.FACEBOOK.name,
                 ChoixMoyensDecouverteFormation.LINKEDIN.name,
+                ChoixMoyensDecouverteFormation.AUTRE.name,
             ],
+            'other_way_to_find_out_about_the_course': 'Other way',
         }
         response = self.client.post(self.url, data=data)
 
@@ -143,8 +145,10 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'moyens_decouverte_formation': [
                     ChoixMoyensDecouverteFormation.FACEBOOK.name,
                     ChoixMoyensDecouverteFormation.LINKEDIN.name,
+                    ChoixMoyensDecouverteFormation.AUTRE.name,
                 ],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': 'Other way',
             },
             **self.default_kwargs,
         )
@@ -197,13 +201,15 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'motivations': 'My motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
 
         # With extra data
-        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AMIS.name]
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name]
         data['interested_mark'] = True
+        data['autre_moyen_decouverte_formation'] = 'My other way'
 
         response = self.client.post(self.url, data=data)
 
@@ -217,6 +223,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'motivations': 'My motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
@@ -265,12 +272,13 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'motivations': 'My motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': True,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
 
         # With extra data
-        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AMIS.name]
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name]
 
         response = self.client.post(self.url, data=data)
 
@@ -284,6 +292,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'motivations': 'My motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': True,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
@@ -317,7 +326,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('ways_to_find_out_about_the_course', []))
 
         data['motivations'] = 'My motivation'
-        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AMIS.name]
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name]
 
         # With complete data
         response = self.client.post(self.url, data=data)
@@ -330,8 +339,9 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'annee_formation': 2020,
                 'matricule_candidat': self.person.global_id,
                 'motivations': 'My motivation',
-                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.AMIS.name],
+                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
@@ -349,8 +359,43 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'annee_formation': 2020,
                 'matricule_candidat': self.person.global_id,
                 'motivations': 'My motivation',
-                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.AMIS.name],
+                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
+            },
+            **self.default_kwargs,
+        )
+
+        # With another way to find out about the course
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AUTRE.name]
+        data['other_way_to_find_out_about_the_course'] = ''
+
+        # With missing data
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+
+        self.assertEqual(form.is_valid(), False)
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('other_way_to_find_out_about_the_course', []))
+
+        data['other_way_to_find_out_about_the_course'] = 'My other way'
+
+        # With complete data
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, 302)
+
+        self.mock_proposition_api.return_value.create_continuing_training_choice.assert_called_with(
+            initier_proposition_continue_command={
+                'sigle_formation': 'TR2',
+                'annee_formation': 2020,
+                'matricule_candidat': self.person.global_id,
+                'motivations': 'My motivation',
+                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.AUTRE.name],
+                'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': 'My other way',
             },
             **self.default_kwargs,
         )
@@ -384,7 +429,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('ways_to_find_out_about_the_course', []))
 
         data['motivations'] = 'My motivation'
-        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AMIS.name]
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name]
         data['interested_mark'] = True
 
         # With complete data
@@ -398,8 +443,9 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'annee_formation': 2020,
                 'matricule_candidat': self.person.global_id,
                 'motivations': 'My motivation',
-                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.AMIS.name],
+                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name],
                 'marque_d_interet': True,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
