@@ -82,6 +82,8 @@ def get_country_initial_choices(iso_code=None, person=None, loaded_country=None)
     if not iso_code and not loaded_country:
         return EMPTY_CHOICE
     country = loaded_country if loaded_country else CountriesService.get_country(iso_code=iso_code, person=person)
+    if not country:
+        return EMPTY_CHOICE
     return EMPTY_CHOICE + (
         (country.iso_code, country.name if get_language() == settings.LANGUAGE_CODE else country.name_en),
     )

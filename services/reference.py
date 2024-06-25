@@ -73,7 +73,7 @@ class CountriesService(metaclass=ServiceMeta):
     @classmethod
     @lru_cache()
     def get_country(cls, person=None, *args, **kwargs):
-        return (
+        countries = (
             CountriesAPIClient()
             .countries_list(
                 active=True,
@@ -82,8 +82,11 @@ class CountriesService(metaclass=ServiceMeta):
                 **build_mandatory_auth_headers(person),
                 limit=1,
             )
-            .results[0]
+            .results
         )
+        if not countries:
+            return None
+        return countries[0]
 
 
 class CitiesAPIClient:
