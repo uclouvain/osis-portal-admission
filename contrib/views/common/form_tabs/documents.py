@@ -54,10 +54,12 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
     retrieve_service_mapping = {
         'general-education': AdmissionPropositionService.retrieve_general_education_documents,
         'continuing-education': AdmissionPropositionService.retrieve_continuing_education_documents,
+        'doctorate': AdmissionPropositionService.retrieve_doctorate_documents,
     }
     update_service_mapping = {
         'general-education': AdmissionPropositionService.update_general_education_documents,
         'continuing-education': AdmissionPropositionService.update_continuing_education_documents,
+        'doctorate': AdmissionPropositionService.update_doctorate_documents,
     }
     form_class = CompleteDocumentsForm
     extra_context = {
