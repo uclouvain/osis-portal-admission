@@ -36,11 +36,16 @@ class ChoixLangueRedactionThese(ChoiceEnum):
 
 
 class ChoixStatutPropositionDoctorale(ChoiceEnum):
-    ANNULEE = _('Cancelled application')
     EN_BROUILLON = _('In draft form')
-    CONFIRMEE = _('Application confirmed')
     EN_ATTENTE_DE_SIGNATURE = _('Waiting for signature')
+    CONFIRMEE = _('Application confirmed')
+    ANNULEE = _('Cancelled application')
     INSCRIPTION_AUTORISEE = _('Application accepted')
+    INSCRIPTION_REFUSEE = _('Application denied')
+    CLOTUREE = _('Closed')
+    # More detailed status are hidden by osis
+    A_COMPLETER = _('To be completed')
+    TRAITEMENT_UCLOUVAIN_EN_COURS = _('UCLouvain processing in progress')
 
 
 class ChoixStatutPropositionGenerale(ChoiceEnum):
