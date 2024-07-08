@@ -128,6 +128,16 @@ class MixinTestCase(TestCase):
         )
 
         # Academic years
+        cls.academic_year_2016 = AcademicYear(
+            year=2016,
+            start_date=datetime.date(2016, 9, 15),
+            end_date=datetime.date(2017, 7, 5),
+        )
+        cls.academic_year_2017 = AcademicYear(
+            year=2017,
+            start_date=datetime.date(2017, 9, 15),
+            end_date=datetime.date(2018, 7, 5),
+        )
         cls.academic_year_2018 = AcademicYear(
             year=2018,
             start_date=datetime.date(2018, 9, 15),
@@ -171,14 +181,18 @@ class MixinTestCase(TestCase):
                 EducationalExperienceEducationalexperienceyearSet(
                     academic_year=cls.academic_year_2020.year,
                     result=Result(value='SUCCESS'),
-                    graduate_degree=['f1_2020.pdf'],
-                    graduate_degree_translation=['f11_2020.pdf'],
+                    transcript=['f1_2020.pdf'],
+                    transcript_translation=['f11_2020.pdf'],
+                    acquired_credit_number=10.0,
+                    registered_credit_number=10.0,
                 ),
                 EducationalExperienceEducationalexperienceyearSet(
                     academic_year=cls.academic_year_2018.year,
                     result=Result(value='SUCCESS'),
-                    graduate_degree=['f1_2018.pdf'],
-                    graduate_degree_translation=['f11_2018.pdf'],
+                    transcript=['f1_2018.pdf'],
+                    transcript_translation=['f11_2018.pdf'],
+                    acquired_credit_number=20.0,
+                    registered_credit_number=20.0,
                 ),
             ],
             valuated_from_trainings=[],
@@ -193,10 +207,14 @@ class MixinTestCase(TestCase):
                 CurriculumDetailsEducationalexperienceyearSet(
                     academic_year=cls.academic_year_2020.year,
                     result=Result(value='SUCCESS'),
+                    acquired_credit_number=10.0,
+                    registered_credit_number=10.0,
                 ),
                 CurriculumDetailsEducationalexperienceyearSet(
                     academic_year=cls.academic_year_2018.year,
                     result=Result(value='WAITING_RESULT'),
+                    acquired_credit_number=20.0,
+                    registered_credit_number=20.0,
                 ),
             ],
             country=cls.be_country.iso_code,
@@ -212,6 +230,8 @@ class MixinTestCase(TestCase):
                 CurriculumDetailsEducationalexperienceyearSet(
                     academic_year=cls.academic_year_2020.year,
                     result=Result(value='SUCCESS'),
+                    acquired_credit_number=10.0,
+                    registered_credit_number=10.0,
                 ),
             ],
             country=cls.not_ue_country.iso_code,
@@ -377,6 +397,8 @@ class MixinTestCase(TestCase):
             aide_a_la_formation=False,
             inscription_au_role_obligatoire=True,
             etat_formation=StateIUFC.OPEN.name,
+            autre_moyen_decouverte_formation='Other way',
+            adresses_emails_gestionnaires_formation=['john.doe@example.be', 'joe.foe@example.be'],
         )
 
         cls.api_default_params = {
@@ -425,7 +447,7 @@ class MixinTestCase(TestCase):
         current_year = datetime.date.today().year
 
         self.mock_academic_years_api.return_value.get_academic_years.return_value = get_paginated_years(
-            current_year - 5,
+            current_year - 7,
             current_year + 2,
         )
         self.addCleanup(academic_years_api_patcher.stop)

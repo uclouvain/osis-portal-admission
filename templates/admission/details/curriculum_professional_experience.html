@@ -32,7 +32,9 @@
     <div class="panel-body">
       {% if not can_be_updated %}
         <p class="alert alert-warning">
-          {% translate "The data related to this non-academic activity can no longer be updated. To make changes, please contact the Enrolment Office." %}
+          {% blocktranslate trimmed with recipient=training_contact|default:_('the Enrolment Office') %}
+            The data related to this non-academic activity can no longer be updated. To make changes, please contact {{ recipient }}.
+          {% endblocktranslate %}
         </p>
       {% endif %}
       <div class="row">

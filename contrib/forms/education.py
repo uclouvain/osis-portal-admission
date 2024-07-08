@@ -315,8 +315,8 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     country = forms.CharField(
         label=_("Organising country"),
         widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:country",
-            forward=[forward.Const(True, 'exclude_be')],
+            url="admission:autocomplete:country-for-education",
+            forward=[forward.Field('foreign_diploma_type')],
             attrs={
                 "data-html": True,
             },

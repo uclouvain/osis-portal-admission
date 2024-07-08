@@ -48,7 +48,7 @@ from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversi
 from osis_reference_sdk.model.university import University
 from waffle.testutils import override_switch
 
-from admission.contrib.enums import BelgianCommunitiesOfEducation, TypeFormationChoisissable
+from admission.contrib.enums import BelgianCommunitiesOfEducation, TypeFormationChoisissable, ForeignDiplomaTypes
 from admission.contrib.enums.diploma import StudyType
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType, TypeFormation
@@ -162,6 +162,84 @@ class AutocompleteTestCase(TestCase):
         self.assertIs(results['pagination']['more'], True)
         api.return_value.countries_list.assert_called()
 
+    @patch('osis_reference_sdk.api.countries_api.CountriesApi')
+    def test_autocomplete_country_for_education(self, api):
+        api.return_value.countries_list.return_value = Mock(
+            results=[
+                MockCountry(iso_code='FR', name='France', name_en='France', european_union=True),
+                MockCountry(iso_code='BE', name='Belgique', name_en='Belgium', european_union=True),
+            ]
+        )
+        url = reverse('admission:autocomplete:country-for-education')
+
+        response = self.client.get(url, {'q': ''})
+        self.assertDictEqual(
+            response.json(),
+            {
+                'results': [
+                    {'id': 'FR', 'text': 'France', 'european_union': True},
+                ],
+                'pagination': {'more': False},
+            },
+        )
+        api.return_value.countries_list.assert_called()
+
+        response = self.client.get(
+            url,
+            {
+                'q': '',
+                'forward': json.dumps({'foreign_diploma_type': ForeignDiplomaTypes.NATIONAL_BACHELOR.name}),
+            },
+        )
+        self.assertDictEqual(
+            response.json(),
+            {
+                'results': [
+                    {'id': 'FR', 'text': 'France', 'european_union': True},
+                ],
+                'pagination': {'more': False},
+            },
+        )
+        api.return_value.countries_list.assert_called()
+
+        response = self.client.get(
+            url,
+            {
+                'q': '',
+                'forward': json.dumps({'foreign_diploma_type': ForeignDiplomaTypes.EUROPEAN_BACHELOR.name}),
+            },
+        )
+        self.assertDictEqual(
+            response.json(),
+            {
+                'results': [
+                    {'id': 'FR', 'text': 'France', 'european_union': True},
+                    {'id': 'BE', 'text': 'Belgique', 'european_union': True},
+                ],
+                'pagination': {'more': False},
+            },
+        )
+        api.return_value.countries_list.assert_called()
+
+        response = self.client.get(
+            url,
+            {
+                'q': '',
+                'forward': json.dumps({'foreign_diploma_type': ForeignDiplomaTypes.INTERNATIONAL_BACCALAUREATE.name}),
+            },
+        )
+        self.assertDictEqual(
+            response.json(),
+            {
+                'results': [
+                    {'id': 'FR', 'text': 'France', 'european_union': True},
+                    {'id': 'BE', 'text': 'Belgique', 'european_union': True},
+                ],
+                'pagination': {'more': False},
+            },
+        )
+        api.return_value.countries_list.assert_called()
+
     @patch('osis_reference_sdk.api.languages_api.LanguagesApi')
     def test_autocomplete_languages(self, api):
         api.return_value.languages_list.return_value = Mock(
@@ -268,7 +346,7 @@ class AutocompleteTestCase(TestCase):
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_persons(self, api):
-        api.return_value.list_persons.return_value = {
+        api.return_value.list_people.return_value = {
             'results': [
                 Mock(first_name='Ripolin', last_name='Trolapois', global_id="0123456987"),
                 Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213"),

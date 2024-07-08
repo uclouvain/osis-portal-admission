@@ -208,6 +208,17 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=forms.CheckboxSelectMultiple,
     )
 
+    other_way_to_find_out_about_the_course = forms.CharField(
+        label='',
+        max_length=1000,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'aria-label': _('How else did you hear about this course?'),
+            },
+        ),
+    )
+
     interested_mark = forms.NullBooleanField(
         label=_('Yes, I am interested in this course'),
         required=False,
@@ -503,6 +514,15 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             else:
                 cleaned_data['ways_to_find_out_about_the_course'] = []
                 cleaned_data['interested_mark'] = None
+
+            if (
+                cleaned_data.get('ways_to_find_out_about_the_course')
+                and ChoixMoyensDecouverteFormation.AUTRE.name in cleaned_data['ways_to_find_out_about_the_course']
+            ):
+                if not cleaned_data.get('other_way_to_find_out_about_the_course'):
+                    self.add_error('other_way_to_find_out_about_the_course', FIELD_REQUIRED_MESSAGE)
+            else:
+                cleaned_data['other_way_to_find_out_about_the_course'] = ''
 
     def clean_doctorate(self, training_type, cleaned_data):
         if training_type == TypeFormation.DOCTORAT.name:
