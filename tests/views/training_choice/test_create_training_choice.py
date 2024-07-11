@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from unittest.mock import MagicMock
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
@@ -75,6 +76,21 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertFalse(form.fields['has_erasmus_mundus_scholarship'].initial)
         self.assertFalse(form.fields['has_international_scholarship'].initial)
         self.assertFalse(form.fields['has_double_degree_scholarship'].initial)
+
+        # A message is displayed for the HUE candidates for a continuing education training
+        self.assertNotIn('Les programmes certifiants et courts', response.rendered_content)
+
+        self.mock_person_api.return_value.retrieve_identification_dto.return_value = MagicMock(
+            pays_nationalite_europeen=True,
+        )
+        response = self.client.get(self.url)
+        self.assertNotIn('Les programmes certifiants et courts', response.rendered_content)
+
+        self.mock_person_api.return_value.retrieve_identification_dto.return_value = MagicMock(
+            pays_nationalite_europeen=False,
+        )
+        response = self.client.get(self.url)
+        self.assertIn('Les programmes certifiants et courts', response.rendered_content)
 
     def test_empty_form_submitting(self):
         response = self.client.post(
