@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -49,7 +49,9 @@ from admission.contrib.forms import (
     get_thesis_location_initial_choices,
     get_scholarship_choices,
     AdmissionFileUploadField as FileUploadField,
+    get_language_initial_choices,
 )
+from admission.contrib.views.autocomplete import LANGUAGE_UNDECIDED
 from admission.services.autocomplete import AdmissionAutocompleteService
 
 SCIENCE_DOCTORATE = 'SC3DP'
@@ -200,10 +202,15 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Letters of recommendation"),
         required=False,
     )
-    langue_redaction_these = forms.ChoiceField(
+    langue_redaction_these = forms.CharField(
         label=_("Thesis language"),
-        choices=ChoixLangueRedactionThese.choices(),
-        initial=ChoixLangueRedactionThese.UNDECIDED.name,
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:language",
+            attrs={
+                "data-html": True,
+            },
+            forward=(forward.Const(True, 'show_top_languages'),),
+        ),
         required=False,
     )
     doctorat_deja_realise = forms.ChoiceField(
@@ -278,6 +285,13 @@ class DoctorateAdmissionProjectForm(forms.Form):
                 uuid=scholarship_uuid,
                 person=self.person,
             )
+
+        lang_code = self.data.get(self.add_prefix("langue_redaction_these"), self.initial.get("langue_redaction_these"))
+        if lang_code == LANGUAGE_UNDECIDED:
+            choices = ((LANGUAGE_UNDECIDED, _('Undecided')),)
+        else:
+            choices = get_language_initial_choices(lang_code, self.person)
+        self.fields["langue_redaction_these"].widget.choices = choices
 
     def clean(self):
         data = super().clean()
