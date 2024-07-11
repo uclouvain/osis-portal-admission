@@ -41,6 +41,7 @@ from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDS
 from admission.contrib.forms.training_choice import TrainingChoiceForm, get_training
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
+from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
 from admission.utils import get_training_id, split_training_id
 
@@ -77,6 +78,19 @@ class AdmissionTrainingChoiceFormView(
         super().__init__(*args, **kwargs)
         self.created_uuid: Optional[str] = None
         self.training_type: Optional[TypeFormation] = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # A message is displayed for the HUE candidates for a continuing education training
+        if self.is_on_create:
+            identification_dto = AdmissionPersonService.retrieve_identification_dto(person=self.request.user.person)
+            context['candidate_has_ue_nationality'] = identification_dto.pays_nationalite_europeen
+
+        elif self.is_continuing:
+            context['candidate_has_ue_nationality'] = self.admission.pays_nationalite_ue_candidat
+
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         # Check permission
@@ -148,6 +162,7 @@ class AdmissionTrainingChoiceFormView(
             'annee_formation': int(training_year),
             'motivations': data.get('motivations'),
             'moyens_decouverte_formation': data.get('ways_to_find_out_about_the_course'),
+            'autre_moyen_decouverte_formation': data.get('other_way_to_find_out_about_the_course'),
             'marque_d_interet': data.get('interested_mark'),
         }
 
@@ -230,5 +245,6 @@ class AdmissionTrainingChoiceFormView(
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
                 'motivations': self.admission.motivations,
                 'ways_to_find_out_about_the_course': self.admission.moyens_decouverte_formation,
+                'other_way_to_find_out_about_the_course': self.admission.autre_moyen_decouverte_formation,
                 'interested_mark': self.admission.marque_d_interet,
             }

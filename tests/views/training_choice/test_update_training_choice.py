@@ -241,6 +241,19 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
             ],
         )
 
+        # A message is displayed for the HUE candidates
+        self.assertNotIn('Les programmes certifiants et courts', response.rendered_content)
+
+        mock_proposition = self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value
+        mock_proposition.pays_nationalite_ue_candidat = None
+
+        response = self.client.get(self.url)
+        self.assertNotIn('Les programmes certifiants et courts', response.rendered_content)
+
+        mock_proposition.pays_nationalite_ue_candidat = False
+        response = self.client.get(self.url)
+        self.assertIn('Les programmes certifiants et courts', response.rendered_content)
+
     def test_form_submitting_missing_fields_with_long_training(self):
         # The training is missing
         data = {
@@ -339,6 +352,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                     ChoixMoyensDecouverteFormation.FACEBOOK.name,
                     ChoixMoyensDecouverteFormation.COURRIER_PERSONNALISE.name,
                 ],
+                'autre_moyen_decouverte_formation': '',
                 'marque_d_interet': None,
             },
             **self.default_kwargs,
@@ -384,6 +398,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                 'motivations': 'Motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
@@ -438,12 +453,13 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                 'motivations': 'My motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
 
         # With extra data
-        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AMIS.name]
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name]
         data['interested_mark'] = True
 
         response = self.client.post(self.url, data=data)
@@ -462,6 +478,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                 'motivations': 'My motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
@@ -515,12 +532,13 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                 'motivations': 'My motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': True,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
 
         # With extra data
-        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AMIS.name]
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name]
 
         response = self.client.post(self.url, data=data)
 
@@ -538,6 +556,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                 'motivations': 'My motivation',
                 'moyens_decouverte_formation': [],
                 'marque_d_interet': True,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
@@ -572,7 +591,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('ways_to_find_out_about_the_course', []))
 
         data['motivations'] = 'My motivation'
-        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AMIS.name]
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name]
 
         # With complete data
         response = self.client.post(self.url, data=data)
@@ -589,8 +608,9 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                     self.first_question_uuid: 'Answer',
                 },
                 'motivations': 'My motivation',
-                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.AMIS.name],
+                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
@@ -612,8 +632,9 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                     self.first_question_uuid: 'Answer',
                 },
                 'motivations': 'My motivation',
-                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.AMIS.name],
+                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name],
                 'marque_d_interet': None,
+                'autre_moyen_decouverte_formation': '',
             },
             **self.default_kwargs,
         )
@@ -648,7 +669,8 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('ways_to_find_out_about_the_course', []))
 
         data['motivations'] = 'My motivation'
-        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AMIS.name]
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name]
+        data['other_way_to_find_out_about_the_course'] = 'Other way'
         data['interested_mark'] = True
 
         # With complete data
@@ -666,8 +688,46 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
                     self.first_question_uuid: 'Answer',
                 },
                 'motivations': 'My motivation',
-                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.AMIS.name],
+                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.BOUCHE_A_OREILLE.name],
                 'marque_d_interet': True,
+                'autre_moyen_decouverte_formation': '',
+            },
+            **self.default_kwargs,
+        )
+
+        # With another way
+        data['ways_to_find_out_about_the_course'] = [ChoixMoyensDecouverteFormation.AUTRE.name]
+        data['other_way_to_find_out_about_the_course'] = ''
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+
+        self.assertEqual(form.is_valid(), False)
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('other_way_to_find_out_about_the_course', []))
+
+        # With complete data
+        data['other_way_to_find_out_about_the_course'] = 'Other way'
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, 302)
+
+        self.mock_proposition_api.return_value.update_continuing_training_choice.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_choix_formation_continue_command={
+                'uuid_proposition': self.proposition_uuid,
+                'sigle_formation': 'TR2',
+                'annee_formation': 2020,
+                'reponses_questions_specifiques': {
+                    self.first_question_uuid: 'Answer',
+                },
+                'motivations': 'My motivation',
+                'moyens_decouverte_formation': [ChoixMoyensDecouverteFormation.AUTRE.name],
+                'marque_d_interet': True,
+                'autre_moyen_decouverte_formation': 'Other way',
             },
             **self.default_kwargs,
         )

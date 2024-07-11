@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ from django.shortcuts import resolve_url
 from django.template.loader import select_template
 from django.utils.datetime_safe import date
 from django.utils.functional import cached_property
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
@@ -75,6 +76,10 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
     @property
     def is_continuing(self):
         return self.current_context == 'continuing-education'
+
+    @property
+    def is_on_create(self):
+        return self.current_context == 'create'
 
     @property
     def is_doctorate(self):
@@ -141,6 +146,14 @@ class LoadDossierViewMixin(LoadViewMixin):
 
             if hasattr(self, 'tab_of_specific_questions'):
                 context['specific_questions'] = self.specific_questions
+
+            if self.is_continuing:
+                context['training_contact'] = mark_safe(
+                    ', '.join(
+                        f'<a href="mailto:{email}">{email}</a>'
+                        for email in self.admission.adresses_emails_gestionnaires_formation
+                    )
+                )
 
             # Add info about doctorate if needed (this concerns the project/cotutelle/supervision tabs)
             if context['admission'].statut == ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name:

@@ -41,11 +41,20 @@
     {% field_data _('I am interested in this course even if it is closed') admission.marque_d_interet %}
   {% endif %}
 
+  {% if admission.pays_nationalite_ue_candidat == False %}
+    <p class="alert alert-info text-justify">
+      {% blocktranslate trimmed %}
+        Certification and short programmes (continuing education) do not allow for obtaining a visa and residence
+        permit in Belgium. More information:
+        <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
+      {% endblocktranslate %}
+    </p>
+  {% endif %}
 
   {% field_data _('Motivations') admission.motivations %}
 
   {% if admission.inscription_au_role_obligatoire == True %}
-    {% field_data _('How did you hear about this course?') admission.moyens_decouverte_formation|multiple_enum_display:'ChoixMoyensDecouverteFormation' %}
+    {% field_data _('How did you hear about this course?') admission|format_ways_to_find_out_about_the_course html_tag='ul' %}
   {% endif %}
 
 {% endblock %}

@@ -104,6 +104,11 @@ msgid ""
 "href=\"%(add_url)s\">add a course</a>"
 msgstr ""
 
+msgid ""
+"<a href=\"https://uclouvain.be/en/study/inscriptions/frequently-asked-"
+"questions.html\" target=\"_blank\">Contact the Enrolment Office</a>"
+msgstr ""
+
 #, python-brace-format
 msgid ""
 "<a href=\"{url}\" target=_blank\">Change of enrolment form</a>, duly "
@@ -163,6 +168,11 @@ msgid ""
 "in the event of the parents' death or their inability to exercise parental "
 "authority following a court decision. A student of legal age cannot have a "
 "guardian. Under no circumstances is a guarantor a legal guardian."
+msgstr ""
+
+msgid ""
+"A technical or IT problem? <a href=\"http://uclouvain.be/8282\" "
+"target=\"_blank\">Contact the Service Desk</a>"
 msgstr ""
 
 msgid "A transcript for all years"
@@ -349,12 +359,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-msgid ""
-"An administrative question about your dossier? <a href=\"https://uclouvain."
-"be/en/study/inscriptions/frequently-asked-questions.html\" "
-"target=\"_blank\">Contact the Enrolment Office</a> - A technical or IT "
-"problem? <a href=\"http://uclouvain.be/8282\" target=\"_blank\">Contact the "
-"Service Desk</a>"
+msgid "An administrative question about your dossier?"
 msgstr ""
 
 msgid "An error has occurred, please check fields and try again."
@@ -529,16 +534,16 @@ msgstr ""
 msgid "Bank account"
 msgstr ""
 
+#, python-format
 msgid ""
 "Because you already submitted an admission, information about coordinates "
-"can not be updated. If you want to update them, please contact the enrolment "
-"office."
+"can not be updated. If you want to update them, please contact %(recipient)s."
 msgstr ""
 
+#, python-format
 msgid ""
 "Because you already submitted an admission, information about identification "
-"can not be updated. If you want to update them, please contact the enrolment "
-"office."
+"can not be updated. If you want to update them, please contact %(recipient)s."
 msgstr ""
 
 msgid ""
@@ -578,6 +583,10 @@ msgid "Box"
 msgstr ""
 
 msgid "Brief justification"
+msgstr ""
+
+msgctxt "ways_hear_about_training"
+msgid "By someone who has already taken this course in a previous edition"
 msgstr ""
 
 msgid "C1"
@@ -817,6 +826,10 @@ msgstr ""
 msgid "Contact"
 msgstr ""
 
+#, python-format
+msgid "Contact %(training_contact)s"
+msgstr ""
+
 msgid "Contact details"
 msgstr ""
 
@@ -830,10 +843,6 @@ msgid "Continue"
 msgstr ""
 
 msgid "Continuing education"
-msgstr ""
-
-msgctxt "ways_hear_about_training"
-msgid "Continuing education website"
 msgstr ""
 
 msgid "Copy of \"orange card\" enrolment certificate"
@@ -1415,15 +1424,7 @@ msgstr ""
 msgid "Former UCLouvain student"
 msgstr ""
 
-msgctxt "ways_hear_about_training"
-msgid "Former students"
-msgstr ""
-
 msgid "French"
-msgstr ""
-
-msgctxt "ways_hear_about_training"
-msgid "Friends"
 msgstr ""
 
 msgid "Full"
@@ -1511,6 +1512,9 @@ msgid "Household composition, or copy of your birth certificate"
 msgstr ""
 
 msgid "How did you hear about this course?"
+msgstr ""
+
+msgid "How else did you hear about this course?"
 msgstr ""
 
 msgid ""
@@ -3041,20 +3045,30 @@ msgstr ""
 msgid "The contact address I provided"
 msgstr ""
 
+#, python-format
 msgid ""
 "The data related to this academic course can no longer be updated. To make "
-"changes, please contact the Enrolment Office."
+"changes, please contact %(recipient)s."
 msgstr ""
 
+#, python-format
 msgid ""
 "The data related to this non-academic activity can no longer be updated. To "
-"make changes, please contact the Enrolment Office."
+"make changes, please contact %(recipient)s."
 msgstr ""
 
 msgid ""
 "The declaration of you doctoral training activities must be consistent with "
 "the specifics disposition of your domain. Please refer to those on the "
 "website of your Domain Doctoral Commission for more information."
+msgstr ""
+
+#, python-format
+msgid ""
+"The enrolments for the %(program)s course are closed. To stay informed about "
+"the opening of enrolments for the next edition, tick the box below. For any "
+"other information, please contact a course administrator: "
+"%(training_info_url)s."
 msgstr ""
 
 msgid "The following period must be justified in the curriculum:"
@@ -3275,6 +3289,10 @@ msgstr "UCL Course"
 msgid "UCLouvain"
 msgstr ""
 
+msgctxt "ways_hear_about_training"
+msgid "UCLouvain continuing education website"
+msgstr ""
+
 msgid "UCLouvain processing in progress"
 msgstr ""
 
@@ -3385,7 +3403,7 @@ msgid "With honours (70-79%)"
 msgstr ""
 
 msgctxt "ways_hear_about_training"
-msgid "Word of mouth"
+msgid "Word of mouth (family, friends, colleagues, ...)"
 msgstr ""
 
 msgid "Work"
@@ -3623,13 +3641,6 @@ msgid ""
 "Your application cannot be confirmed. The desired course is not offered."
 msgstr ""
 
-#, python-format
-msgid ""
-"Your application cannot be submitted because the %(program)s course is "
-"closed. You can express your interest by ticking the box below or contacting "
-"a course administrator: %(program_managers)s."
-msgstr ""
-
 msgid "Your application has been submitted"
 msgstr ""
 
@@ -3639,9 +3650,7 @@ msgstr ""
 msgid "Your application will be sent to the UCLouvain Enrolment Office."
 msgstr ""
 
-msgid ""
-"Your application will be sent to the University Institute for Continuing "
-"Education."
+msgid "Your application will be sent to the faculty."
 msgstr ""
 
 msgid "Your data have been saved"
@@ -3669,15 +3678,16 @@ msgstr ""
 msgid "Your professional email address"
 msgstr ""
 
+#, python-format
 msgid ""
 "Your secondary education data can no longer be updated. To make changes, "
-"please contact the Enrolment Office."
+"please contact %(recipient)s."
 msgstr ""
 
 msgid "by the Enrolment Office"
 msgstr ""
 
-msgid "by the University Institute for Continuing Education (IUFC)"
+msgid "by the faculty"
 msgstr ""
 
 msgid "dd/mm/yyyy"
@@ -3704,7 +3714,10 @@ msgstr "Foreign diploma"
 msgid "from %(start)s to %(end)s"
 msgstr ""
 
-msgid "no manager email address found"
+msgid "the Enrolment Office"
+msgstr ""
+
+msgid "the enrolment office"
 msgstr ""
 
 msgid "the person concerned"

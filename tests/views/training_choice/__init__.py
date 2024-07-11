@@ -408,6 +408,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             'aide_a_la_formation': False,
             'inscription_au_role_obligatoire': True,
             'etat_formation': StateIUFC.OPEN.name,
+            'autre_moyen_decouverte_formation': 'Autre',
+            'adresses_emails_gestionnaires_formation': ['john.doe@example.be', 'joe.foe@example.be'],
         }
         cls.continuing_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -457,6 +459,8 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             aide_a_la_formation=False,
             inscription_au_role_obligatoire=True,
             etat_formation=StateIUFC.OPEN.name,
+            autre_moyen_decouverte_formation='Other way',
+            adresses_emails_gestionnaires_formation=['john.doe@example.be', 'joe.foe@example.be'],
         )
 
         cls.doctorate_proposition = Mock(
@@ -589,6 +593,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 aide_a_la_formation=True,
                 inscription_au_role_obligatoire=True,
                 etat=StateIUFC.OPEN.name,
+                lien_informations_pratiques_formation='https://test.be/FOOBAR/2021/info',
             ),
             InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
                 sigle_formation='BARBAZ',
@@ -596,6 +601,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 aide_a_la_formation=True,
                 inscription_au_role_obligatoire=True,
                 etat=StateIUFC.OPEN.name,
+                lien_informations_pratiques_formation='https://test.be/BARBAZ/2021/info',
             ),
         ]
 
@@ -724,3 +730,11 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.addCleanup(patcher.stop)
 
         self.client.force_login(self.person.user)
+
+        # Mock person api
+        person_patcher = patch('osis_admission_sdk.api.person_api.PersonApi')
+        self.mock_person_api = person_patcher.start()
+        self.mock_person_api.return_value.retrieve_identification_dto.return_value = MagicMock(
+            pays_nationalite_europeen=None,
+        )
+        self.addCleanup(person_patcher.stop)

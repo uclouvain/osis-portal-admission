@@ -39,6 +39,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.validators import EMPTY_VALUES
 from django.shortcuts import resolve_url
+from django.template.defaultfilters import unordered_list
 from django.test import override_settings
 from django.utils.safestring import SafeString
 from django.utils.translation import get_language, gettext_lazy as _, pgettext, pgettext_lazy
@@ -50,6 +51,7 @@ from admission.contrib.enums import (
     ChoixStatutPropositionGenerale,
     ChoixStatutPropositionContinue,
     ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE,
+    ChoixMoyensDecouverteFormation,
 )
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
@@ -793,3 +795,20 @@ def value_if_all(value, *conditions):
 def value_if_any(value, *conditions):
     """Return the value if any condition is true."""
     return value if any(conditions) else ''
+
+
+@register.filter
+def format_ways_to_find_out_about_the_course(proposition):
+    """
+    Format the list of ways to find out about the course of a proposition.
+    :param proposition: The proposition
+    :return: An unordered list of ways to find out about the course (including the "other" case, if any)
+    """
+    return unordered_list(
+        [
+            ChoixMoyensDecouverteFormation.get_value(way)
+            if way != ChoixMoyensDecouverteFormation.AUTRE.name
+            else proposition.autre_moyen_decouverte_formation or ChoixMoyensDecouverteFormation.AUTRE.value
+            for way in proposition.moyens_decouverte_formation
+        ]
+    )
