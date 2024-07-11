@@ -41,6 +41,7 @@ from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDS
 from admission.contrib.forms.training_choice import TrainingChoiceForm, get_training
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
+from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
 from admission.utils import get_training_id, split_training_id
 
@@ -77,6 +78,19 @@ class AdmissionTrainingChoiceFormView(
         super().__init__(*args, **kwargs)
         self.created_uuid: Optional[str] = None
         self.training_type: Optional[TypeFormation] = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # A message is displayed for the HUE candidates for a continuing education training
+        if self.is_on_create:
+            identification_dto = AdmissionPersonService.retrieve_identification_dto(person=self.request.user.person)
+            context['candidate_has_ue_nationality'] = identification_dto.pays_nationalite_europeen
+
+        elif self.is_continuing:
+            context['candidate_has_ue_nationality'] = self.admission.pays_nationalite_ue_candidat
+
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         # Check permission

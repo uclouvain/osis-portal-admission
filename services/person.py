@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ from frontoffice.settings.osis_sdk import admission as admission_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import person_api
+from osis_admission_sdk.model.identification_dto import IdentificationDTO
 from osis_admission_sdk.model.person_identification import PersonIdentification
 
 
@@ -39,6 +40,13 @@ class AdmissionPersonAPIClient:
 
 class AdmissionPersonService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
+
+    # Identification
+    @classmethod
+    def retrieve_identification_dto(cls, person) -> IdentificationDTO:
+        return AdmissionPersonAPIClient().retrieve_identification_dto(
+            **build_mandatory_auth_headers(person),
+        )
 
     # Person
     @classmethod

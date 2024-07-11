@@ -730,3 +730,11 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.addCleanup(patcher.stop)
 
         self.client.force_login(self.person.user)
+
+        # Mock person api
+        person_patcher = patch('osis_admission_sdk.api.person_api.PersonApi')
+        self.mock_person_api = person_patcher.start()
+        self.mock_person_api.return_value.retrieve_identification_dto.return_value = MagicMock(
+            pays_nationalite_europeen=None,
+        )
+        self.addCleanup(person_patcher.stop)
