@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -105,13 +105,6 @@
     {% panel _('Specific aspects') %}
       {% if view.is_continuing %}
         {% if admission.pays_nationalite_ue_candidat == False %}
-          <p class="alert alert-info text-justify">
-            {% blocktranslate trimmed %}
-              Certification and short programmes (continuing education) do not allow for obtaining a visa and residence
-              permit in Belgium. More information:
-              <a target="_blank" href="https://uclouvain.be/en/study/iufc">https://uclouvain.be/en/study/iufc</a>.
-            {% endblocktranslate %}
-          </p>
           {% bootstrap_field form.copie_titre_sejour %}
         {% endif %}
         {% bootstrap_field form.inscription_a_titre form_group_class='form-group required_field' %}
