@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -62,6 +62,19 @@ class ContinuingAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingCho
             **self.default_kwargs,
         )
         self.assertEqual(response.context['admission'].uuid, self.continuing_proposition.uuid)
+
+        # A message is displayed for the HUE candidates
+        self.assertNotIn('Les programmes certifiants et courts', response.rendered_content)
+
+        mock_proposition = self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value
+        mock_proposition.pays_nationalite_ue_candidat = None
+
+        response = self.client.get(self.url)
+        self.assertNotIn('Les programmes certifiants et courts', response.rendered_content)
+
+        mock_proposition.pays_nationalite_ue_candidat = False
+        response = self.client.get(self.url)
+        self.assertIn('Les programmes certifiants et courts', response.rendered_content)
 
 
 class DoctorateAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormViewTestCase):

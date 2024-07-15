@@ -78,6 +78,10 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         return self.current_context == 'continuing-education'
 
     @property
+    def is_on_create(self):
+        return self.current_context == 'create'
+
+    @property
     def is_doctorate(self):
         return self.current_context == 'doctorate'
 

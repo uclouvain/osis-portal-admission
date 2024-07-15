@@ -241,6 +241,19 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
             ],
         )
 
+        # A message is displayed for the HUE candidates
+        self.assertNotIn('Les programmes certifiants et courts', response.rendered_content)
+
+        mock_proposition = self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value
+        mock_proposition.pays_nationalite_ue_candidat = None
+
+        response = self.client.get(self.url)
+        self.assertNotIn('Les programmes certifiants et courts', response.rendered_content)
+
+        mock_proposition.pays_nationalite_ue_candidat = False
+        response = self.client.get(self.url)
+        self.assertIn('Les programmes certifiants et courts', response.rendered_content)
+
     def test_form_submitting_missing_fields_with_long_training(self):
         # The training is missing
         data = {
