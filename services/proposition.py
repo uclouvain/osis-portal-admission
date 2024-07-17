@@ -471,6 +471,16 @@ class PropositionBusinessException(Enum):
     CoordonneesNonCompleteesException = "PROPOSITION-51"
 
 
+class DoctorateBusinessException(Enum):
+    AbsenceDeDetteNonCompleteeDoctoratException = "DOCTORAT-1"
+    ReductionDesDroitsInscriptionNonCompleteeDoctoratException = "DOCTORAT-2"
+    AssimilationNonCompleteeDoctoratException = "DOCTORAT-3"
+    AffiliationsNonCompleteesDoctoratException = "DOCTORAT-4"
+    CarteBancaireRemboursementIbanNonCompleteDoctoratException = "DOCTORAT-5"
+    CarteBancaireRemboursementAutreFormatNonCompleteDoctoratException = "DOCTORAT-6"
+    TypeCompteBancaireRemboursementNonCompleteDoctoratException = "DOCTORAT-7"
+
+
 class PostalCodeBusinessException(Enum):
     PersonResidentialAddressBadPostalCodeFormatException = "RESIDENTIAL-PERSON-ADDRESS-1"
     PersonContactAddressBadPostalCodeFormatException = "CONTACT-PERSON-ADDRESS-1"
@@ -639,6 +649,13 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.CarteBancaireRemboursementIbanNonCompleteException,
         PropositionBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteException,
         PropositionBusinessException.TypeCompteBancaireRemboursementNonCompleteException,
+        DoctorateBusinessException.AbsenceDeDetteNonCompleteeDoctoratException,
+        DoctorateBusinessException.ReductionDesDroitsInscriptionNonCompleteeDoctoratException,
+        DoctorateBusinessException.AssimilationNonCompleteeDoctoratException,
+        DoctorateBusinessException.AffiliationsNonCompleteesDoctoratException,
+        DoctorateBusinessException.CarteBancaireRemboursementIbanNonCompleteDoctoratException,
+        DoctorateBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteDoctoratException,
+        DoctorateBusinessException.TypeCompteBancaireRemboursementNonCompleteDoctoratException,
     },
     'specific-questions': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesInformationsComplementairesNonCompleteesException,
