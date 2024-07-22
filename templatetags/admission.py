@@ -153,7 +153,7 @@ TAB_TREES = {
             Tab('languages', _('Knowledge of languages')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
-            Tab('accounting', _('Accounting')),
+            Tab('accounting', _('Additional information')),
         ],
         Tab('doctorate', pgettext('tab name', 'PhD project'), 'person-chalkboard'): [
             Tab('project', pgettext('tab name', 'Research project')),
