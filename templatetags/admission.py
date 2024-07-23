@@ -153,7 +153,7 @@ TAB_TREES = {
             Tab('languages', _('Knowledge of languages')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
-            Tab('accounting', _('Accounting')),
+            Tab('accounting', _('Additional information')),
         ],
         Tab('doctorate', pgettext('tab name', 'PhD project'), 'person-chalkboard'): [
             Tab('project', pgettext('tab name', 'Research project')),
@@ -180,7 +180,9 @@ TAB_TREES = {
             # Tab('private-defense', _('Private defense')),
             # Tab('public-defense', _('Public defense')),
         ],
-        # TODO documents
+        Tab('documents', _('Documents'), 'folder-open'): [
+            Tab('documents', _('Documents')),
+        ],
     },
     'general-education': {
         Tab('personal', _('Personal data'), 'id-card'): [
@@ -222,6 +224,9 @@ TAB_TREES = {
         ],
         Tab('confirm-submit', _('Finalise application'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
+        ],
+        Tab('documents', _('Documents'), 'folder-open'): [
+            Tab('documents', _('Documents')),
         ],
     },
 }

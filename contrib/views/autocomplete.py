@@ -84,6 +84,10 @@ __all__ = [
     "DiplomaticPostAutocomplete",
 ]
 
+LANGUAGE_FR = 'FR'
+LANGUAGE_EN = 'EN'
+LANGUAGE_UNDECIDED = 'XX'
+
 
 class PaginatedAutocompleteMixin:
     paginate_by = 20
@@ -329,12 +333,34 @@ class LanguageAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autoc
         )
 
     def results(self, results):
-        return [
+        page = self.get_page()
+
+        top_languages = []
+        top_languages_codes = {LANGUAGE_FR, LANGUAGE_EN, LANGUAGE_UNDECIDED}
+        show_top_languages = not self.q and page == 1 and self.forwarded.get('show_top_languages', False)
+        if show_top_languages:
+            top_languages = [
+                {
+                    'id': LANGUAGE_FR,
+                    'text': _('French'),
+                },
+                {
+                    'id': LANGUAGE_EN,
+                    'text': _('English'),
+                },
+                {
+                    'id': LANGUAGE_UNDECIDED,
+                    'text': _('Undecided'),
+                },
+                {'id': None, 'text': '<hr>'},
+            ]
+        return top_languages + [
             dict(
                 id=language.code,
                 text=language.name if get_language() == settings.LANGUAGE_CODE else language.name_en,
             )
             for language in results
+            if not show_top_languages or language.code not in top_languages_codes
         ]
 
 
