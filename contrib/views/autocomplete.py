@@ -61,6 +61,7 @@ from admission.utils import (
     format_training_with_year,
 )
 from base.models.enums.entity_type import INSTITUTE
+from base.utils.eval import eval_bool
 
 __all__ = [
     "DoctorateAutocomplete",
@@ -567,8 +568,11 @@ class SuperiorInstituteAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMix
     def get_list(self):
         additional_filters = {}
         country = self.forwarded.get('country')
+        is_belgian = eval_bool(self.forwarded.get('is_belgian'))
         if country:
             additional_filters['country_iso_code'] = country
+        elif is_belgian:
+            additional_filters['country_iso_code'] = BE_ISO_CODE
         additional_filters.update(self.get_webservice_pagination_kwargs())
 
         universities = UniversityService.get_universities(
