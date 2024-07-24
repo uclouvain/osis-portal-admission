@@ -233,7 +233,6 @@ class ProjectViewTestCase(TestCase):
         self.assertContains(response, "A random postal address")
 
         data = {
-            'type_admission': AdmissionType.ADMISSION.name,
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)

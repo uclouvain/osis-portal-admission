@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -89,14 +89,16 @@
 
   {# Action buttons #}
   {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
-    <button
-      class="btn btn-default pull-right"
-      data-toggle="collapse"
-      data-target="#approve-by-pdf-{{ member.uuid }}"
-    >
-      <i class="fas fa-file-circle-check"></i>
-      {% trans "Approve by PDF" %}
-    </button>
+    {% if type != 'PROMOTER' or member.est_externe %}
+      <button
+        class="btn btn-default pull-right"
+        data-toggle="collapse"
+        data-target="#approve-by-pdf-{{ member.uuid }}"
+      >
+        <i class="fas fa-file-circle-check"></i>
+        {% trans "Approve by PDF" %}
+      </button>
+    {% endif %}
   {% endif %}
 
   {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
@@ -114,19 +116,22 @@
   {# Action buttons #}
   <div class="panel-group" style="flex-basis: 100%;">
     {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
-      {% panel _("Approve by PDF") id="approve-by-pdf-"|add:member.uuid additional_class="collapse" %}
-        <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
-          {% csrf_token %}
-          {{ approve_by_pdf_form.pdf }}
-          <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
-          <button type="submit" class="btn btn-primary pull-right">
-            {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
-              Approve on behalf of {{ first_name }} {{ last_name }}
-            {% endblocktrans %}
-          </button>
-        </form>
-      {% endpanel %}
+      {% if type != 'PROMOTER' or member.est_externe %}
+        {% panel _("Approve by PDF") id="approve-by-pdf-"|add:member.uuid additional_class="collapse" %}
+          <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
+            {% csrf_token %}
+            {{ approve_by_pdf_form.pdf }}
+            <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
+            <button type="submit" class="btn btn-primary pull-right">
+              {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
+                Approve on behalf of {{ first_name }} {{ last_name }}
+              {% endblocktrans %}
+            </button>
+          </form>
+        {% endpanel %}
+      {% endif %}
     {% endif %}
+
     {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
       {% panel _("Resend invitation") id="resend-invite-"|add:member.uuid additional_class="collapse" %}
         <form action="{% url 'admission:doctorate:resend-invite' pk=admission.uuid uuid=member.uuid %}" method="post">

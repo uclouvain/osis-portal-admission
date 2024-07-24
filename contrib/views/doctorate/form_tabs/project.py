@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
 
     def prepare_data(self, data):
         # Process the form data to match API
-        if data['type_admission'] != AdmissionType.PRE_ADMISSION.name:
+        if self.admission.type_admission != AdmissionType.PRE_ADMISSION.name:
             data['justification'] = ''
 
         if data['type_financement'] != ChoixTypeFinancement.WORK_CONTRACT.name:
