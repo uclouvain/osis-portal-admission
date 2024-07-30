@@ -309,12 +309,10 @@ class DoctorateAdmissionPersonForm(forms.Form):
     def _disable_fields_when_internal_account(self):
         # Cas: Les informations des comptes internes doivent être modifié via une autre procédure
         fieldname_to_disabled = ['first_name', 'last_name', 'unknown_birth_date', 'birth_date', 'sex', 'birth_country']
-        fieldname_to_add_helptext = ['first_name', 'last_name', 'birth_date', 'sex', 'birth_country']
         for fieldname in fieldname_to_disabled:
-            # if isinstance(self.fields[fieldname].widget, SelectDateWidget):
-            #     self.fields[fieldname].widget.attrs['disabled'] = True
             self.fields[fieldname].disabled = True
 
+        fieldname_to_add_helptext = ['first_name', 'last_name', 'birth_date', 'sex', 'birth_country']
         help_text_modification_internal_account = _(
             "Any modification of personal data must be communicated to the Registration Department by email by "
             "producing a photocopy of both sides of their identity card incorporating this modification."
