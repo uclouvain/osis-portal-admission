@@ -303,6 +303,23 @@ class DoctorateAdmissionPersonForm(forms.Form):
         elif self.initial.get('identification_type'):
             self.initial['has_national_number'] = False
 
+        if person and not person.global_id.startswith("8"):
+            self._disable_fields_when_internal_account()
+
+    def _disable_fields_when_internal_account(self):
+        # Cas: Les informations des comptes internes doivent être modifié via une autre procédure
+        fieldname_to_disabled = ['first_name', 'last_name', 'unknown_birth_date', 'birth_date', 'sex', 'birth_country']
+        for fieldname in fieldname_to_disabled:
+            self.fields[fieldname].disabled = True
+
+        fieldname_to_add_helptext = ['first_name', 'last_name', 'birth_date', 'sex', 'birth_country']
+        help_text_modification_internal_account = _(
+            "Any modification of personal data must be communicated to the Registration Department by email by "
+            "producing a photocopy of both sides of their identity card incorporating this modification."
+        )
+        for fieldname in fieldname_to_add_helptext:
+            self.fields[fieldname].help_text = help_text_modification_internal_account
+
     def clean(self):
         data = super().clean()
 
