@@ -1048,6 +1048,9 @@ msgstr ""
 msgid "Credits earned"
 msgstr ""
 
+msgid "Current funding"
+msgstr ""
+
 msgid "Curriculum"
 msgstr ""
 
@@ -1167,6 +1170,9 @@ msgid "Do you have an international scholarship?"
 msgstr ""
 
 msgid "Doctor"
+msgstr ""
+
+msgid "Doctorate thesis field"
 msgstr ""
 
 msgid "Document"
@@ -1485,6 +1491,9 @@ msgid ""
 "Belgium?"
 msgstr ""
 
+msgid "Has your PhD project already started?"
+msgstr ""
+
 msgid ""
 "Have you applied <a href='https://allocations-etudes.cfwb.be/etudes-"
 "superieures/' target='_blank'>for a student grant</a> from the French "
@@ -1716,6 +1725,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"If you don't have any funding yet, please choose \"Self-funding\" and "
+"explain the considered funding in the \"Comment\" area."
+msgstr ""
+
+msgid ""
 "If you have a final equivalence decision issued by the <a href='http://www."
 "equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you "
 "must provide a double-sided copy of this document."
@@ -1784,6 +1798,9 @@ msgstr ""
 msgid "Institution"
 msgstr ""
 
+msgid "Institution in which the PhD has been realised / started."
+msgstr ""
+
 msgid "Internal"
 msgstr ""
 
@@ -1816,6 +1833,10 @@ msgid "Invalid phone number"
 msgstr ""
 
 msgid "Is it a Wallonia-Brussels Federation institution?"
+msgstr ""
+
+msgid ""
+"Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"
 msgstr ""
 
 msgctxt "diploma_type"
@@ -2358,11 +2379,10 @@ msgstr ""
 msgid "PhD Committee opinion"
 msgstr ""
 
-msgctxt "tab name"
-msgid "PhD project"
+msgid "PhD proposal"
 msgstr ""
 
-msgid "PhD proposal"
+msgid "PhD research experience"
 msgstr ""
 
 msgid "PhD research project"
@@ -2388,13 +2408,6 @@ msgstr ""
 
 msgid "Please choose the language regime or specify another regime."
 msgstr ""
-
-msgid ""
-"Please complete the \"Application for a cotutelle\" form (available here) "
-"and upload it here."
-msgstr ""
-"Please complete the « Application for a cotutelle » form (available here) "
-"and upload it here."
 
 msgid "Please complete this field: {}"
 msgstr ""
@@ -2424,6 +2437,11 @@ msgid ""
 msgstr ""
 
 msgid "Please justify why the member does not have a doctor title"
+msgstr ""
+
+msgid ""
+"Please look up the website of your domain doctoral committee on how to "
+"download the document."
 msgstr ""
 
 msgid ""
@@ -2941,13 +2959,13 @@ msgstr ""
 msgid "Summary of the communication"
 msgstr ""
 
-msgid "Supervision"
-msgstr ""
-
 msgid "Supervisor"
 msgstr ""
 
 msgid "Support Committee minutes"
+msgstr ""
+
+msgid "Support committee"
 msgstr ""
 
 msgid "Surname"
@@ -3419,6 +3437,9 @@ msgstr ""
 msgid "Work contract type"
 msgstr ""
 
+msgid "Work start date"
+msgstr ""
+
 msgid ""
 "Would you like to become a <a href='https://uclouvain.be/fr/decouvrir/carte-"
 "solidaire.html' target='_blank'>Solidarity Student</a>, that is, a member of "
@@ -3480,6 +3501,10 @@ msgstr ""
 msgid ""
 "Would you like to switch courses this academic year at UCLouvain? (<a href="
 "\"%(url)s\" target=\"_blank\">Informations</a>)"
+msgstr ""
+
+msgid ""
+"Write your resume in the language decided with your accompanying committee."
 msgstr ""
 
 msgid "Writing ability"
@@ -3665,6 +3690,11 @@ msgstr ""
 msgid ""
 "Your enrolment cannot be confirmed. All of the following requirements must "
 "be met."
+msgstr ""
+
+msgid ""
+"Your joint supervision information can be completed later. Please input "
+"\"No\" if you don't have information yet."
 msgstr ""
 
 msgid "Your participation in the event"

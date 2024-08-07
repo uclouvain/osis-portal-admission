@@ -50,6 +50,7 @@ from admission.contrib.forms import (
     get_scholarship_choices,
     AdmissionFileUploadField as FileUploadField,
     get_language_initial_choices,
+    RadioBooleanField,
 )
 from admission.contrib.views.autocomplete import LANGUAGE_UNDECIDED
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -62,12 +63,6 @@ COMMISSIONS_CDE_CLSM = ['CDE', 'CLSM']
 
 
 class DoctorateAdmissionProjectForm(forms.Form):
-    type_admission = forms.ChoiceField(
-        label=_("Admission type"),
-        choices=AdmissionType.choices(),
-        widget=forms.RadioSelect,
-        initial=AdmissionType.ADMISSION.name,
-    )
     justification = forms.CharField(
         label=_("Brief justification"),
         widget=forms.Textarea(
@@ -95,9 +90,13 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
 
     type_financement = forms.ChoiceField(
-        label=_("Funding type"),
+        label=_("Current funding"),
         choices=EMPTY_CHOICE + ChoixTypeFinancement.choices(),
         required=False,
+        help_text=_(
+            "If you don't have any funding yet, please choose \"Self-funding\" and explain the"
+            " considered funding in the \"Comment\" area."
+        ),
     )
     type_contrat_travail = SelectOrOtherField(
         label=_("Work contract type"),
@@ -129,12 +128,12 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Scholarship start date"),
         widget=CustomDateInput(),
         required=False,
-        help_text=_("Scholarship end date prior to any possible renewal."),
     )
     bourse_date_fin = forms.DateField(
         label=_("Scholarship end date"),
         widget=CustomDateInput(),
         required=False,
+        help_text=_("Scholarship end date prior to any possible renewal."),
     )
     bourse_preuve = FileUploadField(
         label=_("Proof of scholarship"),
@@ -157,6 +156,16 @@ class DoctorateAdmissionProjectForm(forms.Form):
         max_value=100,
         required=False,
     )
+    est_lie_fnrs_fria_fresh_csc = RadioBooleanField(
+        label=_("Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"),
+        required=False,
+        initial=False,
+    )
+    commentaire_financement = forms.CharField(
+        label=_("Comment"),
+        required=False,
+        widget=forms.Textarea,
+    )
 
     lieu_these = forms.CharField(
         label=_("Thesis location"),
@@ -174,6 +183,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
     )
     resume_projet = forms.CharField(
         label=_("Project resume (max. 2000 characters)"),
+        help_text=_("Write your resume in the language decided with your accompanying committee."),
         required=False,
         widget=forms.Textarea,
     )
@@ -213,6 +223,22 @@ class DoctorateAdmissionProjectForm(forms.Form):
         ),
         required=False,
     )
+
+    projet_doctoral_deja_commence = RadioBooleanField(
+        label=_("Has your PhD project already started?"),
+        required=False,
+        initial=False,
+    )
+    projet_doctoral_institution = forms.CharField(
+        label=_("Institution"),
+        required=False,
+        max_length=255,
+    )
+    projet_doctoral_date_debut = forms.DateField(
+        label=_("Work start date"),
+        widget=CustomDateInput(),
+        required=False,
+    )
     doctorat_deja_realise = forms.ChoiceField(
         label=_("Have you previously enrolled for a PhD?"),
         choices=ChoixDoctoratDejaRealise.choices(),
@@ -221,12 +247,12 @@ class DoctorateAdmissionProjectForm(forms.Form):
         help_text=_("Indicate any completed or interrupted PhD studies in which you are no longer enrolled."),
     )
     institution = forms.CharField(
-        label=_("Institution"),
+        label=_("Institution in which the PhD has been realised / started."),
         required=False,
         max_length=255,
     )
     domaine_these = forms.CharField(
-        label=_("Thesis field"),
+        label=_("Doctorate thesis field"),
         required=False,
         max_length=255,
     )
