@@ -155,10 +155,10 @@ TAB_TREES = {
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('accounting', _('Additional information')),
         ],
-        Tab('doctorate', pgettext('tab name', 'PhD project'), 'person-chalkboard'): [
+        Tab('doctorate', pgettext('tab name', 'Research project'), 'person-chalkboard'): [
             Tab('project', pgettext('tab name', 'Research project')),
             Tab('cotutelle', _('Cotutelle')),
-            Tab('supervision', _('Supervision')),
+            Tab('supervision', _('Support committee')),
         ],
         # TODO specifics
         Tab('confirm-submit', _('Finalise application'), 'flag'): [

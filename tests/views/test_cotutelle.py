@@ -63,6 +63,19 @@ class CotutelleTestCase(TestCase):
             autres_documents=[],
         )
 
+        superior_institute_patcher = patch("admission.contrib.forms.SuperiorInstituteService")
+        self.mock_superior_institute_api = superior_institute_patcher.start()
+        self.addCleanup(superior_institute_patcher.stop)
+
+        self.mock_superior_institute_api.return_value.get_superior_institute.return_value = {
+            'uuid': 'foo',
+            'name': 'foo',
+            'street': 'foo',
+            'street_number': 'foo',
+            'zipcode': 'foo',
+            'city': 'foo',
+        }
+
     def test_update_no_permission(self):
         self.mock_api.return_value.retrieve_proposition.return_value.links = {
             'update_cotutelle': {'error': 'no access'},
