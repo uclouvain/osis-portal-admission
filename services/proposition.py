@@ -396,6 +396,21 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def retrieve_doctorate_documents(cls, person: Person, uuid):
+        return APIClient().list_doctorate_documents(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_doctorate_documents(cls, person: Person, data, uuid):
+        return APIClient().create_doctorate_documents(
+            completer_emplacements_documents_par_candidat_command=data,
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def open_application_fees_payment_after_submission(cls, person: Person, uuid):
         return APIClient().open_application_fees_payment_after_submission(
             uuid=uuid,
@@ -469,6 +484,16 @@ class PropositionBusinessException(Enum):
     ExperiencesAcademiquesNonCompleteesException = "PROPOSITION-49"
     TypeCompteBancaireRemboursementNonCompleteException = "PROPOSITION-50"
     CoordonneesNonCompleteesException = "PROPOSITION-51"
+
+
+class DoctorateBusinessException(Enum):
+    AbsenceDeDetteNonCompleteeDoctoratException = "DOCTORAT-1"
+    ReductionDesDroitsInscriptionNonCompleteeDoctoratException = "DOCTORAT-2"
+    AssimilationNonCompleteeDoctoratException = "DOCTORAT-3"
+    AffiliationsNonCompleteesDoctoratException = "DOCTORAT-4"
+    CarteBancaireRemboursementIbanNonCompleteDoctoratException = "DOCTORAT-5"
+    CarteBancaireRemboursementAutreFormatNonCompleteDoctoratException = "DOCTORAT-6"
+    TypeCompteBancaireRemboursementNonCompleteDoctoratException = "DOCTORAT-7"
 
 
 class PostalCodeBusinessException(Enum):
@@ -639,6 +664,13 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.CarteBancaireRemboursementIbanNonCompleteException,
         PropositionBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteException,
         PropositionBusinessException.TypeCompteBancaireRemboursementNonCompleteException,
+        DoctorateBusinessException.AbsenceDeDetteNonCompleteeDoctoratException,
+        DoctorateBusinessException.ReductionDesDroitsInscriptionNonCompleteeDoctoratException,
+        DoctorateBusinessException.AssimilationNonCompleteeDoctoratException,
+        DoctorateBusinessException.AffiliationsNonCompleteesDoctoratException,
+        DoctorateBusinessException.CarteBancaireRemboursementIbanNonCompleteDoctoratException,
+        DoctorateBusinessException.CarteBancaireRemboursementAutreFormatNonCompleteDoctoratException,
+        DoctorateBusinessException.TypeCompteBancaireRemboursementNonCompleteDoctoratException,
     },
     'specific-questions': {
         GlobalPropositionBusinessException.QuestionsSpecifiquesInformationsComplementairesNonCompleteesException,

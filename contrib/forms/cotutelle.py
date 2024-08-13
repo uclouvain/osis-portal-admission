@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,16 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from dal import autocomplete, forward
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField, get_superior_institute_initial_choices
 
 
 class DoctorateAdmissionCotutelleForm(forms.Form):
     cotutelle = forms.ChoiceField(
         label=_("Would you like to carry out your thesis under joint supervision with another institution?"),
+        help_text=_(
+            "Your joint supervision information can be completed later."
+            " Please input \"No\" if you don't have information yet."
+        ),
         choices=[
             ('YES', _("Yes")),
             ('NO', _("No")),
@@ -45,6 +50,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         widget=forms.Textarea(attrs={'rows': 2}),
         max_length=255,
     )
+
     institution_fwb = forms.NullBooleanField(
         label=_("Is it a Wallonia-Brussels Federation institution?"),
         required=False,
@@ -56,15 +62,39 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         ),
     )
     institution = forms.CharField(
-        label=_("Partner institution"),
+        empty_value=None,
+        label=_('Institute'),
+        required=False,
+        widget=autocomplete.ListSelect2(
+            url='admission:autocomplete:superior-institute',
+            forward=[
+                forward.Field('institution_fwb', 'is_belgian'),
+            ],
+            attrs={
+                'data-html': True,
+            },
+        ),
+    )
+    autre_institution = forms.BooleanField(
+        label=_('Other institute'),
+        required=False,
+    )
+    autre_institution_nom = forms.CharField(
+        label=_('Institute name'),
         required=False,
         max_length=255,
     )
+    autre_institution_adresse = forms.CharField(
+        label=_('Institute address'),
+        required=False,
+        max_length=255,
+    )
+
     demande_ouverture = FileUploadField(
         label=_("Joint supervision request"),
         required=False,
         max_files=1,
-        help_text=_("Please complete the \"Application for a cotutelle\" form (available here) and upload it here."),
+        help_text=_("Please look up the website of your domain doctoral committee on how to download the document."),
     )
     convention = FileUploadField(
         label=_("Joint supervision agreement"),
@@ -79,6 +109,13 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
     class Media:
         js = ('js/dependsOn.min.js',)
 
+    def __init__(self, person, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['institution'].widget.choices = get_superior_institute_initial_choices(
+            self.data.get(self.add_prefix('institution'), self.initial.get('institution')),
+            person,
+        )
+
     def clean(self):
         cleaned_data = super().clean()
 
@@ -88,5 +125,9 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
             if cleaned_data.get('institution_fwb') is None:
                 self.add_error('institution_fwb', FIELD_REQUIRED_MESSAGE)
-
+            if cleaned_data.get('autre_institution'):
+                if not cleaned_data.get('autre_institution_nom'):
+                    self.add_error('autre_institution_nom', FIELD_REQUIRED_MESSAGE)
+                if not cleaned_data.get('autre_institution_adresse'):
+                    self.add_error('autre_institution_adresse', FIELD_REQUIRED_MESSAGE)
         return cleaned_data

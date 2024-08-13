@@ -100,8 +100,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(enrollment_url)s\">Go to course enrolment</a> or <a "
-"href=\"%(add_url)s\">add a course</a>"
+"<a href=\"%(enrollment_url)s\">Go to course enrolment</a> or <a href="
+"\"%(add_url)s\">add a course</a>"
 msgstr ""
 
 msgid ""
@@ -128,10 +128,9 @@ msgstr ""
 #, python-format
 msgid ""
 "<p> On the basis of the information you have provided on your previous "
-"experience, you do not appear to meet the <a href=\"%(url)s\" "
-"target=\"_blank\">eligibility requirements for the course</a> "
-"<em>%(course_title)s</em>. </p> <p>Please check your previous course data or "
-"choose another course.</p>"
+"experience, you do not appear to meet the <a href=\"%(url)s\" target=\"_blank"
+"\">eligibility requirements for the course</a> <em>%(course_title)s</em>. </"
+"p> <p>Please check your previous course data or choose another course.</p>"
 msgstr ""
 
 #, python-format
@@ -171,8 +170,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"A technical or IT problem? <a href=\"http://uclouvain.be/8282\" "
-"target=\"_blank\">Contact the Service Desk</a>"
+"A technical or IT problem? <a href=\"http://uclouvain.be/8282\" target="
+"\"_blank\">Contact the Service Desk</a>"
 msgstr ""
 
 msgid "A transcript for all years"
@@ -378,10 +377,9 @@ msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
 "classification. Detailed explanations of this framework can be found at <a "
 "href=\"https://www.coe.int/en/web/common-european-framework-reference-"
-"languages/table-1-cefr-3.3-common-reference-levels-global-scale\" "
-"target=\"_blank\"> https://www.coe.int/en/web/common-european-framework-"
-"reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale </"
-"a>"
+"languages/table-1-cefr-3.3-common-reference-levels-global-scale\" target="
+"\"_blank\"> https://www.coe.int/en/web/common-european-framework-reference-"
+"languages/table-1-cefr-3.3-common-reference-levels-global-scale </a>"
 msgstr ""
 
 msgid ""
@@ -392,6 +390,12 @@ msgid ""
 "right to defend themselves and present their case (Articles 16 and 17, "
 "Section 3 of Chapter 1 of Title III of the UCLouvain Academic Regulations "
 "and Procedures)."
+msgstr ""
+
+msgid ""
+"Any modification of personal data must be communicated to the Registration "
+"Department by email by producing a photocopy of both sides of their identity "
+"card incorporating this modification."
 msgstr ""
 
 msgid "Any other assessment system that is not based on a credit system."
@@ -1044,6 +1048,9 @@ msgstr ""
 msgid "Credits earned"
 msgstr ""
 
+msgid "Current funding"
+msgstr ""
+
 msgid "Curriculum"
 msgstr ""
 
@@ -1163,6 +1170,9 @@ msgid "Do you have an international scholarship?"
 msgstr ""
 
 msgid "Doctor"
+msgstr ""
+
+msgid "Doctorate thesis field"
 msgstr ""
 
 msgid "Document"
@@ -1481,6 +1491,9 @@ msgid ""
 "Belgium?"
 msgstr ""
 
+msgid "Has your PhD project already started?"
+msgstr ""
+
 msgid ""
 "Have you applied <a href='https://allocations-etudes.cfwb.be/etudes-"
 "superieures/' target='_blank'>for a student grant</a> from the French "
@@ -1712,6 +1725,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"If you don't have any funding yet, please choose \"Self-funding\" and "
+"explain the considered funding in the \"Comment\" area."
+msgstr ""
+
+msgid ""
 "If you have a final equivalence decision issued by the <a href='http://www."
 "equivalences.cfwb.be/' target='_blank'>French Community</a> of Belgium, you "
 "must provide a double-sided copy of this document."
@@ -1780,6 +1798,9 @@ msgstr ""
 msgid "Institution"
 msgstr ""
 
+msgid "Institution in which the PhD has been realised / started."
+msgstr ""
+
 msgid "Internal"
 msgstr ""
 
@@ -1812,6 +1833,10 @@ msgid "Invalid phone number"
 msgstr ""
 
 msgid "Is it a Wallonia-Brussels Federation institution?"
+msgstr ""
+
+msgid ""
+"Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"
 msgstr ""
 
 msgctxt "diploma_type"
@@ -2354,11 +2379,10 @@ msgstr ""
 msgid "PhD Committee opinion"
 msgstr ""
 
-msgctxt "tab name"
-msgid "PhD project"
+msgid "PhD proposal"
 msgstr ""
 
-msgid "PhD proposal"
+msgid "PhD research experience"
 msgstr ""
 
 msgid "PhD research project"
@@ -2384,13 +2408,6 @@ msgstr ""
 
 msgid "Please choose the language regime or specify another regime."
 msgstr ""
-
-msgid ""
-"Please complete the \"Application for a cotutelle\" form (available here) "
-"and upload it here."
-msgstr ""
-"Please complete the « Application for a cotutelle » form (available here) "
-"and upload it here."
 
 msgid "Please complete this field: {}"
 msgstr ""
@@ -2420,6 +2437,11 @@ msgid ""
 msgstr ""
 
 msgid "Please justify why the member does not have a doctor title"
+msgstr ""
+
+msgid ""
+"Please look up the website of your domain doctoral committee on how to "
+"download the document."
 msgstr ""
 
 msgid ""
@@ -2937,13 +2959,13 @@ msgstr ""
 msgid "Summary of the communication"
 msgstr ""
 
-msgid "Supervision"
-msgstr ""
-
 msgid "Supervisor"
 msgstr ""
 
 msgid "Support Committee minutes"
+msgstr ""
+
+msgid "Support committee"
 msgstr ""
 
 msgid "Surname"
@@ -3415,6 +3437,9 @@ msgstr ""
 msgid "Work contract type"
 msgstr ""
 
+msgid "Work start date"
+msgstr ""
+
 msgid ""
 "Would you like to become a <a href='https://uclouvain.be/fr/decouvrir/carte-"
 "solidaire.html' target='_blank'>Solidarity Student</a>, that is, a member of "
@@ -3474,8 +3499,12 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Would you like to switch courses this academic year at UCLouvain? (<a "
-"href=\"%(url)s\" target=\"_blank\">Informations</a>)"
+"Would you like to switch courses this academic year at UCLouvain? (<a href="
+"\"%(url)s\" target=\"_blank\">Informations</a>)"
+msgstr ""
+
+msgid ""
+"Write your resume in the language decided with your accompanying committee."
 msgstr ""
 
 msgid "Writing ability"
@@ -3571,9 +3600,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"You can find more information on the French Community webpage <a "
-"href=\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/"
-"</a>"
+"You can find more information on the French Community webpage <a href="
+"\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/</a>"
 msgstr ""
 
 msgid "You can specify the locality or postcode in your search."
@@ -3662,6 +3690,11 @@ msgstr ""
 msgid ""
 "Your enrolment cannot be confirmed. All of the following requirements must "
 "be met."
+msgstr ""
+
+msgid ""
+"Your joint supervision information can be completed later. Please input "
+"\"No\" if you don't have information yet."
 msgstr ""
 
 msgid "Your participation in the event"
