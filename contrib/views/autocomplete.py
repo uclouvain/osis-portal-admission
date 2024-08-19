@@ -88,6 +88,8 @@ LANGUAGE_FR = 'FR'
 LANGUAGE_EN = 'EN'
 LANGUAGE_UNDECIDED = 'XX'
 
+TRUTHY_VALUES = [True, "True", "true"]
+
 
 class PaginatedAutocompleteMixin:
     paginate_by = 20
@@ -567,8 +569,11 @@ class SuperiorInstituteAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMix
     def get_list(self):
         additional_filters = {}
         country = self.forwarded.get('country')
+        is_belgian = self.forwarded.get('is_belgian') in TRUTHY_VALUES
         if country:
             additional_filters['country_iso_code'] = country
+        elif is_belgian:
+            additional_filters['country_iso_code'] = BE_ISO_CODE
         additional_filters.update(self.get_webservice_pagination_kwargs())
 
         universities = UniversityService.get_universities(
