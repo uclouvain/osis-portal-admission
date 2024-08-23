@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 import uuid
-from datetime import datetime
+from datetime import datetime, date
 from unittest.mock import ANY, Mock, patch
 
 import freezegun
@@ -43,7 +43,7 @@ from admission.contrib.enums.secondary_studies import (
     ForeignDiplomaTypes,
     GotDiploma,
 )
-from admission.contrib.forms import PDF_MIME_TYPE
+from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
 from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.academic_year import get_current_year
@@ -373,6 +373,14 @@ class EducationTestCase(BaseEducationTestCase):
         for field in ['graduated_from_high_school', 'graduated_from_high_school_year']:
             self.assertFalse(response.context['form'].fields[field].disabled)
         self.assertEqual(len(response.context['form'].visible_fields()), 2)
+        self.assertCountEqual(
+            response.context['form'].fields['graduated_from_high_school_year'].widget.choices,
+            (
+                EMPTY_CHOICE[0],
+                (2021, '2021-2022'),
+                (2020, '2020-2021'),
+            ),
+        )
 
     def test_form_initialization_with_valuated_experience(self):
         self.mock_retrieve_high_school_diploma_for_general['is_valuated'] = True
