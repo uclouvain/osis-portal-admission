@@ -46,7 +46,7 @@ from base.tests.factories.person import PersonFactory
 class PersonViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.person = PersonFactory()
+        cls.person = PersonFactory(global_id="89654123")
         cls.default_kwargs = {
             'accept_language': ANY,
             'x_user_first_name': ANY,

@@ -101,7 +101,6 @@ class BaseAdmissionEducationForm(ConfigurableFormMixin):
         self.current_year = AcademicYearService.get_current_academic_year(person, academic_years)
         self.fields["graduated_from_high_school_year"].widget.choices = get_past_academic_years_choices(
             person,
-            exclude_current=True,
             current_year=self.current_year,
             academic_years=academic_years,
         )
