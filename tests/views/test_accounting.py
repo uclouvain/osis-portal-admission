@@ -173,7 +173,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = self.proposition
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = self.proposition
         self.mock_proposition_api.return_value.retrieve_accounting.return_value.to_dict.return_value = self.accounting
 
         self.addCleanup(propositions_api_patcher.stop)
@@ -204,7 +204,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         self.assertContains(response, "osis-document.umd.min.js")
 
         # Check api calls
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called_with(
             uuid=self.proposition.uuid,
             **self.default_kwargs,
         )
@@ -229,7 +229,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         self.assertContains(response, _("Save and continue"))
 
         # Check api calls
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called_with(
             uuid=self.proposition.uuid,
             **self.default_kwargs,
         )

@@ -92,7 +92,7 @@ class ProjectViewTestCase(TestCase):
         # Mock proposition sdk api
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = Mock(
             statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             code_secteur_formation="SSH",
             documents_projet=[],
@@ -100,7 +100,7 @@ class ProjectViewTestCase(TestCase):
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
             lettres_recommandation=[],
-            links={'update_proposition': {'url': 'ok'}},
+            links={'update_project': {'url': 'ok'}, 'retrieve_project': {'url': 'ok'}},
             bourse_recherche=Mock(uuid=self.doctorate_international_scholarship.uuid),
             erreurs=[],
         )
@@ -184,7 +184,7 @@ class ProjectViewTestCase(TestCase):
     def test_update(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
-        proposition = self.mock_proposition_api.return_value.retrieve_proposition.return_value
+        proposition = self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value
         proposition.doctorat.sigle = 'FOOBAR'
         proposition.doctorat.annee = '2021'
         proposition.code_secteur_formation = 'SSH'
@@ -232,22 +232,21 @@ class ProjectViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "A random postal address")
 
-        data = {
-        }
+        data = {}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
 
     def test_update_no_permission(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.links = {
-            'update_proposition': {'error': 'no access'},
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.links = {
+            'update_project': {'error': 'no access'},
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
     def test_update_consistency_errors(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.to_dict.return_value = {
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.to_dict.return_value = {
             'code_secteur_formation': "SST",
         }
 
@@ -299,7 +298,7 @@ class ProjectViewTestCase(TestCase):
 
     def test_detail(self):
         url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = Mock(
             langue_redaction_these="",
             type_financement=ChoixTypeFinancement.WORK_CONTRACT.name,
             type_contrat_travail="Something",
@@ -318,7 +317,7 @@ class ProjectViewTestCase(TestCase):
         self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
         self.assertContains(response, _("ECONOMY"))
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = Mock(
             langue_redaction_these="",
             code_secteur_formation="SSS",
             commission_proximite="ECLI",
@@ -332,17 +331,17 @@ class ProjectViewTestCase(TestCase):
 
     def test_cancel(self):
         url = resolve_url('admission:doctorate:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = Mock(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = Mock(
             statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             links={},
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, ChoixStatutPropositionDoctorale.EN_BROUILLON.value)
-        self.mock_proposition_api.return_value.destroy_proposition.assert_not_called()
+        self.mock_proposition_api.return_value.destroy_doctorate_proposition.assert_not_called()
         response = self.client.post(url, {})
         self.assertEqual(response.status_code, 302)
-        self.mock_proposition_api.return_value.destroy_proposition.assert_called()
+        self.mock_proposition_api.return_value.destroy_doctorate_proposition.assert_called()
 
     def test_cancel_general_education_proposition(self):
         url = resolve_url('admission:general-education:cancel', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")

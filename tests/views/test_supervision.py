@@ -73,7 +73,7 @@ class SupervisionTestCase(TestCase):
         api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_api = api_patcher.start()
         self.addCleanup(api_patcher.stop)
-        self.mock_api.return_value.retrieve_proposition.return_value = Mock(
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value = Mock(
             doctorat={'intitule': 'test_intitule', 'campus': 'test_campus'},
             reference="REF7777",
             code_secteur_formation="SSH",
@@ -148,7 +148,7 @@ class SupervisionTestCase(TestCase):
         )
 
         self.mock_api.return_value.get_external_proposition.return_value.to_dict.return_value = {
-            'proposition': self.mock_api.return_value.retrieve_proposition.return_value,
+            'proposition': self.mock_api.return_value.retrieve_doctorate_proposition.return_value,
             'supervision': self.mock_api.return_value.retrieve_supervision.return_value.to_dict.return_value,
         }
 
@@ -161,13 +161,13 @@ class SupervisionTestCase(TestCase):
         self.addCleanup(countries_api_patcher.stop)
 
     def test_should_detail_redirect_to_form_when_not_signing(self):
-        self.mock_api.return_value.retrieve_proposition.return_value.links.update(
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value.links.update(
             {
                 'request_signatures': {'url': 'ok'},
                 'add_member': {'url': 'ok'},
             }
         )
-        self.mock_api.return_value.retrieve_proposition.return_value.statut = (
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value.statut = (
             ChoixStatutPropositionDoctorale.EN_BROUILLON.name
         )
         response = self.client.get(self.detail_url)
@@ -184,7 +184,7 @@ class SupervisionTestCase(TestCase):
         self.mock_api.return_value.retrieve_supervision.assert_called()
 
     def test_should_add_supervision_member(self):
-        self.mock_api.return_value.retrieve_proposition.return_value.links.update(
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value.links.update(
             {
                 'request_signatures': {'url': 'ok'},
                 'add_member': {'url': 'ok'},
@@ -470,7 +470,7 @@ class SupervisionTestCase(TestCase):
         self.assertRedirects(response, self.detail_url)
 
     def test_should_not_display_confirmation_if_errors(self):
-        self.mock_api.return_value.retrieve_proposition.return_value.links.update(
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value.links.update(
             {
                 'request_signatures': {'url': 'ok'},
                 'add_member': {'url': 'ok'},
@@ -484,7 +484,7 @@ class SupervisionTestCase(TestCase):
         self.assertContains(response, "Nope")
 
     def test_should_redirect_to_supervision_without_buttons(self):
-        self.mock_api.return_value.retrieve_proposition.return_value.links.update(
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value.links.update(
             {
                 'request_signatures': {'url': 'ok'},
             }

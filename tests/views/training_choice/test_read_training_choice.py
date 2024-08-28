@@ -87,7 +87,7 @@ class DoctorateAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called_with(
             uuid=self.proposition_uuid,
             **self.default_kwargs,
         )
