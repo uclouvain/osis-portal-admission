@@ -2433,6 +2433,11 @@ msgstr "Nouvelle échéance"
 msgid "No"
 msgstr "Non"
 
+msgid "No (access to sports facilities on the Saint-Louis campus is free)"
+msgstr ""
+"Non (l'accès aux infrastructures sportives sur le campus Saint-Louis est "
+"gratuit)"
+
 msgid "No activity created at present"
 msgstr "Aucune activité créée pour le moment"
 
@@ -4035,9 +4040,6 @@ msgstr "Oui, sur Mons uniquement (12 EUR)"
 
 msgid "Yes, only in Saint-Gilles (E12)"
 msgstr "Oui, sur Saint-Gilles uniquement (12 EUR)"
-
-msgid "Yes, only in Saint-Louis (E12)"
-msgstr "Oui, sur Saint-Louis uniquement (12 EUR)"
 
 msgid "Yes, only in Tournai (E12)"
 msgstr "Oui, sur Tournai uniquement (12 EUR)"
