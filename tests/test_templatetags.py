@@ -42,6 +42,7 @@ from admission.contrib.enums import (
     ChoixStatutPropositionContinue,
     TrainingType,
     ChoixMoyensDecouverteFormation,
+    ChoixAffiliationSport,
 )
 from admission.contrib.enums.specific_question import TypeItemFormulaire
 from admission.contrib.forms import PDF_MIME_TYPE, AdmissionFileUploadField
@@ -62,6 +63,7 @@ from admission.templatetags.admission import (
     value_if_any,
     form_fields_are_empty,
     format_ways_to_find_out_about_the_course,
+    sport_affiliation_value,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
@@ -510,6 +512,46 @@ class DisplayTagTestCase(TestCase):
 
         self.assertTrue(
             form_fields_are_empty(form, 'boolean_field', 'char_field', 'integer_field', 'float_field', 'file_field'),
+        )
+
+    def test_sport_affiliation_value(self):
+        self.assertEqual(
+            sport_affiliation_value(None, None),
+            '',
+        )
+
+        self.assertEqual(
+            sport_affiliation_value(None, 'Louvain-la-Neuve'),
+            '',
+        )
+
+        self.assertEqual(
+            sport_affiliation_value(ChoixAffiliationSport.LOUVAIN_WOLUWE.name, None),
+            ChoixAffiliationSport.LOUVAIN_WOLUWE.value,
+        )
+
+        self.assertEqual(
+            sport_affiliation_value(ChoixAffiliationSport.LOUVAIN_WOLUWE.name, 'Bruxelles Woluwe'),
+            ChoixAffiliationSport.LOUVAIN_WOLUWE.value,
+        )
+
+        for campus in [
+            None,
+            '',
+            'Bruxelles Saint-Gilles',
+            'Bruxelles Woluwe',
+            'Louvain-la-Neuve',
+            'Mons',
+            'Tournai',
+        ]:
+            self.assertEqual(
+                sport_affiliation_value(ChoixAffiliationSport.NON.name, campus),
+                ChoixAffiliationSport.NON.value,
+            )
+
+        self.assertEqual(
+            sport_affiliation_value(ChoixAffiliationSport.NON.name, 'Bruxelles Saint-Louis'),
+            _('No (access to sports facilities on the Saint-Louis campus is free)'),
         )
 
 

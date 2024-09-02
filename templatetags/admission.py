@@ -29,7 +29,7 @@ import re
 from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
-from typing import Union
+from typing import Union, Optional
 
 from bootstrap3.forms import render_field
 from bootstrap3.renderers import FieldRenderer
@@ -52,6 +52,8 @@ from admission.contrib.enums import (
     ChoixStatutPropositionContinue,
     ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE,
     ChoixMoyensDecouverteFormation,
+    ChoixAffiliationSport,
+    LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE,
 )
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
@@ -817,3 +819,15 @@ def format_ways_to_find_out_about_the_course(proposition):
             for way in proposition.moyens_decouverte_formation
         ]
     )
+
+
+@register.filter
+def sport_affiliation_value(affiliation: Optional[str], campus_name: Optional[str]) -> str:
+    """Return the label of the sport affiliation based on the affiliation value and the campus."""
+    if not affiliation:
+        return ''
+
+    if not campus_name or affiliation != ChoixAffiliationSport.NON.name:
+        return ChoixAffiliationSport.get_value(affiliation)
+
+    return LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE.get(campus_name, ChoixAffiliationSport.NON.value)
