@@ -71,7 +71,7 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check that the right API calls are done
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called()
         self.mock_person_api.return_value.retrieve_curriculum_details_admission.assert_called()
 
         # Check the context data
@@ -109,7 +109,7 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         self.assertContains(response, '<form class="osis-form"')
 
         # Check that the right API calls are done
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called()
         self.mock_person_api.return_value.retrieve_curriculum_details_admission.assert_called()
 
         # Check the context data

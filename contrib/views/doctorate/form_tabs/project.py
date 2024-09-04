@@ -62,8 +62,8 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
         return kwargs
 
     def get_initial(self):
-        if 'url' not in self.admission.links['update_proposition']:
-            raise PermissionDenied(self.admission.links['update_proposition']['error'])
+        if 'url' not in self.admission.links['update_project']:
+            raise PermissionDenied(self.admission.links['update_project']['error'])
         return {
             **self.admission.to_dict(),
             'sector': self.admission.code_secteur_formation,

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ class ConfirmSubmitTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
         api = self.mock_proposition_api.return_value
-        api.retrieve_proposition.return_value = Mock(
+        api.retrieve_doctorate_proposition.return_value = Mock(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
             erreurs=[],
             date_fin_pot=None,
@@ -118,7 +118,7 @@ class ConfirmSubmitTestCase(TestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called()
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called()
         self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.assert_called()
 
         self.assertContains(response, 'Foo title')
@@ -146,8 +146,8 @@ class ConfirmSubmitTestCase(TestCase):
     @freezegun.freeze_time('2022-09-22')
     def test_get_late_message(self):
         date_fin = date(2022, 9, 30)
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.date_fin_pot = date_fin
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value.pot_calcule = (
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.date_fin_pot = date_fin
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.pot_calcule = (
             'ADMISSION_POOL_UE5_BELGIAN'
         )
         response = self.client.get(self.url)
@@ -213,6 +213,7 @@ class ConfirmSubmitTestCase(TestCase):
             Mock(sigle='SSS', intitule='Foobarbaz'),
         ]
         self.addCleanup(autocomplete_api_patcher.stop)
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.links = {}
 
         response = self.client.post(self.url, data=self.data_ok, follow=True)
         self.mock_proposition_api.return_value.submit_proposition.assert_called_with(
@@ -229,7 +230,7 @@ class ConfirmSubmitTestCase(TestCase):
             },
             **self.default_kwargs,
         )
-        url = resolve_url('admission:doctorate:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+        url = resolve_url('admission:list')
         self.assertRedirects(response, url)
         self.assertContains(response, _("Your application has been submitted"))
 

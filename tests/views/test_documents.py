@@ -489,7 +489,7 @@ class DoctorateDocumentsFormViewTestCase(BaseDocumentsFormViewTestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = self.proposition
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = self.proposition
         self.mock_proposition_api.return_value.list_doctorate_documents.return_value = DocumentSpecificQuestionsList(
             immediate_requested_documents=self.documents_to_complete_immediately_configurations,
             later_requested_documents=self.documents_to_complete_later_configurations,
@@ -504,7 +504,7 @@ class DoctorateDocumentsFormViewTestCase(BaseDocumentsFormViewTestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check api calls
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called_with(
             uuid=self.proposition.uuid,
             **self.default_kwargs,
         )

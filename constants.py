@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ READ_ACTIONS_BY_TAB = {
     'languages': 'retrieve_languages',
     # Project
     'training-choice': 'retrieve_training_choice',
-    'project': 'retrieve_proposition',
+    'project': 'retrieve_project',
     'supervision': 'retrieve_supervision',
     # Accounting
     'accounting': 'retrieve_accounting',
@@ -74,7 +74,7 @@ UPDATE_ACTIONS_BY_TAB = {
     'languages': 'update_languages',
     # Project
     'training-choice': 'update_training_choice',
-    'project': 'update_proposition',
+    'project': 'update_project',
     'supervision': 'request_signatures',
     # Accounting
     'accounting': 'update_accounting',

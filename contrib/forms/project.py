@@ -54,6 +54,7 @@ from admission.contrib.forms import (
 )
 from admission.contrib.views.autocomplete import LANGUAGE_UNDECIDED
 from admission.services.autocomplete import AdmissionAutocompleteService
+from admission.utils import mark_safe_lazy
 
 SCIENCE_DOCTORATE = 'SC3DP'
 
@@ -160,6 +161,14 @@ class DoctorateAdmissionProjectForm(forms.Form):
         label=_("Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"),
         required=False,
         initial=False,
+        help_text=mark_safe_lazy(
+            _(
+                "<a href='https://uclouvain.be/en/research/valodoc/confirmation-eligibility-doctoral-programme.html' "
+                "target='_blank'>"
+                "https://uclouvain.be/en/research/valodoc/confirmation-eligibility-doctoral-programme.html"
+                "</a>"
+            ),
+        ),
     )
     commentaire_financement = forms.CharField(
         label=_("Comment"),
@@ -318,6 +327,15 @@ class DoctorateAdmissionProjectForm(forms.Form):
         else:
             choices = get_language_initial_choices(lang_code, self.person)
         self.fields["langue_redaction_these"].widget.choices = choices
+
+        # Initialize some fields if they are not already set in the input data
+        for field in [
+            'est_lie_fnrs_fria_fresh_csc',
+            'projet_doctoral_deja_commence',
+            'doctorat_deja_realise',
+        ]:
+            if self.initial.get(field) in {None, ''}:
+                self.initial[field] = self.fields[field].initial
 
     def clean(self):
         data = super().clean()
