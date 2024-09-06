@@ -68,6 +68,8 @@ class DoctorateAdmissionCotutelleFormView(LoadDossierViewMixin, WebServiceFormMi
                 convention=[],
                 autres_documents=[],
             )
+        if not data['institution']:
+            data['institution'] = ""
         del data['cotutelle']
         data['uuid'] = str(self.kwargs['pk'])
         return data
