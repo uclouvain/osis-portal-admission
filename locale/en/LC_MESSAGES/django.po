@@ -115,6 +115,12 @@ msgid ""
 "completed and accompanied by the mentioned annexes"
 msgstr ""
 
+msgid ""
+"<a href='https://uclouvain.be/en/research/valodoc/confirmation-eligibility-"
+"doctoral-programme.html' target='_blank'>https://uclouvain.be/en/research/"
+"valodoc/confirmation-eligibility-doctoral-programme.html</a>"
+msgstr ""
+
 #, python-format
 msgid ""
 "<p> On the basis of the <a href=\"%(url)s\" target=\"_blank\">enrolment "
@@ -2128,6 +2134,9 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No (access to sports facilities on the Saint-Louis campus is free)"
+msgstr ""
+
 msgid "No activity created at present"
 msgstr ""
 
@@ -2234,6 +2243,11 @@ msgid ""
 "the student <a href=\"https://uclouvain.be/en/study/inscriptions/welcome-to-"
 "international-students.html\" target=\"_blank\"> visa </a> application "
 "information."
+msgstr ""
+
+msgid ""
+"Once the signatures request is sent, you will not be able to change anything "
+"in your application for admission."
 msgstr ""
 
 msgid "Online"
@@ -3560,9 +3574,6 @@ msgstr "Yes, only in Mons (€12)"
 
 msgid "Yes, only in Saint-Gilles (E12)"
 msgstr "Yes, only in Saint-Gilles (€12)"
-
-msgid "Yes, only in Saint-Louis (E12)"
-msgstr "Yes, only in Saint-Louis (€12)"
 
 msgid "Yes, only in Tournai (E12)"
 msgstr "Yes, only in Tournai (€12)"

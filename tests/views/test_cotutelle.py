@@ -48,7 +48,7 @@ class CotutelleTestCase(TestCase):
         self.mock_api = api_patcher.start()
         self.addCleanup(api_patcher.stop)
 
-        self.mock_api.return_value.retrieve_proposition.return_value = Mock(
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value = Mock(
             statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             links={'update_cotutelle': {'url': 'ok'}},
             erreurs=[],
@@ -77,7 +77,7 @@ class CotutelleTestCase(TestCase):
         }
 
     def test_update_no_permission(self):
-        self.mock_api.return_value.retrieve_proposition.return_value.links = {
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value.links = {
             'update_cotutelle': {'error': 'no access'},
         }
         response = self.client.get(self.url)

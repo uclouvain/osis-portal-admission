@@ -173,7 +173,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = self.proposition
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = self.proposition
         self.mock_proposition_api.return_value.retrieve_accounting.return_value.to_dict.return_value = self.accounting
 
         self.addCleanup(propositions_api_patcher.stop)
@@ -204,7 +204,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         self.assertContains(response, "osis-document.umd.min.js")
 
         # Check api calls
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called_with(
             uuid=self.proposition.uuid,
             **self.default_kwargs,
         )
@@ -229,7 +229,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         self.assertContains(response, _("Save and continue"))
 
         # Check api calls
-        self.mock_proposition_api.return_value.retrieve_proposition.assert_called_with(
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.assert_called_with(
             uuid=self.proposition.uuid,
             **self.default_kwargs,
         )
@@ -688,6 +688,22 @@ class GeneralAccountingViewTestCase(TestCase):
         sport_affiliation_choices = form.fields['affiliation_sport'].choices
         self.assertEqual(sport_affiliation_choices[0][0], ChoixAffiliationSport.NON.name)
         self.assertFalse(form.fields['affiliation_sport'].required)
+
+        with mock.patch.multiple(self.proposition.formation, campus='Bruxelles Saint-Louis'):
+            response = self.client.get(self.update_url)
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+        sport_affiliation_choices = form.fields['affiliation_sport'].choices
+        self.assertEqual(sport_affiliation_choices[0][0], ChoixAffiliationSport.SAINT_LOUIS_UCL.name)
+        self.assertEqual(sport_affiliation_choices[0][1], ChoixAffiliationSport.SAINT_LOUIS_UCL.value)
+        self.assertEqual(sport_affiliation_choices[1][0], ChoixAffiliationSport.NON.name)
+        self.assertEqual(
+            sport_affiliation_choices[1][1],
+            _('No (access to sports facilities on the Saint-Louis campus is free)'),
+        )
+        self.assertTrue(form.fields['affiliation_sport'].required)
 
     def test_post_accounting_form_with_valid_data(self):
         response = self.client.post(self.update_url, data=self.valid_data)

@@ -132,6 +132,15 @@ msgstr ""
 "<a href=\"{url}\" target=_blank\">Formulaire de modification d'inscription</"
 "a>, dûment complété et accompagné des annexes mentionnées"
 
+msgid ""
+"<a href='https://uclouvain.be/en/research/valodoc/confirmation-eligibility-"
+"doctoral-programme.html' target='_blank'>https://uclouvain.be/en/research/"
+"valodoc/confirmation-eligibility-doctoral-programme.html</a>"
+msgstr ""
+"<a href='https://uclouvain.be/fr/chercher/valodoc/attestation-acces-au-"
+"doctorat.html' target='_blank'>https://uclouvain.be/fr/chercher/valodoc/"
+"attestation-acces-au-doctorat.html</a>"
+
 #, python-format
 msgid ""
 "<p> On the basis of the <a href=\"%(url)s\" target=\"_blank\">enrolment "
@@ -2433,6 +2442,11 @@ msgstr "Nouvelle échéance"
 msgid "No"
 msgstr "Non"
 
+msgid "No (access to sports facilities on the Saint-Louis campus is free)"
+msgstr ""
+"Non (l'accès aux infrastructures sportives sur le campus Saint-Louis est "
+"gratuit)"
+
 msgid "No activity created at present"
 msgstr "Aucune activité créée pour le moment"
 
@@ -2558,6 +2572,13 @@ msgstr ""
 "etudier/inscriptions/bienvenue-aux-etudiants-internationaux-et-aux-"
 "etudiantes-internationales.html\" target=\"_blank\"> visa </a>."
 
+msgid ""
+"Once the signatures request is sent, you will not be able to change anything "
+"in your application for admission."
+msgstr ""
+"Une fois la demande de signature envoyée, vous ne pourrez plus rien modifier "
+"dans votre demande."
+
 msgid "Online"
 msgstr "En ligne"
 
@@ -2618,7 +2639,7 @@ msgid "PAPER"
 msgstr "Épreuve"
 
 msgid "PARTIAL"
-msgstr "Partiel"
+msgstr "En partie"
 
 msgid "PASSED_CONFIRMATION"
 msgstr "Épreuve de confirmation réussie"
@@ -4035,9 +4056,6 @@ msgstr "Oui, sur Mons uniquement (12 EUR)"
 
 msgid "Yes, only in Saint-Gilles (E12)"
 msgstr "Oui, sur Saint-Gilles uniquement (12 EUR)"
-
-msgid "Yes, only in Saint-Louis (E12)"
-msgstr "Oui, sur Saint-Louis uniquement (12 EUR)"
 
 msgid "Yes, only in Tournai (E12)"
 msgstr "Oui, sur Tournai uniquement (12 EUR)"
