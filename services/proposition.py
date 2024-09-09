@@ -131,7 +131,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
 
     @classmethod
     def update_proposition(cls, person: Person, **kwargs):
-        return APIClient().update_proposition(
+        return APIClient().update_project(
             uuid=kwargs['uuid'],
             completer_proposition_command=kwargs,
             **build_mandatory_auth_headers(person),
@@ -139,7 +139,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
 
     @classmethod
     def get_proposition(cls, person: Person, uuid) -> DoctoratePropositionDTO:
-        return APIClient().retrieve_proposition(
+        return APIClient().retrieve_doctorate_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
@@ -200,7 +200,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
 
     @classmethod
     def cancel_proposition(cls, person: Person, uuid):
-        return APIClient().destroy_proposition(
+        return APIClient().destroy_doctorate_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
