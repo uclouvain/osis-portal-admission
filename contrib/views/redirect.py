@@ -54,7 +54,8 @@ class AdmissionRedirectView(LoadDossierViewMixin, RedirectView):
         namespace = self.current_context
 
         if namespace == 'doctorate':
-            return f'admission:{namespace}:project'
+            if can_make_action(admission, 'retrieve_project'):
+                return f'admission:{namespace}:project'
 
         if can_make_action(admission, 'retrieve_person'):
             return f'admission:{namespace}:person'

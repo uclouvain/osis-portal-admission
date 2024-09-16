@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ class PDFRecapViewTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_api = propositions_api_patcher.start().return_value
         # Doctorate
-        self.mock_api.retrieve_proposition.return_value = self.proposition
+        self.mock_api.retrieve_doctorate_proposition.return_value = self.proposition
         self.mock_api.retrieve_doctorate_education_proposition_pdf_recap.return_value = MagicMock(
             token='new-doctorate-token',
         )
@@ -123,7 +123,7 @@ class PDFRecapViewTestCase(TestCase):
 
     def test_doctorate_pdf_recap_if_it_is_not_already_generated(self):
         self.client.force_login(self.person.user)
-        self.mock_api.retrieve_proposition.return_value.pdf_recapitulatif = []
+        self.mock_api.retrieve_doctorate_proposition.return_value.pdf_recapitulatif = []
         response = self.client.get(self.doctorate_detail_url)
         self.mock_api.retrieve_doctorate_education_proposition_pdf_recap.assert_called_once_with(
             uuid=self.proposition.uuid,

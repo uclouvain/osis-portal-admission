@@ -481,7 +481,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
             lettres_recommandation=[],
-            links={'update_proposition': {'url': 'ok'}},
+            links={'update_project': {'url': 'ok'}},
             commission_proximite='MANAGEMENT',
             statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             reponses_questions_specifiques={
@@ -646,7 +646,9 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.side_effect = (
             self.get_general_education_admission
         )
-        self.mock_proposition_api.return_value.retrieve_proposition.side_effect = self.get_doctorate_education_admission
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.side_effect = (
+            self.get_doctorate_education_admission
+        )
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = (
             self.continuing_proposition
         )

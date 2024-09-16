@@ -279,6 +279,7 @@ class MixinTestCase(TestCase):
             date_fin_pot=None,
             doctorat=PropositionSearchDoctorat._from_openapi_data(
                 sigle='CS1',
+                code='C1',
                 annee=cls.academic_year_2020.year,
                 intitule='Doctorate name',
                 sigle_entite_gestion="CDSS",
@@ -414,7 +415,7 @@ class MixinTestCase(TestCase):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
 
-        self.mock_proposition_api.return_value.retrieve_proposition.return_value = self.proposition
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = self.proposition
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = (
             self.general_proposition
         )

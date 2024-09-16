@@ -139,8 +139,6 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         if self.submit_proposition_result.get('status') == ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name:
             return resolve_url(f'admission:{self.current_context}:payment', pk=self.admission_uuid)
         self.request.session[PROPOSITION_JUST_SUBMITTED] = self.current_context
-        if self.current_context == 'doctorate':
-            return resolve_url(f'admission:{self.current_context}:project', pk=self.admission_uuid)
         return resolve_url(f'admission:{self.current_context}', pk=self.admission_uuid)
 
     def prepare_data(self, data):
