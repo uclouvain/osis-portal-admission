@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
     )
     private_email = forms.EmailField(
         label=__("admission", "Personal email"),
-        disabled=True,
         required=False,
     )
     phone_mobile = PhoneField(
@@ -68,6 +67,10 @@ class DoctorateAdmissionCoordonneesForm(forms.Form):
         super().__init__(*args, **kwargs)
         # Tick the show contact checkbox only if there is data in contact
         self.fields["show_contact"].initial = self.initial['contact'] is not None
+
+        # Some fields are disabled only if they are not already set
+        if self.initial.get('private_email'):
+            self.fields['private_email'].disabled = True
 
 
 class DoctorateAdmissionAddressForm(forms.Form):

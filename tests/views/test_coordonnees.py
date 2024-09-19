@@ -126,6 +126,17 @@ class CoordonneesTestCase(TestCase):
         self.assertTemplateUsed(response, 'admission/forms/coordonnees.html')
         self.mock_person_api.return_value.retrieve_coordonnees.assert_called()
 
+        # Some fields are disabled if they are already set
+        form = response.context['main_form']
+        self.assertFalse(form.fields['private_email'].disabled)
+
+        self.mock_get.return_value['private_email'] = 'john@example.org'
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        form = response.context['main_form']
+        self.assertTrue(form.fields['private_email'].disabled)
+
     def test_form_empty(self):
         url = resolve_url('admission:create:coordonnees')
 
@@ -166,12 +177,14 @@ class CoordonneesTestCase(TestCase):
         last_call_kwargs = self.mock_person_api.return_value.update_coordonnees.call_args[1]
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['postal_code'], "1111")
         self.assertEqual(last_call_kwargs['coordonnees']['residential']['city'], "Louvain-La-Neuve")
-        self.assertEqual(last_call_kwargs['coordonnees']['private_email'], "")
+        self.assertEqual(last_call_kwargs['coordonnees']['private_email'], "john@example.org")
         self.assertIsNone(last_call_kwargs['coordonnees']['contact'])
         self.assertEqual(last_call_kwargs['coordonnees']['phone_mobile'], "+32474123456")
 
     def test_form_foreign_with_contact_address(self):
         url = resolve_url('admission:create:coordonnees')
+
+        self.mock_get.return_value['private_email'] = 'john@example.org'
 
         response = self.client.post(
             url,
@@ -187,7 +200,7 @@ class CoordonneesTestCase(TestCase):
                 "contact-street": "Rue du Compas",
                 "contact-street_number": "2",
                 "show_contact": True,
-                "private_email": "john@example.org",
+                "private_email": "john_2@example.org",  # Will be overwritten as it is already set
                 "phone_mobile": "+32474123456",
                 "emergency_contact_phone": "+32474123457",
             },
@@ -205,7 +218,7 @@ class CoordonneesTestCase(TestCase):
                 "postal_box": "",
             },
         )
-        self.assertEqual(last_call_kwargs["coordonnees"]["private_email"], '')
+        self.assertEqual(last_call_kwargs["coordonnees"]["private_email"], 'john@example.org')
         self.assertEqual(last_call_kwargs["coordonnees"]["phone_mobile"], '+32474123456')
         self.assertEqual(last_call_kwargs["coordonnees"]["emergency_contact_phone"], '+32474123457')
 
