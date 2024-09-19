@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -308,16 +308,28 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     def _disable_fields_when_internal_account(self):
         # Cas: Les informations des comptes internes doivent être modifié via une autre procédure
-        fieldname_to_disabled = ['first_name', 'last_name', 'unknown_birth_date', 'birth_date', 'sex', 'birth_country']
+        fieldname_to_disabled = {'first_name', 'last_name'}
+
+        # Some fields are disabled only if they are not already set
+        if self.initial.get('sex'):
+            fieldname_to_disabled.add('sex')
+
+        if self.initial.get('birth_country'):
+            fieldname_to_disabled.add('birth_country')
+
+        if self.initial.get('birth_date') or self.initial.get('birth_year'):
+            fieldname_to_disabled.add('birth_date')
+            fieldname_to_disabled.add('unknown_birth_date')
+
         for fieldname in fieldname_to_disabled:
             self.fields[fieldname].disabled = True
 
-        fieldname_to_add_helptext = ['first_name', 'last_name', 'birth_date', 'sex', 'birth_country']
+        fieldname_to_add_helptext = {'first_name', 'last_name', 'birth_date', 'sex', 'birth_country'}
         help_text_modification_internal_account = _(
             "Any modification of personal data must be communicated to the Registration Department by email by "
             "producing a photocopy of both sides of their identity card incorporating this modification."
         )
-        for fieldname in fieldname_to_add_helptext:
+        for fieldname in fieldname_to_add_helptext & fieldname_to_disabled:
             self.fields[fieldname].help_text = help_text_modification_internal_account
 
     def clean(self):
