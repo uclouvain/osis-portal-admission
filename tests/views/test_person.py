@@ -34,6 +34,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import BE_ISO_CODE
+from admission.contrib.enums import SexEnum
 from admission.contrib.enums.person import CivilState
 from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
 from admission.tests import get_paginated_years
@@ -47,6 +48,7 @@ class PersonViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory(global_id="89654123")
+        cls.internal_person = PersonFactory(global_id="12345678")
         cls.default_kwargs = {
             'accept_language': ANY,
             'x_user_first_name': ANY,
@@ -54,6 +56,7 @@ class PersonViewTestCase(TestCase):
             'x_user_email': ANY,
             'x_user_global_id': ANY,
         }
+        cls.create_url = resolve_url('admission:create:person')
 
     def setUp(self):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -142,6 +145,106 @@ class PersonViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateNotUsed(response, 'admission/forms/person.html')
         self.assertTemplateUsed(response, 'admission/details/person.html')
+
+    def test_form_no_field_is_disabled_for_external_account(self):
+        self.client.force_login(self.person.user)
+
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name='',
+            last_name='',
+            sex='',
+            birth_country='',
+            birth_year='',
+            birth_date=None,
+        )
+
+        response = self.client.get(self.create_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        for field_name, field in form.fields.items():
+            self.assertFalse(field.disabled, f'The field "{field_name}" must not be disabled.')
+
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name='John',
+            last_name='Doe',
+            sex=SexEnum.M.name,
+            birth_country='BE',
+            birth_year='1990',
+            birth_date=datetime.date(1990, 1, 1),
+        )
+
+        response = self.client.get(self.create_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        for field_name, field in form.fields.items():
+            self.assertFalse(field.disabled, f'The field "{field_name}" must not be disabled.')
+
+    def test_form_some_fields_are_disabled_for_internal_account(self):
+        self.client.force_login(self.internal_person.user)
+
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name='',
+            last_name='',
+            sex='',
+            birth_country='',
+            birth_year='',
+            birth_date=None,
+        )
+
+        response = self.client.get(self.create_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        fields_to_disabled = {'first_name', 'last_name'}
+        for field_name, field in form.fields.items():
+            if field_name in fields_to_disabled:
+                self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+            else:
+                self.assertFalse(field.disabled, f'The field {field_name} must not be disabled.')
+
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name='John',
+            last_name='Doe',
+            sex=SexEnum.M.name,
+            birth_country='BE',
+            birth_year='1990',
+        )
+
+        response = self.client.get(self.create_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        fields_to_disabled = {'first_name', 'last_name', 'sex', 'birth_country', 'birth_date', 'unknown_birth_date'}
+        for field_name, field in form.fields.items():
+            if field_name in fields_to_disabled:
+                self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+            else:
+                self.assertFalse(field.disabled, f'The field {field_name} must not be disabled.')
+
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = dict(
+            first_name='John',
+            last_name='Doe',
+            sex=SexEnum.M.name,
+            birth_country='BE',
+            birth_date=datetime.date(1990, 1, 1),
+        )
+
+        response = self.client.get(self.create_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        for field_name, field in form.fields.items():
+            if field_name in fields_to_disabled:
+                self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+            else:
+                self.assertFalse(field.disabled, f'The field {field_name} must not be disabled.')
 
     def test_form(self):
         url = resolve_url('admission:create:person')
