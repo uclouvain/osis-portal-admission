@@ -79,6 +79,7 @@ class AutocompleteTestCase(TestCase):
                 campus="Louvain-La-Neuve",
                 type=TrainingType.PHD.name,
                 campus_inscription='Mons',
+                code='CODE',
             ),
         ]
         url = reverse('admission:autocomplete:doctorate')
