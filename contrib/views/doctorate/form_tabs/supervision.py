@@ -57,6 +57,7 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.request.user.person
+        kwargs['admission_status'] = self.admission.statut
         return kwargs
 
     def get(self, request, *args, **kwargs):

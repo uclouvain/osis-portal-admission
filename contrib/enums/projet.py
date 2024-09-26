@@ -39,6 +39,8 @@ class ChoixStatutPropositionDoctorale(ChoiceEnum):
     EN_BROUILLON = _('In draft form')
     EN_ATTENTE_DE_SIGNATURE = _('Waiting for signature')
     CONFIRMEE = _('Application confirmed')
+    CA_A_COMPLETER = _('Supervisory panel to be completed')
+    CA_EN_ATTENTE_DE_SIGNATURE = _('Supervisory panel waiting for signature')
     ANNULEE = _('Cancelled application')
     INSCRIPTION_AUTORISEE = _('Application accepted')
     INSCRIPTION_REFUSEE = _('Application denied')

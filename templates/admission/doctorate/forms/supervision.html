@@ -88,7 +88,12 @@
     <form class="osis-form" method="post" action="">
       {% csrf_token %}
       {% bootstrap_form_errors add_form %}
-      {% panel _("Add a promoter or a CA member") %}
+      {% if admission.statut == 'CA_A_COMPLETER' %}
+        {% translate "Add a CA member" as panel_title %}
+      {% else %}
+        {% translate "Add a promoter or a CA member" as panel_title %}
+      {% endif %}
+      {% panel panel_title %}
         <div class="row">
           <div class="col-md-12">
             {% bootstrap_field add_form.type %}
