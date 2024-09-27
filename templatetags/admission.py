@@ -53,7 +53,7 @@ from admission.contrib.enums import (
     ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE,
     ChoixMoyensDecouverteFormation,
     ChoixAffiliationSport,
-    LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE,
+    LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE, ActorType,
 )
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
@@ -854,3 +854,11 @@ def get_superior_institute_name(context, organisation_uuid):
         uuid=organisation_uuid,
     )
     return mark_safe(format_school_title(institute))
+
+
+@register.filter
+def can_edit_supervision_member(admission, type):
+    if type == ActorType.PROMOTER.name:
+        return admission.get('statut') == 'BROUILLON'
+    elif type == ActorType.CA_MEMBER.name:
+        return admission.get('statut') in ['BROUILLON', 'CA_A_COMPLETER', 'CA_EN_ATTENTE_DE_SIGNATURE']

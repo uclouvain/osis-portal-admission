@@ -144,6 +144,22 @@
 
     {% include "admission/doctorate/includes/request_signature_modal.html" %}
   {% endif %}
+
+  {% if admission|can_make_action:'approve_proposition_by_pdf' and admission.status == 'CA_EN_ATTENTE_DE_SIGNATURE' %}
+    {# TODO ADD TEST ALL APPROVED #}
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-success btn-lg"
+        data-toggle="modal"
+        data-target="#submit-ca-modal"
+      >
+        {% trans "Submit supervisory panel" %}
+      </button>
+    </div>
+
+    {% include "admission/doctorate/includes/submit_ca_modal.html" %}
+  {% endif %}
 {% endblock tab_content %}
 
 {% block script %}

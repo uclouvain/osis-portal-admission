@@ -26,8 +26,9 @@
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -52,6 +53,7 @@ __all__ = [
     'DoctorateAdmissionApprovalByPdfView',
     'DoctorateAdmissionExternalResendView',
     'DoctorateAdmissionEditExternalMemberView',
+    'DoctorateAdmissionSubmitCaView',
 ]
 __namespace__ = False
 
@@ -66,7 +68,10 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
         context = self.get_context_data(**kwargs)
         # If not signing in progress and ability to update supervision, redirect on update page
         if (
-            self.admission.statut != ChoixStatutPropositionDoctorale.EN_ATTENTE_DE_SIGNATURE.name
+            self.admission.statut not in [
+                ChoixStatutPropositionDoctorale.EN_ATTENTE_DE_SIGNATURE.name,
+                ChoixStatutPropositionDoctorale.CA_EN_ATTENTE_DE_SIGNATURE.name,
+            ]
             and 'url' in self.admission.links['request_signatures']
         ):
             return redirect('admission:doctorate:update:supervision', **self.kwargs)
@@ -300,3 +305,19 @@ class DoctorateAdmissionExternalResendView(LoginRequiredMixin, WebServiceFormMix
 
     def form_invalid(self, form):
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
+
+
+class DoctorateAdmissionSubmitCaView(LoginRequiredMixin, SuccessMessageMixin, WebServiceFormMixin, FormView):
+    urlpatterns = 'submit-ca'
+    form_class = forms.Form
+    success_message = _("Support committee submitted")
+
+    def call_webservice(self, data):
+        AdmissionPropositionService.submit_ca(person=self.person, uuid=str(self.kwargs.get('pk')))
+
+    def form_invalid(self, form):
+        messages.error(self.request, _("Please first correct the errors"))
+        return HttpResponseRedirect(resolve_url("admission:doctorate:supervision", pk=self.kwargs.get('pk')))
+
+    def get_success_url(self):
+        return resolve_url("admission:doctorate:supervision", pk=self.kwargs.get('pk'))

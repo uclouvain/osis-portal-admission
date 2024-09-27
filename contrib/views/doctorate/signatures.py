@@ -48,7 +48,7 @@ class DoctorateAdmissionRequestSignaturesView(LoginRequiredMixin, SuccessMessage
         AdmissionPropositionService.request_signatures(person=self.person, uuid=str(self.kwargs.get('pk')))
 
     def form_invalid(self, form):
-        messages.error(self.request, _("Please first correct the erros"))
+        messages.error(self.request, _("Please first correct the errors"))
         return HttpResponseRedirect(resolve_url("admission:doctorate:update:supervision", pk=self.kwargs.get('pk')))
 
     def get_success_url(self):

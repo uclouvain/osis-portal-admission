@@ -58,7 +58,7 @@
     </em>
   </div>
 
-  {% if type != 'PROMOTER' or admission.statut != 'CA_A_COMPLETER' %}
+  {% if admission|can_edit_supervision_member:type %}
     {% if user.is_authenticated and admission|can_make_action:'set_reference_promoter' and type == 'PROMOTER' and member.matricule and member.uuid != supervision.promoteur_reference %}
       <form method="post" action="{{ set_reference_promoter_url }}">
         {% csrf_token %}
@@ -117,7 +117,7 @@
 
   {# Action buttons #}
   <div class="panel-group" style="flex-basis: 100%;">
-    {% if type != 'PROMOTER' or admission.statut != 'CA_A_COMPLETER' %}
+    {% if admission|can_edit_supervision_member:type %}
       {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
         {% if type != 'PROMOTER' or member.est_externe %}
           {% panel _("Approve by PDF") id="approve-by-pdf-"|add:member.uuid additional_class="collapse" %}
