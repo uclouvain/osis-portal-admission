@@ -179,7 +179,7 @@ class LoadDossierViewMixin(LoadViewMixin):
                     "later than %(date)s. The admission panel reserves the right to accept or refuse this "
                     "late application."
                 )
-                % {'date': self.admission.date_fin_pot},
+                % {'date': self.admission.date_fin_pot.strftime('%d/%m/%Y')},
             )
         return context
 
