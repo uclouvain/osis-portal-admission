@@ -120,7 +120,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         cleaned_data = super().clean()
 
         if cleaned_data.get("cotutelle") == "YES":
-            for field in ['motivation', 'institution', 'demande_ouverture']:
+            for field in ['motivation', 'demande_ouverture']:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
             if cleaned_data.get('institution_fwb') is None:
@@ -130,4 +130,6 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
                     self.add_error('autre_institution_nom', FIELD_REQUIRED_MESSAGE)
                 if not cleaned_data.get('autre_institution_adresse'):
                     self.add_error('autre_institution_adresse', FIELD_REQUIRED_MESSAGE)
+            elif not cleaned_data.get('institution'):
+                self.add_error('institution', FIELD_REQUIRED_MESSAGE)
         return cleaned_data
