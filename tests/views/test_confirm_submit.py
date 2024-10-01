@@ -162,7 +162,7 @@ class ConfirmSubmitTestCase(TestCase):
                 "later than %(date)s. The admission panel reserves the right to accept or refuse this "
                 "late application."
             )
-            % {'date': date_fin},
+            % {'date': date_fin.strftime('%d/%m/%Y')},
         )
 
     def test_post_with_incomplete_elements_confirmation(self):
