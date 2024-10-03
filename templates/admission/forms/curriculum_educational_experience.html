@@ -272,6 +272,8 @@
           const totalFormInput = $('#id_year_formset-TOTAL_FORMS');
           const tableHeader = $('#formset-container thead');
           const country = $('#id_base_form-country');
+          const institute = $("#id_base_form-institute");
+          const program = $("#id_base_form-program");
           const linguisticRegime = $('#id_base_form-linguistic_regime');
           const evaluationType = $('#id_base_form-evaluation_type');
           let startYear = parseInt(startSelect.val());
@@ -490,6 +492,12 @@
              evaluationType.change(function() {
                  manageCreditsFields(this.value, country.val());
              }).change();
+
+            // {# Institute / program fields #}
+
+            institute.on('change', function() {
+                program.val('').change();
+            });
 
              {# Foreign fields #}
              $('.foreign-field').dependsOn({
