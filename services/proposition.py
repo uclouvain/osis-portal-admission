@@ -211,6 +211,13 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def submit_ca(cls, person: Person, uuid):
+        return APIClient().submit_ca(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def verify_proposition(cls, person: Person, uuid):
         return APIClient().verify_proposition(
             uuid=uuid,
