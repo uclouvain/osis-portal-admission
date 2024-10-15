@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from admission.constants import BE_ISO_CODE
+from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms import (
@@ -150,6 +151,13 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
         ),
         required=False,
     )
+
+    def __init__(self, admission_status, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if admission_status == ChoixStatutPropositionDoctorale.CA_A_COMPLETER.name:
+            self.fields['type'].disabled = True
+            self.fields['type'].widget = forms.HiddenInput()
+            self.fields['type'].initial = ActorType.CA_MEMBER.name
 
     def clean(self):
         data = self.cleaned_data

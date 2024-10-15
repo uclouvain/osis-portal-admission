@@ -65,6 +65,13 @@
       </a>
     {% endif %}
 
+    {% if admission.statut == 'CA_A_COMPLETER' or admission.status == 'CA_EN_ATTENTE_DE_SIGNATURE' %}
+      <a class="btn btn-default pull-right" href="{% url base_namespace|add:':update:supervision' admission.uuid %}">
+        <span class="fas fa-pencil"></span>
+        {% translate "Complete my supervisory panel" %}
+      </a>
+    {% endif %}
+
     {% if not admission|can_update_tab:'person' and admission|can_update_tab:'training-choice' and admission|can_read_tab:'training-choice' %}
       {% url base_namespace|add:':training-choice' admission.uuid as edit_url %}
     {% elif admission|can_make_action:'retrieve_person' %}

@@ -207,9 +207,6 @@ msgstr ""
 msgid "ACCEPTEE"
 msgstr "Accepted"
 
-msgid "ADMISSION_IN_PROGRESS"
-msgstr "Admission in progress"
-
 msgid "ADMITTED"
 msgstr "Admitted"
 
@@ -273,6 +270,9 @@ msgid "Activity type"
 msgstr ""
 
 msgid "Add"
+msgstr ""
+
+msgid "Add a CA member"
 msgstr ""
 
 msgid "Add a conference"
@@ -488,6 +488,10 @@ msgid "Are you sure you want to remove \"%(prenom)s %(nom)s\" from the jury?"
 msgstr ""
 
 msgid "Are you sure you want to request signatures for this admission?"
+msgstr ""
+
+msgid ""
+"Are you sure you want to submit the support committee for this admission?"
 msgstr ""
 
 msgid "Are you the child of a UCLouvain or Martin V staff member?"
@@ -807,6 +811,9 @@ msgid "Complementary training"
 msgstr ""
 
 msgid "Complementary training proposition"
+msgstr ""
+
+msgid "Complete my supervisory panel"
 msgstr ""
 
 msgid "Confirm"
@@ -2440,6 +2447,9 @@ msgstr ""
 msgid "Please enter your work email address"
 msgstr ""
 
+msgid "Please first correct the errors"
+msgstr ""
+
 msgid "Please first correct the erros"
 msgstr ""
 
@@ -2950,6 +2960,12 @@ msgstr ""
 msgid "Submit selected activities"
 msgstr ""
 
+msgid "Submit supervisory panel"
+msgstr ""
+
+msgid "Submit support committee"
+msgstr ""
+
 msgctxt "category"
 msgid "Submitted"
 msgstr ""
@@ -2975,10 +2991,19 @@ msgstr ""
 msgid "Supervisor"
 msgstr ""
 
+msgid "Supervisory panel to be completed"
+msgstr ""
+
+msgid "Supervisory panel waiting for signature"
+msgstr ""
+
 msgid "Support Committee minutes"
 msgstr ""
 
 msgid "Support committee"
+msgstr ""
+
+msgid "Support committee submitted"
 msgstr ""
 
 msgid "Surname"
