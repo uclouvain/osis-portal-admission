@@ -2520,9 +2520,6 @@ msgstr ""
 msgid "Previous experience"
 msgstr ""
 
-msgid "Previous research experience"
-msgstr ""
-
 msgid "Private"
 msgstr ""
 
