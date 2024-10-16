@@ -648,9 +648,9 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the context data
         self.assertEqual(len(response.context['base_form'].errors), 8)
         for field in ['start', 'end', 'country', 'evaluation_type', 'transcript_type', 'obtained_diploma', 'institute']:
-            self.assertFormError(response, 'base_form', field, errors=FIELD_REQUIRED_MESSAGE)
+            self.assertFormError(response.context['base_form'], field, errors=FIELD_REQUIRED_MESSAGE)
 
-        self.assertFormError(response, 'base_form', None, errors=gettext('At least one academic year is required.'))
+        self.assertFormError(response.context['base_form'], None, errors=gettext('At least one academic year is required.'))
 
     def test_with_admission_on_update_experience_post_form_bad_dates(self):
         response = self.client.post(
@@ -669,8 +669,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the context data
         self.assertFormError(
-            response,
-            'base_form',
+            response.context['base_form'],
             None,
             errors=gettext("The start date must be earlier than or the same as the end date."),
         )
@@ -691,7 +690,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the context data
         for field in ['institute_name', 'institute_address']:
-            self.assertFormError(response, 'base_form', field, FIELD_REQUIRED_MESSAGE)
+            self.assertFormError(response.context['base_form'], field, FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_missing_obtained_diploma_information(self):
         response = self.client.post(
@@ -714,7 +713,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'dissertation_title',
             'dissertation_score',
         ]:
-            self.assertFormError(response, 'base_form', field, FIELD_REQUIRED_MESSAGE)
+            self.assertFormError(response.context['base_form'], field, FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_for_be_missing_other_program(self):
         response = self.client.post(
@@ -732,7 +731,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
-        self.assertFormError(response, 'base_form', 'education_name', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['base_form'], 'education_name', FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_for_be_missing_program(self):
         response = self.client.post(
@@ -750,7 +749,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
-        self.assertFormError(response, 'base_form', 'program', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['base_form'], 'program', FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_for_foreign_country_missing_fields(self):
         response = self.client.post(
@@ -767,8 +766,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.update_educational_experience_admission.assert_not_called()
 
         # Check the context data
-        self.assertFormError(response, 'base_form', 'education_name', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'base_form', 'linguistic_regime', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['base_form'], 'education_name', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['base_form'], 'linguistic_regime', FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_for_foreign_country_missing_fields_for_enrolled_year(self):
         response = self.client.post(
@@ -799,7 +798,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'registered_credit_number',
             'result',
         ]:
-            self.assertFormsetError(response, 'year_formset', 0, field, errors=FIELD_REQUIRED_MESSAGE)
+            self.assertFormSetError(response.context['year_formset'], 0, field, errors=FIELD_REQUIRED_MESSAGE)
 
         response = self.client.post(
             self.admission_update_url,

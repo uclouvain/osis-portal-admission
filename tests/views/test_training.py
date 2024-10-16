@@ -237,7 +237,7 @@ class TrainingTestCase(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)
         self.assertFormError(
-            response, "form", 'start_date', _("The start date must be earlier than or the same as the end date.")
+            response.context["form"], 'start_date', _("The start date must be earlier than or the same as the end date.")
         )
 
     def test_create_with_parent(self):
@@ -346,7 +346,7 @@ class TrainingTestCase(TestCase):
         )
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, "activities_form", None, "Pas bon")
+        self.assertFormError(response.context["activities_form"], None, "Pas bon")
 
         # Any other exception
         self.mock_api.return_value.submit_training.side_effect = ApiException(
