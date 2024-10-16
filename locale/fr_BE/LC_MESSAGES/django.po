@@ -334,6 +334,9 @@ msgstr "Type d'activité"
 msgid "Add"
 msgstr "Ajouter"
 
+msgid "Add a CA member"
+msgstr "Ajouter un nouveau membre du comité d'accompagnement"
+
 msgid "Add a conference"
 msgstr "Ajouter une conférence"
 
@@ -578,6 +581,12 @@ msgstr "Êtes-vous sûr de vouloir retirer \"%(prenom)s %(nom)s\" du jury ?"
 
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr "Êtes-vous sûr de vouloir requérir les signatures pour cette demande ?"
+
+msgid ""
+"Are you sure you want to submit the support committee for this admission?"
+msgstr ""
+"Êtes-vous sûr de vouloir soumettre le comité d’accompagnement pour cette "
+"demande ?"
 
 msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
@@ -932,6 +941,9 @@ msgstr "Formation complémentaire"
 
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
+
+msgid "Complete my supervisory panel"
+msgstr "Compléter mon comité d’accompagnement"
 
 msgid "Confirm"
 msgstr "Confirmer"
@@ -2776,6 +2788,9 @@ msgstr ""
 msgid "Please enter your work email address"
 msgstr "Veuillez encoder votre adresse e-mail-professionnelle"
 
+msgid "Please first correct the errors"
+msgstr "Veuillez d'abord corriger les erreurs"
+
 msgid "Please first correct the erros"
 msgstr "Veuillez d'abord corriger les erreurs"
 
@@ -2872,9 +2887,6 @@ msgstr "Épreuves de confirmation passées"
 
 msgid "Previous experience"
 msgstr "Parcours antérieur"
-
-msgid "Previous research experience"
-msgstr "Expérience précédente de recherche"
 
 msgid "Private"
 msgstr "Privé"
@@ -3324,6 +3336,12 @@ msgstr "Soumettre ma nouvelle échéance"
 msgid "Submit selected activities"
 msgstr "Soumettre les activités sélectionnées"
 
+msgid "Submit supervisory panel"
+msgstr "Soumettre le comité d’accompagnement"
+
+msgid "Submit support committee"
+msgstr "Soumettre le comité d’accompagnement"
+
 msgctxt "category"
 msgid "Submitted"
 msgstr "Soumise"
@@ -3353,11 +3371,20 @@ msgstr "Résumé de la communication"
 msgid "Supervisor"
 msgstr "Promoteur.trice"
 
+msgid "Supervisory panel to be completed"
+msgstr "Comité d’accompagnement à compléter"
+
+msgid "Supervisory panel waiting for signature"
+msgstr "Comité d’accompagnement en attente de signature"
+
 msgid "Support Committee minutes"
 msgstr "Procès-verbal du comité d'accompagnement"
 
 msgid "Support committee"
 msgstr "Comité d'accompagnement"
+
+msgid "Support committee submitted"
+msgstr "Comité d’accompagnement soumis"
 
 msgid "Surname"
 msgstr "Nom"

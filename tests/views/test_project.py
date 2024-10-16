@@ -179,6 +179,11 @@ class ProjectViewTestCase(TestCase):
         self.mock_scholarship_api.return_value.retrieve_scholarship.side_effect = self.get_scholarship
         self.addCleanup(scholarships_api_patcher.stop)
 
+        # Mock language sdk api
+        languages_api_patcher = patch("osis_reference_sdk.api.languages_api.LanguagesApi")
+        self.mock_scholarship_api = languages_api_patcher.start()
+        self.addCleanup(languages_api_patcher.stop)
+
         self.client.force_login(self.person.user)
 
     def test_update(self):

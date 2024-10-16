@@ -23,16 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import pgettext_lazy, gettext_lazy as _
-
-from base.models.utils.utils import ChoiceEnum
+from base.models.entity_version import EntityVersion
 
 
-class DecisionApprovalEnum(ChoiceEnum):
-    APPROVED = pgettext_lazy("admission decision", "Approved")
-    DECLINED = pgettext_lazy("admission decision", "Denied")
+def format_address(street='', street_number='', postal_code='', city='', country=''):
+    """Return the concatenation of the specified street, street number, postal code, city and country."""
+    address_parts = [
+        f'{street} {street_number}',
+        f'{postal_code} {city}',
+        country,
+    ]
+    return ', '.join(filter(lambda part: part and len(part) > 1, address_parts))
 
 
-class ActorType(ChoiceEnum):
-    PROMOTER = _("Supervisor")
-    CA_MEMBER = _("CA Member")
+def format_school_title(school):
+    """Return the concatenation of the school name and city."""
+    address = format_address(
+        street=school.street,
+        street_number=school.street_number,
+        postal_code=school.zipcode,
+        city=school.city,
+    )
+    return f'{school.name} <span class="school-address">{address}</span>'
