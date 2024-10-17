@@ -111,7 +111,7 @@ OSIS_ADMISSION_EDUCATION_TYPES_MAPPING = {
         TrainingType.MASTER_MC.name,
     ],
     TypeFormation.DOCTORAT.name: [
-        TrainingType.PHD.name,
+        TrainingType.FORMATION_PHD.name,
     ],
     TypeFormation.AGREGATION_CAPES.name: [
         TrainingType.AGGREGATION.name,
