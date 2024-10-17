@@ -39,4 +39,4 @@ class ChangeLanguageView(LoginRequiredMixin, View):
         person.change_language(request.user, kwargs['ui_language'])
         translation.activate(kwargs['ui_language'])
         request.session[translation.LANGUAGE_SESSION_KEY] = kwargs['ui_language']
-        return redirect(request.META['HTTP_REFERER'])
+        return redirect(request.headers['referer'])

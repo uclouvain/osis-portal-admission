@@ -79,9 +79,9 @@
                     value="{{ radio_value }}"
                     style="position: relative"
                     {% if field.field.disabled %}disabled{% endif %}
-                    {% ifequal field.value radio_value %}
+                    {% if field.value == radio_value %}
                     checked="checked"
-                    {% endifequal %}/>
+                    {% endif %}/>
                 <span style="font-weight: normal">{{ choice_label }}</span>
                 {% if foreign_diploma_type_images|get_item:radio_value %}
                   <img

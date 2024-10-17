@@ -382,11 +382,19 @@ class PersonViewTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'birth_year', _("This field is required."))
-        self.assertFormError(response, 'form', 'last_registration_year', _("This field is required."))
-        self.assertFormError(response, 'form', 'first_name', _("This field is required if the surname is missing."))
-        self.assertFormError(response, 'form', 'last_name', _("This field is required if the first name is missing."))
-        self.assertFormError(response, 'form', 'last_registration_id', _("The NOMA must contain 8 digits."))
+        self.assertFormError(response.context['form'], 'birth_year', _("This field is required."))
+        self.assertFormError(response.context['form'], 'last_registration_year', _("This field is required."))
+        self.assertFormError(
+            response.context['form'],
+            'first_name',
+            _("This field is required if the surname is missing.")
+        )
+        self.assertFormError(
+            response.context['form'],
+            'last_name',
+            _("This field is required if the first name is missing.")
+        )
+        self.assertFormError(response.context['form'], 'last_registration_id', _("The NOMA must contain 8 digits."))
 
         response = self.client.post(
             url,
@@ -398,7 +406,7 @@ class PersonViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'passport_expiry_date', _("This field is required."))
+        self.assertFormError(response.context['form'], 'passport_expiry_date', _("This field is required."))
 
         response = self.client.post(
             url,
@@ -410,7 +418,7 @@ class PersonViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'id_card_expiry_date', _("This field is required."))
+        self.assertFormError(response.context['form'], 'id_card_expiry_date', _("This field is required."))
 
     def test_post_update(self):
         url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
