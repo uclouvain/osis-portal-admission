@@ -659,7 +659,7 @@ class MultipleFieldDataTestCase(TestCase):
 class DisplayStatusTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.doctorate_training_type = TrainingType.PHD.name
+        cls.doctorate_training_type = TrainingType.FORMATION_PHD.name
         cls.general_training_type = TrainingType.BACHELOR.name
         cls.continuing_training_type = TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
 

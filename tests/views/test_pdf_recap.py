@@ -53,7 +53,7 @@ class PDFRecapViewTestCase(TestCase):
                 intitule='Doctorate name',
                 sigle_entite_gestion="CDSS",
                 campus="Mons",
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
             ),
             matricule_candidat=cls.person.global_id,
             code_secteur_formation='CS',

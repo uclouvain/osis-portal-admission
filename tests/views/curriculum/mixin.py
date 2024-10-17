@@ -284,7 +284,7 @@ class MixinTestCase(TestCase):
                 intitule='Doctorate name',
                 sigle_entite_gestion="CDSS",
                 campus="Mons",
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
                 campus_inscription="Mons",
             ),
             matricule_candidat=cls.person.global_id,

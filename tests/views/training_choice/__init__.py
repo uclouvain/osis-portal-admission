@@ -92,7 +92,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
-                    'education_group_type': 'PHD',
+                    'education_group_type': 'FORMATION_PHD',
                     'management_entity': 'CDE',
                 },
             ),
@@ -105,7 +105,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
-                    'education_group_type': 'PHD',
+                    'education_group_type': 'FORMATION_PHD',
                     'management_entity': 'CDSS',
                 },
             ),
@@ -131,7 +131,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
-                    'education_group_type': 'PHD',
+                    'education_group_type': 'FORMATION_PHD',
                     'management_entity': 'ME3',
                 },
             ),
@@ -470,7 +470,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'intitule': 'Formation',
                 'campus': 'Louvain-La-Neuve',
                 'sigle': 'TR3',
-                'type': TrainingType.PHD.name,
+                'type': TrainingType.FORMATION_PHD.name,
                 'sigle_entite_gestion': 'CDE',
                 'campus_inscription': 'Mons',
             },
@@ -525,7 +525,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 links=[],
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
                 campus_inscription='Mons',
             ),
             Mock(
@@ -534,7 +534,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
                 campus_inscription='Mons',
             ),
             Mock(
@@ -543,7 +543,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
                 campus_inscription='Mons',
             ),
             Mock(
@@ -552,7 +552,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
                 campus_inscription='Mons',
             ),
         ]
