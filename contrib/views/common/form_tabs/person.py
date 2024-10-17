@@ -25,7 +25,6 @@
 # ##############################################################################
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.utils import translation
 from django.utils.functional import cached_property
 from django.utils.translation import activate
 from django.views.generic import FormView
@@ -44,6 +43,8 @@ from admission.services.proposition import BelgianNissBusinessException, Admissi
 from admission.templatetags.admission import can_make_action
 
 __all__ = ['AdmissionPersonFormView']
+
+from osis_common.middlewares.locale import LANGUAGE_SESSION_KEY
 
 
 class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -170,4 +171,4 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
                 setattr(self.person, field, updated_person.get(field))
         self.person.save(update_fields=update_fields)
         activate(self.person.language)
-        self.request.session[translation.LANGUAGE_SESSION_KEY] = self.person.language
+        self.request.session[LANGUAGE_SESSION_KEY] = self.person.language

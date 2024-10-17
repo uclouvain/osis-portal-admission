@@ -650,7 +650,11 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         for field in ['start', 'end', 'country', 'evaluation_type', 'transcript_type', 'obtained_diploma', 'institute']:
             self.assertFormError(response.context['base_form'], field, errors=FIELD_REQUIRED_MESSAGE)
 
-        self.assertFormError(response.context['base_form'], None, errors=gettext('At least one academic year is required.'))
+        self.assertFormError(
+            response.context['base_form'],
+            None,
+            errors=gettext('At least one academic year is required.')
+        )
 
     def test_with_admission_on_update_experience_post_form_bad_dates(self):
         response = self.client.post(
