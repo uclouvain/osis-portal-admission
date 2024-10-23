@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 import uuid
-from datetime import datetime, date
+from datetime import datetime
 from unittest.mock import ANY, Mock, patch
 
 import freezegun
@@ -967,7 +967,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, "foreign_diploma_form", "equivalence", self.REQUIRED_TEXT)
+        self.assertFormError(response.context["foreign_diploma_form"], "equivalence", self.REQUIRED_TEXT)
 
         response = self.client.post(
             self.form_url,
@@ -1039,7 +1039,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, "foreign_diploma_form", "equivalence", self.REQUIRED_TEXT)
+        self.assertFormError(response.context["foreign_diploma_form"], "equivalence", self.REQUIRED_TEXT)
 
         response = self.client.post(
             self.form_url,

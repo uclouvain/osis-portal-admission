@@ -145,7 +145,7 @@ class LanguagesTestCase(TestCase):
         response = self.client.post(self.form_url, {"form-INITIAL_FORMS": 0, "form-TOTAL_FORMS": 0})
         self.assertEqual(response.status_code, 200)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
-        self.assertFormsetError(response, "formset", None, None, _("Mandatory languages are missing."))
+        self.assertFormSetError(response.context["formset"], None, None, _("Mandatory languages are missing."))
 
     def test_create(self):
         response = self.client.get(self.create_url)
@@ -172,9 +172,8 @@ class LanguagesTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
-        self.assertFormsetError(
-            response,
-            "formset",
+        self.assertFormSetError(
+            response.context["formset"],
             None,
             None,
             _("You cannot enter a language more than once, please correct the form."),
@@ -196,7 +195,7 @@ class LanguagesTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.mock_person_api.return_value.create_language_knowledge_admission.assert_not_called()
-        self.assertFormsetError(response, "formset", 0, 'speaking_ability', _("This field is required."))
+        self.assertFormSetError(response.context["formset"], 0, 'speaking_ability', _("This field is required."))
 
     def test_form_ok(self):
         response = self.client.post(self.form_url, self.data_ok)

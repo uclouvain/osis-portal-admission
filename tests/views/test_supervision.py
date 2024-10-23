@@ -407,7 +407,7 @@ class SupervisionTestCase(TestCase):
         self.client.force_login(PersonFactory(global_id='0123456978').user)
         response = self.client.post(self.detail_url, {'decision': DecisionApprovalEnum.APPROVED.name})
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, "approval_form", 'institut_these', _('This field is required.'))
+        self.assertFormError(response.context["approval_form"], 'institut_these', _('This field is required.'))
 
     def test_should_reject_proposition(self):
         # All data is provided and the proposition is rejected

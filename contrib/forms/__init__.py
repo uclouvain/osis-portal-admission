@@ -31,7 +31,8 @@ import phonenumbers
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils.translation import get_language, gettext_lazy as _, gettext, pgettext_lazy
+from django.utils.translation import get_language, gettext, gettext_lazy as _, pgettext_lazy
+from osis_document.contrib import FileUploadField
 
 from admission.constants import MINIMUM_BIRTH_YEAR
 from admission.services.campus import AdmissionCampusService
@@ -47,7 +48,6 @@ from admission.services.reference import (
 )
 from admission.services.scholarship import AdmissionScholarshipService
 from admission.utils import format_entity_title, format_school_title, format_scholarship
-from osis_document.contrib import FileUploadField
 
 EMPTY_CHOICE = (('', ' - '),)
 EMPTY_VALUE = '__all__'
