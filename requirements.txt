@@ -1,2 +1,2 @@
-git+https://github.com/uclouvain/osis-admission-sdk.git@build-1.0.109
+git+https://github.com/uclouvain/osis-admission-sdk.git@build-1.0.110
 phonenumberslite==8.13.48
