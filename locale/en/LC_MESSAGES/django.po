@@ -210,7 +210,7 @@ msgstr ""
 msgid "Access experience details"
 msgstr ""
 
-msgid "Access my PhD students' files"
+msgid "Access my PhD candidates' applications"
 msgstr ""
 
 msgid "Account holder first name"
@@ -1640,7 +1640,7 @@ msgctxt "gender male"
 msgid "Male"
 msgstr ""
 
-msgid "Management of PhDs"
+msgid "Management of PhD applications"
 msgstr ""
 
 msgid "Mandatory languages are missing."

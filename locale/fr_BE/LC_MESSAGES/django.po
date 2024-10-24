@@ -267,7 +267,7 @@ msgstr "Année académique"
 msgid "Access experience details"
 msgstr "Accéder aux détails de l'expérience"
 
-msgid "Access my PhD students' files"
+msgid "Access my PhD candidates' applications"
 msgstr "Accéder aux dossiers de mes doctorants"
 
 msgid "Account holder first name"
@@ -1919,7 +1919,7 @@ msgctxt "gender male"
 msgid "Male"
 msgstr "Masculin"
 
-msgid "Management of PhDs"
+msgid "Management of PhD applications"
 msgstr "Gestion des doctorats"
 
 msgid "Mandatory languages are missing."
