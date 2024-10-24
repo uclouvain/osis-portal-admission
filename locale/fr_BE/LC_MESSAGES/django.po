@@ -40,10 +40,6 @@ msgid "\"Technique de transition\""
 msgstr "Technique de transition"
 
 #, python-format
-msgid "%(added)s ECTS added with %(validated)s validated by the CDD."
-msgstr "%(added)s ECTS ajoutés dont %(validated)s validés par la CDD."
-
-#, python-format
 msgid "%(character)s is not a valid character for IBAN."
 msgstr "%(character)s n'est pas un caractère valide pour l'IBAN."
 
@@ -108,14 +104,6 @@ msgstr "%(state)s le %(date)s"
 
 msgid ":"
 msgstr " :"
-
-#, python-format
-msgid ""
-"<a href=\"%(enrollment_url)s\">Go to course enrolment</a> or <a "
-"href=\"%(add_url)s\">add a course</a>"
-msgstr ""
-"<a href=\"%(enrollment_url)s\">Aller à l'inscription aux cours</a> ou <a "
-"href=\"%(add_url)s\">ajouter un cours</a>"
 
 msgid ""
 "<a href=\"https://uclouvain.be/en/study/inscriptions/frequently-asked-"
@@ -263,15 +251,6 @@ msgstr "A1"
 msgid "A2"
 msgstr "A2"
 
-msgid "ACCEPTEE"
-msgstr "Acceptée"
-
-msgid "ADMISSION_IN_PROGRESS"
-msgstr "Admission en cours"
-
-msgid "ADMITTED"
-msgstr "Admis"
-
 msgid "Absence of debt"
 msgstr "Absence de dettes"
 
@@ -284,10 +263,6 @@ msgstr "Les formations académiques préfixées par %(icon)s sont incomplètes."
 
 msgid "Academic year"
 msgstr "Année académique"
-
-msgctxt "publication-status"
-msgid "Accepted"
-msgstr "Acceptée"
 
 msgid "Access experience details"
 msgstr "Accéder aux détails de l'expérience"
@@ -310,23 +285,8 @@ msgstr "Comptabilité"
 msgid "Actions"
 msgstr "Actions"
 
-msgid "Activities"
-msgstr "Activités"
-
 msgid "Activity"
 msgstr "Activité"
-
-msgid "Activity date"
-msgstr "Date de l'activité"
-
-msgid "Activity description"
-msgstr "Description de l'activité"
-
-msgid "Activity name"
-msgstr "Nom de l'activité"
-
-msgid "Activity subtype"
-msgstr "Sous-type d'activité"
 
 msgid "Activity type"
 msgstr "Type d'activité"
@@ -334,17 +294,8 @@ msgstr "Type d'activité"
 msgid "Add"
 msgstr "Ajouter"
 
-msgid "Add a conference"
-msgstr "Ajouter une conférence"
-
-msgid "Add a course unit"
-msgstr "Ajouter un cours"
-
 msgid "Add a language"
 msgstr "Ajouter une langue"
-
-msgid "Add a new member"
-msgstr "Ajouter un nouveau membre"
 
 msgid "Add a non-academic activity"
 msgstr "Ajout d'une activité non-académique"
@@ -352,50 +303,14 @@ msgstr "Ajout d'une activité non-académique"
 msgid "Add a non-academic experience"
 msgstr "Ajouter une nouvelle expérience non-académique"
 
-msgid "Add a paper"
-msgstr "Ajouter une épreuve"
-
-msgid "Add a paper/presentation"
-msgstr "Ajouter une communication"
-
-msgid "Add a paper/presentation for this conference"
-msgstr "Ajouter une communication à cette conférence"
-
-msgid "Add a paper/presentation for this residency"
-msgstr "Ajouter une communication à ce séjour"
-
-msgid "Add a paper/presentation for this seminar"
-msgstr "Ajouter une communication à ce séminaire"
-
 msgid "Add a promoter or a CA member"
 msgstr "Ajouter un.e promoteur.trice ou un.e membre du comité d'accompagnement"
-
-msgid "Add a publication"
-msgstr "Ajouter une publication"
-
-msgid "Add a publication to this conference"
-msgstr "Ajouter une publication à cette conférence"
-
-msgid "Add a residency"
-msgstr "Ajouter un séjour"
-
-msgid "Add a seminar"
-msgstr "Ajouter un séminaire"
-
-msgid "Add a service"
-msgstr "Ajouter un service"
 
 msgid "Add an academic course"
 msgstr "Ajout d'une formation académique"
 
 msgid "Add an academic experience"
 msgstr "Ajouter une nouvelle expérience académique"
-
-msgid "Add an activity"
-msgstr "Ajouter une activité"
-
-msgid "Add validation of prior experience (VAE)"
-msgstr "Ajouter une valorisation des acquis d'expérience"
 
 msgid "Additional information"
 msgstr "Informations complémentaires"
@@ -501,9 +416,6 @@ msgstr "Demande confirmée"
 msgid "Application denied"
 msgstr "Inscription refusée"
 
-msgid "Approval"
-msgstr "Approbation"
-
 msgid "Approvals"
 msgstr "Approbations"
 
@@ -539,10 +451,6 @@ msgid "Are you sure you want to cancel this application?"
 msgstr "Êtes-vous sûr de vouloir annuler cette demande ?"
 
 #, python-format
-msgid "Are you sure you want to delete \"%(object)s\"?"
-msgstr "Êtes-vous sûr de vouloir supprimer \"%(object)s\" ?"
-
-#, python-format
 msgid ""
 "Are you sure you want to delete %(first_name)s %(last_name)s as %(role)s?"
 msgstr ""
@@ -572,10 +480,6 @@ msgstr "Êtes-vous sûr de vouloir supprimer la formation \"%(name)s\" ?"
 msgid "Are you sure you want to pay them?"
 msgstr "Êtes-vous sûr de vouloir les payer ?"
 
-#, python-format
-msgid "Are you sure you want to remove \"%(prenom)s %(nom)s\" from the jury?"
-msgstr "Êtes-vous sûr de vouloir retirer \"%(prenom)s %(nom)s\" du jury ?"
-
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr "Êtes-vous sûr de vouloir requérir les signatures pour cette demande ?"
 
@@ -599,18 +503,9 @@ msgstr "Au-moins une année académique est requise."
 msgid "Attachments"
 msgstr "Pièces jointes"
 
-msgid "Attestation of the communication"
-msgstr "Attestation de communication"
-
 msgctxt "admission"
 msgid "August"
 msgstr "août"
-
-msgid "Authors"
-msgstr "Auteurs et autrices"
-
-msgid "Awaiting approval"
-msgstr "En attente de validation"
 
 msgid "B1"
 msgstr "B1"
@@ -719,24 +614,6 @@ msgstr "Membres du comité d'accompagnement"
 msgid "CHEMISTRY"
 msgstr "Chimie"
 
-msgid "COMMUNICATION"
-msgstr "Communication orale (hors conférences)"
-
-msgid "COMPLEMENTARY_TRAINING"
-msgstr "Formation complémentaire"
-
-msgid "CONFERENCE"
-msgstr "Conférences, colloques"
-
-msgid "CONFIRMATION_PAPER"
-msgstr "Épreuve de confirmation"
-
-msgid "CONFIRMATION_TO_BE_REPEATED"
-msgstr "Confirmation à représenter"
-
-msgid "COURSE"
-msgstr "Cours, formation et écoles"
-
 msgid "CSS class"
 msgstr "Classe CSS"
 
@@ -771,9 +648,6 @@ msgstr ""
 "Attestation justifiant votre activité, mentionnant cette activité, pour la "
 "période concernée"
 
-msgid "Certificate of achievement"
-msgstr "Attestation de réussite"
-
 msgid "Certificate of language knowledge"
 msgstr "Certificat de connaissance des langues"
 
@@ -786,9 +660,6 @@ msgid ""
 msgstr ""
 "Attestation de participation à un séjour linguistique pour la période "
 "concernée"
-
-msgid "Certificate of participation in the presentation"
-msgstr "Attestation de participation à l'exposé"
 
 msgid "Certificate of passing the bachelor's course entrance exam"
 msgstr ""
@@ -851,15 +722,6 @@ msgstr "Modification d'inscription"
 msgid "Change of enrolment form"
 msgstr "Formulaire de modification d'inscription"
 
-msgid "Change the paper for this residency"
-msgstr "Modifier la communication de ce séjour"
-
-msgid "Change the paper for this seminar"
-msgstr "Modifier la communication de ce séminaire"
-
-msgid "Change the publication for this conference"
-msgstr "Modifier la publication de cette conférence"
-
 msgid "Check my previous experience"
 msgstr "Vérifier mon parcours antérieur"
 
@@ -906,29 +768,17 @@ msgstr "Développement à venir."
 msgid "Comment"
 msgstr "Commentaire"
 
-msgid "Comment for PhD Committee manager"
-msgstr "Commentaire du gestionnaire CDD"
-
 msgid "Comment for the candidate"
 msgstr "Commentaire à destination du candidat"
 
 msgid "Comment to the candidate:"
 msgstr "Commentaire à destination du candidat :"
 
-msgid "Comments"
-msgstr "Commentaires"
-
 msgid "Commitment and declaration"
 msgstr "Engagement et déclaration"
 
-msgid "Communication attestation"
-msgstr "Attestation de communication"
-
 msgid "Competent diplomatic post"
 msgstr "Poste diplomatique compétent"
-
-msgid "Complementary training"
-msgstr "Formation complémentaire"
 
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
@@ -945,23 +795,6 @@ msgstr "Confirmation"
 msgid "Confirmation and submission"
 msgstr "Confirmation et soumission"
 
-msgid "Confirmation deadline"
-msgstr "Date limite pour la confirmation"
-
-msgid "Confirmation exam"
-msgstr "Épreuve de confirmation"
-
-msgid "Confirmation exam date"
-msgstr "Date de l'épreuve de confirmation"
-
-msgid ""
-"Consult the credits grid released by your domain doctoral commission. Refer "
-"to the website of your commission for more details."
-msgstr ""
-"Référez-vous à la grille de crédits communiquées par votre commission "
-"doctorale de domaine. Consultez le site web de votre commission pour plus de "
-"détails."
-
 msgid "Contact"
 msgstr "Contact"
 
@@ -974,9 +807,6 @@ msgstr "Coordonnées"
 
 msgid "Contact language"
 msgstr "Langue de contact"
-
-msgid "Context"
-msgstr "Contexte"
 
 msgid "Continue"
 msgstr "Continuer"
@@ -1167,9 +997,6 @@ msgstr ""
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
-msgid "Cotutelle thesis"
-msgstr "Thèse en cotutelle"
-
 msgid "Country"
 msgstr "Pays"
 
@@ -1195,32 +1022,14 @@ msgstr "Intitulé de la formation"
 msgid "Course not offered"
 msgstr "Formation non-organisée"
 
-msgid "Course owner"
-msgstr "Titulaire du cours"
-
 msgid "Course type"
 msgstr "Type de formation"
-
-msgid "Course unit code (if applicable)"
-msgstr "Code du cours (le cas échéant)"
 
 msgid "Course unit enrolment"
 msgstr "Inscription à un cours"
 
-msgid "Course unit instructor (if applicable)"
-msgstr "Titulaire du cours (le cas échéant)"
-
-msgid "Course unit with evaluation"
-msgstr "Cours avec évaluation"
-
 msgid "Course units"
 msgstr "Cours"
-
-msgid "Course units and courses"
-msgstr "Cours et formation"
-
-msgid "Create and manage my UCLouvain application"
-msgstr "Créer et gérer ma demande d'inscription UCLouvain"
 
 msgid "Create new admission"
 msgstr "Créer une nouvelle admission"
@@ -1241,9 +1050,6 @@ msgstr "Financement actuel"
 msgid "Curriculum"
 msgstr "Curriculum"
 
-msgid "DOCTORAL_TRAINING"
-msgstr "Formation doctorale"
-
 msgid "Date of birth"
 msgstr "Date de naissance"
 
@@ -1262,29 +1068,6 @@ msgstr "Décision"
 
 msgid "Defence date"
 msgstr "Date de soutenance"
-
-msgctxt "doctorate tab"
-msgid "Defense"
-msgstr "Défense"
-
-msgid "Defense indicative date"
-msgstr "Date de soutenance indicative"
-
-msgid "Defense language"
-msgstr "Langue de la soutenance"
-
-msgid "Defense method"
-msgstr "Formule de défense"
-
-msgctxt "admission tab"
-msgid "Defense method"
-msgstr "Modalités de défense"
-
-msgid "Definitive admission date"
-msgstr "Date de l'admission définitive"
-
-msgid "Delete"
-msgstr "Supprimer"
 
 msgid "Delete course"
 msgstr "Suppression d'une formation académique"
@@ -1307,17 +1090,8 @@ msgstr ""
 "CDD, pour un maximum de 60 crédits. Le cas échéant, veuillez indiquer ici "
 "une proposition de formation complémentaire."
 
-msgid "Description"
-msgstr "Description"
-
-msgid "Description of your communication"
-msgstr "Description de votre communication"
-
 msgid "Designate as lead supervisor"
 msgstr "Désigner comme promoteur de référence"
-
-msgid "Detailed curriculum vitae"
-msgstr "Curriculum vitae détaillé"
 
 msgid "Detailed curriculum vitae, dated and signed"
 msgstr "Curriculum vitae détaillé, daté et signé"
@@ -1360,9 +1134,6 @@ msgstr "Avez-vous obtenu un diplôme de fin d'études secondaires ?"
 msgid "Do you have an international scholarship?"
 msgstr "Bénéficiez-vous d'une bourse internationale ?"
 
-msgid "Doctor"
-msgstr "Docteur"
-
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
 
@@ -1390,9 +1161,6 @@ msgstr[1] ""
 
 msgid "Documents"
 msgstr "Documents"
-
-msgid "Does not have a doctor title"
-msgstr "N'est pas porteur du titre de docteur"
 
 msgid "Dossier numero:"
 msgstr "Numéro de dossier :"
@@ -1424,13 +1192,6 @@ msgstr "%(amount)s€"
 msgid "ECONOMY"
 msgstr "Economie"
 
-msgid "ECTS"
-msgstr "ECTS"
-
-msgctxt "summary"
-msgid "ECTS added"
-msgstr "ECTS ajoutés"
-
 msgid "ECTS credits"
 msgstr "Crédits ECTS"
 
@@ -1447,21 +1208,8 @@ msgstr ""
 "place dans la plupart des pays européens mais est également utilisé de plus "
 "en plus dans d’autres pays."
 
-msgid "ECTS for participating"
-msgstr "ECTS pour la participation"
-
-msgid "ECTS for the participation"
-msgstr "ECTS pour la participation"
-
 msgid "Edit"
 msgstr "Modifier"
-
-#, python-format
-msgid "Edit <em>%(category)s</em> activity."
-msgstr "Modifier l'activité de type <em>%(category)s</em>"
-
-msgid "Edit the communication of this conference"
-msgstr "Modifier la communication de cette conférence"
 
 msgid "Eligibility requirements"
 msgstr "Conditions d'accès"
@@ -1531,15 +1279,6 @@ msgstr "ERC - European Research Council"
 msgid "Evaluation system"
 msgstr "Système d'évaluation"
 
-msgid "Event description"
-msgstr "Description de l'événement"
-
-msgid "Event name"
-msgstr "Nom de l'événement"
-
-msgid "Event website"
-msgstr "Site web de l'événement"
-
 msgid "Exit without saving"
 msgstr "Quitter sans enregistrer"
 
@@ -1579,9 +1318,6 @@ msgstr ""
 
 msgid "FNRS"
 msgstr "FNRS"
-
-msgid "FREE_COURSE"
-msgstr "Cours libre"
 
 msgid "FRESH"
 msgstr "FRESH"
@@ -1634,13 +1370,6 @@ msgstr ""
 "target='_blank'>Communauté française</a> de Belgique."
 
 msgid ""
-"For courses in the UCLouvain catalogue, the academic year begins on 14 "
-"September and ends on 13 September of the following year."
-msgstr ""
-"Pour les cours du catalogue UCLouvain, l'année académique commence le 14 "
-"septembre et se termine le 13 septembre de l'année qui suit."
-
-msgid ""
 "For example, a contract, a letter from a supervisor, or any other document "
 "showing that you have been awarded the scholarship on the dates indicated."
 msgstr ""
@@ -1690,13 +1419,6 @@ msgstr "Formation générale"
 
 msgid "German-speaking Community"
 msgstr "Communauté germanophone"
-
-msgid "Give an opinion"
-msgstr "Donner son avis"
-
-#, python-format
-msgid "Give an opinion on \"%(object)s\"?"
-msgstr "Donner son avis sur \"%(object)s\""
 
 msgctxt "admission"
 msgid "Grade"
@@ -1908,13 +1630,6 @@ msgid "Identity document"
 msgstr "Pièce d'identité"
 
 msgid ""
-"If applicable, please upload here the opinion of your support committee on "
-"the extension request."
-msgstr ""
-"Le cas échéant, veuillez téléverser ici l’avis de votre comité "
-"d’accompagnement sur la demande de prolongation."
-
-msgid ""
 "If applicable, upload a language proficiency certificate in the format "
 "required by the specific provisions of your PhD committee."
 msgstr ""
@@ -1934,14 +1649,6 @@ msgstr ""
 "Si connu, indiquez ici le nom du laboratoire, du service clinique ou du "
 "centre de recherche où sera réalisée la thèse"
 
-msgid ""
-"If necessary, please finish inputting doctoral activities and complete the "
-"defense preparation below before submitting the jury proposition."
-msgstr ""
-"Le cas échéant, veuillez terminer l’encodage des activités de formation "
-"doctorale et compléter les modalités de défenses ci-dessous avant de "
-"soumettre la proposition de jury"
-
 msgid "If other language regime, specify"
 msgstr "Si autre régime linguistique, précisez"
 
@@ -1950,20 +1657,6 @@ msgstr "Si autre bourse, spécifier"
 
 msgid "If other, specify"
 msgstr "Si autre, spécifier"
-
-msgid ""
-"If the circumstances justify it, the deadline may be extended by the support "
-"committee, with the agreement of the DDC on the proposed deadline. This "
-"deadline may also be shortened due to constraints imposed by the funder, e."
-"g. in the context of the renewal of the mandate or the doctoral scholarship "
-"(e.g. the renewal of the mandate of the F.R.S.-FNRS candidates)."
-msgstr ""
-"Si les circonstances le justifient, le délai peut être prolongé par le "
-"comité d’accompagnement, avec l'accord de la CDD sur l'échéance proposée. Ce "
-"délai peut également être raccourci en raison de contraintes imposées par le "
-"bailleur de fonds, par exemple dans le cadre du renouvellement du mandat ou "
-"de la bourse de doctorat (exemple : le renouvellement du mandat des "
-"aspirant·es du F.R.S.-FNRS)."
 
 #, python-format
 msgid ""
@@ -2038,13 +1731,6 @@ msgstr ""
 "Si vous n'avez pas suivi votre formation pendant une ou plusieurs années, "
 "merci de l'indiquer en éteignant l'interrupteur correspondant à ces années."
 
-msgid ""
-"If you submit the activity, you will no longer be able to modify the seminar "
-"or the various activities within it."
-msgstr ""
-"Si vous soumettez l'activité, vous ne pourrez plus modifier le séminaire, ni "
-"les différentes activités en faisant partie."
-
 #, python-format
 msgid ""
 "If you wish to change your application, you must confirm your application "
@@ -2055,9 +1741,6 @@ msgstr ""
 
 msgid "Immediately"
 msgstr "Immédiatement"
-
-msgid "Important information:"
-msgstr "Informations importantes :"
 
 msgid "In draft form"
 msgstr "En brouillon"
@@ -2084,13 +1767,6 @@ msgid ""
 msgstr ""
 "Indiquez ici un éventuel parcours doctoral précédent, abouti ou interrompu, "
 "dans lequel vous n’êtes plus inscrit à ce jour."
-
-msgid ""
-"Information about a potential cotutelle are to be inputted in the \"Doctoral "
-"project\" part."
-msgstr ""
-"Les informations concernant une éventuelle cotutelle sont à indiquer dans la "
-"partie « Projet doctoral »."
 
 msgid "Institute"
 msgstr "Établissement"
@@ -2155,24 +1831,6 @@ msgstr "Il s'agit d'un diplôme"
 msgid "It seems that you paid the application fee."
 msgstr "Il semblerait que vous ayez payé les frais de dossier."
 
-msgid "JURY_APPROUVE_ADRE"
-msgstr "Jury approuvé par ADRE"
-
-msgid "JURY_APPROUVE_CA"
-msgstr "Jury approuvé par CA"
-
-msgid "JURY_APPROUVE_CDD"
-msgstr "Jury approuvé par CDD"
-
-msgid "JURY_REFUSE_ADRE"
-msgstr "Jury refusé par ADRE"
-
-msgid "JURY_REFUSE_CDD"
-msgstr "Jury refusé par CDD"
-
-msgid "JURY_SOUMIS"
-msgstr "Jury soumis"
-
 msgctxt "admission"
 msgid "January"
 msgstr "janvier"
@@ -2186,9 +1844,6 @@ msgstr "Convention de cotutelle"
 msgid "Joint supervision request"
 msgstr "Demande d'ouverture de cotutelle"
 
-msgid "Journal or publishing house name"
-msgstr "Nom de la revue ou de la maison d'édition"
-
 msgctxt "admission"
 msgid "July"
 msgstr "juillet"
@@ -2196,15 +1851,6 @@ msgstr "juillet"
 msgctxt "admission"
 msgid "June"
 msgstr "juin"
-
-msgid "Jury composition"
-msgstr "Composition du jury"
-
-msgid "Justification letter"
-msgstr "Lettre de justification"
-
-msgid "Keywords"
-msgstr "Mots-clés"
 
 msgid "Knowledge of languages"
 msgstr "Connaissance des langues"
@@ -2218,9 +1864,6 @@ msgstr "Régime linguistique"
 msgid "Language study abroad"
 msgstr "Séjour linguistique"
 
-msgid "Last name / First name / Global id"
-msgstr "Nom / Prénom / ID Global"
-
 msgid "Later > blocking"
 msgstr "Ultérieurement > bloquant"
 
@@ -2229,12 +1872,6 @@ msgstr "Ultérieurement > non-bloquant"
 
 msgid "Lead supervisor"
 msgstr "Promoteur.trice de référence"
-
-msgid "Lead supervisor approval"
-msgstr "Avis positif du promoteur de référence"
-
-msgid "Learning unit"
-msgstr "Unité d'enseignement"
 
 msgid "Leave page?"
 msgstr "Quitter la page ?"
@@ -2265,17 +1902,11 @@ msgstr "Compréhension à l'audition"
 msgid "Long"
 msgstr "Long"
 
-msgid "Lookup somebody"
-msgstr "Rechercher quelqu'un"
-
 msgid "MANAGEMENT"
 msgstr "Gestion"
 
 msgid "MATHEMATICS"
 msgstr "Mathématiques"
-
-msgid "MEMBRE"
-msgstr "Membre"
 
 msgid "MIME file types"
 msgstr "Types de fichier MIME"
@@ -2283,9 +1914,6 @@ msgstr "Types de fichier MIME"
 msgctxt "ways_hear_about_training"
 msgid "MOOCs"
 msgstr "Par les Moocs"
-
-msgid "Main institute"
-msgstr "Institution principale"
 
 msgctxt "gender male"
 msgid "Male"
@@ -2326,28 +1954,11 @@ msgstr "mai"
 msgid "Member not found"
 msgstr "Membre non trouvé"
 
-msgid "Members"
-msgstr "Membres"
-
 msgid "Memberships"
 msgstr "Affiliations"
 
 msgid "Message"
 msgstr "Message"
-
-msgid ""
-"Method 1 (the private defense and the public defense are separated by at "
-"least a month"
-msgstr ""
-"Formule 1 (la défense privée et la soutenance publique sont séparées d’au "
-"moins un mois) "
-
-msgid ""
-"Method 2 (The private defense and the public defense are organised the same "
-"day, and subjected to an admissibility condition)"
-msgstr ""
-"Formule 2 (La défense et la soutenance sont organisées le même jour, et "
-"soumises à une condition de recevabilité)"
 
 msgid "Missing documents"
 msgstr "Documents à fournir"
@@ -2373,10 +1984,6 @@ msgstr "Motivation de la cotutelle"
 
 msgid "Motivations"
 msgstr "Motivations"
-
-msgctxt "admission"
-msgid "My application"
-msgstr "Ma demande d'inscription"
 
 msgid "My father"
 msgstr "Mon père"
@@ -2409,35 +2016,17 @@ msgstr "Ma mère"
 msgid "My partner"
 msgstr "Mon conjoint"
 
-msgid "N/A"
-msgstr "Sans objet"
-
 msgid "NO"
 msgstr "Non"
 
-msgid "NON_SOUMISE"
-msgstr "Non soumise"
-
-msgid "NOT_ALLOWED_TO_CONTINUE"
-msgstr "Non autorisé à poursuivre"
-
 msgid "NOT_INVITED"
 msgstr "Pas encore invité à signer"
-
-msgid "Name in the language of the manifestation"
-msgstr "Nom dans la langue de la manifestation"
 
 msgid "Name of the education type"
 msgstr "Intitulé du type d'enseignement"
 
 msgid "National baccalaureate (or state diploma, etc.)"
 msgstr "Baccalauréat national (ou diplôme d'état, ...)"
-
-msgid "Negative assessment by lead supervisor"
-msgstr "Avis négatif du promoteur de référence"
-
-msgid "New deadline"
-msgstr "Nouvelle échéance"
 
 msgid "No"
 msgstr "Non"
@@ -2446,12 +2035,6 @@ msgid "No (access to sports facilities on the Saint-Louis campus is free)"
 msgstr ""
 "Non (l'accès aux infrastructures sportives sur le campus Saint-Louis est "
 "gratuit)"
-
-msgid "No activity created at present"
-msgstr "Aucune activité créée pour le moment"
-
-msgid "No activity selected."
-msgstr "Aucune activité n'a été sélectionnée."
 
 msgid "No course created at present."
 msgstr "Aucun cours créé pour le moment."
@@ -2470,13 +2053,6 @@ msgstr "Pas de cotutelle"
 
 msgid "No knowledge of languages provided."
 msgstr "Aucune connaissance des langues renseignée."
-
-msgid ""
-"No later than 24 months after the CDD grants PhD admission, the candidate "
-"must take a confirmation exam."
-msgstr ""
-"Dans un délai maximum de 24 mois à compter de la date d'admission au "
-"doctorat par la CDD, le ou la candidate présente une épreuve de confirmation."
 
 msgid "No one invited"
 msgstr "Aucun invité"
@@ -2525,9 +2101,6 @@ msgstr "Numéro"
 
 msgid "Number of credits earned at the end of the academic year."
 msgstr "Nombre de crédits réussis au terme de l'année académique."
-
-msgid "Number of days participating"
-msgstr "Nombre de jours de participation"
 
 msgctxt "admission"
 msgid "October"
@@ -2582,24 +2155,12 @@ msgstr ""
 msgid "Online"
 msgstr "En ligne"
 
-msgid "Online or in person"
-msgstr "En ligne ou en présentiel"
-
 msgctxt "iufc"
 msgid "Open"
 msgstr "Ouverte"
 
-msgid "Opinion on research mandate renewal"
-msgstr "Avis sur le renouvellement du mandat de recherche"
-
-msgid "Oral presentation"
-msgstr "Exposé oral"
-
 msgid "Organising country"
 msgstr "Pays organisateur"
-
-msgid "Organising institution"
-msgstr "Institution organisatrice"
 
 msgid "Other"
 msgstr "Autre"
@@ -2623,9 +2184,6 @@ msgstr "Autres prénoms"
 msgid "Other institute"
 msgstr "Autre établissement"
 
-msgid "Other institute (if necessary)"
-msgstr "Autre institution (le cas échéant)"
-
 msgid "Other institute address"
 msgstr "Adresse autre établissement"
 
@@ -2635,14 +2193,8 @@ msgstr "Nom autre établissement"
 msgid "Other programme"
 msgstr "Autre formation"
 
-msgid "PAPER"
-msgstr "Épreuve"
-
 msgid "PARTIAL"
 msgstr "En partie"
-
-msgid "PASSED_CONFIRMATION"
-msgstr "Épreuve de confirmation réussie"
 
 msgid "PDF file"
 msgstr "Fichier PDF"
@@ -2652,27 +2204,6 @@ msgstr "Résumé PDF"
 
 msgid "PHYSICS"
 msgstr "Physique"
-
-msgid "PRESIDENT"
-msgstr "Président"
-
-msgid "PRIVATE_DEFENSE"
-msgstr "Défense privée"
-
-msgid "PUBLICATION"
-msgstr "Publication"
-
-msgid "PUBLIC_DEFENSE"
-msgstr "Soutenance publique"
-
-msgid "Participating proof"
-msgstr "Preuve de participation"
-
-msgid "Participation"
-msgstr "Participation"
-
-msgid "Participation certification"
-msgstr "Certificat de participation"
 
 msgid "Partner institution"
 msgstr "Institution partenaire"
@@ -2721,9 +2252,6 @@ msgstr "Par courrier personnalisé"
 msgid "PhD"
 msgstr "Doctorat"
 
-msgid "PhD Committee opinion"
-msgstr "Avis de la CDD"
-
 msgid "PhD proposal"
 msgstr "Projet de formation doctorale"
 
@@ -2733,24 +2261,8 @@ msgstr "Expérience de recherche doctorale"
 msgid "PhD research project"
 msgstr "Projet de recherche doctoral"
 
-msgid "PhD training"
-msgstr "Formation doctorale"
-
 msgid "Place of birth"
 msgstr "Lieu de naissance"
-
-msgid ""
-"Please check the details of the activity (and sub-activities) to fill in all "
-"the mandatory fields"
-msgstr ""
-"Veuillez vérifier le détail de l’activité (et des sous-activités) pour "
-"renseigner tous les champs obligatoires"
-
-msgid ""
-"Please check the details of the activity to fill in all mandatory fields"
-msgstr ""
-"Veuillez vérifier le détail de l’activité pour renseigner tous les champs "
-"obligatoires"
 
 msgid "Please choose the institute or specify another institute"
 msgstr "Veuillez définir l'établissement ou précisez un autre établissement"
@@ -2791,10 +2303,6 @@ msgstr ""
 "document d'identité. Si aucun autre prénom n'est mentionné sur votre "
 "document d'identité, vous ne devez rien indiquer."
 
-msgid "Please justify why the member does not have a doctor title"
-msgstr ""
-"Merci de justifier pourquoi le membre n'est pas porteur du titre de docteur"
-
 msgid ""
 "Please look up the website of your domain doctoral committee on how to "
 "download the document."
@@ -2823,13 +2331,6 @@ msgid "Please rate your writing skills"
 msgstr "Évaluez votre capacité d'écriture"
 
 msgid ""
-"Please refer to the specifics disposition of your domain doctoral commission "
-"for your activities choice."
-msgstr ""
-"Veuillez consulter les dispositions particulières de votre commission "
-"doctorale de domaine pour le choix des activités."
-
-msgid ""
 "Please select the Belgian student status situation that most applies to you"
 msgstr ""
 "Veuillez sélectionner la première situation d’assimilation qui vous "
@@ -2855,20 +2356,8 @@ msgstr "Adresse de correspondance"
 msgid "Postcode"
 msgstr "Code postal"
 
-msgid "Poster"
-msgstr "Poster"
-
 msgid "Pre-admission"
 msgstr "Pré-admission"
-
-msgid "Presentation date"
-msgstr "Date de l'exposé"
-
-msgid "President"
-msgstr "Président"
-
-msgid "Previous confirmation exams"
-msgstr "Épreuves de confirmation passées"
 
 msgid "Previous experience"
 msgstr "Parcours antérieur"
@@ -2885,9 +2374,6 @@ msgstr "Professionnel"
 msgid "Professional education + Maturity exam"
 msgstr "Enseignement professionnel + Examen de maturité"
 
-msgid "Professor"
-msgstr "Professeur"
-
 msgid "Project resume"
 msgstr "Résumé"
 
@@ -2903,18 +2389,6 @@ msgstr "Sujet (max. 100 caractères)"
 msgid "Promoters"
 msgstr "Promotion"
 
-msgid "Proof"
-msgstr "Preuve"
-
-msgid "Proof (if applicable)"
-msgstr "Preuve (le cas échéant)"
-
-msgid "Proof of acceptance or publication"
-msgstr "Preuve d'acceptation ou de publication"
-
-msgid "Proof of acceptation by the committee"
-msgstr "Preuve d'acceptation par le comité de sélection"
-
 msgid ""
 "Proof of employment from the employer, with dates, justifying the period in "
 "question"
@@ -2924,15 +2398,6 @@ msgstr ""
 
 msgid "Proof of equivalency request"
 msgstr "Preuve de la demande d'équivalence"
-
-msgid "Proof of participation for the whole activity"
-msgstr "Attestation de participation pour l'ensemble de l'activité"
-
-msgid "Proof of participation or success"
-msgstr "Certification de participation ou de succès"
-
-msgid "Proof of publication"
-msgstr "Preuve de publication"
 
 msgid ""
 "Proof of receipt of unemployment benefit, pension or compensation from the "
@@ -2949,12 +2414,6 @@ msgstr "Approbation de la proposition"
 
 msgid "Proposal summary"
 msgstr "Résumé de la proposition"
-
-msgid "Proposed new deadline"
-msgstr "Nouvelle échéance proposée"
-
-msgid "Proposed thesis title"
-msgstr "Titre proposé pour la thèse"
 
 msgid ""
 "Provide the details of your most recent academic course and your most recent "
@@ -2996,30 +2455,6 @@ msgstr "Commission de proximité de santé publique, santé et société (SPSS)"
 msgid "Public"
 msgstr "Public"
 
-msgid "Publication"
-msgstr "Publication"
-
-msgid "Publication date"
-msgstr "Date de publication"
-
-msgid "Publication status"
-msgstr "Statut de publication"
-
-msgid "Publication title"
-msgstr "Intitulé de la publication"
-
-msgid "Publication type"
-msgstr "Type de publication"
-
-msgid "Published"
-msgstr "Publié"
-
-msgid "REFUSEE"
-msgstr "Refusée"
-
-msgid "RESIDENCY"
-msgstr "Séjour de perfectionnement de recherche"
-
 msgid "Radio buttons"
 msgstr "Boutons radios"
 
@@ -3040,16 +2475,6 @@ msgstr ""
 msgid "Reduced tuition fee"
 msgstr "Réduction des droits d’inscription"
 
-msgid ""
-"Refer to the specific measures of your doctoral commission to know if one of "
-"these method is mandatory to you."
-msgstr ""
-"Référez-vous aux dispositions particulières de votre commission doctorale "
-"afin de savoir si l'une de ces formules vous est imposée"
-
-msgid "Reference DIAL.Pr"
-msgstr "Référence DIAL.Pr"
-
 msgid "Reference:"
 msgstr "Référence :"
 
@@ -3059,22 +2484,8 @@ msgstr "Crédits inscrits"
 msgid "Remove"
 msgstr "Retirer"
 
-msgctxt "jury member"
-msgid "Remove"
-msgstr "Retirer"
-
 msgid "Remove experience"
 msgstr "Retirer l'expérience"
-
-msgctxt "jury member"
-msgid "Remove?"
-msgstr "Retirer ?"
-
-msgid "Reporting categories"
-msgstr "Catégories de reporting"
-
-msgid "Request a new confirmation exam deadline"
-msgstr "Demander une nouvelle échéance pour l'épreuve de confirmation"
 
 msgid "Request signatures"
 msgstr "Demander les signatures"
@@ -3089,14 +2500,8 @@ msgctxt "tab name"
 msgid "Research project"
 msgstr "Projet de recherche"
 
-msgid "Research report"
-msgstr "Rapport de recherche"
-
 msgid "Research scholarship"
 msgstr "Bourse de recherche"
-
-msgid "Research seminar"
-msgstr "Séminaire de recherche"
 
 msgid "Resend invitation"
 msgstr "Renvoyer une invitation"
@@ -3110,32 +2515,14 @@ msgstr "Résultat"
 msgid "Results by year"
 msgstr "Résultats par année"
 
-msgid "Role"
-msgstr "Rôle"
-
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Bourse de recherche"
-
-msgid "SECRETAIRE"
-msgstr "Secrétaire"
 
 msgid "SELF_FUNDING"
 msgstr "Fonds propres"
 
-msgid "SEMINAR"
-msgstr "Séminaire"
-
-msgid "SERVICE"
-msgstr "Service institutionnel, didactique et d'expertise scientifique"
-
-msgid "SOUMISE"
-msgstr "Soumise"
-
 msgid "STATISTICS"
 msgstr "Statistiques"
-
-msgid "SUBMITTED_CONFIRMATION"
-msgstr "Confirmation soumise"
 
 msgid "Satisfactory (60-69%)"
 msgstr "Satisfaction (60-69%)"
@@ -3156,20 +2543,11 @@ msgstr "Date de fin de la bourse avant tout renouvellement éventuel."
 msgid "Scholarship start date"
 msgstr "Date de démarrage de la bourse"
 
-msgid "Scientific communication"
-msgstr "Communication scientifique"
-
-msgid "Scientific residencies"
-msgstr "Séjours scientifiques"
-
 msgid "Search a person by surname"
 msgstr "Rechercher une personne par son nom"
 
 msgid "Search a tutor by name"
 msgstr "Rechercher un tuteur par son nom"
-
-msgid "Search for an EU code (outside the EU of the form)"
-msgstr "Rechercher un code UE (hors UE du formulaire)"
 
 msgid ""
 "Search for your course title using a word from the title (e.g. management)"
@@ -3203,20 +2581,11 @@ msgstr "Année d'obtention du diplôme d'études secondaires"
 msgid "Secondary studies"
 msgstr "Études secondaires"
 
-msgid "Secretary"
-msgstr "Secrétaire"
-
 msgid "Sector"
 msgstr "Secteur"
 
-msgid "Select for batch action"
-msgstr "Sélectionner pour action en masse"
-
 msgid "Selection"
 msgstr "Sélection"
-
-msgid "Selection committee"
-msgstr "Comité de sélection"
 
 msgid "Selection type"
 msgstr "Type de sélection"
@@ -3241,26 +2610,11 @@ msgctxt "admission"
 msgid "September"
 msgstr "septembre"
 
-msgid "Services"
-msgstr "Services"
-
-msgid "Set as member"
-msgstr "Désigner comme membre"
-
-msgid "Set as president"
-msgstr "Désigner comme président"
-
-msgid "Set as secretary"
-msgstr "Désigner comme secrétaire"
-
 msgid "Sex"
 msgstr "Sexe"
 
 msgid "Short"
 msgstr "Court"
-
-msgid "Show details"
-msgstr "Voir le détail"
 
 msgid "Signature requests sent"
 msgstr "Demandes de signature envoyées"
@@ -3268,9 +2622,6 @@ msgstr "Demandes de signature envoyées"
 msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
-
-msgid "Speaker"
-msgstr "Orateur ou oratrice"
 
 msgid "Speaking ability"
 msgstr "Parler"
@@ -3287,9 +2638,6 @@ msgstr "Profil particulier"
 
 msgid "Specify employer and function"
 msgstr "Indiquer l'employeur et votre fonction"
-
-msgid "Specify if other"
-msgstr "Si autre, précisez"
 
 msgid "Start"
 msgstr "Début"
@@ -3309,28 +2657,11 @@ msgstr "Rue"
 msgid "Submission confirmation"
 msgstr "Confirmation d'envoi"
 
-msgid "Submit"
-msgstr "Soumettre"
-
-msgid "Submit and notify CDD"
-msgstr "Soumettre et avertir la CDD"
-
 msgid "Submit my decision"
 msgstr "Soumettre ma décision"
 
-msgid "Submit my new deadline"
-msgstr "Soumettre ma nouvelle échéance"
-
 msgid "Submit selected activities"
 msgstr "Soumettre les activités sélectionnées"
-
-msgctxt "category"
-msgid "Submitted"
-msgstr "Soumise"
-
-msgctxt "publication-status"
-msgid "Submitted"
-msgstr "Soumise"
 
 msgid ""
 "Subsidiary protection status is granted to a foreign national who cannot be "
@@ -3343,18 +2674,8 @@ msgstr ""
 "motifs de croire que, s'il était renvoyé dans son pays d'origine, il "
 "encourrait un risque réel de subir les atteintes graves"
 
-msgctxt "paper summary"
-msgid "Summary"
-msgstr "Résumé"
-
-msgid "Summary of the communication"
-msgstr "Résumé de la communication"
-
 msgid "Supervisor"
 msgstr "Promoteur.trice"
-
-msgid "Support Committee minutes"
-msgstr "Procès-verbal du comité d'accompagnement"
 
 msgid "Support committee"
 msgstr "Comité d'accompagnement"
@@ -3393,21 +2714,6 @@ msgid ""
 msgstr ""
 "Merci d'avoir complété votre demande. Les gestionnaires vont analyser les "
 "nouveaux documents qui ont été ajoutés."
-
-msgid ""
-"The \"doctoral training\" must be completed before submitting the defense "
-"preparation and the jury proposition."
-msgstr ""
-"La formation doctorale doit être complétée avant de soumettre les modalités "
-"de défense et la proposition de jury"
-
-msgid ""
-"The \"doctoral training\" must be updated before the confirmation paper and "
-"made available to the accompanying committee on the day of the test."
-msgstr ""
-"La « formation doctorale » doit être mise à jour avant l'épreuve de "
-"confirmation et mise à disposition du comité d'accompagnement le jour de "
-"l'épreuve."
 
 msgid ""
 "The BIC/SWIFT code consists of 8 or 11 characters, which correspond to:"
@@ -3458,36 +2764,9 @@ msgstr ""
 msgid "The NOMA must contain 8 digits."
 msgstr "Le NOMA doit contenir exactement 8 chiffres."
 
-msgid ""
-"The PDF certificate of having passed the confirmation exam is currently "
-"being generated. Please come back later to access it."
-msgstr ""
-"L'attestation de réussite de l'épreuve de confirmation au format PDF est en "
-"cours de génération, veuillez revenir plus tard pour y accéder."
-
-msgid ""
-"The aim of the confirmation exam is to establish, on the basis of the state "
-"of progress of the research work, that it is likely to lead to the "
-"submission of a PhD thesis (Art. 2.3.1. of the PhD Regulations)."
-msgstr ""
-"L'épreuve de confirmation a pour objectif de constater, sur la base de "
-"l'état d'avancement des travaux de recherche, que ceux-ci sont bien de "
-"nature à aboutir à la présentation d'une thèse de doctorat (art. 2.3.1. du "
-"règlement doctoral)."
-
 msgid "The application will be updated soon to take that into account."
 msgstr ""
 "La demande va être mise à jour prochainement pour prendre cela en compte."
-
-#, python-format
-msgid ""
-"The canvas of the supervisory panel report must be sent to the accompanying "
-"committee during the test. It can be downloaded <a href=\"%(canvas_url)s\" "
-"target=\"_blank\">here</a>."
-msgstr ""
-"Le canevas de procès-verbal doit être transmis au comité d'accompagnement "
-"durant l'épreuve. Il est téléchargeable <a href=\"%(canvas_url)s\" "
-"target=\"_blank\">ici</a>."
 
 msgid "The contact address I provided"
 msgstr "L'adresse de correspondance que j'ai fournie"
@@ -3510,16 +2789,6 @@ msgstr ""
 "modifiables. Si vous souhaitez y apporter des modifications, merci de "
 "contacter %(recipient)s."
 
-msgid ""
-"The declaration of you doctoral training activities must be consistent with "
-"the specifics disposition of your domain. Please refer to those on the "
-"website of your Domain Doctoral Commission for more information."
-msgstr ""
-"La déclaration de vos activités de formation doctorale doit être conforme "
-"aux dispositions particulières de votre domaine. Veuillez consulter ces "
-"dispositions sur la page web de votre Commission Doctorale de Domaine (CDD) "
-"pour plus d’informations."
-
 #, python-format
 msgid ""
 "The enrolments for the %(program)s course are closed. To stay informed about "
@@ -3536,17 +2805,6 @@ msgid "The following period must be justified in the curriculum:"
 msgid_plural "The following periods must be justified in the curriculum:"
 msgstr[0] "La période suivante doit impérativement être justifiée :"
 msgstr[1] "Les périodes suivantes doivent impérativement être justifiées :"
-
-msgid ""
-"The format of the documents to be uploaded below as well as the deadlines "
-"for submission may vary from one DDC to another; please check with your "
-"dossier manager and respect the usage foreseen by your domain doctoral "
-"committee."
-msgstr ""
-"Le format des documents à téléverser ci-dessous ainsi que les échéances de "
-"dépôt peuvent varier d'une CDD à l'autre; veillez à vous informer auprès de "
-"votre gestionnaire de dossier et respecter l'usage prévu par votre "
-"commission doctorale de domaine."
 
 msgid ""
 "The format of the documents to be uploaded below may vary from one CDD to "
@@ -3606,12 +2864,6 @@ msgstr ""
 msgid "The type of the admission form item is unknown (%(type)s)."
 msgstr "Le type de l'élément du formulaire d'admission est inconnu (%(type)s)."
 
-msgid "There is no request for a new deadline."
-msgstr "Il n'y a pas de demande de nouvelle échéance."
-
-msgid "Thesis defense"
-msgstr "Défense et soutenance"
-
 msgid "Thesis field"
 msgstr "Domaine de la thèse"
 
@@ -3623,9 +2875,6 @@ msgstr "Lieu de la thèse"
 
 msgid "This account number has been verified"
 msgstr "Ce numéro a été vérifié"
-
-msgid "This activity and its potential subactivities will be discontinued"
-msgstr "Cette activité et ses potentielles sous-activités seront supprimées"
 
 msgid ""
 "This choice will define the language of communication throughout your "
@@ -3661,13 +2910,6 @@ msgstr "Ce champ est obligatoire."
 msgid "This field must be less that {length} characters."
 msgstr "Ce champ doit faire moins de {length} caractères."
 
-msgid ""
-"This is a temporary title and it will be modifiable later depending on the "
-"jury analysis."
-msgstr ""
-"Ce titre est provisoire et pourra être modifié ultérieurement en fonction de "
-"l’analyse du jury."
-
 msgid "This language is set more than once."
 msgstr "Cette langue est définie plusieurs fois."
 
@@ -3692,27 +2934,8 @@ msgstr "Cocher le lien de parenté"
 msgid "Time allocated for thesis (in %)"
 msgstr "Temps consacré à la thèse (en %)"
 
-msgctxt "admission"
-msgid "Title"
-msgstr "Titre"
-
-msgctxt "jury"
-msgid "Title"
-msgstr "Titre"
-
-msgid "Title of the communication"
-msgstr "Titre de la communication"
-
 msgid "To be completed"
 msgstr "À compléter"
-
-msgid ""
-"To be uploaded if you have a F.R.S.-FNRS (including Televie), FRIA or FRESH "
-"grant. The canvas for this opinion is provided by your research fund."
-msgstr ""
-"A téléverser obligatoirement si vous êtes boursier.ère du F.R.S.-FNRS (y "
-"compris Télévie), du FRIA ou du FRESH. Le canevas de cet avis est fourni par "
-"votre fonds de recherche."
 
 #, python-format
 msgid ""
@@ -3746,9 +2969,6 @@ msgstr ""
 msgid "To the attention of"
 msgstr "A l'attention de"
 
-msgid "Total hourly volume"
-msgstr "Volume horaire total"
-
 msgid "Total number of credits registered in your annual programme (PAE)."
 msgstr "Nombre total des crédits inscrits dans votre programme d'année (PAE)."
 
@@ -3772,20 +2992,8 @@ msgctxt "admission"
 msgid "Type"
 msgstr "Type"
 
-msgid "Type of communication"
-msgstr "Type de communication"
-
-msgid "Type of paper"
-msgstr "Type d'épreuve"
-
 msgid "UCLOUVAIN_SCIENTIFIC_STAFF"
 msgstr "Personnel scientifique UCLouvain"
-
-msgid "UCL_COURSE"
-msgstr "Cours UCL"
-
-msgid "UCLouvain"
-msgstr "UCLouvain"
 
 msgctxt "ways_hear_about_training"
 msgid "UCLouvain continuing education website"
@@ -3828,26 +3036,11 @@ msgstr "Université"
 msgid "Unknown date of birth"
 msgstr "Date de naissance exacte inconnue"
 
-msgid "Unsubmitted"
-msgstr "Non soumis"
-
-msgid "Update"
-msgstr "Modifier"
-
 msgid "Update experience"
 msgstr "Mettre à jour l'expérience"
 
-msgid "Update member"
-msgstr "Modifier le membre"
-
-msgid "VAE"
-msgstr "Valorisation des acquis de l'expérience"
-
 msgid "VAT number"
 msgstr "Numéro de TVA"
-
-msgid "Validated"
-msgstr "Validé"
 
 msgid "View"
 msgstr "Voir"
@@ -3878,9 +3071,6 @@ msgstr "En attente de signature"
 
 msgid "Wallonie Bruxelles International (WBI)"
 msgstr "Wallonie Bruxelles International (WBI)"
-
-msgid "Website"
-msgstr "Site web"
 
 msgid "What diploma have you obtained (or will obtain)?"
 msgstr "Quel diplôme avez-vous obtenu (ou obtiendrez-vous) ?"
@@ -4160,12 +3350,6 @@ msgstr ""
 msgid "You must reference a person in UCLouvain."
 msgstr "Vous devez référencer une personne de l'UCLouvain."
 
-msgid "You need to set a member as president."
-msgstr "Vous devez désigner un membre comme président"
-
-msgid "You need to set a member as secretary."
-msgstr "Vous devez désigner un membre comme secrétaire"
-
 msgid "You specified that no Belgian student status situation applies to you."
 msgstr ""
 "Vous avez spécifié qu'aucune situation d'assimilation ne s'appliquait à vous."
@@ -4229,9 +3413,6 @@ msgstr ""
 "Vos informations de cotutelle pourront être complétées ultérieurement; "
 "veuillez indiquer \"non\" si vous ne disposez pas encore des informations"
 
-msgid "Your participation in the event"
-msgstr "Votre participation à l'événement"
-
 #, python-brace-format
 msgid ""
 "Your payment for the application {reference} has been taken into account."
@@ -4277,10 +3458,6 @@ msgstr "ex: "
 msgctxt "diploma_type"
 msgid "foreign"
 msgstr "étranger"
-
-#, python-format
-msgid "from %(start)s to %(end)s"
-msgstr "du %(start)s au %(end)s"
 
 msgid "the Enrolment Office"
 msgstr "le Service des Inscriptions"

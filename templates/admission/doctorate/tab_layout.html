@@ -26,38 +26,22 @@
 {% endcomment %}
 
 {% block breadcrumb_title %}
-  {% if doctorate %}
-    {{ doctorate.intitule_formation }} ({{ doctorate.reference }})
-  {% else %}
-    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" %}
-  {% endif %}
+  {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" %}
 {% endblock %}
 
 {% block header_title %}
-  {% if doctorate %}
-    {{ doctorate.intitule_formation }} ({{ doctorate.reference }})
-  {% else %}
-    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" %}
-  {% endif %}
+  {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" %}
 {% endblock %}
 
 {% block well %}
-  {% if doctorate %}
-    {% display doctorate.intitule_formation " " "(" doctorate.reference ")" as title %}
-  {% else %}
-    {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" " " "(" admission.reference ")"  as title %}
-  {% endif %}
+  {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" " " "(" admission.reference ")"  as title %}
   <div class="well">
     <div>
       {% trans "Reference:" %} {{ title }}
     </div>
     <div>
       {% trans "Status:" %}
-      {% if doctorate %}
-        {{ doctorate.statut|enum_display:'ChoixStatutDoctorat' }}
-      {% else %}
-        {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
-      {% endif %}
+      {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
     </div>
   </div>
 {% endblock well %}

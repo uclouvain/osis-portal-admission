@@ -32,7 +32,6 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.utils.translation import get_language, gettext_lazy as _
-from osis_admission_sdk.model.scholarship import Scholarship
 from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
 from osis_reference_sdk.model.university import University
 from waffle import switch_is_active
@@ -61,6 +60,7 @@ from admission.utils import (
     format_training_with_year,
 )
 from base.models.enums.entity_type import INSTITUTE
+from osis_admission_sdk.model.scholarship import Scholarship
 
 __all__ = [
     "DoctorateAutocomplete",
@@ -74,7 +74,6 @@ __all__ = [
     "InstituteLocationAutocomplete",
     "HighSchoolAutocomplete",
     "DiplomaAutocomplete",
-    "LearningUnitYearsAutocomplete",
     "SuperiorNonUniversityAutocomplete",
     "GeneralEducationAutocomplete",
     "MixedTrainingAutocomplete",
@@ -484,26 +483,6 @@ class DiplomaAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autoco
             dict(
                 id=result.uuid,
                 text=result.title,
-            )
-            for result in results
-        ]
-
-
-class LearningUnitYearsAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
-    urlpatterns = 'learning-unit-years'
-
-    def get_list(self):
-        return AdmissionAutocompleteService.autocomplete_learning_unit_years(
-            person=self.request.user.person,
-            year=self.forwarded['academic_year'],
-            acronym_search=self.q,
-        )
-
-    def results(self, results):
-        return [
-            dict(
-                id=result['acronym'],
-                text=f"{result['acronym']} - {result['title']}",
             )
             for result in results
         ]

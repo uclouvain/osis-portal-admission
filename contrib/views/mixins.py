@@ -33,8 +33,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
-from admission.contrib.enums import ChoixStatutPropositionDoctorale, IN_PROGRESS_STATUSES, CANCELLED_STATUSES
-from admission.services.doctorate import AdmissionDoctorateService
+from admission.contrib.enums import IN_PROGRESS_STATUSES, CANCELLED_STATUSES
 from admission.services.proposition import AdmissionPropositionService
 
 LATE_MESSAGE_POOLS = [
@@ -155,13 +154,6 @@ class LoadDossierViewMixin(LoadViewMixin):
                     )
                 )
 
-            # Add info about doctorate if needed (this concerns the project/cotutelle/supervision tabs)
-            if context['admission'].statut == ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name:
-                context['doctorate'] = AdmissionDoctorateService.get_doctorate(
-                    person=self.request.user.person,
-                    uuid=self.admission_uuid,
-                )
-
         # Late message
         if (
             self.admission_uuid
@@ -182,21 +174,3 @@ class LoadDossierViewMixin(LoadViewMixin):
                 % {'date': self.admission.date_fin_pot.strftime('%d/%m/%Y')},
             )
         return context
-
-
-class LoadDoctorateViewMixin(LoadViewMixin):
-    """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['admission'] = self.doctorate
-        context['doctorate'] = self.doctorate
-        return context
-
-    @cached_property
-    def doctorate(self):
-        return AdmissionDoctorateService.get_doctorate(
-            person=self.request.user.person,
-            uuid=self.admission_uuid,
-        )
