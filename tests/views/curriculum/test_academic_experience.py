@@ -674,8 +674,11 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         # Check the context data
         self.assertFormError(
             response.context['base_form'],
-            None,
-            errors=gettext("The start date must be earlier than or the same as the end date."),
+            field=None,
+            errors=[
+                gettext("The start date must be earlier than or the same as the end date."),
+                gettext('At least one academic year is required.'),
+            ],
         )
 
     def test_with_admission_on_update_experience_post_form_missing_other_institute(self):
