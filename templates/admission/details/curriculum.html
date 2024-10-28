@@ -78,7 +78,7 @@
   {% if educational_experiences or professional_experiences %}
     {% if missing_periods_messages %}
       <div class="alert alert-warning" role="alert">
-        {% blocktranslate trimmed count missing_periods_messages=list|length %}
+        {% blocktranslate trimmed count missing_periods_messages=missing_periods_messages|length %}
           The following period must be justified in the curriculum:
           {% plural %}
           The following periods must be justified in the curriculum:
