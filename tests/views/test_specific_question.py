@@ -183,6 +183,14 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'modification_pool_end_date': None,
         }
 
+    def test_forbidden_access(self):
+        with patch.object(self.bachelor_proposition, 'links', {'update_specific_question': {'error': 'a'}}):
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 403)
+
+            response = self.client.post(self.url)
+            self.assertEqual(response.status_code, 403)
+
     def test_get_page(self):
         response = self.client.get(self.url)
 
@@ -606,6 +614,16 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
     def setUpTestData(cls):
         super().setUpTestData()
         cls.url = resolve_url('admission:continuing-education:update:specific-questions', pk=cls.proposition_uuid)
+
+    def test_forbidden_access(self):
+        with patch.object(self.continuing_proposition, 'links', {'update_specific_question': {'error': 'a'}}):
+            response = self.client.get(self.url)
+
+            self.assertEqual(response.status_code, 403)
+
+            response = self.client.post(self.url)
+
+            self.assertEqual(response.status_code, 403)
 
     def test_get_page(self):
         response = self.client.get(self.url)
