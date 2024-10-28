@@ -90,21 +90,35 @@
       }
     }
 
+    const showPreventQuittingModal = function (e) {
+      e.preventDefault();
+      // Show modal and change its 'continue' link so that it link to the same link that clicked
+      $('#prevent-quitting-modal').modal('show');
+      document.querySelector('a#continue-link').setAttribute('href', e.target.href)
+      // Do not show browser popup
+      doBrowserPrevent = false;
+    };
+
     window.addEventListener('click', function (e) {
       // If the click is an opening anchor refreshing the window
       const isOpeningAnchor = e.target.tagName === 'A' && ['', '_self'].includes(e.target.target);
       // But not continue link (from modal) itself
       if (window.preventQuitting && isOpeningAnchor && e.target.id !== 'continue-link') {
+        // If a form has an error, we have unsaved data
+        if ($('.form-group.has-error').length > 0) {
+          showPreventQuittingModal(e);
+          return false;
+        }
+        // Else try all forms to see if they have changed
         allForms.forEach(function (form) {
+          // Do not prevent hijack release
+          if (form.action.endsWith('/hijack/release/')) {
+            return ;
+          }
           // Check the link is not part of the form or that the link has the "prevent-quitting-link" class
           if (!(form.querySelector('.quitting-context-excluded') || form).contains(e.target) || e.target.classList.contains('prevent-quitting-link')) {
             if (formHasChanged(form)) {
-              e.preventDefault();
-              // Show modal and change its 'continue' link so that it link to the same link that clicked
-              $('#prevent-quitting-modal').modal('show');
-              document.querySelector('a#continue-link').setAttribute('href', e.target.href)
-              // Do not show browser popup
-              doBrowserPrevent = false;
+              showPreventQuittingModal(e);
               return false;
             }
           }
