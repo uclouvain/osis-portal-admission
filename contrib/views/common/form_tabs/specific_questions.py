@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.views.generic import FormView
@@ -37,6 +38,7 @@ from admission.contrib.views.common.detail_tabs.specific_questions import (
 )
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
 from admission.services.proposition import AdmissionPropositionService
+from admission.templatetags.admission import can_update_tab
 
 __all__ = ['SpecificQuestionsFormView']
 
@@ -52,6 +54,12 @@ class SpecificQuestionsFormView(
         'general-education': AdmissionPropositionService.update_general_specific_question,
         'continuing-education': AdmissionPropositionService.update_continuing_specific_question,
     }
+
+    def dispatch(self, request, *args, **kwargs):
+        if not can_update_tab(self.admission, self.request.resolver_match.url_name):
+            raise PermissionDenied
+
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         forms = self.get_forms()
@@ -80,8 +88,7 @@ class SpecificQuestionsFormView(
         # Trick template to display form tag and buttons
         kwargs['form'] = next((form for form in kwargs['forms'] if form.visible_fields()), kwargs['forms'][0])
         kwargs['BE_ISO_CODE'] = BE_ISO_CODE
-        # Put self.pool_questions first so that the API call is made and permissions are checked
-        if self.pool_questions and self.display_pool_questions_form:
+        if self.display_pool_questions_form and self.pool_questions:
             kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
             kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
             kwargs['forbid_enrolment_limited_course_for_non_resident'] = self.pool_questions.get(
