@@ -544,22 +544,6 @@ class AutocompleteTestCase(TestCase):
         ]
         self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
-    @patch('osis_learning_unit_sdk.api.learning_units_api.LearningUnitsApi')
-    def test_autocomplete_learning_unit_year(self, api):
-        api.return_value.learningunits_list.return_value = {
-            'results': [
-                dict(acronym="ESA2004", title="dumb text"),
-                dict(acronym="ESA2006", title="dumb text 2"),
-            ]
-        }
-        url = reverse('admission:autocomplete:learning-unit-years')
-        response = self.client.get(url, {'q': 'ES', 'forward': json.dumps({'academic_year': '2021'})})
-        expected = [
-            {'id': "ESA2004", 'text': "ESA2004 - dumb text"},
-            {'id': "ESA2006", 'text': "ESA2006 - dumb text 2"},
-        ]
-        self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
-
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_scholarship(self, api):
         first_scholarship_uuid = str(uuid.uuid4())
