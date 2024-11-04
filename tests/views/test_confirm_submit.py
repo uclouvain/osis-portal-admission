@@ -143,9 +143,9 @@ class ConfirmSubmitTestCase(TestCase):
             _('Your enrolment cannot be confirmed. All of the following requirements must be met.'),
         )
 
-    @freezegun.freeze_time('2022-09-22')
+    @freezegun.freeze_time('2022-10-01')
     def test_get_late_message(self):
-        date_fin = date(2022, 9, 30)
+        date_fin = date(2022, 10, 31)
         self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.date_fin_pot = date_fin
         self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.pot_calcule = (
             'ADMISSION_POOL_UE5_BELGIAN'
