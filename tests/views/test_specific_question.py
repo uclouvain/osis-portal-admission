@@ -72,9 +72,12 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': datetime(2022, 12, 30, 23, 59),
             'modification_pool_end_date': None,
+            'reorientation_pool_academic_year': 2022,
+            'modification_pool_academic_year': None,
             'is_belgian_bachelor': None,
             'is_external_reorientation': None,
             'regular_registration_proof': [],
+            'reorientation_form': [],
         }
         response = self.client.get(self.url)
 
@@ -94,6 +97,8 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
             'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'reorientation_pool_academic_year': None,
+            'modification_pool_academic_year': 2023,
             'is_belgian_bachelor': True,
             'is_external_modification': True,
             'registration_change_form': ['uuid'],
@@ -107,6 +112,8 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
             'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'reorientation_pool_academic_year': None,
+            'modification_pool_academic_year': 2023,
             'is_non_resident': None,
         }
         response = self.client.get(self.url)
@@ -119,6 +126,8 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
             'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'reorientation_pool_academic_year': None,
+            'modification_pool_academic_year': 2023,
             'is_non_resident': True,
         }
         response = self.client.get(self.url)
@@ -130,6 +139,8 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
             'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'reorientation_pool_academic_year': None,
+            'modification_pool_academic_year': 2023,
             'is_non_resident': True,
             'forbid_enrolment_limited_course_for_non_resident': 'This enrolment is forbidden.',
         }
@@ -181,6 +192,8 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
             'modification_pool_end_date': None,
+            'reorientation_pool_academic_year': None,
+            'modification_pool_academic_year': None,
         }
 
     def test_get_page(self):
@@ -409,9 +422,12 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': datetime(2022, 12, 30, 23, 59),
             'modification_pool_end_date': None,
+            'reorientation_pool_academic_year': 2022,
+            'modification_pool_academic_year': None,
             'is_belgian_bachelor': None,
             'is_external_reorientation': None,
             'regular_registration_proof': [],
+            'reorientation_form': [],
         }
         response = self.client.get(self.url)
 
@@ -429,6 +445,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof': [],
+            'pool_questions-reorientation_form': [],
             'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data=data)
@@ -439,6 +456,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             pool_questions={
                 'is_belgian_bachelor': True,
                 'is_external_reorientation': True,
+                'reorientation_form': [],
                 'regular_registration_proof': [],
             },
             **self.default_kwargs,
@@ -447,6 +465,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof_0': 'uuid',
+            'pool_questions-reorientation_form_0': 'uuid2',
             'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
@@ -458,6 +477,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                 'is_belgian_bachelor': True,
                 'is_external_reorientation': True,
                 'regular_registration_proof': ['uuid'],
+                'reorientation_form': ['uuid2'],
             },
             **self.default_kwargs,
         )
@@ -466,6 +486,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': False,
             'pool_questions-is_external_reorientation': True,
             'pool_questions-regular_registration_proof_0': 'uuid',
+            'pool_questions-reorientation_form_0': 'uuid2',
             'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
@@ -476,6 +497,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                 'is_belgian_bachelor': False,
                 'is_external_reorientation': False,
                 'regular_registration_proof': [],
+                'reorientation_form': [],
             },
             **self.default_kwargs,
         )
@@ -484,6 +506,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'pool_questions-is_belgian_bachelor': True,
             'pool_questions-is_external_reorientation': False,
             'pool_questions-regular_registration_proof_0': 'uuid',
+            'pool_questions-reorientation_form_0': 'uuid2',
             'specific_questions-reponses_questions_specifiques_1': 'Answer',
         }
         response = self.client.post(self.url, data)
@@ -494,6 +517,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                 'is_belgian_bachelor': True,
                 'is_external_reorientation': False,
                 'regular_registration_proof': [],
+                'reorientation_form': [],
             },
             **self.default_kwargs,
         )
@@ -512,6 +536,8 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         self.mock_proposition_api.return_value.retrieve_pool_questions.return_value.to_dict.return_value = {
             'reorientation_pool_end_date': None,
             'modification_pool_end_date': datetime(2023, 3, 30, 23, 59),
+            'reorientation_pool_academic_year': None,
+            'modification_pool_academic_year': 2023,
             'is_belgian_bachelor': None,
             'is_external_modification': None,
             'registration_change_form': [],

@@ -91,6 +91,7 @@
               <p>{% blocktrans trimmed with date=reorientation_pool_end_date|date:'d/m/Y H:i' %}
                 If you are applying for a change of course, you must confirm your application before {{ date }}.
               {% endblocktrans %}</p>
+              {% bootstrap_field form.reorientation_form form_group_class="form-group required_field" %}
               {% bootstrap_field form.regular_registration_proof form_group_class="form-group required_field" %}
             </div>
           </div>
