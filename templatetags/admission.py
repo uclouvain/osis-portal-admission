@@ -41,7 +41,7 @@ from django.core.validators import EMPTY_VALUES
 from django.shortcuts import resolve_url
 from django.template.defaultfilters import unordered_list
 from django.test import override_settings
-from django.utils.safestring import SafeString
+from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import get_language, gettext_lazy as _, pgettext, pgettext_lazy
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
@@ -60,8 +60,8 @@ from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve
 from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
 from admission.contrib.forms.supervision import DoctorateAdmissionMemberSupervisionForm
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
-from admission.services.reference import CountriesService
-from admission.utils import get_uuid_value, to_snake_case, format_academic_year
+from admission.services.reference import CountriesService, LanguageService, SuperiorInstituteService
+from admission.utils import get_uuid_value, to_snake_case, format_academic_year, format_school_title
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
 from osis_admission_sdk.model.supervision_dto_signatures_membres_ca import SupervisionDTOSignaturesMembresCA
@@ -831,3 +831,26 @@ def sport_affiliation_value(affiliation: Optional[str], campus_name: Optional[st
         return ChoixAffiliationSport.get_value(affiliation)
 
     return LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE.get(campus_name, ChoixAffiliationSport.NON.value)
+
+
+@register.simple_tag(takes_context=True)
+def get_language_name(context, code):
+    """Return the label of the language associated to the iso code."""
+    if not code:
+        return ''
+    language = LanguageService.get_language(code=code, person=context['request'].user.person)
+    if get_language() == settings.LANGUAGE_CODE:
+        return language.name
+    return language.name_en
+
+
+@register.simple_tag(takes_context=True)
+def get_superior_institute_name(context, organisation_uuid):
+    """Return the label of the institute associated to the uuid."""
+    if not organisation_uuid:
+        return ''
+    institute = SuperiorInstituteService.get_superior_institute(
+        person=context['request'].user.person,
+        uuid=organisation_uuid,
+    )
+    return mark_safe(format_school_title(institute))
