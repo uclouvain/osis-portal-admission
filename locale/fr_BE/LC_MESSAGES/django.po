@@ -2873,9 +2873,6 @@ msgstr "Épreuves de confirmation passées"
 msgid "Previous experience"
 msgstr "Parcours antérieur"
 
-msgid "Previous research experience"
-msgstr "Expérience précédente de recherche"
-
 msgid "Private"
 msgstr "Privé"
 
