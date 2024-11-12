@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -88,7 +88,12 @@
     <form class="osis-form" method="post" action="">
       {% csrf_token %}
       {% bootstrap_form_errors add_form %}
-      {% panel _("Add a promoter or a CA member") %}
+      {% if admission.statut == 'CA_A_COMPLETER' %}
+        {% translate "Add a CA member" as panel_title %}
+      {% else %}
+        {% translate "Add a promoter or a CA member" as panel_title %}
+      {% endif %}
+      {% panel panel_title %}
         <div class="row">
           <div class="col-md-12">
             {% bootstrap_field add_form.type %}
@@ -138,6 +143,21 @@
     </div>
 
     {% include "admission/doctorate/includes/request_signature_modal.html" %}
+  {% endif %}
+
+  {% if all_approved and admission|can_make_action:'approve_by_pdf' and admission.statut == 'CA_EN_ATTENTE_DE_SIGNATURE' %}
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-success btn-lg"
+        data-toggle="modal"
+        data-target="#submit-ca-modal"
+      >
+        {% trans "Submit supervisory panel" %}
+      </button>
+    </div>
+
+    {% include "admission/doctorate/includes/submit_ca_modal.html" %}
   {% endif %}
 {% endblock tab_content %}
 

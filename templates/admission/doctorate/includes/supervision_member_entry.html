@@ -58,110 +58,114 @@
     </em>
   </div>
 
-  {% if user.is_authenticated and admission|can_make_action:'set_reference_promoter' and type == 'PROMOTER' and member.matricule and member.uuid != supervision.promoteur_reference %}
-    <form method="post" action="{{ set_reference_promoter_url }}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-default" name="set_reference_promoter">
-        <i class="fas fa-angles-up"></i>
-        {% trans "Designate as lead supervisor" %}
+  {% if admission|can_edit_supervision_member:type %}
+    {% if user.is_authenticated and admission|can_make_action:'set_reference_promoter' and type == 'PROMOTER' and member.matricule and member.uuid != supervision.promoteur_reference %}
+      <form method="post" action="{{ set_reference_promoter_url }}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-default" name="set_reference_promoter">
+          <i class="fas fa-angles-up"></i>
+          {% trans "Designate as lead supervisor" %}
+        </button>
+      </form>
+    {% endif %}
+  
+    {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
+      <button
+        type="button"
+        class="btn btn-default pull-right"
+        data-toggle="collapse"
+        data-target="#edit_external_member_form-{{ member.uuid }}"
+      >
+        <i class="fas fa-pencil"></i>
+        {% trans "Edit" %}
       </button>
-    </form>
-  {% endif %}
-
-  {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
-    <button
-      type="button"
-      class="btn btn-default pull-right"
-      data-toggle="collapse"
-      data-target="#edit_external_member_form-{{ member.uuid }}"
-    >
-      <i class="fas fa-pencil"></i>
-      {% trans "Edit" %}
-    </button>
-  {% endif %}
-
-  {% if user.is_authenticated and admission|can_make_action:'remove_member' %}
-    <a href="{{ remove_url }}" class="btn btn-danger pull-right">
-      <i class="fas fa-trash-alt"></i>
-      {% trans "Remove" %}
-    </a>
-  {% endif %}
-
-  {# Action buttons #}
-  {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
-    {% if type != 'PROMOTER' or member.est_externe %}
+    {% endif %}
+  
+    {% if user.is_authenticated and admission|can_make_action:'remove_member' %}
+      <a href="{{ remove_url }}" class="btn btn-danger pull-right">
+        <i class="fas fa-trash-alt"></i>
+        {% trans "Remove" %}
+      </a>
+    {% endif %}
+  
+    {# Action buttons #}
+    {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
+      {% if type != 'PROMOTER' or member.est_externe %}
+        <button
+          class="btn btn-default pull-right"
+          data-toggle="collapse"
+          data-target="#approve-by-pdf-{{ member.uuid }}"
+        >
+          <i class="fas fa-file-circle-check"></i>
+          {% trans "Approve by PDF" %}
+        </button>
+      {% endif %}
+    {% endif %}
+  
+    {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
       <button
         class="btn btn-default pull-right"
         data-toggle="collapse"
-        data-target="#approve-by-pdf-{{ member.uuid }}"
+        data-target="#resend-invite-{{ member.uuid }}"
       >
-        <i class="fas fa-file-circle-check"></i>
-        {% trans "Approve by PDF" %}
+        <i class="fas fa-envelope-open-text"></i>
+        {% trans "Resend invitation" %}
       </button>
     {% endif %}
-  {% endif %}
-
-  {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
-    <button
-      class="btn btn-default pull-right"
-      data-toggle="collapse"
-      data-target="#resend-invite-{{ member.uuid }}"
-    >
-      <i class="fas fa-envelope-open-text"></i>
-      {% trans "Resend invitation" %}
-    </button>
   {% endif %}
 
 
   {# Action buttons #}
   <div class="panel-group" style="flex-basis: 100%;">
-    {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
-      {% if type != 'PROMOTER' or member.est_externe %}
-        {% panel _("Approve by PDF") id="approve-by-pdf-"|add:member.uuid additional_class="collapse" %}
-          <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
+    {% if admission|can_edit_supervision_member:type %}
+      {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
+        {% if type != 'PROMOTER' or member.est_externe %}
+          {% panel _("Approve by PDF") id="approve-by-pdf-"|add:member.uuid additional_class="collapse" %}
+            <form action="{% url 'admission:doctorate:approve-by-pdf' pk=admission.uuid %}" method="post">
+              {% csrf_token %}
+              {{ approve_by_pdf_form.pdf }}
+              <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
+              <button type="submit" class="btn btn-primary pull-right">
+                {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
+                  Approve on behalf of {{ first_name }} {{ last_name }}
+                {% endblocktrans %}
+              </button>
+            </form>
+          {% endpanel %}
+        {% endif %}
+      {% endif %}
+  
+      {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
+        {% panel _("Resend invitation") id="resend-invite-"|add:member.uuid additional_class="collapse" %}
+          <form action="{% url 'admission:doctorate:resend-invite' pk=admission.uuid uuid=member.uuid %}" method="post">
             {% csrf_token %}
-            {{ approve_by_pdf_form.pdf }}
             <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
             <button type="submit" class="btn btn-primary pull-right">
-              {% blocktrans with first_name=member.prenom last_name=member.nom trimmed %}
-                Approve on behalf of {{ first_name }} {{ last_name }}
-              {% endblocktrans %}
+              {% trans "Confirm" %}
             </button>
           </form>
         {% endpanel %}
       {% endif %}
-    {% endif %}
-
-    {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
-      {% panel _("Resend invitation") id="resend-invite-"|add:member.uuid additional_class="collapse" %}
-        <form action="{% url 'admission:doctorate:resend-invite' pk=admission.uuid uuid=member.uuid %}" method="post">
+  
+      {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
+        {% url 'admission:doctorate:edit-external-member' pk=admission.uuid uuid=member.uuid as edit_external_member_url %}
+        <form method="post" action="{{ edit_external_member_url }}" id="edit_external_member_form-{{ member.uuid }}" class="collapse">
           {% csrf_token %}
-          <input type="hidden" name="uuid_membre" value="{{ member.uuid }}" />
-          <button type="submit" class="btn btn-primary pull-right">
-            {% trans "Confirm" %}
-          </button>
-        </form>
-      {% endpanel %}
-    {% endif %}
-
-    {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
-      {% url 'admission:doctorate:edit-external-member' pk=admission.uuid uuid=member.uuid as edit_external_member_url %}
-      <form method="post" action="{{ edit_external_member_url }}" id="edit_external_member_form-{{ member.uuid }}" class="collapse">
-        {% csrf_token %}
-        {% edit_external_member_form member as edit_external_member_form %}
-        <div class="">
-          <div class="panel panel-default col-md-6">
-            <div class="panel-body">
-              {% bootstrap_form edit_external_member_form %}
-              <button type="submit" class="btn btn-primary pull-right" name="edit_external_member_form">
-                {% trans "Save" context 'admission'  %}
-              </button>
+          {% edit_external_member_form member as edit_external_member_form %}
+          <div class="">
+            <div class="panel panel-default col-md-6">
+              <div class="panel-body">
+                {% bootstrap_form edit_external_member_form %}
+                <button type="submit" class="btn btn-primary pull-right" name="edit_external_member_form">
+                  {% trans "Save" context 'admission'  %}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      {% endif %}
     {% endif %}
-
+  
     {% if signature.motif_refus and signature.statut == 'DECLINED' %}
       <blockquote><strong>{% trans "Grounds for denied" %}</strong>
         {{ signature.motif_refus|linebreaks }}</blockquote>
