@@ -121,7 +121,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 links=[],
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
             ),
             Mock(
                 sigle='FOOBARBAZ',
@@ -129,7 +129,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
             ),
             Mock(
                 sigle='BARBAZ',
@@ -137,7 +137,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
             ),
             Mock(
                 sigle=SCIENCE_DOCTORATE,
@@ -145,7 +145,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
-                type=TrainingType.PHD.name,
+                type=TrainingType.FORMATION_PHD.name,
             ),
         ]
         self.addCleanup(autocomplete_api_patcher.stop)
@@ -179,6 +179,11 @@ class ProjectViewTestCase(TestCase):
         self.mock_scholarship_api.return_value.retrieve_scholarship.side_effect = self.get_scholarship
         self.addCleanup(scholarships_api_patcher.stop)
 
+        # Mock language sdk api
+        languages_api_patcher = patch("osis_reference_sdk.api.languages_api.LanguagesApi")
+        self.mock_scholarship_api = languages_api_patcher.start()
+        self.addCleanup(languages_api_patcher.stop)
+
         self.client.force_login(self.person.user)
 
     def test_update(self):
@@ -206,7 +211,7 @@ class ProjectViewTestCase(TestCase):
                 'sigle': 'FOOBARBAZ',
                 'annee': '2021',
                 'code_secteur_formation': "SSH",
-                'type': TrainingType.PHD.name,
+                'type': TrainingType.FORMATION_PHD.name,
             },
             'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
             "commission_proximite": ChoixCommissionProximiteCDSS.ECLI.name,

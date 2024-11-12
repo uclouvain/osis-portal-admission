@@ -162,7 +162,7 @@ class UtilsTestCase(TestCase):
             annee=2021,
             sigle_entite_gestion="CDE",
             campus="Mons",
-            type=TrainingType.PHD.name,
+            type=TrainingType.FORMATION_PHD.name,
             campus_inscription='Mons',
             code='FOOBAR',
         )
