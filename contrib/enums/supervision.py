@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext_lazy, gettext_lazy as _
 
 from base.models.utils.utils import ChoiceEnum
 
@@ -31,3 +31,8 @@ from base.models.utils.utils import ChoiceEnum
 class DecisionApprovalEnum(ChoiceEnum):
     APPROVED = pgettext_lazy("admission decision", "Approved")
     DECLINED = pgettext_lazy("admission decision", "Denied")
+
+
+class ActorType(ChoiceEnum):
+    PROMOTER = _("Supervisor")
+    CA_MEMBER = _("CA Member")

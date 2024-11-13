@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 from django.shortcuts import redirect
 from django.views.generic import FormView
 
-from admission.contrib.enums.actor import ActorType
+from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from admission.contrib.forms.supervision import ACTOR_EXTERNAL, DoctorateAdmissionSupervisionForm, EXTERNAL_FIELDS
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
@@ -43,20 +43,26 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['supervision'] = AdmissionSupervisionService.get_supervision(
+        supervision = AdmissionSupervisionService.get_supervision(
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
+        context['supervision'] = supervision
         context['signature_conditions'] = AdmissionSupervisionService.get_signature_conditions(
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
         context['add_form'] = context.pop('form')  # Trick template to not add button
+        context['all_approved'] = all(
+            signature.get('statut') == ChoixEtatSignature.APPROVED.name
+            for signature in supervision.get('signatures_promoteurs', []) + supervision.get('signatures_membres_ca', [])
+        )
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.request.user.person
+        kwargs['admission_status'] = self.admission.statut
         return kwargs
 
     def get(self, request, *args, **kwargs):
