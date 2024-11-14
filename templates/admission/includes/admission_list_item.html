@@ -39,7 +39,13 @@
     {% endif %}
   </h3>
   <div>
-    <em>{% trans "Created on:" context "an admission" %} {{ admission.creee_le }}</em>
+    <em>
+      {% if admission.soumise_le %}
+        {% trans "Submitted on:" context "an admission" %} {{ admission.soumise_le }}
+      {% else %}
+        {% trans "Created on:" context "an admission" %} {{ admission.creee_le }}
+      {% endif %}
+    </em>
   </div>
   <div>
     <em>
@@ -59,9 +65,9 @@
     {% endif %}
 
     {% if admission|can_update_tab:'documents' %}
-      <a class="btn btn-default pull-right" href="{% url base_namespace|add:':update:documents' admission.uuid %}">
-        <span class="fas fa-pencil"></span>
-        {% translate "Send documents" %}
+      <a class="btn btn-primary pull-right" href="{% url base_namespace|add:':update:documents' admission.uuid %}">
+        <span class="fa-solid fa-file-circle-exclamation"></span>
+        {% translate "Send missing documents" %}
       </a>
     {% endif %}
 
