@@ -642,15 +642,6 @@ msgstr "Compte bancaire"
 
 #, python-format
 msgid ""
-"Because you already submitted an admission, information about coordinates "
-"can not be updated. If you want to update them, please contact %(recipient)s."
-msgstr ""
-"Etant donné que vous avez envoyé une autre demande d'inscription, les "
-"informations des coordonnées ne peuvent être modifiées. Si vous souhaitez y "
-"apporter des modifications, merci de contacter %(recipient)s."
-
-#, python-format
-msgid ""
 "Because you already submitted an admission, information about identification "
 "can not be updated. If you want to update them, please contact %(recipient)s."
 msgstr ""
