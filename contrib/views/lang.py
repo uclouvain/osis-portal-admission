@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ from django.utils import translation
 from django.views import View
 
 from base.models import person
+from base.views.my_osis import url_to_redirect_after_language_change
 from osis_common.middlewares.locale import LANGUAGE_SESSION_KEY
 
 
@@ -40,4 +41,4 @@ class ChangeLanguageView(LoginRequiredMixin, View):
         person.change_language(request.user, kwargs['ui_language'])
         translation.activate(kwargs['ui_language'])
         request.session[LANGUAGE_SESSION_KEY] = kwargs['ui_language']
-        return redirect(request.headers['referer'])
+        return redirect(url_to_redirect_after_language_change(request))
