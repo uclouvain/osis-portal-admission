@@ -30,6 +30,7 @@ from django.views import View
 
 from base.models import person
 from base.views.my_osis import url_to_redirect_after_language_change
+from osis_common.middlewares.locale import LANGUAGE_SESSION_KEY
 
 
 class ChangeLanguageView(LoginRequiredMixin, View):
@@ -39,5 +40,5 @@ class ChangeLanguageView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         person.change_language(request.user, kwargs['ui_language'])
         translation.activate(kwargs['ui_language'])
-        request.session[translation.LANGUAGE_SESSION_KEY] = kwargs['ui_language']
+        request.session[LANGUAGE_SESSION_KEY] = kwargs['ui_language']
         return redirect(url_to_redirect_after_language_change(request))

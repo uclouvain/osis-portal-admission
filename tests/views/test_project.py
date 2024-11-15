@@ -179,6 +179,11 @@ class ProjectViewTestCase(TestCase):
         self.mock_scholarship_api.return_value.retrieve_scholarship.side_effect = self.get_scholarship
         self.addCleanup(scholarships_api_patcher.stop)
 
+        # Mock language sdk api
+        languages_api_patcher = patch("osis_reference_sdk.api.languages_api.LanguagesApi")
+        self.mock_scholarship_api = languages_api_patcher.start()
+        self.addCleanup(languages_api_patcher.stop)
+
         self.client.force_login(self.person.user)
 
     def test_update(self):
@@ -255,8 +260,8 @@ class ProjectViewTestCase(TestCase):
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
         }
         response = self.client.post(url, data)
-        self.assertFormError(response, 'form', 'type_contrat_travail', _("This field is required."))
-        self.assertFormError(response, 'form', 'eft', _("This field is required."))
+        self.assertFormError(response.context['form'], 'type_contrat_travail', _("This field is required."))
+        self.assertFormError(response.context['form'], 'eft', _("This field is required."))
 
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
@@ -264,7 +269,7 @@ class ProjectViewTestCase(TestCase):
             'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_SCIENTIFIC_STAFF.name,
         }
         response = self.client.post(url, data)
-        self.assertFormError(response, 'form', 'eft', _("This field is required."))
+        self.assertFormError(response.context['form'], 'eft', _("This field is required."))
 
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
@@ -280,7 +285,7 @@ class ProjectViewTestCase(TestCase):
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
         }
         response = self.client.post(url, data)
-        self.assertFormError(response, 'form', 'bourse_recherche', _("This field is required."))
+        self.assertFormError(response.context['form'], 'bourse_recherche', _("This field is required."))
 
         data = {
             'type_admission': AdmissionType.ADMISSION.name,

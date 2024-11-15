@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,31 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import gettext_lazy as _, pgettext_lazy
-
-from base.models.utils.utils import ChoiceEnum
+from base.models.entity_version import EntityVersion
 
 
-class GenderEnum(ChoiceEnum):
-    F = pgettext_lazy("female gender", "Female")
-    H = pgettext_lazy("gender male", "Male")
-    X = _('Other')
+def format_address(street='', street_number='', postal_code='', city='', country=''):
+    """Return the concatenation of the specified street, street number, postal code, city and country."""
+    address_parts = [
+        f'{street} {street_number}',
+        f'{postal_code} {city}',
+        country,
+    ]
+    return ', '.join(filter(lambda part: part and len(part) > 1, address_parts))
 
 
-class SexEnum(ChoiceEnum):
-    F = pgettext_lazy("female gender", "Female")
-    M = pgettext_lazy("gender male", "Male")
-
-
-class CivilState(ChoiceEnum):
-    LEGAL_COHABITANT = pgettext_lazy("admission", "Legal cohabitant")
-    SINGLE = pgettext_lazy("admission", "Single")
-    DIVORCED = pgettext_lazy("admission", "Divorced")
-    MARRIED = pgettext_lazy("admission", "Married")
-    SEPARATE = pgettext_lazy("admission", "Separated")
-    WIDOWED = pgettext_lazy("admission", "Widowed")
-
-
-class IdentificationType(ChoiceEnum):
-    ID_CARD_NUMBER = _('Identity card number')
-    PASSPORT_NUMBER = _('Passport number')
+def format_school_title(school):
+    """Return the concatenation of the school name and city."""
+    address = format_address(
+        street=school.street,
+        street_number=school.street_number,
+        postal_code=school.zipcode,
+        city=school.city,
+    )
+    return f'{school.name} <span class="school-address">{address}</span>'
