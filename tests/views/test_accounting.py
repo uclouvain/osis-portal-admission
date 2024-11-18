@@ -387,7 +387,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         ]
         self.assertCountEqual(missing_fields, form.errors.keys())
         for field in missing_fields:
-            self.assertFormError(response, 'form', field, FIELD_REQUIRED_MESSAGE)
+            self.assertFormError(response.context['form'], field, FIELD_REQUIRED_MESSAGE)
 
     def test_accounting_form_with_no_data_and_previous_highschool(self):
         mock_accounting = self.mock_proposition_api.return_value.retrieve_accounting.return_value.to_dict.return_value
@@ -413,9 +413,9 @@ class DoctorateAccountingViewTestCase(TestCase):
         form = response.context.get('form')
 
         self.assertFalse(form.is_valid())
-        self.assertFormError(response, 'form', 'numero_compte_iban', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'numero_compte_iban', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
 
     def test_accounting_with_invalid_iban(self):
         # The IBAN is not valid
@@ -432,7 +432,7 @@ class DoctorateAccountingViewTestCase(TestCase):
         form = response.context.get('form')
 
         self.assertFalse(form.is_valid())
-        self.assertFormError(response, 'form', 'numero_compte_iban', 'Invalid IBAN')
+        self.assertFormError(response.context['form'], 'numero_compte_iban', 'Invalid IBAN')
 
     def test_accounting_form_with_incomplete_bank_account_for_other_format(self):
         response = self.client.post(
@@ -448,10 +448,10 @@ class DoctorateAccountingViewTestCase(TestCase):
         form = response.context.get('form')
 
         self.assertFalse(form.is_valid())
-        self.assertFormError(response, 'form', 'numero_compte_autre_format', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'code_bic_swift_banque', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'numero_compte_autre_format', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'code_bic_swift_banque', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
 
     def test_accounting_form_with_unnecessary_bank_account_fields(self):
         response = self.client.post(
@@ -867,7 +867,7 @@ class GeneralAccountingViewTestCase(TestCase):
             'etudiant_solidaire',
             'type_numero_compte',
         ]:
-            self.assertFormError(response, 'form', field, FIELD_REQUIRED_MESSAGE)
+            self.assertFormError(response.context['form'], field, FIELD_REQUIRED_MESSAGE)
 
     def test_accounting_form_with_no_data_ue_country_and_no_previous_highschool(self):
         mock_accounting = (
@@ -930,9 +930,9 @@ class GeneralAccountingViewTestCase(TestCase):
         form = response.context.get('form')
 
         self.assertFalse(form.is_valid())
-        self.assertFormError(response, 'form', 'numero_compte_iban', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'numero_compte_iban', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
 
     def test_accounting_with_invalid_iban(self):
         # The IBAN is not valid
@@ -949,7 +949,7 @@ class GeneralAccountingViewTestCase(TestCase):
         form = response.context.get('form')
 
         self.assertFalse(form.is_valid())
-        self.assertFormError(response, 'form', 'numero_compte_iban', 'Invalid IBAN')
+        self.assertFormError(response.context['form'], 'numero_compte_iban', 'Invalid IBAN')
 
     def test_accounting_form_with_incomplete_bank_account_for_other_format(self):
         response = self.client.post(
@@ -965,10 +965,10 @@ class GeneralAccountingViewTestCase(TestCase):
         form = response.context.get('form')
 
         self.assertFalse(form.is_valid())
-        self.assertFormError(response, 'form', 'numero_compte_autre_format', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'code_bic_swift_banque', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
-        self.assertFormError(response, 'form', 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'numero_compte_autre_format', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'code_bic_swift_banque', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'prenom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
+        self.assertFormError(response.context['form'], 'nom_titulaire_compte', FIELD_REQUIRED_MESSAGE)
 
     def test_accounting_form_with_unnecessary_bank_account_fields(self):
         response = self.client.post(
