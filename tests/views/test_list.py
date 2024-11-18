@@ -62,7 +62,7 @@ class ListTestCase(TestCase):
                     statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
                     erreurs=[],
                     doctorat=Mock(
-                        type=TrainingType.FORMATION_PHD.name,
+                        type=TrainingType.PHD.name,
                     ),
                 ),
                 Mock(
@@ -71,7 +71,7 @@ class ListTestCase(TestCase):
                     erreurs=[],
                     statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
                     doctorat=Mock(
-                        type=TrainingType.FORMATION_PHD.name,
+                        type=TrainingType.PHD.name,
                     ),
                 ),
             ],
