@@ -3221,8 +3221,8 @@ msgstr "Type de sélection"
 msgid "Send"
 msgstr "Envoyer"
 
-msgid "Send documents"
-msgstr "Envoyer des documents"
+msgid "Send missing documents"
+msgstr "Envoyer les documents manquants"
 
 msgid ""
 "Sending the request requires your agreement with all of the following "
@@ -3328,6 +3328,10 @@ msgstr "Soumise"
 msgctxt "publication-status"
 msgid "Submitted"
 msgstr "Soumise"
+
+msgctxt "an admission"
+msgid "Submitted on:"
+msgstr "Envoyée le :"
 
 msgid ""
 "Subsidiary protection status is granted to a foreign national who cannot be "

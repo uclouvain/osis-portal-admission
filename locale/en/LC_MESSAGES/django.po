@@ -2851,7 +2851,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-msgid "Send documents"
+msgid "Send missing documents"
 msgstr ""
 
 msgid ""
@@ -2956,6 +2956,10 @@ msgstr ""
 
 msgctxt "publication-status"
 msgid "Submitted"
+msgstr ""
+
+msgctxt "an admission"
+msgid "Submitted on:"
 msgstr ""
 
 msgid ""
