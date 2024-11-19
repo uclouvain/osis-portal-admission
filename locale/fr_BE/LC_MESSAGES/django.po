@@ -126,10 +126,10 @@ msgstr ""
 
 #, python-brace-format
 msgid ""
-"<a href=\"{url}\" target=_blank\">Change of enrolment form</a>, duly "
+"<a href=\"{url}\" target=\"_blank\">Change of enrolment form</a>, duly "
 "completed and accompanied by the mentioned annexes"
 msgstr ""
-"<a href=\"{url}\" target=_blank\">Formulaire de modification d'inscription</"
+"<a href=\"{url}\" target=\"_blank\">Formulaire de modification d'inscription</"
 "a>, dûment complété et accompagné des annexes mentionnées"
 
 msgid ""
@@ -4205,6 +4205,16 @@ msgstr ""
 
 msgid "Your application will be sent to the faculty."
 msgstr "Votre demande va être envoyée à la faculté."
+
+msgid "Your completed and signed reorientation form"
+msgstr "Votre formulaire de réorientation complété et signé"
+
+#, python-brace-format
+msgid ""
+"Your completed and signed reorientation form (<a href=\"{url}\" "
+"target=\"_blank\">{url}</a>)"
+msgstr "Votre formulaire de réorientation complété et signé (<a href=\"{url}\" "
+"target=\"_blank\">{url}</a>)"
 
 msgid "Your data have been saved"
 msgstr "Vos données ont été enregistrées"
