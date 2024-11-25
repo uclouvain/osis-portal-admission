@@ -260,8 +260,8 @@ class ProjectViewTestCase(TestCase):
             'type_financement': ChoixTypeFinancement.WORK_CONTRACT.name,
         }
         response = self.client.post(url, data)
-        self.assertFormError(response, 'form', 'type_contrat_travail', _("This field is required."))
-        self.assertFormError(response, 'form', 'eft', _("This field is required."))
+        self.assertFormError(response.context['form'], 'type_contrat_travail', _("This field is required."))
+        self.assertFormError(response.context['form'], 'eft', _("This field is required."))
 
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
@@ -269,7 +269,7 @@ class ProjectViewTestCase(TestCase):
             'type_contrat_travail': ChoixTypeContratTravail.UCLOUVAIN_SCIENTIFIC_STAFF.name,
         }
         response = self.client.post(url, data)
-        self.assertFormError(response, 'form', 'eft', _("This field is required."))
+        self.assertFormError(response.context['form'], 'eft', _("This field is required."))
 
         data = {
             'type_admission': AdmissionType.ADMISSION.name,
@@ -285,7 +285,7 @@ class ProjectViewTestCase(TestCase):
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
         }
         response = self.client.post(url, data)
-        self.assertFormError(response, 'form', 'bourse_recherche', _("This field is required."))
+        self.assertFormError(response.context['form'], 'bourse_recherche', _("This field is required."))
 
         data = {
             'type_admission': AdmissionType.ADMISSION.name,

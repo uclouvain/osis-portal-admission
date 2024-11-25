@@ -206,7 +206,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             'end_date_year',
             'type',
         ]:
-            self.assertFormError(response, 'form', field, errors=FIELD_REQUIRED_MESSAGE)
+            self.assertFormError(response.context['form'], field, errors=FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_missing_fields_for_work(self):
         response = self.client.post(
@@ -230,7 +230,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             'sector',
             'institute_name',
         ]:
-            self.assertFormError(response, 'form', field, errors=FIELD_REQUIRED_MESSAGE)
+            self.assertFormError(response.context['form'], field, errors=FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_missing_fields_for_internship(self):
         response = self.client.post(
@@ -282,7 +282,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         for field in [
             'activity',
         ]:
-            self.assertFormError(response, 'form', field, errors=FIELD_REQUIRED_MESSAGE)
+            self.assertFormError(response.context['form'], field, errors=FIELD_REQUIRED_MESSAGE)
 
     def test_with_admission_on_update_experience_post_form_bad_years(self):
         response = self.client.post(
