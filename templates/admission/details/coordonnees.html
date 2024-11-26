@@ -26,14 +26,6 @@
 {% endcomment %}
 
 {% block tab_content %}
-    {% if not admission|can_update_tab:"coordonnees" %}
-      <div class="alert alert-warning">
-        {% blocktrans trimmed with recipient=training_contact|default:_('the enrolment office') %}
-          Because you already submitted an admission, information about coordinates can not be updated.
-          If you want to update them, please contact {{ recipient }}.
-        {% endblocktrans %}
-      </div>
-    {% endif %}
     {% panel _("Legal domicile") %}
         <div class="row">
             <div class="col-md-4">{% field_data _("Street") coordonnees.residential.street %}</div>
@@ -76,18 +68,4 @@
             {% field_data _('Emergency contact (telephone number)') coordonnees.emergency_contact_phone "col-md-6" %}
         </div>
     {% endpanel %}
-
-    {% if not admission|can_update_tab:"coordonnees" %}
-      <a
-          class="btn btn-primary pull-right"
-          {% if view.kwargs.pk %}
-          href="{% url base_namespace|add:':training-choice' view.kwargs.pk %}"
-          {% else %}
-          href="{% url base_namespace|add:':training-choice' %}"
-          {% endif %}
-      >
-        <i class="fa-solid fa-forward-step"></i>
-      {% trans "Continue" %}
-      </a>
-    {% endif %}
 {% endblock %}

@@ -102,7 +102,7 @@ class CoordonneesTestCase(TestCase):
         self.mock_academic_year_api = academic_year_api_patcher.start()
         self.addCleanup(academic_year_api_patcher.stop)
 
-    def test_form_with_submitted_admission_is_readonly(self):
+    def test_form_with_submitted_admission_is_not_readonly(self):
         url = resolve_url('admission:create:coordonnees')
         self.client.force_login(self.person.user)
 
@@ -114,8 +114,8 @@ class CoordonneesTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateNotUsed(response, 'admission/forms/coordonnees.html')
-        self.assertTemplateUsed(response, 'admission/details/coordonnees.html')
+        self.assertTemplateNotUsed(response, 'admission/details/coordonnees.html')
+        self.assertTemplateUsed(response, 'admission/forms/coordonnees.html')
 
     def test_form_display(self):
         url = resolve_url('admission:create:coordonnees')
