@@ -2514,6 +2514,10 @@ msgid ""
 msgstr ""
 
 msgid ""
+"The promoters may be changed during the admissions process."
+msgstr ""
+
+msgid ""
 "The secondary school diploma is the Certificat d'Enseignement Secondaire "
 "Superieur (CESS, Certificate of Higher Secondary Education). It is commonly "
 "referred to in many countries as the baccalaureat."
