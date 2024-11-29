@@ -111,7 +111,7 @@ msgstr ""
 
 #, python-brace-format
 msgid ""
-"<a href=\"{url}\" target=_blank\">Change of enrolment form</a>, duly "
+"<a href=\"{url}\" target=\"_blank\">Change of enrolment form</a>, duly "
 "completed and accompanied by the mentioned annexes"
 msgstr ""
 
@@ -2851,7 +2851,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-msgid "Send documents"
+msgid "Send missing documents"
 msgstr ""
 
 msgid ""
@@ -2956,6 +2956,10 @@ msgstr ""
 
 msgctxt "publication-status"
 msgid "Submitted"
+msgstr ""
+
+msgctxt "an admission"
+msgid "Submitted on:"
 msgstr ""
 
 msgid ""
@@ -3690,6 +3694,15 @@ msgid "Your application will be sent to the UCLouvain Enrolment Office."
 msgstr ""
 
 msgid "Your application will be sent to the faculty."
+msgstr ""
+
+msgid "Your completed and signed reorientation form"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Your completed and signed reorientation form (<a href=\"{url}\" "
+"target=\"_blank\">{url}</a>)"
 msgstr ""
 
 msgid "Your data have been saved"
