@@ -25,7 +25,7 @@
 # ##############################################################################
 
 import json
-from typing import Optional
+from typing import Optional, Dict
 
 from dal import forward
 from django import forms
@@ -72,6 +72,7 @@ from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.continuing_education import ContinuingEducationService
 from admission.services.education_group import TrainingsService
+from admission.services.proposition import AdmissionPropositionService
 from admission.utils import format_scholarship, split_training_id
 from reference.services.scholarship import ScholarshipService
 
@@ -99,6 +100,8 @@ def get_training_choices(training):
 
 
 class TrainingChoiceForm(ConfigurableFormMixin):
+    NO_VALUE = 'NO'
+
     training_type = forms.ChoiceField(
         choices=EMPTY_CHOICE + TypeFormationChoisissable.choices(),
         label=_('Course type'),
@@ -197,6 +200,13 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         required=False,
     )
 
+    related_pre_admission = forms.ChoiceField(
+        label=_("Would you like to create an admission request following a pre-admission request?"),
+        choices=[[NO_VALUE, _('No')]],
+        required=False,
+        widget=forms.RadioSelect,
+    )
+
     # Continuing education
     motivations = forms.CharField(
         label=_('Motivations'),
@@ -290,6 +300,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         self.person = person
         self.current_context = current_context
         self.admission_uuid = kwargs.pop('admission_uuid', None)
+        self.pre_admissions: Dict[str, Dict] = {}
 
         super().__init__(*args, **kwargs)
 
@@ -413,6 +424,30 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             for sector in AdmissionAutocompleteService.get_sectors(person)
         )
 
+        self.initialize_pre_admission_field()
+
+    def _format_pre_admission_training(self, training):
+        return f"{training.sigle} - {training.intitule} ({training.campus.nom})"
+
+    def initialize_pre_admission_field(self):
+        # Manage a doctorate admission following a pre-admission
+        if self.current_context == 'create':
+            doctorate_pre_admissions = AdmissionPropositionService.get_doctorate_pre_admission_propositions(self.person)
+
+            self.fields['related_pre_admission'].choices = [[self.NO_VALUE, _('No')]]
+
+            for doctorate_pre_admission in doctorate_pre_admissions:
+                self.pre_admissions[doctorate_pre_admission.uuid] = doctorate_pre_admission.to_dict()
+                self.fields['related_pre_admission'].choices.append(
+                    [
+                        doctorate_pre_admission.uuid,
+                        _('Yes, for the doctorate %(doctorate_name)s')
+                        % {'doctorate_name': self._format_pre_admission_training(doctorate_pre_admission.doctorat)},
+                    ]
+                )
+
+        self.fields['related_pre_admission'].disabled = not bool(self.pre_admissions)
+
     def clean(self):
         cleaned_data = super().clean()
         if not cleaned_data.get('training_type'):
@@ -534,6 +569,9 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
     def clean_doctorate(self, training_type, cleaned_data):
         if training_type == TypeFormation.DOCTORAT.name:
+            sector = cleaned_data.get('sector')
+            campus = cleaned_data.get('campus')
+
             if not cleaned_data.get('admission_type'):
                 self.add_error('admission_type', FIELD_REQUIRED_MESSAGE)
 
@@ -543,8 +581,32 @@ class TrainingChoiceForm(ConfigurableFormMixin):
             else:
                 cleaned_data['justification'] = ''
 
-            if not cleaned_data.get('sector'):
+            if not sector:
                 self.add_error('sector', FIELD_REQUIRED_MESSAGE)
+
+            # Either the related pre admission or the doctorate training is required
+            if cleaned_data.get('admission_type') == AdmissionType.ADMISSION.name:
+                # The pre admission choices depend on the chosen sector and campus
+                pre_admission_choices = {
+                    pre_admission['uuid']
+                    for pre_admission in self.pre_admissions.values()
+                    if pre_admission['code_secteur_formation'] == sector
+                    and (not campus or campus == EMPTY_VALUE or pre_admission['doctorat']['campus']['uuid'] == campus)
+                }
+
+                related_pre_admission_data = cleaned_data.get('related_pre_admission')
+                if pre_admission_choices and related_pre_admission_data != self.NO_VALUE:
+                    cleaned_data['doctorate_training'] = ''
+                    cleaned_data['proximity_commission_cde'] = ''
+                    cleaned_data['proximity_commission_cdss'] = ''
+                    cleaned_data['science_sub_domain'] = ''
+
+                    if related_pre_admission_data not in pre_admission_choices:
+                        self.add_error('related_pre_admission', FIELD_REQUIRED_MESSAGE)
+
+                    return cleaned_data
+
+            cleaned_data['related_pre_admission'] = ''
 
             if not cleaned_data.get('doctorate_training'):
                 self.add_error('doctorate_training', FIELD_REQUIRED_MESSAGE)

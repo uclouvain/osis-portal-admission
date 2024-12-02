@@ -27,7 +27,7 @@
 from typing import Optional
 
 from django.contrib import messages
-from django.shortcuts import resolve_url
+from django.shortcuts import resolve_url, redirect
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
@@ -43,6 +43,7 @@ from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
+from admission.templatetags.admission import can_make_action
 from admission.utils import get_training_id, split_training_id
 
 NAMESPACE_KEY_BY_ADMISSION_TYPE = {
@@ -104,6 +105,8 @@ class AdmissionTrainingChoiceFormView(
                 self.request.user.person,
                 uuid=self.admission_uuid,
             )
+        elif self.is_doctorate and not can_make_action(self.admission, 'update_training_choice'):
+            return redirect('admission:doctorate:training-choice', pk=self.admission_uuid)
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
@@ -131,12 +134,11 @@ class AdmissionTrainingChoiceFormView(
         return new_data
 
     def prepare_data_for_doctorate(self, data):
-        [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
-        return {
+        prepared_data = {
             'type_admission': data.get('admission_type'),
             'justification': data.get('justification'),
-            'sigle_formation': training_acronym,
-            'annee_formation': int(training_year),
+            'sigle_formation': '',
+            'annee_formation': None,
             'commission_proximite': (
                 data.get('proximity_commission_cde')
                 or data.get('proximity_commission_cdss')
@@ -144,6 +146,16 @@ class AdmissionTrainingChoiceFormView(
                 or ''
             ),
         }
+
+        if data.get('doctorate_training'):
+            [training_acronym, training_year] = split_training_id(data.get('doctorate_training'))
+            prepared_data['sigle_formation'] = training_acronym
+            prepared_data['annee_formation'] = int(training_year)
+
+        if self.is_on_create:
+            prepared_data['pre_admission_associee'] = data.get('related_pre_admission')
+
+        return prepared_data
 
     def prepare_data_for_general_education(self, data):
         [training_acronym, training_year] = split_training_id(data.get('general_education_training'))

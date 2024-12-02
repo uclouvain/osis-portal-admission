@@ -251,12 +251,6 @@ msgstr "A1"
 msgid "A2"
 msgstr "A2"
 
-msgid "ACCEPTEE"
-msgstr "Acceptée"
-
-msgid "ADMITTED"
-msgstr "Admis"
-
 msgid "Absence of debt"
 msgstr "Absence de dettes"
 
@@ -302,12 +296,6 @@ msgstr "Ajouter"
 
 msgid "Add a CA member"
 msgstr "Ajouter un nouveau membre du comité d'accompagnement"
-
-msgid "Add a conference"
-msgstr "Ajouter une conférence"
-
-msgid "Add a course unit"
-msgstr "Ajouter un cours"
 
 msgid "Add a language"
 msgstr "Ajouter une langue"
@@ -1293,6 +1281,9 @@ msgstr "ERC - European Research Council"
 
 msgid "Evaluation system"
 msgstr "Système d'évaluation"
+
+msgid "Existing pre-admission"
+msgstr "Pré-admission existante"
 
 msgid "Exit without saving"
 msgstr "Quitter sans enregistrer"
@@ -2678,23 +2669,15 @@ msgstr "Soumettre ma décision"
 msgid "Submit selected activities"
 msgstr "Soumettre les activités sélectionnées"
 
-msgctxt "an admission"
-msgid "Submitted on:"
-msgstr "Envoyée le :"
-
 msgid "Submit supervisory panel"
 msgstr "Soumettre le comité d’accompagnement"
 
 msgid "Submit support committee"
 msgstr "Soumettre le comité d’accompagnement"
 
-msgctxt "category"
-msgid "Submitted"
-msgstr "Soumise"
-
-msgctxt "publication-status"
-msgid "Submitted"
-msgstr "Soumise"
+msgctxt "an admission"
+msgid "Submitted on:"
+msgstr "Envoyée le :"
 
 msgid ""
 "Subsidiary protection status is granted to a foreign national who cannot be "
@@ -2715,9 +2698,6 @@ msgstr "Comité d’accompagnement à compléter"
 
 msgid "Supervisory panel waiting for signature"
 msgstr "Comité d’accompagnement en attente de signature"
-
-msgid "Support Committee minutes"
-msgstr "Procès-verbal du comité d'accompagnement"
 
 msgid "Support committee"
 msgstr "Comité d'accompagnement"
@@ -2886,9 +2866,10 @@ msgstr ""
 "et de face</strong></li>  <li>Photo récente <strong>en couleur</strong></"
 "li>  <li>Aucun filtre appliqué ni trace de contour</li></ul>"
 
-msgid ""
-"The promoters may be changed during the admissions process."
-msgstr "Le promoteur ou la promotrice pourront être modifiés au cours du processus d'admission."
+msgid "The promoters may be changed during the admissions process."
+msgstr ""
+"Le promoteur ou la promotrice pourront être modifiés au cours du processus "
+"d'admission."
 
 msgid ""
 "The secondary school diploma is the Certificat d'Enseignement Secondaire "
@@ -3205,6 +3186,13 @@ msgstr ""
 "l'UCLouvain ? (<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 
 msgid ""
+"Would you like to create an admission request following a pre-admission "
+"request?"
+msgstr ""
+"Désirez-vous faire une demande d'admission suite à une demande de pré-"
+"admission ?"
+
+msgid ""
 "Would you like to enter an account number so that we can issue a refund?"
 msgstr ""
 "Voulez-vous renseigner un numéro de compte pour que nous puissions procéder "
@@ -3270,6 +3258,10 @@ msgstr "Oui, un numéro de compte au format IBAN"
 
 msgid "Yes, an account number in another format"
 msgstr "Oui, un numéro de compte dans un autre format"
+
+#, python-format
+msgid "Yes, for the doctorate %(doctorate_name)s"
+msgstr "Oui, pour le doctorat %(doctorate_name)s"
 
 #, python-format
 msgid "Yes, in %(year)s."

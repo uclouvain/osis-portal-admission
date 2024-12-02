@@ -35,13 +35,18 @@
 
 {% block well %}
   {% display admission.doctorat.intitule " " "(" admission.doctorat.campus ")" " " "(" admission.reference ")"  as title %}
-  <div class="well">
-    <div>
-      {% trans "Reference:" %} {{ title }}
+  <div class="well" style="display: flex; flex-wrap: wrap; gap: 0.5em;">
+    <div class="flex-1">
+      <div>
+        {% trans "Reference:" %} {{ title }}
+      </div>
+      <div>
+        {% trans "Status:" %}
+        {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
+      </div>
     </div>
     <div>
-      {% trans "Status:" %}
-      {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
+      {% if admission.pre_admission_associee %}<span class="badge badge-info">{% translate 'Existing pre-admission' %}</span>{% endif %}
     </div>
   </div>
 {% endblock well %}
