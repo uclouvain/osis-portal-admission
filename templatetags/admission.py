@@ -56,7 +56,6 @@ from admission.contrib.enums import (
     LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE,
 )
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
-from admission.contrib.enums.training import CategorieActivite, ChoixTypeEpreuve, StatutActivite
 from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
 from admission.contrib.forms.supervision import DoctorateAdmissionMemberSupervisionForm
 from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
@@ -64,7 +63,6 @@ from admission.services.reference import CountriesService, LanguageService, Supe
 from admission.utils import get_uuid_value, to_snake_case, format_academic_year, format_school_title
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
 from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
-from osis_admission_sdk.model.supervision_dto_signatures_membres_ca import SupervisionDTOSignaturesMembresCA
 
 register = template.Library()
 
@@ -162,25 +160,8 @@ TAB_TREES = {
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Support committee')),
         ],
-        # TODO specifics
         Tab('confirm-submit', _('Finalise application'), 'flag'): [
             Tab('confirm-submit', _('Confirmation and submission')),
-        ],
-        Tab('confirmation-paper', _('Confirmation'), 'list-check'): [
-            Tab('confirmation-paper', _('Confirmation exam')),
-            Tab('extension-request', _('New deadline')),
-        ],
-        Tab('training', pgettext_lazy('admission', 'Course'), 'book-open-reader'): [
-            Tab('doctoral-training', _('PhD training')),
-            Tab('complementary-training', _('Complementary training')),
-            Tab('course-enrollment', _('Course unit enrolment')),
-        ],
-        Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
-            Tab('jury-preparation', pgettext('admission tab', 'Defense method')),
-            Tab('jury', _('Jury composition')),
-            # Tab('jury-supervision', _('Jury supervision')),
-            # Tab('private-defense', _('Private defense')),
-            # Tab('public-defense', _('Public defense')),
         ],
         Tab('documents', _('Documents'), 'folder-open'): [
             Tab('documents', _('Documents')),
@@ -522,20 +503,6 @@ def bootstrap_field_no_post_widget_render(field, **kwargs):
         return render_field(field, layout='custom', **kwargs)
 
 
-@register.filter
-def status_as_class(activity):
-    status = activity
-    if hasattr(activity, 'status'):
-        status = activity.status
-    elif isinstance(activity, dict):
-        status = activity['status']
-    return {
-        StatutActivite.SOUMISE.name: "warning",
-        StatutActivite.ACCEPTEE.name: "success",
-        StatutActivite.REFUSEE.name: "danger",
-    }.get(str(status), 'info')
-
-
 @register.simple_tag
 def display(*args):
     """Display args if their value is not empty, can be wrapped by parenthesis, or separated by comma or dash"""
@@ -582,101 +549,6 @@ def reduce_list_separated(arg1, arg2, separator=", "):
     elif arg2:
         return SafeString(arg2)
     return ""
-
-
-def report_ects(activity, categories, added, validated, parent_category=None):
-    if not hasattr(activity, 'ects'):
-        return added, validated
-    status = str(activity.status)
-    if status != StatutActivite.REFUSEE.name:
-        added += activity.ects
-    if status not in [StatutActivite.SOUMISE.name, StatutActivite.ACCEPTEE.name]:
-        return added, validated
-    category = str(activity.category)
-    index = int(status == StatutActivite.ACCEPTEE.name)
-    if status == StatutActivite.ACCEPTEE.name:
-        validated += activity.ects
-    elif category == CategorieActivite.CONFERENCE.name or category == CategorieActivite.SEMINAR.name:
-        categories[_("Participation")][index] += activity.ects
-    elif category == CategorieActivite.COMMUNICATION.name and (
-        activity.get('parent') is None or parent_category == CategorieActivite.CONFERENCE.name
-    ):
-        categories[_("Scientific communication")][index] += activity.ects
-    elif category == CategorieActivite.PUBLICATION.name and (
-        activity.get('parent') is None or parent_category == CategorieActivite.CONFERENCE.name
-    ):
-        categories[_("Publication")][index] += activity.ects
-    elif category == CategorieActivite.COURSE.name:
-        categories[_("Course units and courses")][index] += activity.ects
-    elif category == CategorieActivite.SERVICE.name:
-        categories[_("Services")][index] += activity.ects
-    elif (
-        category == CategorieActivite.RESIDENCY.name
-        or activity.get('parent')
-        and parent_category == CategorieActivite.RESIDENCY.name
-    ):
-        categories[_("Scientific residencies")][index] += activity.ects
-    elif category == CategorieActivite.VAE.name:
-        categories[_("VAE")][index] += activity.ects
-    return added, validated
-
-
-@register.inclusion_tag('admission/doctorate/includes/training_categories.html')
-def training_categories(activities):
-    added, validated = 0, 0
-
-    categories = {
-        _("Participation"): [0, 0],
-        _("Scientific communication"): [0, 0],
-        _("Publication"): [0, 0],
-        _("Course units and courses"): [0, 0],
-        _("Services"): [0, 0],
-        _("VAE"): [0, 0],
-        _("Scientific residencies"): [0, 0],
-        _("Confirmation exam"): [0, 0],
-        _("Thesis defense"): [0, 0],
-    }
-    for activity in activities:
-        if not hasattr(activity, 'ects'):
-            continue
-        # Increment global counts
-        status = str(activity.status)
-        if status != StatutActivite.REFUSEE.name:
-            added += activity.ects
-        if status == StatutActivite.ACCEPTEE.name:
-            validated += activity.ects
-        if status not in [StatutActivite.SOUMISE.name, StatutActivite.ACCEPTEE.name]:
-            continue
-
-        # Increment category counts
-        index = int(status == StatutActivite.ACCEPTEE.name)
-        category = str(activity.category)
-        if category == CategorieActivite.CONFERENCE.name or category == CategorieActivite.SEMINAR.name:
-            categories[_("Participation")][index] += activity.ects
-        elif activity.object_type == "Communication" or activity.object_type == "ConferenceCommunication":
-            categories[_("Scientific communication")][index] += activity.ects
-        elif activity.object_type == "Publication" or activity.object_type == "ConferencePublication":
-            categories[_("Publication")][index] += activity.ects
-        elif category == CategorieActivite.SERVICE.name:
-            categories[_("Services")][index] += activity.ects
-        elif "Residency" in activity.object_type:
-            categories[_("Scientific residencies")][index] += activity.ects
-        elif category == CategorieActivite.VAE.name:
-            categories[_("VAE")][index] += activity.ects
-        elif category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
-            categories[_("Course units and courses")][index] += activity.ects
-        elif category == CategorieActivite.PAPER.name and activity.type == ChoixTypeEpreuve.CONFIRMATION_PAPER.name:
-            categories[_("Confirmation exam")][index] += activity.ects
-        elif category == CategorieActivite.PAPER.name:
-            categories[_("Thesis defense")][index] += activity.ects
-    if not added:
-        return {}
-    return {
-        'display_table': any(cat_added + cat_validated for cat_added, cat_validated in categories.values()),
-        'categories': categories,
-        'added': added,
-        'validated': validated,
-    }
 
 
 @register.filter

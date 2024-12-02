@@ -30,8 +30,6 @@
   {% url "admission:doctorate:course-enrollment:add" pk=view.kwargs.pk category='UCL_COURSE' as add_url %}
   <h3>{% trans "Course unit enrolment" %}</h3>
 
-  <p>{% lorem %}</p>
-
   {% if doctorate|can_make_action:'add_training' %}
     <a href="{{ add_url }}" class="btn btn-default">
       {% trans "Enroll in a course" %}

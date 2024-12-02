@@ -86,6 +86,7 @@
             <p>{% blocktrans trimmed with date=pool_questions.reorientation_pool_end_date|date:'d/m/Y H:i' %}
               If you are applying for a change of course, you must confirm your application before {{ date }}.
             {% endblocktrans %}</p>
+            {% field_data _("Your completed and signed reorientation form") pool_questions.reorientation_form %}
             {% field_data _("Certificate of regular enrolment") pool_questions.regular_registration_proof %}
           {% endif %}
         {% endif %}

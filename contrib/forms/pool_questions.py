@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ class PoolQuestionsForm(forms.Form):
         required=False,
     )
     regular_registration_proof = FileUploadField(max_files=1, required=False)
+    reorientation_form = FileUploadField(max_files=1, required=False)
     is_external_modification = forms.NullBooleanField(
         label=mark_safe_lazy(
             _(
@@ -92,7 +93,7 @@ class PoolQuestionsForm(forms.Form):
             date: datetime.datetime = self.initial['modification_pool_end_date']
             label = format_html(
                 _(
-                    '<a href="{url}" target=_blank">Change of enrolment form</a>, '
+                    '<a href="{url}" target="_blank">Change of enrolment form</a>, '
                     'duly completed and accompanied by the mentioned annexes'
                 ),
                 url=(
@@ -109,6 +110,15 @@ class PoolQuestionsForm(forms.Form):
                 'Certificate of regular enrolment for the %(year)s academic year from the establishment in '
                 'which you are currently enrolled (dated no earlier than 1 November)'
             ) % {'year': f"{date.year - 1}-{date.year}"}
+            academic_year = int(self.initial['reorientation_pool_academic_year']) % 100
+            reorientation_form_label = format_html(
+                _('Your completed and signed reorientation form (<a href="{url}" target="_blank">{url}</a>)'),
+                url=(
+                    'https://cdn.uclouvain.be/groups/cms-editors-sic2/UCLouvain_FORMULAIRE-DE-DEMANDE-DE-REORIENTATION_'
+                    f'{academic_year}-{academic_year + 1}-ETD.pdf'
+                ),
+            )
+            self.fields['reorientation_form'].label = reorientation_form_label
 
         # Remove fields that are not returned pool_questions
         requested_field_names = list(kwargs['initial'].keys())
@@ -130,6 +140,7 @@ class PoolQuestionsForm(forms.Form):
             # not belgian bachelor, clean reorientation fields
             data['is_external_reorientation'] = False
             data['regular_registration_proof'] = []
+            data['reorientation_form'] = []
 
         elif (
             'is_belgian_bachelor' in data
@@ -162,6 +173,7 @@ class PoolQuestionsForm(forms.Form):
                 )
             elif not data['is_external_reorientation']:
                 data['regular_registration_proof'] = []
+                data['reorientation_form'] = []
 
         return data
 
