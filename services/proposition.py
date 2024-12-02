@@ -37,8 +37,6 @@ from osis_admission_sdk.model.doctorate_education_accounting_dto import Doctorat
 from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
 from osis_admission_sdk.model.general_education_accounting_dto import GeneralEducationAccountingDTO
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
-from osis_admission_sdk.model.jury_identity_dto import JuryIdentityDTO
-from osis_admission_sdk.model.membre_jury_identity_dto import MembreJuryIdentityDTO
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
@@ -562,23 +560,6 @@ class FormationContinueBusinessException(Enum):
     FormationEstFermeeException = "FORMATION-CONTINUE-6"
 
 
-class JuryBusinessException(Enum):
-    PromoteurPresidentException = "JURY-1"
-    MembreNonTrouveDansJuryException = "JURY-3"
-    JuryNonTrouveException = "JURY-4"
-    PromoteurRetireException = "JURY-5"
-    PromoteurModifieException = "JURY-6"
-    NonDocteurSansJustificationException = "JURY-7"
-    MembreExterneSansInstitutionException = "JURY-8"
-    MembreExterneSansPaysException = "JURY-9"
-    MembreExterneSansNomException = "JURY-10"
-    MembreExterneSansPrenomException = "JURY-11"
-    MembreExterneSansTitreException = "JURY-12"
-    MembreExterneSansGenreException = "JURY-13"
-    MembreExterneSansEmailException = "JURY-14"
-    MembreDejaDansJuryException = "JURY-15"
-
-
 BUSINESS_EXCEPTIONS_BY_TAB = {
     'person': {
         PropositionBusinessException.IdentificationNonCompleteeException,
@@ -682,8 +663,6 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationGeneraleBusinessException.InformationsVisaNonCompleteesException,
     },
     'documents': set(),
-    'jury-preparation': set(),
-    'jury': set(),
     'payment': set(),
 }
 
@@ -828,87 +807,5 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         return APIClient().approve_by_pdf(
             uuid=uuid,
             approuver_proposition_par_pdf_command=kwargs,
-            **build_mandatory_auth_headers(person),
-        )
-
-
-class AdmissionJuryService(metaclass=ServiceMeta):
-    api_exception_cls = ApiException
-
-    @classmethod
-    def build_config(cls):
-        return osis_admission_sdk.Configuration(
-            host=settings.OSIS_ADMISSION_SDK_HOST,
-            api_key_prefix={'Token': 'Token'},
-            api_key={'Token': settings.ADMISSION_TOKEN_EXTERNAL},
-        )
-
-    @staticmethod
-    def build_mandatory_external_headers():
-        return {
-            'accept_language': get_language(),
-        }
-
-    @classmethod
-    def retrieve_jury(cls, person, uuid, **kwargs) -> JuryIdentityDTO:
-        return APIClient().retrieve_jury_preparation(
-            uuid=uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def modifier_jury(cls, person, uuid, **kwargs) -> JuryIdentityDTO:
-        return APIClient().update_jury_preparation(
-            uuid=uuid,
-            modifier_jury_command=kwargs,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def list_jury_members(cls, person, uuid, **kwargs) -> List[MembreJuryIdentityDTO]:
-        return APIClient().list_jury_members(
-            uuid=uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def create_jury_member(cls, person, uuid, **kwargs) -> MembreJuryIdentityDTO:
-        return APIClient().create_jury_members(
-            uuid=uuid,
-            ajouter_membre_command=kwargs,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def retrieve_jury_member(cls, person, uuid, member_uuid, **kwargs) -> MembreJuryIdentityDTO:
-        return APIClient().retrieve_jury_member(
-            uuid=uuid,
-            member_uuid=member_uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def remove_jury_member(cls, person, uuid, member_uuid, **kwargs) -> MembreJuryIdentityDTO:
-        return APIClient().remove_jury_member(
-            uuid=uuid,
-            member_uuid=member_uuid,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def update_jury_member(cls, person, uuid, member_uuid, **kwargs) -> MembreJuryIdentityDTO:
-        return APIClient().update_jury_member(
-            uuid=uuid,
-            member_uuid=member_uuid,
-            modifier_membre_command=kwargs,
-            **build_mandatory_auth_headers(person),
-        )
-
-    @classmethod
-    def update_role_jury_member(cls, person, uuid, member_uuid, **kwargs) -> MembreJuryIdentityDTO:
-        return APIClient().update_role_jury_member(
-            uuid=uuid,
-            member_uuid=member_uuid,
-            modifier_role_membre_command=kwargs,
             **build_mandatory_auth_headers(person),
         )
