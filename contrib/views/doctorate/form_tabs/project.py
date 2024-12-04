@@ -86,6 +86,9 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
         if data['type_financement'] != ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name:
             data['bourse_recherche'] = ''
             data['autre_bourse_recherche'] = ''
+            data['bourse_date_debut'] = None
+            data['bourse_date_fin'] = None
+            data['bourse_preuve'] = []
 
         if not data['type_financement']:
             data['duree_prevue'] = None
