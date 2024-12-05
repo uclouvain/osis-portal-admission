@@ -71,6 +71,9 @@
         <div class="required_field">
           {% bootstrap_field form.sector %}
         </div>
+        <div class="required_field" id="related-pre-admission-container">
+          {% bootstrap_field form.related_pre_admission %}
+        </div>
         <div class="required_field" id="doctorate-training-field">
           {% bootstrap_field form.doctorate_training %}
         </div>
@@ -161,6 +164,9 @@
   {% if just_submitted %}
     {% include "admission/modal/just_submitted_modal.html" %}
   {% endif %}
+
+  {{ form.pre_admissions|json_script:'doctorate-pre-admissions' }}
+
 {% endblock %}
 
 {% block script %}
@@ -168,6 +174,7 @@
   <script>
       $(function () {
           const isTruthy = val => !!val;
+          const isFalsy = val => !val;
           const defaultOptions = {
               duration: 0,
           };
@@ -179,6 +186,11 @@
           const closedContinuingAlertMessage = $('#closed-continuing-alert');
           const closedContinuingAlertMessageProgramName = closedContinuingAlertMessage.find('.program-name');
           const closedContinuingAlertMessageTrainingInfoURL = closedContinuingAlertMessage.find('.training-info-url');
+          const doctoratePreAdmissions = JSON.parse(document.getElementById('doctorate-pre-admissions').textContent);
+          const allPreAdmissionOptions = $('input[name="related_pre_admission"]');
+          const relatedPreAdmissionOptions = allPreAdmissionOptions.filter(':not([value="NO"])');
+          const relatedPreAdmissionNoOption = allPreAdmissionOptions.filter('[value="NO"]').first();
+          const relatedPreAdmissionContainer = $('#related-pre-admission-container');
 
           const fieldsThatMustBeInitialized = new Set(['id_mixed_training', 'id_doctorate_training']);
 
@@ -280,12 +292,62 @@
                   'input[name="admission_type"]': {values: ['PRE_ADMISSION']},
               }, defaultOptions);
 
-              $('#id_sector').change(function () {
+              function displayRelatedPreAdmissionOptions(init=false) {
+                  const sector = $('#id_sector').val();
+                  const campus = $('#id_campus').val();
+                  const admissionType = $('input[name="admission_type"]:checked').val();
+
+                  if (!sector || admissionType !== 'ADMISSION') {
+                      relatedPreAdmissionContainer.hide();
+                      allPreAdmissionOptions.prop('checked', false).prop('disabled', true).trigger('change')
+                      return false;
+                  }
+
+                  let oneOptionToShow = false;
+
+                  relatedPreAdmissionOptions.each(function () {
+                    const value = $(this).val();
+
+                    const relatedData = doctoratePreAdmissions[value];
+
+                    if (
+                        relatedData
+                        && relatedData.code_secteur_formation === sector
+                        && (relatedData.doctorat.campus.uuid === campus || campus === '__all__' || !campus)
+                    ) {
+                        $(this).parents('.radio').show();
+                        $(this).prop('disabled', false)
+                        oneOptionToShow = true;
+                    } else {
+                        $(this).prop('disabled', true)
+                        $(this).parents('.radio').hide();
+                    }
+                  });
+
+                  relatedPreAdmissionContainer.toggle(oneOptionToShow);
+                  relatedPreAdmissionNoOption.prop('disabled', !oneOptionToShow)
+
+                  if (!init) allPreAdmissionOptions.prop('checked', false);
+
+                  allPreAdmissionOptions.trigger('change');
+
+                  return oneOptionToShow;
+              }
+
+              $('#id_sector, input[name="admission_type"]').change(function() {displayRelatedPreAdmissionOptions()});
+
+              function doctorateTrainingFieldMustBeDisplayed () {
+                  return !relatedPreAdmissionContainer.is(':visible') || relatedPreAdmissionNoOption.is(':checked');
+              }
+
+              displayRelatedPreAdmissionOptions(true);
+              $('#id_sector, input[name="related_pre_admission"]').change(function () {
                   $('#id_doctorate_training').val('').change();
               });
 
               $('#doctorate-training-field').dependsOn({
                   '#id_sector': {isTruthy},
+                  'input[name="related_pre_admission"]': {doctorateTrainingFieldMustBeDisplayed},
               }, defaultOptions);
 
               $('#cde-container').dependsOn({

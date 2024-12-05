@@ -2462,8 +2462,7 @@ msgid ""
 "<li>Without any filter nor any contour</li></ul>"
 msgstr ""
 
-msgid ""
-"The promoters may be changed during the admissions process."
+msgid "The promoters may be changed during the admissions process."
 msgstr ""
 
 msgid ""
@@ -2753,6 +2752,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Would you like to create an admission request following a pre-admission "
+"request?"
+msgstr ""
+
+msgid ""
 "Would you like to enter an account number so that we can issue a refund?"
 msgstr ""
 
@@ -2805,6 +2809,10 @@ msgid "Yes, an account number in IBAN format"
 msgstr ""
 
 msgid "Yes, an account number in another format"
+msgstr ""
+
+#, python-format
+msgid "Yes, for the doctorate %(doctorate_name)s"
 msgstr ""
 
 #, python-format

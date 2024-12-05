@@ -2842,9 +2842,10 @@ msgstr ""
 "et de face</strong></li>  <li>Photo récente <strong>en couleur</strong></"
 "li>  <li>Aucun filtre appliqué ni trace de contour</li></ul>"
 
-msgid ""
-"The promoters may be changed during the admissions process."
-msgstr "Le promoteur ou la promotrice pourront être modifiés au cours du processus d'admission."
+msgid "The promoters may be changed during the admissions process."
+msgstr ""
+"Le promoteur ou la promotrice pourront être modifiés au cours du processus "
+"d'admission."
 
 msgid ""
 "The secondary school diploma is the Certificat d'Enseignement Secondaire "
@@ -3161,6 +3162,11 @@ msgstr ""
 "l'UCLouvain ? (<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 
 msgid ""
+"Would you like to create an admission request following a pre-admission "
+"request?"
+msgstr "Désirez-vous faire une demande d'admission suite à une demande de pré-admission ?"
+
+msgid ""
 "Would you like to enter an account number so that we can issue a refund?"
 msgstr ""
 "Voulez-vous renseigner un numéro de compte pour que nous puissions procéder "
@@ -3226,6 +3232,10 @@ msgstr "Oui, un numéro de compte au format IBAN"
 
 msgid "Yes, an account number in another format"
 msgstr "Oui, un numéro de compte dans un autre format"
+
+#, python-format
+msgid "Yes, for the doctorate %(doctorate_name)s"
+msgstr "Oui, pour le doctorat %(doctorate_name)s"
 
 #, python-format
 msgid "Yes, in %(year)s."
@@ -3502,11 +3512,3 @@ msgstr "votre mère"
 
 msgid "your partner"
 msgstr "votre conjoint"
-
-#~ msgctxt "category"
-#~ msgid "Submitted"
-#~ msgstr "Soumise"
-
-#~ msgctxt "publication-status"
-#~ msgid "Submitted"
-#~ msgstr "Soumise"
