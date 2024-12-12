@@ -77,7 +77,7 @@ class AutocompleteTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 campus="Louvain-La-Neuve",
-                type=TrainingType.FORMATION_PHD.name,
+                type=TrainingType.PHD.name,
                 campus_inscription='Mons',
                 code='CODE',
             ),
