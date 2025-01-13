@@ -2896,6 +2896,10 @@ msgstr ""
 "li>  <li>Aucun filtre appliqué ni trace de contour</li></ul>"
 
 msgid ""
+"The promoters may be changed during the admissions process."
+msgstr "Le promoteur ou la promotrice pourront être modifiés au cours du processus d'admission."
+
+msgid ""
 "The secondary school diploma is the Certificat d'Enseignement Secondaire "
 "Superieur (CESS, Certificate of Higher Secondary Education). It is commonly "
 "referred to in many countries as the baccalaureat."

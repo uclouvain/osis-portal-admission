@@ -59,6 +59,7 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
+        kwargs['admission_type'] = self.admission.type_admission
         return kwargs
 
     def get_initial(self):

@@ -88,45 +88,59 @@
     <form class="osis-form" method="post" action="">
       {% csrf_token %}
       {% bootstrap_form_errors add_form %}
-      {% if admission.statut == 'CA_A_COMPLETER' %}
-        {% translate "Add a CA member" as panel_title %}
-      {% else %}
-        {% translate "Add a promoter or a CA member" as panel_title %}
-      {% endif %}
-      {% panel panel_title %}
-        <div class="row">
-          <div class="col-md-12">
-            {% bootstrap_field add_form.type %}
-          </div>
-          <div class="col-md-12">
-            {% bootstrap_field add_form.internal_external %}
-          </div>
-          <div id="tutor" class="col-md-6">
-            {% bootstrap_field add_form.tutor %}
-          </div>
-          <div id="person" class="col-md-6">
-            {% bootstrap_field add_form.person %}
-          </div>
-          <div class="col-md-6" id="external-person">
-            <div class="panel panel-default">
-              <div class="panel-body">
-                {% bootstrap_field add_form.prenom %}
-                {% bootstrap_field add_form.nom %}
-                {% bootstrap_field add_form.email %}
-                {% bootstrap_field add_form.est_docteur %}
-                {% bootstrap_field add_form.institution %}
-                {% bootstrap_field add_form.ville %}
-                {% bootstrap_field add_form.pays %}
-                {% bootstrap_field add_form.langue %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            {% if admission.statut == 'CA_A_COMPLETER' %}
+              {% translate "Add a CA member" %}
+            {% else %}
+              {% translate "Add a promoter or a CA member" %}
+              {% if admission.type_admission == 'PRE_ADMISSION' %}
+                <a
+                  tabindex="0"
+                  class="fa fa-question-circle popover-buttons"
+                  data-content="<p>{% translate 'The promoters may be changed during the admissions process.' %}</p>"
+                  role="button"
+                ></a>
+              {% endif %}
+            {% endif %}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-12">
+              {% bootstrap_field add_form.type %}
+            </div>
+            <div class="col-md-12">
+              {% bootstrap_field add_form.internal_external %}
+            </div>
+            <div id="tutor" class="col-md-6">
+              {% bootstrap_field add_form.tutor %}
+            </div>
+            <div id="person" class="col-md-6">
+              {% bootstrap_field add_form.person %}
+            </div>
+            <div class="col-md-6" id="external-person">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  {% bootstrap_field add_form.prenom %}
+                  {% bootstrap_field add_form.nom %}
+                  {% bootstrap_field add_form.email %}
+                  {% bootstrap_field add_form.est_docteur %}
+                  {% bootstrap_field add_form.institution %}
+                  {% bootstrap_field add_form.ville %}
+                  {% bootstrap_field add_form.pays %}
+                  {% bootstrap_field add_form.langue %}
+                </div>
               </div>
             </div>
           </div>
+          <button
+            type="submit" class="btn btn-primary"
+            name="add_member_submit"
+          >{% trans "Add" %}</button>
         </div>
-        <button
-          type="submit" class="btn btn-primary"
-          name="add_member_submit"
-        >{% trans "Add" %}</button>
-      {% endpanel %}
+      </div>
     </form>
   {% endif %}
 
@@ -162,6 +176,7 @@
 {% endblock tab_content %}
 
 {% block script %}
+  <script src="{% static 'admission/popover.js' %} "></script>
   {{ add_form.media }}
   {{ approval_form.media }}
   {{ approve_by_pdf_form.media }}

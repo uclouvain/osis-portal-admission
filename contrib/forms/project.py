@@ -284,8 +284,11 @@ class DoctorateAdmissionProjectForm(forms.Form):
     class Media:
         js = ('js/dependsOn.min.js',)
 
-    def __init__(self, hide_proximity_commission_fields=True, *args, **kwargs):
+    def __init__(self, admission_type, hide_proximity_commission_fields=True, *args, **kwargs):
         self.person = getattr(self, 'person', kwargs.pop('person', None))
+        self.admission_type = admission_type
+        self.label_classes = self.get_field_label_classes()
+
         super().__init__(*args, **kwargs)
 
         # Set proximity commission fields value from API data
@@ -367,3 +370,38 @@ class DoctorateAdmissionProjectForm(forms.Form):
         return next(  # pragma: no branch
             d for d in doctorats if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
         )
+
+    def get_field_label_classes(self):
+        """Returns the classes that should be applied to the label of the form fields."""
+
+        possible_mandatory_fields = [
+            'justification',
+            'type_contrat_travail',
+            'eft',
+            'bourse_recherche',
+            'autre_bourse_recherche',
+            'raison_non_soutenue',
+            'titre_projet',
+        ]
+
+        if self.admission_type == AdmissionType.ADMISSION.name:
+            possible_mandatory_fields += [
+                'type_financement',
+                'bourse_date_debut',
+                'bourse_date_fin',
+                'bourse_preuve',
+                'duree_prevue',
+                'temps_consacre',
+                'est_lie_fnrs_fria_fresh_csc',
+                'resume_projet',
+                'documents_projet',
+                'proposition_programme_doctoral',
+                'langue_redaction_these',
+                'projet_doctoral_deja_commence',
+                'projet_doctoral_institution',
+                'projet_doctoral_date_debut',
+                'institution',
+                'domaine_these',
+            ]
+
+        return {field_name: 'required_text' for field_name in possible_mandatory_fields}

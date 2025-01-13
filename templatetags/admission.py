@@ -468,12 +468,13 @@ def has_error_in_tab(context, admission, tab):
 
 
 @register.inclusion_tag('admission/tags/bootstrap_field_with_tooltip.html')
-def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False):
+def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False, label_class=''):
     return {
         'field': field,
         'classes': classes,
         'show_help': show_help,
         'html_tooltip': html_tooltip,
+        'label_class': label_class,
     }
 
 
