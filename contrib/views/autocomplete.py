@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,14 +31,15 @@ from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.utils.translation import get_language, gettext_lazy as _
-from osis_admission_sdk.model.scholarship import Scholarship
+from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
+from osis_reference_sdk.model.scholarship import Scholarship
 from osis_reference_sdk.model.university import University
 from waffle import switch_is_active
 
 from admission.constants import BE_ISO_CODE
-from admission.contrib.enums import TypeFormation, ForeignDiplomaTypes
+from admission.contrib.enums import ForeignDiplomaTypes, TypeFormation
 from admission.contrib.enums.diploma import StudyType
 from admission.contrib.forms import EMPTY_VALUE
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -55,8 +56,8 @@ from admission.services.reference import (
 from admission.utils import (
     format_entity_address,
     format_entity_title,
-    format_school_title,
     format_scholarship,
+    format_school_title,
     format_training,
     format_training_with_year,
 )
@@ -82,6 +83,8 @@ __all__ = [
     "SuperiorInstituteAutocomplete",
     "DiplomaticPostAutocomplete",
 ]
+
+from reference.services.scholarship import ScholarshipService
 
 LANGUAGE_FR = 'FR'
 LANGUAGE_EN = 'EN'
@@ -202,7 +205,7 @@ class ScholarshipAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, au
     urlpatterns = 'scholarship'
 
     def get_list(self):
-        return AdmissionAutocompleteService.get_scholarships(
+        return ScholarshipService.get_scholarships(
             person=self.request.user.person,
             scholarship_type=self.forwarded.get('scholarship_type'),
             search=self.q,

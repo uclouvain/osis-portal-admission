@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,7 +31,9 @@ import phonenumbers
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils.translation import get_language, gettext, gettext_lazy as _, pgettext_lazy
+from django.utils.translation import get_language, gettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileUploadField
 
 from admission.constants import MINIMUM_BIRTH_YEAR
@@ -39,15 +41,15 @@ from admission.services.campus import AdmissionCampusService
 from admission.services.diplomatic_post import AdmissionDiplomaticPostService
 from admission.services.organisation import EntitiesService
 from admission.services.reference import (
-    CountriesService,
-    LanguageService,
     AcademicYearService,
+    CountriesService,
     DiplomaService,
     HighSchoolService,
+    LanguageService,
     SuperiorInstituteService,
 )
-from admission.services.scholarship import AdmissionScholarshipService
-from admission.utils import format_entity_title, format_school_title, format_scholarship
+from admission.utils import format_entity_title, format_scholarship, format_school_title
+from reference.services.scholarship import ScholarshipService
 
 EMPTY_CHOICE = (('', ' - '),)
 EMPTY_VALUE = '__all__'
@@ -181,7 +183,7 @@ def get_scholarship_choices(uuid, person):
     """Return the unique initial choice for the campus."""
     if not uuid:
         return EMPTY_CHOICE
-    scholarship = AdmissionScholarshipService.get_scholarship(
+    scholarship = ScholarshipService.get_scholarship(
         person=person,
         scholarship_uuid=uuid,
     )
