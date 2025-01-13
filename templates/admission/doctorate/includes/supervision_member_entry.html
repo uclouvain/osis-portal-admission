@@ -58,35 +58,37 @@
     </em>
   </div>
 
-  {% if user.is_authenticated and admission|can_make_action:'set_reference_promoter' and type == 'PROMOTER' and member.matricule and member.uuid != supervision.promoteur_reference %}
-    <form method="post" action="{{ set_reference_promoter_url }}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-default" name="set_reference_promoter">
-        <i class="fas fa-angles-up"></i>
-        {% trans "Designate as lead supervisor" %}
+  {% if admission|can_edit_supervision_member:type %}
+    {% if user.is_authenticated and admission|can_make_action:'set_reference_promoter' and type == 'PROMOTER' and member.matricule and member.uuid != supervision.promoteur_reference %}
+      <form method="post" action="{{ set_reference_promoter_url }}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-default" name="set_reference_promoter">
+          <i class="fas fa-angles-up"></i>
+          {% trans "Designate as lead supervisor" %}
+        </button>
+      </form>
+    {% endif %}
+  
+    {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
+      <button
+        type="button"
+        class="btn btn-default pull-right"
+        data-toggle="collapse"
+        data-target="#edit_external_member_form-{{ member.uuid }}"
+      >
+        <i class="fas fa-pencil"></i>
+        {% trans "Edit" %}
       </button>
-    </form>
+    {% endif %}
+  
+    {% if user.is_authenticated and admission|can_make_action:'remove_member' %}
+      <a href="{{ remove_url }}" class="btn btn-danger pull-right">
+        <i class="fas fa-trash-alt"></i>
+        {% trans "Remove" %}
+      </a>
+    {% endif %}
   {% endif %}
-
-  {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
-    <button
-      type="button"
-      class="btn btn-default pull-right"
-      data-toggle="collapse"
-      data-target="#edit_external_member_form-{{ member.uuid }}"
-    >
-      <i class="fas fa-pencil"></i>
-      {% trans "Edit" %}
-    </button>
-  {% endif %}
-
-  {% if user.is_authenticated and admission|can_make_action:'remove_member' %}
-    <a href="{{ remove_url }}" class="btn btn-danger pull-right">
-      <i class="fas fa-trash-alt"></i>
-      {% trans "Remove" %}
-    </a>
-  {% endif %}
-
+  
   {# Action buttons #}
   {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
     {% if type != 'PROMOTER' or member.est_externe %}
@@ -143,25 +145,27 @@
         </form>
       {% endpanel %}
     {% endif %}
-
-    {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
-      {% url 'admission:doctorate:edit-external-member' pk=admission.uuid uuid=member.uuid as edit_external_member_url %}
-      <form method="post" action="{{ edit_external_member_url }}" id="edit_external_member_form-{{ member.uuid }}" class="collapse">
-        {% csrf_token %}
-        {% edit_external_member_form member as edit_external_member_form %}
-        <div class="">
-          <div class="panel panel-default col-md-6">
-            <div class="panel-body">
-              {% bootstrap_form edit_external_member_form %}
-              <button type="submit" class="btn btn-primary pull-right" name="edit_external_member_form">
-                {% trans "Save" context 'admission'  %}
-              </button>
+  
+    {% if admission|can_edit_supervision_member:type %}
+      {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
+        {% url 'admission:doctorate:edit-external-member' pk=admission.uuid uuid=member.uuid as edit_external_member_url %}
+        <form method="post" action="{{ edit_external_member_url }}" id="edit_external_member_form-{{ member.uuid }}" class="collapse">
+          {% csrf_token %}
+          {% edit_external_member_form member as edit_external_member_form %}
+          <div class="">
+            <div class="panel panel-default col-md-6">
+              <div class="panel-body">
+                {% bootstrap_form edit_external_member_form %}
+                <button type="submit" class="btn btn-primary pull-right" name="edit_external_member_form">
+                  {% trans "Save" context 'admission'  %}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      {% endif %}
     {% endif %}
-
+  
     {% if signature.motif_refus and signature.statut == 'DECLINED' %}
       <blockquote><strong>{% trans "Grounds for denied" %}</strong>
         {{ signature.motif_refus|linebreaks }}</blockquote>
