@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -33,10 +33,13 @@ from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.financement import ChoixTypeContratTravail, ChoixTypeFinancement
+from admission.contrib.enums.financement import (
+    ChoixTypeContratTravail,
+    ChoixTypeFinancement,
+)
 from admission.contrib.enums.projet import (
-    ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionContinue,
+    ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionGenerale,
 )
 from admission.contrib.enums.proximity_commission import (
@@ -174,7 +177,7 @@ class ProjectViewTestCase(TestCase):
         self.addCleanup(patcher.stop)
 
         # Mock scholarship sdk api
-        scholarships_api_patcher = patch("osis_admission_sdk.api.scholarship_api.ScholarshipApi")
+        scholarships_api_patcher = patch("osis_reference_sdk.api.scholarship_api.ScholarshipApi")
         self.mock_scholarship_api = scholarships_api_patcher.start()
         self.mock_scholarship_api.return_value.retrieve_scholarship.side_effect = self.get_scholarship
         self.addCleanup(scholarships_api_patcher.stop)

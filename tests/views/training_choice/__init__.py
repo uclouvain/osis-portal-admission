@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,17 +25,22 @@
 # ##############################################################################
 
 import uuid
-from django.test import TestCase
-from unittest.mock import Mock, ANY, patch, MagicMock
+from unittest.mock import ANY, MagicMock, Mock, patch
 
+from django.test import TestCase
+from osis_admission_sdk.model.campus import Campus
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
 )
+from osis_admission_sdk.model.scholarship import Scholarship
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 from admission.contrib.enums import (
-    ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionContinue,
+    ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionGenerale,
 )
 from admission.contrib.enums.scholarship import TypeBourse
@@ -46,11 +51,6 @@ from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
-from osis_admission_sdk.model.campus import Campus
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.scholarship import Scholarship
-from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 
 class AdmissionTrainingChoiceFormViewTestCase(TestCase):
@@ -680,7 +680,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.addCleanup(autocomplete_api_patcher.stop)
 
         # Mock scholarship sdk api
-        scholarships_api_patcher = patch("osis_admission_sdk.api.scholarship_api.ScholarshipApi")
+        scholarships_api_patcher = patch("osis_reference_sdk.api.scholarship_api.ScholarshipApi")
         self.mock_scholarship_api = scholarships_api_patcher.start()
         self.mock_scholarship_api.return_value.retrieve_scholarship.side_effect = self.get_scholarship
         self.addCleanup(scholarships_api_patcher.stop)
