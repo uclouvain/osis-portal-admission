@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.views.generic import FormView
 
@@ -36,11 +35,9 @@ from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
+from admission.services.proposition import PostalCodeBusinessException
 
 __all__ = ['AdmissionCoordonneesFormView']
-
-from admission.services.proposition import PostalCodeBusinessException, AdmissionPropositionService
-from admission.templatetags.admission import can_make_action
 
 
 class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -64,21 +61,6 @@ class AdmissionCoordonneesFormView(LoadDossierViewMixin, WebServiceFormMixin, Fo
         self._error_mapping_contact = {exc.value: field for exc, field in self.error_mapping_contact.items()}
         self._error_mapping_residential = {exc.value: field for exc, field in self.error_mapping_residential.items()}
         super().__init__(*args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        # In case of a creation and if we don't have permission to update the coordinates,
-        # we show the read-only template
-        if not self.admission_uuid:
-            permissions = AdmissionPropositionService.list_proposition_create_permissions(request.user.person)
-            if not can_make_action(permissions, 'create_coordinates'):
-                coordonnees = self.coordonnees
-                context = super().get_context_data(
-                    with_submit=False,
-                    coordonnees=coordonnees,
-                    show_contact=coordonnees['contact'] is not None,
-                )
-                return render(request, 'admission/details/coordonnees.html', context)
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
