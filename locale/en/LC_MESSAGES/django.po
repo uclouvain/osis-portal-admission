@@ -194,6 +194,12 @@ msgstr ""
 msgid "A2"
 msgstr ""
 
+msgid "ACCEPTEE"
+msgstr "Accepted"
+
+msgid "ADMITTED"
+msgstr "Admitted"
+
 msgid "Absence of debt"
 msgstr ""
 
@@ -235,6 +241,15 @@ msgid "Activity type"
 msgstr ""
 
 msgid "Add"
+msgstr ""
+
+msgid "Add a CA member"
+msgstr ""
+
+msgid "Add a conference"
+msgstr ""
+
+msgid "Add a course unit"
 msgstr ""
 
 msgid "Add a language"
@@ -396,6 +411,10 @@ msgstr ""
 msgid "Are you sure you want to request signatures for this admission?"
 msgstr ""
 
+msgid ""
+"Are you sure you want to submit the support committee for this admission?"
+msgstr ""
+
 msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
 
@@ -441,12 +460,6 @@ msgid "Back to page"
 msgstr ""
 
 msgid "Bank account"
-msgstr ""
-
-#, python-format
-msgid ""
-"Because you already submitted an admission, information about coordinates "
-"can not be updated. If you want to update them, please contact %(recipient)s."
 msgstr ""
 
 #, python-format
@@ -659,6 +672,9 @@ msgid "Competent diplomatic post"
 msgstr ""
 
 msgid "Complementary training proposition"
+msgstr ""
+
+msgid "Complete my supervisory panel"
 msgstr ""
 
 msgid "Confirm"
@@ -1984,6 +2000,9 @@ msgstr ""
 msgid "Please enter your work email address"
 msgstr ""
 
+msgid "Please first correct the errors"
+msgstr ""
+
 msgid "Please first correct the erros"
 msgstr ""
 
@@ -2330,6 +2349,20 @@ msgctxt "an admission"
 msgid "Submitted on:"
 msgstr ""
 
+msgid "Submit supervisory panel"
+msgstr ""
+
+msgid "Submit support committee"
+msgstr ""
+
+msgctxt "category"
+msgid "Submitted"
+msgstr ""
+
+msgctxt "publication-status"
+msgid "Submitted"
+msgstr ""
+
 msgid ""
 "Subsidiary protection status is granted to a foreign national who cannot be "
 "considered a refugee but with respect to whom there are serious grounds for "
@@ -2340,7 +2373,19 @@ msgstr ""
 msgid "Supervisor"
 msgstr ""
 
+msgid "Supervisory panel to be completed"
+msgstr ""
+
+msgid "Supervisory panel waiting for signature"
+msgstr ""
+
+msgid "Support Committee minutes"
+msgstr ""
+
 msgid "Support committee"
+msgstr ""
+
+msgid "Support committee submitted"
 msgstr ""
 
 msgid "Surname"
@@ -2460,6 +2505,10 @@ msgid ""
 "<strong>blank background</strong></li>  <li>Centered on your <strong>bare "
 "face</strong></li>  <li>Recent and <strong>in colour</strong></li>  "
 "<li>Without any filter nor any contour</li></ul>"
+msgstr ""
+
+msgid ""
+"The promoters may be changed during the admissions process."
 msgstr ""
 
 msgid ""
