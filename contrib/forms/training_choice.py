@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,9 @@ from django import forms
 from django.conf import settings
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
-from django.utils.translation import get_language, gettext_lazy as _, pgettext_lazy
+from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 from waffle import switch_is_active
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
@@ -51,21 +53,27 @@ from admission.contrib.enums.training_choice import (
     TypeFormation,
     TypeFormationChoisissable,
 )
-from admission.contrib.enums.ways_find_out_about_the_course import ChoixMoyensDecouverteFormation
+from admission.contrib.enums.ways_find_out_about_the_course import (
+    ChoixMoyensDecouverteFormation,
+)
 from admission.contrib.forms import (
     EMPTY_CHOICE,
     EMPTY_VALUE,
     RadioBooleanField,
-    get_campus_choices,
     autocomplete,
+    get_campus_choices,
 )
-from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
+from admission.contrib.forms.project import (
+    COMMISSION_CDSS,
+    COMMISSIONS_CDE_CLSM,
+    SCIENCE_DOCTORATE,
+)
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.continuing_education import ContinuingEducationService
 from admission.services.education_group import TrainingsService
-from admission.services.scholarship import AdmissionScholarshipService
 from admission.utils import format_scholarship, split_training_id
+from reference.services.scholarship import ScholarshipService
 
 
 def get_training(person, training: str):
@@ -385,7 +393,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         for scholarship_name, scholarship_uuid in scholarships.items():
             if scholarship_uuid:
                 self.fields['has_{}'.format(scholarship_name)].initial = True
-                scholarship_obj = AdmissionScholarshipService.get_scholarship(
+                scholarship_obj = ScholarshipService.get_scholarship(
                     person=person,
                     scholarship_uuid=scholarship_uuid,
                 )
