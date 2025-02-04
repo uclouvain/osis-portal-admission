@@ -54,11 +54,12 @@ from admission.contrib.enums import (
     ChoixMoyensDecouverteFormation,
     ChoixAffiliationSport,
     LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE,
+    ActorType, ChoixEtatSignature,
 )
 from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
 from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
 from admission.contrib.forms.supervision import DoctorateAdmissionMemberSupervisionForm
-from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB
+from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB, AdmissionSupervisionService
 from admission.services.reference import CountriesService, LanguageService, SuperiorInstituteService
 from admission.utils import get_uuid_value, to_snake_case, format_academic_year, format_school_title
 from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
@@ -467,12 +468,13 @@ def has_error_in_tab(context, admission, tab):
 
 
 @register.inclusion_tag('admission/tags/bootstrap_field_with_tooltip.html')
-def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False):
+def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False, label_class=''):
     return {
         'field': field,
         'classes': classes,
         'show_help': show_help,
         'html_tooltip': html_tooltip,
+        'label_class': label_class,
     }
 
 
@@ -726,3 +728,30 @@ def get_superior_institute_name(context, organisation_uuid):
         uuid=organisation_uuid,
     )
     return mark_safe(format_school_title(institute))
+
+
+@register.filter
+def can_edit_supervision_member(admission, type):
+    if type == ActorType.PROMOTER.name:
+        return admission.get('statut') == ChoixStatutPropositionDoctorale.EN_BROUILLON.name
+    elif type == ActorType.CA_MEMBER.name:
+        return admission.get('statut') in [
+            ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
+            ChoixStatutPropositionDoctorale.CA_A_COMPLETER.name,
+            ChoixStatutPropositionDoctorale.CA_EN_ATTENTE_DE_SIGNATURE.name,
+        ]
+
+
+@register.simple_tag(takes_context=True)
+def is_ca_all_approved(context, admission):
+    if admission.statut != ChoixStatutPropositionDoctorale.CA_EN_ATTENTE_DE_SIGNATURE.name:
+        return False
+    supervision = AdmissionSupervisionService.get_supervision(
+        person=context['request'].user.person,
+        uuid=admission.uuid,
+    ).to_dict()
+    return all(
+        signature.get('statut') == ChoixEtatSignature.APPROVED.name
+        for signature in supervision.get('signatures_promoteurs', [])
+        + supervision.get('signatures_membres_ca', [])
+    )

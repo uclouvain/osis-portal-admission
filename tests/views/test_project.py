@@ -121,7 +121,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="CDE",
                 links=[],
-                type=TrainingType.FORMATION_PHD.name,
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle='FOOBARBAZ',
@@ -129,7 +129,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion=COMMISSION_CDSS,
                 links=[],
-                type=TrainingType.FORMATION_PHD.name,
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle='BARBAZ',
@@ -137,7 +137,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
-                type=TrainingType.FORMATION_PHD.name,
+                type=TrainingType.PHD.name,
             ),
             Mock(
                 sigle=SCIENCE_DOCTORATE,
@@ -145,7 +145,7 @@ class ProjectViewTestCase(TestCase):
                 annee=2021,
                 sigle_entite_gestion="AZERT",
                 links=[],
-                type=TrainingType.FORMATION_PHD.name,
+                type=TrainingType.PHD.name,
             ),
         ]
         self.addCleanup(autocomplete_api_patcher.stop)
@@ -186,6 +186,74 @@ class ProjectViewTestCase(TestCase):
 
         self.client.force_login(self.person.user)
 
+    def test_get_field_label_classes(self):
+        url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+
+        proposition = self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value
+        proposition.doctorat.sigle = 'FOOBAR'
+        proposition.doctorat.annee = '2021'
+        proposition.code_secteur_formation = 'SSH'
+        proposition.to_dict.return_value = {
+            'code_secteur_formation': "SSH",
+            'type_contrat_travail': "Something",
+            "commission_proximite": ChoixCommissionProximiteCDEouCLSM.ECONOMY.name,
+            "raison_non_soutenue": "A very good reason",
+            'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
+        }
+        proposition.type_admission = AdmissionType.PRE_ADMISSION.name
+
+        response = self.client.get(url)
+
+        form = response.context['form']
+
+        required_fields = {
+            'justification',
+            'type_contrat_travail',
+            'eft',
+            'bourse_recherche',
+            'autre_bourse_recherche',
+            'raison_non_soutenue',
+            'titre_projet',
+        }
+
+        for field in form.fields:
+            self.assertEqual(form.label_classes.get(field), 'required_text' if field in required_fields else None)
+
+        proposition.type_admission = AdmissionType.ADMISSION.name
+
+        response = self.client.get(url)
+
+        form = response.context['form']
+
+        required_fields = {
+            'justification',
+            'type_contrat_travail',
+            'eft',
+            'bourse_recherche',
+            'autre_bourse_recherche',
+            'raison_non_soutenue',
+            'titre_projet',
+            'type_financement',
+            'bourse_date_debut',
+            'bourse_date_fin',
+            'bourse_preuve',
+            'duree_prevue',
+            'temps_consacre',
+            'est_lie_fnrs_fria_fresh_csc',
+            'resume_projet',
+            'documents_projet',
+            'proposition_programme_doctoral',
+            'langue_redaction_these',
+            'projet_doctoral_deja_commence',
+            'projet_doctoral_institution',
+            'projet_doctoral_date_debut',
+            'institution',
+            'domaine_these',
+        }
+
+        for field in form.fields:
+            self.assertEqual(form.label_classes.get(field), 'required_text' if field in required_fields else None)
+
     def test_update(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
@@ -211,7 +279,7 @@ class ProjectViewTestCase(TestCase):
                 'sigle': 'FOOBARBAZ',
                 'annee': '2021',
                 'code_secteur_formation': "SSH",
-                'type': TrainingType.FORMATION_PHD.name,
+                'type': TrainingType.PHD.name,
             },
             'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
             "commission_proximite": ChoixCommissionProximiteCDSS.ECLI.name,
