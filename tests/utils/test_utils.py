@@ -35,7 +35,7 @@ from admission.utils import *
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.scholarship import Scholarship
+from osis_reference_sdk.model.scholarship import Scholarship
 
 
 class UtilsTestCase(TestCase):
@@ -165,6 +165,7 @@ class UtilsTestCase(TestCase):
             type=TrainingType.PHD.name,
             campus_inscription='Mons',
             code='FOOBAR',
+            intitule_entite_gestion='Commission',
         )
         self.assertEqual(
             format_training(formation),
