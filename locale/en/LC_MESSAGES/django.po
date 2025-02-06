@@ -1899,9 +1899,6 @@ msgstr ""
 msgid "Other programme"
 msgstr ""
 
-msgid "PARTIAL"
-msgstr "Partially"
-
 msgid "PDF file"
 msgstr ""
 
@@ -2108,9 +2105,6 @@ msgstr ""
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr ""
 
-msgid "Proximity Commission for Genetics and Immunology (GIM)"
-msgstr ""
-
 msgid "Proximity Commission for Motricity Sciences (MOTR)"
 msgstr ""
 
@@ -2124,7 +2118,8 @@ msgid "Proximity commission / Subdomain"
 msgstr ""
 
 msgid ""
-"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+"Proximity commission for biochemistry, cellular and molecular biology, "
+"genetics, immunology (BCGIM)"
 msgstr ""
 
 msgid "Proximity commission for experimental and clinical research (ECLI)"
@@ -2517,7 +2512,7 @@ msgstr ""
 msgid "Thesis language"
 msgstr ""
 
-msgid "Thesis location"
+msgid "Thesis location in UCLouvain"
 msgstr ""
 
 msgid "This account number has been verified"
