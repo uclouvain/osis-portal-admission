@@ -100,6 +100,12 @@ textarea {
   gap: 1em;
 }
 
+.flex-container-align-no-wrap-no-space {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
 .flex-container-no-wrap > * {
   flex: 1;
 }
@@ -420,4 +426,8 @@ body, html {
 .fst-bold-underline {
   text-decoration: underline;
   font-weight: 700;
+}
+
+.overflow-auto {
+  overflow: auto;
 }

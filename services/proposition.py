@@ -735,7 +735,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def get_signature_conditions(cls, person, uuid) -> SupervisionDTO:
+    def get_signature_conditions(cls, person, uuid) -> List:
         return APIClient().retrieve_verify_project(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
