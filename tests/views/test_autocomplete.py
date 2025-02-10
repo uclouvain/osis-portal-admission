@@ -34,7 +34,7 @@ from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.scholarship import Scholarship
+from osis_reference_sdk.model.scholarship import Scholarship
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
@@ -80,6 +80,7 @@ class AutocompleteTestCase(TestCase):
                 type=TrainingType.PHD.name,
                 campus_inscription='Mons',
                 code='CODE',
+                intitule_entite_gestion='Commission',
             ),
         ]
         url = reverse('admission:autocomplete:doctorate')
@@ -544,7 +545,7 @@ class AutocompleteTestCase(TestCase):
         ]
         self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
 
-    @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
+    @patch('osis_reference_sdk.api.scholarship_api.ScholarshipApi')
     def test_autocomplete_scholarship(self, api):
         first_scholarship_uuid = str(uuid.uuid4())
         second_scholarship_uuid = str(uuid.uuid4())
