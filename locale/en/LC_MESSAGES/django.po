@@ -194,12 +194,6 @@ msgstr ""
 msgid "A2"
 msgstr ""
 
-msgid "ACCEPTEE"
-msgstr "Accepted"
-
-msgid "ADMITTED"
-msgstr "Admitted"
-
 msgid "Absence of debt"
 msgstr ""
 
@@ -244,12 +238,6 @@ msgid "Add"
 msgstr ""
 
 msgid "Add a CA member"
-msgstr ""
-
-msgid "Add a conference"
-msgstr ""
-
-msgid "Add a course unit"
 msgstr ""
 
 msgid "Add a language"
@@ -1096,6 +1084,9 @@ msgid "European Research Council (ERC)"
 msgstr ""
 
 msgid "Evaluation system"
+msgstr ""
+
+msgid "Existing pre-admission"
 msgstr ""
 
 msgid "Exit without saving"
@@ -2345,22 +2336,14 @@ msgstr ""
 msgid "Submit selected activities"
 msgstr ""
 
-msgctxt "an admission"
-msgid "Submitted on:"
-msgstr ""
-
 msgid "Submit supervisory panel"
 msgstr ""
 
 msgid "Submit support committee"
 msgstr ""
 
-msgctxt "category"
-msgid "Submitted"
-msgstr ""
-
-msgctxt "publication-status"
-msgid "Submitted"
+msgctxt "an admission"
+msgid "Submitted on:"
 msgstr ""
 
 msgid ""
@@ -2377,9 +2360,6 @@ msgid "Supervisory panel to be completed"
 msgstr ""
 
 msgid "Supervisory panel waiting for signature"
-msgstr ""
-
-msgid "Support Committee minutes"
 msgstr ""
 
 msgid "Support committee"
@@ -2507,8 +2487,7 @@ msgid ""
 "<li>Without any filter nor any contour</li></ul>"
 msgstr ""
 
-msgid ""
-"The promoters may be changed during the admissions process."
+msgid "The promoters may be changed during the admissions process."
 msgstr ""
 
 msgid ""
@@ -2798,6 +2777,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Would you like to create an admission request following a pre-admission "
+"request?"
+msgstr ""
+
+msgid ""
 "Would you like to enter an account number so that we can issue a refund?"
 msgstr ""
 
@@ -2850,6 +2834,10 @@ msgid "Yes, an account number in IBAN format"
 msgstr ""
 
 msgid "Yes, an account number in another format"
+msgstr ""
+
+#, python-format
+msgid "Yes, for the doctorate %(doctorate_name)s"
 msgstr ""
 
 #, python-format

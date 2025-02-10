@@ -191,6 +191,12 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def get_doctorate_pre_admission_propositions(cls, person: Person) -> List:
+        return APIClient().list_doctorate_pre_admissions(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def get_supervised_propositions(cls, person: Person):
         return APIClient().list_supervised_propositions(
             **build_mandatory_auth_headers(person),

@@ -23,10 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from unittest import mock
 import json
+from unittest.mock import mock_open
 
 from django.shortcuts import resolve_url
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
@@ -776,6 +778,19 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
             }
         ]
         self.assertEqual(form.fields['doctorate_training'].widget.attrs['data-data'], json.dumps(expected))
+
+    def test_redirection_if_the_related_action_is_forbidden(self):
+        with mock.patch.object(self.doctorate_proposition, 'links', {}):
+            self.mock_proposition_api.return_value.retrieve_doctorate_proposition.side_effect = None
+            self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = (
+                self.doctorate_proposition
+            )
+            response = self.client.get(self.url)
+
+            self.assertRedirects(
+                response=response,
+                expected_url=reverse('admission:doctorate:training-choice', args=[self.doctorate_proposition.uuid]),
+            )
 
     def test_form_submitting_missing_training_type_field(self):
         response = self.client.post(self.url)
