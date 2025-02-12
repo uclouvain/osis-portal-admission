@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,13 +24,22 @@
 #
 # ##############################################################################
 from django.shortcuts import redirect
+from django.utils.translation import gettext
 from django.views.generic import FormView
 
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
-from admission.contrib.forms.supervision import ACTOR_EXTERNAL, DoctorateAdmissionSupervisionForm, EXTERNAL_FIELDS
+from admission.contrib.forms.supervision import (
+    ACTOR_EXTERNAL,
+    EXTERNAL_FIELDS,
+    DoctorateAdmissionSupervisionForm,
+)
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionSupervisionService
+from admission.services.proposition import (
+    TAB_OF_BUSINESS_EXCEPTION,
+    AdmissionSupervisionService,
+)
+from admission.templatetags.admission import TAB_TREES, can_read_tab
 
 __all__ = [
     "DoctorateAdmissionSupervisionFormView",
@@ -48,10 +57,13 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
             uuid=self.admission_uuid,
         )
         context['supervision'] = supervision
-        context['signature_conditions'] = AdmissionSupervisionService.get_signature_conditions(
+        signature_conditions = AdmissionSupervisionService.get_signature_conditions(
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
+        signatures_conditions_by_tab = self.format_signature_conditions(signature_conditions)
+        context['signature_conditions'] = signatures_conditions_by_tab
+        context['signature_conditions_number'] = len(signature_conditions)
         context['add_form'] = context.pop('form')  # Trick template to not add button
         context['all_approved'] = all(
             signature.get('statut') == ChoixEtatSignature.APPROVED.name
@@ -87,3 +99,33 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
 
     def call_webservice(self, data):
         return AdmissionSupervisionService.add_member(person=self.person, uuid=self.admission_uuid, **data)
+
+    def format_signature_conditions(self, conditions):
+        """
+        Group the missing conditions by tab
+        @param conditions:
+        @return:
+        """
+        tabs_labels = {
+            tab.name: tab.label
+            for child_tabs in TAB_TREES['doctorate'].values()
+            for tab in child_tabs
+            if can_read_tab(self.admission, tab)
+        }
+
+        conditions_by_tab = {}
+
+        for condition in conditions:
+            tab_name = TAB_OF_BUSINESS_EXCEPTION.get(condition['status_code'])
+
+            tab_label = tabs_labels.get(tab_name, gettext('Other'))
+
+            if tab_label not in conditions_by_tab:
+                conditions_by_tab[tab_label] = {}
+
+            if condition['status_code'] not in conditions_by_tab[tab_label]:
+                conditions_by_tab[tab_label][condition['status_code']] = []
+
+            conditions_by_tab[tab_label][condition['status_code']].append(condition['detail'])
+
+        return conditions_by_tab

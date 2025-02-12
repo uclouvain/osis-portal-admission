@@ -7,7 +7,7 @@
     * The core business involves the administration of students, teachers,
     * courses, programs and so on.
     *
-    * Copyright (C) 2015-2024 Université catholique de Louvain
+    * Copyright (C) 2015-2025 Université catholique de Louvain
     (http://www.uclouvain.be)
     *
     * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@
     role="dialog"
     aria-labelledby="request-signatures-label"
 >
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button
@@ -48,15 +48,41 @@
                 </h4>
             </div>
 
-            {% if signature_conditions %}
-                <div class="modal-body">
+            {% if signature_conditions_number %}
+                <div class="modal-body overflow-auto" style="max-height: 70vh;">
                     <p>
                         {% trans "You must correct your application before you can request signatures." %}
                     </p>
                     <div class="alert alert-danger" role="alert">
-                        <ul>
-                            {% for error in signature_conditions %}
-                                <li> {{ error.detail }} </li>
+                        <ul id="signature-condition-container">
+                            {% for tab_name, conditions in signature_conditions.items %}
+                                <li class="signature-condition-tab">
+                                  <span class="fst-bold-underline">{{ tab_name }}</span>
+                                  <ul>
+                                    {% for condition_code, condition_details in conditions.items %}
+                                      {% if condition_code == 'PROPOSITION-35' %}
+                                        <li>
+                                          {% blocktranslate trimmed count nb=condition_details|length %}
+                                            The following period must be justified in the curriculum:
+                                            {% plural %}
+                                            The following periods must be justified in the curriculum:
+                                          {% endblocktranslate %}
+                                          <ul>
+                                            {% for condition_detail in condition_details %}
+                                              <li>{{ condition_detail }}</li>
+                                            {% endfor %}
+                                          </ul>
+                                        </li>
+                                      {% else %}
+                                        {% for condition_detail in condition_details %}
+                                          <li>
+                                            {{ condition_detail }}
+                                          </li>
+                                        {% endfor %}
+                                      {% endif %}
+                                    {% endfor %}
+                                  </ul>
+                                </li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -82,7 +108,7 @@
                         <p>
                             {% trans "Are you sure you want to request signatures for this admission?" %}
                         </p>
-                        <div class="alert alert-warning flex-container-align-no-wrap">
+                        <div class="alert alert-warning flex-container-align-no-wrap-no-space">
                           <i class="fa fa-solid fa-warning" aria-hidden="true"></i>
                           <p>
                             {% translate 'Once the signatures request is sent, you will not be able to change anything in your application for admission.' %}
