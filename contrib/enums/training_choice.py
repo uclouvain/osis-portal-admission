@@ -92,6 +92,8 @@ class TrainingType(ChoiceEnum):
     MASTER_MS_180_240 = "Master MS 180-240"
     MASTER_M1 = "Master in 60 credits"
     MASTER_MC = "Master of specialist"
+    MASTER_M4 = "Master in 120 credits FIE section 4"
+    MASTER_M5 = "Master in 60 credits FIE section 5"
     INTERNSHIP = "Internship"
 
 
@@ -109,6 +111,8 @@ OSIS_ADMISSION_EDUCATION_TYPES_MAPPING = {
         TrainingType.MASTER_MS_180_240.name,
         TrainingType.MASTER_M1.name,
         TrainingType.MASTER_MC.name,
+        TrainingType.MASTER_M4.name,
+        TrainingType.MASTER_M5.name,
     ],
     TypeFormation.DOCTORAT.name: [
         TrainingType.PHD.name,
