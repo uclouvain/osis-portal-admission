@@ -45,7 +45,8 @@
         {{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}
       </div>
     </div>
-    <div>
+    <div class="admission-flex-column">
+      {% if admission.type_admission == 'ADMISSION' %}<span class="badge badge-primary">{% translate 'Admission' %}</span>{% endif %}
       {% if admission.pre_admission_associee %}<span class="badge badge-info">{% translate 'Existing pre-admission' %}</span>{% endif %}
     </div>
   </div>

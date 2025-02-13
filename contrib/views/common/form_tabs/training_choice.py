@@ -228,6 +228,7 @@ class AdmissionTrainingChoiceFormView(
                 'doctorate_training': get_training_id(self.admission.doctorat),
                 'proximity_commission': self.admission.commission_proximite,
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
+                'campus': self.admission.doctorat.campus_uuid,
             }
         elif self.current_context == 'general-education':
             training_id = get_training_id(self.admission.formation)
@@ -250,6 +251,7 @@ class AdmissionTrainingChoiceFormView(
                     self.admission.bourse_erasmus_mundus and self.admission.bourse_erasmus_mundus.uuid
                 ),
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
+                'campus': self.admission.formation.campus_uuid,
             }
         elif self.current_context == 'continuing-education':
             return {
@@ -259,4 +261,5 @@ class AdmissionTrainingChoiceFormView(
                 'ways_to_find_out_about_the_course': self.admission.moyens_decouverte_formation,
                 'other_way_to_find_out_about_the_course': self.admission.autre_moyen_decouverte_formation,
                 'interested_mark': self.admission.marque_d_interet,
+                'campus': self.admission.formation.campus_uuid,
             }

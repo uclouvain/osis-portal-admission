@@ -157,7 +157,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=forms.Textarea(
             attrs={
                 'rows': 2,
-                'placeholder': _("Reasons for provisional admission."),
+                'placeholder': _("Reasons for pre-admission."),
             }
         ),
         required=False,

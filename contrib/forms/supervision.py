@@ -138,7 +138,7 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
         widget=forms.RadioSelect(),
     )
     tutor = forms.CharField(
-        label=_("Search a tutor by name"),
+        label=_("Search a person by surname"),
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:tutor",
         ),
