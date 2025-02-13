@@ -91,6 +91,9 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr ""
 
+msgid "(Expected) graduation date (signed diploma)"
+msgstr ""
+
 msgid ":"
 msgstr ""
 
@@ -1092,9 +1095,6 @@ msgstr ""
 msgid "Exit without saving"
 msgstr ""
 
-msgid "Expected graduation date (signed diploma)"
-msgstr ""
-
 msgid "External"
 msgstr ""
 
@@ -1106,11 +1106,11 @@ msgid ""
 "for a maximum period of 12 months. Recourse to a pre-admission phase must be "
 "justified, the objectives to be achieved planned and the duration of the pre-"
 "admission period fixed in accordance with them. Unless exceptionally "
-"authorised by the CSD, FRIA or FNRS scholarship holders and, in general, "
-"doctoral candidates engaged in a research project that has already been "
-"defined, are not authorised to take a pre-admission phase for a doctorate.\" "
-"<br /> Please also consult the special provisions of the field for all pre-"
-"admission conditions."
+"authorised by the domain doctoral committee, FRIA or FNRS scholarship "
+"holders and, in general, doctoral candidates engaged in a research project "
+"that has already been defined, are not authorised to take a pre-admission "
+"phase for a doctorate.\" <br /> Please also consult the special provisions "
+"of the field for all pre-admission conditions."
 msgstr ""
 "Extract from the Doctoral Regulations (Article 2.1):<br /> « Pre-admission "
 "is an optional stage of the doctoral programme. It aims to allow the "
@@ -1119,7 +1119,7 @@ msgstr ""
 "for a maximum period of 12 months. Recourse to a pre-admission phase must be "
 "justified, the objectives to be achieved planned and the duration of the pre-"
 "admission period fixed in accordance with them. Unless exceptionally "
-"authorised by the CSD, FRIA or FNRS scholarship holders and, in general, "
+"authorised by the domain doctoral committee, FRIA or FNRS scholarship holders and, in general, "
 "doctoral candidates engaged in a research project that has already been "
 "defined, are not authorised to take a pre-admission phase for a doctorate. » "
 "<br /> Please also consult the special provisions of the field for all pre-"
@@ -1511,7 +1511,7 @@ msgstr ""
 msgid "Institution"
 msgstr ""
 
-msgid "Institution in which the PhD has been realised / started."
+msgid "Institution in which the PhD thesis has been realised / started"
 msgstr ""
 
 msgid "Internal"
@@ -2137,7 +2137,7 @@ msgstr ""
 msgid "Rank in diploma"
 msgstr ""
 
-msgid "Reasons for provisional admission."
+msgid "Reasons for pre-admission."
 msgstr ""
 
 msgid "Recent CPAS certificate of coverage"
@@ -2168,11 +2168,11 @@ msgstr ""
 msgid "Required documents are missing."
 msgstr ""
 
-msgid "Research institute"
+msgctxt "tab name"
+msgid "Research"
 msgstr ""
 
-msgctxt "tab name"
-msgid "Research project"
+msgid "Research institute"
 msgstr ""
 
 msgid "Research scholarship"
@@ -2219,9 +2219,6 @@ msgid "Scholarship start date"
 msgstr ""
 
 msgid "Search a person by surname"
-msgstr ""
-
-msgid "Search a tutor by name"
 msgstr ""
 
 msgid ""
@@ -2504,9 +2501,6 @@ msgstr ""
 
 #, python-format
 msgid "The type of the admission form item is unknown (%(type)s)."
-msgstr ""
-
-msgid "Thesis field"
 msgstr ""
 
 msgid "Thesis language"
