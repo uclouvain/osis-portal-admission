@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,16 +29,13 @@ from django.views.generic import FormView
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.experience_precedente import ChoixDoctoratDejaRealise
 from admission.contrib.enums.financement import ChoixTypeFinancement
-from admission.contrib.forms.project import (
-    COMMISSIONS_CDE_CLSM,
-    COMMISSION_CDSS,
-    DoctorateAdmissionProjectForm,
-    SCIENCE_DOCTORATE,
-)
+from admission.contrib.forms.project import DoctorateAdmissionProjectForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionPropositionService, PropositionBusinessException
+from admission.services.proposition import (
+    AdmissionPropositionService,
+    PropositionBusinessException,
+)
 
 __all__ = ['DoctorateAdmissionProjectFormView']
 
@@ -48,7 +45,6 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
     proposition = None
     error_mapping = {
         PropositionBusinessException.JustificationRequiseException: 'justification',
-        PropositionBusinessException.ProximityCommissionInconsistantException: None,
         PropositionBusinessException.ContratTravailInconsistantException: 'type_contrat_travail',
         PropositionBusinessException.DoctoratNonTrouveException: 'doctorate',
         PropositionBusinessException.InstitutionInconsistanteException: 'institution',
@@ -67,11 +63,6 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
             raise PermissionDenied(self.admission.links['update_project']['error'])
         return {
             **self.admission.to_dict(),
-            'sector': self.admission.code_secteur_formation,
-            'doctorate': "{sigle}-{annee}".format(
-                sigle=self.admission.doctorat.sigle,
-                annee=self.admission.doctorat.annee,
-            ),
             'bourse_recherche': self.admission.bourse_recherche and self.admission.bourse_recherche.uuid,
         }
 
@@ -97,7 +88,6 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
 
         if data['doctorat_deja_realise'] not in [
             ChoixDoctoratDejaRealise.YES.name,
-            ChoixDoctoratDejaRealise.PARTIAL.name,
         ]:
             data['institution'] = ''
             data['domaine_these'] = ''
@@ -110,28 +100,8 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
         else:
             data['raison_non_soutenue'] = ''
 
-        data['commission_proximite'] = (
-            data.get('commission_proximite_cde') or data.get('commission_proximite_cdss') or data.get('sous_domaine')
-        )
-        data.pop('commission_proximite_cde')
-        data.pop('commission_proximite_cdss')
-        data.pop('sous_domaine')
-
         return data
 
     def call_webservice(self, data):
         data['uuid'] = self.admission_uuid
         AdmissionPropositionService.update_proposition(person=self.person, **data)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['COMMISSIONS_CDE_CLSM'] = COMMISSIONS_CDE_CLSM
-        context['COMMISSION_CDSS'] = COMMISSION_CDSS
-        context['SCIENCE_DOCTORATE'] = SCIENCE_DOCTORATE
-        # Lookup sector label from API
-        context['sector_label'] = [
-            s.intitule
-            for s in AdmissionAutocompleteService.get_sectors(self.request.user.person)
-            if s.sigle == self.admission.code_secteur_formation
-        ][0]
-        return context

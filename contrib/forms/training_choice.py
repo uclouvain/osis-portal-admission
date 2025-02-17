@@ -25,7 +25,7 @@
 # ##############################################################################
 
 import json
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 from dal import forward
 from django import forms
@@ -157,7 +157,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         widget=forms.Textarea(
             attrs={
                 'rows': 2,
-                'placeholder': _("Reasons for provisional admission."),
+                'placeholder': _("Reasons for pre-admission."),
             }
         ),
         required=False,

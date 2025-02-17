@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -42,9 +42,9 @@
             the administrative and social formalities that would require a prior registration for the doctorate. [...]
             Pre-admission is valid for a maximum period of 12 months. Recourse to a pre-admission phase must be
             justified, the objectives to be achieved planned and the duration of the pre-admission period fixed in
-            accordance with them. Unless exceptionally authorised by the CSD, FRIA or FNRS scholarship holders and, in
-            general, doctoral candidates engaged in a research project that has already been defined, are not
-            authorised to take a pre-admission phase for a doctorate."
+            accordance with them. Unless exceptionally authorised by the domain doctoral committee, FRIA or FNRS
+            scholarship holders and, in general, doctoral candidates engaged in a research project that has already
+            been defined, are not authorised to take a pre-admission phase for a doctorate."
             <br /> Please also consult the special provisions of the field for all pre-admission conditions.
           {% endblocktrans %}
         </p>
@@ -64,28 +64,13 @@
         </div>
       </div>
     {% else %}
-      {% field_data _("Sector") sector_label %}
+      {% field_data _("Sector") admission.intitule_secteur_formation %}
       {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
       {% field_data _("PhD") doctorate_title %}
       {% if admission.commission_proximite %}
         {% field_data _("Proximity commission / Subdomain") admission.commission_proximite|enum_display:'ChoixCommissionProximiteCDEouCLSM'|enum_display:'ChoixCommissionProximiteCDSS'|enum_display:'ChoixSousDomaineSciences' %}
       {% endif %}
     {% endif %}
-    <div class="row" id="commission_proximite_cde">
-      <div class="col-md-6">
-        {% bootstrap_field form.commission_proximite_cde %}
-      </div>
-    </div>
-    <div class="row" id="commission_proximite_cdss">
-      <div class="col-md-9">
-        {% bootstrap_field form.commission_proximite_cdss %}
-      </div>
-    </div>
-    <div class="row" id="sous_domaine">
-      <div class="col-md-6">
-        {% bootstrap_field form.sous_domaine %}
-      </div>
-    </div>
   {% endpanel %}
 
   {% panel _("Funding") %}
@@ -203,83 +188,6 @@
       $('#justification').dependsOn({
         'input[name=type_admission]': { values: ['PRE_ADMISSION'] },
       });
-        
-      // When a value is already set in select2, it won't be replaced by
-      // ajax call, so we compare the data to evaluate if CDE is present
-      {% if form.doctorate_data %}
-        const initialData = {{ form.doctorate_data|safe }};
-      {% else %}
-        const initialData = false;
-      {% endif %}
-
-      // Install dependsOn condition after select2 has been initiliazed
-      {# // TODO when using DAL 3.8.2 #}
-      {# $(document).on('dal-init-function', function (e) { #}
-      setTimeout(function () {
-
-        // Reset doctorate when changing sector
-        $('#id_sector').change(function () {
-          $('#id_doctorate').val(null).trigger('change');
-        });
-        // Doctorate depends on sector
-        $('#doctorate').dependsOn({
-          '#id_sector': { not: [''] },
-        });
-
-        // proximity commission depends on doctorate
-        $('#commission_proximite_cde').dependsOn({
-          '#id_doctorate': {
-            changed: function () {
-              var $doctorate = $('#id_doctorate');
-              if ($doctorate.hasClass('select2-hidden-accessible')) {
-                var data = $doctorate.select2('data')
-                if (initialData && data.length && data[0].id === initialData.id) {
-                  data = [initialData];
-                }
-                var commissions = {{ COMMISSIONS_CDE_CLSM|safe }};
-                if (data.length && commissions.includes(data[0].sigle_entite_gestion)) {
-                  return true;
-                }
-              }
-            },
-          },
-        }, { valueOnDisable: '' });
-
-        $('#commission_proximite_cdss').dependsOn({
-          '#id_doctorate': {
-            changed: function () {
-              var $doctorate = $('#id_doctorate');
-              if ($doctorate.hasClass('select2-hidden-accessible')) {
-                var data = $doctorate.select2('data')
-                if (initialData && data.length && data[0].id === initialData.id) {
-                  data = [initialData];
-                }
-                if (data.length && data[0].sigle_entite_gestion === '{{ COMMISSION_CDSS }}') {
-                  return true;
-                }
-              }
-            },
-          },
-        }, { valueOnDisable: '' });
-
-        $('#sous_domaine').dependsOn({
-          '#id_doctorate': {
-            changed: function () {
-              var $doctorate = $('#id_doctorate');
-              if ($doctorate.hasClass('select2-hidden-accessible')) {
-                var data = $doctorate.select2('data')
-                if (initialData && data.length && data[0].id === initialData.id) {
-                  data = [initialData];
-                }
-                if (data.length && data[0].sigle === '{{ SCIENCE_DOCTORATE }}') {
-                  return true;
-                }
-              }
-            },
-          },
-        }, { valueOnDisable: '' });
-
-      });
     {% endif %}
 
     $('#work').dependsOn({
@@ -295,7 +203,7 @@
       '#id_type_financement': { not: [''] },
     });
     $('#previous_experience').dependsOn({
-      '#id_doctorat_deja_realise': { values: ['YES', 'PARTIAL'] },
+      '#id_doctorat_deja_realise': { values: ['YES'] },
     });
     $('#non-soutenue').dependsOn({
       '#id_non_soutenue': { checked: true },

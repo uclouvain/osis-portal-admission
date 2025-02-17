@@ -402,6 +402,14 @@ body, html {
   margin-top: 1em;
 }
 
+.admission-flex-column {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.5em;
+  align-items: flex-start
+}
+
 /* Style utility classes */
 .fw-bold {
   font-weight: 700;

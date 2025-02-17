@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -33,10 +33,8 @@ from dal import forward
 from django import forms
 from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
-from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
-
-from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
-from admission.utils import mark_safe_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy as __
 from osis_document.contrib.widgets import HiddenFileWidget
 
 from admission.constants import (
@@ -45,28 +43,26 @@ from admission.constants import (
     LINGUISTIC_REGIMES_WITHOUT_TRANSLATION,
     MINIMUM_YEAR,
 )
-
+from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.training_choice import TrainingType
+from admission.contrib.forms import EMPTY_CHOICE, FORM_SET_PREFIX
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
-    EMPTY_CHOICE,
-    get_country_initial_choices,
-    get_past_academic_years_choices,
     CustomDateInput,
-    get_language_initial_choices,
+    NoInput,
+    RadioBooleanField,
+    autocomplete,
+    get_country_initial_choices,
     get_diploma_initial_choices,
     get_example_text,
-    RadioBooleanField,
+    get_language_initial_choices,
+    get_past_academic_years_choices,
     get_superior_institute_initial_choices,
-    FORM_SET_PREFIX,
-    NoInput,
-    AdmissionFileUploadField as FileUploadField,
-    autocomplete,
 )
-
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
-
+from admission.utils import mark_safe_lazy
 
 CurriculumField = partial(
     FileUploadField,
@@ -503,7 +499,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     expected_graduation_date = forms.DateField(
         help_text=_('Date on which you expect to graduate.'),
-        label=_('Expected graduation date (signed diploma)'),
+        label=_('(Expected) graduation date (signed diploma)'),
         required=False,
         widget=CustomDateInput(),
     )
@@ -627,8 +623,6 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
             for field in [
                 'obtained_grade',
                 'expected_graduation_date',
-                'dissertation_title',
-                'dissertation_score',
             ]:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)

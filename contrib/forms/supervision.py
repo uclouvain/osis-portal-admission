@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,16 +25,17 @@
 # ##############################################################################
 from django import forms
 from django.conf import settings
-from django.utils.translation import gettext_lazy as _, pgettext_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.contrib.enums.actor import ActorType
 from admission.contrib.enums.supervision import DecisionApprovalEnum
+from admission.contrib.forms import EMPTY_CHOICE
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
     autocomplete,
-    AdmissionFileUploadField as FileUploadField,
-    EMPTY_CHOICE,
     get_country_initial_choices,
     get_thesis_institute_initial_choices,
 )
@@ -137,13 +138,6 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
         initial="INTERNAL",
         widget=forms.RadioSelect(),
     )
-    tutor = forms.CharField(
-        label=_("Search a tutor by name"),
-        widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:tutor",
-        ),
-        required=False,
-    )
     person = forms.CharField(
         label=_("Search a person by surname"),
         widget=autocomplete.ListSelect2(
@@ -162,12 +156,7 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
     def clean(self):
         data = self.cleaned_data
         is_external = data.get('internal_external') == ACTOR_EXTERNAL
-        if not is_external and (
-            data.get('type') == ActorType.CA_MEMBER.name
-            and not data.get('person')
-            or data.get('type') == ActorType.PROMOTER.name
-            and not data.get('tutor')
-        ):
+        if not is_external and not data.get('person'):
             self.add_error(None, _("You must reference a person in UCLouvain."))
         elif is_external:
             self.clean_external_fields(data)
