@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,17 +25,14 @@
 # ##############################################################################
 
 import uuid
-from django.test import TestCase
 from unittest.mock import Mock, ANY, patch, MagicMock
 
-from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
-from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
-    InformationsSpecifiquesFormationContinueDTO,
-)
+from django.test import TestCase
+from osis_reference_sdk.model.scholarship import Scholarship
 
 from admission.contrib.enums import (
-    ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionContinue,
+    ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionGenerale,
 )
 from admission.contrib.enums.scholarship import TypeBourse
@@ -46,10 +43,19 @@ from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
+
 from osis_admission_sdk.model.campus import Campus
+from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.model.doctorate_pre_admission_search_dto import DoctoratePreAdmissionSearchDTO
+from osis_admission_sdk.model.doctorate_pre_admission_search_dto_doctorat import DoctoratePreAdmissionSearchDTODoctorat
+from osis_admission_sdk.model.doctorate_pre_admission_search_dto_doctorat_campus import (
+    DoctoratePreAdmissionSearchDTODoctoratCampus,
+)
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.scholarship import Scholarship
+from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+    InformationsSpecifiquesFormationContinueDTO,
+)
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 
@@ -481,7 +487,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             proposition_programme_doctoral=[],
             projet_formation_complementaire=[],
             lettres_recommandation=[],
-            links={'update_project': {'url': 'ok'}},
+            links={'update_project': {'url': 'ok'}, 'update_training_choice': {'url': 'ok'}},
             commission_proximite='MANAGEMENT',
             statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             reponses_questions_specifiques={
@@ -639,6 +645,60 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             Campus._from_openapi_data(name='Mons', uuid=cls.mons_campus_uuid),
         ]
 
+        cls.doctorate_pre_admissions = [
+            DoctoratePreAdmissionSearchDTO._from_openapi_data(
+                uuid=str(uuid.uuid4()),
+                reference='1',
+                doctorat=DoctoratePreAdmissionSearchDTODoctorat._from_openapi_data(
+                    sigle='S-1',
+                    code='C-1',
+                    annee=2024,
+                    intitule='Doctorat 1',
+                    sigle_entite_gestion='SEG-1',
+                    campus=DoctoratePreAdmissionSearchDTODoctoratCampus._from_openapi_data(
+                        uuid=cls.campuses[0].uuid,
+                        nom=cls.campuses[0].name,
+                    ),
+                ),
+                code_secteur_formation='SSH',
+                intitule_secteur_formation='ISF-1',
+            ),
+            DoctoratePreAdmissionSearchDTO._from_openapi_data(
+                uuid=str(uuid.uuid4()),
+                reference='2',
+                doctorat=DoctoratePreAdmissionSearchDTODoctorat._from_openapi_data(
+                    sigle='S-2',
+                    code='C-2',
+                    annee=2024,
+                    intitule='Doctorat 2',
+                    sigle_entite_gestion='SEG-2',
+                    campus=DoctoratePreAdmissionSearchDTODoctoratCampus._from_openapi_data(
+                        uuid=cls.campuses[1].uuid,
+                        nom=cls.campuses[1].name,
+                    ),
+                ),
+                code_secteur_formation='SST',
+                intitule_secteur_formation='ISF-2',
+            ),
+            DoctoratePreAdmissionSearchDTO._from_openapi_data(
+                uuid=str(uuid.uuid4()),
+                reference='3',
+                doctorat=DoctoratePreAdmissionSearchDTODoctorat._from_openapi_data(
+                    sigle='S-3',
+                    code='C-3',
+                    annee=2024,
+                    intitule='Doctorat 3',
+                    sigle_entite_gestion='SEG-3',
+                    campus=DoctoratePreAdmissionSearchDTODoctoratCampus._from_openapi_data(
+                        uuid=cls.campuses[0].uuid,
+                        nom=cls.campuses[0].name,
+                    ),
+                ),
+                code_secteur_formation='SST',
+                intitule_secteur_formation='ISF-3',
+            ),
+        ]
+
     def setUp(self):
         # Mock proposition sdk api
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -680,7 +740,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.addCleanup(autocomplete_api_patcher.stop)
 
         # Mock scholarship sdk api
-        scholarships_api_patcher = patch("osis_admission_sdk.api.scholarship_api.ScholarshipApi")
+        scholarships_api_patcher = patch("osis_reference_sdk.api.scholarship_api.ScholarshipApi")
         self.mock_scholarship_api = scholarships_api_patcher.start()
         self.mock_scholarship_api.return_value.retrieve_scholarship.side_effect = self.get_scholarship
         self.addCleanup(scholarships_api_patcher.stop)

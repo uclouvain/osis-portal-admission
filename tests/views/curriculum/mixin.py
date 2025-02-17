@@ -286,6 +286,7 @@ class MixinTestCase(TestCase):
                 campus="Mons",
                 type=TrainingType.PHD.name,
                 campus_inscription="Mons",
+                intitule_entite_gestion='Commission',
             ),
             matricule_candidat=cls.person.global_id,
             code_secteur_formation='CS',

@@ -27,9 +27,6 @@ from unittest.mock import MagicMock
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
-from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
-    InformationsSpecifiquesFormationContinueDTO,
-)
 from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
@@ -38,6 +35,9 @@ from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.enums.training_choice import TypeFormation
 from admission.contrib.forms import EMPTY_VALUE
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
+from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+    InformationsSpecifiquesFormationContinueDTO,
+)
 
 
 @override_switch('admission-doctorat', active=True)
@@ -667,6 +667,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
         self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
+                'pre_admission_associee': '',
                 'type_admission': AdmissionType.PRE_ADMISSION.name,
                 'sigle_formation': 'SC3DP',
                 'annee_formation': 2020,
@@ -700,6 +701,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
         self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
+                'pre_admission_associee': '',
                 'type_admission': AdmissionType.ADMISSION.name,
                 'sigle_formation': 'TR3',
                 'annee_formation': 2020,
@@ -733,12 +735,162 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
         self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
             initier_proposition_command={
+                'pre_admission_associee': '',
                 'type_admission': AdmissionType.ADMISSION.name,
                 'sigle_formation': 'TR4',
                 'annee_formation': 2020,
                 'matricule_candidat': self.person.global_id,
                 'justification': '',
                 'commission_proximite': 'ECLI',
+            },
+            **self.default_kwargs,
+        )
+
+        self.assertRedirects(
+            response,
+            resolve_url('admission:doctorate:update:training-choice', pk=self.proposition_uuid),
+        )
+
+    def test_doctorate_education_form_initialization_after_a_pre_admission(self):
+        default_choices = [['NO', _('No')]]
+
+        self.mock_proposition_api.return_value.list_doctorate_pre_admissions.return_value = []
+
+        # Without pre-admissions
+        response = self.client.get(self.url)
+
+        form = response.context['form']
+
+        self.assertEqual(form.fields['related_pre_admission'].disabled, True)
+        self.assertEqual(form.fields['related_pre_admission'].choices, default_choices)
+
+        # With pre-admissions
+        self.mock_proposition_api.return_value.list_doctorate_pre_admissions.return_value = (
+            self.doctorate_pre_admissions
+        )
+
+        response = self.client.get(self.url)
+
+        form = response.context['form']
+
+        self.assertEqual(form.fields['related_pre_admission'].disabled, False)
+        self.assertEqual(
+            form.fields['related_pre_admission'].choices,
+            default_choices
+            + [
+                [
+                    current_pre_admission.uuid,
+                    _('Yes, for the doctorate %(doctorate_name)s')
+                    % {
+                        'doctorate_name': f'{current_pre_admission.doctorat.sigle} - '
+                        f'{current_pre_admission.doctorat.intitule} '
+                        f'({current_pre_admission.doctorat.campus.nom})'
+                    },
+                ]
+                for current_pre_admission in self.doctorate_pre_admissions
+            ],
+        )
+
+    def test_doctorate_education_form_submitting_after_a_pre_admission_with_missing_data(self):
+        self.mock_proposition_api.return_value.list_doctorate_pre_admissions.return_value = (
+            self.doctorate_pre_admissions
+        )
+
+        response = self.client.post(
+            self.url,
+            data={
+                'training_type': TypeFormation.DOCTORAT.name,
+                'campus': EMPTY_VALUE,
+                'sector': 'SSH',
+                'admission_type': AdmissionType.ADMISSION.name,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+
+        self.assertEqual(form.is_valid(), False)
+        self.assertFormError(form, 'related_pre_admission', FIELD_REQUIRED_MESSAGE)
+
+    def test_doctorate_education_form_submitting_after_a_pre_admission_with_pre_admission_of_another_sector(self):
+        self.mock_proposition_api.return_value.list_doctorate_pre_admissions.return_value = (
+            self.doctorate_pre_admissions
+        )
+
+        response = self.client.post(
+            self.url,
+            data={
+                'training_type': TypeFormation.DOCTORAT.name,
+                'campus': EMPTY_VALUE,
+                'sector': self.doctorate_pre_admissions[1].code_secteur_formation,
+                'admission_type': AdmissionType.ADMISSION.name,
+                'related_pre_admission': self.doctorate_pre_admissions[0].uuid,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+
+        self.assertEqual(form.is_valid(), False)
+        self.assertFormError(form, 'related_pre_admission', FIELD_REQUIRED_MESSAGE)
+
+    def test_doctorate_education_form_submitting_after_a_pre_admission_with_pre_admission_of_another_campus(self):
+        self.mock_proposition_api.return_value.list_doctorate_pre_admissions.return_value = (
+            self.doctorate_pre_admissions
+        )
+
+        response = self.client.post(
+            self.url,
+            data={
+                'training_type': TypeFormation.DOCTORAT.name,
+                'campus': self.doctorate_pre_admissions[2].doctorat.campus.uuid,
+                'sector': self.doctorate_pre_admissions[1].code_secteur_formation,
+                'admission_type': AdmissionType.ADMISSION.name,
+                'related_pre_admission': self.doctorate_pre_admissions[1].uuid,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+
+        self.assertEqual(form.is_valid(), False)
+        self.assertFormError(form, 'related_pre_admission', FIELD_REQUIRED_MESSAGE)
+
+    def test_doctorate_education_form_submitting_after_a_pre_admission_with_a_valid_pre_admission(self):
+        self.mock_proposition_api.return_value.list_doctorate_pre_admissions.return_value = (
+            self.doctorate_pre_admissions
+        )
+
+        response = self.client.post(
+            self.url,
+            data={
+                'training_type': TypeFormation.DOCTORAT.name,
+                'campus': self.doctorate_pre_admissions[1].doctorat.campus.uuid,
+                'sector': self.doctorate_pre_admissions[1].code_secteur_formation,
+                'admission_type': AdmissionType.ADMISSION.name,
+                'related_pre_admission': self.doctorate_pre_admissions[1].uuid,
+                'sigle_formation': 'TR4',
+                'annee_formation': 2020,
+                'science_sub_domain': 'MATHEMATICS',
+                'proximity_commission_cde': 'ECONOMY',
+                'proximity_commission_cdss': 'ECLI',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        self.mock_proposition_api.return_value.create_doctorate_training_choice.assert_called_with(
+            initier_proposition_command={
+                'pre_admission_associee': self.doctorate_pre_admissions[1].uuid,
+                'type_admission': AdmissionType.ADMISSION.name,
+                'matricule_candidat': self.person.global_id,
+                'sigle_formation': '',
+                'annee_formation': None,
+                'justification': '',
+                'commission_proximite': '',
             },
             **self.default_kwargs,
         )
