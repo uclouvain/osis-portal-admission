@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,11 @@ from django.shortcuts import redirect
 from django.views.generic import FormView
 
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
-from admission.contrib.forms.supervision import ACTOR_EXTERNAL, DoctorateAdmissionSupervisionForm, EXTERNAL_FIELDS
+from admission.contrib.forms.supervision import (
+    ACTOR_EXTERNAL,
+    EXTERNAL_FIELDS,
+    DoctorateAdmissionSupervisionForm,
+)
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import AdmissionSupervisionService
@@ -73,12 +77,13 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
 
     def prepare_data(self, data):
         is_external = data.pop('internal_external') == ACTOR_EXTERNAL
-        promoter = data.pop('tutor')
-        ca_member = data.pop('person')
-        matricule = (ca_member if data['type'] == ActorType.CA_MEMBER.name else promoter) if not is_external else ""
+        person = data.pop('person')
         if not is_external:
+            matricule = person
             # Remove data about external actor
             data = {**data, **{f: '' for f in EXTERNAL_FIELDS}}
+        else:
+            matricule = ''
         return {
             'type': data['type'],
             'matricule': matricule,

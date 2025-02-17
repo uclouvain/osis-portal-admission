@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@
         </button>
       </form>
     {% endif %}
-  
+
     {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
       <button
         type="button"
@@ -80,7 +80,7 @@
         {% trans "Edit" %}
       </button>
     {% endif %}
-  
+
     {% if user.is_authenticated and admission|can_make_action:'remove_member' %}
       <a href="{{ remove_url }}" class="btn btn-danger pull-right">
         <i class="fas fa-trash-alt"></i>
@@ -88,7 +88,7 @@
       </a>
     {% endif %}
   {% endif %}
-  
+
   {# Action buttons #}
   {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
     {% if type != 'PROMOTER' or member.est_externe %}
@@ -145,7 +145,7 @@
         </form>
       {% endpanel %}
     {% endif %}
-  
+
     {% if admission|can_edit_supervision_member:type %}
       {% if user.is_authenticated and admission|can_make_action:'edit_external_member' and member.est_externe %}
         {% url 'admission:doctorate:edit-external-member' pk=admission.uuid uuid=member.uuid as edit_external_member_url %}
@@ -155,7 +155,18 @@
           <div class="">
             <div class="panel panel-default col-md-6">
               <div class="panel-body">
-                {% bootstrap_form edit_external_member_form %}
+                {% csrf_token %}
+                {% bootstrap_form_errors edit_external_member_form %}
+
+                {% bootstrap_field edit_external_member_form.prenom form_group_class="form-group required_field" %}
+                {% bootstrap_field edit_external_member_form.nom form_group_class="form-group required_field" %}
+                {% bootstrap_field edit_external_member_form.email form_group_class="form-group required_field" %}
+                {% bootstrap_field edit_external_member_form.est_docteur %}
+                {% bootstrap_field edit_external_member_form.institution form_group_class="form-group required_field" %}
+                {% bootstrap_field edit_external_member_form.ville form_group_class="form-group required_field" %}
+                {% bootstrap_field edit_external_member_form.pays form_group_class="form-group required_field" %}
+                {% bootstrap_field edit_external_member_form.langue form_group_class="form-group required_field" %}
+
                 <button type="submit" class="btn btn-primary pull-right" name="edit_external_member_form">
                   {% trans "Save" context 'admission'  %}
                 </button>
@@ -165,7 +176,7 @@
         </form>
       {% endif %}
     {% endif %}
-  
+
     {% if signature.motif_refus and signature.statut == 'DECLINED' %}
       <blockquote><strong>{% trans "Grounds for denied" %}</strong>
         {{ signature.motif_refus|linebreaks }}</blockquote>

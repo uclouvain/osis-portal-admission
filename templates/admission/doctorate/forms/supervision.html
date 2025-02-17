@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -114,23 +114,20 @@
             <div class="col-md-12">
               {% bootstrap_field add_form.internal_external %}
             </div>
-            <div id="tutor" class="col-md-6">
-              {% bootstrap_field add_form.tutor %}
-            </div>
-            <div id="person" class="col-md-6">
+            <div id="person" class="col-md-6 required_field">
               {% bootstrap_field add_form.person %}
             </div>
             <div class="col-md-6" id="external-person">
               <div class="panel panel-default">
                 <div class="panel-body">
-                  {% bootstrap_field add_form.prenom %}
-                  {% bootstrap_field add_form.nom %}
-                  {% bootstrap_field add_form.email %}
+                  {% bootstrap_field add_form.prenom form_group_class="form-group required_field" %}
+                  {% bootstrap_field add_form.nom form_group_class="form-group required_field" %}
+                  {% bootstrap_field add_form.email form_group_class="form-group required_field" %}
                   {% bootstrap_field add_form.est_docteur %}
-                  {% bootstrap_field add_form.institution %}
-                  {% bootstrap_field add_form.ville %}
-                  {% bootstrap_field add_form.pays %}
-                  {% bootstrap_field add_form.langue %}
+                  {% bootstrap_field add_form.institution form_group_class="form-group required_field" %}
+                  {% bootstrap_field add_form.ville form_group_class="form-group required_field" %}
+                  {% bootstrap_field add_form.pays form_group_class="form-group required_field" %}
+                  {% bootstrap_field add_form.langue form_group_class="form-group required_field" %}
                 </div>
               </div>
             </div>
@@ -184,11 +181,7 @@
   $(function () {
     // Display autocompletion based on member type
     $('#person').length && $('#person').dependsOn({
-      'input[name=type]': { values: ['CA_MEMBER'] },
-      'input[name=internal_external]': { values: ['INTERNAL'] },
-    }, { duration: 0 });
-    $('#tutor').length && $('#tutor').dependsOn({
-      'input[name=type]': { values: ['MAIN_PROMOTER', 'PROMOTER'] },
+      'input[name=type]': { values: ['CA_MEMBER', 'MAIN_PROMOTER', 'PROMOTER'] },
       'input[name=internal_external]': { values: ['INTERNAL'] },
     }, { duration: 0 });
 

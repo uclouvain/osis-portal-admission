@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,10 @@ from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
 from base.tests.factories.person import PersonFactory
-from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
+from frontoffice.settings.osis_sdk.utils import (
+    ApiBusinessException,
+    MultipleApiBusinessException,
+)
 
 
 @override_settings(ADMISSION_TOKEN_EXTERNAL='api-token-external')
@@ -193,7 +196,7 @@ class SupervisionTestCase(TestCase):
         response = self.client.get(self.update_url)
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(self.update_url, {'type': ActorType.CA_MEMBER.name, 'tutor': "0123456978"})
+        response = self.client.post(self.update_url, {'type': ActorType.CA_MEMBER.name})
         self.assertEqual(response.status_code, 200)
         self.assertIn('__all__', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
@@ -218,7 +221,7 @@ class SupervisionTestCase(TestCase):
         )
         self.mock_api.return_value.add_member.reset_mock()
 
-        response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name, 'person': "0123456978"})
+        response = self.client.post(self.update_url, {'type': ActorType.PROMOTER.name})
         self.assertEqual(response.status_code, 200)
         self.assertIn('__all__', response.context['add_form'].errors)
         self.mock_api.return_value.add_member.assert_not_called()
@@ -226,7 +229,7 @@ class SupervisionTestCase(TestCase):
         data = {
             'type': ActorType.PROMOTER.name,
             'internal_external': "INTERNAL",
-            'tutor': "0123456978",
+            'person': "0123456978",
             'email': "test@test.fr",
         }
         response = self.client.post(self.update_url, data)
@@ -267,7 +270,7 @@ class SupervisionTestCase(TestCase):
         data = {
             'type': ActorType.PROMOTER.name,
             'internal_external': ACTOR_EXTERNAL,
-            'tutor': "0123456978",
+            'person': "0123456978",
             **external_data,
         }
         response = self.client.post(self.update_url, data)

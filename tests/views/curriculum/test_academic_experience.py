@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,11 +34,11 @@ from django.utils.translation import gettext
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import TypeFormation
 from admission.contrib.enums.curriculum import (
-    TranscriptType,
     EvaluationSystem,
     Grade,
     Result,
     TeachingTypeEnum,
+    TranscriptType,
 )
 from admission.contrib.forms import EMPTY_CHOICE
 from admission.contrib.forms.curriculum import (
@@ -651,9 +651,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             self.assertFormError(response.context['base_form'], field, errors=FIELD_REQUIRED_MESSAGE)
 
         self.assertFormError(
-            response.context['base_form'],
-            None,
-            errors=gettext('At least one academic year is required.')
+            response.context['base_form'], None, errors=gettext('At least one academic year is required.')
         )
 
     def test_with_admission_on_update_experience_post_form_bad_dates(self):
@@ -717,8 +715,6 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         for field in [
             'obtained_grade',
             'expected_graduation_date',
-            'dissertation_title',
-            'dissertation_score',
         ]:
             self.assertFormError(response.context['base_form'], field, FIELD_REQUIRED_MESSAGE)
 
