@@ -2296,6 +2296,12 @@ msgctxt "admission"
 msgid "Single"
 msgstr ""
 
+msgid ""
+"Some experiences (academic education or activities) in your curriculum "
+"cannot be modified. If you wish to modify one of these experiences, please "
+"add an identical experience in which you fill in the correct information."
+msgstr ""
+
 msgid "Speaking ability"
 msgstr ""
 
@@ -2437,18 +2443,6 @@ msgid "The application will be updated soon to take that into account."
 msgstr ""
 
 msgid "The contact address I provided"
-msgstr ""
-
-#, python-format
-msgid ""
-"The data related to this academic course can no longer be updated. To make "
-"changes, please contact %(recipient)s."
-msgstr ""
-
-#, python-format
-msgid ""
-"The data related to this non-academic activity can no longer be updated. To "
-"make changes, please contact %(recipient)s."
 msgstr ""
 
 #, python-format

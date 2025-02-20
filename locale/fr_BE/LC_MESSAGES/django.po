@@ -2629,6 +2629,16 @@ msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
 
+msgid ""
+"Some experiences (academic education or activities) in your curriculum "
+"cannot be modified. If you wish to modify one of these experiences, please "
+"add an identical experience in which you fill in the correct information."
+msgstr ""
+"Certaines expériences (formations ou activités) de votre curriculum ne "
+"sont pas modifiables. Si vous souhaitez modifier l’une de ces expériences, "
+"veuillez ajouter une expérience identique dans laquelle vous renseignerez "
+"les informations correctes."
+
 msgid "Speaking ability"
 msgstr "Parler"
 
@@ -2795,24 +2805,6 @@ msgstr ""
 
 msgid "The contact address I provided"
 msgstr "L'adresse de correspondance que j'ai fournie"
-
-#, python-format
-msgid ""
-"The data related to this academic course can no longer be updated. To make "
-"changes, please contact %(recipient)s."
-msgstr ""
-"Les informations relatives à cette formation académique ne sont plus "
-"modifiables. Si vous souhaitez y apporter des modifications, merci de "
-"contacter %(recipient)s."
-
-#, python-format
-msgid ""
-"The data related to this non-academic activity can no longer be updated. To "
-"make changes, please contact %(recipient)s."
-msgstr ""
-"Les informations relatives à cette activité non-académique ne sont plus "
-"modifiables. Si vous souhaitez y apporter des modifications, merci de "
-"contacter %(recipient)s."
 
 #, python-format
 msgid ""
