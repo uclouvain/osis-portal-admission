@@ -1982,10 +1982,7 @@ msgstr ""
 msgid "Please correct the errors below"
 msgstr ""
 
-#, python-format
-msgid ""
-"Please enter all academic courses you have attended. For non-academic "
-"activities, please enter all those that have taken place since %(date)s."
+msgid "Please enter all academic courses you have attended."
 msgstr ""
 
 msgid "Please enter your work email address"
