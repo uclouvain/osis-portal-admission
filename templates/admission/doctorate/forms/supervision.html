@@ -96,10 +96,15 @@
             {% else %}
               {% translate "Add a promoter or a CA member" %}
               {% if admission.type_admission == 'PRE_ADMISSION' %}
+                {% blocktranslate trimmed asvar pre_admission_tooltip %}
+                  Pre-admission is open to any candidate who has a PhD thesis supervisor, in the person of a staff
+                  member of the UCLouvain. This respondent may be different from that of the thesis sponsor, whose
+                  name must be communicated at the time of final admission to the doctoral programme.
+                {% endblocktranslate %}
                 <a
                   tabindex="0"
                   class="fa fa-question-circle popover-buttons"
-                  data-content="<p>{% translate 'The promoters may be changed during the admissions process.' %}</p>"
+                  data-content="<p>{{ pre_admission_tooltip }}</p>"
                   role="button"
                 ></a>
               {% endif %}
