@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,50 +25,49 @@
 # ##############################################################################
 
 import uuid
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, Mock, patch
 
-from django.core.exceptions import ImproperlyConfigured
 from django import forms
+from django.core.exceptions import ImproperlyConfigured
 from django.template import Context, Template
 from django.test import RequestFactory, TestCase
 from django.test.utils import override_settings
 from django.urls import resolve
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
+from osis_admission_sdk.exceptions import UnauthorizedException
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 from admission.contrib.enums import (
+    ChoixAffiliationSport,
+    ChoixMoyensDecouverteFormation,
+    ChoixStatutPropositionContinue,
     ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionGenerale,
-    ChoixStatutPropositionContinue,
     TrainingType,
-    ChoixMoyensDecouverteFormation,
-    ChoixAffiliationSport,
 )
 from admission.contrib.enums.specific_question import TypeItemFormulaire
 from admission.contrib.forms import PDF_MIME_TYPE, AdmissionFileUploadField
 from admission.templatetags.admission import (
     TAB_TREES,
     Tab,
+    admission_status,
     can_make_action,
     can_read_tab,
     can_update_tab,
     display,
-    get_valid_tab_tree,
-    has_error_in_tab,
-    strip,
-    multiple_field_data,
-    interpolate,
-    admission_status,
-    value_if_all,
-    value_if_any,
     form_fields_are_empty,
     format_ways_to_find_out_about_the_course,
-    sport_affiliation_value,
+    get_valid_tab_tree,
+    has_error_in_tab,
+    interpolate,
+    multiple_field_data,
+    strip,
+    value_if_all,
+    value_if_any,
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
-from osis_admission_sdk.exceptions import UnauthorizedException
-from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 
 class TemplateTagsTestCase(TestCase):
@@ -512,46 +511,6 @@ class DisplayTagTestCase(TestCase):
 
         self.assertTrue(
             form_fields_are_empty(form, 'boolean_field', 'char_field', 'integer_field', 'float_field', 'file_field'),
-        )
-
-    def test_sport_affiliation_value(self):
-        self.assertEqual(
-            sport_affiliation_value(None, None),
-            '',
-        )
-
-        self.assertEqual(
-            sport_affiliation_value(None, 'Louvain-la-Neuve'),
-            '',
-        )
-
-        self.assertEqual(
-            sport_affiliation_value(ChoixAffiliationSport.LOUVAIN_WOLUWE.name, None),
-            ChoixAffiliationSport.LOUVAIN_WOLUWE.value,
-        )
-
-        self.assertEqual(
-            sport_affiliation_value(ChoixAffiliationSport.LOUVAIN_WOLUWE.name, 'Bruxelles Woluwe'),
-            ChoixAffiliationSport.LOUVAIN_WOLUWE.value,
-        )
-
-        for campus in [
-            None,
-            '',
-            'Bruxelles Saint-Gilles',
-            'Bruxelles Woluwe',
-            'Louvain-la-Neuve',
-            'Mons',
-            'Tournai',
-        ]:
-            self.assertEqual(
-                sport_affiliation_value(ChoixAffiliationSport.NON.name, campus),
-                ChoixAffiliationSport.NON.value,
-            )
-
-        self.assertEqual(
-            sport_affiliation_value(ChoixAffiliationSport.NON.name, 'Bruxelles Saint-Louis'),
-            _('No (access to sports facilities on the Saint-Louis campus is free)'),
         )
 
 
