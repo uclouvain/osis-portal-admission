@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import re
 from contextlib import suppress
 from dataclasses import dataclass
 from inspect import getfullargspec
-from typing import Union, Optional
+from typing import Union
 
 from bootstrap3.forms import render_field
 from bootstrap3.renderers import FieldRenderer
@@ -42,28 +42,50 @@ from django.shortcuts import resolve_url
 from django.template.defaultfilters import unordered_list
 from django.test import override_settings
 from django.utils.safestring import SafeString, mark_safe
-from django.utils.translation import get_language, gettext_lazy as _, pgettext, pgettext_lazy
+from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext
+from osis_admission_sdk.exceptions import (
+    ForbiddenException,
+    NotFoundException,
+    UnauthorizedException,
+)
+from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums import (
-    ChoixStatutPropositionDoctorale,
-    IN_PROGRESS_STATUSES,
-    ChoixStatutPropositionGenerale,
-    ChoixStatutPropositionContinue,
     ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE,
+    IN_PROGRESS_STATUSES,
+    ActorType,
+    ChoixEtatSignature,
     ChoixMoyensDecouverteFormation,
-    ChoixAffiliationSport,
-    LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE,
-    ActorType, ChoixEtatSignature,
+    ChoixStatutPropositionContinue,
+    ChoixStatutPropositionDoctorale,
+    ChoixStatutPropositionGenerale,
 )
-from admission.contrib.enums.specific_question import TYPES_ITEMS_LECTURE_SEULE, TypeItemFormulaire
-from admission.contrib.enums.training_choice import ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE
+from admission.contrib.enums.specific_question import (
+    TYPES_ITEMS_LECTURE_SEULE,
+    TypeItemFormulaire,
+)
+from admission.contrib.enums.training_choice import (
+    ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE,
+)
 from admission.contrib.forms.supervision import DoctorateAdmissionMemberSupervisionForm
-from admission.services.proposition import BUSINESS_EXCEPTIONS_BY_TAB, AdmissionSupervisionService
-from admission.services.reference import CountriesService, LanguageService, SuperiorInstituteService
-from admission.utils import get_uuid_value, to_snake_case, format_academic_year, format_school_title
-from osis_admission_sdk.exceptions import ForbiddenException, NotFoundException, UnauthorizedException
-from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
+from admission.services.proposition import (
+    BUSINESS_EXCEPTIONS_BY_TAB,
+    AdmissionSupervisionService,
+)
+from admission.services.reference import (
+    CountriesService,
+    LanguageService,
+    SuperiorInstituteService,
+)
+from admission.utils import (
+    format_academic_year,
+    format_school_title,
+    get_uuid_value,
+    to_snake_case,
+)
 
 register = template.Library()
 
@@ -687,24 +709,14 @@ def format_ways_to_find_out_about_the_course(proposition):
     """
     return unordered_list(
         [
-            ChoixMoyensDecouverteFormation.get_value(way)
-            if way != ChoixMoyensDecouverteFormation.AUTRE.name
-            else proposition.autre_moyen_decouverte_formation or ChoixMoyensDecouverteFormation.AUTRE.value
+            (
+                ChoixMoyensDecouverteFormation.get_value(way)
+                if way != ChoixMoyensDecouverteFormation.AUTRE.name
+                else proposition.autre_moyen_decouverte_formation or ChoixMoyensDecouverteFormation.AUTRE.value
+            )
             for way in proposition.moyens_decouverte_formation
         ]
     )
-
-
-@register.filter
-def sport_affiliation_value(affiliation: Optional[str], campus_name: Optional[str]) -> str:
-    """Return the label of the sport affiliation based on the affiliation value and the campus."""
-    if not affiliation:
-        return ''
-
-    if not campus_name or affiliation != ChoixAffiliationSport.NON.name:
-        return ChoixAffiliationSport.get_value(affiliation)
-
-    return LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE.get(campus_name, ChoixAffiliationSport.NON.value)
 
 
 @register.simple_tag(takes_context=True)
@@ -752,6 +764,5 @@ def is_ca_all_approved(context, admission):
     ).to_dict()
     return all(
         signature.get('statut') == ChoixEtatSignature.APPROVED.name
-        for signature in supervision.get('signatures_promoteurs', [])
-        + supervision.get('signatures_membres_ca', [])
+        for signature in supervision.get('signatures_promoteurs', []) + supervision.get('signatures_membres_ca', [])
     )
