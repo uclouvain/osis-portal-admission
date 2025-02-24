@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,10 @@ from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
 from base.tests.factories.person import PersonFactory
-from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
+from frontoffice.settings.osis_sdk.utils import (
+    ApiBusinessException,
+    MultipleApiBusinessException,
+)
 
 
 @override_settings(ADMISSION_TOKEN_EXTERNAL='api-token-external')
@@ -476,7 +479,7 @@ class SupervisionTestCase(TestCase):
                 'add_member': {'url': 'ok'},
             }
         )
-        self.mock_api.return_value.retrieve_verify_project.return_value = [{'detail': "Nope"}]
+        self.mock_api.return_value.retrieve_verify_project.return_value = [{'detail': "Nope", 'status_code': '1'}]
         response = self.client.get(self.update_url)
         self.assertEqual(response.status_code, 200)
         self.mock_api.return_value.retrieve_verify_project.assert_called()
