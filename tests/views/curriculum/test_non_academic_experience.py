@@ -49,7 +49,7 @@ class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
         # Check the request
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
-        self.assertFalse("ne sont pas modifiables" in response.rendered_content)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
 
         # Check that the right API calls are done
         self.mock_person_api.return_value.retrieve_professional_experience_admission.assert_called()
@@ -71,7 +71,7 @@ class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, 200)
-        self.assertTrue("ne sont pas modifiables" in response.rendered_content)
+        self.assertTrue("n'est pas modifiable" in response.rendered_content)
 
     def test_with_admission_on_reading_experience_valuated_by_admission(self):
         mock_retrieve = self.mock_person_api.return_value.retrieve_professional_experience_admission
@@ -87,7 +87,7 @@ class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
 
         # Check the request
         self.assertEqual(response.status_code, 200)
-        self.assertTrue("ne sont pas modifiables" in response.rendered_content)
+        self.assertTrue("n'est pas modifiable" in response.rendered_content)
 
 
 @freezegun.freeze_time('2023-01-01')

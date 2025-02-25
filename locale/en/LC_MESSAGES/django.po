@@ -2296,12 +2296,6 @@ msgctxt "admission"
 msgid "Single"
 msgstr ""
 
-msgid ""
-"Some experiences (academic education or activities) in your curriculum "
-"cannot be modified. If you wish to modify one of these experiences, please "
-"add an identical experience in which you fill in the correct information."
-msgstr ""
-
 msgid "Speaking ability"
 msgstr ""
 
@@ -2514,6 +2508,12 @@ msgstr ""
 msgid "Thesis location"
 msgstr ""
 
+msgid ""
+"This academic course in your curriculum cannot be modified. If you wish to "
+"modify it, please add an identical academic course in which you fill in the "
+"correct information."
+msgstr ""
+
 msgid "This account number has been verified"
 msgstr ""
 
@@ -2546,6 +2546,12 @@ msgid "This field must be less that {length} characters."
 msgstr ""
 
 msgid "This language is set more than once."
+msgstr ""
+
+msgid ""
+"This non-academic activity in your curriculum cannot be modified. If you "
+"wish to modify it, please add an identical non-academic activity in which "
+"you fill in the correct information."
 msgstr ""
 
 msgid "This value may not exceed the number of registered credits"
