@@ -2629,16 +2629,6 @@ msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
 
-msgid ""
-"Some experiences (academic education or activities) in your curriculum "
-"cannot be modified. If you wish to modify one of these experiences, please "
-"add an identical experience in which you fill in the correct information."
-msgstr ""
-"Certaines expériences (formations ou activités) de votre curriculum ne "
-"sont pas modifiables. Si vous souhaitez modifier l’une de ces expériences, "
-"veuillez ajouter une expérience identique dans laquelle vous renseignerez "
-"les informations correctes."
-
 msgid "Speaking ability"
 msgstr "Parler"
 
@@ -2895,6 +2885,15 @@ msgstr "Langue de rédaction de la thèse"
 msgid "Thesis location"
 msgstr "Lieu de la thèse"
 
+msgid ""
+"This academic course in your curriculum cannot be modified. If you wish to "
+"modify it, please add an identical academic course in which you fill in the "
+"correct information."
+msgstr ""
+"Cette formation académique de votre curriculum n'est pas modifiable. Si "
+"vous souhaitez la modifier, veuillez ajouter une formation académique "
+"identique dans laquelle vous renseignerez les informations correctes."
+
 msgid "This account number has been verified"
 msgstr "Ce numéro a été vérifié"
 
@@ -2934,6 +2933,15 @@ msgstr "Ce champ doit faire moins de {length} caractères."
 
 msgid "This language is set more than once."
 msgstr "Cette langue est définie plusieurs fois."
+
+msgid ""
+"This non-academic activity in your curriculum cannot be modified. If you "
+"wish to modify it, please add an identical non-academic activity in which "
+"you fill in the correct information."
+msgstr ""
+"Cette activité non-académique de votre curriculum n'est pas modifiable. Si "
+"vous souhaitez la modifier, veuillez ajouter une activité non-académique "
+"identique dans laquelle vous renseignerez les informations correctes."
 
 msgid "This value may not exceed the number of registered credits"
 msgstr "Cette valeur ne peut être supérieure au nombre de crédits inscrits"
