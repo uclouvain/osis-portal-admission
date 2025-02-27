@@ -2282,14 +2282,9 @@ msgstr "Merci de spécifier une valeur pour le champ suivant : {}"
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
 
-#, python-format
-msgid ""
-"Please enter all academic courses you have attended. For non-academic "
-"activities, please enter all those that have taken place since %(date)s."
-msgstr ""
-"Veuillez renseigner toutes les formations académiques que vous avez "
-"réalisées. Pour les activités non-académiques, veuillez encoder toutes "
-"celles qui ont eu lieu depuis %(date)s."
+msgid "Please enter all academic courses you have attended."
+msgstr "Veuillez renseigner toutes les formations académiques que vous avez "
+"réalisées."
 
 msgid "Please enter your work email address"
 msgstr "Veuillez encoder votre adresse e-mail-professionnelle"
