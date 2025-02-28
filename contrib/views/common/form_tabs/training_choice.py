@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 from typing import Optional
 
 from django.contrib import messages
-from django.shortcuts import resolve_url, redirect
+from django.shortcuts import redirect, resolve_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
@@ -37,10 +37,17 @@ from admission.contrib.enums.training_choice import (
     TYPES_FORMATION_GENERALE,
     TypeFormation,
 )
-from admission.contrib.forms.project import COMMISSIONS_CDE_CLSM, COMMISSION_CDSS, SCIENCE_DOCTORATE
+from admission.contrib.forms.project import (
+    COMMISSION_CDSS,
+    COMMISSIONS_CDE_CLSM,
+    SCIENCE_DOCTORATE,
+)
 from admission.contrib.forms.training_choice import TrainingChoiceForm, get_training
 from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
+from admission.services.mixins import (
+    FormMixinWithSpecificQuestions,
+    WebServiceFormMixin,
+)
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
 from admission.templatetags.admission import can_make_action
@@ -228,6 +235,7 @@ class AdmissionTrainingChoiceFormView(
                 'doctorate_training': get_training_id(self.admission.doctorat),
                 'proximity_commission': self.admission.commission_proximite,
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
+                'campus': self.admission.doctorat['campus_uuid'],
             }
         elif self.current_context == 'general-education':
             training_id = get_training_id(self.admission.formation)
@@ -250,6 +258,7 @@ class AdmissionTrainingChoiceFormView(
                     self.admission.bourse_erasmus_mundus and self.admission.bourse_erasmus_mundus.uuid
                 ),
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
+                'campus': self.admission.formation['campus_uuid'],
             }
         elif self.current_context == 'continuing-education':
             return {
@@ -259,4 +268,5 @@ class AdmissionTrainingChoiceFormView(
                 'ways_to_find_out_about_the_course': self.admission.moyens_decouverte_formation,
                 'other_way_to_find_out_about_the_course': self.admission.autre_moyen_decouverte_formation,
                 'interested_mark': self.admission.marque_d_interet,
+                'campus': self.admission.formation['campus_uuid'],
             }
