@@ -127,10 +127,9 @@ msgstr ""
 #, python-format
 msgid ""
 "<p> On the basis of the information you have provided on your previous "
-"experience, you do not appear to meet the <a href=\"%(url)s\" "
-"target=\"_blank\">eligibility requirements for the course</a> "
-"<em>%(course_title)s</em>. </p> <p>Please check your previous course data or "
-"choose another course.</p>"
+"experience, you do not appear to meet the <a href=\"%(url)s\" target=\"_blank"
+"\">eligibility requirements for the course</a> <em>%(course_title)s</em>. </"
+"p> <p>Please check your previous course data or choose another course.</p>"
 msgstr ""
 
 #, python-format
@@ -170,8 +169,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"A technical or IT problem? <a href=\"http://uclouvain.be/8282\" "
-"target=\"_blank\">Contact the Service Desk</a>"
+"A technical or IT problem? <a href=\"http://uclouvain.be/8282\" target="
+"\"_blank\">Contact the Service Desk</a>"
 msgstr ""
 
 msgid "A transcript for all years"
@@ -307,10 +306,9 @@ msgid ""
 "Answer according to the European Framework of Reference for Languages (CEFR) "
 "classification. Detailed explanations of this framework can be found at <a "
 "href=\"https://www.coe.int/en/web/common-european-framework-reference-"
-"languages/table-1-cefr-3.3-common-reference-levels-global-scale\" "
-"target=\"_blank\"> https://www.coe.int/en/web/common-european-framework-"
-"reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale </"
-"a>"
+"languages/table-1-cefr-3.3-common-reference-levels-global-scale\" target="
+"\"_blank\"> https://www.coe.int/en/web/common-european-framework-reference-"
+"languages/table-1-cefr-3.3-common-reference-levels-global-scale </a>"
 msgstr ""
 
 msgid ""
@@ -1627,6 +1625,9 @@ msgstr ""
 msgid "Listening comprehension"
 msgstr ""
 
+msgid "Logout"
+msgstr ""
+
 msgid "Long"
 msgstr ""
 
@@ -2791,8 +2792,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Would you like to switch courses this academic year at UCLouvain? (<a "
-"href=\"%(url)s\" target=\"_blank\">Informations</a>)"
+"Would you like to switch courses this academic year at UCLouvain? (<a href="
+"\"%(url)s\" target=\"_blank\">Informations</a>)"
 msgstr ""
 
 msgid ""
@@ -2893,9 +2894,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"You can find more information on the French Community webpage <a "
-"href=\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/"
-"</a>"
+"You can find more information on the French Community webpage <a href="
+"\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/</a>"
 msgstr ""
 
 msgid "You can specify the locality or postcode in your search."
@@ -2949,6 +2949,12 @@ msgid "Your Belgian student status"
 msgstr ""
 
 msgid ""
+"Your UCLouvain account has been created. If you have not yet activated it, "
+"please follow the instructions received by email and log in with your "
+"UCLouvain account to access your registrations."
+msgstr ""
+
+msgid ""
 "Your application cannot be confirmed. The admission requirements do not "
 "appear to have been met."
 msgstr ""
@@ -2974,8 +2980,8 @@ msgstr ""
 
 #, python-brace-format
 msgid ""
-"Your completed and signed reorientation form (<a href=\"{url}\" "
-"target=\"_blank\">{url}</a>)"
+"Your completed and signed reorientation form (<a href=\"{url}\" target="
+"\"_blank\">{url}</a>)"
 msgstr ""
 
 msgid "Your data have been saved"
@@ -2990,8 +2996,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Your joint supervision information can be completed later. Please input "
-"\"No\" if you don't have information yet."
+"Your joint supervision information can be completed later. Please input \"No"
+"\" if you don't have information yet."
 msgstr ""
 
 #, python-brace-format
