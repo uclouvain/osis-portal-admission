@@ -31,10 +31,10 @@ import phonenumbers
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.utils.functional import lazy
 from django.utils.translation import get_language, gettext
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from osis_document.contrib import FileUploadField
 
 from admission.constants import MINIMUM_BIRTH_YEAR
 from admission.services.campus import AdmissionCampusService
@@ -49,6 +49,7 @@ from admission.services.reference import (
     SuperiorInstituteService,
 )
 from admission.utils import format_entity_title, format_scholarship, format_school_title
+from osis_document.contrib import FileUploadField
 from reference.services.scholarship import ScholarshipService
 
 EMPTY_CHOICE = (('', ' - '),)
@@ -347,14 +348,31 @@ class BooleanRadioSelect(forms.RadioSelect):
 
 class PhoneWidget(forms.TextInput):
     input_type = 'tel'
-    INTL_TEL_VERSION = '18.1.1'
+    INTL_TEL_VERSION = '25.3.0'
+    INTL_HIDDEN_INPUT_NAME_PREFIX = 'hidden-'
 
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs', {})
         attrs['class'] = 'phone-input'
-        attrs['data-language'] = get_language()
+        attrs['data-language'] = lazy(get_language)
         attrs['data-intl-tel-input-version'] = self.INTL_TEL_VERSION
+        attrs['data-intl-hidden-input-name-prefix'] = self.INTL_HIDDEN_INPUT_NAME_PREFIX
         super().__init__(*args, **kwargs)
+
+    def hidden_input_name(self, name):
+        return f'{self.INTL_HIDDEN_INPUT_NAME_PREFIX}{name}'
+
+    def value_omitted_from_data(self, data, files, name):
+        return self.hidden_input_name(name=name) not in data and super().value_omitted_from_data(data, files, name)
+
+    def value_from_datadict(self, data, files, name):
+        # The hidden input contains the phone number in international format
+        value = data.get(self.hidden_input_name(name=name))
+
+        if value is not None:
+            return value
+
+        return super().value_from_datadict(data, files, name)
 
     @property
     def media(self):
@@ -362,10 +380,12 @@ class PhoneWidget(forms.TextInput):
             css={
                 'all': (
                     f'https://cdn.jsdelivr.net/npm/intl-tel-input@{self.INTL_TEL_VERSION}/build/css/intlTelInput.css',
+                    'admission/phone_input.css',
                 ),
             },
             js=[
-                f'https://cdn.jsdelivr.net/npm/intl-tel-input@{self.INTL_TEL_VERSION}/build/js/intlTelInput.min.js',
+                f'https://cdn.jsdelivr.net/npm/intl-tel-input@{self.INTL_TEL_VERSION}/build/js/'
+                + 'intlTelInputWithUtils.min.js',
                 'admission/initialize_phone_inputs.js',
             ],
         )

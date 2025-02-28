@@ -184,12 +184,12 @@
 
         // Change the placeholder and the mask of phone inputs when selecting a new country
         $('#id_phone_mobile, #id_emergency_contact_phone').on('countrychange', function(event) {
-            const currentInstance = window.intlTelInputGlobals.getInstance($(this)[0]);
+            const currentInstance = window.intlTelInput.getInstance($(this)[0]);
             const selectedCountryData = currentInstance.getSelectedCountryData();
-            const newPlaceholder = intlTelInputUtils.getExampleNumber(
+            const newPlaceholder = window.intlTelInput.utils.getExampleNumber(
                 selectedCountryData.iso2,
                 true,
-                intlTelInputUtils.numberType.MOBILE,
+                window.intlTelInput.utils.numberType.MOBILE,
             );
 
             $(this).attr('placeholder', '{% translate "eg:" %} ' + newPlaceholder);
@@ -201,7 +201,12 @@
         // Initialize the mask
         $('#id_phone_mobile, #id_emergency_contact_phone').each(function(){
             const element = $(this);
-            const currentInstance = window.intlTelInputGlobals.getInstance($(this)[0]);
+            const currentInstance = window.intlTelInput.getInstance($(this)[0]);
+
+            // The number is displayed in national format but saved in international format so we convert it here
+            const nationalNumber = currentInstance.getNumber(intlTelInput.utils.numberFormat.NATIONAL);
+            currentInstance.setNumber(nationalNumber);
+
             currentInstance.promise.then(function () {
                element.trigger('countrychange');
             });
