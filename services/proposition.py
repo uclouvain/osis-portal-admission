@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,12 +31,20 @@ from django.conf import settings
 from django.utils.translation import get_language
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
-from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
+from osis_admission_sdk.model.continuing_education_proposition_dto import (
+    ContinuingEducationPropositionDTO,
+)
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
-from osis_admission_sdk.model.doctorate_education_accounting_dto import DoctorateEducationAccountingDTO
+from osis_admission_sdk.model.doctorate_education_accounting_dto import (
+    DoctorateEducationAccountingDTO,
+)
 from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-from osis_admission_sdk.model.general_education_accounting_dto import GeneralEducationAccountingDTO
-from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
+from osis_admission_sdk.model.general_education_accounting_dto import (
+    GeneralEducationAccountingDTO,
+)
+from osis_admission_sdk.model.general_education_proposition_dto import (
+    GeneralEducationPropositionDTO,
+)
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
@@ -735,7 +743,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def get_signature_conditions(cls, person, uuid) -> SupervisionDTO:
+    def get_signature_conditions(cls, person, uuid) -> List:
         return APIClient().retrieve_verify_project(
             uuid=uuid,
             **build_mandatory_auth_headers(person),

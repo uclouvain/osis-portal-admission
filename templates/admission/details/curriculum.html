@@ -64,10 +64,7 @@
     </p>
   {% elif need_to_complete %}
     <p class="alert alert-info" role="alert">
-      {% blocktranslate trimmed with date=minimal_date|date:"YEAR_MONTH_FORMAT"|capfirst %}
-        Please enter all academic courses you have attended. For non-academic activities, please enter
-        all those that have taken place since {{ date }}.
-      {% endblocktranslate %}
+      {% translate 'Please enter all academic courses you have attended.' %}
     </p>
   {% elif not access_conditions_not_met %}
     <p class="alert alert-info" role="alert">
