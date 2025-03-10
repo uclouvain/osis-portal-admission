@@ -25,9 +25,26 @@
 # ##############################################################################
 
 import uuid
-from unittest.mock import Mock, ANY, patch, MagicMock
+from unittest.mock import ANY, MagicMock, Mock, patch
 
 from django.test import TestCase
+from osis_admission_sdk.model.campus import Campus
+from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.model.doctorate_pre_admission_search_dto import (
+    DoctoratePreAdmissionSearchDTO,
+)
+from osis_admission_sdk.model.doctorate_pre_admission_search_dto_doctorat import (
+    DoctoratePreAdmissionSearchDTODoctorat,
+)
+from osis_admission_sdk.model.doctorate_pre_admission_search_dto_doctorat_campus import (
+    DoctoratePreAdmissionSearchDTODoctoratCampus,
+)
+from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
+from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+    InformationsSpecifiquesFormationContinueDTO,
+)
+from osis_admission_sdk.model.specific_question import SpecificQuestion
 from osis_reference_sdk.model.scholarship import Scholarship
 
 from admission.contrib.enums import (
@@ -43,20 +60,6 @@ from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
-
-from osis_admission_sdk.model.campus import Campus
-from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
-from osis_admission_sdk.model.doctorate_pre_admission_search_dto import DoctoratePreAdmissionSearchDTO
-from osis_admission_sdk.model.doctorate_pre_admission_search_dto_doctorat import DoctoratePreAdmissionSearchDTODoctorat
-from osis_admission_sdk.model.doctorate_pre_admission_search_dto_doctorat_campus import (
-    DoctoratePreAdmissionSearchDTODoctoratCampus,
-)
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
-    InformationsSpecifiquesFormationContinueDTO,
-)
-from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 
 class AdmissionTrainingChoiceFormViewTestCase(TestCase):
@@ -301,6 +304,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'intitule_fr': 'Formation',
                 'intitule_en': 'Course',
                 'campus': 'Louvain-La-Neuve',
+                'campus_uuid': cls.louvain_campus_uuid,
                 'sigle': 'TR1',
                 'type': TrainingType.MASTER_M1.name,
                 'sigle_entite_gestion': 'CMG',
@@ -345,6 +349,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'intitule_fr': 'Formation',
                 'intitule_en': 'Course',
                 'campus': 'Louvain-La-Neuve',
+                'campus_uuid': cls.louvain_campus_uuid,
                 'sigle': 'TR0',
                 'type': TrainingType.BACHELOR.name,
                 'sigle_entite_gestion': 'CMG',
@@ -376,6 +381,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'intitule_fr': 'Formation',
                 'intitule_en': 'Course',
                 'campus': 'Louvain-La-Neuve',
+                'campus_uuid': cls.louvain_campus_uuid,
                 'sigle': 'TR2',
                 'type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 'sigle_entite_gestion': 'CMC',
@@ -425,6 +431,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'intitule_fr': 'Formation',
                 'intitule_en': 'Course',
                 'campus': 'Louvain-La-Neuve',
+                'campus_uuid': cls.louvain_campus_uuid,
                 'sigle': 'TR2',
                 'type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 'sigle_entite_gestion': 'CMC',
@@ -475,6 +482,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                 'annee': 2020,
                 'intitule': 'Formation',
                 'campus': 'Louvain-La-Neuve',
+                'campus_uuid': cls.louvain_campus_uuid,
                 'sigle': 'TR3',
                 'type': TrainingType.PHD.name,
                 'sigle_entite_gestion': 'CDE',
