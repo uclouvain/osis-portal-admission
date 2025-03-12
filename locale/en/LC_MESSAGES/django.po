@@ -800,6 +800,11 @@ msgid ""
 "eligibility for the desired programme)"
 msgstr ""
 
+msgid ""
+"Copy of both sides of the equivalency decision by the Ministry of the French-"
+"speaking Community of Belgium"
+msgstr ""
+
 msgid "Copy of decision to grant CFWB scholarship"
 msgstr ""
 
@@ -935,6 +940,9 @@ msgid "Did you graduate from this course?"
 msgstr ""
 
 msgid "Diploma"
+msgstr ""
+
+msgid "Diploma of aptitude for access to higher education (DAES)"
 msgstr ""
 
 msgid "Diploma translation"
@@ -1470,6 +1478,11 @@ msgstr ""
 msgid ""
 "If you wish to change your application, you must confirm your application "
 "before %(date)s."
+msgstr ""
+
+msgid ""
+"If your equivalency decision does not give access to the desired training, "
+"please provide your diploma of aptitude for access to higher education (DAES)"
 msgstr ""
 
 msgid "Immediately"

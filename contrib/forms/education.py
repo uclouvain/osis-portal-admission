@@ -353,6 +353,18 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         max_files=2,
         required=False,
     )
+    access_diploma_to_higher_education_not_ue = FileUploadField(
+        label=_(
+            'If your equivalency decision does not give access to the desired training, please provide your diploma of '
+            'aptitude for access to higher education (DAES)'
+        ),
+        help_text=(
+            'https://jurys.cfwb.be/jurys-secondaires/obtenir-mon-diplome/diplome-daptitude-a-acceder-a-lenseignement-'
+            'superieur-daes/'
+        ),
+        max_files=1,
+        required=False,
+    )
     final_equivalence_decision_ue = FileUploadField(
         label=_(
             "Copy of both sides of the definitive equivalency decision (accompanied, where applicable, by the DAES "
@@ -364,6 +376,18 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
             "provide a double-sided copy of this document."
         ),
         max_files=2,
+        required=False,
+    )
+    access_diploma_to_higher_education_ue = FileUploadField(
+        label=_(
+            'If your equivalency decision does not give access to the desired training, please provide your diploma of '
+            'aptitude for access to higher education (DAES)'
+        ),
+        help_text=(
+            'https://jurys.cfwb.be/jurys-secondaires/obtenir-mon-diplome/diplome-daptitude-a-acceder-a-lenseignement-'
+            'superieur-daes/'
+        ),
+        max_files=1,
         required=False,
     )
     equivalence_decision_proof = FileUploadField(

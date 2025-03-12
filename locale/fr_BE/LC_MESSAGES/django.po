@@ -962,6 +962,11 @@ msgstr ""
 "du DAES ou de l'examen aux études de premier cycle, si votre équivalence ne "
 "donne pas accès au programme souhaité)"
 
+msgid ""
+"Copy of both sides of the equivalency decision by the Ministry of the French-"
+"speaking Community of Belgium"
+msgstr "Copie recto-verso de la décision d'équivalence"
+
 msgid "Copy of decision to grant CFWB scholarship"
 msgstr ""
 "Copie de la décision de l’octroi de la bourse du service d’allocations "
@@ -1113,6 +1118,9 @@ msgstr "Avez-vous été diplômé·e au terme de cette formation ?"
 
 msgid "Diploma"
 msgstr "Diplôme"
+
+msgid "Diploma of aptitude for access to higher education (DAES)"
+msgstr "Diplôme d'Aptitude à accéder à l'Enseignement supérieur (DAES)"
 
 msgid "Diploma translation"
 msgstr "Traduction du diplôme"
@@ -1745,6 +1753,13 @@ msgstr ""
 "Dans le cadre d'une modification d'inscription externe, vous devez "
 "impérativement confirmer votre demande avant le %(date)s."
 
+msgid ""
+"If your equivalency decision does not give access to the desired training, "
+"please provide your diploma of aptitude for access to higher education (DAES)"
+msgstr ""
+"Si votre équivalence ne donne pas accès à la formation souhaitée, veuillez "
+"fournir votre Diplôme d’Aptitude à accéder à l’Enseignement supérieur (DAES)"
+
 msgid "Immediately"
 msgstr "Immédiatement"
 
@@ -2280,7 +2295,8 @@ msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
 
 msgid "Please enter all academic courses you have attended."
-msgstr "Veuillez renseigner toutes les formations académiques que vous avez "
+msgstr ""
+"Veuillez renseigner toutes les formations académiques que vous avez "
 "réalisées."
 
 msgid "Please enter your work email address"
