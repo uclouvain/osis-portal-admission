@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,18 +25,26 @@
 # ##############################################################################
 from unittest.mock import MagicMock
 
+import freezegun
 from django.shortcuts import resolve_url
+from django.utils.formats import date_format
 from django.utils.translation import gettext as _
+from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+    InformationsSpecifiquesFormationContinueDTO,
+)
 from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import AdmissionType, TypeFormationChoisissable, ChoixMoyensDecouverteFormation
+from admission.contrib.enums import (
+    AdmissionType,
+    ChoixMoyensDecouverteFormation,
+    TypeFormationChoisissable,
+)
 from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.enums.training_choice import TypeFormation
 from admission.contrib.forms import EMPTY_VALUE
-from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
-from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
-    InformationsSpecifiquesFormationContinueDTO,
+from admission.tests.views.training_choice import (
+    AdmissionTrainingChoiceFormViewTestCase,
 )
 
 
@@ -91,6 +99,34 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
         response = self.client.get(self.url)
         self.assertIn('Les programmes certifiants et courts', response.rendered_content)
+
+        # A message is displayed if period dates are not respected
+        medicine_start_date = date_format(self.specific_periods.medicine_dentistry_bachelor.date_debut, 'j F Y')
+
+        for date in ['2021-09-14', '2022-02-16']:
+            with freezegun.freeze_time(date):
+                response = self.client.get(self.url)
+
+                self.assertEqual(response.status_code, 200)
+
+                period_messages = response.context.get('not_in_specific_enrolment_periods_messages')
+                self.assertIsNotNone(period_messages)
+                self.assertEqual(
+                    period_messages.get('medicine_dentistry_bachelor'),
+                    "Dans l’attente de la publication des résultats du concours d’entrée en "
+                    "médecine et dentisterie, votre demande ne pourra être soumise qu'à partir "
+                    "du {medicine_start_date}.".format(medicine_start_date=medicine_start_date),
+                )
+
+        for date in ['2021-09-15', '2022-02-15']:
+            with freezegun.freeze_time(date):
+                response = self.client.get(self.url)
+
+                self.assertEqual(response.status_code, 200)
+
+                period_messages = response.context.get('not_in_specific_enrolment_periods_messages')
+                self.assertIsNotNone(period_messages)
+                self.assertIsNone(period_messages.get('medicine_dentistry_bachelor'))
 
     def test_empty_form_submitting(self):
         response = self.client.post(

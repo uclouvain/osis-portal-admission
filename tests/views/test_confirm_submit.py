@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -33,7 +33,10 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums import ChoixStatutPropositionGenerale
 from base.tests.factories.person import PersonFactory
-from frontoffice.settings.osis_sdk.utils import ApiBusinessException, MultipleApiBusinessException
+from frontoffice.settings.osis_sdk.utils import (
+    ApiBusinessException,
+    MultipleApiBusinessException,
+)
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
@@ -138,6 +141,38 @@ class ConfirmSubmitTestCase(TestCase):
 
         response = self.client.get(self.url)
         # Display an error message as some conditions aren't meet
+        self.assertContains(
+            response,
+            _('Your enrolment cannot be confirmed. All of the following requirements must be met.'),
+        )
+
+    def test_get_with_additional_conditions_not_respected(self):
+        self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.return_value = {
+            'errors': [
+                dict(status_code='ADMISSION-24', detail='Some additional condition is not respected.'),
+            ]
+        }
+
+        response = self.client.get(self.url)
+
+        # Display an error message as some conditions aren't meet but not the errors by tabs
+        self.assertContains(response, 'Some additional condition is not respected.')
+        self.assertNotContains(
+            response,
+            _('Your enrolment cannot be confirmed. All of the following requirements must be met.'),
+        )
+
+        self.mock_proposition_api.return_value.verify_proposition.return_value.to_dict.return_value = {
+            'errors': [
+                dict(status_code='ADMISSION-24', detail='Some additional condition is not respected.'),
+                dict(status_code='PROPOSITION-25', detail='Some data is missing.'),
+            ]
+        }
+
+        response = self.client.get(self.url)
+
+        # Display an error message as some conditions aren't meet and also the errors by tabs
+        self.assertContains(response, 'Some additional condition is not respected.')
         self.assertContains(
             response,
             _('Your enrolment cannot be confirmed. All of the following requirements must be met.'),
