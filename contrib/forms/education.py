@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,33 +23,36 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
+
 from dal import forward
 from django import forms
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _, pgettext_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
+from osis_document.contrib.widgets import HiddenFileWidget
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import HAS_DIPLOMA_CHOICES
 from admission.contrib.enums.secondary_studies import (
+    EDUCATIONAL_TYPES,
     BelgianCommunitiesOfEducation,
     DiplomaTypes,
-    EDUCATIONAL_TYPES,
     Equivalence,
     ForeignDiplomaTypes,
     GotDiploma,
 )
+from admission.contrib.forms import EMPTY_CHOICE
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
     autocomplete,
     get_country_initial_choices,
     get_high_school_initial_choices,
     get_language_initial_choices,
     get_past_academic_years_choices,
-    EMPTY_CHOICE,
-    AdmissionFileUploadField as FileUploadField,
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
-from admission.services.reference import CountriesService, AcademicYearService
-from osis_document.contrib.widgets import HiddenFileWidget
+from admission.services.reference import AcademicYearService, CountriesService
 
 
 def disable_fields(condition, fields, fields_to_keep_enabled_names=None):
@@ -155,6 +158,12 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         max_files=1,
         required=False,
     )
+    first_cycle_admission_exam_year = forms.TypedChoiceField(
+        label=_('Year of obtaining this proof'),
+        widget=autocomplete.Select2(),
+        coerce=int,
+        required=False,
+    )
 
     class Media:
         js = ("js/dependsOn.min.js",)
@@ -166,6 +175,17 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         foreign_diploma = self.initial.get("foreign_diploma")
         high_school_diploma_alternative = self.initial.get("high_school_diploma_alternative")
 
+        today = datetime.date.today()
+        if today.month >= 11:
+            current_year = today.year
+        else:
+            current_year = today.year - 1
+        self.fields['first_cycle_admission_exam_year'].choices = get_past_academic_years_choices(
+            kwargs['person'],
+            current_year=current_year,
+            format_label_function=lambda academic_year: str(academic_year.year + 1),
+        )
+
         diploma = belgian_diploma or foreign_diploma
         # Select the correct diploma type if one has been saved
         if diploma:
@@ -176,6 +196,9 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         elif high_school_diploma_alternative:
             self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
                 "first_cycle_admission_exam"
+            )
+            self.fields['first_cycle_admission_exam_year'].initial = high_school_diploma_alternative.get(
+                "first_cycle_admission_exam_year"
             )
         disable_fields(not self.can_update_diploma, self.fields, {self.configurable_form_field_name})
 
