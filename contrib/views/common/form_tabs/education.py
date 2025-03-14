@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ from django.views.generic import FormView
 
 from admission.constants import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION, PLUS_5_ISO_CODES
 from admission.contrib.enums.secondary_studies import (
+    HAS_DIPLOMA_CHOICES,
     BelgianCommunitiesOfEducation,
     DiplomaTypes,
     Equivalence,
     ForeignDiplomaTypes,
     GotDiploma,
-    HAS_DIPLOMA_CHOICES,
 )
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
@@ -45,7 +45,10 @@ from admission.contrib.forms.education import (
     BaseAdmissionEducationForm,
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
+from admission.services.mixins import (
+    FormMixinWithSpecificQuestions,
+    WebServiceFormMixin,
+)
 from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
@@ -238,12 +241,16 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             }
 
         first_cycle_admission_exam = data.pop("first_cycle_admission_exam", [])
+        first_cycle_admission_exam_year = data.pop("first_cycle_admission_exam_year", "")
         if graduated_from_high_school == GotDiploma.NO.name:
             return {
                 'specific_question_answers': data.get('specific_question_answers'),
                 'graduated_from_high_school': graduated_from_high_school,
                 'graduated_from_high_school_year': data.get('graduated_from_high_school_year'),
-                'high_school_diploma_alternative': {'first_cycle_admission_exam': first_cycle_admission_exam},
+                'high_school_diploma_alternative': {
+                    'first_cycle_admission_exam': first_cycle_admission_exam,
+                    'first_cycle_admission_exam_year': first_cycle_admission_exam_year,
+                },
             }
 
         # The candidate has a diploma or will have one this year

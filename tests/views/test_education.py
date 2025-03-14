@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ from admission.contrib.enums.secondary_studies import (
     ForeignDiplomaTypes,
     GotDiploma,
 )
-from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
+from admission.contrib.forms import EMPTY_CHOICE, PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.academic_year import get_current_year
@@ -852,6 +852,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 'diploma_type': DiplomaTypes.BELGIAN.name,
                 'high_school_diploma': [],
                 'first_cycle_admission_exam': [],
+                'first_cycle_admission_exam_year': "",
                 # Data that should be updated
                 'specific_question_answers': self.proposition.reponses_questions_specifiques,
             },
@@ -1252,6 +1253,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "graduated_from_high_school_year": None,
                 "high_school_diploma_alternative": {
                     "first_cycle_admission_exam": ["test"],
+                    "first_cycle_admission_exam_year": "",
                 },
                 "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
