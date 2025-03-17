@@ -2799,24 +2799,6 @@ msgstr "L'adresse de correspondance que j'ai fournie"
 
 #, python-format
 msgid ""
-"The data related to this academic course can no longer be updated. To make "
-"changes, please contact %(recipient)s."
-msgstr ""
-"Les informations relatives à cette formation académique ne sont plus "
-"modifiables. Si vous souhaitez y apporter des modifications, merci de "
-"contacter %(recipient)s."
-
-#, python-format
-msgid ""
-"The data related to this non-academic activity can no longer be updated. To "
-"make changes, please contact %(recipient)s."
-msgstr ""
-"Les informations relatives à cette activité non-académique ne sont plus "
-"modifiables. Si vous souhaitez y apporter des modifications, merci de "
-"contacter %(recipient)s."
-
-#, python-format
-msgid ""
 "The enrolments for the %(program)s course are closed. To stay informed about "
 "the opening of enrolments for the next edition, tick the box below. For any "
 "other information, please contact a course administrator: "
@@ -2896,6 +2878,15 @@ msgstr "Langue de rédaction de la thèse"
 msgid "Thesis location"
 msgstr "Lieu de la thèse"
 
+msgid ""
+"This academic course in your curriculum cannot be modified. If you wish to "
+"modify it, please add an identical academic course in which you fill in the "
+"correct information."
+msgstr ""
+"Cette formation académique de votre curriculum n'est pas modifiable. Si "
+"vous souhaitez la modifier, veuillez ajouter une formation académique "
+"identique dans laquelle vous renseignerez les informations correctes."
+
 msgid "This account number has been verified"
 msgstr "Ce numéro a été vérifié"
 
@@ -2935,6 +2926,15 @@ msgstr "Ce champ doit faire moins de {length} caractères."
 
 msgid "This language is set more than once."
 msgstr "Cette langue est définie plusieurs fois."
+
+msgid ""
+"This non-academic activity in your curriculum cannot be modified. If you "
+"wish to modify it, please add an identical non-academic activity in which "
+"you fill in the correct information."
+msgstr ""
+"Cette activité non-académique de votre curriculum n'est pas modifiable. Si "
+"vous souhaitez la modifier, veuillez ajouter une activité non-académique "
+"identique dans laquelle vous renseignerez les informations correctes."
 
 msgid "This value may not exceed the number of registered credits"
 msgstr "Cette valeur ne peut être supérieure au nombre de crédits inscrits"
