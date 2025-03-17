@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -41,16 +41,16 @@ from admission.contrib.enums.proximity_commission import (
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
+from admission.contrib.forms import EMPTY_CHOICE
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
-    autocomplete,
     CustomDateInput,
-    EMPTY_CHOICE,
-    SelectOrOtherField,
-    get_thesis_location_initial_choices,
-    get_scholarship_choices,
-    AdmissionFileUploadField as FileUploadField,
-    get_language_initial_choices,
     RadioBooleanField,
+    SelectOrOtherField,
+    autocomplete,
+    get_language_initial_choices,
+    get_scholarship_choices,
+    get_thesis_location_initial_choices,
 )
 from admission.contrib.views.autocomplete import LANGUAGE_UNDECIDED
 from admission.services.autocomplete import AdmissionAutocompleteService
@@ -69,24 +69,9 @@ class DoctorateAdmissionProjectForm(forms.Form):
         widget=forms.Textarea(
             attrs={
                 'rows': 2,
-                'placeholder': _("Reasons for provisional admission."),
+                'placeholder': _("Reasons for pre-admission."),
             }
         ),
-        required=False,
-    )
-    commission_proximite_cde = forms.ChoiceField(
-        label=_("Proximity commission / Subdomain"),
-        choices=EMPTY_CHOICE + ChoixCommissionProximiteCDEouCLSM.choices(),
-        required=False,
-    )
-    commission_proximite_cdss = forms.ChoiceField(
-        label=_("Proximity commission / Subdomain"),
-        choices=EMPTY_CHOICE + ChoixCommissionProximiteCDSS.choices(),
-        required=False,
-    )
-    sous_domaine = forms.ChoiceField(
-        label=_("Proximity commission / Subdomain"),
-        choices=EMPTY_CHOICE + ChoixSousDomaineSciences.choices(),
         required=False,
     )
 
@@ -181,7 +166,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         required=False,
         help_text=_(
             "If known, indicate the name of the laboratory, clinical department or research centre where the thesis "
-            "will be carried out"
+            "will be carried out at UCLouvain"
         ),
         max_length=255,
     )
@@ -256,7 +241,7 @@ class DoctorateAdmissionProjectForm(forms.Form):
         help_text=_("Indicate any completed or interrupted PhD studies in which you are no longer enrolled."),
     )
     institution = forms.CharField(
-        label=_("Institution in which the PhD has been realised / started."),
+        label=_("Institution in which the PhD thesis has been realised / started"),
         required=False,
         max_length=255,
     )
@@ -284,31 +269,12 @@ class DoctorateAdmissionProjectForm(forms.Form):
     class Media:
         js = ('js/dependsOn.min.js',)
 
-    def __init__(self, admission_type, hide_proximity_commission_fields=True, *args, **kwargs):
+    def __init__(self, admission_type, *args, **kwargs):
         self.person = getattr(self, 'person', kwargs.pop('person', None))
         self.admission_type = admission_type
         self.label_classes = self.get_field_label_classes()
 
         super().__init__(*args, **kwargs)
-
-        # Set proximity commission fields value from API data
-        if self.initial.get('commission_proximite'):
-            doctorate = self.get_selected_doctorate(
-                self.initial.get('sector'),
-                self.initial.get('doctorate'),
-            )
-            if doctorate.sigle_entite_gestion in COMMISSIONS_CDE_CLSM:
-                self.initial['commission_proximite_cde'] = self.initial['commission_proximite']
-            elif doctorate.sigle_entite_gestion == COMMISSION_CDSS:
-                self.initial['commission_proximite_cdss'] = self.initial['commission_proximite']
-            elif doctorate.sigle == SCIENCE_DOCTORATE:  # pragma: no branch
-                self.initial['sous_domaine'] = self.initial['commission_proximite']
-
-        # Hide proximity commission fields
-        if hide_proximity_commission_fields:
-            self.fields['commission_proximite_cde'].widget = forms.HiddenInput()
-            self.fields['commission_proximite_cdss'].widget = forms.HiddenInput()
-            self.fields['sous_domaine'].widget = forms.HiddenInput()
 
         # Add the specified thesis position in the choices of the related field
         self.fields['lieu_these'].widget.choices = get_thesis_location_initial_choices(
@@ -364,12 +330,6 @@ class DoctorateAdmissionProjectForm(forms.Form):
             self.add_error('raison_non_soutenue', _("This field is required."))
 
         return data
-
-    def get_selected_doctorate(self, sector, doctorat):
-        doctorats = AdmissionAutocompleteService.get_doctorates(self.person, sector)
-        return next(  # pragma: no branch
-            d for d in doctorats if doctorat == "{doctorat.sigle}-{doctorat.annee}".format(doctorat=d)
-        )
 
     def get_field_label_classes(self):
         """Returns the classes that should be applied to the label of the form fields."""
