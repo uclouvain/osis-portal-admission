@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
+    FORMATTED_RELATIONSHIPS,
     ChoixAffiliationSport,
     ChoixAssimilation1,
     ChoixAssimilation2,
@@ -40,16 +41,21 @@ from admission.contrib.enums import (
     ChoixAssimilation5,
     ChoixAssimilation6,
     ChoixTypeCompteBancaire,
-    FORMATTED_RELATIONSHIPS,
     LienParente,
     TrainingType,
     TypeSituationAssimilation,
 )
 from admission.contrib.enums.admission_type import AdmissionType
-from admission.contrib.enums.projet import ChoixStatutPropositionDoctorale, ChoixStatutPropositionGenerale
+from admission.contrib.enums.projet import (
+    ChoixStatutPropositionDoctorale,
+    ChoixStatutPropositionGenerale,
+)
 from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
-from reference.services.iban_validator import IBANValidatorException, IBANValidatorRequestException
+from reference.services.iban_validator import (
+    IBANValidatorException,
+    IBANValidatorRequestException,
+)
 
 
 def validate_with_no_service_exception(value):
@@ -698,11 +704,10 @@ class GeneralAccountingViewTestCase(TestCase):
         sport_affiliation_choices = form.fields['affiliation_sport'].choices
         self.assertEqual(sport_affiliation_choices[0][0], ChoixAffiliationSport.SAINT_LOUIS_UCL.name)
         self.assertEqual(sport_affiliation_choices[0][1], ChoixAffiliationSport.SAINT_LOUIS_UCL.value)
-        self.assertEqual(sport_affiliation_choices[1][0], ChoixAffiliationSport.NON.name)
-        self.assertEqual(
-            sport_affiliation_choices[1][1],
-            _('No (access to sports facilities on the Saint-Louis campus is free)'),
-        )
+        self.assertEqual(sport_affiliation_choices[1][0], ChoixAffiliationSport.SAINT_LOUIS.name)
+        self.assertEqual(sport_affiliation_choices[1][1], ChoixAffiliationSport.SAINT_LOUIS.value)
+        self.assertEqual(sport_affiliation_choices[2][0], ChoixAffiliationSport.NON.name)
+        self.assertEqual(sport_affiliation_choices[2][1], ChoixAffiliationSport.NON.value)
         self.assertTrue(form.fields['affiliation_sport'].required)
 
     def test_post_accounting_form_with_valid_data(self):

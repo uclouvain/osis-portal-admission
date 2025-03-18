@@ -2033,11 +2033,6 @@ msgstr "Baccalauréat national (ou diplôme d'état, ...)"
 msgid "No"
 msgstr "Non"
 
-msgid "No (access to sports facilities on the Saint-Louis campus is free)"
-msgstr ""
-"Non (l'accès aux infrastructures sportives sur le campus Saint-Louis est "
-"gratuit)"
-
 msgid "No course created at present."
 msgstr "Aucun cours créé pour le moment."
 
@@ -3275,6 +3270,9 @@ msgstr "Oui, sur Mons uniquement (12 EUR)"
 
 msgid "Yes, only in Saint-Gilles (E12)"
 msgstr "Oui, sur Saint-Gilles uniquement (12 EUR)"
+
+msgid "Yes, only in Saint-Louis (free)"
+msgstr "Oui, sur Saint-Louis uniquement (gratuit)"
 
 msgid "Yes, only in Tournai (E12)"
 msgstr "Oui, sur Tournai uniquement (12 EUR)"
