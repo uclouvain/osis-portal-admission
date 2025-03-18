@@ -572,6 +572,7 @@ class FormationGeneraleBusinessException(Enum):
     InformationsAcceptationFacultaireNonSpecifieesException = "FORMATION-GENERALE-18"
     PaiementDejaRealiseException = "FORMATION-GENERALE-19"
     InformationsVisaNonCompleteesException = "FORMATION-GENERALE-20"
+    BoursesEtudesNonRenseignees = "FORMATION-GENERALE-36"
 
 
 class FormationContinueBusinessException(Enum):
@@ -634,6 +635,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.FormationNonTrouveeException,
         FormationContinueBusinessException.ChoixDeFormationNonRenseigneException,
         FormationContinueBusinessException.FormationEstFermeeException,
+        FormationGeneraleBusinessException.BoursesEtudesNonRenseignees,
     },
     'cotutelle': {
         PropositionBusinessException.CotutelleNonCompleteException,
