@@ -175,14 +175,8 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         foreign_diploma = self.initial.get("foreign_diploma")
         high_school_diploma_alternative = self.initial.get("high_school_diploma_alternative")
 
-        today = datetime.date.today()
-        if today.month >= 11:
-            current_year = today.year
-        else:
-            current_year = today.year - 1
         self.fields['first_cycle_admission_exam_year'].choices = get_past_academic_years_choices(
             kwargs['person'],
-            current_year=current_year,
             format_label_function=lambda academic_year: str(academic_year.year + 1),
         )
 

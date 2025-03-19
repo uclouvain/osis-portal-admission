@@ -35,6 +35,7 @@ READ_ACTIONS_BY_TAB = {
     # Previous experience
     'curriculum': 'retrieve_curriculum',
     'education': 'retrieve_secondary_studies',
+    'exam': 'retrieve_exam',
     'languages': 'retrieve_languages',
     # Project
     'training-choice': 'retrieve_training_choice',
@@ -71,6 +72,7 @@ UPDATE_ACTIONS_BY_TAB = {
     # Previous experience
     'curriculum': 'update_curriculum',
     'education': 'update_secondary_studies',
+    'exam': 'update_exam',
     'languages': 'update_languages',
     # Project
     'training-choice': 'update_training_choice',

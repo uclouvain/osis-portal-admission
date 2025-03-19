@@ -622,6 +622,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationGeneraleBusinessException.EquivalenceNonRenseigneeException,
         FormationContinueBusinessException.ExperiencesCurriculumNonRenseigneesException,
     },
+    'exam': set(),
     'languages': {
         PropositionBusinessException.LanguesConnuesNonSpecifieesException,
     },

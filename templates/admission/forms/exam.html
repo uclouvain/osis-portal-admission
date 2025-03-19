@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 {% block form %}
   {% bootstrap_form_errors form %}
 
-  {% panel _('Secondary studies') %}
+  {% panel _('Exam') %}
     {% if is_valuated %}
       <div class="alert alert-warning">
         {% blocktranslate trimmed with recipient=training_contact|default:_('the Enrolment Office') %}
@@ -38,38 +38,14 @@
     {% endif %}
     <div class="row">
       <div class="col-md-12 required_field">
-        {% bootstrap_field_with_tooltip form.graduated_from_high_school %}
+        {% bootstrap_field_with_tooltip form.certificate %}
       </div>
     </div>
     <div class="row">
       <div id="graduation-year-container" class="col-md-12 required_field">
-        {% bootstrap_field form.graduated_from_high_school_year %}
+        {% bootstrap_field form.year %}
       </div>
     </div>
   {% endpanel %}
 
-  {% if form.specific_question_answers.field.fields %}
-    {% panel _('Specific aspects') %}
-      {% bootstrap_field form.specific_question_answers show_label=False error_css_class='' %}
-    {% endpanel %}
-  {% endif %}
-
-{% endblock %}
-
-{% block script %}
-  {{ block.super }}
-  <script>
-      $(function () {
-          const defaultOptions = {
-              duration: 0,
-          };
-
-          $('#graduation-year-container').dependsOn({
-              'input[name=graduated_from_high_school]': { values: ['YES'] },
-          }, defaultOptions);
-
-          document.dispatchEvent(new Event('refreshFormInitial'));
-      });
-
-  </script>
 {% endblock %}
