@@ -248,8 +248,8 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 'graduated_from_high_school': graduated_from_high_school,
                 'graduated_from_high_school_year': data.get('graduated_from_high_school_year'),
                 'high_school_diploma_alternative': {
-                    'first_cycle_admission_exam': first_cycle_admission_exam,
-                    'first_cycle_admission_exam_year': first_cycle_admission_exam_year,
+                    'certificate': first_cycle_admission_exam,
+                    'year': first_cycle_admission_exam_year,
                 },
             }
 

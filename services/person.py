@@ -314,6 +314,22 @@ class GeneralEducationAdmissionPersonService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    # Exam
+    @classmethod
+    def retrieve_exam(cls, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_exam_general_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_exam(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_exam_general_education_admission(
+            uuid=uuid,
+            exam=data,
+            **build_mandatory_auth_headers(person),
+        )
+
     # Curriculum
     @classmethod
     def get_curriculum(cls, person, uuid):

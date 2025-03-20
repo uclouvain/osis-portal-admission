@@ -36,7 +36,7 @@ from admission.contrib.forms import (
 
 class ExamForm(forms.Form):
     certificate = FileUploadField(
-        label=_("Certificate of passing the bachelor's course entrance exam"),
+        label=_("TODO TITLE"),
         max_files=1,
         required=False,
     )

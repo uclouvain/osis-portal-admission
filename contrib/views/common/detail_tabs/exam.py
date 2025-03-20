@@ -23,21 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.conf import settings
-from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
-from admission.constants import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
-from admission.contrib.enums import TrainingType
-from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
-    AdmissionPersonService,
-    ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
-from admission.services.reference import HighSchoolService, LanguageService, CountriesService
-from admission.utils import is_med_dent_training, format_address
 
 __all__ = ['AdmissionExamDetailView']
 
@@ -51,7 +42,7 @@ class AdmissionExamDetailView(LoadDossierViewMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        high_school_diploma = (
+        exam = (
             self.service_mapping[self.current_context]
             .retrieve_exam(
                 person=self.request.user.person,
@@ -60,6 +51,6 @@ class AdmissionExamDetailView(LoadDossierViewMixin, TemplateView):
             .to_dict()
         )
 
-        context_data.update(high_school_diploma)
+        context_data['exam'] = exam
 
         return context_data

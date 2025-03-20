@@ -189,10 +189,10 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
             self.fields['high_school_diploma'].initial = diploma.get("high_school_diploma")
         elif high_school_diploma_alternative:
             self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
-                "first_cycle_admission_exam"
+                "certificate"
             )
             self.fields['first_cycle_admission_exam_year'].initial = high_school_diploma_alternative.get(
-                "first_cycle_admission_exam_year"
+                "year"
             )
         disable_fields(not self.can_update_diploma, self.fields, {self.configurable_form_field_name})
 

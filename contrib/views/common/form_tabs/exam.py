@@ -57,7 +57,6 @@ class AdmissionExamFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView)
 
     @cached_property
     def exam(self):
-        return {'is_valuated': False}
         return (
             self.service_mapping[self.current_context]
             .retrieve_exam(
