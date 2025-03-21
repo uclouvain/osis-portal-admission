@@ -36,7 +36,7 @@ from admission.contrib.forms import (
 
 class ExamForm(forms.Form):
     certificate = FileUploadField(
-        label=_("TODO TITLE"),
+        label=_("Certificate"),
         max_files=1,
         required=False,
     )
@@ -47,9 +47,11 @@ class ExamForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, person, is_valuated, *args, **kwargs):
+    def __init__(self, person, is_valuated, certificate_title, certificate_help_text, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields['certificate'].label = certificate_title
+        self.fields['certificate'].help_text = certificate_help_text
         self.fields['year'].choices = get_past_academic_years_choices(
             person,
             format_label_function=lambda academic_year: str(academic_year.year + 1),

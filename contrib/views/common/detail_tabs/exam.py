@@ -23,6 +23,8 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.conf import settings
+from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -50,6 +52,11 @@ class AdmissionExamDetailView(LoadDossierViewMixin, TemplateView):
             )
             .to_dict()
         )
+
+        if get_language() == settings.LANGUAGE_CODE:
+            context_data['certificate_title'] = exam['title_fr']
+        else:
+            context_data['certificate_title'] = exam['title_en']
 
         context_data['exam'] = exam
 

@@ -23,8 +23,10 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.conf import settings
 from django.shortcuts import render
 from django.utils.functional import cached_property
+from django.utils.translation import get_language
 from django.views.generic import FormView
 
 from admission.contrib.forms.exam import ExamForm
@@ -75,6 +77,12 @@ class AdmissionExamFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView)
         kwargs = super().get_form_kwargs()
         kwargs["person"] = self.person
         kwargs["is_valuated"] = self.exam['is_valuated']
+        if get_language() == settings.LANGUAGE_CODE:
+            kwargs['certificate_title'] = self.exam['title_fr']
+            kwargs['certificate_help_text'] = self.exam['help_text_fr']
+        else:
+            kwargs['certificate_title'] = self.exam['title_en']
+            kwargs['certificate_help_text'] = self.exam['help_text_en']
         return kwargs
 
     def get_initial(self):

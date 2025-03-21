@@ -572,6 +572,7 @@ class FormationGeneraleBusinessException(Enum):
     InformationsAcceptationFacultaireNonSpecifieesException = "FORMATION-GENERALE-18"
     PaiementDejaRealiseException = "FORMATION-GENERALE-19"
     InformationsVisaNonCompleteesException = "FORMATION-GENERALE-20"
+    ExamenNonCompletesException = "FORMATION-GENERALE-36"
 
 
 class FormationContinueBusinessException(Enum):
@@ -622,7 +623,9 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationGeneraleBusinessException.EquivalenceNonRenseigneeException,
         FormationContinueBusinessException.ExperiencesCurriculumNonRenseigneesException,
     },
-    'exam': set(),
+    'exam': {
+        FormationGeneraleBusinessException.ExamenNonCompletesException,
+    },
     'languages': {
         PropositionBusinessException.LanguesConnuesNonSpecifieesException,
     },

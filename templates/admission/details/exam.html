@@ -30,7 +30,7 @@
 
     {% panel _('Exam') %}
 
-      {% field_data _('TOTO TITLE') exam.certificate %}
+      {% field_data certificate_title exam.certificate %}
 
       {% if exam.year %}
         {% field_data _('Year of obtaining this proof') exam.year|add:1 %}
