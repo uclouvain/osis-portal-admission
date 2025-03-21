@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,12 +23,13 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest import mock
 import json
-from unittest.mock import mock_open
+from unittest import mock
 
+import freezegun
 from django.shortcuts import resolve_url
 from django.urls import reverse
+from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
@@ -36,10 +37,16 @@ from osis_admission_sdk.model.informations_specifiques_formation_continue_dto im
 from waffle.testutils import override_switch
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.enums import AdmissionType, TypeFormationChoisissable, ChoixMoyensDecouverteFormation
+from admission.contrib.enums import (
+    AdmissionType,
+    ChoixMoyensDecouverteFormation,
+    TypeFormationChoisissable,
+)
 from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.forms import EMPTY_VALUE
-from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
+from admission.tests.views.training_choice import (
+    AdmissionTrainingChoiceFormViewTestCase,
+)
 
 
 class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -82,12 +89,43 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
             ],
         )
 
-        self.assertEqual(
-            form.fields['general_education_training'].widget.choices,
-            [
-                ('TR1-2020', 'Formation 1 (Louvain-La-Neuve) <span class="training-acronym">TR1</span>'),
-            ],
-        )
+        expected = [
+            {
+                'id': 'TR1-2020',
+                'text': 'Formation 1 (Louvain-La-Neuve) <span class="training-acronym">TR1</span>',
+                'domain_code': '10A',
+                'training_type': 'MASTER_MA_120',
+            }
+        ]
+        self.assertEqual(form.fields['general_education_training'].widget.attrs['data-data'], json.dumps(expected))
+
+        medicine_start_date = date_format(self.specific_periods.medicine_dentistry_bachelor.date_debut, 'j F Y')
+
+        # A message is displayed if period dates are not respected
+        for date in ['2021-09-14', '2022-02-16']:
+            with freezegun.freeze_time(date):
+                response = self.client.get(self.url)
+
+                self.assertEqual(response.status_code, 200)
+
+                period_messages = response.context.get('not_in_specific_enrolment_periods_messages')
+                self.assertIsNotNone(period_messages)
+                self.assertEqual(
+                    period_messages.get('medicine_dentistry_bachelor'),
+                    "Dans l’attente de la publication des résultats du concours d’entrée en "
+                    "médecine et dentisterie, votre demande ne pourra être soumise qu'à partir "
+                    "du {medicine_start_date}.".format(medicine_start_date=medicine_start_date),
+                )
+
+        for date in ['2021-09-15', '2022-02-15']:
+            with freezegun.freeze_time(date):
+                response = self.client.get(self.url)
+
+                self.assertEqual(response.status_code, 200)
+
+                period_messages = response.context.get('not_in_specific_enrolment_periods_messages')
+                self.assertIsNotNone(period_messages)
+                self.assertIsNone(period_messages.get('medicine_dentistry_bachelor'))
 
     def test_form_submitting_missing_fields(self):
         response = self.client.post(self.url, data={'campus': EMPTY_VALUE})

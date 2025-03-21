@@ -170,6 +170,7 @@ class GeneralEducationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListV
                 id="{result.sigle}-{result.annee}".format(result=result),
                 text=format_method(result),
                 training_type=result.type,
+                domain_code=result.code_domaine,
             )
             for result in results
         ]
