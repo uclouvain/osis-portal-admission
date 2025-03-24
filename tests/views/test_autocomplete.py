@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_reference_sdk.model.scholarship import Scholarship
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
@@ -42,13 +41,20 @@ from osis_reference_sdk.model.diploma import Diploma
 from osis_reference_sdk.model.high_school import HighSchool
 from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
-from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
+from osis_reference_sdk.model.paginated_superior_non_university import (
+    PaginatedSuperiorNonUniversity,
+)
 from osis_reference_sdk.model.paginated_university import PaginatedUniversity
+from osis_reference_sdk.model.scholarship import Scholarship
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 from osis_reference_sdk.model.university import University
 from waffle.testutils import override_switch
 
-from admission.contrib.enums import BelgianCommunitiesOfEducation, TypeFormationChoisissable, ForeignDiplomaTypes
+from admission.contrib.enums import (
+    BelgianCommunitiesOfEducation,
+    ForeignDiplomaTypes,
+    TypeFormationChoisissable,
+)
 from admission.contrib.enums.diploma import StudyType
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType, TypeFormation
@@ -618,11 +624,13 @@ class AutocompleteTestCase(TestCase):
                 'id': 'FOOBAR-2021',
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
                 'training_type': TrainingType.MASTER_M1.name,
+                'domain_code': '10C',
             },
             {
                 'id': 'BARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
                 'training_type': TrainingType.MASTER_M1.name,
+                'domain_code': '10C',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
@@ -641,11 +649,13 @@ class AutocompleteTestCase(TestCase):
                 'id': 'FOOBAR-2021',
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
                 'training_type': TrainingType.MASTER_M1.name,
+                'domain_code': '10C',
             },
             {
                 'id': 'BARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
                 'training_type': TrainingType.MASTER_M1.name,
+                'domain_code': '10C',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
@@ -727,21 +737,25 @@ class AutocompleteTestCase(TestCase):
                 'id': 'CONFOOBAR-2021',
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">CONFOOBAR</span>',
                 'training_type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                'domain_code': '10C',
             },
             {
                 'id': 'CONBARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">CONBARBAZ</span>',
                 'training_type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
+                'domain_code': '10C',
             },
             {
                 'id': 'GENFOOBAR-2021',
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">GENFOOBAR</span>',
                 'training_type': TrainingType.CERTIFICATE.name,
+                'domain_code': '10C',
             },
             {
                 'id': 'GENBARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">GENBARBAZ</span>',
                 'training_type': TrainingType.CERTIFICATE.name,
+                'domain_code': '10C',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})

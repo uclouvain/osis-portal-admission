@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, resolve_url
 from django.utils.functional import cached_property
-from django.utils.translation import get_language, gettext as _
+from django.utils.translation import get_language
+from django.utils.translation import gettext as _
 from django.views.generic import FormView
 
 from admission.constants import PROPOSITION_JUST_SUBMITTED
@@ -36,8 +37,9 @@ from admission.contrib.forms.confirm_submit import AdmissionConfirmSubmitForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
 from admission.services.proposition import (
-    AdmissionPropositionService,
+    ADDITIONAL_BUSINESS_EXCEPTIONS,
     TAB_OF_BUSINESS_EXCEPTION,
+    AdmissionPropositionService,
 )
 from admission.templatetags.admission import TAB_TREES, can_read_tab
 
@@ -96,8 +98,9 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         # It is important to get the errors before loading admission data
         context = super().get_context_data(**kwargs)
         context['confirmation_form'] = context.pop('form')
+        context['additional_conditions'] = additional_conditions = {}
 
-        # Group the missing conditions by tab if any
+        # Group the missing conditions by tab or add them to the additional conditions dictionary if any
         if self.confirmation_conditions['errors']:
             errors_by_tab = {
                 tab.name: {'label': tab.label, 'errors': {}}
@@ -106,12 +109,21 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
                 if can_read_tab(self.admission, tab)
             }
             for error in self.confirmation_conditions['errors']:
+                # Additional conditions
+                if error['status_code'] in ADDITIONAL_BUSINESS_EXCEPTIONS:
+                    additional_conditions[error['status_code']] = error['detail']
+                    continue
+
+                # Tab related conditions
                 tab_name = TAB_OF_BUSINESS_EXCEPTION[error['status_code']]
                 if not error['status_code'] in errors_by_tab[tab_name]['errors']:
                     errors_by_tab[tab_name]['errors'][error['status_code']] = []
                 errors_by_tab[tab_name]['errors'][error['status_code']].append(error['detail'])
+
             context['missing_confirmation_conditions'] = errors_by_tab
-            context['missing_confirmations_conditions_number'] = len(self.confirmation_conditions['errors'])
+            context['missing_confirmations_conditions_number'] = len(self.confirmation_conditions['errors']) - len(
+                additional_conditions
+            )
 
         context['access_conditions_url'] = self.confirmation_conditions.get('access_conditions_url')
         context['pool_start_date'] = self.confirmation_conditions.get('pool_start_date')

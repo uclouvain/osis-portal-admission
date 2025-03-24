@@ -788,16 +788,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Copy of both sides of the definitive equivalency decision (accompanied, "
-"where applicable, by the DAES or undergraduate exam, in the case of "
-"restrictive equivalency)"
-msgstr ""
-
-msgid ""
-"Copy of both sides of the definitive equivalency decision by the Ministry of "
-"the French-speaking Community of Belgium (possibly accompanied by the DAES "
-"or the undergraduate studies exam, if your equivalency does not confer "
-"eligibility for the desired programme)"
+"Copy of both sides of the equivalency decision by the Ministry of the French-"
+"speaking Community of Belgium"
 msgstr ""
 
 msgid "Copy of decision to grant CFWB scholarship"
@@ -935,6 +927,9 @@ msgid "Did you graduate from this course?"
 msgstr ""
 
 msgid "Diploma"
+msgstr ""
+
+msgid "Diploma of aptitude for access to higher education (DAES)"
 msgstr ""
 
 msgid "Diploma translation"
@@ -1472,6 +1467,11 @@ msgid ""
 "before %(date)s."
 msgstr ""
 
+msgid ""
+"If your equivalency decision does not give access to the desired training, "
+"please provide your diploma of aptitude for access to higher education (DAES)"
+msgstr ""
+
 msgid "Immediately"
 msgstr ""
 
@@ -1627,6 +1627,9 @@ msgstr ""
 msgid "Listening comprehension"
 msgstr ""
 
+msgid "Logout"
+msgstr ""
+
 msgid "Long"
 msgstr ""
 
@@ -1754,9 +1757,6 @@ msgid "National baccalaureate (or state diploma, etc.)"
 msgstr ""
 
 msgid "No"
-msgstr ""
-
-msgid "No (access to sports facilities on the Saint-Louis campus is free)"
 msgstr ""
 
 msgid "No course created at present."
@@ -1936,6 +1936,12 @@ msgid "Payment of the application fee"
 msgstr ""
 
 msgid "Pending application fee"
+msgstr ""
+
+#, python-format
+msgid ""
+"Pending the publication of the results of the medical and dental entrance "
+"examination, your application can only be submitted from %(start_date)s."
 msgstr ""
 
 msgid "Period"
@@ -2855,6 +2861,9 @@ msgstr "Yes, only in Mons (€12)"
 msgid "Yes, only in Saint-Gilles (E12)"
 msgstr "Yes, only in Saint-Gilles (€12)"
 
+msgid "Yes, only in Saint-Louis (free)"
+msgstr ""
+
 msgid "Yes, only in Tournai (E12)"
 msgstr "Yes, only in Tournai (€12)"
 
@@ -2946,6 +2955,12 @@ msgid ""
 msgstr ""
 
 msgid "Your Belgian student status"
+msgstr ""
+
+msgid ""
+"Your UCLouvain account has been created. If you have not yet activated it, "
+"please follow the instructions received by email and log in with your "
+"UCLouvain account to access your registrations."
 msgstr ""
 
 msgid ""

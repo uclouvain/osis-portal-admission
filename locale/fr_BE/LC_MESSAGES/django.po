@@ -943,24 +943,9 @@ msgstr ""
 "%(person_concerned)s"
 
 msgid ""
-"Copy of both sides of the definitive equivalency decision (accompanied, "
-"where applicable, by the DAES or undergraduate exam, in the case of "
-"restrictive equivalency)"
-msgstr ""
-"Copie recto-verso de la décision d'équivalence définitive (accompagnée "
-"éventuellement du DAES ou de l'examen aux études de premier cycle, en cas "
-"d'équivalence restrictive)"
-
-msgid ""
-"Copy of both sides of the definitive equivalency decision by the Ministry of "
-"the French-speaking Community of Belgium (possibly accompanied by the DAES "
-"or the undergraduate studies exam, if your equivalency does not confer "
-"eligibility for the desired programme)"
-msgstr ""
-"Copie recto-verso de la décision d'équivalence définitive délivrée par le "
-"Ministère de la Communauté française de Belgique (accompagnée éventuellement "
-"du DAES ou de l'examen aux études de premier cycle, si votre équivalence ne "
-"donne pas accès au programme souhaité)"
+"Copy of both sides of the equivalency decision by the Ministry of the French-"
+"speaking Community of Belgium"
+msgstr "Copie recto-verso de la décision d'équivalence"
 
 msgid "Copy of decision to grant CFWB scholarship"
 msgstr ""
@@ -1113,6 +1098,9 @@ msgstr "Avez-vous été diplômé·e au terme de cette formation ?"
 
 msgid "Diploma"
 msgstr "Diplôme"
+
+msgid "Diploma of aptitude for access to higher education (DAES)"
+msgstr "Diplôme d'Aptitude à accéder à l'Enseignement supérieur (DAES)"
 
 msgid "Diploma translation"
 msgstr "Traduction du diplôme"
@@ -1745,6 +1733,13 @@ msgstr ""
 "Dans le cadre d'une modification d'inscription externe, vous devez "
 "impérativement confirmer votre demande avant le %(date)s."
 
+msgid ""
+"If your equivalency decision does not give access to the desired training, "
+"please provide your diploma of aptitude for access to higher education (DAES)"
+msgstr ""
+"Si votre équivalence ne donne pas accès à la formation souhaitée, veuillez "
+"fournir votre Diplôme d’Aptitude à accéder à l’Enseignement supérieur (DAES)"
+
 msgid "Immediately"
 msgstr "Immédiatement"
 
@@ -1905,6 +1900,9 @@ msgstr "Liste des paiements relatifs à cette demande"
 msgid "Listening comprehension"
 msgstr "Compréhension à l'audition"
 
+msgid "Logout"
+msgstr "Se déconnecter"
+
 msgid "Long"
 msgstr "Long"
 
@@ -2036,11 +2034,6 @@ msgstr "Baccalauréat national (ou diplôme d'état, ...)"
 
 msgid "No"
 msgstr "Non"
-
-msgid "No (access to sports facilities on the Saint-Louis campus is free)"
-msgstr ""
-"Non (l'accès aux infrastructures sportives sur le campus Saint-Louis est "
-"gratuit)"
 
 msgid "No course created at present."
 msgstr "Aucun cours créé pour le moment."
@@ -2238,6 +2231,15 @@ msgstr "Paiement des frais de dossier"
 msgid "Pending application fee"
 msgstr "Frais de dossier en attente"
 
+#, python-format
+msgid ""
+"Pending the publication of the results of the medical and dental entrance "
+"examination, your application can only be submitted from %(start_date)s."
+msgstr ""
+"Dans l’attente de la publication des résultats du concours d’entrée en "
+"médecine et dentisterie, votre demande ne pourra être soumise qu'à partir "
+"du %(start_date)s."
+
 msgid "Period"
 msgstr "Période"
 
@@ -2280,7 +2282,8 @@ msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
 
 msgid "Please enter all academic courses you have attended."
-msgstr "Veuillez renseigner toutes les formations académiques que vous avez "
+msgstr ""
+"Veuillez renseigner toutes les formations académiques que vous avez "
 "réalisées."
 
 msgid "Please enter your work email address"
@@ -3279,6 +3282,9 @@ msgstr "Oui, sur Mons uniquement (12 EUR)"
 msgid "Yes, only in Saint-Gilles (E12)"
 msgstr "Oui, sur Saint-Gilles uniquement (12 EUR)"
 
+msgid "Yes, only in Saint-Louis (free)"
+msgstr "Oui, sur Saint-Louis uniquement (gratuit)"
+
 msgid "Yes, only in Tournai (E12)"
 msgstr "Oui, sur Tournai uniquement (12 EUR)"
 
@@ -3395,6 +3401,15 @@ msgstr ""
 
 msgid "Your Belgian student status"
 msgstr "Situation d’assimilation qui vous correspond"
+
+msgid ""
+"Your UCLouvain account has been created. If you have not yet activated it, "
+"please follow the instructions received by email and log in with your "
+"UCLouvain account to access your registrations."
+msgstr ""
+"Votre compte UCLouvain a été créé. Si vous ne l'avez pas encore activé, "
+"veuillez suivre les instructions reçues par mail et connectez-vous avec "
+"votre compte UCLouvain pour accéder à vos inscriptions."
 
 msgid ""
 "Your application cannot be confirmed. The admission requirements do not "

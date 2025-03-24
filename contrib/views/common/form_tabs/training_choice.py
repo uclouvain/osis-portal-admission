@@ -23,14 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+import datetime
 from typing import Optional
 
 from django.contrib import messages
 from django.shortcuts import redirect, resolve_url
+from django.utils.formats import date_format
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
+from admission.constants import MED_DENT_TRAINING_DOMAIN_REGEX
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import (
     OSIS_ADMISSION_EDUCATION_TYPES_MAPPING,
@@ -80,6 +82,13 @@ class AdmissionTrainingChoiceFormView(
         'COMMISSIONS_CDE_CLSM': COMMISSIONS_CDE_CLSM,
         'COMMISSION_CDSS': COMMISSION_CDSS,
         'SCIENCE_DOCTORATE': SCIENCE_DOCTORATE,
+        'MED_DENT_TRAINING_DOMAIN_REGEX': MED_DENT_TRAINING_DOMAIN_REGEX,
+    }
+    NOT_IN_SPECIFIC_ENROLMENT_PERIODS_MESSAGES = {
+        'medicine_dentistry_bachelor': _(
+            'Pending the publication of the results of the medical and dental entrance examination, your application '
+            'can only be submitted from %(start_date)s.'
+        ),
     }
 
     def __init__(self, *args, **kwargs):
@@ -97,6 +106,23 @@ class AdmissionTrainingChoiceFormView(
 
         elif self.is_continuing:
             context['candidate_has_ue_nationality'] = self.admission.pays_nationalite_ue_candidat
+
+        if self.is_on_create or self.is_general:
+            # Some messages are displayed when we are outside of some specific enrolment periods
+            specific_enrolment_periods = AdmissionPropositionService.retrieve_specific_enrolment_periods(
+                person=self.request.user.person
+            )
+            today_date = datetime.date.today()
+
+            context['not_in_specific_enrolment_periods_messages'] = {}
+            for period_key, message in self.NOT_IN_SPECIFIC_ENROLMENT_PERIODS_MESSAGES.items():
+                period = getattr(specific_enrolment_periods, period_key, None)
+
+                if period and not (period.date_debut <= today_date <= period.date_fin):
+                    context['not_in_specific_enrolment_periods_messages'][period_key] = message % {
+                        'start_date': date_format(period.date_debut, 'j F Y'),
+                        'end_date': date_format(period.date_fin, 'j F Y'),
+                    }
 
         return context
 

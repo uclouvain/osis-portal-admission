@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -142,14 +142,13 @@ class ChoixAffiliationSport(ChoiceEnum):
     TOURNAI_UCL = _('Yes, in Tournai and other UCLouvain campuses (E60)')
     TOURNAI = _('Yes, only in Tournai (E12)')
     SAINT_LOUIS_UCL = _('Yes, in Saint-Louis and other UCLouvain campuses (E60)')
+    SAINT_LOUIS = _('Yes, only in Saint-Louis (free)')
     NON = _('No')
 
     @classmethod
     def choices(cls, education_site=''):
         choices = CHOIX_AFFILIATION_SPORT_SELON_SITE.get(education_site, [])
-        return [(x.name, x.value) for x in choices] + [
-            (cls.NON.name, LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE.get(education_site, cls.NON.value))
-        ]
+        return tuple((x.name, x.value) for x in choices + [cls.NON])
 
 
 class ChoixTypeCompteBancaire(ChoiceEnum):
@@ -165,6 +164,7 @@ CHOIX_AFFILIATION_SPORT_SELON_SITE = {
     ],
     'Bruxelles Saint-Louis': [
         ChoixAffiliationSport.SAINT_LOUIS_UCL,
+        ChoixAffiliationSport.SAINT_LOUIS,
     ],
     'Bruxelles Woluwe': [
         ChoixAffiliationSport.LOUVAIN_WOLUWE,
@@ -180,8 +180,4 @@ CHOIX_AFFILIATION_SPORT_SELON_SITE = {
         ChoixAffiliationSport.TOURNAI_UCL,
         ChoixAffiliationSport.TOURNAI,
     ],
-}
-
-LABEL_AFFILIATION_SPORT_SI_NEGATIF_SELON_SITE = {
-    'Bruxelles Saint-Louis': _('No (access to sports facilities on the Saint-Louis campus is free)'),
 }

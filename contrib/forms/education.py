@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,30 +26,31 @@
 from dal import forward
 from django import forms
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _, pgettext_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
+from osis_document.contrib.widgets import HiddenFileWidget
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import HAS_DIPLOMA_CHOICES
 from admission.contrib.enums.secondary_studies import (
+    EDUCATIONAL_TYPES,
     BelgianCommunitiesOfEducation,
     DiplomaTypes,
-    EDUCATIONAL_TYPES,
     Equivalence,
     ForeignDiplomaTypes,
     GotDiploma,
 )
+from admission.contrib.forms import EMPTY_CHOICE
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
     autocomplete,
     get_country_initial_choices,
     get_high_school_initial_choices,
     get_language_initial_choices,
     get_past_academic_years_choices,
-    EMPTY_CHOICE,
-    AdmissionFileUploadField as FileUploadField,
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
-from admission.services.reference import CountriesService, AcademicYearService
-from osis_document.contrib.widgets import HiddenFileWidget
+from admission.services.reference import AcademicYearService, CountriesService
 
 
 def disable_fields(condition, fields, fields_to_keep_enabled_names=None):
@@ -341,9 +342,7 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
     )
     final_equivalence_decision_not_ue = FileUploadField(
         label=_(
-            "Copy of both sides of the definitive equivalency decision by the Ministry of the French-speaking "
-            "Community of Belgium (possibly accompanied by the DAES or the undergraduate studies exam, if your "
-            "equivalency does not confer eligibility for the desired programme)"
+            "Copy of both sides of the equivalency decision by the Ministry of the French-speaking Community of Belgium"
         ),
         help_text=_(
             "For any secondary school diploma from a country outside the European Union, the application for admission "
@@ -353,10 +352,23 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         max_files=2,
         required=False,
     )
+    access_diploma_to_higher_education_not_ue = FileUploadField(
+        label=_(
+            'If your equivalency decision does not give access to the desired training, please provide your diploma of '
+            'aptitude for access to higher education (DAES)'
+        ),
+        help_text=(
+            "<a href='{link}' target='_blank'>{link}</a>".format(
+                link='https://jurys.cfwb.be/jurys-secondaires/obtenir-mon-diplome/'
+                'diplome-daptitude-a-acceder-a-lenseignement-superieur-daes/'
+            )
+        ),
+        max_files=1,
+        required=False,
+    )
     final_equivalence_decision_ue = FileUploadField(
         label=_(
-            "Copy of both sides of the definitive equivalency decision (accompanied, where applicable, by the DAES "
-            "or undergraduate exam, in the case of restrictive equivalency)"
+            "Copy of both sides of the equivalency decision by the Ministry of the French-speaking Community of Belgium"
         ),
         help_text=_(
             "If you have a final equivalence decision issued by the "
@@ -364,6 +376,20 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
             "provide a double-sided copy of this document."
         ),
         max_files=2,
+        required=False,
+    )
+    access_diploma_to_higher_education_ue = FileUploadField(
+        label=_(
+            'If your equivalency decision does not give access to the desired training, please provide your diploma of '
+            'aptitude for access to higher education (DAES)'
+        ),
+        help_text=(
+            "<a href='{link}' target='_blank'>{link}</a>".format(
+                link='https://jurys.cfwb.be/jurys-secondaires/obtenir-mon-diplome/'
+                'diplome-daptitude-a-acceder-a-lenseignement-superieur-daes/'
+            )
+        ),
+        max_files=1,
         required=False,
     )
     equivalence_decision_proof = FileUploadField(
