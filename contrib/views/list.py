@@ -24,7 +24,9 @@
 #
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 from django.views.generic import TemplateView
+from django.utils.translation import gettext_lazy as _
 
 from admission.constants import PROPOSITION_JUST_SUBMITTED
 from admission.contrib.enums import CANCELLED_STATUSES
@@ -36,6 +38,8 @@ __all__ = [
     "DoctorateAdmissionMemberListView",
 ]
 __namespace__ = False
+
+from continuing_education.views.common import display_warning_messages
 
 
 class AdmissionListView(LoginRequiredMixin, TemplateView):
@@ -56,6 +60,22 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
         context["general_education_tab_tree"] = TAB_TREES['general-education']
         context['CANCELLED_STATUSES'] = CANCELLED_STATUSES
         context['just_submitted_from'] = self.request.session.pop(PROPOSITION_JUST_SUBMITTED, None)
+
+        if getattr(result, 'donnees_transferees_vers_compte_interne', False):
+            msg = _(
+                'Your UCLouvain account has been created. If you have not yet activated it, please '
+                'follow the instructions received by email and log in with your UCLouvain account to '
+                'access your registrations.'
+            )
+            logout_url = reverse('admission:logout')
+            btn_msg = _('Logout')
+
+            display_warning_messages(
+                self.request,
+                f"{str(msg)} <br>"
+                f"<a href='{logout_url}' class='btn btn-sm btn-info' style='margin-top:5px;'>{str(btn_msg)}</button>"
+            )
+
         return context
 
 

@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+import datetime
 import uuid
 from unittest.mock import ANY, MagicMock, Mock, patch
 
@@ -77,6 +77,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     },
                     'education_group_type': 'MASTER_MA_120',
                     'management_entity': 'ME1',
+                    'domain_code': '10A',
                 },
             ),
             'TR2': Mock(
@@ -90,6 +91,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     },
                     'education_group_type': 'CERTIFICATE_OF_PARTICIPATION',
                     'management_entity': 'ME2',
+                    'domain_code': '10A',
                 },
             ),
             'TR3': Mock(
@@ -103,6 +105,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     },
                     'education_group_type': 'PHD',
                     'management_entity': 'CDE',
+                    'domain_code': '10A',
                 },
             ),
             'TR4': Mock(
@@ -116,6 +119,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     },
                     'education_group_type': 'PHD',
                     'management_entity': 'CDSS',
+                    'domain_code': '10A',
                 },
             ),
             'TR5': Mock(
@@ -129,6 +133,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     },
                     'education_group_type': 'CERTIFICATE',
                     'management_entity': 'ME1',
+                    'domain_code': '10A',
                 },
             ),
             'SC3DP': Mock(
@@ -142,6 +147,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
                     },
                     'education_group_type': 'PHD',
                     'management_entity': 'ME3',
+                    'domain_code': '10A',
                 },
             ),
         }.get(acronym)
@@ -707,6 +713,13 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             ),
         ]
 
+        cls.specific_periods = MagicMock(
+            medicine_dentistry_bachelor=MagicMock(
+                date_debut=datetime.date(2021, 9, 15),
+                date_fin=datetime.date(2022, 2, 15),
+            )
+        )
+
     def setUp(self):
         # Mock proposition sdk api
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
@@ -720,6 +733,7 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = (
             self.continuing_proposition
         )
+        self.mock_proposition_api.return_value.retrieve_specific_enrolment_periods.return_value = self.specific_periods
         self.mock_proposition_api.return_value.create_continuing_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.create_general_training_choice.side_effect = self.init_training_choice
         self.mock_proposition_api.return_value.create_doctorate_training_choice.side_effect = self.init_training_choice

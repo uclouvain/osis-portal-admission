@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain
+  * Copyright (C) 2015-2025 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -112,12 +112,16 @@
       </div>
 
       <div class="equivalence-fields">
-        {% bootstrap_field_with_tooltip foreign_diploma_form.final_equivalence_decision_not_ue classes="required_field" %}
+        <div id="equivalence_not_ue">
+          {% bootstrap_field_with_tooltip foreign_diploma_form.final_equivalence_decision_not_ue classes="required_field" %}
+          {% bootstrap_field_with_tooltip foreign_diploma_form.access_diploma_to_higher_education_not_ue %}
+        </div>
 
         <div id="equivalence_ue">
           {% bootstrap_field foreign_diploma_form.equivalence form_group_class="form-group required_field" %}
           <div id="final_equivalence_decision_ue">
             {% bootstrap_field_with_tooltip foreign_diploma_form.final_equivalence_decision_ue classes="required_field" %}
+            {% bootstrap_field_with_tooltip foreign_diploma_form.access_diploma_to_higher_education_ue %}
           </div>
           <div id="equivalence_decision_proof">
             {% bootstrap_field_with_tooltip foreign_diploma_form.equivalence_decision_proof classes="required_field" %}
@@ -322,7 +326,7 @@
               });
 
               {# Not UE equivalence #}
-              $('#container_final_equivalence_decision_not_ue').dependsOn({
+              $('#equivalence_not_ue').dependsOn({
                   '#id_foreign_diploma-country': { is_truthy, is_not_ue_country },
               });
 

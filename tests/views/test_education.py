@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ from admission.contrib.enums.secondary_studies import (
     ForeignDiplomaTypes,
     GotDiploma,
 )
-from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
+from admission.contrib.forms import EMPTY_CHOICE, PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.academic_year import get_current_year
@@ -101,7 +101,9 @@ class BaseEducationTestCase(TestCase):
             "foreign_diploma-equivalence": Equivalence.PENDING.name,
             "foreign_diploma-high_school_transcript_0": "test",
             "foreign_diploma-final_equivalence_decision_ue_0": "test_ue",
+            "foreign_diploma-access_diploma_to_higher_education_ue_0": "test_daes_ue",
             "foreign_diploma-final_equivalence_decision_not_ue_0": "test_not_ue",
+            "foreign_diploma-access_diploma_to_higher_education_not_ue_0": "test_daes_not_ue",
         }
 
         cls.default_kwargs = {
@@ -983,7 +985,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.NO.name)
         self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_ue"), [])
         self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
 
     def test_bachelor_form_foreign_pending_equivalence_for_ue_country(self):
@@ -1003,7 +1007,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.PENDING.name)
         self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_ue"), [])
         self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), ["test"])
 
     def test_bachelor_form_foreign_existing_equivalence_for_ue_country(self):
@@ -1013,6 +1019,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 **self.foreign_data,
                 "foreign_diploma-equivalence": Equivalence.YES.name,
                 "foreign_diploma-final_equivalence_decision_ue_0": "test_ue",
+                "foreign_diploma-access_diploma_to_higher_education_ue_0": "test_daes_ue",
             },
         )
 
@@ -1023,7 +1030,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.YES.name)
         self.assertEqual(sent.get("final_equivalence_decision_ue"), ["test_ue"])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_ue"), ["test_daes_ue"])
         self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
 
     def test_bachelor_form_foreign_error_if_no_equivalence_for_ue_country_equivalence(self):
@@ -1055,7 +1064,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.NO.name)
         self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_ue"), [])
         self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
 
     def test_bachelor_form_foreign_pending_equivalence_for_ue_country_equivalence(self):
@@ -1078,7 +1089,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.PENDING.name)
         self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_ue"), [])
         self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), ["test"])
 
     def test_bachelor_form_foreign_existing_equivalence_for_ue_country_equivalence(self):
@@ -1091,6 +1104,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "foreign_diploma-country": "US",
                 "foreign_diploma-equivalence": Equivalence.YES.name,
                 "foreign_diploma-final_equivalence_decision_ue_0": "test_ue",
+                "foreign_diploma-access_diploma_to_higher_education_ue_0": "test_daes_ue",
             },
         )
 
@@ -1101,7 +1115,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), Equivalence.YES.name)
         self.assertEqual(sent.get("final_equivalence_decision_ue"), ["test_ue"])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_ue"), ["test_daes_ue"])
         self.assertEqual(sent.get("final_equivalence_decision_not_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_not_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
 
     def test_bachelor_form_foreign_existing_equivalence_for_not_ue_country(self):
@@ -1111,6 +1127,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 **self.foreign_data,
                 "foreign_diploma-country": "US",
                 "foreign_diploma-final_equivalence_decision_not_ue_0": "test_not_ue",
+                "foreign_diploma-access_diploma_to_higher_education_not_ue_0": "test_daes_not_ue",
             },
         )
 
@@ -1121,7 +1138,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         ]["foreign_diploma"]
         self.assertEqual(sent.get("equivalence"), '')
         self.assertEqual(sent.get("final_equivalence_decision_not_ue"), ["test_not_ue"])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_not_ue"), ["test_daes_not_ue"])
         self.assertEqual(sent.get("final_equivalence_decision_ue"), [])
+        self.assertEqual(sent.get("access_diploma_to_higher_education_ue"), [])
         self.assertEqual(sent.get("equivalence_decision_proof"), [])
 
     def test_bachelor_form_foreign(self):
@@ -1165,7 +1184,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "equivalence": "",
                     "equivalence_decision_proof": [],
                     "final_equivalence_decision_ue": [],
+                    "access_diploma_to_higher_education_ue": [],
                     "final_equivalence_decision_not_ue": [],
+                    "access_diploma_to_higher_education_not_ue": [],
                 },
                 "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
@@ -1217,7 +1238,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "equivalence": Equivalence.PENDING.name,
                     "equivalence_decision_proof": ["test"],
                     "final_equivalence_decision_ue": [],
+                    "access_diploma_to_higher_education_ue": [],
                     "final_equivalence_decision_not_ue": [],
+                    "access_diploma_to_higher_education_not_ue": [],
                 },
                 "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
@@ -1309,7 +1332,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "high_school_diploma_translation": [],
                     "equivalence": "NO",
                     "final_equivalence_decision_ue": [],
+                    "access_diploma_to_higher_education_ue": [],
                     "final_equivalence_decision_not_ue": [],
+                    "access_diploma_to_higher_education_not_ue": [],
                 },
                 "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
