@@ -1084,6 +1084,9 @@ msgstr ""
 msgid "Evaluation system"
 msgstr ""
 
+msgid "Exam"
+msgstr ""
+
 msgid "Existing pre-admission"
 msgstr ""
 
@@ -2498,6 +2501,9 @@ msgstr ""
 msgid "The type of the admission form item is unknown (%(type)s)."
 msgstr ""
 
+msgid "There is no exam required for this course."
+msgstr ""
+
 msgid "Thesis language"
 msgstr ""
 
@@ -2815,6 +2821,9 @@ msgid "Year"
 msgstr ""
 
 msgid "Year of birth"
+msgstr ""
+
+msgid "Year of obtaining this proof"
 msgstr ""
 
 msgid "Year without enrolling in the course."

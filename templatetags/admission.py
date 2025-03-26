@@ -201,6 +201,7 @@ TAB_TREES = {
         Tab('experience', _('Previous experience'), 'person-walking-luggage'): [
             Tab('education', _('Secondary studies')),
             Tab('curriculum', _('Curriculum')),
+            Tab('exam', _('Exam')),
         ],
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('accounting', _('Accounting')),

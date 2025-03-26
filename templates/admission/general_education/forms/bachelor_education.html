@@ -190,6 +190,7 @@
     {% panel _("Attachments") %}
       <div class="{% if not is_vae_potential %}required_field{% endif %}">
         {% bootstrap_field main_form.first_cycle_admission_exam %}
+        {% bootstrap_field main_form.first_cycle_admission_exam_year %}
       </div>
     {% endpanel %}
   </div>

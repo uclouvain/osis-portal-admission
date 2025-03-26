@@ -1273,6 +1273,9 @@ msgstr "ERC - European Research Council"
 msgid "Evaluation system"
 msgstr "Système d'évaluation"
 
+msgid "Exam"
+msgstr "Examen"
+
 msgid "Existing pre-admission"
 msgstr "Pré-admission existante"
 
@@ -2873,6 +2876,9 @@ msgstr ""
 msgid "The type of the admission form item is unknown (%(type)s)."
 msgstr "Le type de l'élément du formulaire d'admission est inconnu (%(type)s)."
 
+msgid "There is no exam required for this course."
+msgstr "Il n'y a pas d'examen requis pour cette formation."
+
 msgid "Thesis language"
 msgstr "Langue de rédaction de la thèse"
 
@@ -3237,6 +3243,9 @@ msgstr "Année"
 
 msgid "Year of birth"
 msgstr "Année de naissance"
+
+msgid "Year of obtaining this proof"
+msgstr "Année d’obtention de cette attestation"
 
 msgid "Year without enrolling in the course."
 msgstr "Année sans inscription à la formation."
