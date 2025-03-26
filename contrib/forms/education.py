@@ -156,6 +156,12 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         max_files=1,
         required=False,
     )
+    first_cycle_admission_exam_year = forms.TypedChoiceField(
+        label=_('Year of obtaining this proof'),
+        widget=autocomplete.Select2(),
+        coerce=int,
+        required=False,
+    )
 
     class Media:
         js = ("js/dependsOn.min.js",)
@@ -167,6 +173,11 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
         foreign_diploma = self.initial.get("foreign_diploma")
         high_school_diploma_alternative = self.initial.get("high_school_diploma_alternative")
 
+        self.fields['first_cycle_admission_exam_year'].choices = get_past_academic_years_choices(
+            kwargs['person'],
+            format_label_function=lambda academic_year: str(academic_year.year + 1),
+        )
+
         diploma = belgian_diploma or foreign_diploma
         # Select the correct diploma type if one has been saved
         if diploma:
@@ -175,9 +186,8 @@ class BachelorAdmissionEducationForm(BaseAdmissionEducationForm):
             )
             self.fields['high_school_diploma'].initial = diploma.get("high_school_diploma")
         elif high_school_diploma_alternative:
-            self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get(
-                "first_cycle_admission_exam"
-            )
+            self.fields['first_cycle_admission_exam'].initial = high_school_diploma_alternative.get("certificate")
+            self.fields['first_cycle_admission_exam_year'].initial = high_school_diploma_alternative.get("year")
         disable_fields(not self.can_update_diploma, self.fields, {self.configurable_form_field_name})
 
     def clean(self):
