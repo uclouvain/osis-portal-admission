@@ -191,7 +191,13 @@ def get_scholarship_choices(uuid, person):
     return EMPTY_CHOICE + ((uuid, format_scholarship(scholarship)),)
 
 
-def get_past_academic_years_choices(person, exclude_current=False, current_year=None, academic_years=None):
+def get_past_academic_years_choices(
+    person,
+    exclude_current=False,
+    current_year=None,
+    academic_years=None,
+    format_label_function=None,
+):
     """Return a list of choices of past academic years."""
     if academic_years is None:
         academic_years = AcademicYearService.get_academic_years(person)
@@ -204,8 +210,15 @@ def get_past_academic_years_choices(person, exclude_current=False, current_year=
 
     lower_year = current_year - 100
 
+    if format_label_function is None:
+
+        def default_format_label_function(academic_year):
+            return f"{academic_year.year}-{academic_year.year + 1}"
+
+        format_label_function = default_format_label_function
+
     return EMPTY_CHOICE + tuple(
-        (academic_year.year, f"{academic_year.year}-{academic_year.year + 1}")
+        (academic_year.year, format_label_function(academic_year))
         for academic_year in academic_years
         if current_year >= academic_year.year >= lower_year
     )
