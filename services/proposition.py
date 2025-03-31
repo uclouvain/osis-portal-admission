@@ -59,6 +59,7 @@ __all__ = [
     "AdmissionSupervisionService",
     "TAB_OF_BUSINESS_EXCEPTION",
     "BUSINESS_EXCEPTIONS_BY_TAB",
+    "ADDITIONAL_BUSINESS_EXCEPTIONS",
     "PropositionBusinessException",
     "GlobalPropositionBusinessException",
 ]
@@ -76,6 +77,10 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     @classmethod
     def get_dashboard_links(cls, person: Person):
         return APIClient().retrieve_dashboard(**build_mandatory_auth_headers(person)).to_dict().get('links', {})
+
+    @classmethod
+    def retrieve_specific_enrolment_periods(cls, person: Person):
+        return APIClient().retrieve_specific_enrolment_periods(**build_mandatory_auth_headers(person))
 
     @classmethod
     def list_proposition_create_permissions(cls, person):
@@ -551,6 +556,9 @@ class GlobalPropositionBusinessException(Enum):
     PosteDiplomatiqueNonTrouveException = "ADMISSION-19"
     ResidenceAuSensDuDecretNonDisponiblePourInscriptionException = "ADMISSION-20"
     DocumentsReclamesImmediatementNonCompletesException = "ADMISSION-21"
+    ExperienceNonTrouveeException = "ADMISSION-22"
+    EnQuarantaineException = "ADMISSION-23"
+    HorsPeriodeSpecifiqueInscription = "ADMISSION-24"
 
 
 class FormationGeneraleBusinessException(Enum):
@@ -691,6 +699,10 @@ TAB_OF_BUSINESS_EXCEPTION = {}
 for tab in BUSINESS_EXCEPTIONS_BY_TAB:
     for exception in BUSINESS_EXCEPTIONS_BY_TAB[tab]:
         TAB_OF_BUSINESS_EXCEPTION[exception.value] = tab
+
+ADDITIONAL_BUSINESS_EXCEPTIONS = {
+    GlobalPropositionBusinessException.HorsPeriodeSpecifiqueInscription.value,
+}
 
 
 class AdmissionCotutelleService(metaclass=ServiceMeta):

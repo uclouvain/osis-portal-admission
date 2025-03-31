@@ -351,8 +351,18 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                 person=self.person,
                 training=general_education_training,
             )
-            self.fields['general_education_training'].widget.choices = get_training_choices(
-                training=self.general_education_training_obj,
+            general_choices = get_training_choices(training=self.general_education_training_obj)
+
+            # We need to provide additional data so we use the data attribute instead of the choice
+            self.fields['general_education_training'].widget.attrs['data-data'] = json.dumps(
+                [
+                    {
+                        'id': general_choices[0][0],
+                        'text': general_choices[0][1],
+                        'domain_code': self.general_education_training_obj['domain_code'],
+                        'training_type': self.general_education_training_obj['education_group_type'],
+                    }
+                ]
             )
             self.fields['training_type'].initial = ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE.get(
                 self.general_education_training_obj.get('education_group_type')

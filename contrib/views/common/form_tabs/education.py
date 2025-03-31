@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ from django.views.generic import FormView
 
 from admission.constants import LINGUISTIC_REGIMES_WITHOUT_TRANSLATION, PLUS_5_ISO_CODES
 from admission.contrib.enums.secondary_studies import (
+    HAS_DIPLOMA_CHOICES,
     BelgianCommunitiesOfEducation,
     DiplomaTypes,
     Equivalence,
     ForeignDiplomaTypes,
     GotDiploma,
-    HAS_DIPLOMA_CHOICES,
 )
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
@@ -45,7 +45,10 @@ from admission.contrib.forms.education import (
     BaseAdmissionEducationForm,
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
-from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
+from admission.services.mixins import (
+    FormMixinWithSpecificQuestions,
+    WebServiceFormMixin,
+)
 from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
@@ -278,6 +281,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
 
             if not is_bachelor or equivalence_ue_country:
                 foreign_diploma_data["final_equivalence_decision_not_ue"] = []
+                foreign_diploma_data["access_diploma_to_higher_education_not_ue"] = []
 
             if (
                 not is_bachelor
@@ -292,6 +296,7 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 or foreign_diploma_data["equivalence"] != Equivalence.YES.name
             ):
                 foreign_diploma_data["final_equivalence_decision_ue"] = []
+                foreign_diploma_data["access_diploma_to_higher_education_ue"] = []
 
             # Clean fields depending on the linguistic regime
             if foreign_diploma_data.get("linguistic_regime"):

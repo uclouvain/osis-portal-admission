@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -58,7 +58,13 @@
       {% field_data _('Determined pool') admission.pot_calcule css_class='debug-content' %}
     {% endswitch %}
 
-    {% if missing_confirmation_conditions %}
+    {% if additional_conditions %}
+      {% for condition in additional_conditions.values %}
+        <p class="alert alert-warning">{{ condition }}</p>
+      {% endfor %}
+    {% endif %}
+
+    {% if missing_confirmations_conditions_number %}
       {% url base_namespace|add:':update:training-choice' admission.uuid as training_choice_url %}
       {% url base_namespace|add:':update:curriculum' admission.uuid as cv_url %}
 
@@ -208,10 +214,11 @@
       </table>
 
     {% else %}
-      <p class="alert alert-success">
-        {% trans "Your application is complete and may be submitted." %}
-      </p>
-      <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
+      {% if not additional_conditions %}
+        <p class="alert alert-success">
+          {% trans "Your application is complete and may be submitted." %}
+        </p>
+        <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
         {% csrf_token %}
         {% for field in confirmation_form.hidden_fields %}
           {% bootstrap_field field %}
@@ -241,6 +248,7 @@
             {% endif %}
           {% endpanel %}
         {% endif %}
+      {% endif %}
 
         <p class="alert alert-info confirmation-warning">
           {% blocktrans trimmed %}
@@ -254,7 +262,11 @@
         <div
             id="submit-button-wrapper"
             class="pull-right"
+            {% if additional_conditions %}
+            title="{% for condition in additional_conditions.values %}{{ condition }}{% endfor %}"
+            {% else %}
             title="{% trans "Sending the request requires your agreement with all of the following elements" %}"
+            {% endif %}
         >
           <button
               type="button"
@@ -340,7 +352,7 @@
           const formButton = $('button[type="button"]', form).first();
           $submitWrapper.tooltip();
 
-          {% if missing_confirmation_conditions %}
+          {% if missing_confirmation_conditions or additional_conditions %}
               formButton.prop('disabled', true);
           {% else %}
               $('input[type="checkbox"], input[type="radio"]', form).change(function () {

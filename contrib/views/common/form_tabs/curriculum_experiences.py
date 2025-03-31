@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -44,11 +44,11 @@ from admission.constants import (
     LINGUISTIC_REGIMES_WITHOUT_TRANSLATION,
 )
 from admission.contrib.enums import (
+    CURRICULUM_ACTIVITY_LABEL,
     EvaluationSystem,
     EvaluationSystemsWithCredits,
-    TranscriptType,
-    CURRICULUM_ACTIVITY_LABEL,
     Result,
+    TranscriptType,
 )
 from admission.contrib.forms import (
     FOLLOWING_FORM_SET_PREFIX,
@@ -57,16 +57,16 @@ from admission.contrib.forms import (
     OSIS_DOCUMENT_UPLOADER_CLASS_PREFIX,
 )
 from admission.contrib.forms.curriculum import (
+    MINIMUM_CREDIT_NUMBER,
     AdmissionCurriculumEducationalExperienceForm,
     AdmissionCurriculumEducationalExperienceYearFormSet,
     AdmissionCurriculumProfessionalExperienceForm,
-    MINIMUM_CREDIT_NUMBER,
 )
 from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
     AdmissionCurriculumMixin,
+    experience_can_be_updated,
     get_educational_experience_year_set_with_lost_years,
     initialize_field_texts,
-    experience_can_be_updated,
 )
 from admission.services.mixins import WebServiceFormMixin
 
@@ -122,7 +122,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
     }
     template_name = 'admission/forms/curriculum_professional_experience.html'
     form_class = AdmissionCurriculumProfessionalExperienceForm
-    url_hash = '#non-academic-activities'
+    url_hash = '#curriculum-header'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -183,7 +183,7 @@ class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFor
     urlpatterns = {'professional_delete': 'professional/<uuid:experience_id>/delete'}
     form_class = forms.Form
     template_name = 'admission/forms/curriculum_experience_delete.html'
-    url_hash = '#non-academic-activities'
+    url_hash = '#curriculum-header'
 
     def call_webservice(self, _):
         self.service_mapping[self.current_context].delete_professional_experience(
@@ -209,7 +209,7 @@ class AdmissionCurriculumEducationalExperienceDeleteView(AdmissionCurriculumForm
     }
     form_class = forms.Form
     template_name = 'admission/forms/curriculum_experience_delete.html'
-    url_hash = '#academic-activities'
+    url_hash = '#curriculum-header'
 
     def call_webservice(self, _):
         self.service_mapping[self.current_context].delete_educational_experience(
@@ -237,7 +237,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
         'educational_create': 'educational/create',
     }
     template_name = 'admission/forms/curriculum_educational_experience.html'
-    url_hash = '#academic-activities'
+    url_hash = '#curriculum-header'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

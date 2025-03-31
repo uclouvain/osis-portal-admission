@@ -88,6 +88,12 @@
         </div>
       </div>
 
+      <p
+        id="specific-enrolment-periods-errors"
+        class="alert alert-warning hidden"
+      >
+      </p>
+
     </div>
   {% endpanel %}
 
@@ -192,7 +198,7 @@
           const relatedPreAdmissionNoOption = allPreAdmissionOptions.filter('[value="NO"]').first();
           const relatedPreAdmissionContainer = $('#related-pre-admission-container');
 
-          const fieldsThatMustBeInitialized = new Set(['id_mixed_training', 'id_doctorate_training']);
+          const fieldsThatMustBeInitialized = new Set(['id_mixed_training', 'id_doctorate_training', 'id_general_education_training']);
 
           $(document).on('dal-element-initialized', function (e) {
               // We need to wait that select2 has been initialized as the display depends on some specific fields
@@ -222,6 +228,33 @@
               $('#general-education-training-container').dependsOn({
                   '#id_training_type': {values: GENERAL_EDUCATION_TYPES},
               }, defaultOptions);
+
+              {# Some enrolments are impossible now because they need to respect some periods #}
+              const specificEnrolmentPeriodsErrors = $('#specific-enrolment-periods-errors');
+
+              {# A training is related to the medicine and dentistry domains if the domain code starts by some values #}
+              const medDentDomainCodeRegex = new RegExp('{{ MED_DENT_TRAINING_DOMAIN_REGEX }}');
+
+              {% if not_in_specific_enrolment_periods_messages %}
+                  $('#id_general_education_training').change(function () {
+                      const data = $(this).select2('data');
+                      let messageToDisplay = '';
+
+                      if (data.length > 0) {
+                          const trainingData = data[0];
+
+                          {# The enrolment to a medicine or dentistry bachelor is impossible now #}
+                          {% if not_in_specific_enrolment_periods_messages.medicine_dentistry_bachelor %}
+                              if (trainingData['training_type'] === 'BACHELOR' && medDentDomainCodeRegex.test(trainingData['domain_code'])) {
+                                  messageToDisplay = "{{ not_in_specific_enrolment_periods_messages.medicine_dentistry_bachelor|safe }}";
+                              }
+                          {% endif %}
+                      }
+
+                      specificEnrolmentPeriodsErrors.text(messageToDisplay);
+                      specificEnrolmentPeriodsErrors.toggleClass('hidden', messageToDisplay === '');
+                  }).change();
+              {% endif %}
 
               // Continuing education
 
