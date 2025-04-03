@@ -427,13 +427,22 @@
 
               // Student profile part
 
-              // Display right scholaships depending on the training type
+              // Display right scholarships depending on the training type
 
               $('#student-profile').dependsOn({
                   '#id_training_type': {
                       values: ['MASTER'],
                   },
-              }, defaultOptions);
+              }, defaultOptions).or({
+                  '#id_training_type': {values: ['CERTIFICAT_ATTESTATION']},
+                  '#id_mixed_training': {
+                      changed: function() {
+                          const training = $('#id_mixed_training');
+                          const data = training.select2('data');
+                          return data.length > 0 && data[0].training_type === 'CERTIFICATE';
+                      }
+                  },
+              });
 
               // Display scholarship search fields when it's required
 
