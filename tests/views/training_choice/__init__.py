@@ -66,6 +66,20 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
     @classmethod
     def get_training(cls, acronym, year, **kwargs):
         return {
+            'TR0': Mock(
+                to_dict=lambda: {
+                    'acronym': 'TR0',
+                    'academic_year': year,
+                    'title': 'Formation 0',
+                    'title_en': 'Training 0',
+                    'main_teaching_campus': {
+                        'name': 'Louvain-La-Neuve',
+                    },
+                    'education_group_type': 'BACHELOR',
+                    'management_entity': 'ME0',
+                    'domain_code': '10A',
+                },
+            ),
             'TR1': Mock(
                 to_dict=lambda: {
                     'acronym': 'TR1',
@@ -323,18 +337,21 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
+            avec_bourse_double_diplome=True,
             bourse_double_diplome=Mock(
                 uuid=cls.double_degree_scholarship.uuid,
                 nom_court=cls.double_degree_scholarship.short_name,
                 nom_long=cls.double_degree_scholarship.long_name,
                 type=cls.double_degree_scholarship.type,
             ),
+            avec_bourse_internationale=True,
             bourse_internationale=Mock(
                 uuid=cls.international_scholarship.uuid,
                 nom_court=cls.international_scholarship.short_name,
                 nom_long=cls.international_scholarship.long_name,
                 type=cls.international_scholarship.type,
             ),
+            avec_bourse_erasmus_mundus=True,
             bourse_erasmus_mundus=Mock(
                 uuid=cls.first_erasmus_mundus_scholarship.uuid,
                 nom_court=cls.first_erasmus_mundus_scholarship.short_name,
@@ -368,8 +385,11 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
+            avec_bourse_double_diplome=None,
             bourse_double_diplome=None,
+            avec_bourse_internationale=None,
             bourse_internationale=None,
+            avec_bourse_erasmus_mundus=None,
             bourse_erasmus_mundus=None,
             reponses_questions_specifiques={
                 cls.first_question_uuid: 'My answer',
