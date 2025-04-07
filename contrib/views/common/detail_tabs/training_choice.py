@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 # ##############################################################################
 from django.views.generic import TemplateView
 
+from admission.contrib.enums import TRAINING_TYPES_WITH_SCHOLARSHIP
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.proposition import AdmissionPropositionService
@@ -47,7 +48,10 @@ class TrainingChoiceDetailView(LoadDossierViewMixin, TemplateView):
                 self.request.user.person,
                 uuid=self.admission_uuid,
             )
-        return super().get_context_data(**kwargs)
+
+        context_data = super().get_context_data(**kwargs)
+        context_data['TRAINING_TYPES_WITH_SCHOLARSHIP'] = TRAINING_TYPES_WITH_SCHOLARSHIP
+        return context_data
 
     def get_template_names(self):
         return [

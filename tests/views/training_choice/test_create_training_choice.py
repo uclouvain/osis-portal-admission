@@ -502,7 +502,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             **self.default_kwargs,
         )
 
-    def test_general_education_form_submitting_without_required_fields(self):
+    def test_general_education_form_submitting_without_required_fields_for_a_master(self):
         response = self.client.post(
             self.url,
             data={
@@ -518,6 +518,19 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertTrue('general_education_training' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['general_education_training'])
 
+    def test_general_education_form_submitting_without_required_scholarship_fields_for_a_master(self):
+        response = self.client.post(
+            self.url,
+            data={
+                'training_type': TypeFormation.MASTER.name,
+                'campus': EMPTY_VALUE,
+                'general_education_training': 'TR1-2020',
+            },
+        )
+
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+
         self.assertTrue('has_double_degree_scholarship' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['has_double_degree_scholarship'])
 
@@ -527,12 +540,12 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertTrue('has_erasmus_mundus_scholarship' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['has_erasmus_mundus_scholarship'])
 
-    def test_general_education_form_submitting_without_required_scholarship_fields(self):
         response = self.client.post(
             self.url,
             data={
                 'training_type': TypeFormation.MASTER.name,
                 'campus': EMPTY_VALUE,
+                'general_education_training': 'TR1-2020',
                 'has_double_degree_scholarship': True,
                 'has_international_scholarship': True,
                 'has_erasmus_mundus_scholarship': True,
@@ -551,7 +564,89 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertTrue('erasmus_mundus_scholarship' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['erasmus_mundus_scholarship'])
 
-    def test_general_education_form_submitting(self):
+    def test_general_education_form_submitting_for_a_bachelor(self):
+        response = self.client.post(
+            self.url,
+            data={
+                'training_type': TypeFormation.BACHELIER.name,
+                'campus': EMPTY_VALUE,
+            },
+        )
+
+        form = response.context['form']
+
+        self.assertFalse(form.is_valid())
+
+        self.assertTrue('general_education_training' in form.errors)
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['general_education_training'])
+
+        response = self.client.post(
+            self.url,
+            data={
+                'training_type': TypeFormation.BACHELIER.name,
+                'campus': EMPTY_VALUE,
+                'general_education_training': 'TR0-2020',
+            },
+        )
+
+        self.mock_proposition_api.return_value.create_general_training_choice.assert_called_with(
+            initier_proposition_generale_command={
+                'sigle_formation': 'TR0',
+                'annee_formation': 2020,
+                'matricule_candidat': self.person.global_id,
+                'avec_bourse_double_diplome': None,
+                'avec_bourse_internationale': None,
+                'avec_bourse_erasmus_mundus': None,
+                'bourse_double_diplome': '',
+                'bourse_internationale': '',
+                'bourse_erasmus_mundus': '',
+            },
+            **self.default_kwargs,
+        )
+
+        self.assertRedirects(
+            response,
+            resolve_url('admission:general-education:update:training-choice', pk=self.proposition_uuid),
+        )
+
+        self.mock_proposition_api.return_value.create_general_training_choice.reset_mock()
+
+        response = self.client.post(
+            self.url,
+            data={
+                'training_type': TypeFormation.BACHELIER.name,
+                'campus': EMPTY_VALUE,
+                'general_education_training': 'TR0-2020',
+                'has_double_degree_scholarship': True,
+                'has_international_scholarship': True,
+                'has_erasmus_mundus_scholarship': True,
+                'double_degree_scholarship': self.double_degree_scholarship.uuid,
+                'international_scholarship': self.international_scholarship.uuid,
+                'erasmus_mundus_scholarship': self.first_erasmus_mundus_scholarship.uuid,
+            },
+        )
+
+        self.mock_proposition_api.return_value.create_general_training_choice.assert_called_with(
+            initier_proposition_generale_command={
+                'sigle_formation': 'TR0',
+                'annee_formation': 2020,
+                'matricule_candidat': self.person.global_id,
+                'avec_bourse_double_diplome': None,
+                'avec_bourse_internationale': None,
+                'avec_bourse_erasmus_mundus': None,
+                'bourse_double_diplome': '',
+                'bourse_internationale': '',
+                'bourse_erasmus_mundus': '',
+            },
+            **self.default_kwargs,
+        )
+
+        self.assertRedirects(
+            response,
+            resolve_url('admission:general-education:update:training-choice', pk=self.proposition_uuid),
+        )
+
+    def test_general_education_form_submitting_for_a_master(self):
         response = self.client.post(
             self.url,
             data={
@@ -572,6 +667,9 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'sigle_formation': 'TR1',
                 'annee_formation': 2020,
                 'matricule_candidat': self.person.global_id,
+                'avec_bourse_double_diplome': True,
+                'avec_bourse_internationale': True,
+                'avec_bourse_erasmus_mundus': True,
                 'bourse_double_diplome': self.double_degree_scholarship.uuid,
                 'bourse_internationale': self.international_scholarship.uuid,
                 'bourse_erasmus_mundus': self.first_erasmus_mundus_scholarship.uuid,
@@ -588,7 +686,64 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         data = {
             'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
             'campus': EMPTY_VALUE,
+        }
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('mixed_training', []))
+
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
             'mixed_training': 'TR5-2020',
+        }
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('has_double_degree_scholarship', []))
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('has_international_scholarship', []))
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('has_erasmus_mundus_scholarship', []))
+
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR5-2020',
+            'has_double_degree_scholarship': True,
+            'has_international_scholarship': True,
+            'has_erasmus_mundus_scholarship': True,
+        }
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('double_degree_scholarship', []))
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('international_scholarship', []))
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('erasmus_mundus_scholarship', []))
+
+        data = {
+            'training_type': TypeFormationChoisissable.CERTIFICAT_ATTESTATION.name,
+            'campus': EMPTY_VALUE,
+            'mixed_training': 'TR5-2020',
+            'has_double_degree_scholarship': False,
+            'has_international_scholarship': False,
+            'has_erasmus_mundus_scholarship': False,
         }
         response = self.client.post(self.url, data=data)
 
@@ -597,8 +752,11 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'sigle_formation': 'TR5',
                 'annee_formation': 2020,
                 'matricule_candidat': self.person.global_id,
+                'avec_bourse_erasmus_mundus': False,
                 'bourse_erasmus_mundus': '',
+                'avec_bourse_double_diplome': False,
                 'bourse_double_diplome': '',
+                'avec_bourse_internationale': False,
                 'bourse_internationale': '',
             },
             **self.default_kwargs,
