@@ -51,6 +51,8 @@ class AdmissionExamFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView)
             # Trick template to not display form and buttons
             context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
             return render(request, 'admission/forms/need_training_choice.html', context)
+        if self.exam['is_valuated'] or not self.exam['required']:
+            return redirect(self._get_url('exam', update=False))
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -68,11 +70,6 @@ class AdmissionExamFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView)
             )
             .to_dict()
         )
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['is_valuated'] = self.exam['is_valuated']
-        return context_data
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

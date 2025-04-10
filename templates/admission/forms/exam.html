@@ -29,27 +29,16 @@
   {% bootstrap_form_errors form %}
 
   {% panel _('Exam') %}
-    {% if exam.required %}
-      {% if is_valuated %}
-        <div class="alert alert-warning">
-          {% blocktranslate trimmed with recipient=training_contact|default:_('the Enrolment Office') %}
-            Your secondary education data can no longer be updated. To make changes, please contact {{ recipient }}.
-          {% endblocktranslate %}
-        </div>
-      {% endif %}
-      <div class="row">
-        <div class="col-md-12 required_field">
-          {% bootstrap_field_with_tooltip form.certificate %}
-        </div>
+    <div class="row">
+      <div class="col-md-12 required_field">
+        {% bootstrap_field_with_tooltip form.certificate %}
       </div>
-      <div class="row">
-        <div id="graduation-year-container" class="col-md-12 required_field">
-          {% bootstrap_field form.year %}
-        </div>
+    </div>
+    <div class="row">
+      <div id="graduation-year-container" class="col-md-12 required_field">
+        {% bootstrap_field form.year %}
       </div>
-    {% else %}
-      {% translate "There is no exam required for this course." %}
-    {% endif %}
+    </div>
   {% endpanel %}
 
 {% endblock %}

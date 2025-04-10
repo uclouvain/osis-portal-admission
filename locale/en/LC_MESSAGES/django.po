@@ -3002,6 +3002,11 @@ msgid ""
 "target=\"_blank\">{url}</a>)"
 msgstr ""
 
+msgid ""
+"Your course is not subject to an entrance exam, you can continue your "
+"application."
+msgstr ""
+
 msgid "Your data have been saved"
 msgstr ""
 
