@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 # ##############################################################################
 import datetime
 from unittest import mock
-from unittest.mock import Mock, patch, ANY
+from unittest.mock import ANY, Mock, patch
 
 import freezegun
 from django.conf import settings
@@ -36,7 +36,7 @@ from django.utils.translation import gettext_lazy as _
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums import SexEnum
 from admission.contrib.enums.person import CivilState
-from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
+from admission.contrib.forms import EMPTY_CHOICE, PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
@@ -96,8 +96,18 @@ class PersonViewTestCase(TestCase):
                 return Mock(results=[c for c in countries if c.iso_code == kwargs.get('iso_code')])
             return Mock(results=countries)
 
+        def get_country(**kwargs):
+            countries = get_countries(**kwargs)
+            return countries.results[0] if countries.results else None
+
         self.mock_countries_api.return_value.countries_list.side_effect = get_countries
         self.addCleanup(countries_api_patcher.stop)
+
+        # Mock the parent method to prevent to use the cache
+        mock_country_method = mock.patch('admission.services.reference.CountriesService.get_country')
+        self.mock_country_method = mock_country_method.start()
+        self.addCleanup(self.mock_country_method.stop)
+        self.mock_country_method.side_effect = get_country
 
         self.current_year = datetime.date.today().year
 
@@ -387,12 +397,12 @@ class PersonViewTestCase(TestCase):
         self.assertFormError(
             response.context['form'],
             'first_name',
-            _("This field is required if the surname is missing.")
+            _("This field is required if the surname is missing."),
         )
         self.assertFormError(
             response.context['form'],
             'last_name',
-            _("This field is required if the first name is missing.")
+            _("This field is required if the first name is missing."),
         )
         self.assertFormError(response.context['form'], 'last_registration_id', _("The NOMA must contain 8 digits."))
 
