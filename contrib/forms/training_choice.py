@@ -39,6 +39,7 @@ from waffle import switch_is_active
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
+    TRAINING_TYPES_WITH_SCHOLARSHIP,
     AdmissionType,
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
@@ -413,7 +414,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
         for scholarship_name, scholarship_uuid in scholarships.items():
             if scholarship_uuid:
-                self.fields['has_{}'.format(scholarship_name)].initial = True
                 scholarship_obj = ScholarshipService.get_scholarship(
                     person=person,
                     scholarship_uuid=scholarship_uuid,
@@ -423,10 +423,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                         scholarship_obj.uuid,
                         format_scholarship(scholarship_obj),
                     ),
-                )
-            else:
-                self.fields['has_{}'.format(scholarship_name)].initial = (
-                    bool(self.initial.get(scholarship_name)) if self.initial else None
                 )
 
         self.fields['sector'].widget.choices = EMPTY_CHOICE + tuple(
@@ -497,11 +493,13 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         self.clean_doctorate(training_type, cleaned_data)
         self.clean_continuing_education(training_type, cleaned_data)
         self.clean_general_education(training_type, cleaned_data)
-        self.clean_master_scholarships(training_type, cleaned_data)
-        self.clean_erasmus_scholarship(training_type, cleaned_data)
+        self.clean_scholarships(cleaned_data)
 
-    def clean_master_scholarships(self, training_type, cleaned_data):
-        if training_type == TypeFormation.MASTER.name:
+    def clean_scholarships(self, cleaned_data):
+        if (
+            self.general_education_training_obj
+            and self.general_education_training_obj['education_group_type'] in TRAINING_TYPES_WITH_SCHOLARSHIP
+        ):
             if cleaned_data.get('has_double_degree_scholarship'):
                 if not cleaned_data.get('double_degree_scholarship'):
                     self.add_error('double_degree_scholarship', FIELD_REQUIRED_MESSAGE)
@@ -519,14 +517,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
                 if cleaned_data.get('has_international_scholarship') is None:
                     self.add_error('has_international_scholarship', FIELD_REQUIRED_MESSAGE)
-        else:
-            cleaned_data['has_double_degree_scholarship'] = ''
-            cleaned_data['has_international_scholarship'] = ''
-            cleaned_data['double_degree_scholarship'] = ''
-            cleaned_data['international_scholarship'] = ''
 
-    def clean_erasmus_scholarship(self, training_type, cleaned_data):
-        if training_type == TypeFormation.MASTER.name:
             if cleaned_data.get('has_erasmus_mundus_scholarship'):
                 if not cleaned_data.get('erasmus_mundus_scholarship'):
                     self.add_error('erasmus_mundus_scholarship', FIELD_REQUIRED_MESSAGE)
@@ -535,6 +526,14 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
                 if cleaned_data.get('has_erasmus_mundus_scholarship') is None:
                     self.add_error('has_erasmus_mundus_scholarship', FIELD_REQUIRED_MESSAGE)
+
+        else:
+            cleaned_data['has_double_degree_scholarship'] = None
+            cleaned_data['has_international_scholarship'] = None
+            cleaned_data['has_erasmus_mundus_scholarship'] = None
+            cleaned_data['double_degree_scholarship'] = ''
+            cleaned_data['international_scholarship'] = ''
+            cleaned_data['erasmus_mundus_scholarship'] = ''
 
     def clean_general_education(self, training_type, cleaned_data):
         if training_type in TYPES_FORMATION_GENERALE:

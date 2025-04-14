@@ -534,7 +534,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_with_admission_on_update_experience_form_is_initialized_with_general_and_valuated_by_continuing(self):
-        editable_fields = EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS
+        editable_fields = EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS.copy()
         mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
         mock_retrieve_experience.return_value.valuated_from_trainings = [
             TypeFormation.FORMATION_CONTINUE.name,
@@ -569,6 +569,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             self.assertEqual(f not in editable_fields, base_form.fields[f].disabled)
 
     def test_with_admission_on_update_experience_form_is_initialized_with_continuing_education(self):
+        mock_retrieve_experience = self.mockapi.retrieve_educational_experience_continuing_education_admission
+        mock_retrieve_experience.return_value.valuated_from_trainings = []
         response = self.client.get(self.continuing_admission_update_url)
 
         # Check the request
