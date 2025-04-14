@@ -534,7 +534,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_with_admission_on_update_experience_form_is_initialized_with_general_and_valuated_by_continuing(self):
-        editable_fields = EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS
+        editable_fields = EDUCATIONAL_EXPERIENCE_GENERAL_FIELDS.copy()
         mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
         mock_retrieve_experience.return_value.valuated_from_trainings = [
             TypeFormation.FORMATION_CONTINUE.name,
