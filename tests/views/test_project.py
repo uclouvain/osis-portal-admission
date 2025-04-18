@@ -104,7 +104,7 @@ class ProjectViewTestCase(TestCase):
             projet_formation_complementaire=[],
             lettres_recommandation=[],
             links={'update_project': {'url': 'ok'}, 'retrieve_project': {'url': 'ok'}},
-            bourse_recherche=Mock(uuid=self.doctorate_international_scholarship.uuid),
+            bourse_recherche=dict(uuid=self.doctorate_international_scholarship.uuid),
             erreurs=[],
         )
         self.addCleanup(propositions_api_patcher.stop)

@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 import json
 from unittest import mock
 
@@ -99,7 +100,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         ]
         self.assertEqual(form.fields['general_education_training'].widget.attrs['data-data'], json.dumps(expected))
 
-        medicine_start_date = date_format(self.specific_periods.medicine_dentistry_bachelor.date_debut, 'j F Y')
+        medicine_start_date = date_format(datetime.date.fromisoformat(self.specific_periods.medicine_dentistry_bachelor['date_debut']), 'j F Y')
 
         # A message is displayed if period dates are not respected
         for date in ['2021-09-14', '2022-02-16']:
