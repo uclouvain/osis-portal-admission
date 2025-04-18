@@ -63,7 +63,7 @@ class DoctorateAdmissionProjectFormView(LoadDossierViewMixin, WebServiceFormMixi
             raise PermissionDenied(self.admission.links['update_project']['error'])
         return {
             **self.admission.to_dict(),
-            'bourse_recherche': self.admission.bourse_recherche and self.admission.bourse_recherche.uuid,
+            'bourse_recherche': self.admission.bourse_recherche and self.admission.bourse_recherche['uuid'],
         }
 
     def prepare_data(self, data):
