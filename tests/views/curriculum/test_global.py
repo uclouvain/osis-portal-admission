@@ -28,11 +28,11 @@ import datetime
 import freezegun
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
-from osis_admission_sdk.model.result import Result
 
 from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
 from admission.contrib.forms.curriculum import REQUIRED_FIELD_CLASS
 from admission.tests.views.curriculum.mixin import MixinTestCase
+from osis_admission_sdk.model.result_enum import ResultEnum
 
 
 @freezegun.freeze_time('2023-01-01')
@@ -286,7 +286,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         )
         mock_return = self.mock_person_api.return_value
         xp = mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences[0]
-        xp.educationalexperienceyear_set[0].result = Result(value='WAITING_RESULT')
+        xp.educationalexperienceyear_set[0].result = ResultEnum(value='WAITING_RESULT')
 
         response = self.client.get(self.admission_update_url)
 
@@ -313,7 +313,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         )
         mock_return = self.mock_person_api.return_value
         xp = mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences[0]
-        xp.educationalexperienceyear_set[0].result = Result(value='WAITING_RESULT')
+        xp.educationalexperienceyear_set[0].result = ResultEnum(value='WAITING_RESULT')
 
         response = self.client.get(self.admission_read_url)
         self.assertFalse(response.context['display_curriculum'])

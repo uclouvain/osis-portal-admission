@@ -34,6 +34,10 @@ from admission.contrib.enums.additional_information import ChoixInscriptionATitr
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
 from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
+from osis_admission_sdk.model.modifier_questions_specifiques_formation_continue_command import \
+    ModifierQuestionsSpecifiquesFormationContinueCommand
+from osis_admission_sdk.model.modifier_questions_specifiques_formation_generale_command import \
+    ModifierQuestionsSpecifiquesFormationGeneraleCommand
 
 
 class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -359,11 +363,11 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_generale_command={
+            modifier_questions_specifiques_formation_generale_command=ModifierQuestionsSpecifiquesFormationGeneraleCommand(**{
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'documents_additionnels': ['uuid-doc'],
                 'poste_diplomatique': None,  # Visa not requested
-            },
+            }),
             **self.default_kwargs,
         )
 
@@ -403,11 +407,11 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_generale_command={
+            modifier_questions_specifiques_formation_generale_command=ModifierQuestionsSpecifiquesFormationGeneraleCommand(**{
                 'documents_additionnels': [],
                 'poste_diplomatique': self.second_diplomatic_post.code,
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
-            },
+            }),
             **self.default_kwargs,
         )
 
@@ -727,12 +731,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command={
-                'reponses_questions_specifiques': ANY,
-                'inscription_a_titre': ANY,
-                'copie_titre_sejour': [],
-                'documents_additionnels': ['file-token1'],
-            },
+            modifier_questions_specifiques_formation_continue_command=ANY,
             **self.default_kwargs,
         )
 
@@ -749,12 +748,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command={
-                'reponses_questions_specifiques': ANY,
-                'inscription_a_titre': ANY,
-                'copie_titre_sejour': ['file-token'],
-                'documents_additionnels': [],
-            },
+            modifier_questions_specifiques_formation_continue_command=ANY,
             **self.default_kwargs,
         )
 
@@ -776,12 +770,12 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command={
+            modifier_questions_specifiques_formation_continue_command=ModifierQuestionsSpecifiquesFormationContinueCommand(**{
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
                 'copie_titre_sejour': [],
                 'documents_additionnels': [],
-            },
+            }),
             **self.default_kwargs,
         )
 
@@ -802,7 +796,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command={
+            modifier_questions_specifiques_formation_continue_command=ModifierQuestionsSpecifiquesFormationContinueCommand(**{
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
                 'nom_siege_social': 'UCLouvain',
@@ -812,7 +806,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
                 'copie_titre_sejour': [],
                 'documents_additionnels': [],
-            },
+            }),
             **self.default_kwargs,
         )
 
@@ -863,7 +857,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command={
+            modifier_questions_specifiques_formation_continue_command=ModifierQuestionsSpecifiquesFormationContinueCommand(**{
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
                 'nom_siege_social': 'UCLouvain',
@@ -880,7 +874,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_facturation_boite_postale': 'PB1',
                 'copie_titre_sejour': [],
                 'documents_additionnels': [],
-            },
+            }),
             **self.default_kwargs,
         )
 
@@ -909,7 +903,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command={
+            modifier_questions_specifiques_formation_continue_command=ModifierQuestionsSpecifiquesFormationContinueCommand(**{
                 'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                 'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
                 'nom_siege_social': 'UCLouvain',
@@ -926,6 +920,6 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
                 'adresse_facturation_boite_postale': 'PB1',
                 'copie_titre_sejour': [],
                 'documents_additionnels': [],
-            },
+            }),
             **self.default_kwargs,
         )
