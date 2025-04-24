@@ -35,7 +35,7 @@ class TypeSituationAssimilation(ChoiceEnum):
     )
     REFUGIE_OU_APATRIDE_OU_PROTECTION_SUBSIDIAIRE_TEMPORAIRE = _(
         'I am a refugee, an asylum seeker, or a stateless person or have subsidiary/temporary protection '
-        '(Belgian student status category 2)'
+        'in Belgium (Belgian student status category 2)'
     )
     AUTORISATION_SEJOUR_ET_REVENUS_PROFESSIONNELS_OU_REMPLACEMENT = _(
         'I have a residence permit valid for more than 3 months and receive professional or replacement income '
