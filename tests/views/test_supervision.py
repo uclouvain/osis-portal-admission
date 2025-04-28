@@ -28,8 +28,9 @@ from unittest.mock import ANY, Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk.model.promoteur_dto_nested import PromoteurDTONested
+
 from osis_admission_sdk import ApiException
-from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
 
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from admission.contrib.enums.projet import ChoixStatutPropositionDoctorale
@@ -120,7 +121,7 @@ class SupervisionTestCase(TestCase):
                     commentaire_externe="A public comment to display",
                 ),
                 dict(
-                    promoteur=SupervisionDTOPromoteur(
+                    promoteur=PromoteurDTONested(
                         uuid="uuid-externe",
                         matricule="",
                         prenom="Marcel",

@@ -854,6 +854,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 'diploma_type': DiplomaTypes.BELGIAN.name,
                 'high_school_diploma': [],
                 'first_cycle_admission_exam': [],
+                'first_cycle_admission_exam_year': "",
                 # Data that should be updated
                 'specific_question_answers': self.proposition.reponses_questions_specifiques,
             },
@@ -1275,6 +1276,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "graduated_from_high_school_year": None,
                 "high_school_diploma_alternative": {
                     "first_cycle_admission_exam": ["test"],
+                    "first_cycle_admission_exam_year": "",
                 },
                 "specific_question_answers": self.proposition.reponses_questions_specifiques,
             },
