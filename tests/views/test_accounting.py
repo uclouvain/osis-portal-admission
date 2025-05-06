@@ -776,7 +776,9 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
             uuid=self.proposition.uuid,
-            completer_comptabilite_proposition_generale_command=CompleterComptabilitePropositionGeneraleCommand(**command_params),
+            completer_comptabilite_proposition_generale_command=(
+                CompleterComptabilitePropositionGeneraleCommand(**command_params)
+            ),
             **self.default_kwargs,
         )
 
@@ -814,7 +816,9 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
             uuid=self.proposition.uuid,
-            completer_comptabilite_proposition_generale_command=CompleterComptabilitePropositionGeneraleCommand(**command_params),
+            completer_comptabilite_proposition_generale_command=(
+                CompleterComptabilitePropositionGeneraleCommand(**command_params)
+            ),
             **self.default_kwargs,
         )
 
@@ -838,7 +842,9 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
             uuid=self.proposition.uuid,
-            completer_comptabilite_proposition_generale_command=CompleterComptabilitePropositionGeneraleCommand(**command_params),
+            completer_comptabilite_proposition_generale_command=(
+                CompleterComptabilitePropositionGeneraleCommand(**command_params)
+            ),
             **self.default_kwargs,
         )
 

@@ -28,6 +28,7 @@ from unittest.mock import patch, ANY, MagicMock
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk.model.poste_diplomatique_dto_nested import PosteDiplomatiqueDTONested
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
@@ -326,7 +327,12 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             pays_residence='FR',
         )
         proposition = self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value
-        proposition.poste_diplomatique = MagicMock(code=self.first_diplomatic_post.code)
+        proposition.poste_diplomatique = PosteDiplomatiqueDTONested._from_openapi_data(
+            code=self.first_diplomatic_post.code,
+            nom_francais='',
+            nom_anglais='',
+            adresse_email='',
+        )
 
         response = self.client.get(self.url)
 
@@ -363,11 +369,13 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_generale_command=ModifierQuestionsSpecifiquesFormationGeneraleCommand(**{
-                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
-                'documents_additionnels': ['uuid-doc'],
-                'poste_diplomatique': None,  # Visa not requested
-            }),
+            modifier_questions_specifiques_formation_generale_command=(
+                ModifierQuestionsSpecifiquesFormationGeneraleCommand(**{
+                    'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                    'documents_additionnels': ['uuid-doc'],
+                    'poste_diplomatique': None,  # Visa not requested
+                })
+            ),
             **self.default_kwargs,
         )
 
@@ -407,11 +415,13 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_generale_command=ModifierQuestionsSpecifiquesFormationGeneraleCommand(**{
-                'documents_additionnels': [],
-                'poste_diplomatique': self.second_diplomatic_post.code,
-                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
-            }),
+            modifier_questions_specifiques_formation_generale_command=(
+                ModifierQuestionsSpecifiquesFormationGeneraleCommand(**{
+                    'documents_additionnels': [],
+                    'poste_diplomatique': self.second_diplomatic_post.code,
+                    'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                })
+            ),
             **self.default_kwargs,
         )
 
@@ -770,12 +780,14 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command=ModifierQuestionsSpecifiquesFormationContinueCommand(**{
-                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
-                'inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
-                'copie_titre_sejour': [],
-                'documents_additionnels': [],
-            }),
+            modifier_questions_specifiques_formation_continue_command=(
+                ModifierQuestionsSpecifiquesFormationContinueCommand(**{
+                    'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                    'inscription_a_titre': ChoixInscriptionATitre.PRIVE.name,
+                    'copie_titre_sejour': [],
+                    'documents_additionnels': [],
+                })
+            ),
             **self.default_kwargs,
         )
 
@@ -796,17 +808,19 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command=ModifierQuestionsSpecifiquesFormationContinueCommand(**{
-                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
-                'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
-                'nom_siege_social': 'UCLouvain',
-                'numero_unique_entreprise': '1234',
-                'numero_tva_entreprise': '1234A',
-                'adresse_mail_professionnelle': 'jane.doe@example.be',
-                'type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
-                'copie_titre_sejour': [],
-                'documents_additionnels': [],
-            }),
+            modifier_questions_specifiques_formation_continue_command=(
+                ModifierQuestionsSpecifiquesFormationContinueCommand(**{
+                    'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                    'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                    'nom_siege_social': 'UCLouvain',
+                    'numero_unique_entreprise': '1234',
+                    'numero_tva_entreprise': '1234A',
+                    'adresse_mail_professionnelle': 'jane.doe@example.be',
+                    'type_adresse_facturation': ChoixTypeAdresseFacturation.RESIDENTIEL.name,
+                    'copie_titre_sejour': [],
+                    'documents_additionnels': [],
+                })
+            ),
             **self.default_kwargs,
         )
 
@@ -857,24 +871,26 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command=ModifierQuestionsSpecifiquesFormationContinueCommand(**{
-                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
-                'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
-                'nom_siege_social': 'UCLouvain',
-                'numero_unique_entreprise': '1234',
-                'numero_tva_entreprise': '1234A',
-                'adresse_mail_professionnelle': 'jane.doe@example.be',
-                'type_adresse_facturation': ChoixTypeAdresseFacturation.AUTRE.name,
-                'adresse_facturation_rue': 'Rue du moulin',
-                'adresse_facturation_numero_rue': '1',
-                'adresse_facturation_code_postal': '44000',
-                'adresse_facturation_ville': 'Nantes',
-                'adresse_facturation_pays': 'FR',
-                'adresse_facturation_destinataire': 'Jane Doe',
-                'adresse_facturation_boite_postale': 'PB1',
-                'copie_titre_sejour': [],
-                'documents_additionnels': [],
-            }),
+            modifier_questions_specifiques_formation_continue_command=(
+                ModifierQuestionsSpecifiquesFormationContinueCommand(**{
+                    'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                    'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                    'nom_siege_social': 'UCLouvain',
+                    'numero_unique_entreprise': '1234',
+                    'numero_tva_entreprise': '1234A',
+                    'adresse_mail_professionnelle': 'jane.doe@example.be',
+                    'type_adresse_facturation': ChoixTypeAdresseFacturation.AUTRE.name,
+                    'adresse_facturation_rue': 'Rue du moulin',
+                    'adresse_facturation_numero_rue': '1',
+                    'adresse_facturation_code_postal': '44000',
+                    'adresse_facturation_ville': 'Nantes',
+                    'adresse_facturation_pays': 'FR',
+                    'adresse_facturation_destinataire': 'Jane Doe',
+                    'adresse_facturation_boite_postale': 'PB1',
+                    'copie_titre_sejour': [],
+                    'documents_additionnels': [],
+                })
+            ),
             **self.default_kwargs,
         )
 
@@ -903,23 +919,25 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertRedirects(response, self.url)
         self.mock_proposition_api.return_value.update_continuing_specific_question.assert_called_with(
             uuid=self.proposition_uuid,
-            modifier_questions_specifiques_formation_continue_command=ModifierQuestionsSpecifiquesFormationContinueCommand(**{
-                'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
-                'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
-                'nom_siege_social': 'UCLouvain',
-                'numero_unique_entreprise': '1234',
-                'numero_tva_entreprise': '1234A',
-                'adresse_mail_professionnelle': 'jane.doe@example.be',
-                'type_adresse_facturation': ChoixTypeAdresseFacturation.AUTRE.name,
-                'adresse_facturation_rue': 'Rue du moulin',
-                'adresse_facturation_numero_rue': '1',
-                'adresse_facturation_code_postal': '1348',
-                'adresse_facturation_ville': 'Louvain-La-Neuve',
-                'adresse_facturation_pays': 'BE',
-                'adresse_facturation_destinataire': 'Jane Doe',
-                'adresse_facturation_boite_postale': 'PB1',
-                'copie_titre_sejour': [],
-                'documents_additionnels': [],
-            }),
+            modifier_questions_specifiques_formation_continue_command=(
+                ModifierQuestionsSpecifiquesFormationContinueCommand(**{
+                    'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                    'inscription_a_titre': ChoixInscriptionATitre.PROFESSIONNEL.name,
+                    'nom_siege_social': 'UCLouvain',
+                    'numero_unique_entreprise': '1234',
+                    'numero_tva_entreprise': '1234A',
+                    'adresse_mail_professionnelle': 'jane.doe@example.be',
+                    'type_adresse_facturation': ChoixTypeAdresseFacturation.AUTRE.name,
+                    'adresse_facturation_rue': 'Rue du moulin',
+                    'adresse_facturation_numero_rue': '1',
+                    'adresse_facturation_code_postal': '1348',
+                    'adresse_facturation_ville': 'Louvain-La-Neuve',
+                    'adresse_facturation_pays': 'BE',
+                    'adresse_facturation_destinataire': 'Jane Doe',
+                    'adresse_facturation_boite_postale': 'PB1',
+                    'copie_titre_sejour': [],
+                    'documents_additionnels': [],
+                })
+            ),
             **self.default_kwargs,
         )
