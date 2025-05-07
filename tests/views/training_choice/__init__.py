@@ -334,21 +334,21 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             avec_bourse_double_diplome=True,
-            bourse_double_diplome=Mock(
+            bourse_double_diplome=dict(
                 uuid=cls.double_degree_scholarship.uuid,
                 nom_court=cls.double_degree_scholarship.short_name,
                 nom_long=cls.double_degree_scholarship.long_name,
                 type=cls.double_degree_scholarship.type,
             ),
             avec_bourse_internationale=True,
-            bourse_internationale=Mock(
+            bourse_internationale=dict(
                 uuid=cls.international_scholarship.uuid,
                 nom_court=cls.international_scholarship.short_name,
                 nom_long=cls.international_scholarship.long_name,
                 type=cls.international_scholarship.type,
             ),
             avec_bourse_erasmus_mundus=True,
-            bourse_erasmus_mundus=Mock(
+            bourse_erasmus_mundus=dict(
                 uuid=cls.first_erasmus_mundus_scholarship.uuid,
                 nom_court=cls.first_erasmus_mundus_scholarship.short_name,
                 nom_long=cls.first_erasmus_mundus_scholarship.long_name,

@@ -31,7 +31,6 @@ from unittest.mock import ANY, patch, MagicMock
 from django.http import Http404
 from django.test import TestCase, override_settings
 
-from admission.contrib.enums import ActivitySector
 from osis_admission_sdk.model.action_link import ActionLink
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.continuing_education_proposition_dto_links import ContinuingEducationPropositionDTOLinks
@@ -40,7 +39,6 @@ from osis_admission_sdk.model.doctorate_proposition_dto import DoctorateProposit
 from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
 from osis_admission_sdk.model.educational_experience import EducationalExperience
 from osis_admission_sdk.model.educational_experience_year import EducationalExperienceYear
-from osis_admission_sdk.model.evaluation_type_enum import EvaluationTypeEnum
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
@@ -68,12 +66,10 @@ from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from base.tests.factories.person import PersonFactory
 from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
-from osis_admission_sdk.model.obtained_grade_enum import ObtainedGradeEnum
 from osis_admission_sdk.model.professional_experience import ProfessionalExperience
 from osis_admission_sdk.model.result_enum import ResultEnum
 from osis_admission_sdk.model.sector_enum import SectorEnum
 from osis_admission_sdk.model.study_system_enum import StudySystemEnum
-from osis_admission_sdk.model.transcript_type_enum import TranscriptTypeEnum
 from osis_admission_sdk.model.type_enum import TypeEnum
 
 
@@ -156,11 +152,11 @@ class MixinTestCase(TestCase):
             program=cls.first_diploma.uuid,
             education_name='Other computer science',
             study_system=StudySystemEnum(value='FULL_TIME'),
-            evaluation_type=EvaluationTypeEnum(value='ECTS_CREDITS'),
+            evaluation_type='ECTS_CREDITS',
             linguistic_regime=cls.language_without_translation.code,
-            transcript_type=TranscriptTypeEnum(value='ONE_FOR_ALL_YEARS'),
+            transcript_type='ONE_FOR_ALL_YEARS',
             obtained_diploma=True,
-            obtained_grade=ObtainedGradeEnum(value='GREAT_DISTINCTION'),
+            obtained_grade='GREAT_DISTINCTION',
             graduate_degree=['f1.pdf'],
             graduate_degree_translation=['f11.pdf'],
             transcript=['f2.pdf'],
