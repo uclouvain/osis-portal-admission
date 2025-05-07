@@ -118,11 +118,14 @@ class AdmissionTrainingChoiceFormView(
             for period_key, message in self.NOT_IN_SPECIFIC_ENROLMENT_PERIODS_MESSAGES.items():
                 period = getattr(specific_enrolment_periods, period_key, None)
 
-                if period and not (period.date_debut <= today_date <= period.date_fin):
-                    context['not_in_specific_enrolment_periods_messages'][period_key] = message % {
-                        'start_date': date_format(period.date_debut, 'j F Y'),
-                        'end_date': date_format(period.date_fin, 'j F Y'),
-                    }
+                if period:
+                    date_debut = datetime.date.fromisoformat(period['date_debut'])
+                    date_fin = datetime.date.fromisoformat(period['date_fin'])
+                    if not date_debut <= today_date <= date_fin:
+                        context['not_in_specific_enrolment_periods_messages'][period_key] = message % {
+                            'start_date': date_format(date_debut, 'j F Y'),
+                            'end_date': date_format(date_fin, 'j F Y'),
+                        }
 
         return context
 

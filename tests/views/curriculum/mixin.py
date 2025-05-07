@@ -30,34 +30,20 @@ from unittest.mock import ANY, patch, MagicMock
 
 from django.http import Http404
 from django.test import TestCase, override_settings
+
+from admission.contrib.enums import ActivitySector
 from osis_admission_sdk.model.action_link import ActionLink
-from osis_admission_sdk.model.activity_sector import ActivitySector
-from osis_admission_sdk.model.activity_type import ActivityType
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.continuing_education_proposition_dto_links import ContinuingEducationPropositionDTOLinks
-from osis_admission_sdk.model.curriculum_details_educational_experiences import CurriculumDetailsEducationalExperiences
-from osis_admission_sdk.model.curriculum_details_educationalexperienceyear_set import (
-    CurriculumDetailsEducationalexperienceyearSet,
-)
-from osis_admission_sdk.model.curriculum_details_professional_experiences import (
-    CurriculumDetailsProfessionalExperiences,
-)
+from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
 from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
 from osis_admission_sdk.model.educational_experience import EducationalExperience
-from osis_admission_sdk.model.educational_experience_educationalexperienceyear_set import (
-    EducationalExperienceEducationalexperienceyearSet,
-)
-from osis_admission_sdk.model.evaluation_system import EvaluationSystem
+from osis_admission_sdk.model.educational_experience_year import EducationalExperienceYear
+from osis_admission_sdk.model.evaluation_type_enum import EvaluationTypeEnum
+from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
-from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
-from osis_admission_sdk.model.grade import Grade
-from osis_admission_sdk.model.professional_experience import ProfessionalExperience
-from osis_admission_sdk.model.proposition_search_doctorat import PropositionSearchDoctorat
-from osis_admission_sdk.model.proposition_search_formation import PropositionSearchFormation
-from osis_admission_sdk.model.result import Result
-from osis_admission_sdk.model.teaching_type_enum import TeachingTypeEnum
-from osis_admission_sdk.model.transcript_type import TranscriptType
 from osis_reference_sdk.model.academic_year import AcademicYear
 from osis_reference_sdk.model.country import Country
 from osis_reference_sdk.model.diploma import Diploma
@@ -81,6 +67,14 @@ from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from base.tests.factories.person import PersonFactory
+from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
+from osis_admission_sdk.model.obtained_grade_enum import ObtainedGradeEnum
+from osis_admission_sdk.model.professional_experience import ProfessionalExperience
+from osis_admission_sdk.model.result_enum import ResultEnum
+from osis_admission_sdk.model.sector_enum import SectorEnum
+from osis_admission_sdk.model.study_system_enum import StudySystemEnum
+from osis_admission_sdk.model.transcript_type_enum import TranscriptTypeEnum
+from osis_admission_sdk.model.type_enum import TypeEnum
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -161,12 +155,12 @@ class MixinTestCase(TestCase):
             institute_address='Place de l\'Université',
             program=cls.first_diploma.uuid,
             education_name='Other computer science',
-            study_system=TeachingTypeEnum(value='FULL_TIME'),
-            evaluation_type=EvaluationSystem(value='ECTS_CREDITS'),
+            study_system=StudySystemEnum(value='FULL_TIME'),
+            evaluation_type=EvaluationTypeEnum(value='ECTS_CREDITS'),
             linguistic_regime=cls.language_without_translation.code,
-            transcript_type=TranscriptType(value='ONE_FOR_ALL_YEARS'),
+            transcript_type=TranscriptTypeEnum(value='ONE_FOR_ALL_YEARS'),
             obtained_diploma=True,
-            obtained_grade=Grade(value='GREAT_DISTINCTION'),
+            obtained_grade=ObtainedGradeEnum(value='GREAT_DISTINCTION'),
             graduate_degree=['f1.pdf'],
             graduate_degree_translation=['f11.pdf'],
             transcript=['f2.pdf'],
@@ -178,17 +172,17 @@ class MixinTestCase(TestCase):
             dissertation_summary=[cls.document_uuid],
             uuid=str(uuid.uuid4()),
             educationalexperienceyear_set=[
-                EducationalExperienceEducationalexperienceyearSet(
+                EducationalExperienceYear(
                     academic_year=cls.academic_year_2020.year,
-                    result=Result(value='SUCCESS'),
+                    result=ResultEnum(value='SUCCESS'),
                     transcript=['f1_2020.pdf'],
                     transcript_translation=['f11_2020.pdf'],
                     acquired_credit_number=10.0,
                     registered_credit_number=10.0,
                 ),
-                EducationalExperienceEducationalexperienceyearSet(
+                EducationalExperienceYear(
                     academic_year=cls.academic_year_2018.year,
-                    result=Result(value='SUCCESS'),
+                    result=ResultEnum(value='SUCCESS'),
                     transcript=['f1_2018.pdf'],
                     transcript_translation=['f11_2018.pdf'],
                     acquired_credit_number=20.0,
@@ -198,21 +192,21 @@ class MixinTestCase(TestCase):
             valuated_from_trainings=[],
         )
 
-        cls.lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
+        cls.lite_educational_experience = EducationalExperience._from_openapi_data(
             uuid=cls.educational_experience.uuid,
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
             educationalexperienceyear_set=[
-                CurriculumDetailsEducationalexperienceyearSet(
+                EducationalExperienceYear(
                     academic_year=cls.academic_year_2020.year,
-                    result=Result(value='SUCCESS'),
+                    result=ResultEnum(value='SUCCESS'),
                     acquired_credit_number=10.0,
                     registered_credit_number=10.0,
                 ),
-                CurriculumDetailsEducationalexperienceyearSet(
+                EducationalExperienceYear(
                     academic_year=cls.academic_year_2018.year,
-                    result=Result(value='WAITING_RESULT'),
+                    result=ResultEnum(value='WAITING_RESULT'),
                     acquired_credit_number=20.0,
                     registered_credit_number=20.0,
                 ),
@@ -221,15 +215,15 @@ class MixinTestCase(TestCase):
             valuated_from_trainings=[],
             obtained_diploma=True,
         )
-        cls.foreign_lite_educational_experience = CurriculumDetailsEducationalExperiences._from_openapi_data(
+        cls.foreign_lite_educational_experience = EducationalExperience._from_openapi_data(
             uuid=cls.educational_experience.uuid,
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
             educationalexperienceyear_set=[
-                CurriculumDetailsEducationalexperienceyearSet(
+                EducationalExperienceYear(
                     academic_year=cls.academic_year_2020.year,
-                    result=Result(value='SUCCESS'),
+                    result=ResultEnum(value='SUCCESS'),
                     acquired_credit_number=10.0,
                     registered_credit_number=10.0,
                 ),
@@ -243,9 +237,9 @@ class MixinTestCase(TestCase):
             institute_name='First institute',
             start_date=datetime.date(2020, 1, 1),
             end_date=datetime.date(2021, 1, 1),
-            type=ActivityType(value='WORK'),
+            type=TypeEnum(value='WORK'),
             role='Librarian',
-            sector=ActivitySector(value='PUBLIC'),
+            sector=SectorEnum(value='PUBLIC'),
             activity='Work - activity',
             uuid=str(uuid.uuid4()),
             certificate=[cls.document_uuid],
@@ -253,7 +247,7 @@ class MixinTestCase(TestCase):
             external_id='',
         )
 
-        cls.lite_professional_experience = CurriculumDetailsProfessionalExperiences._from_openapi_data(
+        cls.lite_professional_experience = ProfessionalExperience._from_openapi_data(
             uuid=cls.professional_experience.uuid,
             institute_name=cls.professional_experience.institute_name,
             type=cls.professional_experience.type,
@@ -277,7 +271,7 @@ class MixinTestCase(TestCase):
                 retrieve_accounting=ActionLink(method='POST', url='url'),
             ),
             date_fin_pot=None,
-            doctorat=PropositionSearchDoctorat._from_openapi_data(
+            doctorat=DoctoratDTO._from_openapi_data(
                 sigle='CS1',
                 code='C1',
                 annee=cls.academic_year_2020.year,
@@ -313,7 +307,7 @@ class MixinTestCase(TestCase):
 
         cls.general_proposition = GeneralEducationPropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
-            formation=PropositionSearchFormation._from_openapi_data(
+            formation=FormationGeneraleDTO._from_openapi_data(
                 annee=2020,
                 intitule='Formation',
                 intitule_fr='Formation',
@@ -358,7 +352,7 @@ class MixinTestCase(TestCase):
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(
             uuid=str(uuid.uuid4()),
             reference='M-CMC20-000.003',
-            formation=PropositionSearchFormation._from_openapi_data(
+            formation=FormationContinueDTO._from_openapi_data(
                 annee=2020,
                 intitule='Formation',
                 intitule_fr='Formation',
