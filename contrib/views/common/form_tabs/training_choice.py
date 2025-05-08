@@ -282,15 +282,15 @@ class AdmissionTrainingChoiceFormView(
                 training_key: training_id,
                 'has_double_degree_scholarship': self.admission.avec_bourse_double_diplome,
                 'double_degree_scholarship': (
-                    self.admission.bourse_double_diplome and self.admission.bourse_double_diplome.uuid
+                    self.admission.bourse_double_diplome and self.admission.bourse_double_diplome['uuid']
                 ),
                 'has_international_scholarship': self.admission.avec_bourse_internationale,
                 'international_scholarship': (
-                    self.admission.bourse_internationale and self.admission.bourse_internationale.uuid
+                    self.admission.bourse_internationale and self.admission.bourse_internationale['uuid']
                 ),
                 'has_erasmus_mundus_scholarship': self.admission.avec_bourse_erasmus_mundus,
                 'erasmus_mundus_scholarship': (
-                    self.admission.bourse_erasmus_mundus and self.admission.bourse_erasmus_mundus.uuid
+                    self.admission.bourse_erasmus_mundus and self.admission.bourse_erasmus_mundus['uuid']
                 ),
                 'specific_question_answers': self.admission.reponses_questions_specifiques,
                 'campus': self.admission.formation['campus_uuid'],
