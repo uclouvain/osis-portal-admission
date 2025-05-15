@@ -551,7 +551,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                 additional_training_information = ContinuingEducationService.get_continuing_education_information(
                     person=self.person,
                     acronym=self.continuing_education_training_obj['acronym'],
-                    year=str(int(self.continuing_education_training_obj['academic_year'])),
+                    year=int(self.continuing_education_training_obj['academic_year']),
                 )
 
                 if additional_training_information.inscription_au_role_obligatoire:

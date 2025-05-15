@@ -37,6 +37,8 @@ from frontoffice.settings.osis_sdk.utils import (
     ApiBusinessException,
     MultipleApiBusinessException,
 )
+from osis_admission_sdk.model.pool_enum import PoolEnum
+from osis_admission_sdk.model.submit_proposition import SubmitProposition
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
@@ -224,8 +226,8 @@ class ConfirmSubmitTestCase(TestCase):
         response = self.client.post(self.url, data=self.data_ok, follow=True)
         self.mock_proposition_api.return_value.submit_proposition.assert_called_with(
             uuid="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-            submit_proposition={
-                'pool': 'DOCTORATE_EDUCATION_ENROLLMENT',
+            submit_proposition=SubmitProposition(**{
+                'pool': PoolEnum(value='DOCTORATE_EDUCATION_ENROLLMENT'),
                 'annee': 2020,
                 'elements_confirmation': {
                     'foo': "I allow Test",
@@ -233,7 +235,7 @@ class ConfirmSubmitTestCase(TestCase):
                     'declaration_sur_lhonneur': "<ul><li>Element1</li></ul>",
                     'justificatifs': 'I understand',
                 },
-            },
+            }),
             **self.default_kwargs,
         )
         self.assertRedirects(response, self.url)
@@ -253,8 +255,8 @@ class ConfirmSubmitTestCase(TestCase):
         response = self.client.post(self.url, data=self.data_ok, follow=True)
         self.mock_proposition_api.return_value.submit_proposition.assert_called_with(
             uuid="3c5cdc60-2537-4a12-a396-64d2e9e34876",
-            submit_proposition={
-                'pool': 'DOCTORATE_EDUCATION_ENROLLMENT',
+            submit_proposition=SubmitProposition(**{
+                'pool': PoolEnum(value='DOCTORATE_EDUCATION_ENROLLMENT'),
                 'annee': 2020,
                 'elements_confirmation': {
                     'foo': "I allow Test",
@@ -262,7 +264,7 @@ class ConfirmSubmitTestCase(TestCase):
                     'declaration_sur_lhonneur': "<ul><li>Element1</li></ul>",
                     'justificatifs': 'I understand',
                 },
-            },
+            }),
             **self.default_kwargs,
         )
         url = resolve_url('admission:list')
@@ -282,8 +284,8 @@ class ConfirmSubmitTestCase(TestCase):
         self.assertRedirects(response, url)
         api.submit_continuing_education_proposition.assert_called_with(
             uuid=uuid,
-            submit_proposition={
-                'pool': 'CONTINUING_EDUCATION_ENROLLMENT',
+            submit_proposition=SubmitProposition(**{
+                'pool': PoolEnum(value='CONTINUING_EDUCATION_ENROLLMENT'),
                 'annee': 2020,
                 'elements_confirmation': {
                     'foo': "I allow Test",
@@ -291,7 +293,7 @@ class ConfirmSubmitTestCase(TestCase):
                     'declaration_sur_lhonneur': "<ul><li>Element1</li></ul>",
                     'justificatifs': 'I understand',
                 },
-            },
+            }),
             **self.default_kwargs,
         )
         self.assertContains(response, _("Your application has been submitted"))
@@ -302,7 +304,7 @@ class ConfirmSubmitTestCase(TestCase):
         verification.return_value = api.verify_proposition.return_value.to_dict.return_value
         uuid = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
         url = resolve_url('admission:general-education:update:confirm-submit', pk=uuid)
-        data = {**self.data_ok, 'pool': 'GENERAL_EDUCATION_ENROLLMENT'}
+        data = {**self.data_ok, 'pool': 'ADMISSION_POOL_UE5_BELGIAN'}
         api.submit_general_education_proposition.return_value.to_dict.return_value = {
             'status': ChoixStatutPropositionGenerale.CONFIRMEE.name,
             'uuid': uuid,
@@ -313,8 +315,8 @@ class ConfirmSubmitTestCase(TestCase):
         self.assertRedirects(response, url)
         api.submit_general_education_proposition.assert_called_with(
             uuid=uuid,
-            submit_proposition={
-                'pool': 'GENERAL_EDUCATION_ENROLLMENT',
+            submit_proposition=SubmitProposition(**{
+                'pool': PoolEnum(value='ADMISSION_POOL_UE5_BELGIAN'),
                 'annee': 2020,
                 'elements_confirmation': {
                     'foo': "I allow Test",
@@ -322,7 +324,7 @@ class ConfirmSubmitTestCase(TestCase):
                     'declaration_sur_lhonneur': "<ul><li>Element1</li></ul>",
                     'justificatifs': 'I understand',
                 },
-            },
+            }),
             **self.default_kwargs,
         )
         self.assertContains(response, _("Your application has been submitted"))
@@ -333,7 +335,7 @@ class ConfirmSubmitTestCase(TestCase):
         verification.return_value = api.verify_proposition.return_value.to_dict.return_value
         uuid = "3c5cdc60-2537-4a12-a396-64d2e9e34876"
         url = resolve_url('admission:general-education:update:confirm-submit', pk=uuid)
-        data = {**self.data_ok, 'pool': 'GENERAL_EDUCATION_ENROLLMENT'}
+        data = {**self.data_ok, 'pool': 'ADMISSION_POOL_UE5_BELGIAN'}
         api.submit_general_education_proposition.return_value.to_dict.return_value = {
             'status': ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name,
             'uuid': uuid,
@@ -343,8 +345,8 @@ class ConfirmSubmitTestCase(TestCase):
         self.assertRedirects(response, url, fetch_redirect_response=False)
         api.submit_general_education_proposition.assert_called_with(
             uuid=uuid,
-            submit_proposition={
-                'pool': 'GENERAL_EDUCATION_ENROLLMENT',
+            submit_proposition=SubmitProposition(**{
+                'pool': PoolEnum(value='ADMISSION_POOL_UE5_BELGIAN'),
                 'annee': 2020,
                 'elements_confirmation': {
                     'foo': "I allow Test",
@@ -352,6 +354,6 @@ class ConfirmSubmitTestCase(TestCase):
                     'declaration_sur_lhonneur': "<ul><li>Element1</li></ul>",
                     'justificatifs': 'I understand',
                 },
-            },
+            }),
             **self.default_kwargs,
         )

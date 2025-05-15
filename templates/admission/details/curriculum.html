@@ -269,7 +269,7 @@
                     {% endif %}
                   {% endwith %}
                 </td>
-                <td><span>{{ professional_experience.type.value|enum_display:'ActivityType' }}</span></td>
+                <td><span>{{ professional_experience.type|enum_display:'ActivityType' }}</span></td>
                 <td class="action-container">
                   <div class="btn-toolbar" role="group">
                     {% if form and not professional_experience.valuated_from_trainings and not professional_experience.external_id %}

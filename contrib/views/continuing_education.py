@@ -53,7 +53,7 @@ class RetrieveContinuingEducationInformationView(LoginRequiredMixin, View):
                 data = ContinuingEducationService.get_continuing_education_information(
                     person=self.request.user.person,
                     acronym=training[0],
-                    year=training[1],
+                    year=int(training[1]),
                 )
                 return JsonResponse(data=data.to_dict())
         raise BadRequest
