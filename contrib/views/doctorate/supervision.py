@@ -57,6 +57,8 @@ __all__ = [
 ]
 __namespace__ = False
 
+from osis_admission_sdk.model.actor_type_enum import ActorTypeEnum
+
 
 class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
     urlpatterns = 'supervision'
@@ -200,7 +202,7 @@ class DoctorateAdmissionRemoveActorView(LoadDossierViewMixin, WebServiceFormMixi
 
     def prepare_data(self, data):
         return {
-            'type': self.kwargs['type'],
+            'actor_type': ActorTypeEnum(self.kwargs['type']),
             'uuid_membre': self.kwargs['uuid'],
         }
 

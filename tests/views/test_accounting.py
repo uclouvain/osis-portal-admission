@@ -52,6 +52,8 @@ from admission.contrib.enums.projet import (
 )
 from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
+from osis_admission_sdk.model.completer_comptabilite_proposition_generale_command import \
+    CompleterComptabilitePropositionGeneraleCommand
 from reference.services.iban_validator import (
     IBANValidatorException,
     IBANValidatorRequestException,
@@ -774,7 +776,9 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
             uuid=self.proposition.uuid,
-            completer_comptabilite_proposition_generale_command=command_params,
+            completer_comptabilite_proposition_generale_command=(
+                CompleterComptabilitePropositionGeneraleCommand(**command_params)
+            ),
             **self.default_kwargs,
         )
 
@@ -787,10 +791,10 @@ class GeneralAccountingViewTestCase(TestCase):
             # Check API calls
             self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
                 uuid=self.proposition.uuid,
-                completer_comptabilite_proposition_generale_command={
+                completer_comptabilite_proposition_generale_command=CompleterComptabilitePropositionGeneraleCommand(**{
                     **command_params,
                     'affiliation_sport': '',
-                },
+                }),
                 **self.default_kwargs,
             )
 
@@ -812,7 +816,9 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
             uuid=self.proposition.uuid,
-            completer_comptabilite_proposition_generale_command=command_params,
+            completer_comptabilite_proposition_generale_command=(
+                CompleterComptabilitePropositionGeneraleCommand(**command_params)
+            ),
             **self.default_kwargs,
         )
 
@@ -836,7 +842,9 @@ class GeneralAccountingViewTestCase(TestCase):
 
         self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
             uuid=self.proposition.uuid,
-            completer_comptabilite_proposition_generale_command=command_params,
+            completer_comptabilite_proposition_generale_command=(
+                CompleterComptabilitePropositionGeneraleCommand(**command_params)
+            ),
             **self.default_kwargs,
         )
 

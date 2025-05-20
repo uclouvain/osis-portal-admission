@@ -112,7 +112,7 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
     @cached_property
     def has_success_year(self):
         return any(
-            year['result'].value == Result.SUCCESS.name
+            year['result'] == Result.SUCCESS.name
             for experience in self.curriculum.educational_experiences
             for year in experience.educationalexperienceyear_set
         )

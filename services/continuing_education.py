@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class ContinuingEducationService(metaclass=ServiceMeta):
         cls,
         person,
         acronym: str,
-        year: str,
+        year: int,
     ) -> InformationsSpecifiquesFormationContinueDTO:
         return ContinuingEducationAPIClient().retrieve_informations_specifiques_formation_continue_dto(
             sigle=acronym,

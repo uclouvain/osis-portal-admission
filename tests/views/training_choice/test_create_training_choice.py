@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from unittest.mock import MagicMock
 
 import freezegun
@@ -101,7 +102,10 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertIn('Les programmes certifiants et courts', response.rendered_content)
 
         # A message is displayed if period dates are not respected
-        medicine_start_date = date_format(self.specific_periods.medicine_dentistry_bachelor.date_debut, 'j F Y')
+        medicine_start_date = date_format(
+            datetime.date.fromisoformat(self.specific_periods.medicine_dentistry_bachelor['date_debut']),
+            'j F Y',
+        )
 
         for date in ['2021-09-14', '2022-02-16']:
             with freezegun.freeze_time(date):
