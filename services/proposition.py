@@ -31,10 +31,30 @@ from django.conf import settings
 from django.utils.translation import get_language
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
+from osis_admission_sdk.model.actor_type_enum import ActorTypeEnum
+from osis_admission_sdk.model.approuver_proposition_command import (
+    ApprouverPropositionCommand,
+)
+from osis_admission_sdk.model.approuver_proposition_par_pdf_command import (
+    ApprouverPropositionParPdfCommand,
+)
+from osis_admission_sdk.model.completer_comptabilite_proposition_doctorale_command import (
+    CompleterComptabilitePropositionDoctoraleCommand,
+)
+from osis_admission_sdk.model.completer_comptabilite_proposition_generale_command import (
+    CompleterComptabilitePropositionGeneraleCommand,
+)
+from osis_admission_sdk.model.completer_proposition_command import (
+    CompleterPropositionCommand,
+)
 from osis_admission_sdk.model.continuing_education_proposition_dto import (
     ContinuingEducationPropositionDTO,
 )
 from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
+from osis_admission_sdk.model.definir_cotutelle_command import DefinirCotutelleCommand
+from osis_admission_sdk.model.designer_promoteur_reference_command import (
+    DesignerPromoteurReferenceCommand,
+)
 from osis_admission_sdk.model.doctorate_education_accounting_dto import (
     DoctorateEducationAccountingDTO,
 )
@@ -45,7 +65,26 @@ from osis_admission_sdk.model.general_education_accounting_dto import (
 from osis_admission_sdk.model.general_education_proposition_dto import (
     GeneralEducationPropositionDTO,
 )
+from osis_admission_sdk.model.identifier_supervision_actor import (
+    IdentifierSupervisionActor,
+)
+from osis_admission_sdk.model.modifier_questions_specifiques_formation_continue_command import (
+    ModifierQuestionsSpecifiquesFormationContinueCommand,
+)
+from osis_admission_sdk.model.modifier_questions_specifiques_formation_generale_command import (
+    ModifierQuestionsSpecifiquesFormationGeneraleCommand,
+)
+from osis_admission_sdk.model.refuser_proposition_command import (
+    RefuserPropositionCommand,
+)
+from osis_admission_sdk.model.renvoyer_invitation_signature_externe import (
+    RenvoyerInvitationSignatureExterne,
+)
 from osis_admission_sdk.model.specific_question import SpecificQuestion
+from osis_admission_sdk.model.submit_proposition import SubmitProposition
+from osis_admission_sdk.model.supervision_actor_reference import (
+    SupervisionActorReference,
+)
 from osis_admission_sdk.model.supervision_dto import SupervisionDTO
 
 from admission.services.mixins import ServiceMeta
@@ -63,6 +102,8 @@ __all__ = [
     "PropositionBusinessException",
     "GlobalPropositionBusinessException",
 ]
+
+from osis_admission_sdk.model.pool_enum import PoolEnum
 
 
 class APIClient:
@@ -144,7 +185,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_proposition(cls, person: Person, **kwargs):
         return APIClient().update_project(
             uuid=kwargs['uuid'],
-            completer_proposition_command=kwargs,
+            completer_proposition_command=CompleterPropositionCommand(**kwargs),
             **build_mandatory_auth_headers(person),
         )
 
@@ -244,11 +285,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_proposition(cls, person: Person, uuid, **kwargs):
+    def submit_proposition(cls, person: Person, uuid, annee, pool, elements_confirmation):
         return APIClient().submit_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
-            submit_proposition=kwargs,
+            submit_proposition=SubmitProposition(annee, PoolEnum(pool), elements_confirmation),
         )
 
     @classmethod
@@ -259,11 +300,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_general_proposition(cls, person: Person, uuid, **kwargs):
+    def submit_general_proposition(cls, person: Person, uuid, annee, pool, elements_confirmation):
         return APIClient().submit_general_education_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
-            submit_proposition=kwargs,
+            submit_proposition=SubmitProposition(annee, PoolEnum(pool), elements_confirmation),
         )
 
     @classmethod
@@ -274,11 +315,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_continuing_proposition(cls, person: Person, uuid, **kwargs):
+    def submit_continuing_proposition(cls, person: Person, uuid, annee, pool, elements_confirmation):
         return APIClient().submit_continuing_education_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
-            submit_proposition=kwargs,
+            submit_proposition=SubmitProposition(annee, PoolEnum(pool), elements_confirmation),
         )
 
     @classmethod
@@ -300,7 +341,9 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         data['uuid_proposition'] = uuid
         return APIClient().update_accounting(
             uuid=uuid,
-            completer_comptabilite_proposition_doctorale_command=data,
+            completer_comptabilite_proposition_doctorale_command=CompleterComptabilitePropositionDoctoraleCommand(
+                **data
+            ),
             **build_mandatory_auth_headers(person),
         )
 
@@ -309,7 +352,7 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         data['uuid_proposition'] = uuid
         return APIClient().update_general_accounting(
             uuid=uuid,
-            completer_comptabilite_proposition_generale_command=data,
+            completer_comptabilite_proposition_generale_command=CompleterComptabilitePropositionGeneraleCommand(**data),
             **build_mandatory_auth_headers(person),
         )
 
@@ -341,7 +384,9 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_general_specific_question(cls, person: Person, uuid: str, data: dict):
         return APIClient().update_general_specific_question(
             uuid=uuid,
-            modifier_questions_specifiques_formation_generale_command=data,
+            modifier_questions_specifiques_formation_generale_command=(
+                ModifierQuestionsSpecifiquesFormationGeneraleCommand(**data)
+            ),
             **build_mandatory_auth_headers(person),
         )
 
@@ -349,7 +394,9 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_continuing_specific_question(cls, person: Person, uuid: str, data: dict):
         return APIClient().update_continuing_specific_question(
             uuid=uuid,
-            modifier_questions_specifiques_formation_continue_command=data,
+            modifier_questions_specifiques_formation_continue_command=(
+                ModifierQuestionsSpecifiquesFormationContinueCommand(**data)
+            ),
             **build_mandatory_auth_headers(person),
         )
 
@@ -715,7 +762,7 @@ class AdmissionCotutelleService(metaclass=ServiceMeta):
         uuid = str(kwargs.pop('uuid'))
         return APIClient().update_cotutelle(
             uuid=uuid,
-            definir_cotutelle_command=kwargs,
+            definir_cotutelle_command=DefinirCotutelleCommand(**kwargs),
             **build_mandatory_auth_headers(person),
         )
 
@@ -765,9 +812,10 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
 
     @classmethod
     def add_member(cls, person, uuid, **kwargs):
+        actor_type = kwargs.pop('actor_type')
         return APIClient().add_member(
             uuid=uuid,
-            identifier_supervision_actor=kwargs,
+            identifier_supervision_actor=IdentifierSupervisionActor(actor_type=ActorTypeEnum(actor_type), **kwargs),
             **build_mandatory_auth_headers(person),
         )
 
@@ -783,7 +831,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def remove_member(cls, person, uuid, **kwargs):
         return APIClient().remove_member(
             uuid=uuid,
-            supervision_actor_reference=kwargs,
+            supervision_actor_reference=SupervisionActorReference(**kwargs),
             **build_mandatory_auth_headers(person),
         )
 
@@ -791,7 +839,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def set_reference_promoter(cls, person, uuid, **kwargs):
         return APIClient().set_reference_promoter(
             uuid=uuid,
-            designer_promoteur_reference_command=kwargs,
+            designer_promoteur_reference_command=DesignerPromoteurReferenceCommand(**kwargs),
             **build_mandatory_auth_headers(person),
         )
 
@@ -799,7 +847,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def resend_invite(cls, person, uuid, **kwargs):
         return APIClient().update_signatures(
             uuid=uuid,
-            renvoyer_invitation_signature_externe=kwargs,
+            renvoyer_invitation_signature_externe=RenvoyerInvitationSignatureExterne(**kwargs),
             **build_mandatory_auth_headers(person),
         )
 
@@ -807,7 +855,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def approve_proposition(cls, person, uuid, **kwargs):
         return APIClient().approve_proposition(
             uuid=uuid,
-            approuver_proposition_command=kwargs,
+            approuver_proposition_command=ApprouverPropositionCommand(**kwargs),
             **build_mandatory_auth_headers(person),
         )
 
@@ -815,7 +863,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def reject_proposition(cls, person, uuid, **kwargs):
         return APIClient().reject_proposition(
             uuid=uuid,
-            refuser_proposition_command=kwargs,
+            refuser_proposition_command=RefuserPropositionCommand(**kwargs),
             **build_mandatory_auth_headers(person),
         )
 
@@ -824,7 +872,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         return APIClient(api_config=cls.build_config()).approve_external_proposition(
             uuid=uuid,
             token=token,
-            approuver_proposition_command=kwargs,
+            approuver_proposition_command=ApprouverPropositionCommand(**kwargs),
             **cls.build_mandatory_external_headers(),
         )
 
@@ -833,7 +881,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
         return APIClient(api_config=cls.build_config()).reject_external_proposition(
             uuid=uuid,
             token=token,
-            refuser_proposition_command=kwargs,
+            refuser_proposition_command=RefuserPropositionCommand(**kwargs),
             **cls.build_mandatory_external_headers(),
         )
 
@@ -841,6 +889,6 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def approve_by_pdf(cls, person, uuid, **kwargs):
         return APIClient().approve_by_pdf(
             uuid=uuid,
-            approuver_proposition_par_pdf_command=kwargs,
+            approuver_proposition_par_pdf_command=ApprouverPropositionParPdfCommand(**kwargs),
             **build_mandatory_auth_headers(person),
         )

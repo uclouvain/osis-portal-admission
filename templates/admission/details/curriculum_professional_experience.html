@@ -53,7 +53,7 @@
         </div>
         {% if experience.type.value == 'WORK' %}
           <div class="col-md-6">
-            {% field_data _('Sector') experience.sector.value|enum_display:'ActivitySector' %}
+            {% field_data _('Sector') experience.sector|enum_display:'ActivitySector' %}
           </div>
         {% elif experience.type.value == 'OTHER' %}
           <div class="col-md-6">

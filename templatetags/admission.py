@@ -45,12 +45,13 @@ from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext, pgettext_lazy
+from osis_admission_sdk.model.membre_cadto_nested import MembreCADTONested
+from osis_admission_sdk.model.promoteur_dto_nested import PromoteurDTONested
 from osis_admission_sdk.exceptions import (
     ForbiddenException,
     NotFoundException,
     UnauthorizedException,
 )
-from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums import (
@@ -664,7 +665,7 @@ def admission_status(status: str, osis_education_type: str):
 
 
 @register.simple_tag(takes_context=True)
-def edit_external_member_form(context, membre: 'SupervisionDTOPromoteur'):
+def edit_external_member_form(context, membre: Union['PromoteurDTONested', 'MembreCADTONested']):
     """Get an edit form"""
     initial = membre.to_dict()
     initial['pays'] = initial['code_pays']
@@ -679,7 +680,7 @@ def edit_external_member_form(context, membre: 'SupervisionDTOPromoteur'):
 def diplomatic_post_name(diplomatic_post):
     """Get the name of a diplomatic post"""
     if diplomatic_post:
-        return getattr(diplomatic_post, 'nom_francais' if get_language() == settings.LANGUAGE_CODE else 'nom_anglais')
+        return diplomatic_post.get('nom_francais' if get_language() == settings.LANGUAGE_CODE else 'nom_anglais')
 
 
 @register.simple_tag

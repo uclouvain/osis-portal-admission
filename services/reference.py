@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -33,9 +33,9 @@ from osis_reference_sdk.api import (
     academic_years_api,
     cities_api,
     countries_api,
-    languages_api,
     diplomas_api,
     high_schools_api,
+    languages_api,
     superior_non_universities_api,
     universities_api,
 )
@@ -58,12 +58,11 @@ class CountriesService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
     @classmethod
-    def get_countries(cls, person=None, *args, **kwargs):
+    def get_countries(cls, person=None, **kwargs):
         return (
             CountriesAPIClient()
             .countries_list(
                 active=True,
-                *args,
                 **kwargs,
                 **build_mandatory_auth_headers(person),
             )
@@ -72,12 +71,11 @@ class CountriesService(metaclass=ServiceMeta):
 
     @classmethod
     @lru_cache()
-    def get_country(cls, person=None, *args, **kwargs):
+    def get_country(cls, person=None, **kwargs):
         countries = (
             CountriesAPIClient()
             .countries_list(
                 active=True,
-                *args,
                 **kwargs,
                 **build_mandatory_auth_headers(person),
                 limit=1,
@@ -99,11 +97,10 @@ class CitiesService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
     @classmethod
-    def get_cities(cls, person: 'Person' = None, *args, **kwargs):
+    def get_cities(cls, person: 'Person' = None, **kwargs):
         return (
             CitiesAPIClient()
             .cities_list(
-                *args,
                 **kwargs,
                 **build_mandatory_auth_headers(person),
             )
@@ -159,12 +156,11 @@ class LanguageService(metaclass=ServiceMeta):
     api_exception_cls = ApiException
 
     @classmethod
-    def get_languages(cls, person, *args, **kwargs):
+    def get_languages(cls, person, **kwargs):
         return (
             LanguagesAPIClient()
             .languages_list(
                 limit=kwargs.pop('limit', 100),
-                *args,
                 **kwargs,
                 **build_mandatory_auth_headers(person),
             )
