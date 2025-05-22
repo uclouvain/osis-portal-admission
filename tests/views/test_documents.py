@@ -31,10 +31,9 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy
+
+from osis_admission_sdk.model.document_specific_question import DocumentSpecificQuestion
 from osis_admission_sdk.model.document_specific_questions_list import DocumentSpecificQuestionsList
-from osis_admission_sdk.model.document_specific_questions_list_immediate_requested_documents import (
-    DocumentSpecificQuestionsListImmediateRequestedDocuments,
-)
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
@@ -54,7 +53,7 @@ class BaseDocumentsFormViewTestCase(TestCase):
     def setUpTestData(cls):
         cls.person = PersonFactory()
         cls.documents_to_complete_immediately_configurations = [
-            DocumentSpecificQuestionsListImmediateRequestedDocuments(
+            DocumentSpecificQuestion(
                 uuid='CURRICULUM.MON_DOCUMENT_1',
                 type=TypeItemFormulaire.DOCUMENT.name,
                 title={
@@ -74,7 +73,7 @@ class BaseDocumentsFormViewTestCase(TestCase):
                 tab_name='Curriculum',
                 required=True,
             ),
-            DocumentSpecificQuestionsListImmediateRequestedDocuments(
+            DocumentSpecificQuestion(
                 uuid='CHOIX_FORMATION.MON_DOCUMENT_2',
                 type=TypeItemFormulaire.DOCUMENT.name,
                 title={
@@ -96,7 +95,7 @@ class BaseDocumentsFormViewTestCase(TestCase):
             ),
         ]
         cls.documents_to_complete_later_configurations = [
-            DocumentSpecificQuestionsListImmediateRequestedDocuments(
+            DocumentSpecificQuestion(
                 uuid='CURRICULUM.MON_DOCUMENT_3',
                 type=TypeItemFormulaire.DOCUMENT.name,
                 title={

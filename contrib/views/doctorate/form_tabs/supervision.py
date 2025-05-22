@@ -93,7 +93,7 @@ class DoctorateAdmissionSupervisionFormView(LoadDossierViewMixin, WebServiceForm
         else:
             matricule = ''
         return {
-            'type': data['type'],
+            'actor_type': data.pop('type'),
             'matricule': matricule,
             **data,
         }

@@ -115,7 +115,7 @@ class SpecificQuestionsFormView(
                 initial={
                     'documents_additionnels': self.admission.documents_additionnels,
                     'reponses_questions_specifiques': self.admission.reponses_questions_specifiques,
-                    'poste_diplomatique': self.admission.poste_diplomatique.code
+                    'poste_diplomatique': self.admission.poste_diplomatique['code']
                     if self.admission.poste_diplomatique
                     else None,
                 },

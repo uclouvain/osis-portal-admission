@@ -123,7 +123,7 @@ class AdmissionCurriculumEducationalExperienceDetailView(AdmissionCurriculumMixi
         context['experience'].end = all_years_config['end']
 
         context['experience'].evaluation_system_with_credits = (
-            self.educational_experience.evaluation_type.value in EvaluationSystemsWithCredits
+            self.educational_experience.evaluation_type in EvaluationSystemsWithCredits
         )
 
         context['is_foreign_experience'] = self.educational_experience.country != BE_ISO_CODE

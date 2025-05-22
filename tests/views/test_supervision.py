@@ -28,8 +28,13 @@ from unittest.mock import ANY, Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
+
+from osis_admission_sdk.model.actor_type_enum import ActorTypeEnum
+from osis_admission_sdk.model.approuver_proposition_command import ApprouverPropositionCommand
+from osis_admission_sdk.model.identifier_supervision_actor import IdentifierSupervisionActor
+from osis_admission_sdk.model.promoteur_dto_nested import PromoteurDTONested
+
 from osis_admission_sdk import ApiException
-from osis_admission_sdk.model.supervision_dto_promoteur import SupervisionDTOPromoteur
 
 from admission.contrib.enums.actor import ActorType, ChoixEtatSignature
 from admission.contrib.enums.projet import ChoixStatutPropositionDoctorale
@@ -41,6 +46,7 @@ from frontoffice.settings.osis_sdk.utils import (
     ApiBusinessException,
     MultipleApiBusinessException,
 )
+from osis_admission_sdk.model.refuser_proposition_command import RefuserPropositionCommand
 
 
 @override_settings(ADMISSION_TOKEN_EXTERNAL='api-token-external')
@@ -120,7 +126,7 @@ class SupervisionTestCase(TestCase):
                     commentaire_externe="A public comment to display",
                 ),
                 dict(
-                    promoteur=SupervisionDTOPromoteur(
+                    promoteur=PromoteurDTONested(
                         uuid="uuid-externe",
                         matricule="",
                         prenom="Marcel",
@@ -211,12 +217,12 @@ class SupervisionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.add_member.assert_called_with(
             uuid=self.pk,
-            identifier_supervision_actor={
-                'type': ActorType.CA_MEMBER.name,
+            identifier_supervision_actor=IdentifierSupervisionActor(**{
+                'actor_type': ActorTypeEnum(ActorType.CA_MEMBER.name),
                 'matricule': "0123456978",
                 'est_docteur': False,
                 **{field: "" for field in EXTERNAL_FIELDS},
-            },
+            }),
             **self.default_kwargs,
         )
         self.mock_api.return_value.add_member.reset_mock()
@@ -236,12 +242,12 @@ class SupervisionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.add_member.assert_called_with(
             uuid=self.pk,
-            identifier_supervision_actor={
-                'type': ActorType.PROMOTER.name,
+            identifier_supervision_actor=IdentifierSupervisionActor(**{
+                'actor_type': ActorTypeEnum(ActorType.PROMOTER.name),
                 'matricule': "0123456978",
                 'est_docteur': False,
                 **{field: "" for field in EXTERNAL_FIELDS},
-            },
+            }),
             **self.default_kwargs,
         )
         self.mock_api.return_value.add_member.reset_mock()
@@ -277,11 +283,11 @@ class SupervisionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.add_member.assert_called_with(
             uuid=self.pk,
-            identifier_supervision_actor={
-                'type': ActorType.PROMOTER.name,
+            identifier_supervision_actor=IdentifierSupervisionActor(**{
+                'actor_type': ActorTypeEnum(ActorType.PROMOTER.name),
                 'matricule': "",
                 **external_data,
-            },
+            }),
             **self.default_kwargs,
         )
 
@@ -383,11 +389,11 @@ class SupervisionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.mock_api.return_value.approve_proposition.assert_called_with(
             uuid=self.pk,
-            approuver_proposition_command={
+            approuver_proposition_command=ApprouverPropositionCommand(**{
                 'commentaire_interne': "The internal comment",
                 'commentaire_externe': "The public comment",
                 'uuid_membre': f"uuid-{self.person.global_id}",
-            },
+            }),
             **self.default_kwargs,
         )
 
@@ -428,12 +434,12 @@ class SupervisionTestCase(TestCase):
 
         self.mock_api.return_value.reject_proposition.assert_called_with(
             uuid=self.pk,
-            refuser_proposition_command={
-                'commentaire_interne': "The internal comment",
+            refuser_proposition_command=RefuserPropositionCommand(**{
                 'commentaire_externe': "The public comment",
+                'commentaire_interne': "The internal comment",
                 'motif_refus': "The reason",
                 'uuid_membre': f"uuid-{self.person.global_id}",
-            },
+            }),
             **self.default_kwargs,
         )
 
@@ -597,11 +603,11 @@ class SupervisionTestCase(TestCase):
         self.assertEqual(self.mock_api.call_args[0][0].configuration.api_key, self.external_api_token_header)
         self.mock_api.return_value.approve_external_proposition.assert_called_with(
             uuid=self.pk,
-            approuver_proposition_command={
+            approuver_proposition_command=ApprouverPropositionCommand(**{
                 'commentaire_interne': "The internal comment",
                 'commentaire_externe': "The public comment",
                 'uuid_membre': "promoter-token",
-            },
+            }),
             **self.external_kwargs,
         )
 
@@ -622,12 +628,12 @@ class SupervisionTestCase(TestCase):
         self.assertEqual(self.mock_api.call_args[0][0].configuration.api_key, self.external_api_token_header)
         self.mock_api.return_value.reject_external_proposition.assert_called_with(
             uuid=self.pk,
-            refuser_proposition_command={
+            refuser_proposition_command=RefuserPropositionCommand(**{
                 'commentaire_interne': "The internal comment",
                 'commentaire_externe': "The public comment",
                 'motif_refus': "The reason",
                 'uuid_membre': "promoter-token",
-            },
+            }),
             **self.external_kwargs,
         )
 
