@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,11 @@
     {% endif %}
     {% include 'admission/includes/curriculum_experience_header.html' with on_update=True title=header_title %}
     <div class="panel-body">
+      {% if experience.valuated_from_trainings and experience.can_be_updated %}
+        <div class="alert alert-warning">
+          {% translate 'This experience has been partially completed so only few fields are editable.' %}
+        </div>
+      {% endif %}
       <div class="row">
         <div class="col-md-6 form-group">
           <fieldset class="custom-fieldset">
@@ -75,7 +80,7 @@
           {% bootstrap_field form.role %}
         </div>
       </div>
-      <div id="certificate">
+      <div id="certificate" class="required_field">
         {% bootstrap_field form.certificate %}
       </div>
     </div>
