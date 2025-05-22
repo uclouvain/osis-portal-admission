@@ -228,15 +228,31 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
         max_length=255,
     )
 
-    def __init__(self, is_continuing, *args, **kwargs):
+    def __init__(self, experience, is_continuing, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.is_continuing = is_continuing
         if self.is_continuing:
             self.fields['certificate'].disabled = True
             self.fields['certificate'].widget = forms.MultipleHiddenInput()
 
+        if experience and experience.get('valuated_from_trainings'):
+            self.disable_valuated_fields(experience['valuated_from_trainings'])
+
     class Media:
         js = ('js/dependsOn.min.js',)
+
+    def disable_valuated_fields(self, valuated_education_types: List[str]):
+        """Disable valuated fields"""
+        # For now, all fields but the certificate one are valuated
+        valuated_contexts = set(
+            ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE.get(training) for training in valuated_education_types
+        )
+        for field in self.fields:
+            if field != 'certificate':
+                self.fields[field].disabled = True
+        if 'doctorate' in valuated_contexts or 'general-education' in valuated_contexts:
+            self.fields['certificate'].disabled = True
+            self.fields['certificate'].widget = HiddenFileWidget(display_visualizer=True)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -274,6 +290,10 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
                 self.add_error('activity', FIELD_REQUIRED_MESSAGE)
         else:
             cleaned_data['activity'] = ''
+
+        if not self.is_continuing:
+            if not cleaned_data['certificate']:
+                self.add_error('certificate', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data
 
