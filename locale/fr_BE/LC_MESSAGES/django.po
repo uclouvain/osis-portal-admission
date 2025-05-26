@@ -271,7 +271,7 @@ msgid "Access experience details"
 msgstr "Accéder aux détails de l'expérience"
 
 msgid "Access my PhD candidates' applications"
-msgstr "Accéder aux dossiers de mes doctorants"
+msgstr "Accéder aux dossiers de mes candidats au doctorat"
 
 msgid "Account holder first name"
 msgstr "Prénom du titulaire du compte"
@@ -1924,7 +1924,7 @@ msgid "Male"
 msgstr "Masculin"
 
 msgid "Management of PhD applications"
-msgstr "Gestion des doctorats"
+msgstr "Gestion des demandes en doctorat"
 
 msgid "Mandatory languages are missing."
 msgstr "Des langues obligatoires sont manquantes."

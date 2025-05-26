@@ -29,15 +29,11 @@ from unittest.mock import ANY, MagicMock, Mock, patch
 
 from django.test import TestCase
 from osis_admission_sdk.model.campus import Campus
+from osis_admission_sdk.model.campus_dto import CampusDTO
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.model.doctorat_search_dto import DoctoratSearchDTO
 from osis_admission_sdk.model.doctorate_pre_admission_search_dto import (
     DoctoratePreAdmissionSearchDTO,
-)
-from osis_admission_sdk.model.doctorate_pre_admission_search_dto_doctorat import (
-    DoctoratePreAdmissionSearchDTODoctorat,
-)
-from osis_admission_sdk.model.doctorate_pre_admission_search_dto_doctorat_campus import (
-    DoctoratePreAdmissionSearchDTODoctoratCampus,
 )
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
@@ -338,21 +334,21 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             links={'update_specific_question': {'url': 'ok'}},
             erreurs={},
             avec_bourse_double_diplome=True,
-            bourse_double_diplome=Mock(
+            bourse_double_diplome=dict(
                 uuid=cls.double_degree_scholarship.uuid,
                 nom_court=cls.double_degree_scholarship.short_name,
                 nom_long=cls.double_degree_scholarship.long_name,
                 type=cls.double_degree_scholarship.type,
             ),
             avec_bourse_internationale=True,
-            bourse_internationale=Mock(
+            bourse_internationale=dict(
                 uuid=cls.international_scholarship.uuid,
                 nom_court=cls.international_scholarship.short_name,
                 nom_long=cls.international_scholarship.long_name,
                 type=cls.international_scholarship.type,
             ),
             avec_bourse_erasmus_mundus=True,
-            bourse_erasmus_mundus=Mock(
+            bourse_erasmus_mundus=dict(
                 uuid=cls.first_erasmus_mundus_scholarship.uuid,
                 nom_court=cls.first_erasmus_mundus_scholarship.short_name,
                 nom_long=cls.first_erasmus_mundus_scholarship.long_name,
@@ -683,13 +679,13 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             DoctoratePreAdmissionSearchDTO._from_openapi_data(
                 uuid=str(uuid.uuid4()),
                 reference='1',
-                doctorat=DoctoratePreAdmissionSearchDTODoctorat._from_openapi_data(
+                doctorat=DoctoratSearchDTO._from_openapi_data(
                     sigle='S-1',
                     code='C-1',
                     annee=2024,
                     intitule='Doctorat 1',
                     sigle_entite_gestion='SEG-1',
-                    campus=DoctoratePreAdmissionSearchDTODoctoratCampus._from_openapi_data(
+                    campus=CampusDTO._from_openapi_data(
                         uuid=cls.campuses[0].uuid,
                         nom=cls.campuses[0].name,
                     ),
@@ -700,13 +696,13 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             DoctoratePreAdmissionSearchDTO._from_openapi_data(
                 uuid=str(uuid.uuid4()),
                 reference='2',
-                doctorat=DoctoratePreAdmissionSearchDTODoctorat._from_openapi_data(
+                doctorat=DoctoratSearchDTO._from_openapi_data(
                     sigle='S-2',
                     code='C-2',
                     annee=2024,
                     intitule='Doctorat 2',
                     sigle_entite_gestion='SEG-2',
-                    campus=DoctoratePreAdmissionSearchDTODoctoratCampus._from_openapi_data(
+                    campus=CampusDTO._from_openapi_data(
                         uuid=cls.campuses[1].uuid,
                         nom=cls.campuses[1].name,
                     ),
@@ -717,13 +713,13 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
             DoctoratePreAdmissionSearchDTO._from_openapi_data(
                 uuid=str(uuid.uuid4()),
                 reference='3',
-                doctorat=DoctoratePreAdmissionSearchDTODoctorat._from_openapi_data(
+                doctorat=DoctoratSearchDTO._from_openapi_data(
                     sigle='S-3',
                     code='C-3',
                     annee=2024,
                     intitule='Doctorat 3',
                     sigle_entite_gestion='SEG-3',
-                    campus=DoctoratePreAdmissionSearchDTODoctoratCampus._from_openapi_data(
+                    campus=CampusDTO._from_openapi_data(
                         uuid=cls.campuses[0].uuid,
                         nom=cls.campuses[0].name,
                     ),
@@ -734,9 +730,9 @@ class AdmissionTrainingChoiceFormViewTestCase(TestCase):
         ]
 
         cls.specific_periods = MagicMock(
-            medicine_dentistry_bachelor=MagicMock(
-                date_debut=datetime.date(2021, 9, 15),
-                date_fin=datetime.date(2022, 2, 15),
+            medicine_dentistry_bachelor=dict(
+                date_debut='2021-09-15',
+                date_fin='2022-02-15',
             )
         )
 
