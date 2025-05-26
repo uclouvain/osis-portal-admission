@@ -67,6 +67,7 @@ from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
     experience_can_be_updated,
     get_educational_experience_year_set_with_lost_years,
     initialize_field_texts,
+    professional_experience_can_be_updated,
 )
 from admission.services.mixins import WebServiceFormMixin
 
@@ -127,11 +128,28 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['CURRICULUM_ACTIVITY_LABEL'] = CURRICULUM_ACTIVITY_LABEL
+
+        if self.experience_id:
+            experience = self.professional_experience.to_dict()
+            experience['can_be_updated'] = professional_experience_can_be_updated(
+                self.professional_experience,
+                self.current_context,
+            )
+
+            if not experience['can_be_updated']:
+                raise PermissionDenied
+            context['experience'] = experience
+
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['is_continuing'] = self.is_continuing
+
+        if self.experience_id:
+            kwargs['experience'] = self.professional_experience.to_dict()
+        else:
+            kwargs['experience'] = None
         return kwargs
 
     def prepare_data(self, data):
@@ -165,9 +183,6 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
         if self.experience_id:
             experience = self.professional_experience.to_dict()
 
-            if self.professional_experience.valuated_from_trainings or self.professional_experience.external_id:
-                raise PermissionDenied
-
             start_date = experience.pop('start_date')
             end_date = experience.pop('end_date')
             if start_date:
@@ -177,6 +192,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
                 experience['end_date_month'] = end_date.month
                 experience['end_date_year'] = end_date.year
             return experience
+        return None
 
 
 class AdmissionCurriculumProfessionalExperienceDeleteView(AdmissionCurriculumFormExperienceMixin, FormView):
