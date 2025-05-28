@@ -1343,6 +1343,9 @@ msgstr "Terminer"
 msgid "First name"
 msgstr "Prénom"
 
+msgid "First name / Last name"
+msgstr "Prénom / Nom"
+
 msgid "Fondation Mont-Godinne"
 msgstr "Fondation Mont Godinne"
 
@@ -1755,6 +1758,12 @@ msgstr "En cours de demande"
 msgctxt "ways_hear_about_training"
 msgid "In the press"
 msgstr "Dans la presse"
+
+msgid "In the process of re-signing"
+msgstr "En cours de resignature du CA"
+
+msgid "In the process of signing"
+msgstr "En cours de signature"
 
 msgid "Incomplete"
 msgstr "Incomplet"
@@ -2237,8 +2246,8 @@ msgid ""
 "examination, your application can only be submitted from %(start_date)s."
 msgstr ""
 "Dans l’attente de la publication des résultats du concours d’entrée en "
-"médecine et dentisterie, votre demande ne pourra être soumise qu'à partir "
-"du %(start_date)s."
+"médecine et dentisterie, votre demande ne pourra être soumise qu'à partir du "
+"%(start_date)s."
 
 msgid "Period"
 msgstr "Période"
@@ -2696,10 +2705,7 @@ msgid "Supervisor"
 msgstr "Promoteur.trice"
 
 msgid "Supervisory panel to be completed"
-msgstr "Comité d’accompagnement à compléter"
-
-msgid "Supervisory panel waiting for signature"
-msgstr "Comité d’accompagnement en attente de signature"
+msgstr "CA à compléter"
 
 msgid "Support committee"
 msgstr "Comité d'accompagnement"
@@ -2884,9 +2890,9 @@ msgid ""
 "modify it, please add an identical academic course in which you fill in the "
 "correct information."
 msgstr ""
-"Cette formation académique de votre curriculum n'est pas modifiable. Si "
-"vous souhaitez la modifier, veuillez ajouter une formation académique "
-"identique dans laquelle vous renseignerez les informations correctes."
+"Cette formation académique de votre curriculum n'est pas modifiable. Si vous "
+"souhaitez la modifier, veuillez ajouter une formation académique identique "
+"dans laquelle vous renseignerez les informations correctes."
 
 msgid "This account number has been verified"
 msgstr "Ce numéro a été vérifié"
@@ -3089,9 +3095,6 @@ msgstr "Contrat de travail"
 
 msgid "Waiting for a result"
 msgstr "En attente de résultat"
-
-msgid "Waiting for signature"
-msgstr "En attente de signature"
 
 msgid "Wallonie Bruxelles International (WBI)"
 msgstr "Wallonie Bruxelles International (WBI)"

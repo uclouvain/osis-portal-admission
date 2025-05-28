@@ -44,14 +44,14 @@ from django.test import override_settings
 from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext, pgettext_lazy
-from osis_admission_sdk.model.membre_cadto_nested import MembreCADTONested
-from osis_admission_sdk.model.promoteur_dto_nested import PromoteurDTONested
+from django.utils.translation import pgettext_lazy
 from osis_admission_sdk.exceptions import (
     ForbiddenException,
     NotFoundException,
     UnauthorizedException,
 )
+from osis_admission_sdk.model.membre_cadto_nested import MembreCADTONested
+from osis_admission_sdk.model.promoteur_dto_nested import PromoteurDTONested
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums import (
@@ -179,8 +179,8 @@ TAB_TREES = {
         Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
             Tab('accounting', _('Additional information')),
         ],
-        Tab('doctorate', pgettext('tab name', 'Research'), 'person-chalkboard'): [
-            Tab('project', pgettext('tab name', 'Research')),
+        Tab('doctorate', pgettext_lazy('tab name', 'Research'), 'person-chalkboard'): [
+            Tab('project', pgettext_lazy('tab name', 'Research')),
             Tab('cotutelle', _('Cotutelle')),
             Tab('supervision', _('Support committee')),
         ],
