@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
-from admission.utils import mark_safe_lazy
+from admission.utils import format_academic_year, mark_safe_lazy
 
 BooleanRadioSelect = partial(
     forms.RadioSelect,
@@ -74,6 +74,7 @@ class PoolQuestionsForm(forms.Form):
         required=False,
     )
     registration_change_form = FileUploadField(max_files=1, required=False)
+    regular_registration_proof_for_registration_change = FileUploadField(max_files=1, required=False)
     is_non_resident = forms.NullBooleanField(
         label=_("You are applying as ..."),
         widget=forms.RadioSelect(
@@ -103,6 +104,11 @@ class PoolQuestionsForm(forms.Form):
                 ),
             )
             self.fields['registration_change_form'].label = label
+            academic_year = format_academic_year(self.initial['modification_pool_academic_year'])
+            self.fields['regular_registration_proof_for_registration_change'].label = _(
+                'Certificate of regular enrolment for the %(year)s academic year from the establishment in '
+                'which you are currently enrolled'
+            ) % {'year': academic_year}
 
         elif self.initial['reorientation_pool_end_date'] is not None:
             date: datetime.datetime = self.initial['reorientation_pool_end_date']
@@ -135,6 +141,7 @@ class PoolQuestionsForm(forms.Form):
             # not belgian bachelor, clean modification fields
             data['is_external_modification'] = False
             data['registration_change_form'] = []
+            data['regular_registration_proof_for_registration_change'] = []
 
         elif data.get('is_belgian_bachelor') is False and self.initial['reorientation_pool_end_date']:
             # not belgian bachelor, clean reorientation fields
@@ -163,6 +170,7 @@ class PoolQuestionsForm(forms.Form):
                 )
             elif not data['is_external_modification']:
                 data['registration_change_form'] = []
+                data['regular_registration_proof_for_registration_change'] = []
 
         elif data.get('is_belgian_bachelor') is True and self.initial['reorientation_pool_end_date']:
             # belgian bachelor, reorientation asked
