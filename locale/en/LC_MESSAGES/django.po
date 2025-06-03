@@ -569,6 +569,12 @@ msgstr ""
 #, python-format
 msgid ""
 "Certificate of regular enrolment for the %(year)s academic year from the "
+"establishment in which you are currently enrolled"
+msgstr ""
+
+#, python-format
+msgid ""
+"Certificate of regular enrolment for the %(year)s academic year from the "
 "establishment in which you are currently enrolled (dated no earlier than 1 "
 "November)"
 msgstr ""
@@ -1279,7 +1285,7 @@ msgstr ""
 
 msgid ""
 "I am a refugee, an asylum seeker, or a stateless person or have subsidiary/"
-"temporary protection (Belgian student status category 2)"
+"temporary protection in Belgium (Belgian student status category 2)"
 msgstr ""
 
 msgid "I am a stateless person"
