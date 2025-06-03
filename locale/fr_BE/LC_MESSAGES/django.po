@@ -1351,6 +1351,9 @@ msgstr "Terminer"
 msgid "First name"
 msgstr "Prénom"
 
+msgid "First name / Last name"
+msgstr "Prénom / Nom"
+
 msgid "Fondation Mont-Godinne"
 msgstr "Fondation Mont Godinne"
 
@@ -1763,6 +1766,12 @@ msgstr "En cours de demande"
 msgctxt "ways_hear_about_training"
 msgid "In the press"
 msgstr "Dans la presse"
+
+msgid "In the process of re-signing"
+msgstr "En cours de resignature du CA"
+
+msgid "In the process of signing"
+msgstr "En cours de signature"
 
 msgid "Incomplete"
 msgstr "Incomplet"
@@ -2704,10 +2713,7 @@ msgid "Supervisor"
 msgstr "Promoteur.trice"
 
 msgid "Supervisory panel to be completed"
-msgstr "Comité d’accompagnement à compléter"
-
-msgid "Supervisory panel waiting for signature"
-msgstr "Comité d’accompagnement en attente de signature"
+msgstr "CA à compléter"
 
 msgid "Support committee"
 msgstr "Comité d'accompagnement"
@@ -3097,9 +3103,6 @@ msgstr "Contrat de travail"
 
 msgid "Waiting for a result"
 msgstr "En attente de résultat"
-
-msgid "Waiting for signature"
-msgstr "En attente de signature"
 
 msgid "Wallonie Bruxelles International (WBI)"
 msgstr "Wallonie Bruxelles International (WBI)"
