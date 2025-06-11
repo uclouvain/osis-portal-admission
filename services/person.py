@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,13 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.services.mixins import ServiceMeta
-from frontoffice.settings.osis_sdk import admission as admission_sdk
-from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import person_api
 from osis_admission_sdk.model.identification_dto import IdentificationDTO
 from osis_admission_sdk.model.person_identification import PersonIdentification
+
+from admission.services.mixins import ServiceMeta
+from frontoffice.settings.osis_sdk import admission as admission_sdk
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
 
 class AdmissionPersonAPIClient:
@@ -311,6 +312,22 @@ class GeneralEducationAdmissionPersonService(metaclass=ServiceMeta):
         return AdmissionPersonAPIClient().update_high_school_diploma_general_education_admission(
             uuid=uuid,
             high_school_diploma=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    # Exam
+    @classmethod
+    def retrieve_exam(cls, person, uuid):
+        return AdmissionPersonAPIClient().retrieve_exam_general_education_admission(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_exam(cls, person, data, uuid):
+        return AdmissionPersonAPIClient().update_exam_general_education_admission(
+            uuid=uuid,
+            exam=data,
             **build_mandatory_auth_headers(person),
         )
 
