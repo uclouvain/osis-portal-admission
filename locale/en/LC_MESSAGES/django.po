@@ -569,6 +569,12 @@ msgstr ""
 #, python-format
 msgid ""
 "Certificate of regular enrolment for the %(year)s academic year from the "
+"establishment in which you are currently enrolled"
+msgstr ""
+
+#, python-format
+msgid ""
+"Certificate of regular enrolment for the %(year)s academic year from the "
 "establishment in which you are currently enrolled (dated no earlier than 1 "
 "November)"
 msgstr ""
@@ -1156,6 +1162,9 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
+msgid "First name / Last name"
+msgstr ""
+
 msgid "Fondation Mont-Godinne"
 msgstr ""
 
@@ -1282,7 +1291,7 @@ msgstr ""
 
 msgid ""
 "I am a refugee, an asylum seeker, or a stateless person or have subsidiary/"
-"temporary protection (Belgian student status category 2)"
+"temporary protection in Belgium (Belgian student status category 2)"
 msgstr ""
 
 msgid "I am a stateless person"
@@ -1489,6 +1498,12 @@ msgstr ""
 
 msgctxt "ways_hear_about_training"
 msgid "In the press"
+msgstr ""
+
+msgid "In the process of re-signing"
+msgstr ""
+
+msgid "In the process of signing"
 msgstr ""
 
 msgid "Incomplete"
@@ -2364,9 +2379,6 @@ msgstr ""
 msgid "Supervisory panel to be completed"
 msgstr ""
 
-msgid "Supervisory panel waiting for signature"
-msgstr ""
-
 msgid "Support committee"
 msgstr ""
 
@@ -2696,9 +2708,6 @@ msgid "WORK_CONTRACT"
 msgstr "Work contract"
 
 msgid "Waiting for a result"
-msgstr ""
-
-msgid "Waiting for signature"
 msgstr ""
 
 msgid "Wallonie Bruxelles International (WBI)"

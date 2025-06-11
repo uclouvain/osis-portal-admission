@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -37,10 +37,10 @@ class ChoixLangueRedactionThese(ChoiceEnum):
 
 class ChoixStatutPropositionDoctorale(ChoiceEnum):
     EN_BROUILLON = _('In draft form')
-    EN_ATTENTE_DE_SIGNATURE = _('Waiting for signature')
+    EN_ATTENTE_DE_SIGNATURE = _('In the process of signing')
     CONFIRMEE = _('Application confirmed')
     CA_A_COMPLETER = _('Supervisory panel to be completed')
-    CA_EN_ATTENTE_DE_SIGNATURE = _('Supervisory panel waiting for signature')
+    CA_EN_ATTENTE_DE_SIGNATURE = _('In the process of re-signing')
     ANNULEE = _('Cancelled application')
     INSCRIPTION_AUTORISEE = _('Application accepted')
     INSCRIPTION_REFUSEE = _('Application denied')
