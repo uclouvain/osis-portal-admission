@@ -324,6 +324,8 @@ class MixinTestCase(TestCase):
             links=GeneralEducationPropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
+                retrieve_exam=ActionLink(method='GET', url='url'),
+                update_exam=ActionLink(method='POST', url='url'),
                 update_specific_question=ActionLink(method='POST', url='url'),
                 retrieve_specific_question=ActionLink(method='GET', url='url'),
                 update_accounting=ActionLink(method='POST', url='url'),
