@@ -2407,6 +2407,11 @@ msgstr "Professionnel"
 msgid "Professional education + Maturity exam"
 msgstr "Enseignement professionnel + Examen de maturité"
 
+#, python-format
+msgid "Professional experiences prefixed with %(icon)s are incomplete."
+msgstr ""
+"Les expériences professionnelles préfixées par %(icon)s sont incomplètes."
+
 msgid "Project resume"
 msgstr "Résumé"
 
