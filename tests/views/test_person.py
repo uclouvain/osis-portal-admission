@@ -61,6 +61,12 @@ class PersonViewTestCase(TestCase):
     def setUp(self):
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = mock.Mock(
+            links={
+                'update_person': {'url': 'foobar'},
+            }
+        )
+
         self.addCleanup(propositions_api_patcher.stop)
 
         self.mock_proposition_api.return_value.detail_proposition_create_permissions.return_value = mock.Mock(
@@ -85,6 +91,14 @@ class PersonViewTestCase(TestCase):
             'first_name': 'Joe',
             'last_name': 'Doe',
             'language': settings.LANGUAGE_CODE,
+        }
+        self.mock_person_api.return_value.propositions_doctorate_person_last_enrolment_update.return_value = {
+            'last_registration_id': '12345678',
+            'last_registration_year': 2021,
+        }
+        self.mock_person_api.return_value.person_last_enrolment_update.return_value = {
+            'last_registration_id': '12345678',
+            'last_registration_year': 2021,
         }
 
         def get_countries(**kwargs):
@@ -255,6 +269,152 @@ class PersonViewTestCase(TestCase):
                 self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
             else:
                 self.assertFalse(field.disabled, f'The field {field_name} must not be disabled.')
+
+    def test_form_all_fields_are_disabled_if_no_permission_on_create(self):
+        self.client.force_login(self.internal_person.user)
+
+        self.mock_proposition_api.return_value.detail_proposition_create_permissions.return_value = mock.Mock(links={})
+
+        response = self.client.get(self.create_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        for field_name, field in form.fields.items():
+            self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+
+    def test_form_all_fields_are_disabled_if_no_permission_on_update(self):
+        self.client.force_login(self.internal_person.user)
+
+        admission_url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = mock.Mock(links={})
+
+        response = self.client.get(admission_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        for field_name, field in form.fields.items():
+            self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+
+    def test_form_some_fields_are_disabled_if_only_permission_for_last_enrolment_on_create(self):
+        self.client.force_login(self.internal_person.user)
+
+        self.mock_proposition_api.return_value.detail_proposition_create_permissions.return_value = mock.Mock(
+            links={
+                'create_person_last_enrolment': {'url': 'foobar'},
+            },
+        )
+
+        response = self.client.get(self.create_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        enabled_fields = {'last_registration_year', 'already_registered', 'last_registration_id'}
+        for field_name, field in form.fields.items():
+            if field_name in enabled_fields:
+                self.assertFalse(field.disabled, f'The field {field_name} must not be disabled.')
+            else:
+                self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+
+        person_kwargs = {
+            'first_name': 'Joe',
+            'middle_name': 'Jim,John,Jean-Pierre',
+            'last_name': 'Doe',
+            'sex': 'M',
+            'gender': 'X',
+            'birth_year': 1990,
+            'civil_state': CivilState.MARRIED.name,
+            'birth_country': 'BE',
+            'birth_place': 'Louvain-la-Neuve',
+            'country_of_citizenship': 'FR',
+            'passport_number': '0123456789',
+            'passport_expiry_date': datetime.date(2020, 1, 1),
+            'birth_date': datetime.date(2022, 5, 1),
+        }
+        self.mock_person_api.return_value.retrieve_person_identification.return_value.to_dict.return_value = (
+            person_kwargs
+        )
+
+        response = self.client.post(
+            self.create_url,
+            data={
+                'first_name': "Jim",
+                'last_registration_year': '2021',
+                'already_registered': True,
+                'last_registration_id': '12345679',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        self.mock_person_api.return_value.person_last_enrolment_update.assert_called()
+
+        call_kwargs = self.mock_person_api.return_value.person_last_enrolment_update.call_args[1]
+        self.assertEqual(call_kwargs.get('person_last_enrolment', {}).get('last_registration_year'), 2021)
+        self.assertEqual(call_kwargs.get('person_last_enrolment', {}).get('last_registration_id'), '12345679')
+
+    def test_form_some_fields_are_disabled_if_only_permission_for_last_enrolment_on_update(self):
+        self.client.force_login(self.internal_person.user)
+
+        admission_url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = mock.Mock(
+            links={
+                'update_person_last_enrolment': {'url': 'foobar'},
+            }
+        )
+
+        response = self.client.get(admission_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        enabled_fields = {'last_registration_year', 'already_registered', 'last_registration_id'}
+        for field_name, field in form.fields.items():
+            if field_name in enabled_fields:
+                self.assertFalse(field.disabled, f'The field {field_name} must not be disabled.')
+            else:
+                self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+
+        person_kwargs = {
+            'first_name': 'Joe',
+            'middle_name': 'Jim,John,Jean-Pierre',
+            'last_name': 'Doe',
+            'sex': 'M',
+            'gender': 'X',
+            'birth_year': 1990,
+            'civil_state': CivilState.MARRIED.name,
+            'birth_country': 'BE',
+            'birth_place': 'Louvain-la-Neuve',
+            'country_of_citizenship': 'FR',
+            'passport_number': '0123456789',
+            'passport_expiry_date': datetime.date(2020, 1, 1),
+            'birth_date': datetime.date(2022, 5, 1),
+        }
+        self.mock_person_api.return_value.retrieve_person_identification_admission.return_value.to_dict.return_value = (
+            person_kwargs
+        )
+
+        response = self.client.post(
+            admission_url,
+            data={
+                'first_name': "Jim",
+                'last_registration_year': '2021',
+                'already_registered': True,
+                'last_registration_id': '12345679',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        self.mock_person_api.return_value.propositions_doctorate_person_last_enrolment_update.assert_called()
+
+        call_kwargs = self.mock_person_api.return_value.propositions_doctorate_person_last_enrolment_update.call_args[1]
+        self.assertEqual(call_kwargs.get('person_last_enrolment', {}).get('last_registration_year'), 2021)
+        self.assertEqual(call_kwargs.get('person_last_enrolment', {}).get('last_registration_id'), '12345679')
 
     def test_form(self):
         url = resolve_url('admission:create:person')

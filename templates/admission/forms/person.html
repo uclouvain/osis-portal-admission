@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,14 @@
 {% endcomment %}
 
 {% block form %}
+  {% if form.person_update_mode.name == 'LAST_ENROLMENT' %}
+    <div class="alert alert-warning">
+      {% blocktrans trimmed with recipient=training_contact|default:_('the enrolment office') %}
+        Because you already submitted an admission, some information about identification can not be updated.
+        If you want to update them, please contact {{ recipient }}.
+      {% endblocktrans %}
+    </div>
+  {% endif %}
   {% bootstrap_form_errors form %}
   {% panel _("Identification") %}
     <div class="row">

@@ -455,8 +455,9 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Because you already submitted an admission, information about identification "
-"can not be updated. If you want to update them, please contact %(recipient)s."
+"Because you already submitted an admission, some information about "
+"identification can not be updated. If you want to update them, please "
+"contact %(recipient)s."
 msgstr ""
 
 msgid ""

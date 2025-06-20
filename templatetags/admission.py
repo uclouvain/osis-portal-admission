@@ -258,7 +258,12 @@ def can_make_action(admission, action_name):
 def _can_access_tab(admission, tab_name, actions_by_tab):
     """Return true if the specified tab can be opened for this admission, otherwise return False"""
     try:
-        return can_make_action(admission, actions_by_tab[tab_name])
+        actions = actions_by_tab[tab_name]
+
+        if isinstance(actions, tuple):
+            return any(can_make_action(admission, action) for action in actions)
+
+        return can_make_action(admission, actions)
     except AttributeError:
         raise ImproperlyConfigured("The admission should contain the 'links' property to check tab access")
     except KeyError:
