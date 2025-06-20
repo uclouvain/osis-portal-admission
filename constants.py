@@ -68,7 +68,7 @@ UPDATE_ACTIONS_BY_TAB = {
     # Personal data
     'coordonnees': 'update_coordinates',
     'cotutelle': 'update_cotutelle',
-    'person': 'update_person',
+    'person': ('update_person', 'update_person_last_enrolment'),
     # Previous experience
     'curriculum': 'update_curriculum',
     'education': 'update_secondary_studies',

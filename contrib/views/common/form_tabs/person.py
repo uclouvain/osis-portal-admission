@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,14 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect, render
 from django.utils.functional import cached_property
 from django.utils.translation import activate
 from django.views.generic import FormView
 
 from admission.constants import BE_ISO_CODE
-from admission.contrib.enums.person import IdentificationType
+from admission.contrib.enums.person import IdentificationType, PersonUpdateMode
 from admission.contrib.forms.person import DoctorateAdmissionPersonForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
@@ -39,7 +41,10 @@ from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
-from admission.services.proposition import BelgianNissBusinessException, AdmissionPropositionService
+from admission.services.proposition import (
+    AdmissionPropositionService,
+    BelgianNissBusinessException,
+)
 from admission.templatetags.admission import can_make_action
 from osis_common.middlewares.locale import LANGUAGE_SESSION_KEY
 
@@ -64,11 +69,35 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         BelgianNissBusinessException.BelgianMissingBirthDataException: 'national_number',
     }
 
+    @cached_property
+    def create_permissions(self):
+        """Return the permissions for the create (not related-admission) views."""
+        return AdmissionPropositionService.list_proposition_create_permissions(self.request.user.person)
+
+    @cached_property
+    def person_update_mode(self):
+        """Return the person update mode depending on the permissions of the current user."""
+        update_mode = PersonUpdateMode.NO
+
+        if self.admission_uuid:
+            if can_make_action(self.admission, 'update_person'):
+                update_mode = PersonUpdateMode.ALL
+            elif can_make_action(self.admission, 'update_person_last_enrolment'):
+                update_mode = PersonUpdateMode.LAST_ENROLMENT
+        else:
+            permissions = self.create_permissions
+            if can_make_action(permissions, 'create_person'):
+                update_mode = PersonUpdateMode.ALL
+            elif can_make_action(permissions, 'create_person_last_enrolment'):
+                update_mode = PersonUpdateMode.LAST_ENROLMENT
+
+        return update_mode
+
     def get(self, request, *args, **kwargs):
         # In case of a creation and if we don't have permission to update the person, we show the read-only template
         if not self.admission_uuid:
-            permissions = AdmissionPropositionService.list_proposition_create_permissions(request.user.person)
-            if not can_make_action(permissions, 'create_person'):
+            if self.person_update_mode == PersonUpdateMode.NO:
+                permissions = self.create_permissions
                 if self.request.GET.get('from_redirection') and can_make_action(permissions, 'create_training_choice'):
                     return redirect(self.request.resolver_match.namespace + ':training-choice')
                 person = self.person_info
@@ -99,6 +128,7 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['person'] = self.person
+        kwargs['person_update_mode'] = self.person_update_mode
         return kwargs
 
     def get_initial(self):
@@ -153,11 +183,21 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         return data
 
     def call_webservice(self, data):
-        updated_person = self.service_mapping[self.current_context].update_person(
-            person=self.person,
-            data=data,
-            uuid=self.admission_uuid,
-        )
+        if self.person_update_mode == PersonUpdateMode.ALL:
+            updated_person = self.service_mapping[self.current_context].update_person(
+                person=self.person,
+                data=data,
+                uuid=self.admission_uuid,
+            )
+        elif self.person_update_mode == PersonUpdateMode.LAST_ENROLMENT:
+            updated_person = self.service_mapping[self.current_context].update_person_last_enrolment(
+                person=self.person,
+                data=data,
+                uuid=self.admission_uuid,
+            )
+        else:
+            raise PermissionDenied
+
         # Update local person to make sure future requests to API don't rollback person
         update_fields = []
         for field in data.keys():
