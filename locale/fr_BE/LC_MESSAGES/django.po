@@ -1136,6 +1136,12 @@ msgstr "Avez-vous obtenu un diplôme de fin d'études secondaires ?"
 msgid "Do you have an international scholarship?"
 msgstr "Bénéficiez-vous d'une bourse internationale ?"
 
+msgid "Doctoral research project"
+msgstr "Projet de recherche doctorale"
+
+msgid "Doctoral training proposal"
+msgstr "Projet de formation doctorale"
+
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
 
@@ -2277,14 +2283,8 @@ msgstr "Par courrier personnalisé"
 msgid "PhD"
 msgstr "Doctorat"
 
-msgid "PhD proposal"
-msgstr "Projet de formation doctorale"
-
 msgid "PhD research experience"
 msgstr "Expérience de recherche doctorale"
-
-msgid "PhD research project"
-msgstr "Projet de recherche doctorale"
 
 msgid "Place of birth"
 msgstr "Lieu de naissance"
