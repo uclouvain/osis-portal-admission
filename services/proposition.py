@@ -628,6 +628,7 @@ class FormationGeneraleBusinessException(Enum):
     PaiementDejaRealiseException = "FORMATION-GENERALE-19"
     InformationsVisaNonCompleteesException = "FORMATION-GENERALE-20"
     BoursesEtudesNonRenseignees = "FORMATION-GENERALE-36"
+    ExamenNonCompletesException = "FORMATION-GENERALE-39"
 
 
 class FormationContinueBusinessException(Enum):
@@ -677,6 +678,9 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationGeneraleBusinessException.FormationNonTrouveeException,
         FormationGeneraleBusinessException.EquivalenceNonRenseigneeException,
         FormationContinueBusinessException.ExperiencesCurriculumNonRenseigneesException,
+    },
+    'exam': {
+        FormationGeneraleBusinessException.ExamenNonCompletesException,
     },
     'languages': {
         PropositionBusinessException.LanguesConnuesNonSpecifieesException,
@@ -823,7 +827,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def edit_external_member(cls, person, uuid, **kwargs):
         return APIClient().edit_external_member(
             uuid=uuid,
-            modifier_membre_supervision_externe=kwargs,
+            patched_modifier_membre_supervision_externe=kwargs,
             **build_mandatory_auth_headers(person),
         )
 

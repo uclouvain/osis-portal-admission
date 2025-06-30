@@ -99,6 +99,7 @@
     {% endpanel %}
     {% panel _('Attachments') %}
       {% field_data _("Certificate of passing the bachelor's course entrance exam") high_school_diploma_alternative.first_cycle_admission_exam %}
+      {% field_data _("Year of obtaining this proof") high_school_diploma_alternative.first_cycle_admission_exam_year.year|add:1 %}
     {% endpanel %}
 
   {% else %}

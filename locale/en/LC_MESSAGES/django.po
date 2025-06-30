@@ -964,6 +964,12 @@ msgstr ""
 msgid "Do you have an international scholarship?"
 msgstr ""
 
+msgid "Doctoral research project"
+msgstr ""
+
+msgid "Doctoral training proposal"
+msgstr ""
+
 msgid "Doctorate thesis field"
 msgstr ""
 
@@ -1088,6 +1094,9 @@ msgid "European Research Council (ERC)"
 msgstr ""
 
 msgid "Evaluation system"
+msgstr ""
+
+msgid "Exam"
 msgstr ""
 
 msgid "Existing pre-admission"
@@ -1976,13 +1985,7 @@ msgstr ""
 msgid "PhD"
 msgstr ""
 
-msgid "PhD proposal"
-msgstr ""
-
 msgid "PhD research experience"
-msgstr ""
-
-msgid "PhD research project"
 msgstr ""
 
 msgid "Place of birth"
@@ -2083,6 +2086,10 @@ msgid "Professional"
 msgstr ""
 
 msgid "Professional education + Maturity exam"
+msgstr ""
+
+#, python-format
+msgid "Professional experiences prefixed with %(icon)s are incomplete."
 msgstr ""
 
 msgid "Project resume"
@@ -2536,6 +2543,12 @@ msgstr ""
 msgid "This comment will be visible to all users with access to this page."
 msgstr ""
 
+#, python-format
+msgid ""
+"This exam data can no longer be updated. To make changes, please contact "
+"%(recipient)s."
+msgstr ""
+
 msgid ""
 "This experience has been partially completed so only few fields are editable."
 msgstr ""
@@ -2826,6 +2839,9 @@ msgstr ""
 msgid "Year of birth"
 msgstr ""
 
+msgid "Year of obtaining this proof"
+msgstr ""
+
 msgid "Year without enrolling in the course."
 msgstr ""
 
@@ -3000,6 +3016,11 @@ msgstr ""
 msgid ""
 "Your completed and signed reorientation form (<a href=\"{url}\" "
 "target=\"_blank\">{url}</a>)"
+msgstr ""
+
+msgid ""
+"Your course is not subject to an entrance exam, you can continue your "
+"application."
 msgstr ""
 
 msgid "Your data have been saved"

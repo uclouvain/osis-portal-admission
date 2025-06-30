@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -33,7 +33,10 @@ from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.curriculum import TRAINING_TYPES_WITH_EQUIVALENCE
-from admission.contrib.views.common.detail_tabs.curriculum_experiences import initialize_field_texts
+from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
+    initialize_field_texts,
+    professional_experience_can_be_updated,
+)
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
     AdmissionPersonService,
@@ -41,7 +44,6 @@ from admission.services.person import (
     GeneralEducationAdmissionPersonService,
 )
 from admission.services.proposition import GlobalPropositionBusinessException
-
 
 __all__ = ['AdmissionCurriculumDetailView']
 
@@ -84,12 +86,19 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
         )
         context_data['missing_periods_messages'] = curriculum.incomplete_periods
         context_data['incomplete_experiences'] = curriculum.incomplete_experiences
+        context_data['incomplete_professional_experiences'] = curriculum.incomplete_professional_experiences
         context_data['display_curriculum'] = self.display_curriculum
         context_data['display_equivalence'] = self.display_equivalence
         context_data['BE_ISO_CODE'] = BE_ISO_CODE
         context_data['force_form'] = True
 
         initialize_field_texts(self.request.user.person, context_data['educational_experiences'], self.current_context)
+
+        for professional_experience in context_data['professional_experiences']:
+            professional_experience.can_be_updated = professional_experience_can_be_updated(
+                professional_experience,
+                self.current_context,
+            )
 
         return context_data
 

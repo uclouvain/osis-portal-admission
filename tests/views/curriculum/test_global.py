@@ -498,7 +498,8 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         # Check the request
         self.assertRedirects(
             response=response,
-            expected_url=resolve_url('admission:general-education:update:accounting', pk=self.general_proposition.uuid),
+            expected_url=resolve_url('admission:general-education:update:exam', pk=self.general_proposition.uuid),
+            fetch_redirect_response=False,
         )
 
         # CV to check as the access conditions are not meet
