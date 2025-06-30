@@ -964,6 +964,12 @@ msgstr ""
 msgid "Do you have an international scholarship?"
 msgstr ""
 
+msgid "Doctoral research project"
+msgstr ""
+
+msgid "Doctoral training proposal"
+msgstr ""
+
 msgid "Doctorate thesis field"
 msgstr ""
 
@@ -1979,13 +1985,7 @@ msgstr ""
 msgid "PhD"
 msgstr ""
 
-msgid "PhD proposal"
-msgstr ""
-
 msgid "PhD research experience"
-msgstr ""
-
-msgid "PhD research project"
 msgstr ""
 
 msgid "Place of birth"
