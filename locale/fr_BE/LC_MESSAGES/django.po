@@ -1287,6 +1287,9 @@ msgstr "ERC - European Research Council"
 msgid "Evaluation system"
 msgstr "Système d'évaluation"
 
+msgid "Exam"
+msgstr "Examen"
+
 msgid "Existing pre-admission"
 msgstr "Pré-admission existante"
 
@@ -2404,6 +2407,11 @@ msgstr "Professionnel"
 msgid "Professional education + Maturity exam"
 msgstr "Enseignement professionnel + Examen de maturité"
 
+#, python-format
+msgid "Professional experiences prefixed with %(icon)s are incomplete."
+msgstr ""
+"Les expériences professionnelles préfixées par %(icon)s sont incomplètes."
+
 msgid "Project resume"
 msgstr "Résumé"
 
@@ -2920,6 +2928,14 @@ msgstr ""
 "Ce commentaire sera visible par tous les utilisateurs ayant accès à cette "
 "page."
 
+#, python-format
+msgid ""
+"This exam data can no longer be updated. To make changes, please contact "
+"%(recipient)s."
+msgstr ""
+"Les informations relatives à cet examen ne sont plus modifiables. Si vous "
+"souhaitez y apporter des modifications, merci de contacter %(recipient)s."
+
 msgid ""
 "This experience has been partially completed so only few fields are editable."
 msgstr ""
@@ -3249,6 +3265,9 @@ msgstr "Année"
 msgid "Year of birth"
 msgstr "Année de naissance"
 
+msgid "Year of obtaining this proof"
+msgstr "Année d’obtention de cette attestation"
+
 msgid "Year without enrolling in the course."
 msgstr "Année sans inscription à la formation."
 
@@ -3461,6 +3480,13 @@ msgid ""
 msgstr ""
 "Votre formulaire de réorientation complété et signé (<a href=\"{url}\" "
 "target=\"_blank\">{url}</a>)"
+
+msgid ""
+"Your course is not subject to an entrance exam, you can continue your "
+"application."
+msgstr ""
+"Votre formation n’est pas concernée par un examen d’entrée, vous pouvez "
+"poursuivre votre demande."
 
 msgid "Your data have been saved"
 msgstr "Vos données ont été enregistrées"
