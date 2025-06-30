@@ -2088,6 +2088,10 @@ msgstr ""
 msgid "Professional education + Maturity exam"
 msgstr ""
 
+#, python-format
+msgid "Professional experiences prefixed with %(icon)s are incomplete."
+msgstr ""
+
 msgid "Project resume"
 msgstr ""
 
