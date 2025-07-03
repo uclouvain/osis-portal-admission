@@ -327,9 +327,6 @@ msgstr "Admission"
 msgid "Admission type"
 msgstr "Type de l'admission"
 
-msgid "Admissions"
-msgstr "Admissions"
-
 msgid ""
 "After payment, your application will be sent to the UCLouvain Enrolment "
 "Office."
@@ -421,6 +418,9 @@ msgstr "Demande confirmée"
 
 msgid "Application denied"
 msgstr "Inscription refusée"
+
+msgid "Applications"
+msgstr "Demandes d'inscription"
 
 msgid "Approvals"
 msgstr "Approbations"
@@ -1030,8 +1030,8 @@ msgstr "Inscription à un cours"
 msgid "Course units"
 msgstr "Cours"
 
-msgid "Create new admission"
-msgstr "Créer une nouvelle admission"
+msgid "Create new application"
+msgstr "Créer une nouvelle demande d'inscription"
 
 msgctxt "an admission"
 msgid "Created on:"
@@ -1428,9 +1428,6 @@ msgstr "Graphe de Gantt"
 msgid "Gender"
 msgstr "Genre"
 
-msgid "General education"
-msgstr "Formation générale"
-
 msgid "German-speaking Community"
 msgstr "Communauté germanophone"
 
@@ -1794,6 +1791,9 @@ msgid ""
 msgstr ""
 "Indiquez ici un éventuel parcours doctoral précédent, abouti ou interrompu, "
 "dans lequel vous n’êtes plus inscrit à ce jour."
+
+msgid "Initial education"
+msgstr "Formation initiale"
 
 msgid "Institute"
 msgstr "Établissement"

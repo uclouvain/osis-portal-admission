@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -58,14 +58,14 @@
   {% endif %}
   <ol class="breadcrumb">
     <li>
-      <a href="{{ list_url }}">{% trans "Admissions" %}</a>
+      <a href="{{ list_url }}">{% trans "Applications" %}</a>
     </li>
     {% if admission %}
       <li class="active">
         {% block breadcrumb_title %}{% endblock %}
       </li>
     {% else %}
-      <li class="active">{% trans "Create new admission" %}</li>
+      <li class="active">{% trans "Create new application" %}</li>
     {% endif %}
   </ol>
 {% endblock %}
@@ -89,7 +89,7 @@
       {% if admission %}
         {% block header_title %}{% endblock %}
       {% else %}
-        {% trans "Create new admission" %}
+        {% trans "Create new application" %}
       {% endif %}
     </span>
     {% if user.is_authenticated %}
