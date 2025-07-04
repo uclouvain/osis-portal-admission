@@ -555,6 +555,7 @@ class PropositionBusinessException(Enum):
     ExperiencesAcademiquesNonCompleteesException = "PROPOSITION-49"
     TypeCompteBancaireRemboursementNonCompleteException = "PROPOSITION-50"
     CoordonneesNonCompleteesException = "PROPOSITION-51"
+    ExperiencesNonAcademiquesCertificatManquantException = "PROPOSITION-73"
 
 
 class DoctorateBusinessException(Enum):
@@ -673,6 +674,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.FichierCurriculumNonRenseigneException,
         PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
         PropositionBusinessException.ExperiencesAcademiquesNonCompleteesException,
+        PropositionBusinessException.ExperiencesNonAcademiquesCertificatManquantException,
         GlobalPropositionBusinessException.QuestionsSpecifiquesCurriculumNonCompleteesException,
         FormationGeneraleBusinessException.FichierCurriculumNonRenseigneException,
         FormationGeneraleBusinessException.FormationNonTrouveeException,
