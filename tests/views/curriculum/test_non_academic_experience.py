@@ -198,13 +198,14 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
-        self.assertEqual(len(response.context['form'].errors), 5)
+        self.assertEqual(len(response.context['form'].errors), 6)
         for field in [
             'start_date_month',
             'end_date_month',
             'start_date_year',
             'end_date_year',
             'type',
+            'certificate',
         ]:
             self.assertFormError(response.context['form'], field, errors=FIELD_REQUIRED_MESSAGE)
 
@@ -224,11 +225,12 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
-        self.assertEqual(len(response.context['form'].errors), 3)
+        self.assertEqual(len(response.context['form'].errors), 4)
         for field in [
             'role',
             'sector',
             'institute_name',
+            'certificate',
         ]:
             self.assertFormError(response.context['form'], field, errors=FIELD_REQUIRED_MESSAGE)
 
@@ -237,6 +239,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             self.admission_update_url,
             data={
                 **self.default_form_data,
+                'certificate_0': ['f1.pdf'],
                 'type': ActivityType.INTERNSHIP.name,
             },
         )
@@ -252,6 +255,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
             self.admission_update_url,
             data={
                 **self.default_form_data,
+                'certificate_0': ['f1.pdf'],
                 'type': ActivityType.VOLUNTEERING.name,
             },
         )
@@ -278,9 +282,10 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.update_professional_experience_admission.assert_not_called()
 
         # Check the context data
-        self.assertEqual(len(response.context['form'].errors), 1)
+        self.assertEqual(len(response.context['form'].errors), 2)
         for field in [
             'activity',
+            'certificate',
         ]:
             self.assertFormError(response.context['form'], field, errors=FIELD_REQUIRED_MESSAGE)
 

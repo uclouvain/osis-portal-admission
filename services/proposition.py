@@ -555,6 +555,7 @@ class PropositionBusinessException(Enum):
     ExperiencesAcademiquesNonCompleteesException = "PROPOSITION-49"
     TypeCompteBancaireRemboursementNonCompleteException = "PROPOSITION-50"
     CoordonneesNonCompleteesException = "PROPOSITION-51"
+    ExperiencesNonAcademiquesCertificatManquantException = "PROPOSITION-73"
 
 
 class DoctorateBusinessException(Enum):
@@ -628,6 +629,7 @@ class FormationGeneraleBusinessException(Enum):
     PaiementDejaRealiseException = "FORMATION-GENERALE-19"
     InformationsVisaNonCompleteesException = "FORMATION-GENERALE-20"
     BoursesEtudesNonRenseignees = "FORMATION-GENERALE-36"
+    ExamenNonCompletesException = "FORMATION-GENERALE-39"
 
 
 class FormationContinueBusinessException(Enum):
@@ -672,11 +674,15 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.FichierCurriculumNonRenseigneException,
         PropositionBusinessException.AnneesCurriculumNonSpecifieesException,
         PropositionBusinessException.ExperiencesAcademiquesNonCompleteesException,
+        PropositionBusinessException.ExperiencesNonAcademiquesCertificatManquantException,
         GlobalPropositionBusinessException.QuestionsSpecifiquesCurriculumNonCompleteesException,
         FormationGeneraleBusinessException.FichierCurriculumNonRenseigneException,
         FormationGeneraleBusinessException.FormationNonTrouveeException,
         FormationGeneraleBusinessException.EquivalenceNonRenseigneeException,
         FormationContinueBusinessException.ExperiencesCurriculumNonRenseigneesException,
+    },
+    'exam': {
+        FormationGeneraleBusinessException.ExamenNonCompletesException,
     },
     'languages': {
         PropositionBusinessException.LanguesConnuesNonSpecifieesException,
