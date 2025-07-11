@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,8 +34,14 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic.edit import BaseFormView
+from osis_admission_sdk import ApiException
 
-from admission.contrib.enums import ActorType, ChoixStatutPropositionDoctorale, DecisionApprovalEnum, ChoixEtatSignature
+from admission.contrib.enums import (
+    ActorType,
+    ChoixEtatSignature,
+    ChoixStatutPropositionDoctorale,
+    DecisionApprovalEnum,
+)
 from admission.contrib.forms.supervision import (
     DoctorateAdmissionApprovalByPdfForm,
     DoctorateAdmissionApprovalForm,
@@ -43,15 +49,17 @@ from admission.contrib.forms.supervision import (
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import WebServiceFormMixin
-from admission.services.proposition import AdmissionPropositionService, AdmissionSupervisionService
-from osis_admission_sdk import ApiException
+from admission.services.proposition import (
+    AdmissionPropositionService,
+    AdmissionSupervisionService,
+)
 
 __all__ = [
     'DoctorateAdmissionSupervisionDetailView',
     'DoctorateAdmissionRemoveActorView',
     'DoctorateAdmissionSetReferencePromoterView',
     'DoctorateAdmissionApprovalByPdfView',
-    'DoctorateAdmissionExternalResendView',
+    'DoctorateAdmissionResendView',
     'DoctorateAdmissionEditExternalMemberView',
     'DoctorateAdmissionSubmitCaView',
 ]
@@ -286,7 +294,7 @@ class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixi
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
-class DoctorateAdmissionExternalResendView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+class DoctorateAdmissionResendView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
     urlpatterns = {'resend-invite': 'resend-invite/<uuid>'}
     template_name = 'admission/doctorate/forms/external_confirm.html'
     form_class = forms.Form
@@ -312,6 +320,7 @@ class DoctorateAdmissionExternalResendView(LoginRequiredMixin, WebServiceFormMix
         )
 
     def form_invalid(self, form):
+        messages.error(self.request, '\n'.join(form.errors.get('__all__', [])))
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
