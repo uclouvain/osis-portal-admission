@@ -521,7 +521,15 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         help_text=_('Date on which you expect to graduate.'),
         label=_('(Expected) graduation date (signed diploma)'),
         required=False,
-        widget=CustomDateInput(),
+        input_formats=['%m/%Y'],
+        widget=CustomDateInput(
+            attrs={
+                'placeholder': _("mm/yyyy"),
+                'data-mask': '00/0000',
+                'autocomplete': 'off',
+            },
+            format='%m/%Y',
+        ),
     )
     dissertation_title = forms.CharField(
         label=pgettext_lazy('admission', 'Dissertation title'),
