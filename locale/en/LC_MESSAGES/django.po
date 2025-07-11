@@ -3082,6 +3082,9 @@ msgctxt "diploma_type"
 msgid "foreign"
 msgstr "Foreign diploma"
 
+msgid "mm/yyyy"
+msgstr ""
+
 msgid "the Enrolment Office"
 msgstr ""
 
