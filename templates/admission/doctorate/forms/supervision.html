@@ -178,6 +178,7 @@
 {% endblock tab_content %}
 
 {% block script %}
+  {{ block.super }}
   <script src="{% static 'admission/popover.js' %} "></script>
   {{ add_form.media }}
   {{ approval_form.media }}
