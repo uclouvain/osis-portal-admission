@@ -270,9 +270,6 @@ msgstr ""
 msgid "Admission type"
 msgstr ""
 
-msgid "Admissions"
-msgstr ""
-
 msgid ""
 "After payment, your application will be sent to the UCLouvain Enrolment "
 "Office."
@@ -339,6 +336,9 @@ msgid "Application confirmed"
 msgstr ""
 
 msgid "Application denied"
+msgstr ""
+
+msgid "Applications"
 msgstr ""
 
 msgid "Approvals"
@@ -862,7 +862,7 @@ msgstr ""
 msgid "Course units"
 msgstr ""
 
-msgid "Create new admission"
+msgid "Create new application"
 msgstr ""
 
 msgctxt "an admission"
@@ -1230,9 +1230,6 @@ msgstr "Gantt chart"
 msgid "Gender"
 msgstr ""
 
-msgid "General education"
-msgstr ""
-
 msgid "German-speaking Community"
 msgstr ""
 
@@ -1521,6 +1518,9 @@ msgstr ""
 msgid ""
 "Indicate any completed or interrupted PhD studies in which you are no longer "
 "enrolled."
+msgstr ""
+
+msgid "Initial education"
 msgstr ""
 
 msgid "Institute"
