@@ -530,14 +530,20 @@
                      const $this = $(this);
                      const tbodyContainer = $this.closest('tbody');
                      const hasTranslationFile = $this.find('.annual-transcript-translation-file input[type=hidden]').length > 0;
+                     const isTranslationFileInError = $this.find('.annual-transcript-translation .form-group').hasClass('has-error');
                      const needsTranslationFile = $this.find('.annual-transcript-translation-file.hidden').length === 0;
                      const hasTranscriptFile = $this.find('.annual-transcript-file input[type=hidden]').length > 0;
+                     const isTranscriptFileInError = $this.find('.annual-transcript-file .form-group').hasClass('has-error');
                      const needsTranscriptFile = $this.find('.annual-transcript-file.hidden').length === 0;
 
                      if (hasTranslationFile) {
                          const translationBadge = $this.find('.translation-badge > span');
                          translationBadge.addClass('fa-circle-check');
                          translationBadge.removeClass('fa-circle-xmark');
+                         if (isTranslationFileInError) {
+                           const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
+                           newAttachmentsToToggle.removeClass('hidden');
+                         }
                      } else if (needsTranslationFile) {
                          const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
                          newAttachmentsToToggle.removeClass('hidden');
@@ -547,6 +553,10 @@
                          const transcriptBadge = $this.find('.transcript-badge > span');
                          transcriptBadge.addClass('fa-circle-check');
                          transcriptBadge.removeClass('fa-circle-xmark');
+                         if (isTranscriptFileInError) {
+                           const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
+                           newAttachmentsToToggle.removeClass('hidden');
+                         }
                      } else if (needsTranscriptFile) {
                          const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
                          newAttachmentsToToggle.removeClass('hidden');
