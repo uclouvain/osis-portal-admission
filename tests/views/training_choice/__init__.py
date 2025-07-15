@@ -56,9 +56,10 @@ from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
-class AdmissionTrainingChoiceFormViewTestCase(TestCase):
+class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
     @classmethod
     def get_training(cls, acronym, year, **kwargs):
         return {

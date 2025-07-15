@@ -37,8 +37,10 @@ from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_reference_sdk.model.scholarship import Scholarship
 
+from base.tests.test_case import OsisPortalTestCase
 
-class UtilsTestCase(TestCase):
+
+class UtilsTestCase(OsisPortalTestCase):
     def setUp(self) -> None:
         self.address = Address(
             city="Louvain-la-Neuve",
