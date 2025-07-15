@@ -28,8 +28,10 @@ from unittest import mock
 from unittest.mock import ANY, MagicMock, Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk.model.completer_comptabilite_proposition_generale_command import \
+    CompleterComptabilitePropositionGeneraleCommand
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
@@ -52,8 +54,7 @@ from admission.contrib.enums.projet import (
 )
 from admission.contrib.forms import PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
-from osis_admission_sdk.model.completer_comptabilite_proposition_generale_command import \
-    CompleterComptabilitePropositionGeneraleCommand
+from base.tests.test_case import OsisPortalTestCase
 from reference.services.iban_validator import (
     IBANValidatorException,
     IBANValidatorRequestException,
@@ -73,7 +74,7 @@ def validate_ok(value):
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class DoctorateAccountingViewTestCase(TestCase):
+class DoctorateAccountingViewTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
@@ -486,7 +487,7 @@ class DoctorateAccountingViewTestCase(TestCase):
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class GeneralAccountingViewTestCase(TestCase):
+class GeneralAccountingViewTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()

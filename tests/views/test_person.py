@@ -40,11 +40,12 @@ from admission.contrib.forms import EMPTY_CHOICE, PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 @freezegun.freeze_time('2023-01-01')
-class PersonViewTestCase(TestCase):
+class PersonViewTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory(global_id="89654123")
