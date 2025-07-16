@@ -251,6 +251,7 @@ class MixinTestCase(OsisPortalTestCase):
             type=cls.professional_experience.type,
             start_date=cls.professional_experience.start_date,
             end_date=cls.professional_experience.start_date,
+            certificate=[],
             valuated_from_trainings=[],
             external_id='',
         )
