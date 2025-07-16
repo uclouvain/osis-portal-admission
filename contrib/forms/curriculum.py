@@ -251,8 +251,9 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
             if field != 'certificate':
                 self.fields[field].disabled = True
         if 'doctorate' in valuated_contexts or 'general-education' in valuated_contexts:
-            self.fields['certificate'].disabled = True
-            self.fields['certificate'].widget = HiddenFileWidget(display_visualizer=True)
+            if self.initial.get('certificate'):
+                self.fields['certificate'].disabled = True
+                self.fields['certificate'].widget = HiddenFileWidget(display_visualizer=True)
 
     def clean(self):
         cleaned_data = super().clean()
