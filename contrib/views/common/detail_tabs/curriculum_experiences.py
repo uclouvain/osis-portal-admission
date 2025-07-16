@@ -240,11 +240,15 @@ def professional_experience_can_be_updated(experience, context):
         not getattr(experience, 'valuated_from_trainings', [])
         # ... or, for a doctorate / general admission,
         #     if it hasn't been valuated by another doctorate / general admission
-        or context in ['doctorate', 'general-education']
-        and all(
-            training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
-            for training in experience.valuated_from_trainings
+        or (
+            context in ['doctorate', 'general-education']
+            and all(
+                training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
+                for training in experience.valuated_from_trainings
+            )
         )
+        # ... or, for a doctorate / general admission, certificate is missing
+        or (context in ['doctorate', 'general-education'] and not experience['certificate'])
     ) and not getattr(
         experience,
         'external_id',
