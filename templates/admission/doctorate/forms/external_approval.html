@@ -75,7 +75,7 @@
     </form>
   {% endif %}
 
-  {% panel _("Promoters") %}
+  {% panel _("Supervisors") %}
     {% for signature in supervision.signatures_promoteurs %}
       {% include "admission/doctorate/includes/supervision_member_entry.html" with type='PROMOTER' member=signature.promoteur supervision=supervision %}
       {% empty %}
