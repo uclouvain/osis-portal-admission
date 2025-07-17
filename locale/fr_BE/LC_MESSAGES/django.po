@@ -102,8 +102,8 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr "%(state)s le %(date)s"
 
-msgid "(Expected) graduation date (signed diploma)"
-msgstr "Date (prévue) de délivrance du diplôme (document signé)"
+msgid "(Expected) graduation date"
+msgstr "Date (prévue) de délivrance du diplôme"
 
 msgid ":"
 msgstr " :"
@@ -309,8 +309,8 @@ msgstr "Ajout d'une activité non-académique"
 msgid "Add a non-academic experience"
 msgstr "Ajouter une nouvelle expérience non-académique"
 
-msgid "Add a promoter or a CA member"
-msgstr "Ajouter un.e promoteur.trice ou un.e membre du comité d'accompagnement"
+msgid "Add a supervisor or a CA member"
+msgstr "Ajouter un·e promoteur·trice ou un·e membre du comité d'accompagnement"
 
 msgid "Add an academic course"
 msgstr "Ajout d'une formation académique"
@@ -823,6 +823,9 @@ msgstr "Coordonnées"
 msgid "Contact language"
 msgstr "Langue de contact"
 
+msgid "Contact supervisor"
+msgstr "Promoteur·trice de contact"
+
 msgid "Continue"
 msgstr "Continuer"
 
@@ -1090,8 +1093,8 @@ msgstr ""
 "CDD, pour un maximum de 60 crédits. Le cas échéant, veuillez indiquer ici "
 "une proposition de formation complémentaire."
 
-msgid "Designate as lead supervisor"
-msgstr "Désigner comme promoteur de référence"
+msgid "Designate as contact supervisor"
+msgstr "Désigner comme promoteur·trice de contact"
 
 msgid "Detailed curriculum vitae, dated and signed"
 msgstr "Curriculum vitae détaillé, daté et signé"
@@ -1657,11 +1660,11 @@ msgstr ""
 "d'inscription ci-dessous"
 
 msgid ""
-"If known, indicate the name of the laboratory, clinical department or "
-"research centre where the thesis will be carried out at UCLouvain"
+"If known, indicate, for example, the name of the laboratory, clinical department, research "
+"centre, ... where the thesis will be carried out at UCLouvain"
 msgstr ""
-"Si connu, indiquez ici le nom du laboratoire, du service clinique ou du "
-"centre de recherche où sera réalisée la thèse à l'UCLouvain"
+"Si connu, indiquez ici par exemple le nom du laboratoire, du service clinique, du centre "
+"de recherche, ... où sera réalisée la thèse à l'UCLouvain"
 
 msgid "If other language regime, specify"
 msgstr "Si autre régime linguistique, précisez"
@@ -1888,6 +1891,9 @@ msgstr "Connaissance des langues"
 msgid "Language"
 msgstr "Langue"
 
+msgid "Language in which the domain doctoral committee can contact this person"
+msgstr "Langue dans laquelle la Commission doctorale de domaine peut contacter cette personne"
+
 msgid "Language regime"
 msgstr "Régime linguistique"
 
@@ -1899,9 +1905,6 @@ msgstr "Ultérieurement > bloquant"
 
 msgid "Later > non-blocking"
 msgstr "Ultérieurement > non-bloquant"
-
-msgid "Lead supervisor"
-msgstr "Promoteur.trice de référence"
 
 msgid "Leave page?"
 msgstr "Quitter la page ?"
@@ -2415,10 +2418,10 @@ msgid "Professional experiences prefixed with %(icon)s are incomplete."
 msgstr ""
 "Les expériences professionnelles préfixées par %(icon)s sont incomplètes."
 
-msgid "Project resume"
+msgid "Project abstract"
 msgstr "Résumé"
 
-msgid "Project resume (max. 2000 characters)"
+msgid "Project abstract (max. 2000 characters)"
 msgstr "Résumé (max. 2000 caractères)"
 
 msgid "Project title"
@@ -2426,9 +2429,6 @@ msgstr "Sujet"
 
 msgid "Project title (max. 100 characters)"
 msgstr "Sujet (max. 100 caractères)"
-
-msgid "Promoters"
-msgstr "Promotion"
 
 msgid ""
 "Proof of employment from the employer, with dates, justifying the period in "
@@ -2541,6 +2541,9 @@ msgstr "Institut de recherche"
 
 msgid "Research scholarship"
 msgstr "Bourse de recherche"
+
+msgid "Research start date"
+msgstr "Date de début des travaux"
 
 msgid "Resend invitation"
 msgstr "Renvoyer une invitation"
@@ -2721,7 +2724,10 @@ msgstr ""
 "encourrait un risque réel de subir les atteintes graves"
 
 msgid "Supervisor"
-msgstr "Promoteur.trice"
+msgstr "Promoteur·trice"
+
+msgid "Supervisors"
+msgstr "Promoteurs·trices"
 
 msgid "Supervisory panel to be completed"
 msgstr "CA à compléter"
@@ -2822,6 +2828,9 @@ msgstr ""
 
 msgid "The contact address I provided"
 msgstr "L'adresse de correspondance que j'ai fournie"
+
+msgid "The contact supervisor must be internal UCLouvain"
+msgstr "Le·la promoteur·trice de contact doit être interne UCLouvain"
 
 #, python-format
 msgid ""
@@ -3161,9 +3170,6 @@ msgstr "Contrat de travail"
 msgid "Work contract type"
 msgstr "Type de contrat de travail"
 
-msgid "Work start date"
-msgstr "Date de début des travaux"
-
 msgid ""
 "Would you like to become a <a href='https://uclouvain.be/fr/decouvrir/carte-"
 "solidaire.html' target='_blank'>Solidarity Student</a>, that is, a member of "
@@ -3251,7 +3257,7 @@ msgstr ""
 "(<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
 
 msgid ""
-"Write your resume in the language decided with your accompanying committee."
+"Write your abstract in the language decided with your accompanying committee."
 msgstr ""
 "Rédigez votre résumé dans la langue convenue avec votre comité "
 "d'accompagnement."
