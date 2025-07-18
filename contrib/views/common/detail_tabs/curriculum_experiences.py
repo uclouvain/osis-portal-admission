@@ -234,19 +234,27 @@ def experience_can_be_updated(experience, context):
 
 def professional_experience_can_be_updated(experience, context):
     """Return if the educational experience can be updated in the specific context."""
+    is_certificate_missing = context in ['doctorate', 'general-education'] and not experience['certificate']
     # An experience can be updated...
     return (
         # ... if it is not valuated
         not getattr(experience, 'valuated_from_trainings', [])
         # ... or, for a doctorate / general admission,
         #     if it hasn't been valuated by another doctorate / general admission
-        or context in ['doctorate', 'general-education']
-        and all(
-            training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
-            for training in experience.valuated_from_trainings
+        or (
+            context in ['doctorate', 'general-education']
+            and all(
+                training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
+                for training in experience.valuated_from_trainings
+            )
         )
-    ) and not getattr(
-        experience,
-        'external_id',
-        None,
-    )  # ... and if the experience doesn't come from EPC
+        # ... or, for a doctorate / general admission, certificate is missing
+        or is_certificate_missing
+    ) and (
+        is_certificate_missing
+        or not getattr(
+            experience,
+            'external_id',
+            None,
+        )  # ... and if the experience doesn't come from EPC or needs a certificate
+    )
