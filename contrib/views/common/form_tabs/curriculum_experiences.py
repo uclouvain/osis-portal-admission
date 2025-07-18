@@ -125,6 +125,27 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
     form_class = AdmissionCurriculumProfessionalExperienceForm
     url_hash = '#curriculum-header'
 
+    def get_success_url(self):
+        """Redirect to the read page if we cannot edit the experience anymore."""
+        if (
+            self.request.POST.get('redirect_to')
+            or '_submit_and_continue' in self.request.POST
+            or not self.experience_id
+            or not getattr(self, 'updated_experience')
+        ):
+            return super().get_success_url()
+        messages.info(self.request, _("Your data have been saved"))
+        if not professional_experience_can_be_updated(
+            self.updated_experience,
+            self.current_context,
+        ):
+            url = self.request.resolver_match.view_name.replace('update:', '').replace(
+                'professional_update',
+                'professional_read',
+            )
+            return resolve_url(url, pk=self.admission_uuid, experience_id=self.experience_id) + '#curriculum-header'
+        return self.request.get_full_path()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['CURRICULUM_ACTIVITY_LABEL'] = CURRICULUM_ACTIVITY_LABEL
@@ -165,11 +186,15 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
 
     def call_webservice(self, data):
         if self.experience_id:
-            self.service_mapping[self.current_context].update_professional_experience(
-                experience_id=self.experience_id,
-                person=self.person,
-                uuid=self.admission_uuid,
-                data=data,
+            setattr(
+                self,
+                'updated_experience',
+                self.service_mapping[self.current_context].update_professional_experience(
+                    experience_id=self.experience_id,
+                    person=self.person,
+                    uuid=self.admission_uuid,
+                    data=data,
+                ),
             )
         else:
             created_experience = self.service_mapping[self.current_context].create_professional_experience(
