@@ -103,7 +103,7 @@
     {% endif %}
   {% endif %}
 
-  {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
+  {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
     <button
       class="btn btn-default pull-right"
       data-toggle="collapse"
@@ -134,7 +134,7 @@
       {% endif %}
     {% endif %}
 
-    {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' and not member.matricule %}
+    {% if user.is_authenticated and admission|can_make_action:'approve_by_pdf' and signature.statut == 'INVITED' %}
       {% panel _("Resend invitation") id="resend-invite-"|add:member.uuid additional_class="collapse" %}
         <form action="{% url 'admission:doctorate:resend-invite' pk=admission.uuid uuid=member.uuid %}" method="post">
           {% csrf_token %}
