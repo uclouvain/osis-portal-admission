@@ -34,11 +34,12 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.tests import get_paginated_years
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
 @freezegun.freeze_time('2022-01-01')
 @override_settings(OSIS_DOCUMENT_BASE_URL="http://dummyurl.com/document/")
-class ExamTestCase(TestCase):
+class ExamTestCase(OsisPortalTestCase):
     REQUIRED_TEXT = _("This field is required.")
 
     @classmethod

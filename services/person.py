@@ -74,6 +74,19 @@ class AdmissionPersonService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def update_person_last_enrolment(cls, person, data, uuid=None):
+        if uuid:
+            return AdmissionPersonAPIClient().propositions_doctorate_person_last_enrolment_update(
+                uuid=str(uuid),
+                person_last_enrolment=data,
+                **build_mandatory_auth_headers(person),
+            )
+        return AdmissionPersonAPIClient().person_last_enrolment_update(
+            person_last_enrolment=data,
+            **build_mandatory_auth_headers(person),
+        )
+
     # Coordinates
     @classmethod
     def retrieve_person_coordonnees(cls, person, uuid=None):
@@ -283,6 +296,14 @@ class GeneralEducationAdmissionPersonService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def update_person_last_enrolment(cls, person, uuid, data):
+        return AdmissionPersonAPIClient().propositions_general_education_person_last_enrolment_update(
+            uuid=uuid,
+            person_last_enrolment=data,
+            **build_mandatory_auth_headers(person),
+        )
+
     # Coordinates
     @classmethod
     def retrieve_person_coordonnees(cls, person, uuid):
@@ -430,6 +451,14 @@ class ContinuingEducationAdmissionPersonService(metaclass=ServiceMeta):
         return AdmissionPersonAPIClient().update_person_identification_continuing_education_admission(
             uuid=uuid,
             person_identification=data,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def update_person_last_enrolment(cls, person, uuid, data):
+        return AdmissionPersonAPIClient().propositions_continuing_education_person_last_enrolment_update(
+            uuid=uuid,
+            person_last_enrolment=data,
             **build_mandatory_auth_headers(person),
         )
 

@@ -72,9 +72,11 @@ from osis_admission_sdk.model.sector_enum import SectorEnum
 from osis_admission_sdk.model.study_system_enum import StudySystemEnum
 from osis_admission_sdk.model.type_enum import TypeEnum
 
+from base.tests.test_case import OsisPortalTestCase
+
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
-class MixinTestCase(TestCase):
+class MixinTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
@@ -249,6 +251,7 @@ class MixinTestCase(TestCase):
             type=cls.professional_experience.type,
             start_date=cls.professional_experience.start_date,
             end_date=cls.professional_experience.start_date,
+            certificate=[],
             valuated_from_trainings=[],
             external_id='',
         )

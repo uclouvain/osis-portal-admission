@@ -32,10 +32,11 @@ from django.utils.translation import gettext_lazy as _
 from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.tests.utils import MockLanguage
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class LanguagesTestCase(TestCase):
+class LanguagesTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
