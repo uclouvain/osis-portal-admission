@@ -38,11 +38,12 @@ from admission.contrib.enums import (
 from admission.contrib.enums.payment import PaymentStatus, PaymentMethod, PaymentSessionValue
 from admission.contrib.enums.projet import ChoixStatutPropositionGenerale
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class AdmissionPaymentViewTestCase(TestCase):
+class AdmissionPaymentViewTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()

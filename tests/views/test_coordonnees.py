@@ -33,9 +33,10 @@ from django.utils.translation import gettext_lazy as _
 from admission.contrib.enums import ChoixStatutPropositionDoctorale
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
-class CoordonneesTestCase(TestCase):
+class CoordonneesTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
