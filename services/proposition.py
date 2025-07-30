@@ -555,6 +555,8 @@ class PropositionBusinessException(Enum):
     ExperiencesAcademiquesNonCompleteesException = "PROPOSITION-49"
     TypeCompteBancaireRemboursementNonCompleteException = "PROPOSITION-50"
     CoordonneesNonCompleteesException = "PROPOSITION-51"
+    PrenomTropLongException = "PROPOSITION-71"
+    AutresPrenomsTropLongException = "PROPOSITION-72"
 
 
 class DoctorateBusinessException(Enum):
@@ -648,6 +650,8 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         PropositionBusinessException.CarteIdentiteeNonSpecifieeException,
         PropositionBusinessException.NomEtPrenomNonSpecifiesException,
         PropositionBusinessException.SpecifierNOMASiDejaInscritException,
+        PropositionBusinessException.PrenomTropLongException,
+        PropositionBusinessException.AutresPrenomsTropLongException,
         BelgianNissBusinessException.BelgianNISSCharactersException,
         BelgianNissBusinessException.BelgianNISSLengthException,
         BelgianNissBusinessException.BelgianNISSBirthDateException,
