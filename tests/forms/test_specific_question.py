@@ -28,16 +28,15 @@ from unittest.mock import ANY, patch
 
 from django import forms
 from django.core.exceptions import ImproperlyConfigured
-from django.test import TestCase
 from django.test.utils import override_settings
-
-from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
 from osis_document.contrib import FileUploadField
 
+from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
 from admission.contrib.forms.specific_question import ConfigurableFormMixin, PlainTextWidget
+from base.tests.test_case import OsisPortalTestCase
 
 
-class ConfigurableFormItemFieldTestCase(TestCase):
+class ConfigurableFormItemFieldTestCase(OsisPortalTestCase):
     first_uuid = uuid.uuid4()
     default_translated_value = {'en': '', 'fr-be': ''}
 
@@ -352,7 +351,7 @@ class ConfigurableFormItemFieldTestCase(TestCase):
         self.assertIn('data-values="file:token,foobar"', form_p)
 
 
-class ConfigurableMultipleFormItemFieldTestCase(TestCase):
+class ConfigurableMultipleFormItemFieldTestCase(OsisPortalTestCase):
     first_uuid = uuid.uuid4()
     default_translated_value = {'en': '', 'fr-be': ''}
 

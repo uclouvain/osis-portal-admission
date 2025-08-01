@@ -29,9 +29,8 @@ from unittest.mock import ANY, MagicMock, patch
 
 from django.core.exceptions import ValidationError
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy
-
 from osis_admission_sdk.model.document_specific_question import DocumentSpecificQuestion
 from osis_admission_sdk.model.document_specific_questions_list import DocumentSpecificQuestionsList
 
@@ -46,9 +45,10 @@ from admission.contrib.enums import (
 from admission.contrib.enums.projet import ChoixStatutPropositionGenerale
 from admission.contrib.forms import PDF_MIME_TYPE, JPEG_MIME_TYPE
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
-class BaseDocumentsFormViewTestCase(TestCase):
+class BaseDocumentsFormViewTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()

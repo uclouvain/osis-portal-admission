@@ -29,8 +29,7 @@ import uuid
 from unittest.mock import ANY, patch, MagicMock
 
 from django.http import Http404
-from django.test import TestCase, override_settings
-
+from django.test import override_settings
 from osis_admission_sdk.model.action_link import ActionLink
 from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
 from osis_admission_sdk.model.continuing_education_proposition_dto_links import ContinuingEducationPropositionDTOLinks
@@ -42,6 +41,12 @@ from osis_admission_sdk.model.educational_experience_year import EducationalExpe
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
+from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
+from osis_admission_sdk.model.professional_experience import ProfessionalExperience
+from osis_admission_sdk.model.result_enum import ResultEnum
+from osis_admission_sdk.model.sector_enum import SectorEnum
+from osis_admission_sdk.model.study_system_enum import StudySystemEnum
+from osis_admission_sdk.model.type_enum import TypeEnum
 from osis_reference_sdk.model.academic_year import AcademicYear
 from osis_reference_sdk.model.country import Country
 from osis_reference_sdk.model.diploma import Diploma
@@ -65,16 +70,11 @@ from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from base.tests.factories.person import PersonFactory
-from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
-from osis_admission_sdk.model.professional_experience import ProfessionalExperience
-from osis_admission_sdk.model.result_enum import ResultEnum
-from osis_admission_sdk.model.sector_enum import SectorEnum
-from osis_admission_sdk.model.study_system_enum import StudySystemEnum
-from osis_admission_sdk.model.type_enum import TypeEnum
+from base.tests.test_case import OsisPortalTestCase
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
-class MixinTestCase(TestCase):
+class MixinTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()

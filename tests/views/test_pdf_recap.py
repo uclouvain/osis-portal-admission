@@ -27,7 +27,7 @@ import uuid
 from unittest.mock import ANY, Mock, patch, MagicMock
 
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 
 from admission.contrib.enums import (
     TrainingType,
@@ -35,10 +35,11 @@ from admission.contrib.enums import (
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import ChoixStatutPropositionDoctorale
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class PDFRecapViewTestCase(TestCase):
+class PDFRecapViewTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()

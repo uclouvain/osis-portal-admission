@@ -26,7 +26,7 @@
 from unittest.mock import ANY, Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_admission_sdk import ApiException
 from osis_admission_sdk.model.actor_type_enum import ActorTypeEnum
@@ -47,6 +47,7 @@ from admission.contrib.enums.supervision import DecisionApprovalEnum
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 from frontoffice.settings.osis_sdk.utils import (
     ApiBusinessException,
     MultipleApiBusinessException,
@@ -54,7 +55,7 @@ from frontoffice.settings.osis_sdk.utils import (
 
 
 @override_settings(ADMISSION_TOKEN_EXTERNAL='api-token-external')
-class SupervisionTestCase(TestCase):
+class SupervisionTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()

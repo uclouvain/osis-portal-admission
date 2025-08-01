@@ -29,7 +29,7 @@ from unittest.mock import ANY, MagicMock, patch
 
 import mock
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 
 from admission.constants import PROPOSITION_JUST_SUBMITTED
 from admission.contrib.enums import (
@@ -38,11 +38,12 @@ from admission.contrib.enums import (
 from admission.contrib.enums.payment import PaymentStatus, PaymentMethod, PaymentSessionValue
 from admission.contrib.enums.projet import ChoixStatutPropositionGenerale
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class AdmissionPaymentViewTestCase(TestCase):
+class AdmissionPaymentViewTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()

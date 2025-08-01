@@ -29,7 +29,7 @@ from unittest.mock import ANY, Mock, patch
 
 import freezegun
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_reference_sdk.model.high_school import HighSchool
 
@@ -48,10 +48,11 @@ from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry, MockLanguage
 from base.tests.factories.academic_year import get_current_year
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL="http://dummyurl.com/document/")
-class BaseEducationTestCase(TestCase):
+class BaseEducationTestCase(OsisPortalTestCase):
     REQUIRED_TEXT = _("This field is required.")
 
     @classmethod

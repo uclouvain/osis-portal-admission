@@ -23,11 +23,9 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
 import uuid
 from unittest.mock import ANY, MagicMock, Mock, patch
 
-from django.test import TestCase
 from osis_admission_sdk.model.campus import Campus
 from osis_admission_sdk.model.campus_dto import CampusDTO
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
@@ -56,9 +54,10 @@ from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from admission.tests.utils import MockCountry
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
-class AdmissionTrainingChoiceFormViewTestCase(TestCase):
+class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
     @classmethod
     def get_training(cls, acronym, year, **kwargs):
         return {

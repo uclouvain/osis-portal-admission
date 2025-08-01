@@ -26,14 +26,14 @@
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase
 from django.urls import reverse
 
 from admission.contrib.enums import ChoixStatutPropositionDoctorale, TrainingType
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
-class ListTestCase(TestCase):
+class ListTestCase(OsisPortalTestCase):
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
     def test_list_empty(self, api, *args):
         self.client.force_login(PersonFactory().user)

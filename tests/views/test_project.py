@@ -27,7 +27,7 @@ import uuid
 from unittest.mock import MagicMock, Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
@@ -52,10 +52,11 @@ from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.contrib.forms.project import COMMISSION_CDSS, SCIENCE_DOCTORATE
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class ProjectViewTestCase(TestCase):
+class ProjectViewTestCase(OsisPortalTestCase):
     @classmethod
     def get_scholarship(cls, uuid, **kwargs):
         return next((scholarship for scholarship in cls.mock_scholarships if scholarship.uuid == uuid), None)

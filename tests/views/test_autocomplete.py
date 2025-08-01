@@ -28,7 +28,6 @@ import json
 import uuid
 from unittest.mock import ANY, Mock, patch
 
-from django.test import TestCase
 from django.urls import reverse
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
@@ -60,6 +59,7 @@ from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType, TypeFormation
 from admission.tests.utils import MockCity, MockCountry, MockLanguage
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 DEFAULT_API_PARAMS = {
     'accept_language': ANY,
@@ -70,7 +70,7 @@ DEFAULT_API_PARAMS = {
 }
 
 
-class AutocompleteTestCase(TestCase):
+class AutocompleteTestCase(OsisPortalTestCase):
     def setUp(self):
         self.client.force_login(PersonFactory().user)
 

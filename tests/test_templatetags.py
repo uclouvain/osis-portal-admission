@@ -30,7 +30,7 @@ from unittest.mock import MagicMock, Mock, patch
 from django import forms
 from django.core.exceptions import ImproperlyConfigured
 from django.template import Context, Template
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory
 from django.test.utils import override_settings
 from django.urls import resolve
 from django.utils.translation import gettext_lazy as _
@@ -39,7 +39,6 @@ from osis_admission_sdk.exceptions import UnauthorizedException
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 
 from admission.contrib.enums import (
-    ChoixAffiliationSport,
     ChoixMoyensDecouverteFormation,
     ChoixStatutPropositionContinue,
     ChoixStatutPropositionDoctorale,
@@ -68,9 +67,10 @@ from admission.templatetags.admission import (
 )
 from base.models.utils.utils import ChoiceEnum
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
-class TemplateTagsTestCase(TestCase):
+class TemplateTagsTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         class Admission:
@@ -387,7 +387,7 @@ class TemplateTagsTestCase(TestCase):
         )
 
 
-class DisplayTagTestCase(TestCase):
+class DisplayTagTestCase(OsisPortalTestCase):
     class TestForm(forms.Form):
         boolean_field = forms.BooleanField()
         char_field = forms.CharField()
@@ -515,7 +515,7 @@ class DisplayTagTestCase(TestCase):
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/', LANGUAGE_CODE='en')
-class MultipleFieldDataTestCase(TestCase):
+class MultipleFieldDataTestCase(OsisPortalTestCase):
     default_translated_value = {'en': '', 'fr-be': ''}
 
     def setUp(self):
@@ -615,7 +615,7 @@ class MultipleFieldDataTestCase(TestCase):
         )
 
 
-class DisplayStatusTestCase(TestCase):
+class DisplayStatusTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.doctorate_training_type = TrainingType.PHD.name
