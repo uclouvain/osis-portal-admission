@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,22 +30,27 @@ from django.conf import settings
 from django.core import validators
 from django.forms import SelectDateWidget
 from django.utils.translation import gettext_lazy as _
+from osis_document.contrib.widgets import HiddenFileWidget
 
 from admission.constants import FIELD_REQUIRED_MESSAGE, MINIMUM_BIRTH_YEAR
-from admission.contrib.enums.person import CivilState, GenderEnum, SexEnum, IdentificationType
+from admission.contrib.enums.person import (
+    CivilState,
+    GenderEnum,
+    IdentificationType,
+    SexEnum,
+)
+from admission.contrib.forms import EMPTY_CHOICE, IMAGE_MIME_TYPES, LOWERCASE_MONTHS
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
     CustomDateInput,
-    EMPTY_CHOICE,
+    RadioBooleanField,
+    autocomplete,
     get_country_initial_choices,
     get_example_text,
     get_past_academic_years_choices,
-    RadioBooleanField,
-    AdmissionFileUploadField as FileUploadField,
-    IMAGE_MIME_TYPES,
     get_year_choices,
-    autocomplete,
-    LOWERCASE_MONTHS,
 )
+from admission.contrib.views.common.form_tabs.person import PersonUpdateMode
 from admission.utils import force_title
 
 YES = '1'
@@ -53,6 +58,15 @@ NO = '0'
 
 
 class DoctorateAdmissionPersonForm(forms.Form):
+    FIELDS_BY_PARTIAL_UPDATE_MODE = {
+        PersonUpdateMode.LAST_ENROLMENT: {
+            'last_registration_year',
+            'already_registered',
+            'last_registration_id',
+        },
+        PersonUpdateMode.NO: {},
+    }
+
     # Identification
     first_name = forms.CharField(
         required=False,
@@ -270,8 +284,11 @@ class DoctorateAdmissionPersonForm(forms.Form):
             'admission/formatter.js',
         )
 
-    def __init__(self, person=None, *args, **kwargs):
+    def __init__(self, person_update_mode, person=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.person_update_mode = person_update_mode
+        self.editable_fields = self.FIELDS_BY_PARTIAL_UPDATE_MODE.get(person_update_mode, None)
 
         self.fields['last_registration_year'].choices = get_past_academic_years_choices(person)
         self.fields['birth_date'].widget.years = range(MINIMUM_BIRTH_YEAR, datetime.date.today().year + 1)
@@ -305,6 +322,19 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
         if person and not person.global_id.startswith("8"):
             self._disable_fields_when_internal_account()
+
+        self._disable_fields_depending_on_person_update_mode()
+
+    def _disable_fields_depending_on_person_update_mode(self):
+        """Disabled fields that are not editable in the current person update mode."""
+        if self.editable_fields is None:
+            return
+
+        for field_name, field in self.fields.items():
+            if field_name not in self.editable_fields:
+                field.disabled = True
+                if isinstance(field, FileUploadField):
+                    field.widget = HiddenFileWidget(display_visualizer=True)
 
     def _disable_fields_when_internal_account(self):
         # Cas: Les informations des comptes internes doivent être modifié via une autre procédure

@@ -46,9 +46,10 @@ from admission.contrib.enums import (
 from admission.contrib.enums.projet import ChoixStatutPropositionGenerale
 from admission.contrib.forms import PDF_MIME_TYPE, JPEG_MIME_TYPE
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 
 
-class BaseDocumentsFormViewTestCase(TestCase):
+class BaseDocumentsFormViewTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()

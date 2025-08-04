@@ -46,7 +46,6 @@ from admission.constants import (
 from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.training_choice import TrainingType
-from admission.contrib.forms import EMPTY_CHOICE, FORM_SET_PREFIX
 from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
     CustomDateInput,
@@ -60,6 +59,7 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     get_superior_institute_initial_choices,
 )
+from admission.contrib.forms import EMPTY_CHOICE, FORM_SET_PREFIX
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 from admission.utils import mark_safe_lazy
@@ -248,7 +248,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
             ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE.get(training) for training in valuated_education_types
         )
         for field in self.fields:
-            if field != 'certificate':
+            if field != 'certificate' and self.initial.get(field):
                 self.fields[field].disabled = True
         if 'doctorate' in valuated_contexts or 'general-education' in valuated_contexts:
             if self.initial.get('certificate'):

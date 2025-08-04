@@ -33,6 +33,7 @@ from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums import ChoixStatutPropositionGenerale
 from base.tests.factories.person import PersonFactory
+from base.tests.test_case import OsisPortalTestCase
 from frontoffice.settings.osis_sdk.utils import (
     ApiBusinessException,
     MultipleApiBusinessException,
@@ -42,7 +43,7 @@ from osis_admission_sdk.model.submit_proposition import SubmitProposition
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
-class ConfirmSubmitTestCase(TestCase):
+class ConfirmSubmitTestCase(OsisPortalTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
