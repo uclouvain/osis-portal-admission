@@ -520,7 +520,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     expected_graduation_date = forms.DateField(
         help_text=_('Date on which you expect to graduate.'),
-        label=_('(Expected) graduation date (signed diploma)'),
+        label=_('(Expected) graduation date'),
         required=False,
         widget=CustomDateInput(),
     )
