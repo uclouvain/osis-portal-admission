@@ -235,7 +235,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
             self.fields['certificate'].disabled = True
             self.fields['certificate'].widget = forms.MultipleHiddenInput()
 
-        if experience and experience.get('valuated_from_trainings'):
+        if experience and (experience.get('valuated_from_trainings') or experience.get('external_id')):
             self.disable_valuated_fields(experience['valuated_from_trainings'])
 
     class Media:
