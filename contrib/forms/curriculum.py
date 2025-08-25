@@ -235,7 +235,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
             self.fields['certificate'].disabled = True
             self.fields['certificate'].widget = forms.MultipleHiddenInput()
 
-        if experience and experience.get('valuated_from_trainings'):
+        if experience and (experience.get('valuated_from_trainings') or experience.get('external_id')):
             self.disable_valuated_fields(experience['valuated_from_trainings'])
 
     class Media:
@@ -520,7 +520,7 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
     )
     expected_graduation_date = forms.DateField(
         help_text=_('Date on which you expect to graduate.'),
-        label=_('(Expected) graduation date (signed diploma)'),
+        label=_('(Expected) graduation date'),
         required=False,
         widget=CustomDateInput(),
     )
