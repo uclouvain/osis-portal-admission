@@ -197,6 +197,19 @@ class SupervisionTestCase(OsisPortalTestCase):
         self.assertContains(response, ChoixEtatSignature.DECLINED.value)
         self.mock_api.return_value.retrieve_supervision.assert_called()
 
+    def test_should_detail_supervision_member_from_doctorate_management(self):
+        detail_url = resolve_url("gestion_doctorat:doctorate:supervision", pk=self.pk)
+
+        response = self.client.get(detail_url)
+        self.assertEqual(response.status_code, 403)
+
+        self.mock_api.return_value.retrieve_doctorate_proposition.return_value.links.update(
+            {'retrieve_doctorate_management': {'url': 'ok'}}
+        )
+
+        response = self.client.get(detail_url)
+        self.assertEqual(response.status_code, 200)
+
     def test_should_add_supervision_member(self):
         self.mock_api.return_value.retrieve_doctorate_proposition.return_value.links.update(
             {

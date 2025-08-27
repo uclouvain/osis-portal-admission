@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -255,3 +255,18 @@ class LanguagesTestCase(OsisPortalTestCase):
         self.assertContains(response, "Français")
         self.mock_person_api.return_value.list_language_knowledges_admission.assert_called()
         self.assertIn('admission', response.context)
+
+    def test_detail_from_doctorate_management(self):
+        self.client.force_login(self.person.user)
+
+        url = resolve_url('gestion_doctorat:doctorate:languages', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = Mock(
+            links={'retrieve_doctorate_management': {'url': 'ok'}},
+        )
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
