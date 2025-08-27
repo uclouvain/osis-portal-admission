@@ -71,7 +71,7 @@
           <ul class="dropdown-menu">
             {% for parent, subtabs in tab_tree.items %}
               {% for subtab in subtabs %}
-                {% include 'admission/admission_tab_entry.html' with base_namespace="admission:doctorate" admission_uuid=admission.uuid tab=subtab no_status=True %}
+                {% include 'admission/admission_tab_entry.html' with base_namespace=main_namespace|add:":doctorate" admission_uuid=admission.uuid tab=subtab no_status=True %}
               {% endfor %}
             {% endfor %}
           </ul>

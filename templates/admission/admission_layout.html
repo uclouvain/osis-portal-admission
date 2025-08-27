@@ -25,5 +25,5 @@
 {% endcomment %}
 
 {% block lang %}
-    <li><a href="{% url 'admission:change_language' lang.0 %}?next={{ request.get_full_path }}">{{ lang.0 }}</a></li>
+    <li><a href="{% url main_namespace|default:'admission'|add:':change_language' lang.0 %}?next={{ request.get_full_path }}">{{ lang.0 }}</a></li>
 {% endblock %}

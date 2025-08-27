@@ -167,7 +167,7 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
                 # That may be the last admission the member has access to, if so, redirect to homepage
                 return resolve_url('home')
             # Redirect on list
-            return resolve_url('admission:supervised-list')
+            return resolve_url(f'{self.main_namespace}:supervised-list')
         return self.request.POST.get('redirect_to') or self.request.get_full_path()
 
 

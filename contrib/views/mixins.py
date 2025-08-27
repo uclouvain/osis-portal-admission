@@ -59,6 +59,7 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
             'admission/tab_layout.html',
         ]
         context['base_template'] = select_template(templates)
+        context['main_namespace'] = self.main_namespace
         context['base_namespace'] = self.base_namespace
         context['current_context'] = self.current_context
         context['is_general'] = self.is_general
@@ -87,6 +88,10 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
     @cached_property
     def base_namespace(self):
         return ':'.join(self.request.resolver_match.namespaces[:2])
+
+    @cached_property
+    def main_namespace(self):
+        return self.request.resolver_match.namespaces[0]
 
     @cached_property
     def admission_uuid(self):

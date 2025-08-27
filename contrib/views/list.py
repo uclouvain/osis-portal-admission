@@ -86,5 +86,6 @@ class DoctorateAdmissionMemberListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["admissions"] = AdmissionPropositionService().get_supervised_propositions(self.request.user.person)
+        context["main_namespace"] = self.request.resolver_match.namespaces[0]
         context["tab_tree"] = TAB_TREES['doctorate']
         return context
