@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -111,6 +111,7 @@ class ListTestCase(OsisPortalTestCase):
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
     def test_list_supervised(self, api, *args):
         self.client.force_login(PersonFactory().user)
+
         api.return_value.list_supervised_propositions.return_value = [
             Mock(
                 uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
@@ -119,7 +120,13 @@ class ListTestCase(OsisPortalTestCase):
             ),
             Mock(uuid='b3729603-c991-489f-8d8d-1d3a11b64dad', links={}, erreurs=[]),
         ]
+
         url = reverse('admission:supervised-list')
         response = self.client.get(url)
         detail_url = resolve_url('admission:doctorate:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
+        self.assertContains(response, detail_url)
+
+        url = reverse('gestion_doctorat:supervised-list')
+        response = self.client.get(url)
+        detail_url = resolve_url('gestion_doctorat:doctorate:project', pk='3c5cdc60-2537-4a12-a396-64d2e9e34876')
         self.assertContains(response, detail_url)

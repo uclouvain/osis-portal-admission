@@ -30,8 +30,9 @@ from unittest.mock import ANY, MagicMock, Mock, patch
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
-from osis_admission_sdk.model.completer_comptabilite_proposition_generale_command import \
-    CompleterComptabilitePropositionGeneraleCommand
+from osis_admission_sdk.model.completer_comptabilite_proposition_generale_command import (
+    CompleterComptabilitePropositionGeneraleCommand,
+)
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
@@ -227,6 +228,21 @@ class DoctorateAccountingViewTestCase(OsisPortalTestCase):
         self.assertEqual(response.context['admission'], self.proposition)
         self.assertEqual(response.context['accounting'], self.accounting)
         self.assertEqual(response.context['formatted_relationship'], 'votre mère')
+
+    def test_display_accounting_details_from_doctorate_management(self):
+        self.client.force_login(self.person.user)
+
+        url = resolve_url('gestion_doctorat:doctorate:accounting', pk=self.proposition.uuid)
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.links = {
+            'retrieve_doctorate_management': {'url': 'ok'}
+        }
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
     def test_display_accounting_form(self):
         response = self.client.get(self.update_url)
@@ -792,10 +808,12 @@ class GeneralAccountingViewTestCase(OsisPortalTestCase):
             # Check API calls
             self.mock_proposition_api.return_value.update_general_accounting.assert_called_with(
                 uuid=self.proposition.uuid,
-                completer_comptabilite_proposition_generale_command=CompleterComptabilitePropositionGeneraleCommand(**{
-                    **command_params,
-                    'affiliation_sport': '',
-                }),
+                completer_comptabilite_proposition_generale_command=CompleterComptabilitePropositionGeneraleCommand(
+                    **{
+                        **command_params,
+                        'affiliation_sport': '',
+                    }
+                ),
                 **self.default_kwargs,
             )
 
