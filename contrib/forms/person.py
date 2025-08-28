@@ -76,7 +76,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
                 "placeholder": get_example_text('Maria'),
             },
         ),
-        max_length=50,
+        max_length=20,
     )
     middle_name = forms.CharField(
         required=False,
@@ -90,7 +90,7 @@ class DoctorateAdmissionPersonForm(forms.Form):
                 "placeholder": get_example_text("Pierre, Paul, Jacques"),
             },
         ),
-        max_length=50,
+        max_length=40,
     )
     last_name = forms.CharField(
         required=False,

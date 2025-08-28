@@ -91,7 +91,7 @@ msgstr ""
 msgid "%(state)s on %(date)s"
 msgstr ""
 
-msgid "(Expected) graduation date (signed diploma)"
+msgid "(Expected) graduation date"
 msgstr ""
 
 msgid ":"
@@ -241,7 +241,7 @@ msgid "Add"
 msgstr ""
 
 msgid "Add a CA member"
-msgstr ""
+msgstr "Add a supervision committee member"
 
 msgid "Add a language"
 msgstr ""
@@ -252,8 +252,8 @@ msgstr ""
 msgid "Add a non-academic experience"
 msgstr ""
 
-msgid "Add a promoter or a CA member"
-msgstr "Add a promoter or a supervision member"
+msgid "Add a supervisor or a CA member"
+msgstr "Add a supervisor or a supervision committee member"
 
 msgid "Add an academic course"
 msgstr ""
@@ -510,10 +510,10 @@ msgid "C2"
 msgstr ""
 
 msgid "CA Member"
-msgstr "Supervision member"
+msgstr "Supervision committee member"
 
 msgid "CA members"
-msgstr "Supervision members"
+msgstr "Supervision committee members"
 
 msgid "CHEMISTRY"
 msgstr "Chemistry"
@@ -698,6 +698,9 @@ msgid "Contact details"
 msgstr ""
 
 msgid "Contact language"
+msgstr ""
+
+msgid "Contact supervisor"
 msgstr ""
 
 msgid "Continue"
@@ -918,7 +921,7 @@ msgid ""
 "training."
 msgstr ""
 
-msgid "Designate as lead supervisor"
+msgid "Designate as contact supervisor"
 msgstr ""
 
 msgid "Detailed curriculum vitae, dated and signed"
@@ -1130,12 +1133,13 @@ msgstr ""
 "require a prior registration for the doctorate. [...] Pre-admission is valid "
 "for a maximum period of 12 months. Recourse to a pre-admission phase must be "
 "justified, the objectives to be achieved planned and the duration of the pre-"
-"admission period fixed in accordance with them. <strong class=\"text-danger\">Unless exceptionally "
-"authorised by the domain doctoral committee, FRIA or FNRS scholarship "
-"holders and, in general, doctoral candidates engaged in a research project "
-"that has already been defined, are not authorised to take a pre-admission "
-"phase for a doctorate.</strong> » <br /> Please also consult the special provisions "
-"of the field for all pre-admission conditions."
+"admission period fixed in accordance with them. <strong class=\"text-"
+"danger\">Unless exceptionally authorised by the domain doctoral committee, "
+"FRIA or FNRS scholarship holders and, in general, doctoral candidates "
+"engaged in a research project that has already been defined, are not "
+"authorised to take a pre-admission phase for a doctorate.</strong> » <br /> "
+"Please also consult the special provisions of the field for all pre-"
+"admission conditions."
 
 msgid "FNRS"
 msgstr ""
@@ -1416,8 +1420,8 @@ msgid "If everything appears correct, send your enrolment request below."
 msgstr ""
 
 msgid ""
-"If known, indicate the name of the laboratory, clinical department or "
-"research centre where the thesis will be carried out at UCLouvain"
+"If known, indicate, for example, the name of the laboratory, clinical department, research "
+"centre, ... where the thesis will be carried out at UCLouvain"
 msgstr ""
 
 msgid "If other language regime, specify"
@@ -1612,6 +1616,9 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+msgid "Language in which the domain doctoral committee can contact this person"
+msgstr ""
+
 msgid "Language regime"
 msgstr ""
 
@@ -1622,9 +1629,6 @@ msgid "Later > blocking"
 msgstr ""
 
 msgid "Later > non-blocking"
-msgstr ""
-
-msgid "Lead supervisor"
 msgstr ""
 
 msgid "Leave page?"
@@ -2094,19 +2098,16 @@ msgstr ""
 msgid "Professional experiences prefixed with %(icon)s are incomplete."
 msgstr ""
 
-msgid "Project resume"
+msgid "Project abstract"
 msgstr ""
 
-msgid "Project resume (max. 2000 characters)"
+msgid "Project abstract (max. 2000 characters)"
 msgstr ""
 
 msgid "Project title"
 msgstr ""
 
 msgid "Project title (max. 100 characters)"
-msgstr ""
-
-msgid "Promoters"
 msgstr ""
 
 msgid ""
@@ -2210,6 +2211,9 @@ msgid "Research institute"
 msgstr ""
 
 msgid "Research scholarship"
+msgstr ""
+
+msgid "Research start date"
 msgstr ""
 
 msgid "Resend invitation"
@@ -2382,6 +2386,9 @@ msgstr ""
 msgid "Supervisor"
 msgstr ""
 
+msgid "Supervisors"
+msgstr ""
+
 msgid "Supervisory panel to be completed"
 msgstr ""
 
@@ -2460,6 +2467,9 @@ msgid "The application will be updated soon to take that into account."
 msgstr ""
 
 msgid "The contact address I provided"
+msgstr ""
+
+msgid "The contact supervisor must be internal UCLouvain"
 msgstr ""
 
 #, python-format
@@ -2754,9 +2764,6 @@ msgstr ""
 msgid "Work contract type"
 msgstr ""
 
-msgid "Work start date"
-msgstr ""
-
 msgid ""
 "Would you like to become a <a href='https://uclouvain.be/fr/decouvrir/carte-"
 "solidaire.html' target='_blank'>Solidarity Student</a>, that is, a member of "
@@ -2826,7 +2833,7 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Write your resume in the language decided with your accompanying committee."
+"Write your abstract in the language decided with your accompanying committee."
 msgstr ""
 
 msgid "Writing ability"
