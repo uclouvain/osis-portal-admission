@@ -188,11 +188,11 @@ class DoctorateAccountingViewTestCase(OsisPortalTestCase):
         self.addCleanup(propositions_api_patcher.stop)
 
         # Mock osis document api
-        patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
+        patcher = patch("osis_document_components.services.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
         patcher = patch(
-            'osis_document.api.utils.get_remote_metadata',
+            'osis_document_components.services.get_remote_metadata',
             return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()
@@ -612,11 +612,11 @@ class GeneralAccountingViewTestCase(OsisPortalTestCase):
         self.addCleanup(propositions_api_patcher.stop)
 
         # Mock osis document api
-        patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
+        patcher = patch("osis_document_components.services.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
         patcher = patch(
-            "osis_document.api.utils.get_remote_metadata",
+            "osis_document_components.services.get_remote_metadata",
             return_value={"name": "myfile", 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()

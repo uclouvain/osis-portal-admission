@@ -394,7 +394,7 @@ def field_data(
     tooltip=None,
 ):
     if isinstance(data, list):
-        template_string = "{% load osis_document %}{% if files %}{% document_visualizer files %}{% endif %}"
+        template_string = "{% load osis_document_components %}{% if files %}{% document_visualizer files %}{% endif %}"
         template_context = {'files': data}
         data = template.Template(template_string).render(template.Context(template_context))
 

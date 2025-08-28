@@ -35,7 +35,7 @@ from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy as __
-from osis_document.contrib.widgets import HiddenFileWidget
+from osis_document_components.widgets import HiddenFileWidget
 
 from admission.constants import (
     BE_ISO_CODE,

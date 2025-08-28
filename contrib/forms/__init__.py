@@ -49,7 +49,7 @@ from admission.services.reference import (
     SuperiorInstituteService,
 )
 from admission.utils import format_entity_title, format_scholarship, format_school_title
-from osis_document.contrib import FileUploadField
+from osis_document_components.fields import FileUploadField
 from reference.services.scholarship import ScholarshipService
 
 EMPTY_CHOICE = (('', ' - '),)
