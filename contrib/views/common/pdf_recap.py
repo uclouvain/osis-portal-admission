@@ -24,6 +24,8 @@
 #
 # ##############################################################################
 from django.views.generic import RedirectView
+from osis_document_components.enums import PostProcessingWanted
+
 from osis_document_components.services import get_remote_token
 
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -48,7 +50,10 @@ class AdmissionPDFRecapExportView(LoadDossierViewMixin, RedirectView):
     def get(self, request, *args, **kwargs):
         reading_token = (
             # use the saved pdf if there is one
-            get_remote_token(self.admission.pdf_recapitulatif[0])
+            get_remote_token(
+                self.admission.pdf_recapitulatif[0],
+                wanted_post_process=PostProcessingWanted.ORIGINAL.name,
+            )
             if self.admission.pdf_recapitulatif
             # otherwise generate a new pdf
             else self.service_mapping[self.current_context](
