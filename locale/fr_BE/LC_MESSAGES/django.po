@@ -3553,7 +3553,7 @@ msgstr "ex: 5ème sur 30"
 msgid "e.g.: Librarian"
 msgstr "ex: Bibliothécaire"
 
-msgid "eg:"
+msgid "eg: "
 msgstr "ex: "
 
 msgctxt "diploma_type"
