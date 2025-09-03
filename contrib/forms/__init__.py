@@ -33,8 +33,10 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.functional import lazy
 from django.utils.translation import get_language, gettext
+from django.utils.translation import gettext_lazy
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
+from osis_document.contrib import FileUploadField
 
 from admission.constants import MINIMUM_BIRTH_YEAR
 from admission.services.campus import AdmissionCampusService
@@ -49,7 +51,6 @@ from admission.services.reference import (
     SuperiorInstituteService,
 )
 from admission.utils import format_entity_title, format_scholarship, format_school_title
-from osis_document.contrib import FileUploadField
 from reference.services.scholarship import ScholarshipService
 
 EMPTY_CHOICE = (('', ' - '),)
@@ -361,7 +362,7 @@ class BooleanRadioSelect(forms.RadioSelect):
 
 class PhoneWidget(forms.TextInput):
     input_type = 'tel'
-    INTL_TEL_VERSION = '25.3.0'
+    INTL_TEL_VERSION = '25.8.4'
     INTL_HIDDEN_INPUT_NAME_PREFIX = 'hidden-'
 
     def __init__(self, *args, **kwargs):
@@ -370,6 +371,7 @@ class PhoneWidget(forms.TextInput):
         attrs['data-language'] = lazy(get_language)
         attrs['data-intl-tel-input-version'] = self.INTL_TEL_VERSION
         attrs['data-intl-hidden-input-name-prefix'] = self.INTL_HIDDEN_INPUT_NAME_PREFIX
+        attrs['data-placeholder-prefix'] = gettext_lazy('eg: ')
         super().__init__(*args, **kwargs)
 
     def hidden_input_name(self, name):

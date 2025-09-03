@@ -273,7 +273,7 @@ const fr_translations = {
   // Aria label for the country list element
   countryListAriaLabel: "Liste des pays",
   // Placeholder for the search input in the dropdown
-  searchPlaceholder: "Rechercher",
+  searchPlaceholder: "Recherche",
   // Screen reader text for when the search produces no results
   zeroSearchResults: "Aucun résultat trouvé",
   // Screen reader text for when the search produces 1 result
@@ -291,11 +291,9 @@ $(function () {
             }),
             initialCountry: 'be',
             countryOrder: ['be'],
-            autoPlaceholder: 'off',
             i18n: element.dataset.language === 'en' ? {} : fr_translations,
-            separateDialCode: true,
-            formatAsYouType: false,
-            formatOnDisplay: false,
+            strictMode: true,
+            customPlaceholder: (defaultPlaceholder, _) => element.dataset.placeholderPrefix + defaultPlaceholder,
         });
 
         iti.promise.then(function() {
@@ -303,4 +301,3 @@ $(function () {
         });
     });
 });
-
