@@ -3084,7 +3084,7 @@ msgstr ""
 msgid "e.g.: Librarian"
 msgstr ""
 
-msgid "eg:"
+msgid "eg: "
 msgstr ""
 
 msgctxt "diploma_type"
