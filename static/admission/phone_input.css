@@ -24,5 +24,6 @@
  *
  */
 .iti input {
-  padding: 6px 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }

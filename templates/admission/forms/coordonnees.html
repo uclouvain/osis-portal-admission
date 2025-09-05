@@ -8,7 +8,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -181,36 +181,6 @@
         $('#id_contact-city, #id_contact-postal_code').dependsOn({
             '#id_contact-country': { not: [null] },
         }, { valueOnDisable: '', hide: false });
-
-        // Change the placeholder and the mask of phone inputs when selecting a new country
-        $('#id_phone_mobile, #id_emergency_contact_phone').on('countrychange', function(event) {
-            const currentInstance = window.intlTelInput.getInstance($(this)[0]);
-            const selectedCountryData = currentInstance.getSelectedCountryData();
-            const newPlaceholder = window.intlTelInput.utils.getExampleNumber(
-                selectedCountryData.iso2,
-                true,
-                window.intlTelInput.utils.numberType.MOBILE,
-            );
-
-            $(this).attr('placeholder', '{% translate "eg:" %} ' + newPlaceholder);
-
-            // Apply the new mask for the input
-            $(this).mask(newPlaceholder.replace(/[1-9]/g, '0'), {reverse: true});
-        });
-
-        // Initialize the mask
-        $('#id_phone_mobile, #id_emergency_contact_phone').each(function(){
-            const element = $(this);
-            const currentInstance = window.intlTelInput.getInstance($(this)[0]);
-
-            // The number is displayed in national format but saved in international format so we convert it here
-            const nationalNumber = currentInstance.getNumber(intlTelInput.utils.numberFormat.NATIONAL);
-            currentInstance.setNumber(nationalNumber);
-
-            currentInstance.promise.then(function () {
-               element.trigger('countrychange');
-            });
-        });
 
         document.dispatchEvent(new Event('refreshFormInitial'));
     });
