@@ -568,6 +568,7 @@ class DoctorateBusinessException(Enum):
     CarteBancaireRemboursementIbanNonCompleteDoctoratException = "DOCTORAT-5"
     CarteBancaireRemboursementAutreFormatNonCompleteDoctoratException = "DOCTORAT-6"
     TypeCompteBancaireRemboursementNonCompleteDoctoratException = "DOCTORAT-7"
+    MaximumPropositionsDoctoralesAtteintException = "DOCTORAT-12"
 
 
 class PostalCodeBusinessException(Enum):
@@ -719,6 +720,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.PoolNonResidentContingenteNonOuvertException,
         GlobalPropositionBusinessException.AucunPoolCorrespondantException,
         GlobalPropositionBusinessException.NombrePropositionsSoumisesDepasseException,
+        DoctorateBusinessException.MaximumPropositionsDoctoralesAtteintException,
     },
     'confirmation-paper': set(),
     'extension-request': set(),

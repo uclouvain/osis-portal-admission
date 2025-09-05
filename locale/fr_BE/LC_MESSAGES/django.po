@@ -2421,14 +2421,11 @@ msgstr ""
 msgid "Project abstract"
 msgstr "Résumé"
 
-msgid "Project abstract (max. 2000 characters)"
-msgstr "Résumé (max. 2000 caractères)"
+msgid "Project abstract (max. 4000 characters)"
+msgstr "Résumé (max. 4000 caractères)"
 
 msgid "Project title"
 msgstr "Sujet"
-
-msgid "Project title (max. 100 characters)"
-msgstr "Sujet (max. 100 caractères)"
 
 msgid ""
 "Proof of employment from the employer, with dates, justifying the period in "
