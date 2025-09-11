@@ -59,7 +59,7 @@ __all__ = [
     'DoctorateAdmissionRemoveActorView',
     'DoctorateAdmissionSetReferencePromoterView',
     'DoctorateAdmissionApprovalByPdfView',
-    'DoctorateAdmissionExternalResendView',
+    'DoctorateAdmissionResendView',
     'DoctorateAdmissionEditExternalMemberView',
     'DoctorateAdmissionSubmitCaView',
 ]
@@ -295,7 +295,7 @@ class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixi
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
-class DoctorateAdmissionExternalResendView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+class DoctorateAdmissionResendView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
     urlpatterns = {'resend-invite': 'resend-invite/<uuid>'}
     template_name = 'admission/doctorate/forms/external_confirm.html'
     form_class = forms.Form
@@ -321,6 +321,7 @@ class DoctorateAdmissionExternalResendView(LoginRequiredMixin, WebServiceFormMix
         )
 
     def form_invalid(self, form):
+        messages.error(self.request, '\n'.join(form.errors.get('__all__', [])))
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 

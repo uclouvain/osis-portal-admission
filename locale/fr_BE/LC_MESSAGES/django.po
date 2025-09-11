@@ -3563,6 +3563,9 @@ msgctxt "diploma_type"
 msgid "foreign"
 msgstr "étranger"
 
+msgid "mm/yyyy"
+msgstr "mm/aaaa"
+
 msgid "the Enrolment Office"
 msgstr "le Service des Inscriptions"
 
