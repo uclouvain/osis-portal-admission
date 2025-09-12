@@ -2101,13 +2101,10 @@ msgstr ""
 msgid "Project abstract"
 msgstr ""
 
-msgid "Project abstract (max. 2000 characters)"
+msgid "Project abstract (max. 4000 characters)"
 msgstr ""
 
 msgid "Project title"
-msgstr ""
-
-msgid "Project title (max. 100 characters)"
 msgstr ""
 
 msgid ""
