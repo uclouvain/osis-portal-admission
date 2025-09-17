@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,10 +23,13 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from unittest import mock
 
 from django.shortcuts import resolve_url
 
-from admission.tests.views.training_choice import AdmissionTrainingChoiceFormViewTestCase
+from admission.tests.views.training_choice import (
+    AdmissionTrainingChoiceFormViewTestCase,
+)
 
 
 class GeneralAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormViewTestCase):
@@ -92,3 +95,18 @@ class DoctorateAdmissionReadTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
             **self.default_kwargs,
         )
         self.assertEqual(response.context['admission'].uuid, self.doctorate_proposition.uuid)
+
+    def test_get_page_from_doctorate_management(self):
+        self.client.force_login(self.person.user)
+
+        url = resolve_url('gestion_doctorat:doctorate:training-choice', pk=self.proposition_uuid)
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.side_effect = None
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = self.doctorate_proposition
+
+        with mock.patch.object(self.doctorate_proposition, 'links', {'retrieve_doctorate_management': {'url': 'ok'}}):
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,22 +29,24 @@ from unittest.mock import ANY, MagicMock, patch
 
 from django.core.exceptions import ValidationError
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
+from django.urls import reverse
 from django.utils.translation import gettext_lazy
-
 from osis_admission_sdk.model.document_specific_question import DocumentSpecificQuestion
-from osis_admission_sdk.model.document_specific_questions_list import DocumentSpecificQuestionsList
+from osis_admission_sdk.model.document_specific_questions_list import (
+    DocumentSpecificQuestionsList,
+)
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
-    TrainingType,
-    CleConfigurationItemFormulaire,
-    TypeItemFormulaire,
     ChoixStatutPropositionContinue,
     ChoixStatutPropositionDoctorale,
+    CleConfigurationItemFormulaire,
+    TrainingType,
+    TypeItemFormulaire,
 )
 from admission.contrib.enums.projet import ChoixStatutPropositionGenerale
-from admission.contrib.forms import PDF_MIME_TYPE, JPEG_MIME_TYPE
+from admission.contrib.forms import JPEG_MIME_TYPE, PDF_MIME_TYPE
 from base.tests.factories.person import PersonFactory
 from base.tests.test_case import OsisPortalTestCase
 
@@ -193,6 +195,17 @@ class GeneralDocumentsFormViewTestCase(BaseDocumentsFormViewTestCase):
         )
 
         self.addCleanup(propositions_api_patcher.stop)
+
+    def test_redirect_to_admission_list_if_no_permission(self):
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.links = {}
+
+        response = self.client.get(self.url)
+
+        self.assertRedirects(
+            response=response,
+            expected_url=reverse('admission:list'),
+            fetch_redirect_response=False,
+        )
 
     def test_display_document_form(self):
         response = self.client.get(self.url)

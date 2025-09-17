@@ -28,7 +28,7 @@ from typing import Set
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _, ngettext
-from localflavor.generic.forms import BICFormField, IBAN_MIN_LENGTH
+from localflavor.generic.forms import BICFormField, IBAN_COUNTRY_CODE_LENGTH
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import dynamic_person_concerned
@@ -51,6 +51,8 @@ from reference.services.iban_validator import (
     IBANValidatorException,
     IBANValidatorRequestException,
 )
+
+IBAN_MIN_LENGTH = min(IBAN_COUNTRY_CODE_LENGTH.values())
 
 
 class AccountingForm(forms.Form):
