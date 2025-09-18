@@ -439,3 +439,12 @@ body, html {
 .overflow-auto {
   overflow: auto;
 }
+
+.select2-results__option--highlighted .option-small-text {
+  color: initial;
+}
+
+.option-small-text {
+  color: #666;
+  font-size: 0.8em;
+}

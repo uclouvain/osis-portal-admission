@@ -146,6 +146,7 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
             attrs={
                 'data-minimum-input-length': 3,
                 'data-placeholder': _('First name / Last name'),
+                'data-html': True,
             },
         ),
         required=False,
