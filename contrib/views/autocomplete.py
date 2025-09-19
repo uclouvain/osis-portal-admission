@@ -382,7 +382,7 @@ class TutorAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomp
         return [
             dict(
                 id=result.global_id,
-                text="{result.first_name} {result.last_name}".format(result=result),
+                text=f'{result.first_name} {result.last_name} <span class="option-small-text">({result.email})</span>',
             )
             for result in results
         ]
@@ -395,6 +395,7 @@ class PersonAutocomplete(TutorAutocomplete):
         return AdmissionAutocompleteService.autocomplete_persons(
             person=self.request.user.person,
             search=self.q,
+            **self.get_webservice_pagination_kwargs(),
         )
 
 
