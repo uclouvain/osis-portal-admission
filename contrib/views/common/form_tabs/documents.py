@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,10 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.translation import gettext as _
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
+from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView
 
@@ -76,6 +78,11 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
         ):
             self.error_message = _('Required documents are missing.')
         return super().form_invalid(form)
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('admission:list'))
+        return super().handle_no_permission()
 
     def has_permission(self):
         return can_update_tab(admission=self.admission, tab='documents')

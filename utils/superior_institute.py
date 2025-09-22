@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.models.entity_version import EntityVersion
 
 
 def format_address(street='', street_number='', postal_code='', city='', country=''):
