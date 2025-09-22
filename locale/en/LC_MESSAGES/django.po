@@ -2101,13 +2101,10 @@ msgstr ""
 msgid "Project abstract"
 msgstr ""
 
-msgid "Project abstract (max. 2000 characters)"
+msgid "Project abstract (max. 4000 characters)"
 msgstr ""
 
 msgid "Project title"
-msgstr ""
-
-msgid "Project title (max. 100 characters)"
 msgstr ""
 
 msgid ""
@@ -3084,12 +3081,15 @@ msgstr ""
 msgid "e.g.: Librarian"
 msgstr ""
 
-msgid "eg:"
+msgid "eg: "
 msgstr ""
 
 msgctxt "diploma_type"
 msgid "foreign"
 msgstr "Foreign diploma"
+
+msgid "mm/yyyy"
+msgstr ""
 
 msgid "the Enrolment Office"
 msgstr ""

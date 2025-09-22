@@ -217,7 +217,13 @@ class DoctorateAdmissionApprovalForm(forms.Form):
     )
 
     def __init__(self, *args, include_institut_these=False, person=None, **kwargs):
+        main_namespace = kwargs.pop('main_namespace', '')
+
         super().__init__(*args, **kwargs)
+
+        if main_namespace:
+            self.fields['institut_these'].widget.url = f'{main_namespace}:autocomplete:institute'
+
         if not include_institut_these:
             del self.fields['institut_these']
         else:
