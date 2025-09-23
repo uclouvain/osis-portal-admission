@@ -551,7 +551,7 @@ class SupervisionTestCase(OsisPortalTestCase):
         self.mock_api.return_value.create_signatures.assert_called()
 
     @patch(
-        'osis_document.api.utils.get_remote_metadata',
+        'osis_document_components.services.get_remote_metadata',
         return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE, 'size': 1},
     )
     def test_should_approval_by_pdf_redirect_without_errors(self, *args):

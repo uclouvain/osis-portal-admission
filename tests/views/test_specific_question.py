@@ -98,9 +98,9 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Course change"))
 
-    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+    @patch('osis_document_components.services.get_remote_token', return_value='foobar')
     @patch(
-        'osis_document.api.utils.get_remote_metadata',
+        'osis_document_components.services.get_remote_metadata',
         return_value={
             'name': 'myfile',
             'mimetype': PDF_MIME_TYPE,
@@ -444,9 +444,9 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             **self.default_kwargs,
         )
 
-    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+    @patch('osis_document_components.services.get_remote_token', return_value='foobar')
     @patch(
-        'osis_document.api.utils.get_remote_metadata',
+        'oosis_document_components.services.get_remote_metadata',
         return_value={
             'name': 'myfile',
             'mimetype': PDF_MIME_TYPE,
@@ -558,9 +558,9 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             **self.default_kwargs,
         )
 
-    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+    @patch('osis_document_components.services.get_remote_token', return_value='foobar')
     @patch(
-        'osis_document.api.utils.get_remote_metadata',
+        'osis_document_components.services.get_remote_metadata',
         return_value={
             'name': 'myfile',
             'mimetype': PDF_MIME_TYPE,
