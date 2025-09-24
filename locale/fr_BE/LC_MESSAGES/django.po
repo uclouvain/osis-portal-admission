@@ -1660,11 +1660,12 @@ msgstr ""
 "d'inscription ci-dessous"
 
 msgid ""
-"If known, indicate, for example, the name of the laboratory, clinical department, research "
-"centre, ... where the thesis will be carried out at UCLouvain"
+"If known, indicate, for example, the name of the laboratory, clinical "
+"department, research centre, ... where the thesis will be carried out at "
+"UCLouvain"
 msgstr ""
-"Si connu, indiquez ici par exemple le nom du laboratoire, du service clinique, du centre "
-"de recherche, ... où sera réalisée la thèse à l'UCLouvain"
+"Si connu, indiquez ici par exemple le nom du laboratoire, du service "
+"clinique, du centre de recherche, ... où sera réalisée la thèse à l'UCLouvain"
 
 msgid "If other language regime, specify"
 msgstr "Si autre régime linguistique, précisez"
@@ -1892,7 +1893,9 @@ msgid "Language"
 msgstr "Langue"
 
 msgid "Language in which the domain doctoral committee can contact this person"
-msgstr "Langue dans laquelle la Commission doctorale de domaine peut contacter cette personne"
+msgstr ""
+"Langue dans laquelle la Commission doctorale de domaine peut contacter cette "
+"personne"
 
 msgid "Language regime"
 msgstr "Régime linguistique"
@@ -2223,6 +2226,9 @@ msgstr "Nom autre établissement"
 
 msgid "Other programme"
 msgstr "Autre formation"
+
+msgid "Other scholarship"
+msgstr "Autre bourse"
 
 msgid "PDF file"
 msgstr "Fichier PDF"
