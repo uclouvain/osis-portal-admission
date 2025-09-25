@@ -446,7 +446,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
     @patch('osis_document_components.services.get_remote_token', return_value='foobar')
     @patch(
-        'oosis_document_components.services.get_remote_metadata',
+        'osis_document_components.services.get_remote_metadata',
         return_value={
             'name': 'myfile',
             'mimetype': PDF_MIME_TYPE,
