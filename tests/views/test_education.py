@@ -29,7 +29,7 @@ from unittest.mock import ANY, Mock, patch
 
 import freezegun
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_reference_sdk.model.high_school import HighSchool
 
@@ -46,9 +46,9 @@ from admission.contrib.enums.secondary_studies import (
 from admission.contrib.forms import EMPTY_CHOICE, PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from admission.tests.utils import MockCountry, MockLanguage
-from base.tests.factories.academic_year import get_current_year
 from base.tests.factories.person import PersonFactory
 from base.tests.test_case import OsisPortalTestCase
+from reference.utils import get_current_year
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL="http://dummyurl.com/document/")

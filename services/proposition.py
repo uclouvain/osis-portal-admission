@@ -77,8 +77,8 @@ from osis_admission_sdk.model.modifier_questions_specifiques_formation_generale_
 from osis_admission_sdk.model.refuser_proposition_command import (
     RefuserPropositionCommand,
 )
-from osis_admission_sdk.model.renvoyer_invitation_signature_externe import (
-    RenvoyerInvitationSignatureExterne,
+from osis_admission_sdk.model.renvoyer_invitation_signature import (
+    RenvoyerInvitationSignature,
 )
 from osis_admission_sdk.model.specific_question import SpecificQuestion
 from osis_admission_sdk.model.submit_proposition import SubmitProposition
@@ -568,6 +568,7 @@ class DoctorateBusinessException(Enum):
     CarteBancaireRemboursementIbanNonCompleteDoctoratException = "DOCTORAT-5"
     CarteBancaireRemboursementAutreFormatNonCompleteDoctoratException = "DOCTORAT-6"
     TypeCompteBancaireRemboursementNonCompleteDoctoratException = "DOCTORAT-7"
+    MaximumPropositionsDoctoralesAtteintException = "DOCTORAT-12"
 
 
 class PostalCodeBusinessException(Enum):
@@ -719,6 +720,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.PoolNonResidentContingenteNonOuvertException,
         GlobalPropositionBusinessException.AucunPoolCorrespondantException,
         GlobalPropositionBusinessException.NombrePropositionsSoumisesDepasseException,
+        DoctorateBusinessException.MaximumPropositionsDoctoralesAtteintException,
     },
     'confirmation-paper': set(),
     'extension-request': set(),
@@ -857,7 +859,7 @@ class AdmissionSupervisionService(metaclass=ServiceMeta):
     def resend_invite(cls, person, uuid, **kwargs):
         return APIClient().update_signatures(
             uuid=uuid,
-            renvoyer_invitation_signature_externe=RenvoyerInvitationSignatureExterne(**kwargs),
+            renvoyer_invitation_signature=RenvoyerInvitationSignature(**kwargs),
             **build_mandatory_auth_headers(person),
         )
 

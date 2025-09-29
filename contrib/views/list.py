@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.views.generic import TemplateView
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import TemplateView
 
 from admission.constants import PROPOSITION_JUST_SUBMITTED
 from admission.contrib.enums import CANCELLED_STATUSES
@@ -73,7 +73,7 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
             display_warning_messages(
                 self.request,
                 f"{str(msg)} <br>"
-                f"<a href='{logout_url}' class='btn btn-sm btn-info' style='margin-top:5px;'>{str(btn_msg)}</button>"
+                f"<a href='{logout_url}' class='btn btn-sm btn-info' style='margin-top:5px;'>{str(btn_msg)}</button>",
             )
 
         return context
@@ -86,5 +86,6 @@ class DoctorateAdmissionMemberListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["admissions"] = AdmissionPropositionService().get_supervised_propositions(self.request.user.person)
+        context["main_namespace"] = self.request.resolver_match.namespaces[0]
         context["tab_tree"] = TAB_TREES['doctorate']
         return context

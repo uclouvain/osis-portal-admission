@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import resolve_url
 from django.template.loader import select_template
 from django.utils.datetime_safe import date
@@ -33,8 +33,9 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
-from admission.contrib.enums import IN_PROGRESS_STATUSES, CANCELLED_STATUSES
+from admission.contrib.enums import CANCELLED_STATUSES, IN_PROGRESS_STATUSES
 from admission.services.proposition import AdmissionPropositionService
+from admission.templatetags.admission import can_make_action
 
 LATE_MESSAGE_POOLS = [
     'ADMISSION_POOL_HUE_UCL_PATHWAY_CHANGE',
@@ -59,6 +60,7 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
             'admission/tab_layout.html',
         ]
         context['base_template'] = select_template(templates)
+        context['main_namespace'] = self.main_namespace
         context['base_namespace'] = self.base_namespace
         context['current_context'] = self.current_context
         context['is_general'] = self.is_general
@@ -89,6 +91,10 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         return ':'.join(self.request.resolver_match.namespaces[:2])
 
     @cached_property
+    def main_namespace(self):
+        return self.request.resolver_match.namespaces[0]
+
+    @cached_property
     def admission_uuid(self):
         return str(self.kwargs.get('pk', ''))
 
@@ -109,8 +115,14 @@ class LoadViewMixin(LoginRequiredMixin, ContextMixin):
         return resolve_url(pattern)
 
 
-class LoadDossierViewMixin(LoadViewMixin):
+class LoadDossierViewMixin(LoadViewMixin, UserPassesTestMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
+
+    def test_func(self):
+        # We check that the user has the right to access to the pages under '/gestion_doctorat'.
+        if self.main_namespace == 'gestion_doctorat':
+            return self.admission_uuid and can_make_action(self.admission, 'retrieve_doctorate_management')
+        return True
 
     @cached_property
     def admission(self):

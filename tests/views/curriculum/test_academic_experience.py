@@ -232,7 +232,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'base_form-transcript_0': ['f2.pdf'],
             'base_form-transcript_translation_0': ['f22.pdf'],
             'base_form-rank_in_diploma': '10 on 100',
-            'base_form-expected_graduation_date': datetime.date(2022, 1, 1),
+            'base_form-expected_graduation_date': '01/2022',
             'base_form-dissertation_title': 'The new title',
             'base_form-dissertation_score': 'A',
             'base_form-dissertation_summary_0': ['f3.pdf'],

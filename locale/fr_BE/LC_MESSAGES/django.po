@@ -1660,11 +1660,12 @@ msgstr ""
 "d'inscription ci-dessous"
 
 msgid ""
-"If known, indicate, for example, the name of the laboratory, clinical department, research "
-"centre, ... where the thesis will be carried out at UCLouvain"
+"If known, indicate, for example, the name of the laboratory, clinical "
+"department, research centre, ... where the thesis will be carried out at "
+"UCLouvain"
 msgstr ""
-"Si connu, indiquez ici par exemple le nom du laboratoire, du service clinique, du centre "
-"de recherche, ... où sera réalisée la thèse à l'UCLouvain"
+"Si connu, indiquez ici par exemple le nom du laboratoire, du service "
+"clinique, du centre de recherche, ... où sera réalisée la thèse à l'UCLouvain"
 
 msgid "If other language regime, specify"
 msgstr "Si autre régime linguistique, précisez"
@@ -1892,7 +1893,9 @@ msgid "Language"
 msgstr "Langue"
 
 msgid "Language in which the domain doctoral committee can contact this person"
-msgstr "Langue dans laquelle la Commission doctorale de domaine peut contacter cette personne"
+msgstr ""
+"Langue dans laquelle la Commission doctorale de domaine peut contacter cette "
+"personne"
 
 msgid "Language regime"
 msgstr "Régime linguistique"
@@ -2224,6 +2227,9 @@ msgstr "Nom autre établissement"
 msgid "Other programme"
 msgstr "Autre formation"
 
+msgid "Other scholarship"
+msgstr "Autre bourse"
+
 msgid "PDF file"
 msgstr "Fichier PDF"
 
@@ -2421,14 +2427,11 @@ msgstr ""
 msgid "Project abstract"
 msgstr "Résumé"
 
-msgid "Project abstract (max. 2000 characters)"
-msgstr "Résumé (max. 2000 caractères)"
+msgid "Project abstract (max. 4000 characters)"
+msgstr "Résumé (max. 4000 caractères)"
 
 msgid "Project title"
 msgstr "Sujet"
-
-msgid "Project title (max. 100 characters)"
-msgstr "Sujet (max. 100 caractères)"
 
 msgid ""
 "Proof of employment from the employer, with dates, justifying the period in "
@@ -3556,12 +3559,15 @@ msgstr "ex: 5ème sur 30"
 msgid "e.g.: Librarian"
 msgstr "ex: Bibliothécaire"
 
-msgid "eg:"
+msgid "eg: "
 msgstr "ex: "
 
 msgctxt "diploma_type"
 msgid "foreign"
 msgstr "étranger"
+
+msgid "mm/yyyy"
+msgstr "mm/aaaa"
 
 msgid "the Enrolment Office"
 msgstr "le Service des Inscriptions"

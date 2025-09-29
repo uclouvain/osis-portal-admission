@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -58,9 +58,9 @@ class CoordonneesTestCase(OsisPortalTestCase):
         self.mock_person_api = person_api_patcher.start()
         self.addCleanup(person_api_patcher.stop)
 
-        self.mock_get = (
-            self.mock_person_api.return_value.retrieve_coordonnees.return_value.to_dict
-        ) = self.mock_person_api.return_value.retrieve_coordonnees_admission.return_value.to_dict
+        self.mock_get = self.mock_person_api.return_value.retrieve_coordonnees.return_value.to_dict = (
+            self.mock_person_api.return_value.retrieve_coordonnees_admission.return_value.to_dict
+        )
         self.mock_get.return_value = dict(
             email="john@example.org",
             phone_mobile="",
@@ -309,3 +309,18 @@ class CoordonneesTestCase(OsisPortalTestCase):
         self.assertContains(response, "France")
         self.mock_person_api.return_value.retrieve_coordonnees_admission.assert_called()
         self.assertIn('admission', response.context)
+
+    def test_detail_from_doctorate_management(self):
+        self.client.force_login(self.person.user)
+
+        url = resolve_url('gestion_doctorat:doctorate:coordonnees', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value.links = {
+            'retrieve_doctorate_management': {'url': 'ok'}
+        }
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

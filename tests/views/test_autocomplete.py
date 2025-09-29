@@ -335,8 +335,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
     def test_autocomplete_tutors(self, api):
         api.return_value.list_tutors.return_value = {
             'results': [
-                Mock(first_name='Michel', last_name='Screugnette', global_id="0123456987"),
-                Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213"),
+                Mock(first_name='Michel', last_name='Screugnette', global_id="0123456987", email="mis@info.be"),
+                Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213", email="mat@info.be"),
             ]
         }
         url = reverse('admission:autocomplete:tutor')
@@ -344,11 +344,11 @@ class AutocompleteTestCase(OsisPortalTestCase):
         expected = [
             {
                 'id': '0123456987',
-                'text': 'Michel Screugnette',
+                'text': 'Michel Screugnette <span class="option-small-text">(mis@info.be)</span>',
             },
             {
                 'id': '789654213',
-                'text': 'Marie-Odile Troufignon',
+                'text': 'Marie-Odile Troufignon <span class="option-small-text">(mat@info.be)</span>',
             },
         ]
         self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})
@@ -357,8 +357,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
     def test_autocomplete_persons(self, api):
         api.return_value.list_people.return_value = {
             'results': [
-                Mock(first_name='Ripolin', last_name='Trolapois', global_id="0123456987"),
-                Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213"),
+                Mock(first_name='Ripolin', last_name='Trolapois', global_id="0123456987", email="rit@info.be"),
+                Mock(first_name='Marie-Odile', last_name='Troufignon', global_id="789654213", email="mat@info.be"),
             ]
         }
         url = reverse('admission:autocomplete:person')
@@ -366,11 +366,11 @@ class AutocompleteTestCase(OsisPortalTestCase):
         expected = [
             {
                 'id': '0123456987',
-                'text': 'Ripolin Trolapois',
+                'text': 'Ripolin Trolapois <span class="option-small-text">(rit@info.be)</span>',
             },
             {
                 'id': '789654213',
-                'text': 'Marie-Odile Troufignon',
+                'text': 'Marie-Odile Troufignon <span class="option-small-text">(mat@info.be)</span>',
             },
         ]
         self.assertDictEqual(response.json(), {'pagination': {'more': False}, 'results': expected})

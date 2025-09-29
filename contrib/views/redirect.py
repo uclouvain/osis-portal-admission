@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -53,18 +53,19 @@ class AdmissionRedirectView(LoadDossierViewMixin, RedirectView):
             return 'admission:list'
         namespace = self.current_context
 
+        if can_make_action(admission, 'pay_after_submission'):
+            return f'admission:{namespace}:payment'
+        if can_make_action(admission, 'pay_after_request'):
+            return f'admission:{namespace}:payment'
+        if can_make_action(admission, 'update_documents'):
+            return f'admission:{namespace}:update:documents'
+
         if namespace == 'doctorate':
             if can_make_action(admission, 'retrieve_project'):
                 return f'admission:{namespace}:project'
 
         if can_make_action(admission, 'retrieve_person'):
             return f'admission:{namespace}:person'
-        if can_make_action(admission, 'update_documents'):
-            return f'admission:{namespace}:update:documents'
-        if can_make_action(admission, 'pay_after_submission'):
-            return f'admission:{namespace}:payment'
-        if can_make_action(admission, 'pay_after_request'):
-            return f'admission:{namespace}:payment'
 
         return 'admission:list'
 

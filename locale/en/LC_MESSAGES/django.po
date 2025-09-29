@@ -1420,8 +1420,9 @@ msgid "If everything appears correct, send your enrolment request below."
 msgstr ""
 
 msgid ""
-"If known, indicate, for example, the name of the laboratory, clinical department, research "
-"centre, ... where the thesis will be carried out at UCLouvain"
+"If known, indicate, for example, the name of the laboratory, clinical "
+"department, research centre, ... where the thesis will be carried out at "
+"UCLouvain"
 msgstr ""
 
 msgid "If other language regime, specify"
@@ -1929,6 +1930,9 @@ msgstr ""
 msgid "Other programme"
 msgstr ""
 
+msgid "Other scholarship"
+msgstr ""
+
 msgid "PDF file"
 msgstr ""
 
@@ -2101,13 +2105,10 @@ msgstr ""
 msgid "Project abstract"
 msgstr ""
 
-msgid "Project abstract (max. 2000 characters)"
+msgid "Project abstract (max. 4000 characters)"
 msgstr ""
 
 msgid "Project title"
-msgstr ""
-
-msgid "Project title (max. 100 characters)"
 msgstr ""
 
 msgid ""
@@ -3084,12 +3085,15 @@ msgstr ""
 msgid "e.g.: Librarian"
 msgstr ""
 
-msgid "eg:"
+msgid "eg: "
 msgstr ""
 
 msgctxt "diploma_type"
 msgid "foreign"
 msgstr "Foreign diploma"
+
+msgid "mm/yyyy"
+msgstr ""
 
 msgid "the Enrolment Office"
 msgstr ""
