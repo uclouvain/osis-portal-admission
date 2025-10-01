@@ -214,6 +214,9 @@ class DoctorateAdmissionApprovalForm(forms.Form):
         required=False,
         widget=autocomplete.ListSelect2(
             url="admission:autocomplete:institute",
+            attrs={
+                'data-minimum-input-length': 3,
+            },
         ),
     )
 
