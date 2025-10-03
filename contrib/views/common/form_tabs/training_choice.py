@@ -110,7 +110,8 @@ class AdmissionTrainingChoiceFormView(
         if self.is_on_create or self.is_general:
             # Some messages are displayed when we are outside of some specific enrolment periods
             specific_enrolment_periods = AdmissionPropositionService.retrieve_specific_enrolment_periods(
-                person=self.request.user.person
+                person=self.request.user.person,
+                year=self.admission.annee_calculee if self.is_general else None,
             )
             today_date = datetime.date.today()
 
