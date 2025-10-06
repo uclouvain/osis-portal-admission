@@ -72,8 +72,6 @@ class ExamTestCase(OsisPortalTestCase):
             "required": True,
             "title_fr": "title_fr",
             "title_en": "title_en",
-            "help_text_fr": "help_text_fr",
-            "help_text_en": "help_text_en",
             "certificate": [],
             "year": None,
             "is_valuated": False,
