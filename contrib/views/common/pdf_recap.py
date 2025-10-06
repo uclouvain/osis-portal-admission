@@ -24,13 +24,13 @@
 #
 # ##############################################################################
 from django.views.generic import RedirectView
-from osis_document.enums import PostProcessingWanted
+from osis_document_components.enums import PostProcessingWanted
 
-from osis_document.api.utils import get_remote_token
+from osis_document_components.services import get_remote_token
 
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.proposition import AdmissionPropositionService
-from osis_document.utils import get_file_url
+from osis_document_components.utils import get_file_url
 
 __all__ = [
     'AdmissionPDFRecapExportView',

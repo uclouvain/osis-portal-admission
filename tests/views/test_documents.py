@@ -130,11 +130,11 @@ class BaseDocumentsFormViewTestCase(OsisPortalTestCase):
 
     def setUp(self):
         # Mock osis document api
-        patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
+        patcher = patch("osis_document_components.services.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
         patcher = patch(
-            "osis_document.api.utils.get_remote_metadata",
+            "osis_document_components.services.get_remote_metadata",
             side_effect=lambda token: {
                 "name": "myfile",
                 'size': 1,

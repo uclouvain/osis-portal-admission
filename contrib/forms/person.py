@@ -30,7 +30,7 @@ from django.conf import settings
 from django.core import validators
 from django.forms import SelectDateWidget
 from django.utils.translation import gettext_lazy as _
-from osis_document.contrib.widgets import HiddenFileWidget
+from osis_document_components.widgets import HiddenFileWidget
 
 from admission.constants import FIELD_REQUIRED_MESSAGE, MINIMUM_BIRTH_YEAR
 from admission.contrib.enums.person import (
