@@ -146,6 +146,7 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
             attrs={
                 'data-minimum-input-length': 3,
                 'data-placeholder': _('First name / Last name'),
+                'data-html': True,
             },
         ),
         required=False,
@@ -171,9 +172,9 @@ class DoctorateAdmissionSupervisionForm(DoctorateAdmissionMemberSupervisionForm)
         js = (
             'js/dependsOn.min.js',
             # Add osis-document script in case of approved-by-pdf documents
-            'osis_document/osis-document.umd.min.js',
+            'osis_document_components/osis-document.umd.min.js',
         )
-        css = {'all': ('osis_document/osis-document.css',)}
+        css = {'all': ('osis_document_components/osis-document.css',)}
 
 
 class DoctorateAdmissionApprovalForm(forms.Form):

@@ -32,6 +32,7 @@ from django.utils.translation import gettext_lazy as _
 from osis_organisation_sdk.model.entite import Entite
 from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
 
+from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.financement import (
     ChoixTypeContratTravail,
@@ -167,11 +168,11 @@ class ProjectViewTestCase(OsisPortalTestCase):
         self.mock_countries_api = countries_api_patcher.start()
         self.addCleanup(countries_api_patcher.stop)
 
-        patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
+        patcher = patch("osis_document_components.services.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
         patcher = patch(
-            "osis_document.api.utils.get_remote_metadata",
+            "osis_document_components.services.get_remote_metadata",
             return_value={"name": "myfile", 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()
@@ -276,6 +277,8 @@ class ProjectViewTestCase(OsisPortalTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("Save and continue"))
         self.assertContains(response, '<form class="osis-form"')
+        form = response.context['form']
+        self.assertEqual(form['avec_autre_bourse_recherche'].value(), False)
 
         proposition.doctorat.sigle = 'FOOBARBAZ'
         proposition.to_dict.return_value = {
@@ -285,13 +288,15 @@ class ProjectViewTestCase(OsisPortalTestCase):
                 'code_secteur_formation': "SSH",
                 'type': TrainingType.PHD.name,
             },
-            'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
+            'autre_bourse_recherche': 'B1',
             "commission_proximite": ChoixCommissionProximiteCDSS.ECLI.name,
         }
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "dependsOn.min.js", count=1)
+        form = response.context['form']
+        self.assertEqual(form['avec_autre_bourse_recherche'].value(), True)
 
         proposition.doctorat.sigle = SCIENCE_DOCTORATE
         proposition.to_dict.return_value["commission_proximite"] = ChoixSousDomaineSciences.CHEMISTRY.name
@@ -363,6 +368,24 @@ class ProjectViewTestCase(OsisPortalTestCase):
             'type_admission': AdmissionType.ADMISSION.name,
             'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
             'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
+            'avec_autre_bourse_recherche': 'on',
+        }
+        response = self.client.post(url, data)
+        self.assertFormError(response.context['form'], 'autre_bourse_recherche', FIELD_REQUIRED_MESSAGE)
+
+        data = {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
+            'bourse_recherche': str(self.doctorate_international_scholarship.uuid),
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+
+        data = {
+            'type_admission': AdmissionType.ADMISSION.name,
+            'type_financement': ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
+            'avec_autre_bourse_recherche': 'on',
+            'autre_bourse_recherche': 'B1',
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
