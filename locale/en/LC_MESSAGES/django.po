@@ -2798,10 +2798,10 @@ msgid ""
 "Would you like to change your UCLouvain enrolment for this academic year?"
 msgstr ""
 
-#, python-format
 msgid ""
 "Would you like to change your UCLouvain enrolment for this academic year? "
-"(<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
+"(<a href=\"https://www.uclouvain.be/en/enrolment/modifying-enrolment-during-"
+"the-academic-year\" target=\"_blank\">Informations</a>)"
 msgstr ""
 
 msgid ""
@@ -2827,10 +2827,10 @@ msgstr ""
 msgid "Would you like to switch courses this academic year at UCLouvain?"
 msgstr ""
 
-#, python-format
 msgid ""
 "Would you like to switch courses this academic year at UCLouvain? (<a "
-"href=\"%(url)s\" target=\"_blank\">Informations</a>)"
+"href=\"https://www.uclouvain.be/en/enrolment/changing-courses\" "
+"target=\"_blank\">Informations</a>)"
 msgstr ""
 
 msgid ""
