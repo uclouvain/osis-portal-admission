@@ -168,11 +168,11 @@ class ProjectViewTestCase(OsisPortalTestCase):
         self.mock_countries_api = countries_api_patcher.start()
         self.addCleanup(countries_api_patcher.stop)
 
-        patcher = patch("osis_document.api.utils.get_remote_token", return_value="foobar")
+        patcher = patch("osis_document_components.services.get_remote_token", return_value="foobar")
         patcher.start()
         self.addCleanup(patcher.stop)
         patcher = patch(
-            "osis_document.api.utils.get_remote_metadata",
+            "osis_document_components.services.get_remote_metadata",
             return_value={"name": "myfile", 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()
