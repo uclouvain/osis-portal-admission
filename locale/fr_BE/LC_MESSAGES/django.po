@@ -3210,13 +3210,13 @@ msgstr ""
 "Souhaitez-vous modifier votre inscription pour cette année académique, à "
 "l'UCLouvain ?"
 
-#, python-format
 msgid ""
 "Would you like to change your UCLouvain enrolment for this academic year? "
-"(<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
+"(<a href=\"https://www.uclouvain.be/en/enrolment/modifying-enrolment-during-"
+"the-academic-year\" target=\"_blank\">Informations</a>)"
 msgstr ""
 "Souhaitez-vous modifier votre inscription pour cette année académique, à "
-"l'UCLouvain ? (<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
+"l'UCLouvain ? (<a href=\"https://www.uclouvain.be/fr/inscriptions/modifier-une-inscription\" target=\"_blank\">Informations</a>)"
 
 msgid ""
 "Would you like to create an admission request following a pre-admission "
@@ -3251,13 +3251,13 @@ msgid "Would you like to switch courses this academic year at UCLouvain?"
 msgstr ""
 "Souhaitez-vous vous réorienter pour cette année académique, à l’UCLouvain ?"
 
-#, python-format
 msgid ""
 "Would you like to switch courses this academic year at UCLouvain? (<a "
-"href=\"%(url)s\" target=\"_blank\">Informations</a>)"
+"href=\"https://www.uclouvain.be/en/enrolment/changing-courses\" "
+"target=\"_blank\">Informations</a>)"
 msgstr ""
 "Souhaitez-vous vous réorienter pour cette année académique, à l’UCLouvain ? "
-"(<a href=\"%(url)s\" target=\"_blank\">Informations</a>)"
+"(<a href=\"https://www.uclouvain.be/fr/inscriptions/se-reorienter\" target=\"_blank\">Informations</a>)"
 
 msgid ""
 "Write your abstract in the language decided with your accompanying committee."

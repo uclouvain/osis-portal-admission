@@ -53,9 +53,8 @@ class PoolQuestionsForm(forms.Form):
         label=mark_safe_lazy(
             _(
                 'Would you like to switch courses this academic year at UCLouvain? '
-                '(<a href="%(url)s" target="_blank">Informations</a>)'
+                '(<a href="https://www.uclouvain.be/en/enrolment/changing-courses" target="_blank">Informations</a>)'
             ),
-            url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#r%C3%A9orientation',
         ),
         widget=BooleanRadioSelect(),
         required=False,
@@ -66,9 +65,9 @@ class PoolQuestionsForm(forms.Form):
         label=mark_safe_lazy(
             _(
                 "Would you like to change your UCLouvain enrolment for this academic year? "
-                '(<a href="%(url)s" target="_blank">Informations</a>)'
+                '(<a href="https://www.uclouvain.be/en/enrolment/modifying-enrolment-during-the-academic-year" '
+                'target="_blank">Informations</a>)'
             ),
-            url='https://uclouvain.be/fr/etudier/inscriptions/suivi-particulier.html#modificationinscr',
         ),
         widget=BooleanRadioSelect(),
         required=False,
@@ -98,9 +97,8 @@ class PoolQuestionsForm(forms.Form):
                     'duly completed and accompanied by the mentioned annexes'
                 ),
                 url=(
-                    'https://cdn.uclouvain.be/groups/cms-editors-sic/sic/public/inscriptions/'
-                    f'{date.year}/Formulaire%20de%20modification%20-%20BAC1%20-%20Externe%20vers%20l%27'
-                    f'UCLouvain_{date.year - 2000}-{date.year - 1999}.pdf'
+                    f'https://www.uclouvain.be/fr/system/files/uclouvain_assetmanager/groups/cms-editors-sic/SIC-D10/'
+                    f'G%C3%A9rez%20votre%20inscription/FORMULAIRE-MODIF_{date.year - 2000}-{date.year - 1999}.pdf'
                 ),
             )
             self.fields['registration_change_form'].label = label
