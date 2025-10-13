@@ -140,9 +140,9 @@ class CotutelleTestCase(OsisPortalTestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.context['form'].initial['cotutelle'], None)
 
-    @patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+    @patch('osis_document_components.services.get_remote_token', return_value='foobar')
     @patch(
-        'osis_document.api.utils.get_remote_metadata',
+        'osis_document_components.services.get_remote_metadata',
         return_value={
             'name': 'myfile',
             'mimetype': PDF_MIME_TYPE,

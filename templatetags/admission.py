@@ -395,7 +395,7 @@ def field_data(
 ):
     if isinstance(data, list):
         template_string = (
-            "{% load osis_document %}"
+            "{% load osis_document_components %}"
             "{% if files %}{% document_visualizer files wanted_post_process='ORIGINAL' %}{% endif %}"
         )
         template_context = {'files': data}

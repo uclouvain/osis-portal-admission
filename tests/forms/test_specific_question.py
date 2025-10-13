@@ -32,7 +32,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 
 from admission.contrib.forms import PDF_MIME_TYPE, EMPTY_CHOICE
-from osis_document.contrib import FileUploadField
+from osis_document_components.fields import FileUploadField
 
 from admission.contrib.forms.specific_question import ConfigurableFormMixin, PlainTextWidget
 from base.tests.test_case import OsisPortalTestCase
@@ -164,12 +164,12 @@ class ConfigurableFormItemFieldTestCase(OsisPortalTestCase):
         cls.field_configurations = field_configurations
 
     def setUp(self) -> None:
-        patcher = patch('osis_document.api.utils.get_remote_token', return_value='foobar')
+        patcher = patch('osis_document_components.services.get_remote_token', return_value='foobar')
         patcher.start()
         self.addCleanup(patcher.stop)
 
         patcher = patch(
-            'osis_document.api.utils.get_remote_metadata',
+            'osis_document_components.services.get_remote_metadata',
             return_value={'name': 'myfile', 'mimetype': PDF_MIME_TYPE, 'size': 1},
         )
         patcher.start()
