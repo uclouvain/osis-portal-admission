@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 import osis_admission_sdk
 from django.conf import settings
@@ -120,8 +120,9 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         return APIClient().retrieve_dashboard(**build_mandatory_auth_headers(person)).to_dict().get('links', {})
 
     @classmethod
-    def retrieve_specific_enrolment_periods(cls, person: Person):
-        return APIClient().retrieve_specific_enrolment_periods(**build_mandatory_auth_headers(person))
+    def retrieve_specific_enrolment_periods(cls, person: Person, year: Optional[int]):
+        kwargs = {'year': year} if year else {}
+        return APIClient().retrieve_specific_enrolment_periods(**kwargs, **build_mandatory_auth_headers(person))
 
     @classmethod
     def list_proposition_create_permissions(cls, person):
