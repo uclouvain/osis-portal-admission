@@ -118,8 +118,8 @@ class PoolQuestionsForm(forms.Form):
             reorientation_form_label = format_html(
                 _('Your completed and signed reorientation form (<a href="{url}" target="_blank">{url}</a>)'),
                 url=(
-                    'https://cdn.uclouvain.be/groups/cms-editors-sic2/UCLouvain_FORMULAIRE-DE-DEMANDE-DE-REORIENTATION_'
-                    f'{academic_year}-{academic_year + 1}-ETD.pdf'
+                    'https://www.uclouvain.be/fr/system/files/uclouvain_assetmanager/groups/cms-editors-sic/SIC-D10/'
+                    f'G%C3%A9rez%20votre%20inscription/FORMULAIRE-REOR_{academic_year}-{academic_year + 1}.pdf'
                 ),
             )
             self.fields['reorientation_form'].label = reorientation_form_label
