@@ -414,6 +414,33 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
         self.assertEqual(forms[2].fields['result'].choices, past_choices)
 
+        # Check choices with future years
+        with freezegun.freeze_time('2020-01-01'):
+            response = self.client.get(self.admission_update_url)
+
+            # Check the request
+            self.assertEqual(response.status_code, 200)
+
+            base_form = response.context['base_form']
+
+            # choices of the fields
+            self.assertEqual(
+                base_form.fields['start'].choices,
+                [EMPTY_CHOICE[0]]
+                + [
+                    (2016, '2016-2017'),
+                    (2017, '2017-2018'),
+                    (2018, '2018-2019'),
+                    (2019, '2019-2020'),
+                    (2020, '2020-2021'),
+                ],
+            )
+
+            self.assertEqual(
+                base_form.fields['end'].choices,
+                base_form.fields['start'].choices,
+            )
+
     def test_with_admission_on_update_experience_form_is_forbidden_with_doctorate_and_valuated_by_doctorate(self):
         # Valuated by a doctorate admission
         self.mockapi.retrieve_educational_experience_admission.return_value.valuated_from_trainings = [
@@ -1231,11 +1258,38 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'uuid': self.educational_experience.uuid,
         }
 
+        url = resolve_url(
+            'admission:continuing-education:update:curriculum:educational_create',
+            pk=self.continuing_proposition.uuid,
+        )
+
+        # Check choices
+        with freezegun.freeze_time('2020-01-01'):
+            response = self.client.get(url)
+
+            # Check the request
+            self.assertEqual(response.status_code, 200)
+
+            base_form = response.context['base_form']
+
+            self.assertEqual(
+                base_form.fields['start'].choices,
+                [EMPTY_CHOICE[0]]
+                + [
+                    (2016, '2016-2017'),
+                    (2017, '2017-2018'),
+                    (2018, '2018-2019'),
+                    (2019, '2019-2020'),
+                ],
+            )
+
+            self.assertEqual(
+                base_form.fields['end'].choices,
+                base_form.fields['start'].choices,
+            )
+
         response = self.client.post(
-            resolve_url(
-                'admission:continuing-education:update:curriculum:educational_create',
-                pk=self.continuing_proposition.uuid,
-            ),
+            url,
             data={
                 'base_form-start': '2016',
                 'base_form-end': '2018',
