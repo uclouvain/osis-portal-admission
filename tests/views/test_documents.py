@@ -313,6 +313,29 @@ class GeneralDocumentsFormViewTestCase(BaseDocumentsFormViewTestCase):
         response = self.client.get(self.confirm_url)
         self.assertEqual(response.status_code, 403)
 
+    def test_give_control_back_to_manager_if_there_is_no_requested_document(self):
+        self.mock_proposition_api.return_value.list_general_documents.return_value = DocumentSpecificQuestionsList(
+            immediate_requested_documents=[],
+            later_requested_documents=[],
+            deadline=datetime.date(2023, 1, 1),
+        )
+
+        response = self.client.get(self.url)
+
+        # Check response
+        self.assertRedirects(
+            response=response,
+            fetch_redirect_response=False,
+            expected_url=resolve_url('admission:list'),
+        )
+
+        # Check API calls
+        mocked_value = self.mock_proposition_api.return_value
+        mocked_value.give_control_back_to_general_manager_during_document_request.assert_called_with(
+            uuid=self.proposition.uuid,
+            **self.default_kwargs,
+        )
+
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class ContinuingDocumentsFormViewTestCase(BaseDocumentsFormViewTestCase):
@@ -468,6 +491,29 @@ class ContinuingDocumentsFormViewTestCase(BaseDocumentsFormViewTestCase):
         response = self.client.get(self.confirm_url)
         self.assertEqual(response.status_code, 403)
 
+    def test_give_control_back_to_manager_if_there_is_no_requested_document(self):
+        self.mock_proposition_api.return_value.list_continuing_documents.return_value = DocumentSpecificQuestionsList(
+            immediate_requested_documents=[],
+            later_requested_documents=[],
+            deadline=datetime.date(2023, 1, 1),
+        )
+
+        response = self.client.get(self.url)
+
+        # Check response
+        self.assertRedirects(
+            response=response,
+            fetch_redirect_response=False,
+            expected_url=resolve_url('admission:list'),
+        )
+
+        # Check API calls
+        mocked_value = self.mock_proposition_api.return_value
+        mocked_value.give_control_back_to_continuing_manager_during_document_request.assert_called_with(
+            uuid=self.proposition.uuid,
+            **self.default_kwargs,
+        )
+
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl.com/document/')
 class DoctorateDocumentsFormViewTestCase(BaseDocumentsFormViewTestCase):
@@ -616,3 +662,26 @@ class DoctorateDocumentsFormViewTestCase(BaseDocumentsFormViewTestCase):
         # Only access to the confirmation page through the document form page
         response = self.client.get(self.confirm_url)
         self.assertEqual(response.status_code, 403)
+
+    def test_give_control_back_to_manager_if_there_is_no_requested_document(self):
+        self.mock_proposition_api.return_value.list_doctorate_documents.return_value = DocumentSpecificQuestionsList(
+            immediate_requested_documents=[],
+            later_requested_documents=[],
+            deadline=datetime.date(2023, 1, 1),
+        )
+
+        response = self.client.get(self.url)
+
+        # Check response
+        self.assertRedirects(
+            response=response,
+            fetch_redirect_response=False,
+            expected_url=resolve_url('admission:list'),
+        )
+
+        # Check API calls
+        mocked_value = self.mock_proposition_api.return_value
+        mocked_value.give_control_back_to_doctorate_manager_during_document_request.assert_called_with(
+            uuid=self.proposition.uuid,
+            **self.default_kwargs,
+        )

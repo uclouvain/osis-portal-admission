@@ -452,6 +452,13 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def give_control_back_to_general_manager_during_document_request(cls, person: Person, uuid):
+        return APIClient().give_control_back_to_general_manager_during_document_request(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def retrieve_continuing_education_documents(cls, person: Person, uuid):
         return APIClient().list_continuing_documents(
             uuid=uuid,
@@ -467,6 +474,13 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
+    def give_control_back_to_continuing_manager_during_document_request(cls, person: Person, uuid):
+        return APIClient().give_control_back_to_continuing_manager_during_document_request(
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
     def retrieve_doctorate_documents(cls, person: Person, uuid):
         return APIClient().list_doctorate_documents(
             uuid=uuid,
@@ -477,6 +491,13 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def update_doctorate_documents(cls, person: Person, data, uuid):
         return APIClient().create_doctorate_documents(
             completer_emplacements_documents_par_candidat_command=data,
+            uuid=uuid,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def give_control_back_to_doctorate_manager_during_document_request(cls, person: Person, uuid):
+        return APIClient().give_control_back_to_doctorate_manager_during_document_request(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
         )
