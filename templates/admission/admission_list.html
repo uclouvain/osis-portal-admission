@@ -79,6 +79,10 @@
   {% if just_submitted_from %}
     {% include "admission/modal/just_submitted_modal.html" with current_context=just_submitted_from %}
   {% endif %}
+
+  {% if documents_request_just_completed_without_document %}
+    {% include "admission/modal/documents_request_just_completed_without_document_modal.html" %}
+  {% endif %}
 {% endblock %}
 
 

@@ -123,5 +123,6 @@ PLUS_5_ISO_CODES = [
 ]
 
 PROPOSITION_JUST_SUBMITTED = 'proposition_just_submitted'
+DOCUMENTS_REQUEST_JUST_COMPLETED_WITHOUT_DOCUMENT = 'proposition_document_request_just_completed_without_document'
 MED_DENT_TRAINING_DOMAIN_PREFIXES = ['11', '13']
 MED_DENT_TRAINING_DOMAIN_REGEX = f"^({'|'.join(MED_DENT_TRAINING_DOMAIN_PREFIXES)})"
