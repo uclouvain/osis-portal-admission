@@ -114,6 +114,7 @@
       <div class="equivalence-fields">
         <div id="equivalence_not_ue">
           {% bootstrap_field_with_tooltip foreign_diploma_form.final_equivalence_decision_not_ue classes="required_field" %}
+          {% bootstrap_field foreign_diploma_form.has_access_diploma_to_higher_education_not_ue %}
           {% bootstrap_field_with_tooltip foreign_diploma_form.access_diploma_to_higher_education_not_ue %}
         </div>
 
@@ -121,6 +122,7 @@
           {% bootstrap_field foreign_diploma_form.equivalence form_group_class="form-group required_field" %}
           <div id="final_equivalence_decision_ue">
             {% bootstrap_field_with_tooltip foreign_diploma_form.final_equivalence_decision_ue classes="required_field" %}
+            {% bootstrap_field foreign_diploma_form.has_access_diploma_to_higher_education_ue %}
             {% bootstrap_field_with_tooltip foreign_diploma_form.access_diploma_to_higher_education_ue %}
           </div>
           <div id="equivalence_decision_proof">
@@ -330,6 +332,9 @@
               $('#equivalence_not_ue').dependsOn({
                   '#id_foreign_diploma-country': { is_truthy, is_not_ue_country },
               });
+              $('#container_access_diploma_to_higher_education_not_ue').dependsOn({
+                  'input[name=foreign_diploma-has_access_diploma_to_higher_education_not_ue]': { values: ['True'] },
+              });
 
               {# UE equivalence #}
               $('#equivalence_ue').dependsOn({
@@ -344,6 +349,9 @@
               });
               $('#equivalence_info').dependsOn({
                   'input[name=foreign_diploma-equivalence]': { values: ['NO'] },
+              });
+              $('#container_access_diploma_to_higher_education_ue').dependsOn({
+                  'input[name=foreign_diploma-has_access_diploma_to_higher_education_ue]': { values: ['True'] },
               });
 
               {# Attachments #}
