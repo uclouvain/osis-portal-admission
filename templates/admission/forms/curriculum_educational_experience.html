@@ -566,6 +566,21 @@
                  });
              };
 
+            /**
+             * Add a class on the button(s) to toggle the annual attachments to display a caret up or down.
+             * @param buttons the buttons to manage.
+             * @param displayAttachments true if we want to display the attachments, false otherwise.
+             */
+             function manageToggleAttachmentsButtonCaretButton (buttons, displayAttachments) {
+                 if (displayAttachments) {
+                     buttons.removeClass('dropdown');
+                     buttons.addClass('dropup');
+                 } else {
+                     buttons.removeClass('dropup');
+                     buttons.addClass('dropdown');
+                 }
+             }
+
              initializeYearlyTranscripts();
 
              {# Transcript fields #}
@@ -586,10 +601,12 @@
                      annualTranscripts.filter('input').prop('disabled', false);
                      annualTranscriptsButtons.removeClass('hidden');
                      initializeYearlyTranscripts();
+                     manageToggleAttachmentsButtonCaretButton(annualTranscriptsButtons, true);
                  } else {
                      annualTranscripts.filter('input').prop('disabled', true);
                      annualTranscripts.addClass('hidden');
                      annualTranscriptsButtons.addClass('hidden');
+                     manageToggleAttachmentsButtonCaretButton(annualTranscriptsButtons, false);
                  }
              }).change();
 
@@ -629,6 +646,7 @@
 
                  const newAttachmentsToToggle = tbodyContainer.find('.annual-transcript').first();
                  newAttachmentsToToggle.toggleClass('hidden');
+                 manageToggleAttachmentsButtonCaretButton($(this), !newAttachmentsToToggle.hasClass('hidden'));
              });
 
              {# Show that the annual attachments are required except when the result is pending #}
