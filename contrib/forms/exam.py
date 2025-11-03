@@ -44,11 +44,10 @@ class ExamForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, person, is_valuated, certificate_title, certificate_help_text, *args, **kwargs):
+    def __init__(self, person, is_valuated, certificate_title, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['certificate'].label = certificate_title
-        self.fields['certificate'].help_text = certificate_help_text
         self.fields['year'].choices = get_past_academic_years_choices(
             person,
             format_label_function=lambda academic_year: str(academic_year.year + 1),
