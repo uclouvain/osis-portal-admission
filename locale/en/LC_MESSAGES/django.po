@@ -1658,6 +1658,7 @@ msgstr ""
 msgid "Listening comprehension"
 msgstr ""
 
+msgctxt "admission"
 msgid "Logout"
 msgstr ""
 
