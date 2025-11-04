@@ -57,12 +57,19 @@
 
       {% if form.is_non_resident %}
         {% panel _("Enrolment in limited enrolment bachelor's course") %}
-          {% bootstrap_field form.is_non_resident form_group_class="form-group required_field" %}
-          {% if forbid_enrolment_limited_course_for_non_resident %}
-            <p class="alert alert-warning" id="non-resident-error">
-              {{ forbid_enrolment_limited_course_for_non_resident|safe }}
-            </p>
-          {% endif %}
+          {% bootstrap_field_with_tooltip form.is_non_resident classes="form-group required_field" %}
+          <div id="is-resident-fields">
+            {% bootstrap_field_with_tooltip form.residence_certificate classes="form-group required_field" %}
+            {% bootstrap_field form.resident_competitive_entrance_examination form_group_class="form-group required_field" %}
+            {% bootstrap_field form.residence_student_form form_group_class="form-group required_field" %}
+          </div>
+          <div id="is-non-resident-fields">
+            {% bootstrap_field form.non_resident_file form_group_class="form-group required_field" %}
+            {% if form.non_resident_with_second_year_enrolment %}
+              {% bootstrap_field form.non_resident_with_second_year_enrolment form_group_class="form-group required_field" %}
+              {% bootstrap_field form.non_resident_with_second_year_enrolment_form form_group_class="form-group required_field" %}
+            {% endif %}
+          </div>
         {% endpanel %}
       {% endif %}
 
@@ -218,9 +225,19 @@
     });
 
     {% if forms.1 and forms.1.is_non_resident %}
-      {% if forbid_enrolment_limited_course_for_non_resident %}
-        $('#non-resident-error').dependsOn({
-          'input[name=pool_questions-is_non_resident]': {
+      $('#is-resident-fields').dependsOn({
+        'input[name=pool_questions-is_non_resident]': {
+          values: ['True'],
+        },
+      });
+      $('#is-non-resident-fields').dependsOn({
+        'input[name=pool_questions-is_non_resident]': {
+          values: ['False'],
+        },
+      });
+      {% if form.1.non_resident_with_second_year_enrolment %}
+        $('#id_non_resident_with_second_year_enrolment_form').dependsOn({
+          'input[name=pool_questions-non_resident_with_second_year_enrolment]': {
             values: ['True'],
           },
         });
