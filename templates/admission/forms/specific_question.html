@@ -67,7 +67,9 @@
             {% bootstrap_field form.non_resident_file form_group_class="form-group required_field" %}
             {% if form.non_resident_with_second_year_enrolment %}
               {% bootstrap_field form.non_resident_with_second_year_enrolment form_group_class="form-group required_field" %}
-              {% bootstrap_field form.non_resident_with_second_year_enrolment_form form_group_class="form-group required_field" %}
+              <div id="non-resident-second-years-form">
+                {% bootstrap_field form.non_resident_with_second_year_enrolment_form form_group_class="form-group required_field" %}
+              </div>
             {% endif %}
           </div>
         {% endpanel %}
@@ -235,8 +237,8 @@
           values: ['False'],
         },
       });
-      {% if form.1.non_resident_with_second_year_enrolment %}
-        $('#id_non_resident_with_second_year_enrolment_form').dependsOn({
+      {% if forms.1.non_resident_with_second_year_enrolment %}
+        $('#non-resident-second-years-form').dependsOn({
           'input[name=pool_questions-non_resident_with_second_year_enrolment]': {
             values: ['True'],
           },
