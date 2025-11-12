@@ -77,10 +77,8 @@ class AdmissionExamFormView(LoadDossierViewMixin, WebServiceFormMixin, FormView)
         kwargs["is_valuated"] = self.exam['is_valuated']
         if get_language() == settings.LANGUAGE_CODE:
             kwargs['certificate_title'] = self.exam['title_fr']
-            kwargs['certificate_help_text'] = self.exam['help_text_fr']
         else:
             kwargs['certificate_title'] = self.exam['title_en']
-            kwargs['certificate_help_text'] = self.exam['help_text_en']
         return kwargs
 
     def get_initial(self):

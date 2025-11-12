@@ -25,7 +25,7 @@
 # ##############################################################################
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django.views.generic import TemplateView
 
 from admission.constants import PROPOSITION_JUST_SUBMITTED
@@ -68,7 +68,7 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
                 'access your registrations.'
             )
             logout_url = reverse('admission:logout')
-            btn_msg = _('Logout')
+            btn_msg = pgettext_lazy('admission', 'Logout')
 
             display_warning_messages(
                 self.request,
