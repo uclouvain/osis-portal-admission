@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django.views.generic import TemplateView
@@ -42,7 +41,7 @@ __namespace__ = False
 from continuing_education.views.common import display_warning_messages
 
 
-class AdmissionListView(LoginRequiredMixin, TemplateView):
+class AdmissionListView(TemplateView):
     urlpatterns = {'list': ''}
     template_name = "admission/admission_list.html"
 
@@ -79,7 +78,7 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class DoctorateAdmissionMemberListView(LoginRequiredMixin, TemplateView):
+class DoctorateAdmissionMemberListView(TemplateView):
     urlpatterns = {'supervised-list': 'supervised'}
     template_name = "admission/doctorate/supervised_list.html"
 

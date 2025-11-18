@@ -23,11 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from datetime import date
+
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import resolve_url
 from django.template.loader import select_template
-from django.utils.datetime_safe import date
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -44,7 +45,7 @@ LATE_MESSAGE_POOLS = [
 LATE_MESSAGE_DAYS_THRESHOLD = 31
 
 
-class LoadViewMixin(LoginRequiredMixin, ContextMixin):
+class LoadViewMixin(ContextMixin):
     @property
     def current_context(self):
         return self.request.resolver_match.namespaces[1]

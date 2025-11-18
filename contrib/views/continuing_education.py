@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import BadRequest
 from django.http import JsonResponse
 from django.views import View
@@ -37,7 +36,7 @@ __all__ = [
 ]
 
 
-class RetrieveContinuingEducationInformationView(LoginRequiredMixin, View):
+class RetrieveContinuingEducationInformationView(View):
     name = 'retrieve-continuing-education-information'
     urlpatterns = {
         'retrieve_continuing_education_information': 'retrieve-continuing-education-information',

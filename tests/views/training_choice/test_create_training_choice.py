@@ -74,12 +74,12 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
 
         self.assertEqual(
             form.fields['sector'].widget.choices,
-            (
+            [
                 ('', ' - '),
                 ('SSH', 'SSH - Foobar'),
                 ('SST', 'SST - Barbaz'),
                 ('SSS', 'SSS - Foobarbaz'),
-            ),
+            ],
         )
 
         self.assertFalse(form.fields['has_erasmus_mundus_scholarship'].initial)
@@ -950,7 +950,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         )
 
     def test_doctorate_education_form_initialization_after_a_pre_admission(self):
-        default_choices = [['NO', _('No')]]
+        default_choices = [('NO', _('No'))]
 
         self.mock_proposition_api.return_value.list_doctorate_pre_admissions.return_value = []
 
