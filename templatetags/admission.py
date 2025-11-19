@@ -429,11 +429,13 @@ def panel(context, title='', title_level=4, additional_class='', **kwargs):
     :param additional_class: css class to add
     :type context: django.template.context.RequestContext
     """
-    context['title'] = title
-    context['title_level'] = title_level
-    context['additional_class'] = additional_class
-    context['attributes'] = {k.replace('_', '-'): v for k, v in kwargs.items()}
-    return context
+    return {
+        **context.flatten(),
+        'title': title,
+        'title_level': title_level,
+        'additional_class': additional_class,
+        'attributes': {k.replace('_', '-'): v for k, v in kwargs.items()},
+    }
 
 
 @register.simple_tag(takes_context=True)
