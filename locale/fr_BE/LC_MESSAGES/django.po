@@ -1112,7 +1112,7 @@ msgid "Diploma"
 msgstr "Diplôme"
 
 msgid "Diploma of aptitude for access to higher education (DAES)"
-msgstr "Diplôme d'Aptitude à accéder à l'Enseignement supérieur (DAES)"
+msgstr "Diplôme d'Aptitude à accéder à l'Enseignement Supérieur (DAES)"
 
 msgid "Diploma translation"
 msgstr "Traduction du diplôme"
@@ -1759,10 +1759,11 @@ msgstr ""
 
 msgid ""
 "If your equivalency decision does not give access to the desired training, "
-"please provide your diploma of aptitude for access to higher education (DAES)"
+"do you hold your diploma of aptitude for access to higher education (DAES)?"
 msgstr ""
-"Si votre équivalence ne donne pas accès à la formation souhaitée, veuillez "
-"fournir votre Diplôme d’Aptitude à accéder à l’Enseignement supérieur (DAES)"
+"Si votre équivalence ne donne pas accès à la formation souhaitée, êtes-vous "
+"en possession d'un Diplôme d'Aptitude à accéder à l'Enseignement Supérieur "
+"(DAES) ?"
 
 msgid "Immediately"
 msgstr "Immédiatement"

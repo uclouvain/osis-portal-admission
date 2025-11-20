@@ -43,6 +43,7 @@ from admission.contrib.enums.secondary_studies import (
 from admission.contrib.forms import EMPTY_CHOICE
 from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
+    RadioBooleanField,
     autocomplete,
     get_country_initial_choices,
     get_high_school_initial_choices,
@@ -362,10 +363,10 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         max_files=2,
         required=False,
     )
-    access_diploma_to_higher_education_not_ue = FileUploadField(
+    has_access_diploma_to_higher_education_not_ue = RadioBooleanField(
         label=_(
-            'If your equivalency decision does not give access to the desired training, please provide your diploma of '
-            'aptitude for access to higher education (DAES)'
+            'If your equivalency decision does not give access to the desired training, do you hold your diploma of '
+            'aptitude for access to higher education (DAES)?'
         ),
         help_text=(
             "<a href='{link}' target='_blank'>{link}</a>".format(
@@ -373,6 +374,12 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
                 'diplome-daptitude-a-acceder-a-lenseignement-superieur-daes/'
             )
         ),
+        required=False,
+        empty_value=False,
+        initial=False,
+    )
+    access_diploma_to_higher_education_not_ue = FileUploadField(
+        label=_('Diploma of aptitude for access to higher education (DAES)'),
         max_files=1,
         required=False,
     )
@@ -388,10 +395,10 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
         max_files=2,
         required=False,
     )
-    access_diploma_to_higher_education_ue = FileUploadField(
+    has_access_diploma_to_higher_education_ue = RadioBooleanField(
         label=_(
-            'If your equivalency decision does not give access to the desired training, please provide your diploma of '
-            'aptitude for access to higher education (DAES)'
+            'If your equivalency decision does not give access to the desired training, do you hold your diploma of '
+            'aptitude for access to higher education (DAES)?'
         ),
         help_text=(
             "<a href='{link}' target='_blank'>{link}</a>".format(
@@ -399,6 +406,12 @@ class BachelorAdmissionEducationForeignDiplomaForm(forms.Form):
                 'diplome-daptitude-a-acceder-a-lenseignement-superieur-daes/'
             )
         ),
+        required=False,
+        empty_value=False,
+        initial=False,
+    )
+    access_diploma_to_higher_education_ue = FileUploadField(
+        label=_('Diploma of aptitude for access to higher education (DAES)'),
         max_files=1,
         required=False,
     )
