@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,7 +28,8 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField, get_superior_institute_initial_choices
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
+from admission.contrib.forms import get_superior_institute_initial_choices
 
 
 class DoctorateAdmissionCotutelleForm(forms.Form):
@@ -48,7 +49,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         label=_("Motivation for joint supervision"),
         required=False,
         widget=forms.Textarea(attrs={'rows': 2}),
-        max_length=255,
+        max_length=1024,
     )
 
     institution_fwb = forms.NullBooleanField(
@@ -120,7 +121,7 @@ class DoctorateAdmissionCotutelleForm(forms.Form):
         cleaned_data = super().clean()
 
         if cleaned_data.get("cotutelle") == "YES":
-            for field in ['motivation', 'demande_ouverture']:
+            for field in ['motivation']:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
             if cleaned_data.get('institution_fwb') is None:
