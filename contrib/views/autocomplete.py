@@ -29,7 +29,6 @@ from typing import List
 
 from dal import autocomplete
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
@@ -123,7 +122,7 @@ class PaginatedAutocompleteMixin:
         )
 
 
-class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class DoctorateAutocomplete(autocomplete.Select2ListView):
     urlpatterns = 'doctorate'
 
     def get_list(self):
@@ -151,7 +150,7 @@ class DoctorateAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         return results
 
 
-class GeneralEducationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class GeneralEducationAutocomplete(autocomplete.Select2ListView):
     urlpatterns = 'general-education'
 
     def get_list(self):
@@ -202,7 +201,7 @@ class MixedTrainingAutocomplete(GeneralEducationAutocomplete):
         return iufc_trainings + certificate
 
 
-class ScholarshipAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class ScholarshipAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'scholarship'
 
     def get_list(self):
@@ -223,7 +222,7 @@ class ScholarshipAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, au
         ]
 
 
-class CountryAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class CountryAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'country'
 
     def get_list(self):
@@ -278,7 +277,7 @@ class CountryForEducationAutocomplete(CountryAutocomplete):
         ]
 
 
-class DiplomaticPostAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class DiplomaticPostAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'diplomatic-post'
 
     def get_list(self):
@@ -309,7 +308,7 @@ class DiplomaticPostAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin,
         return final_results
 
 
-class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class CityAutocomplete(autocomplete.Select2ListView):
     urlpatterns = 'city'
 
     def get_list(self):
@@ -327,7 +326,7 @@ class CityAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
         return [dict(id=city.name, text=city.name) for city in results]
 
 
-class LanguageAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class LanguageAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'language'
 
     def get_list(self):
@@ -369,7 +368,7 @@ class LanguageAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autoc
         ]
 
 
-class TutorAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class TutorAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'tutor'
 
     def get_list(self):
@@ -399,7 +398,7 @@ class PersonAutocomplete(TutorAutocomplete):
         )
 
 
-class HighSchoolAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class HighSchoolAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'high-school'
 
     def get_list(self):
@@ -427,7 +426,7 @@ class HighSchoolAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, aut
         ]
 
 
-class InstituteAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class InstituteAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'institute'
 
     def get_list(self):
@@ -451,7 +450,7 @@ class InstituteAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, auto
         ]
 
 
-class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2ListView):
+class InstituteLocationAutocomplete(autocomplete.Select2ListView):
     urlpatterns = 'institute-location'
 
     def get_list(self):
@@ -471,7 +470,7 @@ class InstituteLocationAutocomplete(LoginRequiredMixin, autocomplete.Select2List
         return formatted_results
 
 
-class DiplomaAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class DiplomaAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'diploma'
 
     def get_list(self):
@@ -493,7 +492,7 @@ class DiplomaAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autoco
         ]
 
 
-class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class SuperiorNonUniversityAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'superior-non-university'
 
     def get_list(self):
@@ -520,7 +519,7 @@ class SuperiorNonUniversityAutocomplete(LoginRequiredMixin, PaginatedAutocomplet
         ]
 
 
-class UniversityAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class UniversityAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'university'
 
     def get_list(self):
@@ -547,7 +546,7 @@ class UniversityAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, aut
         ]
 
 
-class SuperiorInstituteAutocomplete(LoginRequiredMixin, PaginatedAutocompleteMixin, autocomplete.Select2ListView):
+class SuperiorInstituteAutocomplete(PaginatedAutocompleteMixin, autocomplete.Select2ListView):
     urlpatterns = 'superior-institute'
 
     def get_list(self):

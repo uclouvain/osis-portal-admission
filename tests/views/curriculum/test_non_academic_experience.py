@@ -308,8 +308,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the context data
         self.assertFormError(
-            response=response,
-            form='form',
+            form=response.context['form'],
             field=None,
             errors=gettext("The start date must be earlier than or the same as the end date."),
         )
@@ -333,8 +332,7 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check the context data
         self.assertFormError(
-            response=response,
-            form='form',
+            form=response.context['form'],
             field=None,
             errors=gettext("The start date must be earlier than or the same as the end date."),
         )
