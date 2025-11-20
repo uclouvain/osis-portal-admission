@@ -32,8 +32,10 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.functional import lazy
-from django.utils.translation import get_language, gettext, gettext_lazy as _
+from django.utils.translation import get_language, gettext
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
+from osis_document_components.fields import FileUploadField
 
 from admission.constants import MINIMUM_BIRTH_YEAR
 from admission.services.campus import AdmissionCampusService
@@ -48,7 +50,6 @@ from admission.services.reference import (
     SuperiorInstituteService,
 )
 from admission.utils import format_entity_title, format_scholarship, format_school_title
-from osis_document_components.fields import FileUploadField
 from reference.services.scholarship import ScholarshipService
 
 EMPTY_CHOICE = (('', ' - '),)
@@ -196,6 +197,7 @@ def get_past_academic_years_choices(
     current_year=None,
     academic_years=None,
     format_label_function=None,
+    additional_years: set[int] | None = None,
 ):
     """Return a list of choices of past academic years."""
     if academic_years is None:
@@ -203,6 +205,9 @@ def get_past_academic_years_choices(
 
     if current_year is None:
         current_year = AcademicYearService.get_current_academic_year(person, academic_years)
+
+    if additional_years is None:
+        additional_years = set()
 
     if exclude_current:
         current_year -= 1
@@ -219,7 +224,7 @@ def get_past_academic_years_choices(
     return EMPTY_CHOICE + tuple(
         (academic_year.year, format_label_function(academic_year))
         for academic_year in academic_years
-        if current_year >= academic_year.year >= lower_year
+        if current_year >= academic_year.year >= lower_year or academic_year.year in additional_years
     )
 
 
