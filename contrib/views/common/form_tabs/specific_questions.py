@@ -91,6 +91,10 @@ class SpecificQuestionsFormView(
         if self.display_pool_questions_form and self.pool_questions:
             kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
             kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
+            kwargs['non_resident_quota_pool_start_date'] = self.pool_questions['non_resident_quota_pool_start_date']
+            kwargs['non_resident_quota_pool_start_time'] = self.pool_questions['non_resident_quota_pool_start_time']
+            kwargs['non_resident_quota_pool_end_date'] = self.pool_questions['non_resident_quota_pool_end_date']
+            kwargs['non_resident_quota_pool_end_time'] = self.pool_questions['non_resident_quota_pool_end_time']
         return super().get_context_data(**kwargs)
 
     def get_forms(self):

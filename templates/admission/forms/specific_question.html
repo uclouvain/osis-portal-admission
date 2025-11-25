@@ -64,6 +64,12 @@
             {% bootstrap_field form.residence_student_form form_group_class="form-group required_field" %}
           </div>
           <div id="is-non-resident-fields">
+            <div class="alert alert-info">
+              {% blocktranslate with start_date=non_resident_quota_pool_start_date|date:'l jS F' start_time=non_resident_quota_pool_start_time|date:"g:i a" end_date=non_resident_quota_pool_end_date|date:'l jS F' end_time=non_resident_quota_pool_end_time|date:"g:i a" trimmed %}
+                As a non-resident, you can start to fill in your online enrolment form BUT you will
+                only be able to confirm it from {{ start_date }} {{ start_time }} to {{ end_date }} {{ end_time }}
+              {% endblocktranslate %}
+            </div>
             {% bootstrap_field form.non_resident_file form_group_class="form-group required_field" %}
             {% if form.non_resident_with_second_year_enrolment %}
               {% bootstrap_field form.non_resident_with_second_year_enrolment form_group_class="form-group required_field" %}
