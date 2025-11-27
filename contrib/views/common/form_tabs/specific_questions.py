@@ -89,12 +89,12 @@ class SpecificQuestionsFormView(
         kwargs['form'] = next((form for form in kwargs['forms'] if form.visible_fields()), kwargs['forms'][0])
         kwargs['BE_ISO_CODE'] = BE_ISO_CODE
         if self.display_pool_questions_form and self.pool_questions:
-            kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
-            kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
-            kwargs['non_resident_quota_pool_start_date'] = self.pool_questions['non_resident_quota_pool_start_date']
-            kwargs['non_resident_quota_pool_start_time'] = self.pool_questions['non_resident_quota_pool_start_time']
-            kwargs['non_resident_quota_pool_end_date'] = self.pool_questions['non_resident_quota_pool_end_date']
-            kwargs['non_resident_quota_pool_end_time'] = self.pool_questions['non_resident_quota_pool_end_time']
+            kwargs['reorientation_pool_end_date'] = self.pool_questions.get('reorientation_pool_end_date')
+            kwargs['modification_pool_end_date'] = self.pool_questions.get('modification_pool_end_date')
+            kwargs['non_resident_quota_pool_start_date'] = self.pool_questions.get('non_resident_quota_pool_start_date')
+            kwargs['non_resident_quota_pool_start_time'] = self.pool_questions.get('non_resident_quota_pool_start_time')
+            kwargs['non_resident_quota_pool_end_date'] = self.pool_questions.get('non_resident_quota_pool_end_date')
+            kwargs['non_resident_quota_pool_end_time'] = self.pool_questions.get('non_resident_quota_pool_end_time')
         return super().get_context_data(**kwargs)
 
     def get_forms(self):

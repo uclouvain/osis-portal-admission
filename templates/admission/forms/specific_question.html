@@ -65,7 +65,7 @@
           </div>
           <div id="is-non-resident-fields">
             <div class="alert alert-info">
-              {% blocktranslate with start_date=non_resident_quota_pool_start_date|date:'l jS F' start_time=non_resident_quota_pool_start_time|date:"g:i a" end_date=non_resident_quota_pool_end_date|date:'l jS F' end_time=non_resident_quota_pool_end_time|date:"g:i a" trimmed %}
+              {% blocktranslate with start_date=non_resident_quota_pool_start_date|date:'DATE_FORMAT' start_time=non_resident_quota_pool_start_time|date:"TIME_FORMAT" end_date=non_resident_quota_pool_end_date|date:'DATE_FORMAT' end_time=non_resident_quota_pool_end_time|date:"TIME_FORMAT" trimmed %}
                 As a non-resident, you can start to fill in your online enrolment form BUT you will
                 only be able to confirm it from {{ start_date }} {{ start_time }} to {{ end_date }} {{ end_time }}
               {% endblocktranslate %}
@@ -235,12 +235,12 @@
     {% if forms.1 and forms.1.is_non_resident %}
       $('#is-resident-fields').dependsOn({
         'input[name=pool_questions-is_non_resident]': {
-          values: ['True'],
+          values: ['False'],
         },
       });
       $('#is-non-resident-fields').dependsOn({
         'input[name=pool_questions-is_non_resident]': {
-          values: ['False'],
+          values: ['True'],
         },
       });
       {% if forms.1.non_resident_with_second_year_enrolment %}

@@ -655,6 +655,7 @@ class FormationGeneraleBusinessException(Enum):
     InformationsVisaNonCompleteesException = "FORMATION-GENERALE-20"
     BoursesEtudesNonRenseignees = "FORMATION-GENERALE-36"
     ExamenNonCompletesException = "FORMATION-GENERALE-39"
+    UneSeuleFormationContingentePossible = "FORMATION-GENERALE-41"
 
 
 class FormationContinueBusinessException(Enum):
@@ -696,6 +697,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourDiplomeBelgeException,
         FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourDiplomeEtrangerException,
         FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourAlternativeException,
+        FormationGeneraleBusinessException.UneSeuleFormationContingentePossible,
     },
     'curriculum': {
         PropositionBusinessException.FichierCurriculumNonRenseigneException,

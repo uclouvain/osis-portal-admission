@@ -93,7 +93,7 @@
                       <li>
                         <p>
                         {% if pool_start_date and pool_end_date and pool_start_time and pool_end_time %}
-                          {% blocktrans with start_date=pool_start_date|date:'l jS F' end_date=pool_end_date|date:'l jS F' start_time=pool_start_time|date:"g:i a" end_time=pool_end_time|date:"g:i a" trimmed %}
+                          {% blocktrans with start_date=pool_start_date|date:'DATE_FORMAT' end_date=pool_end_date|date:'DATE_FORMAT' start_time=pool_start_time|date:"TIME_FORMAT" end_time=pool_end_time|date:"TIME_FORMAT" trimmed %}
                             Applications for non-resident applicants to limited-enrollment programs may be initiated
                             at any time, but can only be submitted between {{ start_date }} at {{ start_time }}
                             and {{ end_date }} at {{ end_time }}.
