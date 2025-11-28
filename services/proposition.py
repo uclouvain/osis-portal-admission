@@ -697,7 +697,6 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourDiplomeBelgeException,
         FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourDiplomeEtrangerException,
         FormationGeneraleBusinessException.EtudesSecondairesNonCompleteesPourAlternativeException,
-        FormationGeneraleBusinessException.UneSeuleFormationContingentePossible,
     },
     'curriculum': {
         PropositionBusinessException.FichierCurriculumNonRenseigneException,
@@ -775,6 +774,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.ResidenceAuSensDuDecretNonDisponiblePourInscriptionException,
         FormationContinueBusinessException.InformationsComplementairesNonRenseigneesException,
         FormationGeneraleBusinessException.InformationsVisaNonCompleteesException,
+        FormationGeneraleBusinessException.UneSeuleFormationContingentePossible,
     },
     'documents': set(),
     'payment': set(),
