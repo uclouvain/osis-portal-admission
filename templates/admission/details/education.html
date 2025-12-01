@@ -69,13 +69,19 @@
           {% field_data _('Has this diploma been recognised as equivalent by the French Community of Belgium?') foreign_diploma.equivalence|enum_display:'Equivalence' %}
           {% if foreign_diploma.equivalence == 'YES' %}
             {% field_data _("Copy of both sides of the equivalency decision by the Ministry of the French-speaking Community of Belgium") foreign_diploma.final_equivalence_decision_ue %}
-            {% field_data _("Diploma of aptitude for access to higher education (DAES)") foreign_diploma.access_diploma_to_higher_education_ue %}
+            {% field_data _("If your equivalency decision does not give access to the desired training, do you hold your diploma of aptitude for access to higher education (DAES)?") foreign_diploma.has_access_diploma_to_higher_education_ue %}
+            {% if foreign_diploma.has_access_diploma_to_higher_education_ue %}
+              {% field_data _("Diploma of aptitude for access to higher education (DAES)") foreign_diploma.access_diploma_to_higher_education_ue %}
+            {% endif %}
           {% elif foreign_diploma.equivalence == 'PENDING' %}
             {% field_data _('Proof of equivalency request') foreign_diploma.equivalence_decision_proof %}
           {% endif %}
         {% else %}
           {% field_data _("Copy of both sides of the equivalency decision by the Ministry of the French-speaking Community of Belgium") foreign_diploma.final_equivalence_decision_not_ue %}
-          {% field_data _("Diploma of aptitude for access to higher education (DAES)") foreign_diploma.access_diploma_to_higher_education_not_ue %}
+          {% field_data _("If your equivalency decision does not give access to the desired training, do you hold your diploma of aptitude for access to higher education (DAES)?") foreign_diploma.has_access_diploma_to_higher_education_not_ue %}
+          {% if foreign_diploma.has_access_diploma_to_higher_education_not_ue %}
+            {% field_data _("Diploma of aptitude for access to higher education (DAES)") foreign_diploma.access_diploma_to_higher_education_not_ue %}
+          {% endif %}
         {% endif %}
       {% endif %}
     {% endpanel %}

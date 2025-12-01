@@ -1491,7 +1491,7 @@ msgstr ""
 
 msgid ""
 "If your equivalency decision does not give access to the desired training, "
-"please provide your diploma of aptitude for access to higher education (DAES)"
+"do you hold your diploma of aptitude for access to higher education (DAES)?"
 msgstr ""
 
 msgid "Immediately"
@@ -1809,6 +1809,11 @@ msgstr ""
 msgid "No knowledge of languages provided."
 msgstr ""
 
+msgid ""
+"No more documents are missing. The enrolment office will therefore continue "
+"to process the file. You must not perform any action."
+msgstr ""
+
 msgid "No one invited"
 msgstr ""
 
@@ -1855,6 +1860,9 @@ msgid "Number"
 msgstr ""
 
 msgid "Number of credits earned at the end of the academic year."
+msgstr ""
+
+msgid "OK"
 msgstr ""
 
 msgctxt "admission"

@@ -46,6 +46,7 @@ from admission.constants import (
 from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.training_choice import TrainingType
+from admission.contrib.forms import EMPTY_CHOICE, FORM_SET_PREFIX
 from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
     CustomDateInput,
@@ -59,7 +60,6 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     get_superior_institute_initial_choices,
 )
-from admission.contrib.forms import EMPTY_CHOICE, FORM_SET_PREFIX
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 from admission.utils import mark_safe_lazy
@@ -580,7 +580,17 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
         super().__init__(educational_experience, *args, **kwargs)
 
         # Initialize the field with dynamic choices
-        academic_years_choices = get_past_academic_years_choices(person)
+        already_selected_years = (
+            set(range(self.initial['start'], self.initial['end'] + 1))
+            if self.initial and self.initial['start'] and self.initial['end']
+            else set()
+        )
+
+        academic_years_choices = get_past_academic_years_choices(
+            person,
+            additional_years=already_selected_years,
+        )
+
         self.fields['start'].choices = academic_years_choices
         self.fields['end'].choices = academic_years_choices
 
