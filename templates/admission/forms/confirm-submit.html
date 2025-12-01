@@ -91,12 +91,21 @@
                     {# Pool non-resident contingenté non-ouvert #}
                     {% if error_code == 'ADMISSION-10' %}
                       <li>
-                        {# TODO message #}
                         <p>
-                          {% blocktrans with start_date=pool_start_date|date:'d/m/Y' end_date=pool_end_date|date:'d/m/Y' trimmed %}
-                            If you are applying for a limited enrolment bachelor's course, the application can only be
-                            submitted during the period from {{ start_date }} to {{ end_date }}.
-                          {% endblocktrans %}</p>
+                        {% if pool_start_date and pool_end_date and pool_start_time and pool_end_time %}
+                          {% blocktrans with start_date=pool_start_date|date:'DATE_FORMAT' end_date=pool_end_date|date:'DATE_FORMAT' start_time=pool_start_time|date:"TIME_FORMAT" end_time=pool_end_time|date:"TIME_FORMAT" trimmed %}
+                            Applications for non-resident applicants to limited-enrollment programs may be initiated
+                            at any time, but can only be submitted between {{ start_date }} at {{ start_time }}
+                            and {{ end_date }} at {{ end_time }}.
+                          {% endblocktrans %}
+                        {% else %}
+                          {% blocktrans trimmed %}
+                            Applications for non-resident applicants to limited-enrollment programs may be
+                            initiated at any time, but submission for validation will only be possible during
+                            the official application period, which will be announced at a later date.
+                          {% endblocktrans %}
+                        {% endif %}
+                        </p>
                       </li>
 
                       {# Pool non déterminé #}
