@@ -55,11 +55,6 @@
       {% else %}
         {% translate 'You do not specify if you are applying as resident or non-resident (as defined by government decree).' %}
       {% endif %}
-      {% if pool_questions.is_non_resident and "forbid_enrolment_limited_course_for_non_resident" in pool_questions %}
-        <p class="alert alert-warning mt-1">
-          {{ pool_questions.forbid_enrolment_limited_course_for_non_resident|safe }}
-        </p>
-      {% endif %}
     {% endpanel %}
   {% else %}
     {% if pool_questions.is_external_modification is not None or pool_questions.modification_pool_end_date %}
