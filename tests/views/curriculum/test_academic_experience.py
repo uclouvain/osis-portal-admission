@@ -167,7 +167,7 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
         self.assertRedirects(
             response=response,
             expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -348,27 +348,27 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         )
         self.assertEqual(
             base_form.fields['country'].widget.choices,
-            EMPTY_CHOICE + ((self.be_country.iso_code, self.be_country.name),),
+            [*EMPTY_CHOICE, (self.be_country.iso_code, self.be_country.name)]
         )
         self.assertTrue(base_form.fields['country'].is_ue_country)
         self.assertEqual(
             base_form.fields['linguistic_regime'].widget.choices,
-            EMPTY_CHOICE + ((self.language_without_translation.code, self.language_without_translation.name),),
+            [*EMPTY_CHOICE, (self.language_without_translation.code, self.language_without_translation.name)]
         )
         self.assertEqual(
             base_form.fields['program'].widget.choices,
-            EMPTY_CHOICE + ((self.first_diploma.uuid, self.first_diploma.title),),
+            [*EMPTY_CHOICE, (self.first_diploma.uuid, self.first_diploma.title)]
         )
         self.assertEqual(
             base_form.fields['institute'].widget.choices,
-            EMPTY_CHOICE
-            + (
+            [
+                *EMPTY_CHOICE,
                 (
                     self.institute.uuid,
                     f'{self.institute.name}'
                     f' <span class="school-address">Boulevard de l\'Université 1, 1348 Louvain-la-Neuve</span>',
-                ),
-            ),
+                )
+            ]
         )
 
         # Check that no field is hidden or disabled
@@ -413,6 +413,33 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             },
         )
         self.assertEqual(forms[2].fields['result'].choices, past_choices)
+
+        # Check choices with future years
+        with freezegun.freeze_time('2020-01-01'):
+            response = self.client.get(self.admission_update_url)
+
+            # Check the request
+            self.assertEqual(response.status_code, 200)
+
+            base_form = response.context['base_form']
+
+            # choices of the fields
+            self.assertEqual(
+                base_form.fields['start'].choices,
+                [EMPTY_CHOICE[0]]
+                + [
+                    (2016, '2016-2017'),
+                    (2017, '2017-2018'),
+                    (2018, '2018-2019'),
+                    (2019, '2019-2020'),
+                    (2020, '2020-2021'),
+                ],
+            )
+
+            self.assertEqual(
+                base_form.fields['end'].choices,
+                base_form.fields['start'].choices,
+            )
 
     def test_with_admission_on_update_experience_form_is_forbidden_with_doctorate_and_valuated_by_doctorate(self):
         # Valuated by a doctorate admission
@@ -926,7 +953,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertRedirects(
             response=response,
             expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -988,7 +1015,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertRedirects(
             response=response,
             expected_url=resolve_url('admission:general-education:update:curriculum', pk=self.general_proposition.uuid)
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -1053,7 +1080,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'admission:continuing-education:update:curriculum',
                 pk=self.continuing_proposition.uuid,
             )
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -1231,11 +1258,38 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'uuid': self.educational_experience.uuid,
         }
 
+        url = resolve_url(
+            'admission:continuing-education:update:curriculum:educational_create',
+            pk=self.continuing_proposition.uuid,
+        )
+
+        # Check choices
+        with freezegun.freeze_time('2020-01-01'):
+            response = self.client.get(url)
+
+            # Check the request
+            self.assertEqual(response.status_code, 200)
+
+            base_form = response.context['base_form']
+
+            self.assertEqual(
+                base_form.fields['start'].choices,
+                [EMPTY_CHOICE[0]]
+                + [
+                    (2016, '2016-2017'),
+                    (2017, '2017-2018'),
+                    (2018, '2018-2019'),
+                    (2019, '2019-2020'),
+                ],
+            )
+
+            self.assertEqual(
+                base_form.fields['end'].choices,
+                base_form.fields['start'].choices,
+            )
+
         response = self.client.post(
-            resolve_url(
-                'admission:continuing-education:update:curriculum:educational_create',
-                pk=self.continuing_proposition.uuid,
-            ),
+            url,
             data={
                 'base_form-start': '2016',
                 'base_form-end': '2018',
@@ -1368,7 +1422,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertRedirects(
             response=response,
             expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -1439,7 +1493,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertRedirects(
             response=response,
             expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -1511,7 +1565,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertRedirects(
             response=response,
             expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -1576,7 +1630,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertRedirects(
             response=response,
             expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -1642,7 +1696,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
         self.assertRedirects(
             response=response,
             expected_url=resolve_url('admission:doctorate:update:curriculum', pk=self.proposition.uuid)
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )
 
         # Check that the API calls are done
@@ -1675,5 +1729,5 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 pk=self.proposition.uuid,
                 experience_id=self.educational_experience.uuid,
             )
-            + '#curriculum-header',
+                         + '#curriculum-header',
         )

@@ -1112,7 +1112,7 @@ msgid "Diploma"
 msgstr "Diplôme"
 
 msgid "Diploma of aptitude for access to higher education (DAES)"
-msgstr "Diplôme d'Aptitude à accéder à l'Enseignement supérieur (DAES)"
+msgstr "Diplôme d'Aptitude à accéder à l'Enseignement Supérieur (DAES)"
 
 msgid "Diploma translation"
 msgstr "Traduction du diplôme"
@@ -1759,10 +1759,11 @@ msgstr ""
 
 msgid ""
 "If your equivalency decision does not give access to the desired training, "
-"please provide your diploma of aptitude for access to higher education (DAES)"
+"do you hold your diploma of aptitude for access to higher education (DAES)?"
 msgstr ""
-"Si votre équivalence ne donne pas accès à la formation souhaitée, veuillez "
-"fournir votre Diplôme d’Aptitude à accéder à l’Enseignement supérieur (DAES)"
+"Si votre équivalence ne donne pas accès à la formation souhaitée, êtes-vous "
+"en possession d'un Diplôme d'Aptitude à accéder à l'Enseignement Supérieur "
+"(DAES) ?"
 
 msgid "Immediately"
 msgstr "Immédiatement"
@@ -2089,6 +2090,12 @@ msgstr "Pas de cotutelle"
 msgid "No knowledge of languages provided."
 msgstr "Aucune connaissance des langues renseignée."
 
+msgid ""
+"No more documents are missing. The enrolment office will therefore continue "
+"to process the file. You must not perform any action."
+msgstr ""
+"Plus aucun document n'est manquant. Le service des inscriptions va donc poursuivre le traitement du dossier. Vous ne devez réaliser aucune action."
+
 msgid "No one invited"
 msgstr "Aucun invité"
 
@@ -2136,6 +2143,9 @@ msgstr "Numéro"
 
 msgid "Number of credits earned at the end of the academic year."
 msgstr "Nombre de crédits réussis au terme de l'année académique."
+
+msgid "OK"
+msgstr "OK"
 
 msgctxt "admission"
 msgid "October"

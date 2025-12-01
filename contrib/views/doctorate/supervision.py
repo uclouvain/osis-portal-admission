@@ -25,7 +25,6 @@
 # ##############################################################################
 from django import forms
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseRedirect
@@ -247,7 +246,7 @@ class DoctorateAdmissionEditExternalMemberView(LoadDossierViewMixin, WebServiceF
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
-class DoctorateAdmissionSetReferencePromoterView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+class DoctorateAdmissionSetReferencePromoterView(WebServiceFormMixin, BaseFormView):
     urlpatterns = {'set-reference-promoter': 'set-reference-promoter/<uuid>'}
     form_class = forms.Form
 
@@ -274,7 +273,7 @@ class DoctorateAdmissionSetReferencePromoterView(LoginRequiredMixin, WebServiceF
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
-class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+class DoctorateAdmissionApprovalByPdfView(WebServiceFormMixin, BaseFormView):
     urlpatterns = 'approve-by-pdf'
     form_class = DoctorateAdmissionApprovalByPdfForm
 
@@ -295,7 +294,7 @@ class DoctorateAdmissionApprovalByPdfView(LoginRequiredMixin, WebServiceFormMixi
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
-class DoctorateAdmissionResendView(LoginRequiredMixin, WebServiceFormMixin, BaseFormView):
+class DoctorateAdmissionResendView(WebServiceFormMixin, BaseFormView):
     urlpatterns = {'resend-invite': 'resend-invite/<uuid>'}
     template_name = 'admission/doctorate/forms/external_confirm.html'
     form_class = forms.Form
@@ -325,7 +324,7 @@ class DoctorateAdmissionResendView(LoginRequiredMixin, WebServiceFormMixin, Base
         return redirect('admission:doctorate:supervision', pk=self.kwargs['pk'])
 
 
-class DoctorateAdmissionSubmitCaView(LoginRequiredMixin, WebServiceFormMixin, SuccessMessageMixin, FormView):
+class DoctorateAdmissionSubmitCaView(WebServiceFormMixin, SuccessMessageMixin, FormView):
     urlpatterns = 'submit-ca'
     form_class = forms.Form
     success_message = _("Support committee submitted")

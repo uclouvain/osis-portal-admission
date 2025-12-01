@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.utils import translation
 from django.views import View
@@ -33,7 +32,7 @@ from base.views.my_osis import url_to_redirect_after_language_change
 from osis_common.middlewares.locale import LANGUAGE_SESSION_KEY
 
 
-class ChangeLanguageView(LoginRequiredMixin, View):
+class ChangeLanguageView(View):
 
     name = 'change_language'
 

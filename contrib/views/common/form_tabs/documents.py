@@ -23,16 +23,21 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Callable
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import resolve_url
+from django.shortcuts import redirect, resolve_url
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView
 
-from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.constants import (
+    DOCUMENTS_REQUEST_JUST_COMPLETED_WITHOUT_DOCUMENT,
+    FIELD_REQUIRED_MESSAGE,
+)
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.forms.documents import CompleteDocumentsForm
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -63,12 +68,33 @@ class DocumentsFormView(LoadDossierViewMixin, WebServiceFormMixin, PermissionReq
         'continuing-education': AdmissionPropositionService.update_continuing_education_documents,
         'doctorate': AdmissionPropositionService.update_doctorate_documents,
     }
+    give_control_back_to_manager_service_mapping: dict[str, Callable] = {
+        'general-education': AdmissionPropositionService.give_control_back_to_general_manager_during_document_request,
+        'continuing-education': (
+            AdmissionPropositionService.give_control_back_to_continuing_manager_during_document_request
+        ),
+        'doctorate': AdmissionPropositionService.give_control_back_to_doctorate_manager_during_document_request,
+    }
     form_class = CompleteDocumentsForm
     extra_context = {
         'submit_class': 'btn btn-primary',
         'submit_label': gettext_lazy('Send'),
         'submit_icon': 'fa-paper-plane',
     }
+
+    def get(self, request, *args, **kwargs):
+        if (
+            not self.specific_questions['immediate_requested_documents']
+            and not self.specific_questions['later_requested_documents']
+        ):
+            # No document to submit -> automatically send the admission to the manager and redirect to the list
+            self.give_control_back_to_manager_service_mapping[self.current_context](
+                person=self.request.user.person,
+                uuid=self.admission_uuid,
+            )
+            self.request.session[DOCUMENTS_REQUEST_JUST_COMPLETED_WITHOUT_DOCUMENT] = True
+            return redirect('admission:list')
+        return super().get(request, *args, **kwargs)
 
     def form_invalid(self, form):
         if any(

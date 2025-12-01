@@ -23,12 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django.views.generic import TemplateView
 
-from admission.constants import PROPOSITION_JUST_SUBMITTED
+from admission.constants import (
+    DOCUMENTS_REQUEST_JUST_COMPLETED_WITHOUT_DOCUMENT,
+    PROPOSITION_JUST_SUBMITTED,
+)
 from admission.contrib.enums import CANCELLED_STATUSES
 from admission.services.proposition import AdmissionPropositionService
 from admission.templatetags.admission import TAB_TREES, can_make_action
@@ -42,7 +44,7 @@ __namespace__ = False
 from continuing_education.views.common import display_warning_messages
 
 
-class AdmissionListView(LoginRequiredMixin, TemplateView):
+class AdmissionListView(TemplateView):
     urlpatterns = {'list': ''}
     template_name = "admission/admission_list.html"
 
@@ -60,6 +62,10 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
         context["general_education_tab_tree"] = TAB_TREES['general-education']
         context['CANCELLED_STATUSES'] = CANCELLED_STATUSES
         context['just_submitted_from'] = self.request.session.pop(PROPOSITION_JUST_SUBMITTED, None)
+        context['documents_request_just_completed_without_document'] = self.request.session.pop(
+            DOCUMENTS_REQUEST_JUST_COMPLETED_WITHOUT_DOCUMENT,
+            None,
+        )
 
         if getattr(result, 'donnees_transferees_vers_compte_interne', False):
             msg = _(
@@ -79,7 +85,7 @@ class AdmissionListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class DoctorateAdmissionMemberListView(LoginRequiredMixin, TemplateView):
+class DoctorateAdmissionMemberListView(TemplateView):
     urlpatterns = {'supervised-list': 'supervised'}
     template_name = "admission/doctorate/supervised_list.html"
 
