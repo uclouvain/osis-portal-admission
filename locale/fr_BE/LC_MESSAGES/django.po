@@ -115,6 +115,13 @@ msgstr ""
 "<a href=\"https://uclouvain.be/fr/etudier/inscriptions/questions-frequemment-"
 "posees.html\" target=\"_blank\">Contactez le Service des inscriptions</a>"
 
+msgid ""
+"<a href=\"https://www.uclouvain.be/en/enrolment/limited-enrolment-courses\" "
+"target=\"_blank\">Limited enrolment courses</a>"
+msgstr ""
+"<a href=\"https://www.uclouvain.be/fr/inscriptions/etudes-contingentees\" "
+"target=\"_blank\">Les études contingentées</a>"
+
 #, python-brace-format
 msgid ""
 "<a href=\"{url}\" target=\"_blank\">Change of enrolment form</a>, duly "
@@ -220,6 +227,11 @@ msgstr ""
 "l’enfant en cas de décès des parents ou d’incapacité de ceux-ci à exercer "
 "leur autorité parentale suite à une décision de justice. Un étudiant majeur "
 "ne peut pas avoir de tuteur. Un garant n’est en aucun cas un tuteur légal."
+
+msgid ""
+"A recent residence certificate attesting to your residence in a Belgian "
+"municipality"
+msgstr "Un certificat de résidence récent attestant de votre résidence dans une commune belge"
 
 msgid ""
 "A technical or IT problem? <a href=\"http://uclouvain.be/8282\" "
@@ -422,6 +434,21 @@ msgstr "Inscription refusée"
 msgid "Applications"
 msgstr "Demandes d'inscription"
 
+#, python-format
+msgid ""
+"Applications for non-resident applicants to limited-enrollment programs may "
+"be initiated at any time, but can only be submitted between %(start_date)s "
+"at %(start_time)s and %(end_date)s at %(end_time)s."
+msgstr "Les demandes de candidats non-résidents aux programmes d’études contingentés peuvent être initiées à tout "
+"moment, mais leur validation ne sera autorisée que du %(start_date)s à %(start_time)s au %(end_date)s à %(end_time)s."
+
+msgid ""
+"Applications for non-resident applicants to limited-enrollment programs may "
+"be initiated at any time, but submission for validation will only be "
+"possible during the official application period, which will be announced at "
+"a later date."
+msgstr "Les demandes de candidats non-résidents aux programmes d’études contingentés peuvent être initiées à tout moment, mais leur validation ne sera possible que durant la période officielle, laquelle sera communiquée ultérieurement."
+
 msgid "Approvals"
 msgstr "Approbations"
 
@@ -499,6 +526,13 @@ msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
 "Êtes-vous l'enfant d'un membre du personnel de l'UCLouvain ou de l'entité "
 "Martin V ?"
+
+#, python-format
+msgid ""
+"As a non-resident, you can start to fill in your online enrolment form BUT "
+"you will only be able to confirm it from %(start_date)s %(start_time)s to "
+"%(end_date)s %(end_time)s"
+msgstr "En tant que non-résident·e, vous pouvez entamer votre demande en ligne MAIS ne pourrez la confirmer qu'à partir du %(start_date)s %(start_time)s et jusqu’au %(end_date)s %(end_time)s."
 
 msgid ""
 "Assessment is also based on the credit system, which quantifies the workload "
@@ -1053,6 +1087,9 @@ msgstr "Financement actuel"
 msgid "Curriculum"
 msgstr "Curriculum"
 
+msgid "DEUX_OU_PLUS"
+msgstr "2x ou +"
+
 msgid "Date of birth"
 msgstr "Date de naissance"
 
@@ -1139,6 +1176,10 @@ msgstr "Avez-vous obtenu un diplôme de fin d'études secondaires ?"
 
 msgid "Do you have an international scholarship?"
 msgstr "Bénéficiez-vous d'une bourse internationale ?"
+
+msgid "Do you intend to make an enrolment directly for the second year?"
+msgstr ""
+"Désirez-vous faire une demande d’admission directement pour la deuxième année ?"
 
 msgid "Doctoral research project"
 msgstr "Projet de recherche doctorale"
@@ -1255,6 +1296,14 @@ msgstr "S'inscrire à un cours"
 
 msgid "Enrolled"
 msgstr "Inscrit"
+
+msgid ""
+"Enrolment form for an enrolment beyond the first 60 credits of the first "
+"cycle (Appendix 5bis) duly completed and signed in accordance with the "
+"specific terms and conditions for the <a href=\"https://www.uclouvain.be/en/"
+"enrolment/limited-enrolment-courses\">studies under quotas</a>"
+msgstr "Formulaire de demande d’admission au-delà des 60 premiers crédits du premier cycle (Annexe 5 bis) dûment complété et signé conformément aux modalités particulières prévues pour les"
+" <a href=\"https://www.uclouvain.be/fr/inscriptions/etudes-contingentees\">études contingentées</a>"
 
 msgid "Enrolment in limited enrolment bachelor's course"
 msgstr "Inscription à un bachelier contingenté"
@@ -1476,6 +1525,12 @@ msgid "Have you previously enrolled for a PhD?"
 msgstr ""
 "Avez-vous été inscrit antérieurement pour réaliser une thèse de doctorat ?"
 
+msgid ""
+"Have you taken a competitive entrance examination to study medicine, "
+"dentistry, pharmacy or physiotherapy (in Belgium or abroad), with the "
+"exception of the ARES medical or dental entrance examination?"
+msgstr "Avez-vous présenté un concours d’accès aux études de médecine, sciences dentaires, sciences pharmaceutiques, kinésithérapie (en Belgique ou à l'étranger) - à l’exception du concours d’entrée en médecine ou dentisterie organisé par l’ARES ?"
+
 msgid "Head office name"
 msgstr "Nom du siège social"
 
@@ -1684,15 +1739,6 @@ msgstr ""
 "Dans le cadre d'une réorientation externe, vous devez impérativement "
 "confirmer votre demande avant le %(date)s."
 
-#, python-format
-msgid ""
-"If you are applying for a limited enrolment bachelor's course, the "
-"application can only be submitted during the period from %(start_date)s to "
-"%(end_date)s."
-msgstr ""
-"Vous vous inscrivez dans un bachelor contingenté, la demande ne peut être "
-"soumise que pendant la période du %(start_date)s au %(end_date)s."
-
 msgid ""
 "If you do not have all the documents listed below, please send those you do "
 "have."
@@ -1865,6 +1911,9 @@ msgstr "Il s'agit d'un diplôme"
 
 msgid "It seems that you paid the application fee."
 msgstr "Il semblerait que vous ayez payé les frais de dossier."
+
+msgid "JAMAIS"
+msgstr "Jamais"
 
 msgctxt "admission"
 msgid "January"
@@ -2094,7 +2143,8 @@ msgid ""
 "No more documents are missing. The enrolment office will therefore continue "
 "to process the file. You must not perform any action."
 msgstr ""
-"Plus aucun document n'est manquant. Le service des inscriptions va donc poursuivre le traitement du dossier. Vous ne devez réaliser aucune action."
+"Plus aucun document n'est manquant. Le service des inscriptions va donc "
+"poursuivre le traitement du dossier. Vous ne devez réaliser aucune action."
 
 msgid "No one invited"
 msgstr "Aucun invité"
@@ -2150,6 +2200,11 @@ msgstr "OK"
 msgctxt "admission"
 msgid "October"
 msgstr "octobre"
+
+msgid ""
+"Official recent document issued by your local municipal administration "
+"certifying that your main residence is located in Belgium."
+msgstr "Document officiel délivré par votre administration communale attestant que votre résidence principale est située en Belgique."
 
 msgid ""
 "On the basis of the information you have provided, it is not necessary to "
@@ -2565,6 +2620,14 @@ msgstr "Renvoyer une invitation"
 msgid "Resident (as defined by government decree)"
 msgstr "Résident (au sens du Décret)"
 
+msgid ""
+"Resident student\" form (Annex 2), duly completed and signed in accordance "
+"with the specific terms and conditions for a <a href=\"https://www.uclouvain."
+"be/fr/inscriptions/etudes-contingentees\"target=\"_blank\">limited-enrolment "
+"course</a>"
+msgstr "Le dossier résident (Annexe 2) dûment complété et signé conformément aux modalités particulières prévues pour les "
+"<a href=\"https://www.uclouvain.be/fr/inscriptions/etudes-contingentees\" target=\"_blank\">études contingentées</a>"
+
 msgid "Result"
 msgstr "Résultat"
 
@@ -2872,6 +2935,14 @@ msgstr ""
 "CDD ou auprès de votre gestionnaire de doctorat."
 
 msgid ""
+"The non-resident file (Annex 3) duly completed and signed in accordance with "
+"the specific terms and conditions for the <a href=\"https://www.uclouvain.be/"
+"en/enrolment/limited-enrolment-courses\" target=\"_blank\">studies under "
+"quotas</a>"
+msgstr "Le dossier non-résident (Annexe 3) dûment complété et signé conformément aux modalités particulières prévues pour les "
+"<a href=\"https://www.uclouvain.be/fr/inscriptions/etudes-contingentees\" target=\"_blank\">études contingentées</a>"
+
+msgid ""
 "The online application is comprised of several tabs. The application can "
 "only be validated once all the tabs have been successfully completed. The "
 "icons indicate the progress of your application, which can be interrupted "
@@ -3085,6 +3156,9 @@ msgstr "Traitement UCLouvain en cours"
 msgctxt "ways_hear_about_training"
 msgid "UCLouvain website"
 msgstr "Par le site web de l'UCLouvain"
+
+msgid "UNE"
+msgstr "1x"
 
 msgid "Undecided"
 msgstr "Non décidé"

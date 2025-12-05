@@ -157,7 +157,6 @@ class GeneralEducationSpecificQuestionDetailViewTestCase(AdmissionTrainingChoice
             'reorientation_pool_academic_year': None,
             'modification_pool_academic_year': 2023,
             'is_non_resident': True,
-            'forbid_enrolment_limited_course_for_non_resident': 'This enrolment is forbidden.',
         }
         response = self.client.get(self.url)
 

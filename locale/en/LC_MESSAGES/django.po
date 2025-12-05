@@ -102,6 +102,11 @@ msgid ""
 "questions.html\" target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
 
+msgid ""
+"<a href=\"https://www.uclouvain.be/en/enrolment/limited-enrolment-courses\" "
+"target=\"_blank\">Limited enrolment courses</a>"
+msgstr ""
+
 #, python-brace-format
 msgid ""
 "<a href=\"{url}\" target=\"_blank\">Change of enrolment form</a>, duly "
@@ -167,6 +172,11 @@ msgid ""
 "in the event of the parents' death or their inability to exercise parental "
 "authority following a court decision. A student of legal age cannot have a "
 "guardian. Under no circumstances is a guarantor a legal guardian."
+msgstr ""
+
+msgid ""
+"A recent residence certificate attesting to your residence in a Belgian "
+"municipality"
 msgstr ""
 
 msgid ""
@@ -341,6 +351,20 @@ msgstr ""
 msgid "Applications"
 msgstr ""
 
+#, python-format
+msgid ""
+"Applications for non-resident applicants to limited-enrollment programs may "
+"be initiated at any time, but can only be submitted between %(start_date)s "
+"at %(start_time)s and %(end_date)s at %(end_time)s."
+msgstr ""
+
+msgid ""
+"Applications for non-resident applicants to limited-enrollment programs may "
+"be initiated at any time, but submission for validation will only be "
+"possible during the official application period, which will be announced at "
+"a later date."
+msgstr ""
+
 msgid "Approvals"
 msgstr ""
 
@@ -407,6 +431,13 @@ msgid ""
 msgstr ""
 
 msgid "Are you the child of a UCLouvain or Martin V staff member?"
+msgstr ""
+
+#, python-format
+msgid ""
+"As a non-resident, you can start to fill in your online enrolment form BUT "
+"you will only be able to confirm it from %(start_date)s %(start_time)s to "
+"%(end_date)s %(end_time)s"
 msgstr ""
 
 msgid ""
@@ -885,6 +916,9 @@ msgstr ""
 msgid "Curriculum"
 msgstr ""
 
+msgid "DEUX_OU_PLUS"
+msgstr "Twice or more"
+
 msgid "Date of birth"
 msgstr ""
 
@@ -966,6 +1000,9 @@ msgid "Do you have a secondary school diploma?"
 msgstr ""
 
 msgid "Do you have an international scholarship?"
+msgstr ""
+
+msgid "Do you intend to make an enrolment directly for the second year?"
 msgstr ""
 
 msgid "Doctoral research project"
@@ -1069,6 +1106,13 @@ msgid "Enroll in a course"
 msgstr ""
 
 msgid "Enrolled"
+msgstr ""
+
+msgid ""
+"Enrolment form for an enrolment beyond the first 60 credits of the first "
+"cycle (Appendix 5bis) duly completed and signed in accordance with the "
+"specific terms and conditions for the <a href=\"https://www.uclouvain.be/en/"
+"enrolment/limited-enrolment-courses\">studies under quotas</a>"
 msgstr ""
 
 msgid "Enrolment in limited enrolment bachelor's course"
@@ -1270,6 +1314,12 @@ msgstr ""
 msgid "Have you previously enrolled for a PhD?"
 msgstr ""
 
+msgid ""
+"Have you taken a competitive entrance examination to study medicine, "
+"dentistry, pharmacy or physiotherapy (in Belgium or abroad), with the "
+"exception of the ARES medical or dental entrance examination?"
+msgstr ""
+
 msgid "Head office name"
 msgstr ""
 
@@ -1440,13 +1490,6 @@ msgid ""
 "application before %(date)s."
 msgstr ""
 
-#, python-format
-msgid ""
-"If you are applying for a limited enrolment bachelor's course, the "
-"application can only be submitted during the period from %(start_date)s to "
-"%(end_date)s."
-msgstr ""
-
 msgid ""
 "If you do not have all the documents listed below, please send those you do "
 "have."
@@ -1589,6 +1632,9 @@ msgstr "It is a"
 
 msgid "It seems that you paid the application fee."
 msgstr ""
+
+msgid "JAMAIS"
+msgstr "Never"
 
 msgctxt "admission"
 msgid "January"
@@ -1867,6 +1913,11 @@ msgstr ""
 
 msgctxt "admission"
 msgid "October"
+msgstr ""
+
+msgid ""
+"Official recent document issued by your local municipal administration "
+"certifying that your main residence is located in Belgium."
 msgstr ""
 
 msgid ""
@@ -2232,6 +2283,13 @@ msgstr ""
 msgid "Resident (as defined by government decree)"
 msgstr ""
 
+msgid ""
+"Resident student\" form (Annex 2), duly completed and signed in accordance "
+"with the specific terms and conditions for a <a href=\"https://www.uclouvain."
+"be/fr/inscriptions/etudes-contingentees\"target=\"_blank\">limited-enrolment "
+"course</a>"
+msgstr ""
+
 msgid "Result"
 msgstr ""
 
@@ -2501,6 +2559,13 @@ msgid ""
 msgstr ""
 
 msgid ""
+"The non-resident file (Annex 3) duly completed and signed in accordance with "
+"the specific terms and conditions for the <a href=\"https://www.uclouvain.be/"
+"en/enrolment/limited-enrolment-courses\" target=\"_blank\">studies under "
+"quotas</a>"
+msgstr ""
+
+msgid ""
 "The online application is comprised of several tabs. The application can "
 "only be validated once all the tabs have been successfully completed. The "
 "icons indicate the progress of your application, which can be interrupted "
@@ -2679,6 +2744,9 @@ msgstr ""
 msgctxt "ways_hear_about_training"
 msgid "UCLouvain website"
 msgstr ""
+
+msgid "UNE"
+msgstr "Once"
 
 msgid "Undecided"
 msgstr ""
