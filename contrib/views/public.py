@@ -25,11 +25,13 @@
 # ##############################################################################
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import resolve_url
+from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
-from django.views.generic import FormView, TemplateView
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import FormView, TemplateView
 
 from admission.contrib.enums import DecisionApprovalEnum
 from admission.contrib.forms.supervision import DoctorateAdmissionApprovalForm
@@ -43,6 +45,7 @@ __all__ = [
 __namespace__ = {'public-doctorate': 'public/doctorate/<uuid:pk>'}
 
 
+@method_decorator(login_not_required, name="dispatch")
 class DoctorateAdmissionExternalApprovalView(UserPassesTestMixin, WebServiceFormMixin, FormView):
     urlpatterns = {'external-approval': 'external-approval/<token>'}
     form_class = DoctorateAdmissionApprovalForm

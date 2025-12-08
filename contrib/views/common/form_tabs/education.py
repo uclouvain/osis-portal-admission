@@ -285,6 +285,9 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
 
             if not is_bachelor or equivalence_ue_country:
                 foreign_diploma_data["final_equivalence_decision_not_ue"] = []
+                foreign_diploma_data["has_access_diploma_to_higher_education_not_ue"] = False
+
+            if not foreign_diploma_data["has_access_diploma_to_higher_education_not_ue"]:
                 foreign_diploma_data["access_diploma_to_higher_education_not_ue"] = []
 
             if (
@@ -300,6 +303,9 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
                 or foreign_diploma_data["equivalence"] != Equivalence.YES.name
             ):
                 foreign_diploma_data["final_equivalence_decision_ue"] = []
+                foreign_diploma_data["has_access_diploma_to_higher_education_ue"] = False
+
+            if not foreign_diploma_data["has_access_diploma_to_higher_education_ue"]:
                 foreign_diploma_data["access_diploma_to_higher_education_ue"] = []
 
             # Clean fields depending on the linguistic regime

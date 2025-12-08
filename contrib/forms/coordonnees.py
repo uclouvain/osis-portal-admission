@@ -87,7 +87,7 @@ class DoctorateAdmissionAddressForm(forms.Form):
     street_number = forms.CharField(
         required=False,
         label=__("address", "Number"),
-        max_length=20,
+        max_length=12,
     )
     postal_box = forms.CharField(
         required=False,
