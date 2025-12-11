@@ -976,7 +976,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
             form.fields['related_pre_admission'].choices,
             default_choices
             + [
-                [
+                (
                     current_pre_admission.uuid,
                     _('Yes, for the doctorate %(doctorate_name)s')
                     % {
@@ -984,7 +984,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                         f'{current_pre_admission.doctorat.intitule} '
                         f'({current_pre_admission.doctorat.campus.nom})'
                     },
-                ]
+                )
                 for current_pre_admission in self.doctorate_pre_admissions
             ],
         )

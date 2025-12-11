@@ -440,11 +440,11 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         if self.current_context == 'create':
             doctorate_pre_admissions = AdmissionPropositionService.get_doctorate_pre_admission_propositions(self.person)
 
-            self.fields['related_pre_admission'].choices = [[self.NO_VALUE, _('No')]]
+            choices = [[self.NO_VALUE, _('No')]]
 
             for doctorate_pre_admission in doctorate_pre_admissions:
                 self.pre_admissions[doctorate_pre_admission.uuid] = doctorate_pre_admission.to_dict()
-                self.fields['related_pre_admission'].choices.append(
+                choices.append(
                     [
                         doctorate_pre_admission.uuid,
                         _('Yes, for the doctorate %(doctorate_name)s')
@@ -452,6 +452,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                     ]
                 )
 
+            self.fields['related_pre_admission'].choices = choices
         self.fields['related_pre_admission'].disabled = not bool(self.pre_admissions)
 
     def clean(self):
