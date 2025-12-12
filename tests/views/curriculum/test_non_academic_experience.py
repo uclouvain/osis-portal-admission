@@ -26,7 +26,6 @@
 import datetime
 from unittest.mock import ANY
 
-import freezegun
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext
 
@@ -35,7 +34,6 @@ from admission.contrib.enums.curriculum import ActivitySector, ActivityType
 from admission.tests.views.curriculum.mixin import MixinTestCase
 
 
-@freezegun.freeze_time('2023-01-01')
 class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
     def test_with_admission_on_reading_experience_is_loaded(self):
         response = self.client.get(
@@ -90,7 +88,6 @@ class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
         self.assertTrue("n'est pas modifiable" in response.rendered_content)
 
 
-@freezegun.freeze_time('2023-01-01')
 class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
     @classmethod
     def setUpTestData(cls):
@@ -721,7 +718,6 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         )
 
 
-@freezegun.freeze_time('2023-01-01')
 class CurriculumNonAcademicExperienceDeleteTestCase(MixinTestCase):
     def test_with_admission_on_delete_experience_post_form(self):
         response = self.client.post(
