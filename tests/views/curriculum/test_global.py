@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,17 +25,18 @@
 # ##############################################################################
 import datetime
 
-import freezegun
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
-
-from admission.contrib.enums.training_choice import TrainingType, VETERINARY_BACHELOR_CODE
-from admission.contrib.forms.curriculum import REQUIRED_FIELD_CLASS
-from admission.tests.views.curriculum.mixin import MixinTestCase
 from osis_admission_sdk.model.result_enum import ResultEnum
 
+from admission.contrib.enums.training_choice import (
+    VETERINARY_BACHELOR_CODE,
+    TrainingType,
+)
+from admission.contrib.forms.curriculum import REQUIRED_FIELD_CLASS
+from admission.tests.views.curriculum.mixin import MixinTestCase
 
-@freezegun.freeze_time('2023-01-01')
+
 class CreateGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()
@@ -57,7 +58,6 @@ class CreateGlobalCurriculumTestCase(MixinTestCase):
         )
 
 
-@freezegun.freeze_time('2023-01-01')
 class DoctorateGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()
@@ -160,7 +160,6 @@ class DoctorateGlobalCurriculumTestCase(MixinTestCase):
         )
 
 
-@freezegun.freeze_time('2023-01-01')
 class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()
@@ -654,7 +653,6 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         )
 
 
-@freezegun.freeze_time('2023-01-01')
 class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
     def setUp(self):
         super().setUp()
