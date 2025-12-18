@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,22 +26,39 @@
 
 import datetime
 import uuid
-from unittest.mock import ANY, patch, MagicMock
+from unittest.mock import ANY, MagicMock, patch
 
 from django.http import Http404
-from django.test import TestCase, override_settings
-
+from django.test import override_settings
 from osis_admission_sdk.model.action_link import ActionLink
-from osis_admission_sdk.model.continuing_education_proposition_dto import ContinuingEducationPropositionDTO
-from osis_admission_sdk.model.continuing_education_proposition_dto_links import ContinuingEducationPropositionDTOLinks
+from osis_admission_sdk.model.continuing_education_proposition_dto import (
+    ContinuingEducationPropositionDTO,
+)
+from osis_admission_sdk.model.continuing_education_proposition_dto_links import (
+    ContinuingEducationPropositionDTOLinks,
+)
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-from osis_admission_sdk.model.doctorate_proposition_dto_links import DoctoratePropositionDTOLinks
+from osis_admission_sdk.model.doctorate_proposition_dto_links import (
+    DoctoratePropositionDTOLinks,
+)
 from osis_admission_sdk.model.educational_experience import EducationalExperience
-from osis_admission_sdk.model.educational_experience_year import EducationalExperienceYear
+from osis_admission_sdk.model.educational_experience_year import (
+    EducationalExperienceYear,
+)
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.general_education_proposition_dto import GeneralEducationPropositionDTO
+from osis_admission_sdk.model.general_education_proposition_dto import (
+    GeneralEducationPropositionDTO,
+)
+from osis_admission_sdk.model.general_education_proposition_dto_links import (
+    GeneralEducationPropositionDTOLinks,
+)
+from osis_admission_sdk.model.professional_experience import ProfessionalExperience
+from osis_admission_sdk.model.result_enum import ResultEnum
+from osis_admission_sdk.model.sector_enum import SectorEnum
+from osis_admission_sdk.model.study_system_enum import StudySystemEnum
+from osis_admission_sdk.model.type_enum import TypeEnum
 from osis_reference_sdk.model.academic_year import AcademicYear
 from osis_reference_sdk.model.country import Country
 from osis_reference_sdk.model.diploma import Diploma
@@ -49,34 +66,31 @@ from osis_reference_sdk.model.language import Language
 from osis_reference_sdk.model.paginated_country import PaginatedCountry
 from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
 from osis_reference_sdk.model.paginated_language import PaginatedLanguage
-from osis_reference_sdk.model.paginated_superior_non_university import PaginatedSuperiorNonUniversity
+from osis_reference_sdk.model.paginated_superior_non_university import (
+    PaginatedSuperiorNonUniversity,
+)
 from osis_reference_sdk.model.paginated_university import PaginatedUniversity
 from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
 from osis_reference_sdk.model.university import University
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import (
+    ChoixStatutPropositionContinue,
     ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionGenerale,
-    ChoixStatutPropositionContinue,
 )
 from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import PDF_MIME_TYPE
 from admission.tests import get_paginated_years
 from base.tests.factories.person import PersonFactory
-from osis_admission_sdk.model.general_education_proposition_dto_links import GeneralEducationPropositionDTOLinks
-from osis_admission_sdk.model.professional_experience import ProfessionalExperience
-from osis_admission_sdk.model.result_enum import ResultEnum
-from osis_admission_sdk.model.sector_enum import SectorEnum
-from osis_admission_sdk.model.study_system_enum import StudySystemEnum
-from osis_admission_sdk.model.type_enum import TypeEnum
-
 from base.tests.test_case import OsisPortalTestCase
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
 class MixinTestCase(OsisPortalTestCase):
+    current_date = datetime.date(2023, 1, 1)
+
     @classmethod
     def setUpTestData(cls):
         cls.person = PersonFactory()
@@ -441,7 +455,7 @@ class MixinTestCase(OsisPortalTestCase):
         academic_years_api_patcher = patch("osis_reference_sdk.api.academic_years_api.AcademicYearsApi")
         self.mock_academic_years_api = academic_years_api_patcher.start()
 
-        current_year = datetime.date.today().year
+        current_year = self.current_date.year
 
         self.mock_academic_years_api.return_value.get_academic_years.return_value = get_paginated_years(
             current_year - 7,
