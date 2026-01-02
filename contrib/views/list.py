@@ -41,7 +41,7 @@ __all__ = [
 ]
 __namespace__ = False
 
-from continuing_education.views.common import display_warning_messages
+from base.views.common import display_warning_messages
 
 
 class AdmissionListView(TemplateView):
