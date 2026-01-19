@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ from django.utils.translation import gettext
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.curriculum import ActivitySector, ActivityType
+from admission.contrib.forms import EMPTY_CHOICE
 from admission.tests.views.curriculum.mixin import MixinTestCase
 
 
@@ -142,8 +143,9 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
         self.mockapi.retrieve_professional_experience_admission.assert_called()
 
         # Check the context data
+        form = response.context['form']
         self.assertEqual(
-            response.context.get('form').initial,
+            form.initial,
             {
                 'start_date_month': int(self.professional_experience.start_date.month),
                 'end_date_month': int(self.professional_experience.end_date.month),
@@ -160,6 +162,24 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
                 'external_id': '',
             },
         )
+
+        current_year = datetime.date.today().year
+        next_year = current_year + 1
+
+        expected_choices = [EMPTY_CHOICE[0]] + [(year, year) for year in range(current_year, 1900, -1)]
+        self.assertEqual(form.fields['start_date_year'].choices, expected_choices)
+        self.assertEqual(form.fields['end_date_year'].choices, expected_choices)
+
+        self.mockapi.retrieve_professional_experience_admission.return_value.end_date = datetime.date(next_year, 1, 1)
+
+        response = self.client.get(self.admission_update_url)
+
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context['form']
+        expected_choices = [EMPTY_CHOICE[0]] + [(year, year) for year in range(current_year + 1, 1900, -1)]
+        self.assertEqual(form.fields['start_date_year'].choices, expected_choices)
+        self.assertEqual(form.fields['end_date_year'].choices, expected_choices)
 
     def test_with_admission_on_update_experience_form_is_initialized_with_continuing_education(self):
         response = self.client.get(self.continuing_update_url)
