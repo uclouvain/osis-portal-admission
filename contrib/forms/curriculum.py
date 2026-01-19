@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 from copy import deepcopy
 from datetime import datetime
 from functools import partial
+from itertools import chain
 from typing import List
 
 from dal import forward
@@ -46,9 +47,9 @@ from admission.constants import (
 from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.training_choice import TrainingType
-from admission.contrib.forms import EMPTY_CHOICE, FORM_SET_PREFIX
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
+    EMPTY_CHOICE,
+    FORM_SET_PREFIX,
     CustomDateInput,
     NoInput,
     RadioBooleanField,
@@ -60,6 +61,7 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     get_superior_institute_initial_choices,
 )
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 from admission.utils import mark_safe_lazy
@@ -165,8 +167,10 @@ class ContinuingAdmissionCurriculumFileForm(ConfigurableFormMixin):
         return cleaned_data
 
 
-def year_choices():
-    return [EMPTY_CHOICE[0]] + [(year, year) for year in range(datetime.today().year, MINIMUM_YEAR, -1)]
+def year_choices(additional_years: set[int]):
+    min_year = min(chain(additional_years, [MINIMUM_YEAR]))
+    max_year = max(chain(additional_years, [datetime.today().year]))
+    return [EMPTY_CHOICE[0]] + [(year, year) for year in range(max_year, min_year, -1)]
 
 
 def month_choices():
@@ -185,12 +189,10 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
         widget=autocomplete.Select2(),
     )
     start_date_year = forms.ChoiceField(
-        choices=year_choices,
         label=_('Year'),
         widget=autocomplete.Select2(),
     )
     end_date_year = forms.ChoiceField(
-        choices=year_choices,
         label=_('Year'),
         widget=autocomplete.Select2(),
     )
@@ -230,6 +232,13 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
 
     def __init__(self, experience, is_continuing, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        selected_years: set[int] = {
+            self.initial[year_field]
+            for year_field in ['start_date_year', 'end_date_year']
+            if self.initial.get(year_field)
+        }
+        self.fields['start_date_year'].choices = self.fields['end_date_year'].choices = year_choices(selected_years)
         self.is_continuing = is_continuing
         if self.is_continuing:
             self.fields['certificate'].disabled = True
