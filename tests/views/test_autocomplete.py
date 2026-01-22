@@ -30,24 +30,24 @@ from unittest.mock import ANY, Mock, patch
 
 from django.test import TestCase
 from django.urls import reverse
-from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_organisation_sdk.model.address import Address
-from osis_organisation_sdk.model.entite import Entite
-from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
-from osis_reference_sdk.model.diploma import Diploma
-from osis_reference_sdk.model.high_school import HighSchool
-from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
-from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
-from osis_reference_sdk.model.paginated_superior_non_university import (
+from osis_admission_sdk.models.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.models.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.models.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.models.formation_generale_dto import FormationGeneraleDTO
+from osis_organisation_sdk.models.address import Address
+from osis_organisation_sdk.models.entite import Entite
+from osis_organisation_sdk.models.paginated_entites import PaginatedEntites
+from osis_reference_sdk.models.diploma import Diploma
+from osis_reference_sdk.models.high_school import HighSchool
+from osis_reference_sdk.models.paginated_diploma import PaginatedDiploma
+from osis_reference_sdk.models.paginated_high_school import PaginatedHighSchool
+from osis_reference_sdk.models.paginated_superior_non_university import (
     PaginatedSuperiorNonUniversity,
 )
-from osis_reference_sdk.model.paginated_university import PaginatedUniversity
-from osis_reference_sdk.model.scholarship import Scholarship
-from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
-from osis_reference_sdk.model.university import University
+from osis_reference_sdk.models.paginated_university import PaginatedUniversity
+from osis_reference_sdk.models.scholarship import Scholarship
+from osis_reference_sdk.models.superior_non_university import SuperiorNonUniversity
+from osis_reference_sdk.models.university import University
 from waffle.testutils import override_switch
 
 from admission.contrib.enums import (

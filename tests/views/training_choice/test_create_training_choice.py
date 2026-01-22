@@ -30,7 +30,7 @@ import freezegun
 from django.shortcuts import resolve_url
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
-from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+from osis_admission_sdk.models.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
 )
 from waffle.testutils import override_switch

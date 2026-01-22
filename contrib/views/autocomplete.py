@@ -32,9 +32,9 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from osis_organisation_sdk.model.entite_type_enum import EntiteTypeEnum
-from osis_reference_sdk.model.scholarship import Scholarship
-from osis_reference_sdk.model.university import University
+from osis_organisation_sdk.models.entite_type_enum import EntiteTypeEnum
+from osis_reference_sdk.models.scholarship import Scholarship
+from osis_reference_sdk.models.university import University
 from waffle import switch_is_active
 
 from admission.constants import BE_ISO_CODE

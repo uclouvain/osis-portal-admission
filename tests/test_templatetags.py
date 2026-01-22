@@ -36,7 +36,7 @@ from django.urls import resolve
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from osis_admission_sdk.exceptions import UnauthorizedException
-from osis_admission_sdk.model.specific_question import SpecificQuestion
+from osis_admission_sdk.models.specific_question import SpecificQuestion
 
 from admission.contrib.enums import (
     ChoixAffiliationSport,

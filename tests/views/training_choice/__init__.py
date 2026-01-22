@@ -28,20 +28,20 @@ import uuid
 from unittest.mock import ANY, MagicMock, Mock, patch
 
 from django.test import TestCase
-from osis_admission_sdk.model.campus import Campus
-from osis_admission_sdk.model.campus_dto import CampusDTO
-from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
-from osis_admission_sdk.model.doctorat_search_dto import DoctoratSearchDTO
-from osis_admission_sdk.model.doctorate_pre_admission_search_dto import (
+from osis_admission_sdk.models.campus import Campus
+from osis_admission_sdk.models.campus_dto import CampusDTO
+from osis_admission_sdk.models.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.models.doctorat_search_dto import DoctoratSearchDTO
+from osis_admission_sdk.models.doctorate_pre_admission_search_dto import (
     DoctoratePreAdmissionSearchDTO,
 )
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+from osis_admission_sdk.models.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.models.formation_generale_dto import FormationGeneraleDTO
+from osis_admission_sdk.models.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
 )
-from osis_admission_sdk.model.specific_question import SpecificQuestion
-from osis_reference_sdk.model.scholarship import Scholarship
+from osis_admission_sdk.models.specific_question import SpecificQuestion
+from osis_reference_sdk.models.scholarship import Scholarship
 
 from admission.contrib.enums import (
     ChoixStatutPropositionContinue,

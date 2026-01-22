@@ -32,8 +32,8 @@ from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.urls import reverse
 from django.utils.translation import gettext_lazy
-from osis_admission_sdk.model.document_specific_question import DocumentSpecificQuestion
-from osis_admission_sdk.model.document_specific_questions_list import (
+from osis_admission_sdk.models.document_specific_question import DocumentSpecificQuestion
+from osis_admission_sdk.models.document_specific_questions_list import (
     DocumentSpecificQuestionsList,
 )
 

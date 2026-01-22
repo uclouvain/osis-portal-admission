@@ -30,8 +30,8 @@ import freezegun
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from osis_admission_sdk.model.pool_enum import PoolEnum
-from osis_admission_sdk.model.submit_proposition import SubmitProposition
+from osis_admission_sdk.models.pool_enum import PoolEnum
+from osis_admission_sdk.models.submit_proposition import SubmitProposition
 
 from admission.contrib.enums import ChoixStatutPropositionGenerale
 from base.tests.factories.person import PersonFactory

@@ -39,7 +39,7 @@ from osis_reference_sdk.api import (
     superior_non_universities_api,
     universities_api,
 )
-from osis_reference_sdk.model.academic_year import AcademicYear
+from osis_reference_sdk.models.academic_year import AcademicYear
 
 from admission.contrib.enums.diploma import StudyType
 from admission.services.mixins import ServiceMeta

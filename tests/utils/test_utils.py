@@ -26,16 +26,16 @@
 import uuid
 
 from django.test import TestCase
-from osis_organisation_sdk.model.address import Address
-from osis_organisation_sdk.model.entite import Entite
+from osis_organisation_sdk.models.address import Address
+from osis_organisation_sdk.models.entite import Entite
 
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType
 from admission.utils import *
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_reference_sdk.model.scholarship import Scholarship
+from osis_admission_sdk.models.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.models.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.models.formation_generale_dto import FormationGeneraleDTO
+from osis_reference_sdk.models.scholarship import Scholarship
 
 from base.tests.test_case import OsisPortalTestCase
 

@@ -64,7 +64,7 @@ __all__ = [
 ]
 __namespace__ = False
 
-from osis_admission_sdk.model.actor_type_enum import ActorTypeEnum
+from osis_admission_sdk.models.actor_type_enum import ActorTypeEnum
 
 
 class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFormMixin, FormView):

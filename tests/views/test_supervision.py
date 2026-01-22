@@ -29,15 +29,15 @@ from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_admission_sdk import ApiException
-from osis_admission_sdk.model.actor_type_enum import ActorTypeEnum
-from osis_admission_sdk.model.approuver_proposition_command import (
+from osis_admission_sdk.models.actor_type_enum import ActorTypeEnum
+from osis_admission_sdk.models.approuver_proposition_command import (
     ApprouverPropositionCommand,
 )
-from osis_admission_sdk.model.identifier_supervision_actor import (
+from osis_admission_sdk.models.identifier_supervision_actor import (
     IdentifierSupervisionActor,
 )
-from osis_admission_sdk.model.promoteur_dto_nested import PromoteurDTONested
-from osis_admission_sdk.model.refuser_proposition_command import (
+from osis_admission_sdk.models.promoteur_dto_nested import PromoteurDTONested
+from osis_admission_sdk.models.refuser_proposition_command import (
     RefuserPropositionCommand,
 )
 

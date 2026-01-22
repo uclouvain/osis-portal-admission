@@ -31,61 +31,61 @@ from django.conf import settings
 from django.utils.translation import get_language
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import propositions_api
-from osis_admission_sdk.model.actor_type_enum import ActorTypeEnum
-from osis_admission_sdk.model.approuver_proposition_command import (
+from osis_admission_sdk.models.actor_type_enum import ActorTypeEnum
+from osis_admission_sdk.models.approuver_proposition_command import (
     ApprouverPropositionCommand,
 )
-from osis_admission_sdk.model.approuver_proposition_par_pdf_command import (
+from osis_admission_sdk.models.approuver_proposition_par_pdf_command import (
     ApprouverPropositionParPdfCommand,
 )
-from osis_admission_sdk.model.completer_comptabilite_proposition_doctorale_command import (
+from osis_admission_sdk.models.completer_comptabilite_proposition_doctorale_command import (
     CompleterComptabilitePropositionDoctoraleCommand,
 )
-from osis_admission_sdk.model.completer_comptabilite_proposition_generale_command import (
+from osis_admission_sdk.models.completer_comptabilite_proposition_generale_command import (
     CompleterComptabilitePropositionGeneraleCommand,
 )
-from osis_admission_sdk.model.completer_proposition_command import (
+from osis_admission_sdk.models.completer_proposition_command import (
     CompleterPropositionCommand,
 )
-from osis_admission_sdk.model.continuing_education_proposition_dto import (
+from osis_admission_sdk.models.continuing_education_proposition_dto import (
     ContinuingEducationPropositionDTO,
 )
-from osis_admission_sdk.model.cotutelle_dto import CotutelleDTO
-from osis_admission_sdk.model.definir_cotutelle_command import DefinirCotutelleCommand
-from osis_admission_sdk.model.designer_promoteur_reference_command import (
+from osis_admission_sdk.models.cotutelle_dto import CotutelleDTO
+from osis_admission_sdk.models.definir_cotutelle_command import DefinirCotutelleCommand
+from osis_admission_sdk.models.designer_promoteur_reference_command import (
     DesignerPromoteurReferenceCommand,
 )
-from osis_admission_sdk.model.doctorate_education_accounting_dto import (
+from osis_admission_sdk.models.doctorate_education_accounting_dto import (
     DoctorateEducationAccountingDTO,
 )
-from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-from osis_admission_sdk.model.general_education_accounting_dto import (
+from osis_admission_sdk.models.doctorate_proposition_dto import DoctoratePropositionDTO
+from osis_admission_sdk.models.general_education_accounting_dto import (
     GeneralEducationAccountingDTO,
 )
-from osis_admission_sdk.model.general_education_proposition_dto import (
+from osis_admission_sdk.models.general_education_proposition_dto import (
     GeneralEducationPropositionDTO,
 )
-from osis_admission_sdk.model.identifier_supervision_actor import (
+from osis_admission_sdk.models.identifier_supervision_actor import (
     IdentifierSupervisionActor,
 )
-from osis_admission_sdk.model.modifier_questions_specifiques_formation_continue_command import (
+from osis_admission_sdk.models.modifier_questions_specifiques_formation_continue_command import (
     ModifierQuestionsSpecifiquesFormationContinueCommand,
 )
-from osis_admission_sdk.model.modifier_questions_specifiques_formation_generale_command import (
+from osis_admission_sdk.models.modifier_questions_specifiques_formation_generale_command import (
     ModifierQuestionsSpecifiquesFormationGeneraleCommand,
 )
-from osis_admission_sdk.model.refuser_proposition_command import (
+from osis_admission_sdk.models.refuser_proposition_command import (
     RefuserPropositionCommand,
 )
-from osis_admission_sdk.model.renvoyer_invitation_signature import (
+from osis_admission_sdk.models.renvoyer_invitation_signature import (
     RenvoyerInvitationSignature,
 )
-from osis_admission_sdk.model.specific_question import SpecificQuestion
-from osis_admission_sdk.model.submit_proposition import SubmitProposition
-from osis_admission_sdk.model.supervision_actor_reference import (
+from osis_admission_sdk.models.specific_question import SpecificQuestion
+from osis_admission_sdk.models.submit_proposition import SubmitProposition
+from osis_admission_sdk.models.supervision_actor_reference import (
     SupervisionActorReference,
 )
-from osis_admission_sdk.model.supervision_dto import SupervisionDTO
+from osis_admission_sdk.models.supervision_dto import SupervisionDTO
 
 from admission.services.mixins import ServiceMeta
 from base.models.person import Person
@@ -103,7 +103,7 @@ __all__ = [
     "GlobalPropositionBusinessException",
 ]
 
-from osis_admission_sdk.model.pool_enum import PoolEnum
+from osis_admission_sdk.models.pool_enum import PoolEnum
 
 
 class APIClient:

@@ -30,7 +30,7 @@ from unittest.mock import ANY, MagicMock, Mock, patch
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
-from osis_admission_sdk.model.completer_comptabilite_proposition_generale_command import (
+from osis_admission_sdk.models.completer_comptabilite_proposition_generale_command import (
     CompleterComptabilitePropositionGeneraleCommand,
 )
 

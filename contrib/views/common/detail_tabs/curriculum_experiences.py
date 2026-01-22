@@ -28,8 +28,8 @@ from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
-from osis_admission_sdk.model.educational_experience import EducationalExperience
-from osis_admission_sdk.model.professional_experience import ProfessionalExperience
+from osis_admission_sdk.models.educational_experience import EducationalExperience
+from osis_admission_sdk.models.professional_experience import ProfessionalExperience
 
 from admission.constants import BE_ISO_CODE, LINGUISTIC_REGIMES_WITHOUT_TRANSLATION
 from admission.contrib.enums import (

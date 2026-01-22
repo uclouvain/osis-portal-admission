@@ -29,8 +29,8 @@ from unittest.mock import MagicMock, Mock, patch
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.utils.translation import gettext_lazy as _
-from osis_organisation_sdk.model.entite import Entite
-from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
+from osis_organisation_sdk.models.entite import Entite
+from osis_organisation_sdk.models.paginated_entites import PaginatedEntites
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.admission_type import AdmissionType
