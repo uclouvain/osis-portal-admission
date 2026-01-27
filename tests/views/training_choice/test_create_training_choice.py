@@ -30,7 +30,7 @@ import freezegun
 from django.shortcuts import resolve_url
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
-from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+from osis_admission_sdk.models.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
 )
 from waffle.testutils import override_switch
@@ -217,7 +217,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
     def test_continuing_education_form_submitting_for_a_short_opened_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,
@@ -287,7 +287,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
     def test_continuing_education_form_submitting_for_a_short_closed_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,
@@ -356,7 +356,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
     def test_continuing_education_form_submitting_for_a_long_opened_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,
@@ -459,7 +459,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
     def test_continuing_education_form_submitting_for_a_long_closed_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,

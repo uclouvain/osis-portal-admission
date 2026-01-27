@@ -50,8 +50,8 @@ from osis_admission_sdk.exceptions import (
     NotFoundException,
     UnauthorizedException,
 )
-from osis_admission_sdk.model.membre_cadto_nested import MembreCADTONested
-from osis_admission_sdk.model.promoteur_dto_nested import PromoteurDTONested
+from osis_admission_sdk.models.membre_cadto_nested import MembreCADTONested
+from osis_admission_sdk.models.promoteur_dto_nested import PromoteurDTONested
 
 from admission.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from admission.contrib.enums import (

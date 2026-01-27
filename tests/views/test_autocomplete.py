@@ -30,24 +30,24 @@ from unittest.mock import ANY, Mock, patch
 
 from django.test import TestCase
 from django.urls import reverse
-from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_organisation_sdk.model.address import Address
-from osis_organisation_sdk.model.entite import Entite
-from osis_organisation_sdk.model.paginated_entites import PaginatedEntites
-from osis_reference_sdk.model.diploma import Diploma
-from osis_reference_sdk.model.high_school import HighSchool
-from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
-from osis_reference_sdk.model.paginated_high_school import PaginatedHighSchool
-from osis_reference_sdk.model.paginated_superior_non_university import (
+from osis_admission_sdk.models.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.models.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.models.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.models.formation_generale_dto import FormationGeneraleDTO
+from osis_organisation_sdk.models.address import Address
+from osis_organisation_sdk.models.entite import Entite
+from osis_organisation_sdk.models.paginated_entites import PaginatedEntites
+from osis_reference_sdk.models.diploma import Diploma
+from osis_reference_sdk.models.high_school import HighSchool
+from osis_reference_sdk.models.paginated_diploma import PaginatedDiploma
+from osis_reference_sdk.models.paginated_high_school import PaginatedHighSchool
+from osis_reference_sdk.models.paginated_superior_non_university import (
     PaginatedSuperiorNonUniversity,
 )
-from osis_reference_sdk.model.paginated_university import PaginatedUniversity
-from osis_reference_sdk.model.scholarship import Scholarship
-from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
-from osis_reference_sdk.model.university import University
+from osis_reference_sdk.models.paginated_university import PaginatedUniversity
+from osis_reference_sdk.models.scholarship import Scholarship
+from osis_reference_sdk.models.superior_non_university import SuperiorNonUniversity
+from osis_reference_sdk.models.university import University
 from waffle.testutils import override_switch
 
 from admission.contrib.enums import (
@@ -377,16 +377,18 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_organisation_sdk.api.entites_api.EntitesApi')
     def test_autocomplete_institute_list(self, api):
+        uuid1 = uuid.uuid4()
+        uuid2 = uuid.uuid4()
         mock_entities = [
             Entite(
-                uuid='uuid1',
+                uuid=uuid1,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of technology',
                 acronym='IT',
             ),
             Entite(
-                uuid='uuid2',
+                uuid=uuid2,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of foreign languages',
@@ -400,11 +402,11 @@ class AutocompleteTestCase(OsisPortalTestCase):
         response = self.client.get(url, {'q': 'Institute'})
         expected = [
             {
-                'id': 'uuid1',
+                'id': uuid1,
                 'text': 'Institute of technology (IT)',
             },
             {
-                'id': 'uuid2',
+                'id': uuid2,
                 'text': 'Institute of foreign languages (IFL)',
             },
         ]
@@ -457,8 +459,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_reference_sdk.api.high_schools_api.HighSchoolsApi')
     def test_autocomplete_high_school_list(self, api):
-        self.first_high_school_uuid = str(uuid.uuid4())
-        self.second_high_school_uuid = str(uuid.uuid4())
+        self.first_high_school_uuid = uuid.uuid4()
+        self.second_high_school_uuid = uuid.uuid4()
         self.maxDiff = None
 
         mock_schools = [
@@ -528,8 +530,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_reference_sdk.api.diplomas_api.DiplomasApi')
     def test_autocomplete_diploma_list(self, api):
-        self.first_diploma_uuid = str(uuid.uuid4())
-        self.second_diploma_uuid = str(uuid.uuid4())
+        self.first_diploma_uuid = uuid.uuid4()
+        self.second_diploma_uuid = uuid.uuid4()
 
         mock_diplomas = [
             Diploma(uuid=self.first_diploma_uuid, title="Computer science"),
@@ -558,13 +560,13 @@ class AutocompleteTestCase(OsisPortalTestCase):
         second_scholarship_uuid = str(uuid.uuid4())
 
         mock_scholarships = [
-            Scholarship._from_openapi_data(
+            Scholarship(
                 uuid=first_scholarship_uuid,
                 short_name="EM-1",
                 long_name="Erasmus Mundus 1",
                 type=TypeBourse.ERASMUS_MUNDUS.name,
             ),
-            Scholarship._from_openapi_data(
+            Scholarship(
                 uuid=second_scholarship_uuid,
                 short_name="EM-2",
                 long_name="",
@@ -763,8 +765,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
     def test_autocomplete_non_universities_list(self, api):
-        self.first_superior_school_uuid = str(uuid.uuid4())
-        self.second_superior_school_uuid = str(uuid.uuid4())
+        self.first_superior_school_uuid = uuid.uuid4()
+        self.second_superior_school_uuid = uuid.uuid4()
 
         mock_schools = [
             SuperiorNonUniversity(
@@ -836,8 +838,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_reference_sdk.api.universities_api.UniversitiesApi')
     def test_autocomplete_universities_list(self, api):
-        self.first_superior_school_uuid = str(uuid.uuid4())
-        self.second_superior_school_uuid = str(uuid.uuid4())
+        self.first_superior_school_uuid = uuid.uuid4()
+        self.second_superior_school_uuid = uuid.uuid4()
 
         mock_schools = [
             University(
@@ -910,10 +912,10 @@ class AutocompleteTestCase(OsisPortalTestCase):
     @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
     @patch('osis_reference_sdk.api.universities_api.UniversitiesApi')
     def test_autocomplete_superior_list(self, api_university, api_non_university):
-        self.first_superior_school_uuid = str(uuid.uuid4())
-        self.second_superior_school_uuid = str(uuid.uuid4())
-        self.third_superior_school_uuid = str(uuid.uuid4())
-        self.fourth_superior_school_uuid = str(uuid.uuid4())
+        self.first_superior_school_uuid = uuid.uuid4()
+        self.second_superior_school_uuid = uuid.uuid4()
+        self.third_superior_school_uuid = uuid.uuid4()
+        self.fourth_superior_school_uuid = uuid.uuid4()
 
         mock_universities = [
             University(
@@ -1013,21 +1015,21 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
         api.return_value.list_diplomatic_posts.return_value = {
             'results': [
-                DiplomaticPost._new_from_openapi_data(
+                DiplomaticPost(
                     code=self.first_diplomatic_post_code,
                     name_fr='Marseille',
                     name_en='Marseille',
                     email='marseille@example.be',
                     countries_iso_codes=['FR'],
                 ),
-                DiplomaticPost._new_from_openapi_data(
+                DiplomaticPost(
                     code=self.second_diplomatic_post_code,
                     name_fr='Paris',
                     name_en='Paris',
                     email='paris@example.be',
                     countries_iso_codes=['FR', 'GF'],
                 ),
-                DiplomaticPost._new_from_openapi_data(
+                DiplomaticPost(
                     code=self.third_diplomatic_post_code,
                     name_fr='Londres',
                     name_en='London',

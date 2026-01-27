@@ -28,13 +28,13 @@ from unittest.mock import ANY, MagicMock, patch
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
-from osis_admission_sdk.model.modifier_questions_specifiques_formation_continue_command import (
+from osis_admission_sdk.models.modifier_questions_specifiques_formation_continue_command import (
     ModifierQuestionsSpecifiquesFormationContinueCommand,
 )
-from osis_admission_sdk.model.modifier_questions_specifiques_formation_generale_command import (
+from osis_admission_sdk.models.modifier_questions_specifiques_formation_generale_command import (
     ModifierQuestionsSpecifiquesFormationGeneraleCommand,
 )
-from osis_admission_sdk.model.poste_diplomatique_dto_nested import (
+from osis_admission_sdk.models.poste_diplomatique_dto_nested import (
     PosteDiplomatiqueDTONested,
 )
 
@@ -337,7 +337,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             pays_residence='FR',
         )
         proposition = self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value
-        proposition.poste_diplomatique = PosteDiplomatiqueDTONested._from_openapi_data(
+        proposition.poste_diplomatique = PosteDiplomatiqueDTONested(
             code=self.first_diplomatic_post.code,
             nom_francais='',
             nom_anglais='',

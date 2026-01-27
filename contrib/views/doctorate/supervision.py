@@ -64,7 +64,7 @@ __all__ = [
 ]
 __namespace__ = False
 
-from osis_admission_sdk.model.actor_type_enum import ActorTypeEnum
+from osis_admission_sdk.models.actor_type_enum import ActorTypeEnum
 
 
 class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFormMixin, FormView):
@@ -134,14 +134,14 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
         return next(
             iter(
                 [
-                    signature['promoteur']['uuid']
+                    signature.promoteur.uuid
                     for signature in self.supervision['signatures_promoteurs']
-                    if self.person.global_id == signature['promoteur']['matricule']
+                    if self.person.global_id == signature['promoteur'].matricule
                 ]
                 + [
-                    signature['membre_ca']['uuid']
+                    signature['membre_ca'].uuid
                     for signature in self.supervision['signatures_membres_ca']
-                    if self.person.global_id == signature['membre_ca']['matricule']
+                    if self.person.global_id == signature['membre_ca'].matricule
                 ]
             ),
             None,

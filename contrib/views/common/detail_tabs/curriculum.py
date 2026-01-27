@@ -129,7 +129,7 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
     @cached_property
     def display_curriculum(self):
         if self.current_context == 'general-education':
-            return self.admission.formation['type'] != TrainingType.BACHELOR.name
+            return self.admission.formation.type != TrainingType.BACHELOR.name
         elif self.current_context == 'continuing-education':
             return self.admission.inscription_au_role_obligatoire is True
         return True
@@ -137,10 +137,10 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
     @cached_property
     def display_equivalence(self):
         if self.current_context == 'general-education':
-            return self.admission.formation['type'] in TRAINING_TYPES_WITH_EQUIVALENCE and self.has_foreign_diploma
+            return self.admission.formation.type in TRAINING_TYPES_WITH_EQUIVALENCE and self.has_foreign_diploma
         elif self.current_context == 'continuing-education':
             return (
-                self.admission.formation['type'] == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+                self.admission.formation.type == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
                 and self.has_foreign_diploma
             )
         return False

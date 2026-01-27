@@ -30,48 +30,48 @@ from unittest.mock import ANY, MagicMock, patch
 
 from django.http import Http404
 from django.test import override_settings
-from osis_admission_sdk.model.action_link import ActionLink
-from osis_admission_sdk.model.continuing_education_proposition_dto import (
+from osis_admission_sdk.models.action_link import ActionLink
+from osis_admission_sdk.models.continuing_education_proposition_dto import (
     ContinuingEducationPropositionDTO,
 )
-from osis_admission_sdk.model.continuing_education_proposition_dto_links import (
+from osis_admission_sdk.models.continuing_education_proposition_dto_links import (
     ContinuingEducationPropositionDTOLinks,
 )
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.doctorate_proposition_dto import DoctoratePropositionDTO
-from osis_admission_sdk.model.doctorate_proposition_dto_links import (
+from osis_admission_sdk.models.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.models.doctorate_proposition_dto import DoctoratePropositionDTO
+from osis_admission_sdk.models.doctorate_proposition_dto_links import (
     DoctoratePropositionDTOLinks,
 )
-from osis_admission_sdk.model.educational_experience import EducationalExperience
-from osis_admission_sdk.model.educational_experience_year import (
+from osis_admission_sdk.models.educational_experience import EducationalExperience
+from osis_admission_sdk.models.educational_experience_year import (
     EducationalExperienceYear,
 )
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_admission_sdk.model.general_education_proposition_dto import (
+from osis_admission_sdk.models.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.models.formation_generale_dto import FormationGeneraleDTO
+from osis_admission_sdk.models.general_education_proposition_dto import (
     GeneralEducationPropositionDTO,
 )
-from osis_admission_sdk.model.general_education_proposition_dto_links import (
+from osis_admission_sdk.models.general_education_proposition_dto_links import (
     GeneralEducationPropositionDTOLinks,
 )
-from osis_admission_sdk.model.professional_experience import ProfessionalExperience
-from osis_admission_sdk.model.result_enum import ResultEnum
-from osis_admission_sdk.model.sector_enum import SectorEnum
-from osis_admission_sdk.model.study_system_enum import StudySystemEnum
-from osis_admission_sdk.model.type_enum import TypeEnum
-from osis_reference_sdk.model.academic_year import AcademicYear
-from osis_reference_sdk.model.country import Country
-from osis_reference_sdk.model.diploma import Diploma
-from osis_reference_sdk.model.language import Language
-from osis_reference_sdk.model.paginated_country import PaginatedCountry
-from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
-from osis_reference_sdk.model.paginated_language import PaginatedLanguage
-from osis_reference_sdk.model.paginated_superior_non_university import (
+from osis_admission_sdk.models.professional_experience import ProfessionalExperience
+from osis_admission_sdk.models.result_enum import ResultEnum
+from osis_admission_sdk.models.sector_enum import SectorEnum
+from osis_admission_sdk.models.study_system_enum import StudySystemEnum
+from osis_admission_sdk.models.type_enum import TypeEnum
+from osis_reference_sdk.models.academic_year import AcademicYear
+from osis_reference_sdk.models.country import Country
+from osis_reference_sdk.models.diploma import Diploma
+from osis_reference_sdk.models.language import Language
+from osis_reference_sdk.models.paginated_country import PaginatedCountry
+from osis_reference_sdk.models.paginated_diploma import PaginatedDiploma
+from osis_reference_sdk.models.paginated_language import PaginatedLanguage
+from osis_reference_sdk.models.paginated_superior_non_university import (
     PaginatedSuperiorNonUniversity,
 )
-from osis_reference_sdk.model.paginated_university import PaginatedUniversity
-from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
-from osis_reference_sdk.model.university import University
+from osis_reference_sdk.models.paginated_university import PaginatedUniversity
+from osis_reference_sdk.models.superior_non_university import SuperiorNonUniversity
+from osis_reference_sdk.models.university import University
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import (
@@ -112,12 +112,12 @@ class MixinTestCase(OsisPortalTestCase):
         cls.language_with_translation = Language(code='IS', name='Islandais', name_en='Icelandic')
 
         # Diplomas
-        cls.first_diploma = Diploma(uuid=str(uuid.uuid4()), title="Computer science")
-        cls.second_diploma = Diploma(uuid=str(uuid.uuid4()), title="Biology")
+        cls.first_diploma = Diploma(uuid=uuid.uuid4(), title="Computer science")
+        cls.second_diploma = Diploma(uuid=uuid.uuid4(), title="Biology")
 
         # Institute
         cls.institute = SuperiorNonUniversity(
-            uuid=str(uuid.uuid4()),
+            uuid=uuid.uuid4(),
             name="Institute of Technology",
             city="Louvain-la-Neuve",
             zipcode="1348",
@@ -125,7 +125,7 @@ class MixinTestCase(OsisPortalTestCase):
             street_number="1",
         )
         cls.university = University(
-            uuid=str(uuid.uuid4()),
+            uuid=uuid.uuid4(),
             name="University of Technology",
             city="Louvain-la-Neuve",
             zipcode="1348",
@@ -160,12 +160,12 @@ class MixinTestCase(OsisPortalTestCase):
             end_date=datetime.date(2021, 7, 5),
         )
 
-        cls.educational_experience = EducationalExperience._from_openapi_data(
+        cls.educational_experience = EducationalExperience(
             country=cls.be_country.iso_code,
-            institute=cls.institute.uuid,
+            institute=str(cls.institute.uuid),
             institute_name='UCL',
             institute_address='Place de l\'Université',
-            program=cls.first_diploma.uuid,
+            program=str(cls.first_diploma.uuid),
             education_name='Other computer science',
             study_system=StudySystemEnum(value='FULL_TIME'),
             evaluation_type='ECTS_CREDITS',
@@ -204,7 +204,7 @@ class MixinTestCase(OsisPortalTestCase):
             valuated_from_trainings=[],
         )
 
-        cls.lite_educational_experience = EducationalExperience._from_openapi_data(
+        cls.lite_educational_experience = EducationalExperience(
             uuid=cls.educational_experience.uuid,
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
@@ -227,7 +227,7 @@ class MixinTestCase(OsisPortalTestCase):
             valuated_from_trainings=[],
             obtained_diploma=True,
         )
-        cls.foreign_lite_educational_experience = EducationalExperience._from_openapi_data(
+        cls.foreign_lite_educational_experience = EducationalExperience(
             uuid=cls.educational_experience.uuid,
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
@@ -245,7 +245,7 @@ class MixinTestCase(OsisPortalTestCase):
             obtained_diploma=True,
         )
 
-        cls.professional_experience = ProfessionalExperience._from_openapi_data(
+        cls.professional_experience = ProfessionalExperience(
             institute_name='First institute',
             start_date=datetime.date(2020, 1, 1),
             end_date=datetime.date(2021, 1, 1),
@@ -259,7 +259,7 @@ class MixinTestCase(OsisPortalTestCase):
             external_id='',
         )
 
-        cls.lite_professional_experience = ProfessionalExperience._from_openapi_data(
+        cls.lite_professional_experience = ProfessionalExperience(
             uuid=cls.professional_experience.uuid,
             institute_name=cls.professional_experience.institute_name,
             type=cls.professional_experience.type,
@@ -271,20 +271,18 @@ class MixinTestCase(OsisPortalTestCase):
         )
 
         # Proposition
-        cls.proposition = DoctoratePropositionDTO._from_openapi_data(
+        cls.proposition = DoctoratePropositionDTO(
             uuid=str(uuid.uuid4()),
             type_admission=AdmissionType.ADMISSION.name,
             reference='M-CDSS20-000.001',
             links=DoctoratePropositionDTOLinks(
                 retrieve_curriculum=ActionLink(method='GET', url='url'),
                 update_curriculum=ActionLink(method='POST', url='url'),
-                update_specific_question=ActionLink(method='POST', url='url'),
-                retrieve_specific_question=ActionLink(method='GET', url='url'),
                 update_accounting=ActionLink(method='POST', url='url'),
                 retrieve_accounting=ActionLink(method='POST', url='url'),
             ),
             date_fin_pot=None,
-            doctorat=DoctoratDTO._from_openapi_data(
+            doctorat=DoctoratDTO(
                 sigle='CS1',
                 code='C1',
                 annee=cls.academic_year_2020.year,
@@ -318,9 +316,9 @@ class MixinTestCase(OsisPortalTestCase):
             sigle_institut_these='',
         )
 
-        cls.general_proposition = GeneralEducationPropositionDTO._from_openapi_data(
+        cls.general_proposition = GeneralEducationPropositionDTO(
             uuid=str(uuid.uuid4()),
-            formation=FormationGeneraleDTO._from_openapi_data(
+            formation=FormationGeneraleDTO(
                 annee=2020,
                 intitule='Formation',
                 intitule_fr='Formation',
@@ -364,10 +362,10 @@ class MixinTestCase(OsisPortalTestCase):
             poste_diplomatique=None,
         )
 
-        cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(
+        cls.continuing_proposition = ContinuingEducationPropositionDTO(
             uuid=str(uuid.uuid4()),
             reference='M-CMC20-000.003',
-            formation=FormationContinueDTO._from_openapi_data(
+            formation=FormationContinueDTO(
                 annee=2020,
                 intitule='Formation',
                 intitule_fr='Formation',
@@ -390,8 +388,6 @@ class MixinTestCase(OsisPortalTestCase):
                 update_curriculum=ActionLink(method='POST', url='url'),
                 update_specific_question=ActionLink(method='POST', url='url'),
                 retrieve_specific_question=ActionLink(method='GET', url='url'),
-                update_accounting=ActionLink(method='POST', url='url'),
-                retrieve_accounting=ActionLink(method='POST', url='url'),
             ),
             erreurs=[],
             reponses_questions_specifiques={},
@@ -497,7 +493,7 @@ class MixinTestCase(OsisPortalTestCase):
         def get_diploma(**kwargs):
             diploma_uuid = kwargs.get('uuid')
             return next(
-                (diploma for diploma in [self.first_diploma, self.second_diploma] if diploma.uuid == diploma_uuid),
+                (diploma for diploma in [self.first_diploma, self.second_diploma] if str(diploma.uuid) == diploma_uuid),
                 None,
             )
 
