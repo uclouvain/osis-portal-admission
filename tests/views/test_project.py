@@ -78,16 +78,19 @@ class ProjectViewTestCase(OsisPortalTestCase):
         ]
 
     def setUp(self):
+        uuid1 = uuid.uuid4()
+        uuid2 = uuid.uuid4()
+
         self.mock_entities = [
             Entite(
-                uuid='uuid1',
+                uuid=uuid1,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of technology',
                 acronym='IT',
             ),
             Entite(
-                uuid='uuid2',
+                uuid=uuid2,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of foreign languages',

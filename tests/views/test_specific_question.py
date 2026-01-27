@@ -337,7 +337,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             pays_residence='FR',
         )
         proposition = self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value
-        proposition.poste_diplomatique = PosteDiplomatiqueDTONested._from_openapi_data(
+        proposition.poste_diplomatique = PosteDiplomatiqueDTONested(
             code=self.first_diplomatic_post.code,
             nom_francais='',
             nom_anglais='',

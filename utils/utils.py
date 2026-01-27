@@ -42,7 +42,7 @@ from osis_reference_sdk.models.university import University
 
 def format_entity_title(entity: Entite):
     """Return the concatenation of the entity name and acronym."""
-    return '{title} ({acronym})'.format_map(entity)
+    return '{title} ({acronym})'.format_map(entity.to_dict())
 
 
 def format_address(street='', street_number='', postal_code='', city='', country=''):
@@ -63,26 +63,26 @@ def format_entity_address(address: Address):
 def format_school_title(school: Union[HighSchool, SuperiorNonUniversity, University]):
     """Return the concatenation of the school name and city."""
     return '{} <span class="school-address">{}</span>'.format(
-        school['name'],
+        school.name,
         format_address(
-            street=school['street'],
-            street_number=school['street_number'],
-            postal_code=school['zipcode'],
-            city=school['city'],
+            street=school.street,
+            street_number=school.street_number,
+            postal_code=school.zipcode,
+            city=school.city,
         ),
     )
 
 
 def format_training(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
-    return '{intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training)
+    return '{intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training.to_dict())
 
 
 def format_training_with_year(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
-    return '{annee} - {intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training)
+    return '{annee} - {intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training.to_dict())
 
 
 def format_scholarship(scholarship: Scholarship):
-    return scholarship['long_name'] or scholarship['short_name']
+    return scholarship.long_name or scholarship.short_name
 
 
 def force_title(string: str):

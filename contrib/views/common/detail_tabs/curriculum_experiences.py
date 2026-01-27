@@ -234,7 +234,7 @@ def experience_can_be_updated(experience, context):
 
 def professional_experience_can_be_updated(experience, context):
     """Return if the educational experience can be updated in the specific context."""
-    is_certificate_missing = context in ['doctorate', 'general-education'] and not experience['certificate']
+    is_certificate_missing = context in ['doctorate', 'general-education'] and not experience.certificate
     # An experience can be updated...
     return (
         # ... if it is not valuated

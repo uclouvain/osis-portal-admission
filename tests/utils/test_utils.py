@@ -50,7 +50,7 @@ class UtilsTestCase(OsisPortalTestCase):
             state="Belgique",
         )
         self.entity = Entite(
-            uuid='uuid',
+            uuid=uuid.uuid4(),
             organization_name='Université Catholique de Louvain',
             organization_acronym='UCL',
             title='Institute of technology',
@@ -61,14 +61,14 @@ class UtilsTestCase(OsisPortalTestCase):
         """Return the concatenation of the entity name and acronym."""
         self.assertEqual(
             format_entity_title(entity=self.entity),
-            '{title} ({acronym})'.format_map(self.entity),
+            '{title} ({acronym})'.format_map(self.entity.to_dict()),
         )
 
     def test_format_address_with_street_and_city_and_state_parts(self):
         """Return the concatenation of the street number, street, postal code, city and state if they are defined"""
         self.assertEqual(
             format_entity_address(address=self.address),
-            '{street} {street_number}, {postal_code} {city}, {state}'.format_map(self.address),
+            '{street} {street_number}, {postal_code} {city}, {state}'.format_map(self.address.to_dict()),
         )
 
     def test_format_address_with_city_and_state_parts(self):
@@ -82,7 +82,7 @@ class UtilsTestCase(OsisPortalTestCase):
         )
         self.assertEqual(
             format_entity_address(address=address),
-            '{postal_code} {city}, {state}'.format_map(address),
+            '{postal_code} {city}, {state}'.format_map(address.to_dict()),
         )
 
     def test_format_address_with_state_part(self):
@@ -96,7 +96,7 @@ class UtilsTestCase(OsisPortalTestCase):
         )
         self.assertEqual(
             format_entity_address(address=address),
-            '{state}'.format_map(address),
+            '{state}'.format_map(address.to_dict()),
         )
 
     def test_force_title_empty_string(self):

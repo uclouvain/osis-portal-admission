@@ -217,7 +217,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 if training.sigle_formation == acronym and training.annee == year
             )
         except StopIteration:
-            return InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            return InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation=acronym,
                 annee=int(year),
                 aide_a_la_formation=True,
@@ -255,25 +255,25 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         cls.louvain_campus_uuid = str(uuid.uuid4())
         cls.mons_campus_uuid = str(uuid.uuid4())
         cls.first_question_uuid = str(uuid.uuid4())
-        cls.first_erasmus_mundus_scholarship = Scholarship._from_openapi_data(
+        cls.first_erasmus_mundus_scholarship = Scholarship(
             uuid=str(uuid.uuid4()),
             short_name="EM-1",
             long_name="Erasmus Mundus 1",
             type=TypeBourse.ERASMUS_MUNDUS.name,
         )
-        cls.second_erasmus_mundus_scholarship = Scholarship._from_openapi_data(
+        cls.second_erasmus_mundus_scholarship = Scholarship(
             uuid=str(uuid.uuid4()),
             short_name="EM-2",
             long_name="",
             type=TypeBourse.ERASMUS_MUNDUS.name,
         )
-        cls.double_degree_scholarship = Scholarship._from_openapi_data(
+        cls.double_degree_scholarship = Scholarship(
             uuid=str(uuid.uuid4()),
             short_name="DD-1",
             long_name="",
             type=TypeBourse.DOUBLE_TRIPLE_DIPLOMATION.name,
         )
-        cls.international_scholarship = Scholarship._from_openapi_data(
+        cls.international_scholarship = Scholarship(
             uuid=str(uuid.uuid4()),
             short_name="IN-2",
             long_name="",
@@ -287,7 +287,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             cls.international_scholarship,
         ]
 
-        cls.first_diplomatic_post = DiplomaticPost._from_openapi_data(
+        cls.first_diplomatic_post = DiplomaticPost(
             code=1,
             name_fr="Bruxelles",
             name_en="Brussels",
@@ -295,7 +295,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             email='brussels@example.be',
         )
 
-        cls.second_diplomatic_post = DiplomaticPost._from_openapi_data(
+        cls.second_diplomatic_post = DiplomaticPost(
             code=2,
             name_fr="Paris",
             name_en="Paris",
@@ -303,7 +303,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             email='paris@example.fr',
         )
 
-        cls.third_diplomatic_post = DiplomaticPost._from_openapi_data(
+        cls.third_diplomatic_post = DiplomaticPost(
             code=3,
             name_fr="Londres",
             name_en="London",
@@ -527,7 +527,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         )
 
         cls.specific_questions = [
-            SpecificQuestion._from_openapi_data(
+            SpecificQuestion(
                 uuid=str(uuid.uuid4()),
                 type=TypeItemFormulaire.MESSAGE.name,
                 title={},
@@ -537,7 +537,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 required=True,
                 values=[],
             ),
-            SpecificQuestion._from_openapi_data(
+            SpecificQuestion(
                 uuid=cls.first_question_uuid,
                 type=TypeItemFormulaire.TEXTE.name,
                 title={'en': 'My first question', 'fr-be': 'Ma première question'},
@@ -624,7 +624,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         ]
 
         cls.continuing_trainings_informations = [
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='FOOBAR',
                 annee=2021,
                 aide_a_la_formation=True,
@@ -632,7 +632,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 etat=StateIUFC.OPEN.name,
                 lien_informations_pratiques_formation='https://test.be/FOOBAR/2021/info',
             ),
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='BARBAZ',
                 annee=2021,
                 aide_a_la_formation=True,
@@ -672,21 +672,21 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         ]
 
         cls.campuses = [
-            Campus._from_openapi_data(name='Louvain-La-Neuve', uuid=cls.louvain_campus_uuid),
-            Campus._from_openapi_data(name='Mons', uuid=cls.mons_campus_uuid),
+            Campus(name='Louvain-La-Neuve', uuid=cls.louvain_campus_uuid),
+            Campus(name='Mons', uuid=cls.mons_campus_uuid),
         ]
 
         cls.doctorate_pre_admissions = [
-            DoctoratePreAdmissionSearchDTO._from_openapi_data(
+            DoctoratePreAdmissionSearchDTO(
                 uuid=str(uuid.uuid4()),
                 reference='1',
-                doctorat=DoctoratSearchDTO._from_openapi_data(
+                doctorat=DoctoratSearchDTO(
                     sigle='S-1',
                     code='C-1',
                     annee=2024,
                     intitule='Doctorat 1',
                     sigle_entite_gestion='SEG-1',
-                    campus=CampusDTO._from_openapi_data(
+                    campus=CampusDTO(
                         uuid=cls.campuses[0].uuid,
                         nom=cls.campuses[0].name,
                     ),
@@ -694,16 +694,16 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 code_secteur_formation='SSH',
                 intitule_secteur_formation='ISF-1',
             ),
-            DoctoratePreAdmissionSearchDTO._from_openapi_data(
+            DoctoratePreAdmissionSearchDTO(
                 uuid=str(uuid.uuid4()),
                 reference='2',
-                doctorat=DoctoratSearchDTO._from_openapi_data(
+                doctorat=DoctoratSearchDTO(
                     sigle='S-2',
                     code='C-2',
                     annee=2024,
                     intitule='Doctorat 2',
                     sigle_entite_gestion='SEG-2',
-                    campus=CampusDTO._from_openapi_data(
+                    campus=CampusDTO(
                         uuid=cls.campuses[1].uuid,
                         nom=cls.campuses[1].name,
                     ),
@@ -711,16 +711,16 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 code_secteur_formation='SST',
                 intitule_secteur_formation='ISF-2',
             ),
-            DoctoratePreAdmissionSearchDTO._from_openapi_data(
+            DoctoratePreAdmissionSearchDTO(
                 uuid=str(uuid.uuid4()),
                 reference='3',
-                doctorat=DoctoratSearchDTO._from_openapi_data(
+                doctorat=DoctoratSearchDTO(
                     sigle='S-3',
                     code='C-3',
                     annee=2024,
                     intitule='Doctorat 3',
                     sigle_entite_gestion='SEG-3',
-                    campus=CampusDTO._from_openapi_data(
+                    campus=CampusDTO(
                         uuid=cls.campuses[0].uuid,
                         nom=cls.campuses[0].name,
                     ),

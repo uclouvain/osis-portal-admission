@@ -521,7 +521,7 @@ class MultipleFieldDataTestCase(OsisPortalTestCase):
 
     def setUp(self):
         self.configurations = [
-            SpecificQuestion._from_openapi_data(
+            SpecificQuestion(
                 uuid='fe254203-17c7-47d6-95e4-3c5c532da551',
                 type=TypeItemFormulaire.MESSAGE.name,
                 required=False,
@@ -531,7 +531,7 @@ class MultipleFieldDataTestCase(OsisPortalTestCase):
                 configuration={},
                 values=[],
             ),
-            SpecificQuestion._from_openapi_data(
+            SpecificQuestion(
                 uuid='fe254203-17c7-47d6-95e4-3c5c532da552',
                 type=TypeItemFormulaire.TEXTE.name,
                 required=True,
@@ -541,7 +541,7 @@ class MultipleFieldDataTestCase(OsisPortalTestCase):
                 configuration={},
                 values=[],
             ),
-            SpecificQuestion._from_openapi_data(
+            SpecificQuestion(
                 uuid='fe254203-17c7-47d6-95e4-3c5c532da553',
                 type=TypeItemFormulaire.DOCUMENT.name,
                 required=False,
@@ -551,7 +551,7 @@ class MultipleFieldDataTestCase(OsisPortalTestCase):
                 configuration={},
                 values=[],
             ),
-            SpecificQuestion._from_openapi_data(
+            SpecificQuestion(
                 uuid='fe254203-17c7-47d6-95e4-3c5c532da554',
                 type=TypeItemFormulaire.SELECTION.name,
                 required=False,
@@ -566,7 +566,7 @@ class MultipleFieldDataTestCase(OsisPortalTestCase):
                     {'key': '2', 'fr-be': 'Deux', 'en': 'Two'},
                 ],
             ),
-            SpecificQuestion._from_openapi_data(
+            SpecificQuestion(
                 uuid='fe254203-17c7-47d6-95e4-3c5c532da555',
                 type=TypeItemFormulaire.SELECTION.name,
                 required=False,

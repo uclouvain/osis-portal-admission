@@ -507,7 +507,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
     def test_form_submitting_missing_fields_with_short_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,
@@ -591,7 +591,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         # For short courses, the ways of finding out about the course is not required
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,
@@ -635,7 +635,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
     def test_continuing_education_form_submitting_for_a_short_opened_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,
@@ -713,7 +713,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
     def test_continuing_education_form_submitting_for_a_short_closed_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,
@@ -791,7 +791,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
     def test_continuing_education_form_submitting_for_a_long_opened_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,
@@ -869,7 +869,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
     def test_continuing_education_form_submitting_for_a_long_closed_training(self):
         mock_continuing_api = self.mock_continuing_education_api.return_value
         mock_continuing_api.retrieve_informations_specifiques_formation_continue_dto.side_effect = lambda **kwargs: (
-            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
+            InformationsSpecifiquesFormationContinueDTO(
                 sigle_formation='TR2',
                 annee=2020,
                 aide_a_la_formation=True,

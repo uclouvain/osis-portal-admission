@@ -134,14 +134,14 @@ class DoctorateAdmissionSupervisionDetailView(LoadDossierViewMixin, WebServiceFo
         return next(
             iter(
                 [
-                    signature['promoteur']['uuid']
+                    signature.promoteur.uuid
                     for signature in self.supervision['signatures_promoteurs']
-                    if self.person.global_id == signature['promoteur']['matricule']
+                    if self.person.global_id == signature['promoteur'].matricule
                 ]
                 + [
-                    signature['membre_ca']['uuid']
+                    signature['membre_ca'].uuid
                     for signature in self.supervision['signatures_membres_ca']
-                    if self.person.global_id == signature['membre_ca']['matricule']
+                    if self.person.global_id == signature['membre_ca'].matricule
                 ]
             ),
             None,

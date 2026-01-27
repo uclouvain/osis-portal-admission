@@ -177,7 +177,7 @@ def get_high_school_initial_choices(uuid, person):
 def get_campus_choices(person):
     """Return the unique initial choice for the campus."""
     ucl_campus = AdmissionCampusService.list_campus(person=person)
-    return [(EMPTY_VALUE, _('All'))] + [(campus['uuid'], campus['name']) for campus in ucl_campus]
+    return [(EMPTY_VALUE, _('All'))] + [(campus.uuid, campus.name) for campus in ucl_campus]
 
 
 def get_scholarship_choices(uuid, person):
