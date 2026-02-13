@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,11 +23,9 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
 import uuid
 from unittest.mock import ANY, MagicMock, Mock, patch
 
-from django.test import TestCase
 from osis_admission_sdk.model.campus import Campus
 from osis_admission_sdk.model.campus_dto import CampusDTO
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
@@ -46,7 +44,7 @@ from osis_reference_sdk.model.scholarship import Scholarship
 from admission.contrib.enums import (
     ChoixStatutPropositionContinue,
     ChoixStatutPropositionDoctorale,
-    ChoixStatutPropositionGenerale,
+    ChoixStatutPropositionGenerale, ChoixCommissionProximiteCDSS,
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
@@ -151,8 +149,36 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 to_dict=lambda: {
                     'acronym': 'SC3DP',
                     'academic_year': year,
-                    'title': 'Formation 5',
-                    'title_en': 'Training 5',
+                    'title': 'Formation 6',
+                    'title_en': 'Training 6',
+                    'main_teaching_campus': {
+                        'name': 'Louvain-La-Neuve',
+                    },
+                    'education_group_type': 'PHD',
+                    'management_entity': 'ME3',
+                    'domain_code': '10A',
+                },
+            ),
+            'GEST3DP': Mock(
+                to_dict=lambda: {
+                    'acronym': 'GEST3DP',
+                    'academic_year': year,
+                    'title': 'Formation 7',
+                    'title_en': 'Training 7',
+                    'main_teaching_campus': {
+                        'name': 'Louvain-La-Neuve',
+                    },
+                    'education_group_type': 'PHD',
+                    'management_entity': 'ME3',
+                    'domain_code': '10A',
+                },
+            ),
+            'ECON3DP': Mock(
+                to_dict=lambda: {
+                    'acronym': 'ECON3DP',
+                    'academic_year': year,
+                    'title': 'Formation 8',
+                    'title_en': 'Training 8',
                     'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
@@ -506,9 +532,9 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'intitule': 'Formation',
                 'campus': 'Louvain-La-Neuve',
                 'campus_uuid': cls.louvain_campus_uuid,
-                'sigle': 'TR3',
+                'sigle': 'TR4',
                 'type': TrainingType.PHD.name,
-                'sigle_entite_gestion': 'CDE',
+                'sigle_entite_gestion': 'TR4',
                 'campus_inscription': 'Mons',
             },
             reference='M-CDE20-000.004',
@@ -519,7 +545,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             projet_formation_complementaire=[],
             lettres_recommandation=[],
             links={'update_project': {'url': 'ok'}, 'update_training_choice': {'url': 'ok'}},
-            commission_proximite='MANAGEMENT',
+            commission_proximite=ChoixCommissionProximiteCDSS.MOTR.name,
             statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             reponses_questions_specifiques={
                 cls.first_question_uuid: 'My answer',
