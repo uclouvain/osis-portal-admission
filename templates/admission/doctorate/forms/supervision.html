@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -137,6 +137,12 @@
               </div>
             </div>
           </div>
+          <p class="alert alert-danger">
+            {% blocktranslate trimmed %}
+              <strong>Before adding them to your proposal</strong>, please contact all members of your support
+              committee to obtain their agreement to supervise/monitor your thesis.
+            {% endblocktranslate %}
+          </p>
           <button
             type="submit" class="btn btn-primary"
             name="add_member_submit"
