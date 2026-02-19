@@ -27,6 +27,7 @@ from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
 from admission.constants import PLUS_5_ISO_CODES, BE_ISO_CODE
+from admission.contrib.enums import OSIS_ADMISSION_EDUCATION_TYPES_MAPPING, TypeFormation
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.views.mixins import LoadDossierViewMixin
@@ -51,6 +52,15 @@ class SpecificQuestionViewMixin(LoadDossierViewMixin):
                 uuid_proposition=self.admission_uuid,
             )
 
+
+    @cached_property
+    def curriculum(self):
+        if self.is_general:
+            return AdmissionPropositionService.retrieve(
+                person=self.person,
+                uuid_proposition=self.admission_uuid,
+            )
+
     @cached_property
     def display_visa_question(self):
         identification = self.identification
@@ -63,6 +73,11 @@ class SpecificQuestionViewMixin(LoadDossierViewMixin):
             and identification.pays_residence != BE_ISO_CODE
         )
 
+    @cached_property
+    def display_bama_15_question(self):
+        return self.admission.formation.type in OSIS_ADMISSION_EDUCATION_TYPES_MAPPING[TypeFormation.MASTER.name] and
+
+        self.admission.formation.type in {}
 
 class SpecificQuestionDetailView(SpecificQuestionViewMixin, TemplateView):
     template_name = 'admission/details/specific_question.html'

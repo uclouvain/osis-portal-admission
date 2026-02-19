@@ -62,6 +62,18 @@ class GeneralSpecificQuestionForm(ConfigurableFormMixin, forms.Form):
         ),
     )
 
+    est_concerne_par_bama_15 = forms.BooleanField(
+        label="According to our analysis, you have a maximum of 15 remaining credits from your bachelor's "
+              "degree to complete in %(current_year)-%(year+1). Do you confirm this analysis?",
+        required=False,
+    )
+
+    preuve_bama_15 = FileUploadField(
+        label="Proof of re-enrolment for your %(current_year)s-%(next_year)s bachelor's degree",
+        required=False,
+        max_files=10,
+    )
+
     def __init__(self, display_visa: bool, residential_country: str, person, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
