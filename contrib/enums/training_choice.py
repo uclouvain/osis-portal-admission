@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -159,4 +159,14 @@ ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE = {
 TRAINING_TYPES_WITH_SCHOLARSHIP = {
     *OSIS_ADMISSION_EDUCATION_TYPES_MAPPING[TypeFormation.MASTER.name],
     TrainingType.CERTIFICATE.name,
+}
+
+
+FORMATIONS_POUR_BAMA_15 = {
+    TrainingType.MASTER_MA_120.name,
+    TrainingType.MASTER_MD_120.name,
+    TrainingType.MASTER_MS_120.name,
+    TrainingType.MASTER_MS_180_240.name,
+    TrainingType.MASTER_M1.name,
+    TrainingType.MASTER_M4.name,
 }

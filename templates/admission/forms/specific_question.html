@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,34 @@
           </div>
         </div>
       {% endpanel %}
+    {% endif %}
+
+    {% if view.display_bama_15_questions %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            {% translate 'Dual bachelor-master registration (BAMA15)' %}
+          {% blocktranslate with year=view.formatted_training_year trimmed asvar bama_15_tooltip %}
+            If you have 15 or fewer bachelor's credits left to validate in {{ year }}, you have the option of anticipating
+            your master's degree. Before registering for the master's program, please validate your bachelor's
+            registration at your other institution. Your bachelor's registration certificate for {{ year }} must be
+            attached to your master's application.
+          {% endblocktranslate %}
+          <a
+            tabindex="0"
+            class="fa fa-question-circle popover-buttons d-inline-block"
+            data-content="<p>{{ bama_15_tooltip }}</p>"
+            role="button"
+          ></a>
+          </h4>
+        </div>
+        <div class="panel-body">
+          {% bootstrap_field form.est_concerne_par_le_bama_15 form_group_class="form-group required_field" %}
+          <div id="bama-15-proof-container">
+            {% bootstrap_field form.preuve_bama_15 form_group_class="form-group required_field" %}
+          </div>
+        </div>
+      </div>
     {% endif %}
   {% endwith %}
 
@@ -200,6 +228,14 @@
       $('#id_specific_questions-city, #id_specific_questions-postal_code').dependsOn({
           '#id_specific_questions-country': { not: [null] },
       }, { valueOnDisable: '', hide: false });
+    {% endif %}
+
+    {% if view.display_bama_15_questions %}
+        $('#bama-15-proof-container').dependsOn({
+            'input[name=specific_questions-est_concerne_par_le_bama_15]': {
+                values: ['True'],
+            },
+        });
     {% endif %}
 
     const $belgianChildren = $('.belgian-bachelor-children');
