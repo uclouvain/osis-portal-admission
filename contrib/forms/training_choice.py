@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -32,16 +32,14 @@ from django import forms
 from django.conf import settings
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
-from django.utils.translation import get_language
+from django.utils.translation import get_language, pgettext_lazy
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy
 from waffle import switch_is_active
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
     TRAINING_TYPES_WITH_SCHOLARSHIP,
     AdmissionType,
-    ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixSousDomaineSciences,
 )
@@ -66,7 +64,6 @@ from admission.contrib.forms import (
 )
 from admission.contrib.forms.project import (
     COMMISSION_CDSS,
-    COMMISSIONS_CDE_CLSM,
     SCIENCE_DOCTORATE,
 )
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
@@ -181,12 +178,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                 'data-placeholder': _('Search for your course title using a word from the title (e.g. management)'),
             },
         ),
-    )
-
-    proximity_commission_cde = forms.ChoiceField(
-        label=_("Proximity commission / Subdomain"),
-        choices=EMPTY_CHOICE + ChoixCommissionProximiteCDEouCLSM.choices(),
-        required=False,
     )
 
     proximity_commission_cdss = forms.ChoiceField(
@@ -405,9 +396,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
             # Initialize the right proximity commission field
             if self.initial.get('proximity_commission'):
-                if self.doctorate_training_obj['management_entity'] in COMMISSIONS_CDE_CLSM:
-                    self.fields['proximity_commission_cde'].initial = self.initial['proximity_commission']
-                elif self.doctorate_training_obj['management_entity'] == COMMISSION_CDSS:
+                if self.doctorate_training_obj['management_entity'] == COMMISSION_CDSS:
                     self.fields['proximity_commission_cdss'].initial = self.initial['proximity_commission']
                 elif self.doctorate_training_obj['acronym'] == SCIENCE_DOCTORATE:
                     self.fields['science_sub_domain'].initial = self.initial['proximity_commission']
@@ -607,7 +596,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                 related_pre_admission_data = cleaned_data.get('related_pre_admission')
                 if pre_admission_choices and related_pre_admission_data != self.NO_VALUE:
                     cleaned_data['doctorate_training'] = ''
-                    cleaned_data['proximity_commission_cde'] = ''
                     cleaned_data['proximity_commission_cdss'] = ''
                     cleaned_data['science_sub_domain'] = ''
 
@@ -620,12 +608,6 @@ class TrainingChoiceForm(ConfigurableFormMixin):
 
             if not cleaned_data.get('doctorate_training'):
                 self.add_error('doctorate_training', FIELD_REQUIRED_MESSAGE)
-
-            if self.doctorate_training_obj and self.doctorate_training_obj['management_entity'] in COMMISSIONS_CDE_CLSM:
-                if not cleaned_data.get('proximity_commission_cde'):
-                    self.add_error('proximity_commission_cde', FIELD_REQUIRED_MESSAGE)
-            else:
-                cleaned_data['proximity_commission_cde'] = ''
 
             if self.doctorate_training_obj and self.doctorate_training_obj['management_entity'] == COMMISSION_CDSS:
                 if not cleaned_data.get('proximity_commission_cdss'):

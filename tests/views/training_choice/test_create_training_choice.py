@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import freezegun
 from django.shortcuts import resolve_url
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
+
 from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
 )
@@ -806,20 +807,6 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
         self.assertTrue('justification' in form.errors)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['justification'])
 
-    def test_doctorate_education_form_submitting_without_required_fields_cde(self):
-        # Some doctorates require a CDE proximity commission
-        data = {
-            'training_type': TypeFormation.DOCTORAT.name,
-            'campus': EMPTY_VALUE,
-            'doctorate_training': 'TR3-2020',
-        }
-        response = self.client.post(self.url, data=data)
-
-        form = response.context['form']
-
-        self.assertTrue('proximity_commission_cde' in form.errors)
-        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors['proximity_commission_cde'])
-
     def test_doctorate_education_form_submitting_without_required_fields_cdss(self):
         data = {
             'training_type': TypeFormation.DOCTORAT.name,
@@ -905,7 +892,7 @@ class AdmissionCreateTrainingChoiceFormViewTestCase(AdmissionTrainingChoiceFormV
                 'annee_formation': 2020,
                 'matricule_candidat': self.person.global_id,
                 'justification': '',
-                'commission_proximite': 'ECONOMY',
+                'commission_proximite': '',
             },
             **self.default_kwargs,
         )

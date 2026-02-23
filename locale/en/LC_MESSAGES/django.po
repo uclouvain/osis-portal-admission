@@ -155,6 +155,12 @@ msgid ""
 msgstr ""
 
 msgid ""
+"<strong>Before adding them to your proposal</strong>, please contact all "
+"members of your support committee to obtain their agreement to supervise/"
+"monitor your thesis."
+msgstr ""
+
+msgid ""
 "<strong>Non-academic activity</strong>: any professional or private activity "
 "that you have previously carried out. Example: work, unemployment, voluntary "
 "work, internship, job search, sabbatical year, etc. You can also indicate "

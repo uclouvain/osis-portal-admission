@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -41,7 +41,6 @@ from admission.contrib.enums.training_choice import (
 )
 from admission.contrib.forms.project import (
     COMMISSION_CDSS,
-    COMMISSIONS_CDE_CLSM,
     SCIENCE_DOCTORATE,
 )
 from admission.contrib.forms.training_choice import TrainingChoiceForm, get_training
@@ -79,7 +78,6 @@ class AdmissionTrainingChoiceFormView(
     extra_context = {
         'GENERAL_EDUCATION_TYPES': list(TYPES_FORMATION_GENERALE),
         'CONTINUING_EDUCATION_TYPES': OSIS_ADMISSION_EDUCATION_TYPES_MAPPING[TypeFormation.FORMATION_CONTINUE.name],
-        'COMMISSIONS_CDE_CLSM': COMMISSIONS_CDE_CLSM,
         'COMMISSION_CDSS': COMMISSION_CDSS,
         'SCIENCE_DOCTORATE': SCIENCE_DOCTORATE,
         'MED_DENT_TRAINING_DOMAIN_REGEX': MED_DENT_TRAINING_DOMAIN_REGEX,
@@ -177,8 +175,7 @@ class AdmissionTrainingChoiceFormView(
             'sigle_formation': '',
             'annee_formation': None,
             'commission_proximite': (
-                data.get('proximity_commission_cde')
-                or data.get('proximity_commission_cdss')
+                data.get('proximity_commission_cdss')
                 or data.get('science_sub_domain')
                 or ''
             ),

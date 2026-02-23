@@ -42,6 +42,7 @@ from admission.contrib.enums import (
     AdmissionType,
     ChoixMoyensDecouverteFormation,
     TypeFormationChoisissable,
+    ChoixCommissionProximiteCDSS,
 )
 from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.forms import EMPTY_VALUE
@@ -978,11 +979,11 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
         )
 
         # Initial values
-        self.assertEqual(form.initial['doctorate_training'], 'TR3-2020')
+        self.assertEqual(form.initial['doctorate_training'], 'TR4-2020')
         self.assertEqual(form.fields['campus'].initial, EMPTY_VALUE)
         self.assertEqual(form.fields['training_type'].initial, TypeFormationChoisissable.DOCTORAT.name)
-        self.assertEqual(form.initial['proximity_commission'], 'MANAGEMENT')
-        self.assertEqual(form.fields['proximity_commission_cde'].initial, 'MANAGEMENT')
+        self.assertEqual(form.initial['proximity_commission'], ChoixCommissionProximiteCDSS.MOTR.name)
+        self.assertEqual(form.fields['proximity_commission_cdss'].initial, ChoixCommissionProximiteCDSS.MOTR.name)
 
         # Initial choices
         self.assertEqual(
@@ -996,10 +997,10 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
 
         expected = [
             {
-                'id': 'TR3-2020',
-                'sigle': 'TR3',
-                'sigle_entite_gestion': 'CDE',
-                'text': 'Formation 3 (Louvain-La-Neuve) <span class="training-acronym">TR3</span>',
+                'id': 'TR4-2020',
+                'sigle': 'TR4',
+                'sigle_entite_gestion': 'CDSS',
+                'text': 'Formation 4 (Louvain-La-Neuve) <span class="training-acronym">TR4</span>',
             }
         ]
         self.assertEqual(form.fields['doctorate_training'].widget.attrs['data-data'], json.dumps(expected))
@@ -1053,7 +1054,6 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
                 'campus': EMPTY_VALUE,
                 'sector': 'SSH',
                 'doctorate_training': 'TR3-2020',
-                'proximity_commission_cde': 'ECONOMY',
                 'admission_type': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
                 'specific_question_answers_1': 'Answer',
@@ -1066,7 +1066,7 @@ class DoctorateAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingCh
                 'uuid_proposition': self.proposition_uuid,
                 'sigle_formation': 'TR3',
                 'annee_formation': 2020,
-                'commission_proximite': 'ECONOMY',
+                'commission_proximite': '',
                 'type_admission': AdmissionType.PRE_ADMISSION.name,
                 'justification': 'Justification',
                 'reponses_questions_specifiques': {
