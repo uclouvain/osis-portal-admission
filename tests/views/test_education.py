@@ -31,7 +31,7 @@ import freezegun
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
-from osis_reference_sdk.model.high_school import HighSchool
+from osis_reference_sdk.models.high_school import HighSchool
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import ChoixStatutPropositionGenerale, TrainingType

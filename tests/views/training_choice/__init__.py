@@ -39,7 +39,7 @@ from osis_admission_sdk.model.informations_specifiques_formation_continue_dto im
     InformationsSpecifiquesFormationContinueDTO,
 )
 from osis_admission_sdk.model.specific_question import SpecificQuestion
-from osis_reference_sdk.model.scholarship import Scholarship
+from osis_reference_sdk.models.scholarship import Scholarship
 
 from admission.contrib.enums import (
     ChoixStatutPropositionContinue,
