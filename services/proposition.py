@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ from osis_admission_sdk.model.approuver_proposition_command import (
 from osis_admission_sdk.model.approuver_proposition_par_pdf_command import (
     ApprouverPropositionParPdfCommand,
 )
+from osis_admission_sdk.model.candidate_re_enrolment_eligibility import CandidateReEnrolmentEligibility
 from osis_admission_sdk.model.completer_comptabilite_proposition_doctorale_command import (
     CompleterComptabilitePropositionDoctoraleCommand,
 )
@@ -123,6 +124,20 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
     def retrieve_specific_enrolment_periods(cls, person: Person, year: Optional[int]):
         kwargs = {'year': year} if year else {}
         return APIClient().retrieve_specific_enrolment_periods(**kwargs, **build_mandatory_auth_headers(person))
+
+    @classmethod
+    def retrieve_re_enrolment_period(cls, person: Person):
+        return APIClient().propositions_re_enrolment_period_retrieve(**build_mandatory_auth_headers(person))
+
+    @classmethod
+    def retrieve_ucl_enrolments_list(cls, person):
+        return APIClient().propositions_ucl_enrolments_list(**build_mandatory_auth_headers(person))
+
+    @classmethod
+    def retrieve_candidate_re_enrolment_eligibility(cls, person) -> CandidateReEnrolmentEligibility:
+        return APIClient().propositions_candidate_re_enrolment_eligibity_retrieve(
+            **build_mandatory_auth_headers(person),
+        )
 
     @classmethod
     def list_proposition_create_permissions(cls, person):

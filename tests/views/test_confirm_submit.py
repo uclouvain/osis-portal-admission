@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,12 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from datetime import date
 from unittest.mock import ANY, Mock, patch
 
 import freezegun
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_admission_sdk.model.pool_enum import PoolEnum
 from osis_admission_sdk.model.submit_proposition import SubmitProposition
@@ -67,9 +68,16 @@ class ConfirmSubmitTestCase(OsisPortalTestCase):
         }
         self.client.force_login(self.person.user)
 
+        api_person_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
+        self.mock_person_api = api_person_patcher.start()
+        self.addCleanup(api_person_patcher.stop)
+
         propositions_api_patcher = patch("osis_admission_sdk.api.propositions_api.PropositionsApi")
         self.mock_proposition_api = propositions_api_patcher.start()
         api = self.mock_proposition_api.return_value
+        api.propositions_re_enrolment_period_retrieve.return_value.date_debut = datetime.date(2023, 6, 15)
+        api.propositions_re_enrolment_period_retrieve.return_value.date_fin = datetime.date(2023, 10, 31)
+        api.propositions_ucl_enrolments_list.return_value = []
         api.retrieve_doctorate_proposition.return_value = Mock(
             uuid='3c5cdc60-2537-4a12-a396-64d2e9e34876',
             erreurs=[],
@@ -80,6 +88,7 @@ class ConfirmSubmitTestCase(OsisPortalTestCase):
                 'retrieve_supervision': {'url': 'ok'},
             },
             code_secteur_formation='SSH',
+            creee_le=datetime.datetime(2023, 1, 1),
         )
         api.verify_proposition.return_value.to_dict.return_value = {
             'errors': [],
