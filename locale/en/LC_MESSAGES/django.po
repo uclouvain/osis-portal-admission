@@ -302,6 +302,9 @@ msgstr ""
 msgid "An error has occurred, please check fields and try again."
 msgstr ""
 
+msgid "An error occured when creating the application."
+msgstr ""
+
 msgid ""
 "An international scholarship may be awarded to students as part of a "
 "project. These international grants are awarded by ARES and a scholarship "
@@ -877,6 +880,9 @@ msgstr ""
 msgid "Course units"
 msgstr ""
 
+msgid "Create a new application"
+msgstr ""
+
 msgid "Create new application"
 msgstr ""
 
@@ -1083,6 +1089,9 @@ msgid "Enroll in a course"
 msgstr ""
 
 msgid "Enrolled"
+msgstr ""
+
+msgid "Enrolment and re-enrolment applications"
 msgstr ""
 
 msgid "Enrolment in limited enrolment bachelor's course"
@@ -1550,9 +1559,6 @@ msgid ""
 "enrolled."
 msgstr ""
 
-msgid "Initial education"
-msgstr ""
-
 msgid "Institute"
 msgstr ""
 
@@ -1647,6 +1653,9 @@ msgid "Language regime"
 msgstr ""
 
 msgid "Language study abroad"
+msgstr ""
+
+msgid "Last name, First name"
 msgstr ""
 
 msgid "Later > blocking"
@@ -1771,6 +1780,9 @@ msgstr ""
 msgid "Motivations"
 msgstr ""
 
+msgid "My drafts"
+msgstr ""
+
 msgid "My father"
 msgstr ""
 
@@ -1797,6 +1809,9 @@ msgid "My mother"
 msgstr ""
 
 msgid "My partner"
+msgstr ""
+
+msgid "My submitted applications"
 msgstr ""
 
 msgid "NO"
@@ -1847,6 +1862,9 @@ msgid "No year has yet been added"
 msgstr ""
 
 msgid "No."
+msgstr ""
+
+msgid "Noma"
 msgstr ""
 
 msgid "Non-European credits"
@@ -2207,6 +2225,10 @@ msgid "Radio buttons"
 msgstr ""
 
 msgid "Rank in diploma"
+msgstr ""
+
+#, python-format
+msgid "Re-enrol in this course in %(year)s"
 msgstr ""
 
 msgid "Reasons for pre-admission."
@@ -2990,6 +3012,9 @@ msgstr ""
 msgid ""
 "You do not specify if you are applying as resident or non-resident (as "
 "defined by government decree)."
+msgstr ""
+
+msgid "You have not been deliberated yet."
 msgstr ""
 
 msgid "You have now reached the application confirmation tab."

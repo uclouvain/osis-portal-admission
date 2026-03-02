@@ -365,6 +365,9 @@ msgstr "Une question administrative concernant votre dossier ?"
 msgid "An error has occurred, please check fields and try again."
 msgstr "Une erreur est survenue, veuillez vérifier les valeurs et réessayer."
 
+msgid "An error occured when creating the application."
+msgstr "Une erreur est survenue lors de la création de la demande."
+
 msgid ""
 "An international scholarship may be awarded to students as part of a "
 "project. These international grants are awarded by ARES and a scholarship "
@@ -1049,6 +1052,9 @@ msgstr "Inscription à un cours"
 msgid "Course units"
 msgstr "Cours"
 
+msgid "Create a new application"
+msgstr "Introduire une nouvelle demande"
+
 msgid "Create new application"
 msgstr "Créer une nouvelle demande d'inscription"
 
@@ -1273,6 +1279,9 @@ msgstr "S'inscrire à un cours"
 
 msgid "Enrolled"
 msgstr "Inscrit"
+
+msgid "Enrolment and re-enrolment applications"
+msgstr "Demandes d'inscription et de réinscription"
 
 msgid "Enrolment in limited enrolment bachelor's course"
 msgstr "Inscription à un bachelier contingenté"
@@ -1832,9 +1841,6 @@ msgstr ""
 "Indiquez ici un éventuel parcours doctoral précédent, abouti ou interrompu, "
 "dans lequel vous n’êtes plus inscrit à ce jour."
 
-msgid "Initial education"
-msgstr "Formation initiale"
-
 msgid "Institute"
 msgstr "Établissement"
 
@@ -1935,6 +1941,9 @@ msgstr "Régime linguistique"
 
 msgid "Language study abroad"
 msgstr "Séjour linguistique"
+
+msgid "Last name, First name"
+msgstr "Nom, Prénom"
 
 msgid "Later > blocking"
 msgstr "Ultérieurement > bloquant"
@@ -2058,6 +2067,9 @@ msgstr "Motivation de la cotutelle"
 msgid "Motivations"
 msgstr "Motivations"
 
+msgid "My drafts"
+msgstr "Mes brouillons"
+
 msgid "My father"
 msgstr "Mon père"
 
@@ -2088,6 +2100,9 @@ msgstr "Ma mère"
 
 msgid "My partner"
 msgstr "Mon conjoint"
+
+msgid "My submitted applications"
+msgstr "Mes demandes envoyées"
 
 msgid "NO"
 msgstr "Non"
@@ -2140,6 +2155,9 @@ msgstr "Aucune année n'a encore été ajoutée"
 
 msgid "No."
 msgstr "Non."
+
+msgid "Noma"
+msgstr "Noma"
 
 msgid "Non-European credits"
 msgstr "Crédits non-européens"
@@ -2550,6 +2568,10 @@ msgstr "Boutons radios"
 
 msgid "Rank in diploma"
 msgstr "Rang dans le diplôme"
+
+#, python-format
+msgid "Re-enrol in this course in %(year)s"
+msgstr "Me ré-inscrire à cette formation en %(year)s"
 
 msgid "Reasons for pre-admission."
 msgstr "Détaillez ici les raisons justifiant une préadmission."
@@ -3447,6 +3469,9 @@ msgid ""
 msgstr ""
 "Vous n'avez pas indiqué si vous postulez en tant que résident ou non-"
 "résident (au sens du Décret)."
+
+msgid "You have not been deliberated yet."
+msgstr "Vous n'êtes pas encore délibéré·e."
 
 msgid "You have now reached the application confirmation tab."
 msgstr ""

@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain
+  * Copyright (C) 2015-2026 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -26,16 +26,15 @@
 {% endcomment %}
 
 {% panel additional_class="admission-item" cy_state=admission.statut %}
-  <h3 style="margin-top: 0">
+  <h3 class="mt-0">
     {% if admission.doctorat %}
       {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
       {% admission_status admission.statut admission.doctorat.type as admission_status %}
-      {{ doctorate_title }} ({{ admission.reference }})
-      <span style="display:block;"><small>{{ admission.intitule_secteur_formation }}</small></span>
+      {{ doctorate_title }} <span class="small-text">{{ admission.doctorat.sigle }}</span>
     {% elif admission.formation %}
       {% admission_status admission.statut admission.formation.type as admission_status %}
       {% display admission.formation.intitule " (" admission.formation.campus ")" as title %}
-      {{ title }} ({{ admission.reference }})
+      {{ title }} <span class="small-text">{{ admission.formation.sigle }}</span>
     {% endif %}
   </h3>
   <div>
