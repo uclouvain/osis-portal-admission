@@ -125,6 +125,10 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         return APIClient().retrieve_specific_enrolment_periods(**kwargs, **build_mandatory_auth_headers(person))
 
     @classmethod
+    def retrieve_re_enrolment_period(cls, person: Person):
+        return APIClient().propositions_re_enrolment_period_retrieve(**build_mandatory_auth_headers(person))
+
+    @classmethod
     def list_proposition_create_permissions(cls, person):
         return APIClient().detail_proposition_create_permissions(
             **build_mandatory_auth_headers(person),

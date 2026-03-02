@@ -43,6 +43,7 @@ from admission.contrib.forms.project import (
     COMMISSION_CDSS,
     SCIENCE_DOCTORATE,
 )
+from admission.contrib.forms.re_enrolment import ReEnrolmentForm
 from admission.contrib.forms.training_choice import TrainingChoiceForm, get_training
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.mixins import (
@@ -88,6 +89,12 @@ class AdmissionTrainingChoiceFormView(
             'can only be submitted from %(start_date)s.'
         ),
     }
+
+    def get_form_class(self):
+        if self.request.GET.get('re_enrolment'):
+            return ReEnrolmentForm
+
+        return TrainingChoiceForm
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

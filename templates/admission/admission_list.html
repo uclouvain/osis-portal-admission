@@ -1,6 +1,7 @@
 {% extends "admission/admission_layout.html" %}
+{% load academic_year_display %}
 {% load bootstrap3 i18n static admission enums %}
-
+{% get_current_language as LANGUAGE_CODE %}
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
   * designed to manage the core business of higher education institutions,
@@ -30,50 +31,172 @@
   <div class="page-header">
     <div class="row">
       <div class="col-md-12">
-        <h2>
-          {% trans "Applications" %}
-          <a
-            href="{% url 'admission:create' %}"
-            id="create-link"
-            class="btn btn-primary pull-right{% if not can_create_proposition %} disabled{% endif %}"
-          >
-            <span class="glyphicon glyphicon-plus"></span>
-            {% trans "Create new application" %}
-          </a>
-        </h2>
+        <h1>
+          {% translate "Enrolment and re-enrolment applications" %}
+        </h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>{% translate 'Last name, First name' %}</label>
+          <div>{{ candidate.last_name }}, {{ candidate.first_name }}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>{% translate 'Email' %}</label>
+          <div>{{ candidate.email|default:candidate.private_email }}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>{% translate 'Noma' %}</label>
+          <div>{{ candidate.registration_id }}</div>
+        </div>
       </div>
     </div>
   </div>
 
-  {% if not can_create_proposition %}
-    <p class="alert alert-warning">
-      {{ creation_error_message }}
-    </p>
-  {% endif %}
 
   <div id="template-messages-container">
     {% include "template_messages.html" %}
   </div>
 
-  {% if doctorate_propositions %}
-    <h3>{% trans "PhD" %}</h3>
-    {% for admission in doctorate_propositions %}
-      {% include "admission/includes/admission_list_item.html" with base_namespace='admission:doctorate' admission=admission tab_tree=doctorate_tab_tree %}
-    {% endfor %}
+  <div>
+    <h2>{% translate 'Submit a new application' %}</h2>
+
+    {% if not can_create_proposition %}
+      <p class="alert alert-warning">
+        {{ creation_error_message }}
+      </p>
+    {% endif %}
+
+    <div>
+      {% blocktranslate with year=re_enrolment_period.annee_formation|display_as_academic_year trimmed asvar re_enrolment_label %}
+        Re-enrol in this course in {{ year }}
+      {% endblocktranslate %}
+      {% for ucl_enrolment in ucl_enrolments_list %}
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3 class="mt-0 mb-0">
+              {% if LANGUAGE_CODE == LANGUAGE_CODE_FR %}
+                {{ ucl_enrolment.intitule_formation_fr }}
+              {% else %}
+                {{ ucl_enrolment.intitule_formation_en }}
+              {% endif %}
+              {% if ucl_enrolment.lieu_enseignement %}({{ ucl_enrolment.lieu_enseignement }}){% endif %}
+              <span class="small-text">{{ ucl_enrolment.sigle_formation }}</span>
+            </h3>
+          </div>
+          <div class="panel-footer">
+            {# Existing in draft admission -> Link to this admission #}
+            {% if ucl_enrolment.sigle_formation in draft_or_in_payment_propositions %}
+              {% with related_in_draft_proposition=draft_or_in_payment_propositions|get_item:ucl_enrolment.sigle_formation %}
+                <a
+                  class="btn btn-primary"
+                  href="{% url 'admission:'|add_str:related_in_draft_proposition.admission_context pk=related_in_draft_proposition.uuid %}"
+                >
+                  {{ re_enrolment_label }}
+                </a>
+                <i class="fa-solid fa-lock-open"></i>
+              {% endwith %}
+            {% elif can_create_re_enrolment_proposition %}
+              {# Form to create the new admission #}
+              <form method="post" action="{% url 'admission:re-enrolment' %}">
+                {% csrf_token %}
+                <input
+                  type="hidden"
+                  name="training_type"
+                  value="{{ ucl_enrolment.type_formation }}"
+                />
+                <input
+                  type="hidden"
+                  name="training_acronym"
+                  value="{{ ucl_enrolment.sigle_formation }}"
+                />
+                <input
+                  type="hidden"
+                  name="training_year"
+                  value="{{ re_enrolment_period.annee_formation }}"
+                />
+                <button
+                  class="btn btn-primary"
+                  type="submit"
+                >
+                  {{ re_enrolment_label }}
+                </button>
+                <i class="fa-solid fa-lock-open"></i>
+                {{ re_enrolment_error_message }}
+              </form>
+            {% else %}
+              {# Just display the disabled button #}
+              <button
+                class="btn btn-primary"
+                disabled
+              >
+                {{ re_enrolment_label }}
+              </button>
+              <i class="fa-solid fa-lock"></i>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      {% if can_create_proposition %}
+        <a
+          href="{% url 'admission:create' %}"
+          class="btn btn-default"
+        >
+          {% translate "Create new application" %}
+        </a>
+      {% else %}
+        <button class="btn btn-default" disabled>
+          {% translate "Create new application" %}
+        </button>
+        <i class="fa-solid fa-lock"></i>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if draft_propositions %}
+    <div>
+      <h2>{% translate 'My drafts' %}</h2>
+      {% for admission in draft_propositions %}
+        {% include "admission/includes/admission_list_item.html" with admission=admission base_namespace='admission:'|add_str:admission.admission_context tab_tree=TAB_TREES|get_item:admission.admission_context %}
+      {% endfor %}
+    </div>
   {% endif %}
 
-  {% if general_education_propositions %}
-    <h3>{% trans "Initial education" %}</h3>
-    {% for admission in general_education_propositions %}
-      {% include "admission/includes/admission_list_item.html" with base_namespace='admission:general-education' admission=admission tab_tree=general_education_tab_tree %}
-    {% endfor %}
-  {% endif %}
+  {% if submitted_propositions %}
+    <div>
+      <h2>{% translate 'My submitted applications' %}</h2>
+      <div>
+        <ul class="nav nav-tabs" role="tablist">
+          {% for year in submitted_propositions %}
+            <li role="presentation" {% if forloop.first %}class="active"{% endif %}>
+              <a
+                href="#submitted-propositions-{{ year }}"
+                role="tab"
+                data-toggle="tab"
+                aria-controls="submitted-propositions-{{ year }}"
+              >
+                {{ year|display_as_academic_year }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
 
-  {% if continuing_education_propositions %}
-    <h3>{% trans "Continuing education" %}</h3>
-    {% for admission in continuing_education_propositions %}
-      {% include "admission/includes/admission_list_item.html" with base_namespace='admission:continuing-education' admission=admission tab_tree=continuing_education_tab_tree %}
-    {% endfor %}
+        <div class="tab-content">
+          {% for year, propositions in submitted_propositions.items %}
+            <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="submitted-propositions-{{ year }}">
+              {% for admission in propositions %}
+                {% include "admission/includes/admission_list_item.html" with admission=admission base_namespace='admission:'|add_str:admission.admission_context tab_tree=TAB_TREES|get_item:admission.admission_context %}
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   {% endif %}
 
   {% if just_submitted_from %}
@@ -89,17 +212,27 @@
 {% block style %}
   {{ block.super }}
   <style>
-    #create-link.disabled {
-      color: #fff;
-    }
-    #template-messages-container > .panel-body {
-      padding: 0;
-      margin: 0;
-    }
+      .mt-0 {
+          margin-top: 0;
+      }
+      .mb-0 {
+          margin-bottom: 0;
+      }
+      .mb-1 {
+          margin-bottom:.21875rem;
+      }
+      .small-text {
+          color: #666;
+          font-size: 0.8em;
+      }
+      #template-messages-container > .panel-body {
+          padding: 0;
+          margin: 0;
+      }
 
-    #template-messages-container > .panel-body > #pnl_error_messages {
-      margin: 0;
-    }
+      #template-messages-container > .panel-body > #pnl_error_messages {
+          margin: 0;
+      }
   </style>
 {% endblock %}
 

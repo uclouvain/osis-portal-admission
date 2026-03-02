@@ -23,6 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
+from collections import defaultdict
+from itertools import chain
+
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django.views.generic import TemplateView
@@ -30,10 +34,16 @@ from django.views.generic import TemplateView
 from admission.constants import (
     DOCUMENTS_REQUEST_JUST_COMPLETED_WITHOUT_DOCUMENT,
     PROPOSITION_JUST_SUBMITTED,
+    LANGUAGE_CODE_FR,
+    LANGUAGE_CODE_EN,
 )
-from admission.contrib.enums import CANCELLED_STATUSES
+from admission.contrib.enums import CANCELLED_STATUSES, IN_PROGRESS_STATUSES, IN_PROGRESS_OR_IN_PAYMENT_STATUSES, \
+    TypeFormationChoisissable, ADMISSION_EDUCATION_TYPE_BY_OSIS_TYPE, TypeFormation, \
+    ADMISSION_CONTEXT_BY_OSIS_EDUCATION_TYPE
+from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
 from admission.templatetags.admission import TAB_TREES, can_make_action
+from base.views.common import display_warning_messages
 
 __all__ = [
     "AdmissionListView",
@@ -41,31 +51,76 @@ __all__ = [
 ]
 __namespace__ = False
 
-from base.views.common import display_warning_messages
-
 
 class AdmissionListView(TemplateView):
     urlpatterns = {'list': ''}
     template_name = "admission/admission_list.html"
+    extra_context = {
+        'LANGUAGE_CODE_FR': LANGUAGE_CODE_FR,
+        'LANGUAGE_CODE_EN': LANGUAGE_CODE_EN,
+        'TAB_TREES': TAB_TREES,
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         result = AdmissionPropositionService().get_propositions(self.request.user.person)
-        context["doctorate_propositions"] = result.doctorate_propositions
-        context["continuing_education_propositions"] = result.continuing_education_propositions
-        context["general_education_propositions"] = result.general_education_propositions
         context["global_links"] = result.links
         context["can_create_proposition"] = can_make_action(result, 'create_training_choice')
         context["creation_error_message"] = result.links['create_training_choice'].get('error', '')
-        context["doctorate_tab_tree"] = TAB_TREES['doctorate']
-        context["continuing_education_tab_tree"] = TAB_TREES['continuing-education']
-        context["general_education_tab_tree"] = TAB_TREES['general-education']
         context['CANCELLED_STATUSES'] = CANCELLED_STATUSES
         context['just_submitted_from'] = self.request.session.pop(PROPOSITION_JUST_SUBMITTED, None)
         context['documents_request_just_completed_without_document'] = self.request.session.pop(
             DOCUMENTS_REQUEST_JUST_COMPLETED_WITHOUT_DOCUMENT,
             None,
         )
+        context['candidate'] = AdmissionPersonService.retrieve_person(self.request.user.person)
+
+        # Group and sort the propositions for display
+        submitted_propositions = {}
+        draft_propositions = []
+        draft_or_in_payment_propositions = {}
+
+        for admission_context, propositions, training_field_name in [
+            ('general-education', result.general_education_propositions, 'formation'),
+            ('doctorate', result.doctorate_propositions, 'doctorat'),
+            ('continuing-education', result.continuing_education_propositions, 'formation'),
+        ]:
+            for proposition in propositions:
+                training = getattr(proposition, training_field_name)
+                training_acronym = training.sigle
+                proposition.admission_context = admission_context
+                if proposition.statut in IN_PROGRESS_OR_IN_PAYMENT_STATUSES:
+                    # Group by training acronym
+                    draft_or_in_payment_propositions[training_acronym] = proposition
+                if proposition.statut in IN_PROGRESS_STATUSES:
+                    # Group by status
+                    draft_propositions.append(proposition)
+                elif proposition.soumise_le:
+                    # Group by year
+                    submitted_propositions.setdefault(training.annee, []).append(proposition)
+
+        context['draft_propositions'] = sorted(draft_propositions, key=lambda elt: elt.creee_le, reverse=True)
+        context['draft_or_in_payment_propositions'] = draft_or_in_payment_propositions
+        context['submitted_propositions'] = {
+            year: sorted(submitted_propositions[year], key=lambda elt: elt.soumise_le, reverse=True) for year in sorted(submitted_propositions.keys(), reverse=True)
+        }
+
+        # Re-enrolment specificities
+        re_enrolment_period = AdmissionPropositionService.retrieve_re_enrolment_period(self.request.user.person)
+
+        context['ucl_enrolments_list'] = []
+        context['re_enrolment_period'] = re_enrolment_period
+        context['can_create_re_enrolment_proposition'] = context['can_create_proposition'] and re_enrolment_period.candidat_delibere
+        context['re_enrolment_error_message'] = _('You have not been deliberated yet.') if not re_enrolment_period.candidat_delibere else ''
+
+        if re_enrolment_period.date_debut <= datetime.date.today() <= re_enrolment_period.date_fin:
+            all_ucl_enrolments_list = AdmissionPersonService.retrieve_ucl_enrolments_list(self.request.user.person)
+
+            context['ucl_enrolments_list'] = [
+                ucl_enrolment
+                for ucl_enrolment in all_ucl_enrolments_list
+                if ucl_enrolment.annee == re_enrolment_period.annee_formation - 1 and (not re_enrolment_period.candidat_delibere or not ucl_enrolment.est_diplome)
+            ]
 
         if getattr(result, 'donnees_transferees_vers_compte_interne', False):
             msg = _(

@@ -276,6 +276,10 @@ class AdmissionPersonService(metaclass=ServiceMeta):
             **build_mandatory_auth_headers(person),
         )
 
+    @classmethod
+    def retrieve_ucl_enrolments_list(cls, person):
+        return AdmissionPersonAPIClient().person_ucl_enrolments_list(**build_mandatory_auth_headers(person))
+
 
 class GeneralEducationAdmissionPersonService(metaclass=ServiceMeta):
     api_exception_cls = ApiException

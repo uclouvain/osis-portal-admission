@@ -1,4 +1,4 @@
-{% load i18n admission enums %}
+{% load i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -26,15 +26,16 @@
 {% endcomment %}
 
 {% panel additional_class="admission-item" cy_state=admission.statut %}
-  <h3 class="mt-0">
+  <h3 style="margin-top: 0">
     {% if admission.doctorat %}
       {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
       {% admission_status admission.statut admission.doctorat.type as admission_status %}
-      {{ doctorate_title }} <span class="small-text d-block">{{ admission.doctorat.sigle }}</span>
+      {{ doctorate_title }} ({{ admission.reference }})
+      <span style="display:block;"><small>{{ admission.intitule_secteur_formation }}</small></span>
     {% elif admission.formation %}
       {% admission_status admission.statut admission.formation.type as admission_status %}
       {% display admission.formation.intitule " (" admission.formation.campus ")" as title %}
-      {{ title }} <span class="small-text d-block">{{ admission.formation.sigle }}</span>
+      {{ title }} ({{ admission.reference }})
     {% endif %}
   </h3>
   <div>

@@ -83,6 +83,10 @@ IN_PROGRESS_STATUSES = {
     ChoixStatutPropositionContinue.EN_BROUILLON.name,
 }
 
+IN_PROGRESS_OR_IN_PAYMENT_STATUSES = IN_PROGRESS_STATUSES.union({
+    ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name,
+})
+
 CANCELLED_STATUSES = {
     ChoixStatutPropositionDoctorale.ANNULEE.name,
     ChoixStatutPropositionGenerale.ANNULEE.name,
