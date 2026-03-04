@@ -160,13 +160,3 @@ TRAINING_TYPES_WITH_SCHOLARSHIP = {
     *OSIS_ADMISSION_EDUCATION_TYPES_MAPPING[TypeFormation.MASTER.name],
     TrainingType.CERTIFICATE.name,
 }
-
-
-FORMATIONS_POUR_BAMA_15 = {
-    TrainingType.MASTER_MA_120.name,
-    TrainingType.MASTER_MD_120.name,
-    TrainingType.MASTER_MS_120.name,
-    TrainingType.MASTER_MS_180_240.name,
-    TrainingType.MASTER_M1.name,
-    TrainingType.MASTER_M4.name,
-}
