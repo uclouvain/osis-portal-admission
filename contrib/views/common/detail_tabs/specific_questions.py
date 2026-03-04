@@ -27,17 +27,13 @@ from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
 from admission.constants import BE_ISO_CODE, PLUS_5_ISO_CODES
-from admission.contrib.enums import (
-    FORMATIONS_POUR_BAMA_15,
-)
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.proposition import AdmissionPropositionService
+from admission.utils import format_academic_year
 
 __all__ = ['SpecificQuestionDetailView']
-
-from admission.utils import format_academic_year
 
 
 class SpecificQuestionViewMixin(LoadDossierViewMixin):
@@ -56,14 +52,6 @@ class SpecificQuestionViewMixin(LoadDossierViewMixin):
             )
 
     @cached_property
-    def curriculum(self):
-        if self.is_general:
-            return AdmissionPropositionService.retrieve(
-                person=self.person,
-                uuid_proposition=self.admission_uuid,
-            )
-
-    @cached_property
     def display_visa_question(self):
         identification = self.identification
         return (
@@ -77,11 +65,8 @@ class SpecificQuestionViewMixin(LoadDossierViewMixin):
 
     @cached_property
     def display_bama_15_questions(self):
-        return (
-            self.is_general
-            and self.admission.formation['type'] in FORMATIONS_POUR_BAMA_15
-            and self.identification.a_une_experience_fwb_non_diplomee_de_premier_cycle_pour_annee_formation
-        )
+        identification = self.identification
+        return identification is not None and identification.est_potentiellement_concerne_par_le_bama_15 is True
 
     @cached_property
     def formatted_training_year(self):

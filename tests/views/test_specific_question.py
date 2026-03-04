@@ -382,7 +382,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         # With identification without required experience -> no bama 15 questions
         self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
-            a_une_experience_fwb_non_diplomee_de_premier_cycle_pour_annee_formation=False
+            est_potentiellement_concerne_par_le_bama_15=False
         )
 
         response = self.client.get(self.url)
@@ -394,35 +394,15 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         # With identification with required experience -> bama 15 questions for some trainings
         self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
-            a_une_experience_fwb_non_diplomee_de_premier_cycle_pour_annee_formation=True
+            est_potentiellement_concerne_par_le_bama_15=True
         )
 
-        trainings_with_bama_15_questions = {
-            TrainingType.MASTER_MA_120.name,
-            TrainingType.MASTER_MD_120.name,
-            TrainingType.MASTER_MS_120.name,
-            TrainingType.MASTER_MS_180_240.name,
-            TrainingType.MASTER_M1.name,
-            TrainingType.MASTER_M4.name,
-        }
+        response = self.client.get(self.url)
 
-        for training in TrainingType:
-            self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation[
-                'type'
-            ] = training.name
-
-            response = self.client.get(self.url)
-
-            self.assertEqual(response.status_code, 200)
-            main_form = response.context['forms'][0]
-
-            self.assertEqual(
-                main_form.fields['est_concerne_par_le_bama_15'].disabled,
-                training.name not in trainings_with_bama_15_questions,
-            )
-            self.assertEqual(
-                main_form.fields['preuve_bama_15'].disabled, training.name not in trainings_with_bama_15_questions
-            )
+        self.assertEqual(response.status_code, 200)
+        main_form = response.context['forms'][0]
+        self.assertFalse(main_form.fields['est_concerne_par_le_bama_15'].disabled)
+        self.assertFalse(main_form.fields['preuve_bama_15'].disabled)
 
     def test_post_page(self):
         response = self.client.post(
@@ -514,7 +494,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         mock_proposition.reponses_questions_specifiques = {}
         self.mock_proposition_api.return_value.list_general_specific_questions.side_effect = lambda **kwargs: []
         self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
-            a_une_experience_fwb_non_diplomee_de_premier_cycle_pour_annee_formation=True
+            est_potentiellement_concerne_par_le_bama_15=True
         )
 
         # The bama 15 questions are required but not specified
