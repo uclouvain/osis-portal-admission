@@ -25,7 +25,7 @@
 # ##############################################################################
 from osis_education_group_sdk import ApiClient, ApiException
 from osis_education_group_sdk.api import trainings_api
-from osis_education_group_sdk.model.training_detailed import TrainingDetailed
+from osis_education_group_sdk.models.training_detailed import TrainingDetailed
 
 from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import education_group as education_group_sdk
