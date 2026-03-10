@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,20 +23,32 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
+
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.views.generic import FormView
 
 from admission.constants import BE_ISO_CODE
-from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
+from admission.contrib.enums.additional_information import (
+    ChoixInscriptionATitre,
+    ChoixTypeAdresseFacturation,
+)
 from admission.contrib.enums.training_choice import TrainingType
-from admission.contrib.forms.additional_information import ContinuingSpecificQuestionForm, GeneralSpecificQuestionForm
+from admission.contrib.forms.additional_information import (
+    ContinuingSpecificQuestionForm,
+    GeneralSpecificQuestionForm,
+)
 from admission.contrib.forms.pool_questions import PoolQuestionsForm
 from admission.contrib.views.common.detail_tabs.specific_questions import (
     SpecificQuestionViewMixin,
 )
-from admission.services.mixins import FormMixinWithSpecificQuestions, WebServiceFormMixin
+from admission.services.mixins import (
+    FormMixinWithSpecificQuestions,
+    WebServiceFormMixin,
+)
 from admission.services.proposition import AdmissionPropositionService
 from admission.templatetags.admission import can_update_tab
 
@@ -89,38 +101,58 @@ class SpecificQuestionsFormView(
         kwargs['form'] = next((form for form in kwargs['forms'] if form.visible_fields()), kwargs['forms'][0])
         kwargs['BE_ISO_CODE'] = BE_ISO_CODE
         if self.display_pool_questions_form and self.pool_questions:
-            kwargs['reorientation_pool_end_date'] = self.pool_questions['reorientation_pool_end_date']
-            kwargs['modification_pool_end_date'] = self.pool_questions['modification_pool_end_date']
-            kwargs['forbid_enrolment_limited_course_for_non_resident'] = self.pool_questions.get(
-                'forbid_enrolment_limited_course_for_non_resident'
+            kwargs['reorientation_pool_end_date'] = self.pool_questions.get('reorientation_pool_end_date')
+            kwargs['modification_pool_end_date'] = self.pool_questions.get('modification_pool_end_date')
+
+            # non_resident_quota_pool
+            start_date = self.pool_questions.get('non_resident_quota_pool_start_date')
+            start_time = (
+                datetime.time.fromisoformat(self.pool_questions['non_resident_quota_pool_start_time'])
+                if self.pool_questions.get('non_resident_quota_pool_start_time')
+                else None
             )
+            start_datetime = timezone.make_aware(datetime.datetime.combine(start_date, start_time if start_time else datetime.time(0, 0)))
+            end_date = self.pool_questions.get('non_resident_quota_pool_end_date')
+            end_time = (
+                datetime.time.fromisoformat(self.pool_questions['non_resident_quota_pool_end_time'])
+                if self.pool_questions.get('non_resident_quota_pool_end_time')
+                else None
+            )
+            end_datetime = timezone.make_aware(datetime.datetime.combine(end_date, end_time if end_time else datetime.time(23, 59)))
+            kwargs['non_resident_quota_pool_start_date'] = start_date
+            kwargs['non_resident_quota_pool_start_time'] = start_time
+            kwargs['non_resident_quota_pool_end_date'] = end_date
+            kwargs['non_resident_quota_pool_end_time'] = end_time
+            kwargs['in_non_resident_quota_pool_windows'] = start_datetime <= timezone.now() <= end_datetime
         return super().get_context_data(**kwargs)
 
     def get_forms(self):
         form_kwargs = self.get_form_kwargs()
         forms = [
-            ContinuingSpecificQuestionForm(
-                data=self.request.POST or None,
-                form_item_configurations=form_kwargs['form_item_configurations'],
-                person=self.person,
-                initial=self.get_initial_data_for_continuing_form(),
-                prefix='specific_questions',
-            )
-            if self.is_continuing
-            else GeneralSpecificQuestionForm(
-                display_visa=self.display_visa_question,
-                residential_country=self.identification.pays_residence if self.identification else '',
-                data=self.request.POST or None,
-                form_item_configurations=form_kwargs['form_item_configurations'],
-                initial={
-                    'documents_additionnels': self.admission.documents_additionnels,
-                    'reponses_questions_specifiques': self.admission.reponses_questions_specifiques,
-                    'poste_diplomatique': self.admission.poste_diplomatique['code']
-                    if self.admission.poste_diplomatique
-                    else None,
-                },
-                prefix='specific_questions',
-                person=self.person,
+            (
+                ContinuingSpecificQuestionForm(
+                    data=self.request.POST or None,
+                    form_item_configurations=form_kwargs['form_item_configurations'],
+                    person=self.person,
+                    initial=self.get_initial_data_for_continuing_form(),
+                    prefix='specific_questions',
+                )
+                if self.is_continuing
+                else GeneralSpecificQuestionForm(
+                    display_visa=self.display_visa_question,
+                    residential_country=self.identification.pays_residence if self.identification else '',
+                    data=self.request.POST or None,
+                    form_item_configurations=form_kwargs['form_item_configurations'],
+                    initial={
+                        'documents_additionnels': self.admission.documents_additionnels,
+                        'reponses_questions_specifiques': self.admission.reponses_questions_specifiques,
+                        'poste_diplomatique': (
+                            self.admission.poste_diplomatique['code'] if self.admission.poste_diplomatique else None
+                        ),
+                    },
+                    prefix='specific_questions',
+                    person=self.person,
+                )
             )
         ]
         if self.display_pool_questions_form and self.pool_questions:
@@ -155,9 +187,9 @@ class SpecificQuestionsFormView(
             continuing_value = {
                 'inscription_a_titre': value.get('inscription_a_titre'),
                 'reponses_questions_specifiques': value.get('reponses_questions_specifiques'),
-                'copie_titre_sejour': value.get('copie_titre_sejour')
-                if self.admission.pays_nationalite_ue_candidat is False
-                else [],
+                'copie_titre_sejour': (
+                    value.get('copie_titre_sejour') if self.admission.pays_nationalite_ue_candidat is False else []
+                ),
                 'documents_additionnels': value.get('documents_additionnels'),
             }
 

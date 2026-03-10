@@ -128,6 +128,8 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         context['access_conditions_url'] = self.confirmation_conditions.get('access_conditions_url')
         context['pool_start_date'] = self.confirmation_conditions.get('pool_start_date')
         context['pool_end_date'] = self.confirmation_conditions.get('pool_end_date')
+        context['pool_start_time'] = self.confirmation_conditions.get('pool_start_time')
+        context['pool_end_time'] = self.confirmation_conditions.get('pool_end_time')
         context['calendar_url'] = (
             "https://uclouvain.be/fr/etudier/inscriptions/calendrier-inscriptions.html"
             if get_language() == settings.LANGUAGE_CODE
