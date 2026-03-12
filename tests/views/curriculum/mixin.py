@@ -363,6 +363,8 @@ class MixinTestCase(OsisPortalTestCase):
             documents_additionnels=[],
             poste_diplomatique=None,
             preuve_bama_15=[],
+            raison_plusieurs_demandes_meme_cycle_meme_annee='',
+            justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee='',
         )
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(

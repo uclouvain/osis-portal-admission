@@ -1055,8 +1055,21 @@ msgstr "Cours"
 msgid "Create a new application"
 msgstr "Introduire une nouvelle demande"
 
+#, python-format
+msgid ""
+"Create an application for %(training_name)s (%(training_campus)s) "
+"%(training_acronym)s and cancel your other applications"
+msgstr ""
+"Introduire une demande d'inscription en %(training_name)s "
+"(%(training_campus)s) %(training_acronym)s et annuler vos autres demandes"
+
 msgid "Create new application"
 msgstr "Créer une nouvelle demande d'inscription"
+
+msgid "Create this new application and cancel your other ones"
+msgstr ""
+"Introduire cette nouvelle demande d'inscription et annuler vos autres "
+"demandes"
 
 msgctxt "an admission"
 msgid "Created on:"
@@ -2365,6 +2378,9 @@ msgstr "Expérience de recherche doctorale"
 msgid "Place of birth"
 msgstr "Lieu de naissance"
 
+msgid "Please briefly explain what you want:"
+msgstr "Veuillez expliquer brièvement votre souhait :"
+
 msgid "Please choose the institute or specify another institute"
 msgstr "Veuillez définir l'établissement ou précisez un autre établissement"
 
@@ -2714,6 +2730,13 @@ msgid "Send missing documents"
 msgstr "Envoyer les documents manquants"
 
 msgid ""
+"Sending the request requires the completion of this form and your agreement "
+"with all of the following elements"
+msgstr ""
+"L'envoi de la demande nécessite la complétion de ce formulaire "
+"et votre accord pour l'ensemble des éléments"
+
+msgid ""
 "Sending the request requires your agreement with all of the following "
 "elements"
 msgstr ""
@@ -2821,6 +2844,9 @@ msgstr "Nom"
 
 msgid "System of education"
 msgstr "Système d'études"
+
+msgid "Take several courses at the same time"
+msgstr "Suivre plusieurs formations en parallèle"
 
 msgid "Teaching degree and CAPAES"
 msgstr "Agrégation et CAPAES"
@@ -3413,6 +3439,10 @@ msgstr "Oui, envoyer"
 msgid "Yes,No,"
 msgstr "Oui,Non,"
 
+#, python-format
+msgid "You already submitted other applications for %(year)s"
+msgstr "Vous avez déjà soumis d'autres demandes d'inscription pour %(year)s"
+
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 "Vous semblez avoir des modifications non enregistrées, celles-ci seront "
@@ -3513,6 +3543,9 @@ msgstr "Vous devez référencer une personne de l'UCLouvain."
 msgid "You specified that no Belgian student status situation applies to you."
 msgstr ""
 "Vous avez spécifié qu'aucune situation d'assimilation ne s'appliquait à vous."
+
+msgid "You want:"
+msgstr "Vous souhaitez :"
 
 msgid ""
 "You will receive a monthly newsletter explaining all the benefits and "

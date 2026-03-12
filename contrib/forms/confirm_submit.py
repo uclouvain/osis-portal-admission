@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,6 +26,9 @@
 
 from django import forms
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy
+
+from admission.contrib.enums.confirmation import RaisonPlusieursDemandesMemesCycleEtAnnee
 
 
 class CharFieldCheckbox(forms.CheckboxSelectMultiple):
@@ -40,8 +43,44 @@ class AdmissionConfirmSubmitForm(forms.Form):
     pool = forms.CharField(widget=forms.HiddenInput())
     annee = forms.IntegerField(widget=forms.HiddenInput())
 
-    def __init__(self, *args, elements, **kwargs):
+    raison_plusieurs_demandes_meme_cycle_meme_annee = forms.ChoiceField(
+        choices=RaisonPlusieursDemandesMemesCycleEtAnnee.choices(),
+        label=gettext_lazy('You want:'),
+        widget=forms.RadioSelect,
+    )
+
+    justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee = forms.CharField(
+        label=gettext_lazy('Please briefly explain what you want:'),
+        widget=forms.Textarea(attrs={'rows': 3, 'placeholder': ''}),
+    )
+
+    def __init__(
+        self,
+        *args,
+        elements,
+        display_several_applications_same_cycle_same_year_questions,
+        training,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
+
+        if display_several_applications_same_cycle_same_year_questions:
+            self.fields[
+                'raison_plusieurs_demandes_meme_cycle_meme_annee'
+            ].choices = RaisonPlusieursDemandesMemesCycleEtAnnee.choices_with_training_name(
+                training=training,
+            )
+
+            if not self.initial.get('raison_plusieurs_demandes_meme_cycle_meme_annee') or not self.initial.get(
+                'justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee'
+            ):
+                self.only_display_several_applications_same_cycle_same_year_questions = True
+                return
+
+        else:
+            del self.fields['raison_plusieurs_demandes_meme_cycle_meme_annee']
+            del self.fields['justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee']
+
         if not elements:
             return
 

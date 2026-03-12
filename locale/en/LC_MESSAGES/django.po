@@ -883,7 +883,16 @@ msgstr ""
 msgid "Create a new application"
 msgstr ""
 
+#, python-format
+msgid ""
+"Create an application for %(training_name)s (%(training_campus)s) "
+"%(training_acronym)s and cancel your other applications"
+msgstr ""
+
 msgid "Create new application"
+msgstr ""
+
+msgid "Create this new application and cancel your other ones"
 msgstr ""
 
 msgctxt "an admission"
@@ -2052,6 +2061,9 @@ msgstr ""
 msgid "Place of birth"
 msgstr ""
 
+msgid "Please briefly explain what you want:"
+msgstr ""
+
 msgid "Please choose the institute or specify another institute"
 msgstr ""
 
@@ -2364,6 +2376,11 @@ msgid "Send missing documents"
 msgstr ""
 
 msgid ""
+"Sending the request requires the completion of this form and your agreement "
+"with all of the following elements"
+msgstr ""
+
+msgid ""
 "Sending the request requires your agreement with all of the following "
 "elements"
 msgstr ""
@@ -2465,6 +2482,9 @@ msgid "Surname"
 msgstr ""
 
 msgid "System of education"
+msgstr ""
+
+msgid "Take several courses at the same time"
 msgstr ""
 
 msgid "Teaching degree and CAPAES"
@@ -2970,6 +2990,10 @@ msgstr ""
 msgid "Yes,No,"
 msgstr ""
 
+#, python-format
+msgid "You already submitted other applications for %(year)s"
+msgstr ""
+
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 
@@ -3047,6 +3071,9 @@ msgid "You must reference a person in UCLouvain."
 msgstr ""
 
 msgid "You specified that no Belgian student status situation applies to you."
+msgstr ""
+
+msgid "You want:"
 msgstr ""
 
 msgid ""
