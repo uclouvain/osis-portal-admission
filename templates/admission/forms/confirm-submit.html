@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -213,6 +213,17 @@
         {% endfor %}
       </table>
 
+    {% elif confirmation_form.only_display_several_applications_same_cycle_same_year_questions %}
+      <p class="alert alert-success">
+        {% trans "Your application is complete and may be submitted." %}
+      </p>
+      <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
+      {% csrf_token %}
+      {% for field in confirmation_form.hidden_fields %}
+        {% bootstrap_field field %}
+      {% endfor %}
+
+      {% include 'admission/includes/multiple_applications_same_year_same_cycle_form_fields.html' with display_submit_button=True %}
     {% else %}
       {% if not additional_conditions %}
         <p class="alert alert-success">
@@ -223,6 +234,8 @@
         {% for field in confirmation_form.hidden_fields %}
           {% bootstrap_field field %}
         {% endfor %}
+
+        {% include 'admission/includes/multiple_applications_same_year_same_cycle_form_fields.html' with display_submit_button=False %}
 
         {% if confirmation_form.hors_delai %}
           {% panel _("Academic year") %}
@@ -264,6 +277,8 @@
             class="pull-right"
             {% if additional_conditions %}
             title="{% for condition in additional_conditions.values %}{{ condition }}{% endfor %}"
+            {% elif confirmation_form.raison_plusieurs_demandes_meme_cycle_meme_annee %}
+            title="{% trans "Sending the request requires the completion of this form and your agreement with all of the following elements" %}"
             {% else %}
             title="{% trans "Sending the request requires your agreement with all of the following elements" %}"
             {% endif %}
@@ -355,7 +370,7 @@
           {% if missing_confirmation_conditions or additional_conditions %}
               formButton.prop('disabled', true);
           {% else %}
-              $('input[type="checkbox"], input[type="radio"]', form).change(function () {
+              $('input[type="checkbox"], input[type="radio"], textarea', form).change(function () {
                   formButton.prop('disabled', !form.checkValidity());
                   if (form.checkValidity()) {
                       $submitWrapper.tooltip('destroy');
