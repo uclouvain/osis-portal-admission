@@ -82,6 +82,10 @@ from osis_admission_sdk.model.renvoyer_invitation_signature import (
     RenvoyerInvitationSignature,
 )
 from osis_admission_sdk.model.specific_question import SpecificQuestion
+from osis_admission_sdk.model.specifier_raison_plusieurs_demandes_meme_cycle_meme_annee_command import (
+    SpecifierRaisonPlusieursDemandesMemeCycleMemeAnneeCommand,
+)
+from osis_admission_sdk.model.submit_general_proposition import SubmitGeneralProposition
 from osis_admission_sdk.model.submit_proposition import SubmitProposition
 from osis_admission_sdk.model.supervision_actor_reference import (
     SupervisionActorReference,
@@ -316,11 +320,45 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def submit_general_proposition(cls, person: Person, uuid, annee, pool, elements_confirmation):
+    def submit_general_proposition(
+        cls,
+        person: Person,
+        uuid,
+        annee,
+        pool,
+        elements_confirmation,
+        raison_plusieurs_demandes_meme_cycle_meme_annee,
+        justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee,
+    ):
         return APIClient().submit_general_education_proposition(
             uuid=uuid,
             **build_mandatory_auth_headers(person),
-            submit_proposition=SubmitProposition(annee, PoolEnum(pool), elements_confirmation),
+            submit_general_proposition=SubmitGeneralProposition(
+                annee=annee,
+                pool=PoolEnum(pool),
+                elements_confirmation=elements_confirmation,
+                raison_plusieurs_demandes_meme_cycle_meme_annee=raison_plusieurs_demandes_meme_cycle_meme_annee,
+                justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee=(
+                    justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee
+                ),
+            ),
+        )
+
+    @classmethod
+    def specify_reason_multiple_applications_same_cycle_same_year(cls, person: Person, uuid, **data):
+        return APIClient().specify_reason_multiple_applications_same_cycle_same_year(
+            uuid=uuid,
+            specifier_raison_plusieurs_demandes_meme_cycle_meme_annee_command=(
+                SpecifierRaisonPlusieursDemandesMemeCycleMemeAnneeCommand(
+                    raison_plusieurs_demandes_meme_cycle_meme_annee=data[
+                        'raison_plusieurs_demandes_meme_cycle_meme_annee'
+                    ],
+                    justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee=data[
+                        'justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee'
+                    ],
+                )
+            ),
+            **build_mandatory_auth_headers(person),
         )
 
     @classmethod
@@ -647,6 +685,7 @@ class GlobalPropositionBusinessException(Enum):
     ExperienceNonTrouveeException = "ADMISSION-22"
     EnQuarantaineException = "ADMISSION-23"
     HorsPeriodeSpecifiqueInscription = "ADMISSION-24"
+    DemandePourCetteFormationDejaEnvoyeeException = "ADMISSION-26"
 
 
 class FormationGeneraleBusinessException(Enum):
@@ -670,6 +709,8 @@ class FormationGeneraleBusinessException(Enum):
     InformationsVisaNonCompleteesException = "FORMATION-GENERALE-20"
     BoursesEtudesNonRenseignees = "FORMATION-GENERALE-36"
     ExamenNonCompletesException = "FORMATION-GENERALE-39"
+    CandidatNonEligibleALaReinscriptionException = "FORMATION-GENERALE-42"
+    CandidatDejaDiplomeFormationException = "FORMATION-GENERALE-43"
 
 
 class FormationContinueBusinessException(Enum):
@@ -739,6 +780,9 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         FormationContinueBusinessException.ChoixDeFormationNonRenseigneException,
         FormationContinueBusinessException.FormationEstFermeeException,
         FormationGeneraleBusinessException.BoursesEtudesNonRenseignees,
+        GlobalPropositionBusinessException.DemandePourCetteFormationDejaEnvoyeeException,
+        FormationGeneraleBusinessException.CandidatNonEligibleALaReinscriptionException,
+        FormationGeneraleBusinessException.CandidatDejaDiplomeFormationException,
     },
     'cotutelle': {
         PropositionBusinessException.CotutelleNonCompleteException,
