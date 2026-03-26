@@ -423,6 +423,13 @@ msgstr ""
 msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
 
+#, python-format
+msgid ""
+"As you are a currently a student at UCLouvain, some information about "
+"identification can not be updated. If you want to update them, please "
+"contact %(recipient)s."
+msgstr ""
+
 msgid ""
 "Assessment is also based on the credit system, which quantifies the workload "
 "involved in a class. Depending on the country, a full year of study is "

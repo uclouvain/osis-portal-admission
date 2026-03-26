@@ -115,6 +115,10 @@ class LoadViewMixin(ContextMixin):
             return resolve_url(pattern, pk=self.admission_uuid)
         return resolve_url(pattern)
 
+    @cached_property
+    def ucl_enrolment_information(self):
+        return AdmissionPropositionService.retrieve_candidate_ucl_enrolment_information(person=self.request.user.person)
+
 
 class LoadDossierViewMixin(LoadViewMixin, UserPassesTestMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
@@ -186,4 +190,7 @@ class LoadDossierViewMixin(LoadViewMixin, UserPassesTestMixin):
                 )
                 % {'date': self.admission.date_fin_pot.strftime('%d/%m/%Y')},
             )
+
+        context['ucl_enrolment_information'] = self.ucl_enrolment_information
+
         return context
