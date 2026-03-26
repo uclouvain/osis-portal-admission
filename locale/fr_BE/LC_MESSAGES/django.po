@@ -109,11 +109,9 @@ msgid ":"
 msgstr " :"
 
 msgid ""
-"<a href=\"https://uclouvain.be/en/study/inscriptions/frequently-asked-"
-"questions.html\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
-"<a href=\"https://uclouvain.be/fr/etudier/inscriptions/questions-frequemment-"
-"posees.html\" target=\"_blank\">Contactez le Service des inscriptions</a>"
+"<a href=\"https://www.uclouvain.be/fr/inscriptions/contact\" target=\"_blank\">Contactez le Service des inscriptions</a>"
 
 #, python-brace-format
 msgid ""
@@ -353,7 +351,7 @@ msgstr "Tout"
 msgid "Amount"
 msgstr "Montant"
 
-msgid "An administrative question about your dossier?"
+msgid "An administrative question about your application?"
 msgstr "Une question administrative concernant votre dossier ?"
 
 msgid "An error has occurred, please check fields and try again."
