@@ -26,6 +26,15 @@
 {% endcomment %}
 
 {% block tab_content %}
+  {% if ucl_enrolment_information.est_inscrit_recemment %}
+    <div class="alert alert-warning">
+      {% blocktrans trimmed with recipient=training_contact|default:_('the enrolment office') %}
+        As you are a currently a student at UCLouvain, some information about identification can not be updated.
+        If you want to update them, please contact {{ recipient }}.
+      {% endblocktrans %}
+    </div>
+  {% endif %}
+
     {% panel _("Identification") %}
         <div class="row">
             {% field_data _("Surname") person.last_name "col-md-4" %}
@@ -55,6 +64,7 @@
         {% field_data _("Contact language") contact_language %}
     {% endpanel %}
 
+    {% if not ucl_enrolment_information.est_inscrit_recemment %}
     {% panel _("Identity document") %}
         {% if person.national_number or person.id_card_number %}
             {% field_data _("Belgian national registry number (NISS)") person.national_number hide_empty=True %}
@@ -85,6 +95,7 @@
             {% field_data _('Have you previously enrolled at UCLouvain?') _('No') %}
         {% endif %}
     {% endpanel %}
+  {% endif %}
 
     {% if not admission|can_update_tab:"person" %}
       <a

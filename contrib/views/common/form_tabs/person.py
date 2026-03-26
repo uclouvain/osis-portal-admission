@@ -79,6 +79,9 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         """Return the person update mode depending on the permissions of the current user."""
         update_mode = PersonUpdateMode.NO
 
+        if self.ucl_enrolment_information.est_inscrit_recemment:
+            return PersonUpdateMode.NO
+
         if self.admission_uuid:
             if can_make_action(self.admission, 'update_person'):
                 update_mode = PersonUpdateMode.ALL
