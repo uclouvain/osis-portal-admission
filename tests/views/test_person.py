@@ -30,8 +30,9 @@ from unittest.mock import ANY, Mock, patch
 import freezegun
 from django.conf import settings
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 
 from admission.constants import BE_ISO_CODE
 from admission.contrib.enums import SexEnum
@@ -74,6 +75,15 @@ class PersonViewTestCase(OsisPortalTestCase):
             links={
                 'create_person': {'url': 'foobar'},
             }
+        )
+
+        self.mock_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
         )
 
         person_api_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
@@ -286,6 +296,36 @@ class PersonViewTestCase(OsisPortalTestCase):
 
     def test_form_all_fields_are_disabled_if_no_permission_on_update(self):
         self.client.force_login(self.internal_person.user)
+
+        admission_url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
+
+        self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = mock.Mock(links={})
+
+        response = self.client.get(admission_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        for field_name, field in form.fields.items():
+            self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+
+    def test_form_all_fields_are_disabled_if_ucl_student_on_create(self):
+        self.client.force_login(self.internal_person.user)
+
+        self.mock_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.create_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+
+        for field_name, field in form.fields.items():
+            self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
+
+    def test_form_all_fields_are_disabled_if_ucl_student_on_update(self):
+        self.client.force_login(self.internal_person.user)
+
+        self.mock_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
 
         admission_url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
