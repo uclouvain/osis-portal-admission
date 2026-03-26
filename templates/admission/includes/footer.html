@@ -26,12 +26,12 @@
 {% endcomment %}
 
 <p class="text-center">
-  {% translate 'An administrative question about your dossier?' %}
+  {% translate 'An administrative question about your application?' %}
   {% if training_contact %}
     {% blocktranslate with training_contact=training_contact %}Contact {{ training_contact }}{% endblocktranslate %}
   {% else %}
     {% blocktranslate trimmed %}
-      <a href="https://uclouvain.be/en/study/inscriptions/frequently-asked-questions.html" target="_blank">Contact the Enrolment Office</a>
+      <a href="https://www.uclouvain.be/en/enrolment/contact-uclouvain" target="_blank">Contact the Enrolment Office</a>
     {% endblocktranslate %}
   {% endif %}
    -
