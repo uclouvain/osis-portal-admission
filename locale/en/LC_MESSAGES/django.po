@@ -98,8 +98,7 @@ msgid ":"
 msgstr ""
 
 msgid ""
-"<a href=\"https://uclouvain.be/en/study/inscriptions/frequently-asked-"
-"questions.html\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
 
 #, python-brace-format
@@ -291,7 +290,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-msgid "An administrative question about your dossier?"
+msgid "An administrative question about your application?"
 msgstr ""
 
 msgid "An error has occurred, please check fields and try again."
