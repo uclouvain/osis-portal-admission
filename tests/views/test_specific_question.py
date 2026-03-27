@@ -213,10 +213,8 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'modification_pool_academic_year': None,
         }
 
-        self.mock_candidate_ucl_enrolment_information = (
-            self.mock_proposition_api.return_value.propositions_candidate_ucl_enrolment_information_retrieve
-        )
-        self.mock_candidate_ucl_enrolment_information.return_value = (
+        self.mock_general_candidate_ucl_enrolment_information = self.mock_proposition_api.return_value.propositions_general_education_candidate_ucl_enrolment_information_retrieve
+        self.mock_general_candidate_ucl_enrolment_information.return_value = (
             CandidateEnrolmentInformation._new_from_openapi_data(
                 est_inscrit_recemment=False,
             )
@@ -380,7 +378,7 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         )
 
         # With ucl student -> no visa
-        self.mock_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
 
         response = self.client.get(self.url)
         main_form = response.context['forms'][0]

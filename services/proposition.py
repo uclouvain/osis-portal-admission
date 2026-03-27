@@ -38,8 +38,8 @@ from osis_admission_sdk.model.approuver_proposition_command import (
 from osis_admission_sdk.model.approuver_proposition_par_pdf_command import (
     ApprouverPropositionParPdfCommand,
 )
-from osis_admission_sdk.model.candidate_re_enrolment_eligibility import CandidateReEnrolmentEligibility
 from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
+from osis_admission_sdk.model.candidate_re_enrolment_eligibility import CandidateReEnrolmentEligibility
 from osis_admission_sdk.model.completer_comptabilite_proposition_doctorale_command import (
     CompleterComptabilitePropositionDoctoraleCommand,
 )
@@ -145,8 +145,45 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         )
 
     @classmethod
-    def retrieve_candidate_ucl_enrolment_information(cls, person) -> CandidateEnrolmentInformation:
+    def retrieve_candidate_ucl_enrolment_information(
+        cls,
+        person: Person,
+        **kwargs,
+    ) -> CandidateEnrolmentInformation:
         return APIClient().propositions_candidate_ucl_enrolment_information_retrieve(
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_general_candidate_ucl_enrolment_information(
+        cls,
+        person: Person,
+        uuid_proposition: str,
+    ) -> CandidateEnrolmentInformation:
+        return APIClient().propositions_general_education_candidate_ucl_enrolment_information_retrieve(
+            uuid=uuid_proposition,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_doctorate_candidate_ucl_enrolment_information(
+        cls,
+        person: Person,
+        uuid_proposition: str,
+    ) -> CandidateEnrolmentInformation:
+        return APIClient().propositions_doctorate_candidate_ucl_enrolment_information_retrieve(
+            uuid=uuid_proposition,
+            **build_mandatory_auth_headers(person),
+        )
+
+    @classmethod
+    def retrieve_continuing_candidate_ucl_enrolment_information(
+        cls,
+        person: Person,
+        uuid_proposition: str,
+    ) -> CandidateEnrolmentInformation:
+        return APIClient().propositions_continuing_education_candidate_ucl_enrolment_information_retrieve(
+            uuid=uuid_proposition,
             **build_mandatory_auth_headers(person),
         )
 
@@ -693,6 +730,7 @@ class GlobalPropositionBusinessException(Enum):
     EnQuarantaineException = "ADMISSION-23"
     HorsPeriodeSpecifiqueInscription = "ADMISSION-24"
     DemandePourCetteFormationDejaEnvoyeeException = "ADMISSION-26"
+    DemandeEnBrouillonDejaExistantePourCetteFormationException = "ADMISSION-27"
 
 
 class FormationGeneraleBusinessException(Enum):
@@ -791,6 +829,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.DemandePourCetteFormationDejaEnvoyeeException,
         FormationGeneraleBusinessException.CandidatNonEligibleALaReinscriptionException,
         FormationGeneraleBusinessException.CandidatDejaDiplomeFormationException,
+        GlobalPropositionBusinessException.DemandeEnBrouillonDejaExistantePourCetteFormationException,
     },
     'cotutelle': {
         PropositionBusinessException.CotutelleNonCompleteException,

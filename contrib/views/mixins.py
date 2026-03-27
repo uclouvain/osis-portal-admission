@@ -117,7 +117,16 @@ class LoadViewMixin(ContextMixin):
 
     @cached_property
     def ucl_enrolment_information(self):
-        return AdmissionPropositionService.retrieve_candidate_ucl_enrolment_information(person=self.request.user.person)
+        method = {
+            'create': AdmissionPropositionService.retrieve_candidate_ucl_enrolment_information,
+            'doctorate': AdmissionPropositionService.retrieve_doctorate_candidate_ucl_enrolment_information,
+            'general-education': AdmissionPropositionService.retrieve_general_candidate_ucl_enrolment_information,
+            'continuing-education': AdmissionPropositionService.retrieve_continuing_candidate_ucl_enrolment_information,
+        }
+        return method[self.current_context](
+            person=self.request.user.person,
+            uuid_proposition=self.admission_uuid,
+        )
 
 
 class LoadDossierViewMixin(LoadViewMixin, UserPassesTestMixin):
