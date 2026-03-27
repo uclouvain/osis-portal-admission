@@ -28,6 +28,7 @@ from unittest.mock import ANY, MagicMock, patch
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 from osis_admission_sdk.model.modifier_questions_specifiques_formation_continue_command import (
     ModifierQuestionsSpecifiquesFormationContinueCommand,
 )
@@ -212,6 +213,15 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'modification_pool_academic_year': None,
         }
 
+        self.mock_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
     def test_forbidden_access(self):
         with patch.object(self.bachelor_proposition, 'links', {'update_specific_question': {'error': 'a'}}):
             response = self.client.get(self.url)
@@ -368,6 +378,14 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                 ),
             ),
         )
+
+        # With ucl student -> no visa
+        self.mock_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.url)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+        self.assertFalse(main_form.fields['poste_diplomatique'].required)
 
     def test_get_page_with_bama_15_questions(self):
         # No identification -> no bama 15 questions
