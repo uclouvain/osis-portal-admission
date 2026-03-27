@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ from unittest.mock import ANY, MagicMock, patch
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 from osis_admission_sdk.model.modifier_questions_specifiques_formation_continue_command import (
     ModifierQuestionsSpecifiquesFormationContinueCommand,
 )
@@ -211,6 +212,15 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'modification_pool_academic_year': None,
         }
 
+        self.mock_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
     def test_forbidden_access(self):
         with patch.object(self.bachelor_proposition, 'links', {'update_specific_question': {'error': 'a'}}):
             response = self.client.get(self.url)
@@ -365,6 +375,14 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                 ),
             ),
         )
+
+        # With ucl student -> no visa
+        self.mock_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.url)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+        self.assertFalse(main_form.fields['poste_diplomatique'].required)
 
     def test_post_page(self):
         response = self.client.post(
@@ -713,7 +731,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertEqual(initial_data.get('nom_siege_social'), 'UCL')
         self.assertEqual(initial_data.get('numero_unique_entreprise'), '1')
         self.assertEqual(initial_data.get('numero_tva_entreprise'), '1A')
-        self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),
+        (self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),)
         self.assertEqual(initial_data.get('type_adresse_facturation'), 'AUTRE')
         self.assertEqual(initial_data.get('adresse_facturation_destinataire'), 'Mr Doe')
         self.assertEqual(initial_data.get('street'), 'Rue des Pins')
@@ -744,7 +762,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertEqual(initial_data.get('nom_siege_social'), 'UCL')
         self.assertEqual(initial_data.get('numero_unique_entreprise'), '1')
         self.assertEqual(initial_data.get('numero_tva_entreprise'), '1A')
-        self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),
+        (self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),)
         self.assertEqual(initial_data.get('type_adresse_facturation'), 'RESIDENTIEL')
 
     def test_post_page_enrolment_with_residence_permit(self):
