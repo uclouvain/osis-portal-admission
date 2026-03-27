@@ -80,7 +80,17 @@ class PersonViewTestCase(OsisPortalTestCase):
         self.mock_candidate_ucl_enrolment_information = (
             self.mock_proposition_api.return_value.propositions_candidate_ucl_enrolment_information_retrieve
         )
+        self.mock_doctorate_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_doctorate_candidate_ucl_enrolment_information_retrieve
+        )
+
         self.mock_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value = (
             CandidateEnrolmentInformation._new_from_openapi_data(
                 est_inscrit_recemment=False,
             )

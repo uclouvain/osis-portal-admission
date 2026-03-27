@@ -29,6 +29,7 @@ from unittest.mock import ANY, MagicMock, Mock, patch
 
 from osis_admission_sdk.model.campus import Campus
 from osis_admission_sdk.model.campus_dto import CampusDTO
+from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
 from osis_admission_sdk.model.doctorat_search_dto import DoctoratSearchDTO
 from osis_admission_sdk.model.doctorate_pre_admission_search_dto import (
@@ -355,7 +356,6 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'sigle_entite_gestion': 'CMG',
                 'campus_inscription': 'Mons',
             },
-            annee_calculee=None,
             reference='M-CMG20-000.001',
             annee_calculee=None,
             matricule_candidat=cls.person.global_id,
@@ -407,7 +407,6 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'sigle_entite_gestion': 'CMG',
                 'campus_inscription': 'Mons',
             },
-            annee_calculee=None,
             reference='M-CMG20-000.002',
             annee_calculee=None,
             matricule_candidat=cls.person.global_id,
@@ -811,6 +810,39 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         )
         self.mock_proposition_api.return_value.propositions_candidate_re_enrolment_eligibity_retrieve.return_value = (
             Mock(est_eligible_a_la_reinscription=False)
+        )
+
+        self.mock_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_general_candidate_ucl_enrolment_information = self.mock_proposition_api.return_value.propositions_general_education_candidate_ucl_enrolment_information_retrieve
+        self.mock_doctorate_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_doctorate_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_continuing_candidate_ucl_enrolment_information = self.mock_proposition_api.return_value.propositions_continuing_education_candidate_ucl_enrolment_information_retrieve
+
+        self.mock_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
         )
 
         self.addCleanup(propositions_api_patcher.stop)
