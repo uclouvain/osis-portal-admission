@@ -74,8 +74,14 @@ class PoolQuestionsForm(forms.Form):
     )
     registration_change_form = FileUploadField(max_files=1, required=False)
     regular_registration_proof_for_registration_change = FileUploadField(max_files=1, required=False)
+
+    # Contingenté
     is_non_resident = forms.NullBooleanField(
         label=_("You are applying as ..."),
+        help_text=_(
+            '<a href="https://www.uclouvain.be/en/enrolment/limited-enrolment-courses" '
+            'target="_blank">Limited enrolment courses</a>'
+        ),
         widget=forms.RadioSelect(
             choices=(
                 (False, _("Resident (as defined by government decree)")),
@@ -83,6 +89,55 @@ class PoolQuestionsForm(forms.Form):
             ),
             attrs={'autocomplete': "off"},
         ),
+        required=False,
+    )
+    # Resident
+    residence_certificate = FileUploadField(
+        label=_('A recent residence certificate attesting to your residence in a Belgian municipality'),
+        help_text=_(
+            'Official recent document issued by your local municipal administration certifying '
+            'that your main residence is located in Belgium.'
+        ),
+        max_files=1,
+        required=False,
+    )
+    residence_student_form = FileUploadField(
+        label=mark_safe_lazy(
+            _(
+                'Resident student" form (Annex 2), duly completed and signed in accordance with the specific '
+                'terms and conditions for a <a href="https://www.uclouvain.be/fr/inscriptions/etudes-contingentees"'
+                'target="_blank">limited-enrolment course</a>'
+            )
+        ),
+        max_files=1,
+        required=False,
+    )
+    # Non-resident
+    non_resident_file = FileUploadField(
+        label=mark_safe_lazy(
+            _(
+                'The non-resident file (Annex 3) duly completed and signed in accordance with the specific terms and '
+                'conditions for the <a href="https://www.uclouvain.be/en/enrolment/limited-enrolment-courses" '
+                'target="_blank">studies under quotas</a>'
+            )
+        ),
+        max_files=1,
+        required=False,
+    )
+    non_resident_with_second_year_enrolment = forms.NullBooleanField(
+        widget=BooleanRadioSelect(),
+        label=_("Do you intend to make an enrolment directly for the second year?"),
+        required=False,
+    )
+    non_resident_with_second_year_enrolment_form = FileUploadField(
+        label=mark_safe_lazy(
+            _(
+                'Enrolment form for an enrolment beyond the first 60 credits of the first cycle (Appendix 5bis) duly '
+                'completed and signed in accordance with the specific terms and conditions for the '
+                '<a href="https://www.uclouvain.be/en/enrolment/limited-enrolment-courses">studies under quotas</a>'
+            )
+        ),
+        max_files=1,
         required=False,
     )
 
