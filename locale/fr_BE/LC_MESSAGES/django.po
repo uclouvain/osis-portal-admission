@@ -201,8 +201,8 @@ msgid ""
 "monitor your thesis."
 msgstr ""
 "Veuillez, <strong>avant de les encoder dans votre dossier</strong>, "
-"contacter toutes et tous les membres de votre comité d'accompagnement, "
-"afin d'avoir leur accord pour superviser/suivre votre thèse."
+"contacter toutes et tous les membres de votre comité d'accompagnement, afin "
+"d'avoir leur accord pour superviser/suivre votre thèse."
 
 msgid ""
 "<strong>Non-academic activity</strong>: any professional or private activity "
@@ -279,6 +279,14 @@ msgstr "Accéder aux détails de l'expérience"
 
 msgid "Access my PhD candidates' applications"
 msgstr "Accéder aux dossiers de mes candidats au doctorat"
+
+#, python-format
+msgid ""
+"According to our analysis, you have a maximum of 15 remaining credits from "
+"your bachelor's degree to complete in %(year)s. Do you confirm this analysis?"
+msgstr ""
+"Selon notre analyse, il vous reste maximum 15 crédits résiduels de votre "
+"bachelier à terminer en %(year)s. Confirmez-vous cette analyse ?"
 
 msgid "Account holder first name"
 msgstr "Prénom du titulaire du compte"
@@ -1190,6 +1198,9 @@ msgstr "Télécharger en tant que PDF"
 msgid "Dr"
 msgstr "Dr."
 
+msgid "Dual bachelor-master registration (BAMA15)"
+msgstr "Double inscription bachelier-master (BAMA15)"
+
 msgid "Dual degree scholarship"
 msgstr "Bourse double diplomation"
 
@@ -1738,6 +1749,20 @@ msgid ""
 msgstr ""
 "Si vous n’avez pas encore obtenu votre financement, veuillez sélectionner "
 "“Fonds propres” et décrire le financement envisagé dans la zone “Commentaire”"
+
+#, python-format
+msgid ""
+"If you have 15 or fewer bachelor's credits left to validate in %(year)s, you "
+"have the option of anticipating your master's degree. Before registering for "
+"the master's program, please validate your bachelor's registration at your "
+"other institution. Your bachelor's registration certificate for %(year)s "
+"must be attached to your master's application."
+msgstr ""
+"S'il vous reste 15 crédits ou moins de bachelier à valider en %(year)s, vous "
+"avez la possibilité d'anticiper votre master. Avant de vous inscrire au "
+"master, veuillez valider votre réinscription au bachelier dans votre autre "
+"établissement. Votre attestation d'inscription au bachelier pour %(year)s "
+"doit être jointe à votre demande d'inscription au master."
 
 msgid ""
 "If you have a final equivalence decision issued by the <a href='http://www."
@@ -2461,6 +2486,10 @@ msgstr ""
 
 msgid "Proof of equivalency request"
 msgstr "Preuve de la demande d'équivalence"
+
+#, python-format
+msgid "Proof of re-enrolment for your %(year)s bachelor's degree"
+msgstr "Preuve de réinscription à votre bachelier %(year)s"
 
 msgid ""
 "Proof of receipt of unemployment benefit, pension or compensation from the "

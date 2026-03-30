@@ -42,9 +42,10 @@ from osis_admission_sdk.model.specific_question import SpecificQuestion
 from osis_reference_sdk.model.scholarship import Scholarship
 
 from admission.contrib.enums import (
+    ChoixCommissionProximiteCDSS,
     ChoixStatutPropositionContinue,
     ChoixStatutPropositionDoctorale,
-    ChoixStatutPropositionGenerale, ChoixCommissionProximiteCDSS,
+    ChoixStatutPropositionGenerale,
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
@@ -354,6 +355,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'campus_inscription': 'Mons',
             },
             reference='M-CMG20-000.001',
+            annee_calculee=None,
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
@@ -386,6 +388,8 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             },
             documents_additionnels=['uuid-documents-additionnels'],
             poste_diplomatique=None,
+            est_concerne_par_le_bama_15=None,
+            preuve_bama_15=[],
         )
         cls.bachelor_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -402,6 +406,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'campus_inscription': 'Mons',
             },
             reference='M-CMG20-000.002',
+            annee_calculee=None,
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
@@ -419,6 +424,8 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             },
             documents_additionnels=['uuid-documents-additionnels'],
             poste_diplomatique=None,
+            est_concerne_par_le_bama_15=None,
+            preuve_bama_15=[],
         )
 
         cls.continuing_proposition_dict = {
