@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -149,6 +149,13 @@ class LoadDossierViewMixin(LoadViewMixin, UserPassesTestMixin):
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
+
+    @cached_property
+    def candidate_has_internal_account(self):
+        global_id = (
+            self.admission.matricule_candidat if self.admission_uuid else self.request.user.person.global_id or ''
+        )
+        return not global_id.startswith('8')
 
     @cached_property
     def specific_questions(self):
