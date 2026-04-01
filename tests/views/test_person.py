@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -245,7 +245,13 @@ class PersonViewTestCase(OsisPortalTestCase):
         self.assertEqual(response.status_code, 200)
         form = response.context['form']
 
-        fields_to_disabled = {'first_name', 'last_name'}
+        fields_to_disabled = {
+            'first_name',
+            'last_name',
+            'last_registration_year',
+            'already_registered',
+            'last_registration_id',
+        }
         for field_name, field in form.fields.items():
             if field_name in fields_to_disabled:
                 self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
@@ -265,7 +271,17 @@ class PersonViewTestCase(OsisPortalTestCase):
         self.assertEqual(response.status_code, 200)
         form = response.context['form']
 
-        fields_to_disabled = {'first_name', 'last_name', 'sex', 'birth_country', 'birth_date', 'unknown_birth_date'}
+        fields_to_disabled = {
+            'first_name',
+            'last_name',
+            'sex',
+            'birth_country',
+            'birth_date',
+            'unknown_birth_date',
+            'last_registration_year',
+            'already_registered',
+            'last_registration_id',
+        }
         for field_name, field in form.fields.items():
             if field_name in fields_to_disabled:
                 self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
@@ -319,24 +335,6 @@ class PersonViewTestCase(OsisPortalTestCase):
         for field_name, field in form.fields.items():
             self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
 
-    def test_form_all_fields_are_disabled_if_ucl_student_on_create(self):
-        self.client.force_login(self.internal_person.user)
-
-        self.mock_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
-
-        response = self.client.get(self.create_url)
-
-        self.assertEqual(response.status_code, 200)
-        form = response.context['form']
-
-        for field_name, field in form.fields.items():
-            self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
-
-    def test_form_all_fields_are_disabled_if_ucl_student_on_update(self):
-        self.client.force_login(self.internal_person.user)
-
-        self.mock_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
-
         admission_url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
         self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = mock.Mock(links={})
@@ -350,7 +348,7 @@ class PersonViewTestCase(OsisPortalTestCase):
             self.assertTrue(field.disabled, f'The field {field_name} must be disabled.')
 
     def test_form_some_fields_are_disabled_if_only_permission_for_last_enrolment_on_create(self):
-        self.client.force_login(self.internal_person.user)
+        self.client.force_login(self.person.user)
 
         self.mock_proposition_api.return_value.detail_proposition_create_permissions.return_value = mock.Mock(
             links={
@@ -408,7 +406,7 @@ class PersonViewTestCase(OsisPortalTestCase):
         self.assertEqual(call_kwargs.get('person_last_enrolment', {}).get('last_registration_id'), '12345679')
 
     def test_form_some_fields_are_disabled_if_only_permission_for_last_enrolment_on_update(self):
-        self.client.force_login(self.internal_person.user)
+        self.client.force_login(self.person.user)
 
         admission_url = resolve_url('admission:doctorate:update:person', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
 
