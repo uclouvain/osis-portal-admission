@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -116,6 +116,47 @@ class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue("n'est pas modifiable" in response.rendered_content)
 
+    def test_with_admission_and_ucl_student_on_reading_experience(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:curriculum:educational_read',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:continuing-education:curriculum:educational_read',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:general-education:curriculum:educational_read',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
     def test_with_admission_on_reading_experience_without_year_is_loaded(self):
         self.educational_experience.educationalexperienceyear_set = []
 
@@ -201,6 +242,44 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
             )
         )
 
+        self.assertEqual(response.status_code, 403)
+
+    def test_with_admission_and_ucl_student_on_delete_experience_can_be_forbidden(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:update:curriculum:educational_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:continuing-education:update:curriculum:educational_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:general-education:update:curriculum:educational_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
         self.assertEqual(response.status_code, 403)
 
 
@@ -324,6 +403,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'other_institute': True,
                 'can_be_updated': ANY,
                 'valuated_from_trainings': ANY,
+                'external_id': ANY,
             },
         )
         # Check the choices of the fields
@@ -541,6 +621,26 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
     def test_with_admission_on_update_epc_experience_form_is_forbidden_with_general(self):
         mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
         mock_retrieve_experience.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(self.general_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 403)
+
+    def test_with_admission_and_ucl_student_on_delete_experience_can_be_forbidden(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(self.continuing_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.get(self.general_admission_update_url)
 

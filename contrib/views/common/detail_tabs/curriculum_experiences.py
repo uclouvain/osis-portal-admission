@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 from django.conf import settings
-from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
@@ -47,7 +46,6 @@ from admission.services.reference import (
     DiplomaService,
     LanguageService,
     SuperiorInstituteService,
-    SuperiorNonUniversityService,
 )
 from admission.utils import format_address
 
@@ -88,6 +86,10 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
+
+    @cached_property
+    def experiences_are_read_only(self):
+        return self.is_general and self.ucl_enrolment_information.est_inscrit_recemment
 
 
 class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMixin, TemplateView):
@@ -171,7 +173,6 @@ def initialize_field_texts(person, curriculum_experiences, context):
     is_supported_language = get_language() == settings.LANGUAGE_CODE
 
     for experience in curriculum_experiences:
-
         # Initialize the linguistic regime
         if getattr(experience, 'linguistic_regime', None):
             linguistic_regime = LanguageService.get_language(
