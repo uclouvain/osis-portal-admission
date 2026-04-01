@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -103,7 +103,7 @@
           ></a>
         {% endif %}
       </div>
-      {% if form %}
+      {% if form and not view.experiences_are_read_only %}
         <a
             href="{{ curriculum_educational_create_url }}#curriculum-header"
             class="btn btn-primary"
@@ -155,7 +155,7 @@
                 <td><span>{{ educational_experience.institute_name }}</span></td>
                 <td class="action-container">
                   <div class="btn-toolbar" role="group">
-                    {% if form and educational_experience.can_be_updated %}
+                    {% if form and educational_experience.can_be_updated and not view.experiences_are_read_only %}
                       <a
                           href="{{ experience_update_url }}#curriculum-header"
                           class="btn btn-info"
@@ -222,7 +222,7 @@
           ></a>
         {% endif %}
       </div>
-      {% if form %}
+      {% if form and not view.experiences_are_read_only %}
         <a
             href="{{ curriculum_professional_create_url }}#curriculum-header"
             class="btn btn-primary"
@@ -276,7 +276,7 @@
                 <td><span>{{ professional_experience.type|enum_display:'ActivityType' }}</span></td>
                 <td class="action-container">
                   <div class="btn-toolbar" role="group">
-                    {% if form and professional_experience.can_be_updated %}
+                    {% if form and professional_experience.can_be_updated and not view.experiences_are_read_only %}
                       <a
                           href="{{ experience_update_url }}#curriculum-header"
                           class="btn btn-info"
