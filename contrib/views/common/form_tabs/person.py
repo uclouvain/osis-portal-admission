@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -79,9 +79,6 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         """Return the person update mode depending on the permissions of the current user."""
         update_mode = PersonUpdateMode.NO
 
-        if self.ucl_enrolment_information.est_inscrit_recemment:
-            return PersonUpdateMode.NO
-
         if self.admission_uuid:
             if can_make_action(self.admission, 'update_person'):
                 update_mode = PersonUpdateMode.ALL
@@ -97,19 +94,19 @@ class AdmissionPersonFormView(LoadDossierViewMixin, WebServiceFormMixin, FormVie
         return update_mode
 
     def get(self, request, *args, **kwargs):
-        # In case of a creation and if we don't have permission to update the person, we show the read-only template
-        if not self.admission_uuid:
-            if self.person_update_mode == PersonUpdateMode.NO:
+        # If the candidate does not have the permission to update the person, we show the read-only template
+        if self.person_update_mode == PersonUpdateMode.NO:
+            if not self.admission_uuid:
                 permissions = self.create_permissions
                 if self.request.GET.get('from_redirection') and can_make_action(permissions, 'create_training_choice'):
                     return redirect(self.request.resolver_match.namespace + ':training-choice')
-                person = self.person_info
-                context = super().get_context_data(
-                    with_submit=False,
-                    person=person,
-                    contact_language=dict(settings.LANGUAGES).get(person.get('language')),
-                )
-                return render(request, 'admission/details/person.html', context)
+            person = self.person_info
+            context = super().get_context_data(
+                with_submit=False,
+                person=person,
+                contact_language=dict(settings.LANGUAGES).get(person.get('language')),
+            )
+            return render(request, 'admission/details/person.html', context)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
