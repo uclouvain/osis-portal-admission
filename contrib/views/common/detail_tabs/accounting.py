@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -57,7 +57,9 @@ class BaseAdmissionAccountingView(LoadDossierViewMixin):
 
     @property
     def with_assimilation(self):
-        return self.accounting.get('a_nationalite_ue') is False
+        return self.accounting.get('a_nationalite_ue') is False and (
+            not self.is_general or not self.accounting.get('a_assimilation_meme_formation_annee_precedente')
+        )
 
 
 class AdmissionAccountingDetailView(BaseAdmissionAccountingView, TemplateView):
