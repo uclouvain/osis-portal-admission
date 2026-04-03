@@ -645,6 +645,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
                 code='FOOBAR',
+                active='ACTIVE',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -658,6 +659,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
                 code='BARBAZ',
+                active='ACTIVE',
             ),
         ]
 
@@ -693,6 +695,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
                 code='FOOBAR',
+                active='ACTIVE',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -706,6 +709,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
                 code='BARBAZ',
+                active='ACTIVE',
             ),
         ]
 
