@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,18 +25,16 @@
 # ##############################################################################
 import uuid
 
-from django.test import TestCase
+from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
 from osis_organisation_sdk.model.address import Address
 from osis_organisation_sdk.model.entite import Entite
+from osis_reference_sdk.model.scholarship import Scholarship
 
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType
 from admission.utils import *
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_reference_sdk.model.scholarship import Scholarship
-
 from base.tests.test_case import OsisPortalTestCase
 
 
@@ -132,6 +130,7 @@ class UtilsTestCase(OsisPortalTestCase):
             sigle_entite_gestion='CMC',
             campus_inscription='Mons',
             code='INFO-1',
+            active='ACTIVE',
         )
         self.assertEqual(
             format_training(formation),
@@ -151,6 +150,7 @@ class UtilsTestCase(OsisPortalTestCase):
             sigle_entite_gestion='CMG',
             campus_inscription='Mons',
             code='INFO-1',
+            active='ACTIVE',
         )
         self.assertEqual(
             format_training(formation),

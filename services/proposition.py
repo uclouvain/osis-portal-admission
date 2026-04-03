@@ -40,6 +40,8 @@ from osis_admission_sdk.model.approuver_proposition_par_pdf_command import (
 )
 from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 from osis_admission_sdk.model.candidate_re_enrolment_eligibility import CandidateReEnrolmentEligibility
+from osis_admission_sdk.model.candidate_re_enrolment_period_dto import CandidateReEnrolmentPeriodDTO
+from osis_admission_sdk.model.candidate_ucl_enrolment_dto import CandidateUCLEnrolmentDTO
 from osis_admission_sdk.model.completer_comptabilite_proposition_doctorale_command import (
     CompleterComptabilitePropositionDoctoraleCommand,
 )
@@ -131,11 +133,11 @@ class AdmissionPropositionService(metaclass=ServiceMeta):
         return APIClient().retrieve_specific_enrolment_periods(**kwargs, **build_mandatory_auth_headers(person))
 
     @classmethod
-    def retrieve_re_enrolment_period(cls, person: Person):
+    def retrieve_re_enrolment_period(cls, person: Person) -> CandidateReEnrolmentPeriodDTO:
         return APIClient().propositions_re_enrolment_period_retrieve(**build_mandatory_auth_headers(person))
 
     @classmethod
-    def retrieve_ucl_enrolments_list(cls, person):
+    def retrieve_ucl_enrolments_list(cls, person) -> list[CandidateUCLEnrolmentDTO]:
         return APIClient().propositions_ucl_enrolments_list(**build_mandatory_auth_headers(person))
 
     @classmethod

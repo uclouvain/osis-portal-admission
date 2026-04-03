@@ -150,6 +150,13 @@ class AdmissionTrainingChoiceFormView(
         kwargs['current_context'] = self.current_context
         if self.admission_uuid:
             kwargs['admission_uuid'] = self.admission_uuid
+        re_enrolment_period = AdmissionPropositionService.retrieve_re_enrolment_period(self.request.user.person)
+        all_ucl_enrolments_list = AdmissionPropositionService.retrieve_ucl_enrolments_list(self.request.user.person)
+        kwargs['previous_year_enrolled_trainings'] = [
+            enrolment.sigle_formation
+            for enrolment in all_ucl_enrolments_list
+            if enrolment.annee == re_enrolment_period.annee_formation - 1
+        ]
         return kwargs
 
     def prepare_data(self, data):
@@ -174,11 +181,7 @@ class AdmissionTrainingChoiceFormView(
             'justification': data.get('justification'),
             'sigle_formation': '',
             'annee_formation': None,
-            'commission_proximite': (
-                data.get('proximity_commission_cdss')
-                or data.get('science_sub_domain')
-                or ''
-            ),
+            'commission_proximite': (data.get('proximity_commission_cdss') or data.get('science_sub_domain') or ''),
         }
 
         if data.get('doctorate_training'):
