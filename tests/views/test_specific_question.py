@@ -420,6 +420,16 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
         self.assertFalse(main_form.fields['est_concerne_par_le_bama_15'].disabled)
         self.assertFalse(main_form.fields['preuve_bama_15'].disabled)
 
+        # With ucl student -> no bama 15 question
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['est_concerne_par_le_bama_15'].disabled)
+        self.assertTrue(main_form.fields['preuve_bama_15'].disabled)
+
     def test_post_page(self):
         response = self.client.post(
             self.url,

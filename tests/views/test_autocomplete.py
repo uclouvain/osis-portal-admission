@@ -627,12 +627,14 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'FOOBAR',
             },
             {
                 'id': 'BARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'BARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
@@ -652,12 +654,14 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'FOOBAR',
             },
             {
                 'id': 'BARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'BARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
@@ -744,24 +748,28 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">CONFOOBAR</span>',
                 'training_type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 'domain_code': '10C',
+                'acronym': 'CONFOOBAR',
             },
             {
                 'id': 'CONBARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">CONBARBAZ</span>',
                 'training_type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 'domain_code': '10C',
+                'acronym': 'CONBARBAZ',
             },
             {
                 'id': 'GENFOOBAR-2021',
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">GENFOOBAR</span>',
                 'training_type': TrainingType.CERTIFICATE.name,
                 'domain_code': '10C',
+                'acronym': 'GENFOOBAR',
             },
             {
                 'id': 'GENBARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">GENBARBAZ</span>',
                 'training_type': TrainingType.CERTIFICATE.name,
                 'domain_code': '10C',
+                'acronym': 'GENBARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
