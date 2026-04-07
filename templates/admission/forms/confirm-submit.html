@@ -218,18 +218,21 @@
         {% trans "Your application is complete and may be submitted." %}
       </p>
       <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
-      {% csrf_token %}
-      {% for field in confirmation_form.hidden_fields %}
-        {% bootstrap_field field %}
-      {% endfor %}
+        {% csrf_token %}
+        {% for field in confirmation_form.hidden_fields %}
+          {% bootstrap_field field %}
+        {% endfor %}
 
-      {% include 'admission/includes/multiple_applications_same_year_same_cycle_form_fields.html' with display_submit_button=True %}
+        {% include 'admission/includes/multiple_applications_same_year_same_cycle_form_fields.html' with display_submit_button=True %}
+      </form>
     {% else %}
       {% if not additional_conditions %}
         <p class="alert alert-success">
           {% trans "Your application is complete and may be submitted." %}
         </p>
-        <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
+      {% endif %}
+      <form class="osis-form text-justify" method="post" action="" id="confirmation-form">
+        {% if not additional_conditions %}
         {% csrf_token %}
         {% for field in confirmation_form.hidden_fields %}
           {% bootstrap_field field %}
@@ -261,7 +264,7 @@
             {% endif %}
           {% endpanel %}
         {% endif %}
-      {% endif %}
+        {% endif %}
 
         <p class="alert alert-info confirmation-warning">
           {% blocktrans trimmed %}
