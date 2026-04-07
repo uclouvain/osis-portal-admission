@@ -98,8 +98,7 @@ msgid ":"
 msgstr ""
 
 msgid ""
-"<a href=\"https://uclouvain.be/en/study/inscriptions/frequently-asked-"
-"questions.html\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
 
 #, python-brace-format
@@ -222,6 +221,12 @@ msgstr ""
 msgid "Access my PhD candidates' applications"
 msgstr ""
 
+#, python-format
+msgid ""
+"According to our analysis, you have a maximum of 15 remaining credits from "
+"your bachelor's degree to complete in %(year)s. Do you confirm this analysis?"
+msgstr ""
+
 msgid "Account holder first name"
 msgstr ""
 
@@ -291,7 +296,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-msgid "An administrative question about your dossier?"
+msgid "An administrative question about your application?"
 msgstr ""
 
 msgid "An error has occurred, please check fields and try again."
@@ -1013,6 +1018,9 @@ msgstr ""
 msgid "Dr"
 msgstr ""
 
+msgid "Dual bachelor-master registration (BAMA15)"
+msgstr ""
+
 msgid "Dual degree scholarship"
 msgstr ""
 
@@ -1476,6 +1484,15 @@ msgstr ""
 msgid ""
 "If you don't have any funding yet, please choose \"Self-funding\" and "
 "explain the considered funding in the \"Comment\" area."
+msgstr ""
+
+#, python-format
+msgid ""
+"If you have 15 or fewer bachelor's credits left to validate in %(year)s, you "
+"have the option of anticipating your master's degree. Before registering for "
+"the master's program, please validate your bachelor's registration at your "
+"other institution. Your bachelor's registration certificate for %(year)s "
+"must be attached to your master's application."
 msgstr ""
 
 msgid ""
@@ -2132,6 +2149,10 @@ msgid ""
 msgstr ""
 
 msgid "Proof of equivalency request"
+msgstr ""
+
+#, python-format
+msgid "Proof of re-enrolment for your %(year)s bachelor's degree"
 msgstr ""
 
 msgid ""
