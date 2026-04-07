@@ -67,7 +67,11 @@ class SpecificQuestionViewMixin(LoadDossierViewMixin):
     @cached_property
     def display_bama_15_questions(self):
         identification = self.identification
-        return identification is not None and identification.est_potentiellement_concerne_par_le_bama_15 is True
+        return (
+            identification is not None
+            and identification.est_potentiellement_concerne_par_le_bama_15 is True
+            and not self.ucl_enrolment_information.est_inscrit_recemment
+        )
 
     @cached_property
     def formatted_training_year(self):
