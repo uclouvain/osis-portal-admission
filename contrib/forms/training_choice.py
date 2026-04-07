@@ -360,6 +360,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                         'text': general_choices[0][1],
                         'domain_code': self.general_education_training_obj['domain_code'],
                         'training_type': self.general_education_training_obj['education_group_type'],
+                        'acronym': self.general_education_training_obj['acronym'],
                     }
                 ]
             )
