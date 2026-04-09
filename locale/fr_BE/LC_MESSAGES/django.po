@@ -1636,9 +1636,11 @@ msgid "I would like the billing address to be"
 msgstr "Je souhaite que l'adresse de facturation soit"
 
 msgid ""
-"I would like to receive my mail at an address other than my legal address"
+"I would like to receive my mail at a belgian address other than my legal "
+"address"
 msgstr ""
-"Je souhaite recevoir mon courrier à une autre adresse que mon domicile légal"
+"Je souhaite recevoir mon courrier à une adresse belge différente de mon "
+"domicile légal"
 
 msgid "IBAN account number"
 msgstr "Numéro de compte IBAN"
@@ -2432,6 +2434,9 @@ msgstr "Adresse de correspondance"
 msgctxt "admission"
 msgid "Postal address"
 msgstr "Adresse de correspondance"
+
+msgid "Postal address in Belgium"
+msgstr "Adresse de correspondance en Belgique"
 
 msgid "Postcode"
 msgstr "Code postal"
