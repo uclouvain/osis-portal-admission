@@ -81,84 +81,92 @@
       {% blocktranslate with year=re_enrolment_period.annee_formation|display_as_academic_year trimmed asvar re_enrolment_label %}
         Re-enrol in this course in {{ year }}
       {% endblocktranslate %}
-      {% for ucl_enrolment in ucl_enrolments_list %}
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <h3 class="mt-0 mb-0">
-              {% if LANGUAGE_CODE == LANGUAGE_CODE_FR %}
-                {{ ucl_enrolment.intitule_formation_fr }}
+      {% if ucl_enrolments_list %}
+        <ul id="create-enrolment-list">
+          {% for ucl_enrolment in ucl_enrolments_list %}
+            <li>
+              <h3>
+                {% if LANGUAGE_CODE == LANGUAGE_CODE_FR %}
+                  {{ ucl_enrolment.intitule_formation_fr }}
+                {% else %}
+                  {{ ucl_enrolment.intitule_formation_en }}
+                {% endif %}
+                {% if ucl_enrolment.lieu_enseignement %}({{ ucl_enrolment.lieu_enseignement }}){% endif %}
+                <span class="small-text">{{ ucl_enrolment.sigle_formation }}</span>
+              </h3>
+              {# Existing in draft admission -> Link to this admission #}
+              {% if ucl_enrolment.sigle_formation in draft_or_in_payment_propositions %}
+                {% with related_in_draft_proposition=draft_or_in_payment_propositions|get_item:ucl_enrolment.sigle_formation %}
+                  <a
+                    class="btn btn-primary"
+                    href="{% url 'admission:'|add_str:related_in_draft_proposition.admission_context pk=related_in_draft_proposition.uuid %}"
+                  >
+                    {{ re_enrolment_label }}
+                  </a>
+                  <i class="fa-solid fa-lock-open"></i>
+                {% endwith %}
+              {% elif can_create_re_enrolment_proposition %}
+                {# Form to create the new admission #}
+                <form method="post" action="{{ re_enrolment_url }}">
+                  {% csrf_token %}
+                  <input
+                    type="hidden"
+                    name="training_type"
+                    value="{{ ucl_enrolment.type_formation }}"
+                  />
+                  <input
+                    type="hidden"
+                    name="training_acronym"
+                    value="{{ ucl_enrolment.sigle_formation }}"
+                  />
+                  <input
+                    type="hidden"
+                    name="training_year"
+                    value="{{ re_enrolment_period.annee_formation }}"
+                  />
+                  <button
+                    class="btn btn-primary"
+                    type="submit"
+                  >
+                    {{ re_enrolment_label }}
+                  </button>
+                  <i class="fa-solid fa-lock-open"></i>
+                </form>
               {% else %}
-                {{ ucl_enrolment.intitule_formation_en }}
-              {% endif %}
-              {% if ucl_enrolment.lieu_enseignement %}({{ ucl_enrolment.lieu_enseignement }}){% endif %}
-              <span class="small-text">{{ ucl_enrolment.sigle_formation }}</span>
-            </h3>
-          </div>
-          <div class="panel-footer">
-            {# Existing in draft admission -> Link to this admission #}
-            {% if ucl_enrolment.sigle_formation in draft_or_in_payment_propositions %}
-              {% with related_in_draft_proposition=draft_or_in_payment_propositions|get_item:ucl_enrolment.sigle_formation %}
-                <a
-                  class="btn btn-primary"
-                  href="{% url 'admission:'|add_str:related_in_draft_proposition.admission_context pk=related_in_draft_proposition.uuid %}"
-                >
-                  {{ re_enrolment_label }}
-                </a>
-                <i class="fa-solid fa-lock-open"></i>
-              {% endwith %}
-            {% elif can_create_re_enrolment_proposition %}
-              {# Form to create the new admission #}
-              <form method="post" action="{{ re_enrolment_url }}">
-                {% csrf_token %}
-                <input
-                  type="hidden"
-                  name="training_type"
-                  value="{{ ucl_enrolment.type_formation }}"
-                />
-                <input
-                  type="hidden"
-                  name="training_acronym"
-                  value="{{ ucl_enrolment.sigle_formation }}"
-                />
-                <input
-                  type="hidden"
-                  name="training_year"
-                  value="{{ re_enrolment_period.annee_formation }}"
-                />
+                {# Just display the disabled button #}
                 <button
                   class="btn btn-primary"
-                  type="submit"
+                  disabled
                 >
                   {{ re_enrolment_label }}
                 </button>
-                <i class="fa-solid fa-lock-open"></i>
-              </form>
-            {% else %}
-              {# Just display the disabled button #}
-              <button
-                class="btn btn-primary"
-                disabled
-              >
-                {{ re_enrolment_label }}
-              </button>
+                <i class="fa-solid fa-lock"></i>
+                {{ re_enrolment_error_message }}
+              {% endif %}
+            </li>
+          {% endfor %}
+          <li>
+            <a
+              href="{% url 'admission:create' %}"
+              class="btn btn-default{% if not can_create_proposition %} disabled{% endif %}"
+            >
+              {% translate "Create an application for another training" %}
+            </a>
+            {% if not can_create_proposition %}
               <i class="fa-solid fa-lock"></i>
-              {{ re_enrolment_error_message }}
             {% endif %}
-          </div>
-        </div>
-      {% endfor %}
-      {% if can_create_proposition %}
+          </li>
+        </ul>
+      {% else %}
         <a
           href="{% url 'admission:create' %}"
-          class="btn btn-default"
+          class="btn btn-primary{% if not can_create_proposition %} disabled{% endif %}"
         >
           {% translate "Create new application" %}
         </a>
-      {% else %}
-        <button class="btn btn-default" disabled>
-          {% translate "Create new application" %}
-        </button>
-        <i class="fa-solid fa-lock"></i>
+        {% if not can_create_proposition %}
+          <i class="fa-solid fa-lock"></i>
+        {% endif %}
       {% endif %}
     </div>
   </div>
@@ -191,11 +199,15 @@
           {% endfor %}
         </ul>
 
-        <div class="tab-content">
+        <div id="submitted-propositions" class="tab-content">
           {% for year, propositions in submitted_propositions.items %}
             <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="submitted-propositions-{{ year }}">
               {% for admission in propositions %}
                 {% include "admission/includes/admission_list_item.html" with admission=admission base_namespace='admission:'|add_str:admission.admission_context tab_tree=TAB_TREES|get_item:admission.admission_context %}
+              {% empty %}
+                {% panel %}
+                  {% translate _('No application for this academic year.') %}
+                {% endpanel %}
               {% endfor %}
             </div>
           {% endfor %}
@@ -217,6 +229,10 @@
 {% block style %}
   {{ block.super }}
   <style>
+      #submitted-propositions .panel{
+          margin-top: 20px;
+          margin-bottom: 0;
+      }
       .mt-0 {
           margin-top: 0;
       }
@@ -237,6 +253,14 @@
 
       #template-messages-container > .panel-body > #pnl_error_messages {
           margin: 0;
+      }
+
+      #create-enrolment-list li + li {
+          margin-top: 1em;
+      }
+
+      a.btn.btn-primary.disabled {
+          color: white;
       }
   </style>
 {% endblock %}

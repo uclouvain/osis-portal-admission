@@ -98,7 +98,8 @@ msgid ":"
 msgstr ""
 
 msgid ""
-"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" "
+"target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
 
 #, python-brace-format
@@ -894,6 +895,9 @@ msgstr ""
 msgid ""
 "Create an application for %(training_name)s (%(training_campus)s) "
 "%(training_acronym)s and cancel your other applications"
+msgstr ""
+
+msgid "Create an application for another training"
 msgstr ""
 
 msgid "Create new application"
@@ -1844,6 +1848,9 @@ msgid "National baccalaureate (or state diploma, etc.)"
 msgstr ""
 
 msgid "No"
+msgstr ""
+
+msgid "No application for this academic year."
 msgstr ""
 
 msgid "No course created at present."

@@ -30,11 +30,11 @@
     {% if admission.doctorat %}
       {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
       {% admission_status admission.statut admission.doctorat.type as admission_status %}
-      {{ doctorate_title }} <span class="small-text">{{ admission.doctorat.sigle }}</span>
+      {{ doctorate_title }} ({{ admission.reference }}) <span class="small-text">{{ admission.doctorat.sigle }}</span>
     {% elif admission.formation %}
       {% admission_status admission.statut admission.formation.type as admission_status %}
       {% display admission.formation.intitule " (" admission.formation.campus ")" as title %}
-      {{ title }} <span class="small-text">{{ admission.formation.sigle }}</span>
+      {{ title }} ({{ admission.reference }}) <span class="small-text">{{ admission.formation.sigle }}</span>
     {% endif %}
   </h3>
   <div>

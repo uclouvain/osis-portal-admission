@@ -109,9 +109,11 @@ msgid ":"
 msgstr " :"
 
 msgid ""
-"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" "
+"target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
-"<a href=\"https://www.uclouvain.be/fr/inscriptions/contact\" target=\"_blank\">Contactez le Service des inscriptions</a>"
+"<a href=\"https://www.uclouvain.be/fr/inscriptions/contact\" "
+"target=\"_blank\">Contactez le Service des inscriptions</a>"
 
 #, python-brace-format
 msgid ""
@@ -524,9 +526,9 @@ msgid ""
 "identification can not be updated. If you want to update them, please "
 "contact %(recipient)s."
 msgstr ""
-"Etant donné que vous êtes actuellement étudiant·e à l'UCLouvain, certaines informations "
-"de l'identification ne peuvent être modifiées. Si vous souhaitez y apporter des modifications, "
-"merci de contacter %(recipient)s."
+"Etant donné que vous êtes actuellement étudiant·e à l'UCLouvain, certaines "
+"informations de l'identification ne peuvent être modifiées. Si vous "
+"souhaitez y apporter des modifications, merci de contacter %(recipient)s."
 
 msgid ""
 "Assessment is also based on the credit system, which quantifies the workload "
@@ -1072,6 +1074,9 @@ msgid ""
 msgstr ""
 "Introduire une demande d'inscription en %(training_name)s "
 "(%(training_campus)s) %(training_acronym)s et annuler vos autres demandes"
+
+msgid "Create an application for another training"
+msgstr "Créer une demande pour une autre formation"
 
 msgid "Create new application"
 msgstr "Créer une nouvelle demande d'inscription"
@@ -2143,6 +2148,9 @@ msgstr "Baccalauréat national (ou diplôme d'état, ...)"
 
 msgid "No"
 msgstr "Non"
+
+msgid "No application for this academic year."
+msgstr "Aucune demande pour cette année académique."
 
 msgid "No course created at present."
 msgstr "Aucun cours créé pour le moment."

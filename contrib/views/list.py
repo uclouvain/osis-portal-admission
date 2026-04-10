@@ -105,15 +105,6 @@ class AdmissionListView(TemplateView):
 
         context['draft_propositions'] = sorted(draft_propositions, key=lambda elt: elt.creee_le, reverse=True)
         context['draft_or_in_payment_propositions'] = draft_or_in_payment_propositions
-        min_date = datetime.datetime(datetime.MINYEAR, 1, 1)
-        context['submitted_propositions'] = {
-            year: sorted(
-                submitted_propositions[year],
-                key=lambda elt: (elt.soumise_le or min_date, elt.creee_le),
-                reverse=True,
-            )
-            for year in sorted(submitted_propositions.keys(), reverse=True)
-        }
 
         # Re-enrolment specificities
         re_enrolment_period = AdmissionPropositionService.retrieve_re_enrolment_period(self.request.user.person)
@@ -124,6 +115,8 @@ class AdmissionListView(TemplateView):
         context['re_enrolment_error_message'] = ''
 
         if re_enrolment_period.date_debut <= datetime.date.today() <= re_enrolment_period.date_fin:
+            submitted_propositions.setdefault(re_enrolment_period.annee_formation, [])
+
             all_ucl_enrolments_list = AdmissionPropositionService.retrieve_ucl_enrolments_list(self.request.user.person)
 
             re_enrolment_eligibility = AdmissionPropositionService.retrieve_candidate_re_enrolment_eligibility(
@@ -145,6 +138,17 @@ class AdmissionListView(TemplateView):
                     for ucl_enrolment in all_ucl_enrolments_list
                     if ucl_enrolment.annee == re_enrolment_period.annee_formation - 1
                 ]
+
+        # Sort submitted propositions by dates
+        min_date = datetime.datetime(datetime.MINYEAR, 1, 1)
+        context['submitted_propositions'] = {
+            year: sorted(
+                submitted_propositions[year],
+                key=lambda elt: (elt.soumise_le or min_date, elt.creee_le),
+                reverse=True,
+            )
+            for year in sorted(submitted_propositions.keys(), reverse=True)
+        }
 
         if getattr(result, 'donnees_transferees_vers_compte_interne', False):
             msg = _(
