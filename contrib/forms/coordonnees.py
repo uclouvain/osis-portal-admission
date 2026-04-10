@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,14 +25,15 @@
 # ##############################################################################
 from dal import forward
 from django import forms
-from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy as __
 
 from admission.constants import BE_ISO_CODE, FIELD_REQUIRED_MESSAGE
 from admission.contrib.forms import (
-    get_country_initial_choices,
-    get_example_text,
     PhoneField,
     autocomplete,
+    get_country_initial_choices,
+    get_example_text,
 )
 from admission.utils import force_title
 
@@ -40,7 +41,7 @@ from admission.utils import force_title
 class DoctorateAdmissionCoordonneesForm(forms.Form):
     show_contact = forms.BooleanField(
         required=False,
-        label=_("I would like to receive my mail at an address other than my legal address"),
+        label=_("I would like to receive my mail at a belgian address other than my legal address"),
     )
     private_email = forms.EmailField(
         label=__("admission", "Personal email"),
@@ -135,9 +136,18 @@ class DoctorateAdmissionAddressForm(forms.Form):
         max_length=255,
     )
 
-    def __init__(self, person=None, check_coordinates_fields=True, *args, **kwargs):
+    def __init__(self, person=None, check_coordinates_fields=True, only_belgian_address=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.check_coordinates_fields = check_coordinates_fields
+        self.only_belgian_address = only_belgian_address
+
+        if self.only_belgian_address:
+            self.fields['country'].disabled = True
+
+            # We do not want to display older foreign address if any and the new address must be in Belgium
+            if self.initial.get('country') != BE_ISO_CODE:
+                self.initial = {'country': BE_ISO_CODE}
+
         self.fields['country'].widget.choices = get_country_initial_choices(
             self.data.get(self.add_prefix("country"), self.initial.get("country")),
             person,
@@ -157,6 +167,9 @@ class DoctorateAdmissionAddressForm(forms.Form):
             "country",
             "street",
         ]
+
+        if self.only_belgian_address:
+            cleaned_data['country'] = BE_ISO_CODE
 
         # Either one of following data couple is mandatory :
         # (postal_code / city) or (be_postal_code / be_city)
