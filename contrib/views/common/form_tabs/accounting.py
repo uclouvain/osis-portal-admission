@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 # ##############################################################################
 from django.views.generic import FormView
 
-from admission.contrib.enums import LienParente, FORMATTED_RELATIONSHIPS
+from admission.contrib.enums import FORMATTED_RELATIONSHIPS, LienParente
 from admission.contrib.forms.accounting import AccountingForm
 from admission.contrib.views.common.detail_tabs.accounting import BaseAdmissionAccountingView
 from admission.services.mixins import WebServiceFormMixin
@@ -56,7 +56,6 @@ class DoctorateAdmissionAccountingFormView(BaseAdmissionAccountingView, WebServi
         if self.is_general:
             kwargs['education_site'] = self.admission.formation.campus
 
-        kwargs['has_ue_nationality'] = self.accounting.get('a_nationalite_ue')
         kwargs['last_french_community_high_education_institutes_attended'] = self.accounting.get(
             'derniers_etablissements_superieurs_communaute_fr_frequentes'
         )

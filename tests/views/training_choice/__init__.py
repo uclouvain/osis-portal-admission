@@ -23,11 +23,13 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 import uuid
 from unittest.mock import ANY, MagicMock, Mock, patch
 
 from osis_admission_sdk.model.campus import Campus
 from osis_admission_sdk.model.campus_dto import CampusDTO
+from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
 from osis_admission_sdk.model.doctorat_search_dto import DoctoratSearchDTO
 from osis_admission_sdk.model.doctorate_pre_admission_search_dto import (
@@ -443,6 +445,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'sigle_entite_gestion': 'CMC',
                 'campus_inscription': 'Mons',
             },
+            'annee_calculee': None,
             'matricule_candidat': cls.person.global_id,
             'prenom_candidat': cls.person.first_name,
             'nom_candidat': cls.person.last_name,
@@ -493,6 +496,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'sigle_entite_gestion': 'CMC',
                 'campus_inscription': 'Mons',
             },
+            annee_calculee=None,
             reference='M-CMC20-000.003',
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
@@ -544,6 +548,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'sigle_entite_gestion': 'TR4',
                 'campus_inscription': 'Mons',
             },
+            annee_calculee=None,
             reference='M-CDE20-000.004',
             code_secteur_formation="SSH",
             documents_projet=[],
@@ -640,6 +645,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
                 code='FOOBAR',
+                active='ACTIVE',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -653,6 +659,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
                 code='BARBAZ',
+                active='ACTIVE',
             ),
         ]
 
@@ -688,6 +695,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
                 code='FOOBAR',
+                active='ACTIVE',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -701,6 +709,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
                 code='BARBAZ',
+                active='ACTIVE',
             ),
         ]
 
@@ -797,6 +806,49 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         self.mock_proposition_api.return_value.list_continuing_specific_questions.side_effect = (
             self.get_specific_questions
         )
+        self.mock_proposition_api.return_value.propositions_ucl_enrolments_list.return_value = []
+        self.mock_proposition_api.return_value.propositions_re_enrolment_period_retrieve.return_value = Mock(
+            date_debut=datetime.date(2023, 6, 15),
+            date_fin=datetime.date(2023, 10, 31),
+            annee_formation=2024,
+        )
+        self.mock_proposition_api.return_value.propositions_candidate_re_enrolment_eligibity_retrieve.return_value = (
+            Mock(est_eligible_a_la_reinscription=False)
+        )
+
+        self.mock_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_general_candidate_ucl_enrolment_information = self.mock_proposition_api.return_value.propositions_general_education_candidate_ucl_enrolment_information_retrieve
+        self.mock_doctorate_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_doctorate_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_continuing_candidate_ucl_enrolment_information = self.mock_proposition_api.return_value.propositions_continuing_education_candidate_ucl_enrolment_information_retrieve
+
+        self.mock_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
         self.addCleanup(propositions_api_patcher.stop)
 
         # Mock autocomplete sdk api
