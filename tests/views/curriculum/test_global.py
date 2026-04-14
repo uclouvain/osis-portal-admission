@@ -260,7 +260,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_update_url)
@@ -281,7 +281,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(response.context['display_equivalence'])
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_read_url)
@@ -321,7 +321,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_update_url)
@@ -346,7 +346,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(response.context['display_equivalence'])
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_read_url)
@@ -389,7 +389,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         form = response.context.get('form')
@@ -415,7 +415,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(response.context['display_equivalence'])
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_read_url)
@@ -457,7 +457,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_update_url)
@@ -485,7 +485,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(response.context['display_equivalence'])
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_read_url)
@@ -522,7 +522,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['equivalence_diplome'].disabled)
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_update_url)
@@ -551,7 +551,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(response.context['display_equivalence'])
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_read_url)
@@ -583,7 +583,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         form = response.context.get('form')
@@ -606,7 +606,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(response.context['display_equivalence'])
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_read_url)
@@ -644,7 +644,7 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['equivalence_diplome'].disabled)
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
-            True
+            EnPoursuite.OUI.name
         )
 
         response = self.client.get(self.admission_update_url)

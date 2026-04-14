@@ -98,7 +98,8 @@ msgid ":"
 msgstr ""
 
 msgid ""
-"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" "
+"target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
 
 #, python-brace-format
@@ -1833,6 +1834,14 @@ msgstr ""
 msgid "NO"
 msgstr "No"
 
+#, fuzzy
+#| msgid "NO"
+msgid "NON"
+msgstr "No"
+
+msgid "NON_CONCERNE"
+msgstr ""
+
 msgid "NOT_INVITED"
 msgstr "Not invited to sign"
 
@@ -1920,6 +1929,9 @@ msgid "Number of credits earned at the end of the academic year."
 msgstr ""
 
 msgid "OK"
+msgstr ""
+
+msgid "OUI"
 msgstr ""
 
 msgctxt "admission"

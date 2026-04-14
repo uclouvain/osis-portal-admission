@@ -109,9 +109,11 @@ msgid ":"
 msgstr " :"
 
 msgid ""
-"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" "
+"target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
-"<a href=\"https://www.uclouvain.be/fr/inscriptions/contact\" target=\"_blank\">Contactez le Service des inscriptions</a>"
+"<a href=\"https://www.uclouvain.be/fr/inscriptions/contact\" "
+"target=\"_blank\">Contactez le Service des inscriptions</a>"
 
 #, python-brace-format
 msgid ""
@@ -524,9 +526,9 @@ msgid ""
 "identification can not be updated. If you want to update them, please "
 "contact %(recipient)s."
 msgstr ""
-"Etant donné que vous êtes actuellement étudiant·e à l'UCLouvain, certaines informations "
-"de l'identification ne peuvent être modifiées. Si vous souhaitez y apporter des modifications, "
-"merci de contacter %(recipient)s."
+"Etant donné que vous êtes actuellement étudiant·e à l'UCLouvain, certaines "
+"informations de l'identification ne peuvent être modifiées. Si vous "
+"souhaitez y apporter des modifications, merci de contacter %(recipient)s."
 
 msgid ""
 "Assessment is also based on the credit system, which quantifies the workload "
@@ -2130,6 +2132,12 @@ msgstr "Mes demandes envoyées"
 msgid "NO"
 msgstr "Non"
 
+msgid "NON"
+msgstr "Non"
+
+msgid "NON_CONCERNE"
+msgstr "Non concerné"
+
 msgid "NOT_INVITED"
 msgstr "Pas encore invité à signer"
 
@@ -2220,6 +2228,9 @@ msgstr "Nombre de crédits réussis au terme de l'année académique."
 
 msgid "OK"
 msgstr "OK"
+
+msgid "OUI"
+msgstr "Oui"
 
 msgctxt "admission"
 msgid "October"

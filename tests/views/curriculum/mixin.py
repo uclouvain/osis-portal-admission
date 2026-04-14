@@ -31,7 +31,9 @@ from unittest.mock import ANY, MagicMock, patch
 from django.http import Http404
 from django.test import override_settings
 from osis_admission_sdk.model.action_link import ActionLink
-from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
+from osis_admission_sdk.model.candidate_enrolment_information import (
+    CandidateEnrolmentInformation,
+)
 from osis_admission_sdk.model.continuing_education_proposition_dto import (
     ContinuingEducationPropositionDTO,
 )
@@ -75,6 +77,7 @@ from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversi
 from osis_reference_sdk.model.university import University
 
 from admission.contrib.enums.admission_type import AdmissionType
+from admission.contrib.enums.poursuite import EnPoursuite
 from admission.contrib.enums.projet import (
     ChoixStatutPropositionContinue,
     ChoixStatutPropositionDoctorale,
@@ -368,7 +371,7 @@ class MixinTestCase(OsisPortalTestCase):
             preuve_bama_15=[],
             raison_plusieurs_demandes_meme_cycle_meme_annee='',
             justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee='',
-            est_en_poursuite=False,
+            est_en_poursuite=EnPoursuite.NON.name,
         )
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(

@@ -30,6 +30,7 @@ from admission.constants import BE_ISO_CODE
 
 # Do not remove the following import as it is used by enum_display templatetag
 from admission.contrib.enums.curriculum import *
+from admission.contrib.enums.poursuite import EnPoursuite
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.curriculum import TRAINING_TYPES_WITH_EQUIVALENCE
@@ -147,7 +148,7 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
     def display_equivalence(self):
         if self.current_context == 'general-education':
             return (
-                not self.admission.est_en_poursuite
+                self.admission.est_en_poursuite in [EnPoursuite.NON_CONCERNE.name, EnPoursuite.NON.name]
                 and self.admission.formation['type'] in TRAINING_TYPES_WITH_EQUIVALENCE
                 and self.has_foreign_diploma
             )
