@@ -109,9 +109,11 @@ msgid ":"
 msgstr " :"
 
 msgid ""
-"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" "
+"target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
-"<a href=\"https://www.uclouvain.be/fr/inscriptions/contact\" target=\"_blank\">Contactez le Service des inscriptions</a>"
+"<a href=\"https://www.uclouvain.be/fr/inscriptions/contact\" "
+"target=\"_blank\">Contactez le Service des inscriptions</a>"
 
 #, python-brace-format
 msgid ""
@@ -212,7 +214,7 @@ msgid ""
 "certificate, short course, etc.)."
 msgstr ""
 "<strong>Activité non académique</strong> : toute activité professionnelle ou "
-"privée que vous avez réalisée précédemment . Exemple: travail, chômage, "
+"privée que vous avez réalisée précédemment. Exemple: travail, chômage, "
 "volontariat, stage, recherche d'emploi, année sabbatique, ... Vous pouvez "
 "également indiquer vos formations non académiques (cours de langue, cours "
 "isolé, certificat, formation courte, ...)"
@@ -365,6 +367,9 @@ msgstr "Une question administrative concernant votre dossier ?"
 msgid "An error has occurred, please check fields and try again."
 msgstr "Une erreur est survenue, veuillez vérifier les valeurs et réessayer."
 
+msgid "An error occured when creating the application."
+msgstr "Une erreur est survenue lors de la création de la demande."
+
 msgid ""
 "An international scholarship may be awarded to students as part of a "
 "project. These international grants are awarded by ARES and a scholarship "
@@ -514,6 +519,16 @@ msgid "Are you the child of a UCLouvain or Martin V staff member?"
 msgstr ""
 "Êtes-vous l'enfant d'un membre du personnel de l'UCLouvain ou de l'entité "
 "Martin V ?"
+
+#, python-format
+msgid ""
+"As you are a currently a student at UCLouvain, some information about "
+"identification can not be updated. If you want to update them, please "
+"contact %(recipient)s."
+msgstr ""
+"Etant donné que vous êtes actuellement étudiant·e à l'UCLouvain, certaines "
+"informations de l'identification ne peuvent être modifiées. Si vous "
+"souhaitez y apporter des modifications, merci de contacter %(recipient)s."
 
 msgid ""
 "Assessment is also based on the credit system, which quantifies the workload "
@@ -1049,8 +1064,27 @@ msgstr "Inscription à un cours"
 msgid "Course units"
 msgstr "Cours"
 
+msgid "Create a new application"
+msgstr "Introduire une nouvelle demande"
+
+#, python-format
+msgid ""
+"Create an application for %(training_name)s (%(training_campus)s) "
+"%(training_acronym)s and cancel your other applications"
+msgstr ""
+"Introduire une demande d'inscription en %(training_name)s "
+"(%(training_campus)s) %(training_acronym)s et annuler vos autres demandes"
+
+msgid "Create an application for another training"
+msgstr "Créer une demande pour une autre formation"
+
 msgid "Create new application"
 msgstr "Créer une nouvelle demande d'inscription"
+
+msgid "Create this new application and cancel your other ones"
+msgstr ""
+"Introduire cette nouvelle demande d'inscription et annuler vos autres "
+"demandes"
 
 msgctxt "an admission"
 msgid "Created on:"
@@ -1273,6 +1307,9 @@ msgstr "S'inscrire à un cours"
 
 msgid "Enrolled"
 msgstr "Inscrit"
+
+msgid "Enrolment and re-enrolment applications"
+msgstr "Demandes d'inscription et de réinscription"
 
 msgid "Enrolment in limited enrolment bachelor's course"
 msgstr "Inscription à un bachelier contingenté"
@@ -1636,9 +1673,11 @@ msgid "I would like the billing address to be"
 msgstr "Je souhaite que l'adresse de facturation soit"
 
 msgid ""
-"I would like to receive my mail at an address other than my legal address"
+"I would like to receive my mail at a belgian address other than my legal "
+"address"
 msgstr ""
-"Je souhaite recevoir mon courrier à une autre adresse que mon domicile légal"
+"Je souhaite recevoir mon courrier à une adresse belge différente de mon "
+"domicile légal"
 
 msgid "IBAN account number"
 msgstr "Numéro de compte IBAN"
@@ -1832,9 +1871,6 @@ msgstr ""
 "Indiquez ici un éventuel parcours doctoral précédent, abouti ou interrompu, "
 "dans lequel vous n’êtes plus inscrit à ce jour."
 
-msgid "Initial education"
-msgstr "Formation initiale"
-
 msgid "Institute"
 msgstr "Établissement"
 
@@ -1935,6 +1971,9 @@ msgstr "Régime linguistique"
 
 msgid "Language study abroad"
 msgstr "Séjour linguistique"
+
+msgid "Last name, First name"
+msgstr "Nom, Prénom"
 
 msgid "Later > blocking"
 msgstr "Ultérieurement > bloquant"
@@ -2058,6 +2097,9 @@ msgstr "Motivation de la cotutelle"
 msgid "Motivations"
 msgstr "Motivations"
 
+msgid "My drafts"
+msgstr "Mes brouillons"
+
 msgid "My father"
 msgstr "Mon père"
 
@@ -2089,6 +2131,9 @@ msgstr "Ma mère"
 msgid "My partner"
 msgstr "Mon conjoint"
 
+msgid "My submitted applications"
+msgstr "Mes demandes envoyées"
+
 msgid "NO"
 msgstr "Non"
 
@@ -2103,6 +2148,9 @@ msgstr "Baccalauréat national (ou diplôme d'état, ...)"
 
 msgid "No"
 msgstr "Non"
+
+msgid "No application for this academic year."
+msgstr "Aucune demande pour cette année académique."
 
 msgid "No course created at present."
 msgstr "Aucun cours créé pour le moment."
@@ -2140,6 +2188,9 @@ msgstr "Aucune année n'a encore été ajoutée"
 
 msgid "No."
 msgstr "Non."
+
+msgid "Noma"
+msgstr "Noma"
 
 msgid "Non-European credits"
 msgstr "Crédits non-européens"
@@ -2345,6 +2396,9 @@ msgstr "Expérience de recherche doctorale"
 msgid "Place of birth"
 msgstr "Lieu de naissance"
 
+msgid "Please briefly explain what you want:"
+msgstr "Veuillez expliquer brièvement votre souhait :"
+
 msgid "Please choose the institute or specify another institute"
 msgstr "Veuillez définir l'établissement ou précisez un autre établissement"
 
@@ -2432,6 +2486,9 @@ msgstr "Adresse de correspondance"
 msgctxt "admission"
 msgid "Postal address"
 msgstr "Adresse de correspondance"
+
+msgid "Postal address in Belgium"
+msgstr "Adresse de correspondance en Belgique"
 
 msgid "Postcode"
 msgstr "Code postal"
@@ -2550,6 +2607,10 @@ msgstr "Boutons radios"
 
 msgid "Rank in diploma"
 msgstr "Rang dans le diplôme"
+
+#, python-format
+msgid "Re-enrol in this course in %(year)s"
+msgstr "Me ré-inscrire à cette formation en %(year)s"
 
 msgid "Reasons for pre-admission."
 msgstr "Détaillez ici les raisons justifiant une préadmission."
@@ -2687,6 +2748,13 @@ msgid "Send missing documents"
 msgstr "Envoyer les documents manquants"
 
 msgid ""
+"Sending the request requires the completion of this form and your agreement "
+"with all of the following elements"
+msgstr ""
+"L'envoi de la demande nécessite la complétion de ce formulaire et votre "
+"accord pour l'ensemble des éléments"
+
+msgid ""
 "Sending the request requires your agreement with all of the following "
 "elements"
 msgstr ""
@@ -2794,6 +2862,9 @@ msgstr "Nom"
 
 msgid "System of education"
 msgstr "Système d'études"
+
+msgid "Take several courses at the same time"
+msgstr "Suivre plusieurs formations en parallèle"
 
 msgid "Teaching degree and CAPAES"
 msgstr "Agrégation et CAPAES"
@@ -3386,6 +3457,10 @@ msgstr "Oui, envoyer"
 msgid "Yes,No,"
 msgstr "Oui,Non,"
 
+#, python-format
+msgid "You already submitted other applications for %(year)s"
+msgstr "Vous avez déjà soumis d'autres demandes d'inscription pour %(year)s"
+
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 "Vous semblez avoir des modifications non enregistrées, celles-ci seront "
@@ -3448,6 +3523,9 @@ msgstr ""
 "Vous n'avez pas indiqué si vous postulez en tant que résident ou non-"
 "résident (au sens du Décret)."
 
+msgid "You have not been deliberated yet."
+msgstr "Vous n'êtes pas encore délibéré·e."
+
 msgid "You have now reached the application confirmation tab."
 msgstr ""
 "Vous voici arrivé·e sur l'onglet de confirmation de votre demande "
@@ -3483,6 +3561,9 @@ msgstr "Vous devez référencer une personne de l'UCLouvain."
 msgid "You specified that no Belgian student status situation applies to you."
 msgstr ""
 "Vous avez spécifié qu'aucune situation d'assimilation ne s'appliquait à vous."
+
+msgid "You want:"
+msgstr "Vous souhaitez :"
 
 msgid ""
 "You will receive a monthly newsletter explaining all the benefits and "

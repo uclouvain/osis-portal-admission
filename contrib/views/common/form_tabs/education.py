@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.functional import cached_property
 from django.views.generic import FormView
 
@@ -53,6 +53,7 @@ from admission.services.person import (
     ContinuingEducationAdmissionPersonService,
     GeneralEducationAdmissionPersonService,
 )
+from admission.templatetags.admission import can_update_tab
 from admission.utils import is_med_dent_training
 
 __all__ = [
@@ -74,6 +75,10 @@ class AdmissionEducationFormView(FormMixinWithSpecificQuestions, LoadDossierView
             # Trick template to not display form and buttons
             context = super(LoadDossierViewMixin, self).get_context_data(form=None, **kwargs)
             return render(request, 'admission/forms/need_training_choice.html', context)
+
+        if not can_update_tab(self.admission, 'education'):
+            return redirect(self._get_url('education'))
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

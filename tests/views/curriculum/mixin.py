@@ -31,6 +31,7 @@ from unittest.mock import ANY, MagicMock, patch
 from django.http import Http404
 from django.test import override_settings
 from osis_admission_sdk.model.action_link import ActionLink
+from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 from osis_admission_sdk.model.continuing_education_proposition_dto import (
     ContinuingEducationPropositionDTO,
 )
@@ -161,6 +162,7 @@ class MixinTestCase(OsisPortalTestCase):
         )
 
         cls.educational_experience = EducationalExperience._from_openapi_data(
+            external_id='',
             country=cls.be_country.iso_code,
             institute=cls.institute.uuid,
             institute_name='UCL',
@@ -332,6 +334,7 @@ class MixinTestCase(OsisPortalTestCase):
                 sigle_entite_gestion="CMG",
                 campus_inscription="Mons",
                 code='TR1',
+                active='ACTIVE',
             ),
             reference='M-CMG20-000.002',
             matricule_candidat=cls.person.global_id,
@@ -363,6 +366,9 @@ class MixinTestCase(OsisPortalTestCase):
             documents_additionnels=[],
             poste_diplomatique=None,
             preuve_bama_15=[],
+            raison_plusieurs_demandes_meme_cycle_meme_annee='',
+            justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee='',
+            est_en_poursuite=False,
         )
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO._from_openapi_data(
@@ -380,6 +386,7 @@ class MixinTestCase(OsisPortalTestCase):
                 campus_inscription="Mons",
                 sigle_entite_gestion="CMC",
                 code='TR2',
+                active='ACTIVE',
             ),
             date_fin_pot=None,
             matricule_candidat=cls.person.global_id,
@@ -432,6 +439,31 @@ class MixinTestCase(OsisPortalTestCase):
         )
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = (
             self.continuing_proposition
+        )
+        mock_proposition_api_return = self.mock_proposition_api.return_value
+        self.mock_general_candidate_ucl_enrolment_information = (
+            mock_proposition_api_return.propositions_general_education_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_general_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+        self.mock_doctorate_candidate_ucl_enrolment_information = (
+            mock_proposition_api_return.propositions_doctorate_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+        self.mock_continuing_candidate_ucl_enrolment_information = (
+            mock_proposition_api_return.propositions_continuing_education_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
         )
         self.addCleanup(propositions_api_patcher.stop)
 
