@@ -61,12 +61,17 @@ class SpecificQuestionViewMixin(LoadDossierViewMixin):
             and identification.pays_nationalite_europeen is False
             and identification.pays_nationalite not in PLUS_5_ISO_CODES
             and identification.pays_residence != BE_ISO_CODE
+            and not self.ucl_enrolment_information.est_inscrit_recemment
         )
 
     @cached_property
     def display_bama_15_questions(self):
         identification = self.identification
-        return identification is not None and identification.est_potentiellement_concerne_par_le_bama_15 is True
+        return (
+            identification is not None
+            and identification.est_potentiellement_concerne_par_le_bama_15 is True
+            and not self.ucl_enrolment_information.est_inscrit_recemment
+        )
 
     @cached_property
     def formatted_training_year(self):

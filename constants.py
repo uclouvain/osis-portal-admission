@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -126,3 +126,5 @@ PROPOSITION_JUST_SUBMITTED = 'proposition_just_submitted'
 DOCUMENTS_REQUEST_JUST_COMPLETED_WITHOUT_DOCUMENT = 'proposition_document_request_just_completed_without_document'
 MED_DENT_TRAINING_DOMAIN_PREFIXES = ['11', '13']
 MED_DENT_TRAINING_DOMAIN_REGEX = f"^({'|'.join(MED_DENT_TRAINING_DOMAIN_PREFIXES)})"
+LANGUAGE_CODE_FR = 'fr-be'
+LANGUAGE_CODE_EN = 'en'

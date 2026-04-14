@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -163,6 +163,7 @@ class GeneralEducationAutocomplete(autocomplete.Select2ListView):
         )
 
     def results(self, results):
+        previous_year_enrolled_trainings = self.forwarded.get('previous_year_enrolled_trainings') or []
         format_method = format_training_with_year if switch_is_active('debug') else format_training
         return [
             dict(
@@ -170,8 +171,12 @@ class GeneralEducationAutocomplete(autocomplete.Select2ListView):
                 text=format_method(result),
                 training_type=result.type,
                 domain_code=result.code_domaine,
+                acronym=result.sigle,
             )
             for result in results
+            if result.active == 'ACTIVE'
+            or result.active == 'RE_REGISTRATION'
+            and result.sigle in previous_year_enrolled_trainings
         ]
 
     def autocomplete_results(self, results):

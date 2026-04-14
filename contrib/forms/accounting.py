@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,29 +27,31 @@ from typing import Set
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _, ngettext
-from localflavor.generic.forms import BICFormField, IBAN_COUNTRY_CODE_LENGTH
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
+from localflavor.generic.forms import IBAN_COUNTRY_CODE_LENGTH, BICFormField
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import dynamic_person_concerned
 from admission.contrib.enums.accounting import (
-    TypeSituationAssimilation,
+    ChoixAffiliationSport,
     ChoixAssimilation1,
     ChoixAssimilation2,
     ChoixAssimilation3,
     ChoixAssimilation5,
     ChoixAssimilation6,
-    ChoixAffiliationSport,
     ChoixTypeCompteBancaire,
     LienParente,
+    TypeSituationAssimilation,
 )
-from admission.contrib.forms import RadioBooleanField, get_example_text, AdmissionFileUploadField as FileUploadField
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
+from admission.contrib.forms import RadioBooleanField, get_example_text
 from admission.templatetags.admission import get_academic_year
 from admission.utils import mark_safe_lazy
 from reference.services.iban_validator import (
-    IBANValidatorService,
     IBANValidatorException,
     IBANValidatorRequestException,
+    IBANValidatorService,
 )
 
 IBAN_MIN_LENGTH = min(IBAN_COUNTRY_CODE_LENGTH.values())
@@ -404,7 +406,6 @@ class AccountingForm(forms.Form):
         self.is_general_admission = is_general_admission
         self.with_assimilation = with_assimilation
         self.education_site = kwargs.pop('education_site', None)
-        self.has_ue_nationality = kwargs.pop('has_ue_nationality', None)
         self.last_french_community_high_education_institutes_attended = kwargs.pop(
             'last_french_community_high_education_institutes_attended',
             None,
@@ -697,8 +698,7 @@ class AccountingForm(forms.Form):
         assimilation_required_fields = {}
 
         # Can have assimilation
-        if self.has_ue_nationality is False:
-
+        if self.with_assimilation:
             if cleaned_data.get('type_situation_assimilation'):
                 assimilation_required_fields = self.get_assimilation_required_fields(
                     'type_situation_assimilation',

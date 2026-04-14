@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -92,6 +92,9 @@ class AdmissionCurriculumFormExperienceMixin(AdmissionCurriculumFormMixin, ABC):
         'professional_create': 'professional_update',
         'educational_create': 'educational_update',
     }
+
+    def test_func(self):
+        return super().test_func() and not self.experiences_are_read_only
 
     def get_success_url(self):
         messages.info(self.request, _("Your data have been saved"))
@@ -429,7 +432,6 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
 
         # Credit fields
         if cleaned_data.get('academic_year') >= FIRST_YEAR_WITH_ECTS_BE if be_country else credits_are_required:
-
             acquired_credit_number = cleaned_data.get('acquired_credit_number', None)
             registered_credit_number = cleaned_data.get('registered_credit_number', None)
             credits_are_required_for_this_year = cleaned_data.get('result') != Result.WAITING_RESULT.name

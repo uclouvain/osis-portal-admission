@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -587,6 +587,7 @@ class GeneralAccountingViewTestCase(OsisPortalTestCase):
                 'academic_year': 2021,
             },
             'a_nationalite_ue': False,
+            'a_assimilation_meme_formation_annee_precedente': False,
         }
 
         cls.detail_url = resolve_url('admission:general-education:accounting', pk=cls.proposition.uuid)
@@ -623,7 +624,7 @@ class GeneralAccountingViewTestCase(OsisPortalTestCase):
 
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value = self.proposition
         self.mock_accounting = self.mock_proposition_api.return_value.retrieve_general_accounting.return_value.to_dict
-        self.mock_accounting.return_value = self.accounting
+        self.mock_accounting.return_value = self.accounting.copy()
 
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -728,6 +729,14 @@ class GeneralAccountingViewTestCase(OsisPortalTestCase):
         self.assertEqual(sport_affiliation_choices[2][0], ChoixAffiliationSport.NON.name)
         self.assertEqual(sport_affiliation_choices[2][1], ChoixAffiliationSport.NON.value)
         self.assertTrue(form.fields['affiliation_sport'].required)
+
+        self.mock_accounting.return_value['a_assimilation_meme_formation_annee_precedente'] = True
+
+        response = self.client.get(self.update_url)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+        self.assertFalse(form.fields['type_situation_assimilation'].required)
 
     def test_post_accounting_form_with_valid_data(self):
         response = self.client.post(self.update_url, data=self.valid_data)
