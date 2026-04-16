@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ from unittest.mock import ANY, MagicMock, patch
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
+from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 from osis_admission_sdk.model.modifier_questions_specifiques_formation_continue_command import (
     ModifierQuestionsSpecifiquesFormationContinueCommand,
 )
@@ -39,6 +40,7 @@ from osis_admission_sdk.model.poste_diplomatique_dto_nested import (
 )
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
+from admission.contrib.enums import TrainingType
 from admission.contrib.enums.additional_information import (
     ChoixInscriptionATitre,
     ChoixTypeAdresseFacturation,
@@ -211,6 +213,13 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             'modification_pool_academic_year': None,
         }
 
+        self.mock_general_candidate_ucl_enrolment_information = self.mock_proposition_api.return_value.propositions_general_education_candidate_ucl_enrolment_information_retrieve
+        self.mock_general_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
     def test_forbidden_access(self):
         with patch.object(self.bachelor_proposition, 'links', {'update_specific_question': {'error': 'a'}}):
             response = self.client.get(self.url)
@@ -242,6 +251,8 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                 'reponses_questions_specifiques': self.bachelor_proposition.reponses_questions_specifiques,
                 'documents_additionnels': self.bachelor_proposition.documents_additionnels,
                 'poste_diplomatique': None,
+                'est_concerne_par_le_bama_15': None,
+                'preuve_bama_15': [],
             },
         )
         self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
@@ -366,6 +377,59 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
             ),
         )
 
+        # With ucl student -> no visa
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.url)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['poste_diplomatique'].disabled)
+        self.assertFalse(main_form.fields['poste_diplomatique'].required)
+
+    def test_get_page_with_bama_15_questions(self):
+        # No identification -> no bama 15 questions
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = None
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['est_concerne_par_le_bama_15'].disabled)
+        self.assertTrue(main_form.fields['preuve_bama_15'].disabled)
+
+        # With identification without required experience -> no bama 15 questions
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            est_potentiellement_concerne_par_le_bama_15=False
+        )
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['est_concerne_par_le_bama_15'].disabled)
+        self.assertTrue(main_form.fields['preuve_bama_15'].disabled)
+
+        # With identification with required experience -> bama 15 questions for some trainings
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            est_potentiellement_concerne_par_le_bama_15=True
+        )
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        main_form = response.context['forms'][0]
+        self.assertFalse(main_form.fields['est_concerne_par_le_bama_15'].disabled)
+        self.assertFalse(main_form.fields['preuve_bama_15'].disabled)
+
+        # With ucl student -> no bama 15 question
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        main_form = response.context['forms'][0]
+        self.assertTrue(main_form.fields['est_concerne_par_le_bama_15'].disabled)
+        self.assertTrue(main_form.fields['preuve_bama_15'].disabled)
+
     def test_post_page(self):
         response = self.client.post(
             self.url,
@@ -373,6 +437,8 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                 'specific_questions-reponses_questions_specifiques_1': 'My updated answer',
                 'specific_questions-documents_additionnels_0': 'uuid-doc',
                 'specific_questions-poste_diplomatique': self.first_diplomatic_post.code,
+                'specific_questions-est_concerne_par_le_bama_15': 'True',
+                'specific_questions-preuve_bama_15_0': ['uuid-doc-2'],
             },
         )
 
@@ -385,6 +451,8 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                         'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
                         'documents_additionnels': ['uuid-doc'],
                         'poste_diplomatique': None,  # Visa not requested
+                        'est_concerne_par_le_bama_15': None,  # BAMA 15 not requested
+                        'preuve_bama_15': [],  # BAMA 15 not requested
                     }
                 )
             ),
@@ -433,6 +501,8 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
                         'documents_additionnels': [],
                         'poste_diplomatique': self.second_diplomatic_post.code,
                         'reponses_questions_specifiques': {self.first_question_uuid: 'My updated answer'},
+                        'est_concerne_par_le_bama_15': None,  # BAMA 15 not requested
+                        'preuve_bama_15': [],  # BAMA 15 not requested
                     }
                 )
             ),
@@ -441,6 +511,58 @@ class GeneralEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoiceFo
 
         self.mock_diplomatic_post_api.return_value.retrieve_diplomatic_post.assert_called_with(
             code=self.second_diplomatic_post.code,
+            **self.default_kwargs,
+        )
+
+    def test_post_page_with_bama_15_questions(self, *__):
+        mock_proposition = self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value
+        mock_proposition.formation['type'] = TrainingType.MASTER_M1.name
+        mock_proposition.reponses_questions_specifiques = {}
+        self.mock_proposition_api.return_value.list_general_specific_questions.side_effect = lambda **kwargs: []
+        self.mock_proposition_api.return_value.retrieve_general_identification.return_value = MagicMock(
+            est_potentiellement_concerne_par_le_bama_15=True
+        )
+
+        # The bama 15 questions are required but not specified
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-est_concerne_par_le_bama_15': '',
+                'specific_questions-preuve_bama_15_0': [],
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        main_form = response.context['forms'][0]
+
+        self.assertFalse(main_form.is_valid())
+        self.assertIn(FIELD_REQUIRED_MESSAGE, main_form.errors.get('est_concerne_par_le_bama_15', []))
+
+        # The bama 15 questions are required and specified
+        response = self.client.post(
+            self.url,
+            data={
+                'specific_questions-est_concerne_par_le_bama_15': 'True',
+                'specific_questions-preuve_bama_15_0': ['uuid-doc'],
+            },
+        )
+
+        self.assertRedirects(response, self.url)
+
+        self.mock_proposition_api.return_value.update_general_specific_question.assert_called_with(
+            uuid=self.proposition_uuid,
+            modifier_questions_specifiques_formation_generale_command=(
+                ModifierQuestionsSpecifiquesFormationGeneraleCommand(
+                    **{
+                        'documents_additionnels': [],
+                        'poste_diplomatique': None,
+                        'reponses_questions_specifiques': {},
+                        'est_concerne_par_le_bama_15': True,
+                        'preuve_bama_15': ['uuid-doc'],
+                    }
+                )
+            ),
             **self.default_kwargs,
         )
 
@@ -713,7 +835,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertEqual(initial_data.get('nom_siege_social'), 'UCL')
         self.assertEqual(initial_data.get('numero_unique_entreprise'), '1')
         self.assertEqual(initial_data.get('numero_tva_entreprise'), '1A')
-        self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),
+        (self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),)
         self.assertEqual(initial_data.get('type_adresse_facturation'), 'AUTRE')
         self.assertEqual(initial_data.get('adresse_facturation_destinataire'), 'Mr Doe')
         self.assertEqual(initial_data.get('street'), 'Rue des Pins')
@@ -744,7 +866,7 @@ class ContinuingEducationSpecificQuestionFormViewTestCase(AdmissionTrainingChoic
         self.assertEqual(initial_data.get('nom_siege_social'), 'UCL')
         self.assertEqual(initial_data.get('numero_unique_entreprise'), '1')
         self.assertEqual(initial_data.get('numero_tva_entreprise'), '1A')
-        self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),
+        (self.assertEqual(initial_data.get('adresse_mail_professionnelle'), 'john.doe@example.be'),)
         self.assertEqual(initial_data.get('type_adresse_facturation'), 'RESIDENTIEL')
 
     def test_post_page_enrolment_with_residence_permit(self):

@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,21 @@
           {% field_data _('Competent diplomatic post') admission.poste_diplomatique|diplomatic_post_name %}
         </div>
       </div>
+    {% endpanel %}
+  {% endif %}
+
+  {% if view.display_bama_15_questions %}
+    {% panel _('Dual bachelor-master registration (BAMA15)') %}
+      {% blocktranslate asvar is_concerned_by_bama_15_label trimmed with year=view.formatted_training_year %}
+        According to our analysis, you have a maximum of 15 remaining credits from your bachelor's degree to complete in {{ year }}. Do you confirm this analysis?
+      {% endblocktranslate %}
+      {% blocktranslate asvar bama_15_proof_label trimmed with year=view.formatted_training_year %}
+        Proof of re-enrolment for your {{ year }} bachelor's degree
+      {% endblocktranslate %}
+      {% field_data is_concerned_by_bama_15_label admission.est_concerne_par_le_bama_15 %}
+      {% if admission.est_concerne_par_le_bama_15 %}
+        {% field_data bama_15_proof_label admission.preuve_bama_15 %}
+      {% endif %}
     {% endpanel %}
   {% endif %}
 

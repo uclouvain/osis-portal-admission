@@ -292,6 +292,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         self.person = person
         self.current_context = current_context
         self.admission_uuid = kwargs.pop('admission_uuid', None)
+        previous_year_enrolled_trainings = kwargs.pop('previous_year_enrolled_trainings', [])
         self.pre_admissions: Dict[str, Dict] = {}
 
         super().__init__(*args, **kwargs)
@@ -337,6 +338,12 @@ class TrainingChoiceForm(ConfigurableFormMixin):
         self.general_education_training_obj: Optional[dict] = None
         self.continuing_education_training_obj: Optional[dict] = None
         self.doctorate_training_obj: Optional[dict] = None
+        previous_year_enrolled_trainings_const = forward.Const(
+            previous_year_enrolled_trainings,
+            'previous_year_enrolled_trainings',
+        )
+        self.fields['general_education_training'].widget.forward.append(previous_year_enrolled_trainings_const)
+        self.fields['mixed_training'].widget.forward.append(previous_year_enrolled_trainings_const)
 
         if general_education_training:
             self.general_education_training_obj = get_training(
@@ -353,6 +360,7 @@ class TrainingChoiceForm(ConfigurableFormMixin):
                         'text': general_choices[0][1],
                         'domain_code': self.general_education_training_obj['domain_code'],
                         'training_type': self.general_education_training_obj['education_group_type'],
+                        'acronym': self.general_education_training_obj['acronym'],
                     }
                 ]
             )

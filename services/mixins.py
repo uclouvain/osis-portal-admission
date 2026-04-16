@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,13 +28,13 @@ from copy import copy
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from osis_admission_sdk import OpenApiException
 
 from admission.contrib.enums import IN_PROGRESS_STATUSES
 from base.models.person import Person
 from frontoffice.settings.osis_sdk.utils import MultipleApiBusinessException, api_exception_handler
-
 
 INVALID_LENGTH_RE = re.compile('Invalid value for `([^`]+)`, length must be less than or equal to `([^`]+)`')
 
@@ -59,7 +59,7 @@ class WebServiceFormMixin:
         if exception.status_code in self._error_mapping:
             form.add_error(self._error_mapping[exception.status_code], exception.detail)
         else:
-            form.add_error(None, exception.detail)
+            form.add_error(None, mark_safe(exception.detail))
 
     def form_valid(self, form):
         data = self.prepare_data(copy(form.cleaned_data))
@@ -98,7 +98,7 @@ class WebServiceFormMixin:
         raise NotImplementedError
 
     def get_success_url(self):
-        from admission.templatetags.admission import can_update_tab, TAB_TREES
+        from admission.templatetags.admission import TAB_TREES, can_update_tab
 
         messages.info(self.request, _("Your data have been saved"))
 

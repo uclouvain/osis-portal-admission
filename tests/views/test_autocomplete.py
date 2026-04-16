@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import json
 import uuid
 from unittest.mock import ANY, Mock, patch
 
-from django.test import TestCase
 from django.urls import reverse
 from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
@@ -601,6 +600,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
                 code='FOOBAR',
+                active='ACTIVE',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -614,6 +614,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
                 code='BARBAZ',
+                active='ACTIVE',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -626,12 +627,14 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'FOOBAR',
             },
             {
                 'id': 'BARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'BARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
@@ -651,12 +654,14 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'FOOBAR',
             },
             {
                 'id': 'BARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'BARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
@@ -684,6 +689,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMC',
                 code='CONFOOBAR',
+                active='ACTIVE',
             ),
             FormationContinueDTO(
                 sigle='CONBARBAZ',
@@ -697,6 +703,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMC',
                 code='CONBARBAZ',
+                active='ACTIVE',
             ),
         ]
         api.return_value.list_formation_generale_dtos.return_value = [
@@ -712,6 +719,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
                 code='GENFOOBAR',
+                active='ACTIVE',
             ),
             FormationGeneraleDTO(
                 sigle='GENBARBAZ',
@@ -725,6 +733,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
                 code='GENBARBAZ',
+                active='ACTIVE',
             ),
         ]
         url = reverse('admission:autocomplete:mixed-training')
@@ -739,24 +748,28 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">CONFOOBAR</span>',
                 'training_type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 'domain_code': '10C',
+                'acronym': 'CONFOOBAR',
             },
             {
                 'id': 'CONBARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">CONBARBAZ</span>',
                 'training_type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 'domain_code': '10C',
+                'acronym': 'CONBARBAZ',
             },
             {
                 'id': 'GENFOOBAR-2021',
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">GENFOOBAR</span>',
                 'training_type': TrainingType.CERTIFICATE.name,
                 'domain_code': '10C',
+                'acronym': 'GENFOOBAR',
             },
             {
                 'id': 'GENBARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">GENBARBAZ</span>',
                 'training_type': TrainingType.CERTIFICATE.name,
                 'domain_code': '10C',
+                'acronym': 'GENBARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})

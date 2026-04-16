@@ -76,7 +76,9 @@ class BaseEducationTestCase(OsisPortalTestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
-            links={},
+            links={
+                'update_secondary_studies': {'url': 'ok'},
+            },
             erreurs={},
             bourse_double_diplome=None,
             bourse_internationale=None,
@@ -351,6 +353,11 @@ class EducationTestCase(BaseEducationTestCase):
             _("You must choose your course before entering your previous experience."),
         )
 
+    def test_form_without_edit_permission(self):
+        with patch.object(self.proposition, 'links', {}):
+            response = self.client.get(self.form_url)
+            self.assertRedirects(response, expected_url=self.detail_url)
+
     def test_form_initialization(self):
         response = self.client.get(self.form_url)
 
@@ -450,7 +457,7 @@ class EducationTestCase(BaseEducationTestCase):
         )
 
         # Check response status
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, expected_url=self.form_url)
 
         # Check api calls
         self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
@@ -474,7 +481,7 @@ class EducationTestCase(BaseEducationTestCase):
         )
 
         # Check response status
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, expected_url=self.form_url)
 
         # Check api calls
         self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
@@ -497,7 +504,7 @@ class EducationTestCase(BaseEducationTestCase):
         )
 
         # Check response status
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, expected_url=self.form_url)
 
         # Check api calls
         self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(

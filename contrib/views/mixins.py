@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -115,6 +115,19 @@ class LoadViewMixin(ContextMixin):
             return resolve_url(pattern, pk=self.admission_uuid)
         return resolve_url(pattern)
 
+    @cached_property
+    def ucl_enrolment_information(self):
+        method = {
+            'create': AdmissionPropositionService.retrieve_candidate_ucl_enrolment_information,
+            'doctorate': AdmissionPropositionService.retrieve_doctorate_candidate_ucl_enrolment_information,
+            'general-education': AdmissionPropositionService.retrieve_general_candidate_ucl_enrolment_information,
+            'continuing-education': AdmissionPropositionService.retrieve_continuing_candidate_ucl_enrolment_information,
+        }
+        return method[self.current_context](
+            person=self.request.user.person,
+            uuid_proposition=self.admission_uuid,
+        )
+
 
 class LoadDossierViewMixin(LoadViewMixin, UserPassesTestMixin):
     """Mixin that can be used to load data for tabs used during the enrolment and eventually after it."""
@@ -136,6 +149,13 @@ class LoadDossierViewMixin(LoadViewMixin, UserPassesTestMixin):
             person=self.request.user.person,
             uuid=self.admission_uuid,
         )
+
+    @cached_property
+    def candidate_has_internal_account(self):
+        global_id = (
+            self.admission.matricule_candidat if self.admission_uuid else self.request.user.person.global_id or ''
+        )
+        return not global_id.startswith('8')
 
     @cached_property
     def specific_questions(self):
@@ -186,4 +206,7 @@ class LoadDossierViewMixin(LoadViewMixin, UserPassesTestMixin):
                 )
                 % {'date': self.admission.date_fin_pot.strftime('%d/%m/%Y')},
             )
+
+        context['ucl_enrolment_information'] = self.ucl_enrolment_information
+
         return context
