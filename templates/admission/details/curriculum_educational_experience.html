@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain
+  * Copyright (C) 2015-2026 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@
   <div class="panel panel-default">
     {% include 'admission/includes/curriculum_experience_header.html' with on_reading=True educational_tab=True title=_("View academic activity") %}
     <div class="panel-body">
-      {% if not experience.can_be_updated %}
+      {% if not experience.can_be_updated and not view.experiences_are_read_only %}
         <p class="alert alert-warning">
           {% blocktranslate trimmed %}
             This academic course in your curriculum cannot be modified. If you wish to modify it, please add an

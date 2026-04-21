@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -39,9 +39,10 @@ from admission.contrib.enums.person import (
     IdentificationType,
     SexEnum,
 )
-from admission.contrib.forms import EMPTY_CHOICE, IMAGE_MIME_TYPES, LOWERCASE_MONTHS
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
+    EMPTY_CHOICE,
+    IMAGE_MIME_TYPES,
+    LOWERCASE_MONTHS,
     CustomDateInput,
     RadioBooleanField,
     autocomplete,
@@ -50,6 +51,7 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     get_year_choices,
 )
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.views.common.form_tabs.person import PersonUpdateMode
 from admission.utils import force_title
 
@@ -338,7 +340,13 @@ class DoctorateAdmissionPersonForm(forms.Form):
 
     def _disable_fields_when_internal_account(self):
         # Cas: Les informations des comptes internes doivent être modifié via une autre procédure
-        fieldname_to_disabled = {'first_name', 'last_name'}
+        fieldname_to_disabled = {
+            'first_name',
+            'last_name',
+            'last_registration_year',
+            'already_registered',
+            'last_registration_id',
+        }
 
         # Some fields are disabled only if they are not already set
         if self.initial.get('sex'):

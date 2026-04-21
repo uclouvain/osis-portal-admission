@@ -98,7 +98,8 @@ msgid ":"
 msgstr ""
 
 msgid ""
-"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" target=\"_blank\">Contact the Enrolment Office</a>"
+"<a href=\"https://www.uclouvain.be/en/enrolment/contact-uclouvain\" "
+"target=\"_blank\">Contact the Enrolment Office</a>"
 msgstr ""
 
 #, python-brace-format
@@ -302,6 +303,9 @@ msgstr ""
 msgid "An error has occurred, please check fields and try again."
 msgstr ""
 
+msgid "An error occured when creating the application."
+msgstr ""
+
 msgid ""
 "An international scholarship may be awarded to students as part of a "
 "project. These international grants are awarded by ARES and a scholarship "
@@ -418,6 +422,13 @@ msgid ""
 msgstr ""
 
 msgid "Are you the child of a UCLouvain or Martin V staff member?"
+msgstr ""
+
+#, python-format
+msgid ""
+"As you are a currently a student at UCLouvain, some information about "
+"identification can not be updated. If you want to update them, please "
+"contact %(recipient)s."
 msgstr ""
 
 msgid ""
@@ -877,7 +888,22 @@ msgstr ""
 msgid "Course units"
 msgstr ""
 
+msgid "Create a new application"
+msgstr ""
+
+#, python-format
+msgid ""
+"Create an application for %(training_name)s (%(training_campus)s) "
+"%(training_acronym)s and cancel your other applications"
+msgstr ""
+
+msgid "Create an application for another training"
+msgstr ""
+
 msgid "Create new application"
+msgstr ""
+
+msgid "Create this new application and cancel your other ones"
 msgstr ""
 
 msgctxt "an admission"
@@ -1083,6 +1109,9 @@ msgid "Enroll in a course"
 msgstr ""
 
 msgid "Enrolled"
+msgstr ""
+
+msgid "Enrolment and re-enrolment applications"
 msgstr ""
 
 msgid "Enrolment in limited enrolment bachelor's course"
@@ -1398,7 +1427,8 @@ msgid "I would like the billing address to be"
 msgstr ""
 
 msgid ""
-"I would like to receive my mail at an address other than my legal address"
+"I would like to receive my mail at a belgian address other than my legal "
+"address"
 msgstr ""
 
 msgid "IBAN account number"
@@ -1550,9 +1580,6 @@ msgid ""
 "enrolled."
 msgstr ""
 
-msgid "Initial education"
-msgstr ""
-
 msgid "Institute"
 msgstr ""
 
@@ -1647,6 +1674,9 @@ msgid "Language regime"
 msgstr ""
 
 msgid "Language study abroad"
+msgstr ""
+
+msgid "Last name, First name"
 msgstr ""
 
 msgid "Later > blocking"
@@ -1771,6 +1801,9 @@ msgstr ""
 msgid "Motivations"
 msgstr ""
 
+msgid "My drafts"
+msgstr ""
+
 msgid "My father"
 msgstr ""
 
@@ -1799,6 +1832,9 @@ msgstr ""
 msgid "My partner"
 msgstr ""
 
+msgid "My submitted applications"
+msgstr ""
+
 msgid "NO"
 msgstr "No"
 
@@ -1812,6 +1848,9 @@ msgid "National baccalaureate (or state diploma, etc.)"
 msgstr ""
 
 msgid "No"
+msgstr ""
+
+msgid "No application for this academic year."
 msgstr ""
 
 msgid "No course created at present."
@@ -1847,6 +1886,9 @@ msgid "No year has yet been added"
 msgstr ""
 
 msgid "No."
+msgstr ""
+
+msgid "Noma"
 msgstr ""
 
 msgid "Non-European credits"
@@ -2033,6 +2075,9 @@ msgstr ""
 msgid "Place of birth"
 msgstr ""
 
+msgid "Please briefly explain what you want:"
+msgstr ""
+
 msgid "Please choose the institute or specify another institute"
 msgstr ""
 
@@ -2103,6 +2148,9 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Postal address"
+msgstr ""
+
+msgid "Postal address in Belgium"
 msgstr ""
 
 msgid "Postcode"
@@ -2207,6 +2255,10 @@ msgid "Radio buttons"
 msgstr ""
 
 msgid "Rank in diploma"
+msgstr ""
+
+#, python-format
+msgid "Re-enrol in this course in %(year)s"
 msgstr ""
 
 msgid "Reasons for pre-admission."
@@ -2338,6 +2390,11 @@ msgid "Send missing documents"
 msgstr ""
 
 msgid ""
+"Sending the request requires the completion of this form and your agreement "
+"with all of the following elements"
+msgstr ""
+
+msgid ""
 "Sending the request requires your agreement with all of the following "
 "elements"
 msgstr ""
@@ -2439,6 +2496,9 @@ msgid "Surname"
 msgstr ""
 
 msgid "System of education"
+msgstr ""
+
+msgid "Take several courses at the same time"
 msgstr ""
 
 msgid "Teaching degree and CAPAES"
@@ -2944,6 +3004,10 @@ msgstr ""
 msgid "Yes,No,"
 msgstr ""
 
+#, python-format
+msgid "You already submitted other applications for %(year)s"
+msgstr ""
+
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 
@@ -2992,6 +3056,9 @@ msgid ""
 "defined by government decree)."
 msgstr ""
 
+msgid "You have not been deliberated yet."
+msgstr ""
+
 msgid "You have now reached the application confirmation tab."
 msgstr ""
 
@@ -3018,6 +3085,9 @@ msgid "You must reference a person in UCLouvain."
 msgstr ""
 
 msgid "You specified that no Belgian student status situation applies to you."
+msgstr ""
+
+msgid "You want:"
 msgstr ""
 
 msgid ""

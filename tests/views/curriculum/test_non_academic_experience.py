@@ -88,6 +88,47 @@ class CurriculumNonAcademicExperienceReadTestCase(MixinTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue("n'est pas modifiable" in response.rendered_content)
 
+    def test_with_admission_and_ucl_student_on_reading_experience(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:curriculum:professional_read',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:continuing-education:curriculum:professional_read',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:general-education:curriculum:professional_read',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
 
 class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
     @classmethod
@@ -682,6 +723,26 @@ class CurriculumNonAcademicExperienceFormTestCase(MixinTestCase):
 
         self.assertEqual(response.status_code, 403)
 
+    def test_with_admission_and_ucl_student_on_update_experience_can_be_forbidden(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(self.continuing_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(self.general_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 403)
+
     # On create
     def test_with_admission_on_create_experience_post_form_for_other_activity(self):
         response = self.client.post(
@@ -791,4 +852,42 @@ class CurriculumNonAcademicExperienceDeleteTestCase(MixinTestCase):
             )
         )
 
+        self.assertEqual(response.status_code, 403)
+
+    def test_with_admission_and_ucl_student_on_delete_experience_can_be_forbidden(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:update:curriculum:professional_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:continuing-education:update:curriculum:professional_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:general-education:update:curriculum:professional_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.professional_experience.uuid,
+            )
+        )
+
+        # Check the request
         self.assertEqual(response.status_code, 403)

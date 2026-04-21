@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -80,6 +80,8 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
         context_data['educational_experiences'] = curriculum.educational_experiences
         context_data['minimal_date'] = curriculum.minimal_date
         context_data['need_to_complete'] = curriculum.minimal_date <= curriculum.maximal_date
+        if self.is_general:
+            context_data['need_to_complete'] &= not self.ucl_enrolment_information.est_inscrit_recemment
         context_data['access_conditions_not_met'] = any(
             error.get('status_code') == GlobalPropositionBusinessException.ConditionsAccessNonRempliesException.value
             for error in self.admission.erreurs
@@ -101,6 +103,10 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
             )
 
         return context_data
+
+    @cached_property
+    def experiences_are_read_only(self):
+        return self.is_general and self.ucl_enrolment_information.est_inscrit_recemment
 
     @cached_property
     def has_foreign_diploma(self):
@@ -129,7 +135,10 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
     @cached_property
     def display_curriculum(self):
         if self.current_context == 'general-education':
-            return self.admission.formation['type'] != TrainingType.BACHELOR.name
+            return (
+                self.admission.formation['type'] != TrainingType.BACHELOR.name
+                and not self.ucl_enrolment_information.est_inscrit_recemment
+            )
         elif self.current_context == 'continuing-education':
             return self.admission.inscription_au_role_obligatoire is True
         return True
@@ -137,7 +146,11 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
     @cached_property
     def display_equivalence(self):
         if self.current_context == 'general-education':
-            return self.admission.formation['type'] in TRAINING_TYPES_WITH_EQUIVALENCE and self.has_foreign_diploma
+            return (
+                not self.admission.est_en_poursuite
+                and self.admission.formation['type'] in TRAINING_TYPES_WITH_EQUIVALENCE
+                and self.has_foreign_diploma
+            )
         elif self.current_context == 'continuing-education':
             return (
                 self.admission.formation['type'] == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name

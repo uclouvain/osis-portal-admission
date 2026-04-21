@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ from waffle.testutils import override_switch
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import (
     AdmissionType,
+    ChoixCommissionProximiteCDSS,
     ChoixMoyensDecouverteFormation,
     TypeFormationChoisissable,
-    ChoixCommissionProximiteCDSS,
 )
 from admission.contrib.enums.state_iufc import StateIUFC
 from admission.contrib.forms import EMPTY_VALUE
@@ -97,6 +97,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
                 'text': 'Formation 1 (Louvain-La-Neuve) <span class="training-acronym">TR1</span>',
                 'domain_code': '10A',
                 'training_type': 'MASTER_MA_120',
+                'acronym': 'TR1',
             }
         ]
         self.assertEqual(form.fields['general_education_training'].widget.attrs['data-data'], json.dumps(expected))
@@ -319,7 +320,7 @@ class GeneralAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingChoi
         self.assertTrue('__all__' in form.errors)
         self.assertIn(
             _('To choose this course, you need to <a href="%(url)s">cancel</a> your application and create a new one.')
-            % {'url': resolve_url(f'admission:general-education:cancel', pk=self.proposition_uuid)},
+            % {'url': resolve_url('admission:general-education:cancel', pk=self.proposition_uuid)},
             form.errors['__all__'][0],
         )
 
@@ -548,7 +549,7 @@ class ContinuingAdmissionUpdateTrainingChoiceFormViewTestCase(AdmissionTrainingC
         self.assertTrue('__all__' in form.errors)
         self.assertIn(
             _('To choose this course, you need to <a href="%(url)s">cancel</a> your application and create a new one.')
-            % {'url': resolve_url(f'admission:continuing-education:cancel', pk=self.proposition_uuid)},
+            % {'url': resolve_url('admission:continuing-education:cancel', pk=self.proposition_uuid)},
             form.errors['__all__'][0],
         )
 

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -82,6 +82,12 @@ IN_PROGRESS_STATUSES = {
     ChoixStatutPropositionGenerale.EN_BROUILLON.name,
     ChoixStatutPropositionContinue.EN_BROUILLON.name,
 }
+
+IN_PROGRESS_OR_IN_PAYMENT_STATUSES = IN_PROGRESS_STATUSES.union(
+    {
+        ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name,
+    }
+)
 
 CANCELLED_STATUSES = {
     ChoixStatutPropositionDoctorale.ANNULEE.name,

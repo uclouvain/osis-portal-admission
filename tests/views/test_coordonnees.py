@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ from unittest import mock
 from unittest.mock import Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase
 from django.utils.translation import gettext_lazy as _
 
 from admission.contrib.enums import ChoixStatutPropositionDoctorale
@@ -127,6 +126,13 @@ class CoordonneesTestCase(OsisPortalTestCase):
         self.assertTemplateUsed(response, 'admission/forms/coordonnees.html')
         self.mock_person_api.return_value.retrieve_coordonnees.assert_called()
 
+        # The country field is disabled in the contact form
+        contact_form = response.context['contact']
+        self.assertTrue(contact_form.fields['country'].disabled)
+
+        residential_form = response.context['residential']
+        self.assertFalse(residential_form.fields['country'].disabled)
+
         # Some fields are disabled if they are already set
         form = response.context['main_form']
         self.assertFalse(form.fields['private_email'].disabled)
@@ -195,9 +201,9 @@ class CoordonneesTestCase(OsisPortalTestCase):
                 "residential-city": "Nantes",
                 "residential-street": "Rue du Compas",
                 "residential-street_number": "1",
-                "contact-country": "FR",
-                "contact-postal_code": "44001",
-                "contact-city": "Nantes",
+                "contact-country": "BE",
+                "contact-be_postal_code": "1348",
+                "contact-be_city": "Louvain-La-Neuve",
                 "contact-street": "Rue du Compas",
                 "contact-street_number": "2",
                 "show_contact": True,
@@ -211,9 +217,9 @@ class CoordonneesTestCase(OsisPortalTestCase):
         self.assertEqual(
             last_call_kwargs["coordonnees"]["contact"],
             {
-                "country": "FR",
-                "postal_code": "44001",
-                "city": "Nantes",
+                "country": "BE",
+                "postal_code": "1348",
+                "city": "Louvain-La-Neuve",
                 "street": "Rue du Compas",
                 "street_number": "2",
                 "postal_box": "",
