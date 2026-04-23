@@ -59,7 +59,7 @@ from admission.contrib.forms import (
     get_example_text,
     get_language_initial_choices,
     get_past_academic_years_choices,
-    get_superior_institute_initial_choices,
+    get_superior_institute_initial_choices, AdmissionFileUploadField,
 )
 from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
@@ -167,6 +167,63 @@ class ContinuingAdmissionCurriculumFileForm(ConfigurableFormMixin):
         return cleaned_data
 
 
+class ByContextAdmissionForm(forms.Form):
+    """
+    Hide and disable the fields that are not in the current context and disable the fields valuated by other contexts.
+    """
+    FIELDS_BY_CONTEXT: dict[str, set[str]] = {
+        'doctorate-education': set(),
+        'general-education': set(),
+        'continuing-education': set(),
+    }
+
+    def __init__(self, experience, current_context, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        all_fields = set(self.fields)
+
+        # Fields that are not in the current context
+        fields_other_contexts = all_fields - self.FIELDS_BY_CONTEXT[current_context]
+        fields_to_disabled = fields_other_contexts.copy()
+
+        # Fields to disable based on the experience status and on the previous valuations
+        if experience and experience['validation_status'] != ChoixStatutValidationExperience.EN_BROUILLON.name:
+            valuated_fields = set()
+
+            if experience.get('valuated_from_trainings'):
+                valuated_contexts = set(
+                    ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE.get(training)
+                    for training in experience['valuated_from_trainings']
+                )
+
+                for context in valuated_contexts:
+                    valuated_fields |= self.FIELDS_BY_CONTEXT[context]
+
+                for field_name in valuated_fields:
+                    if not isinstance(self.fields[field_name], FileUploadField) or self.initial.get(field_name):
+                        fields_to_disabled.add(field_name)
+
+        # Additional fields to disable
+        self.update_fields_to_disabled(fields_to_disabled=fields_to_disabled)
+
+        # Disable (and eventually hide) the fields that are not editable
+        for field_name in fields_to_disabled:
+            self.fields[field_name].disabled = True
+
+            if field_name in fields_other_contexts:
+                self.fields[field_name].widget = self.fields[field_name].hidden_widget()
+            elif isinstance(self.fields[field_name], AdmissionFileUploadField):
+                self.fields[field_name].widget = HiddenFileWidget(display_visualizer=True)
+
+    def update_fields_to_disabled(self, fields_to_disabled: set[str]):
+        return fields_to_disabled
+
+    def add_error(self, field, error):
+        if field and self.fields[field].disabled:
+            return
+        super().add_error(field, error)
+
+
 def year_choices(additional_years: set[int]):
     min_year = min(chain(additional_years, [MINIMUM_YEAR]))
     max_year = max(chain(additional_years, [datetime.today().year]))
@@ -177,7 +234,32 @@ def month_choices():
     return [EMPTY_CHOICE[0]] + [(index, month) for index, month in MONTHS_ALT.items()]
 
 
-class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
+ALL_PROFESSIONAL_EXPERIENCE_FIELDS_EXCEPT_CERTIFICATE = {
+    'start_date_month',
+    'end_date_month',
+    'start_date_year',
+    'end_date_year',
+    'type',
+    'role',
+    'sector',
+    'institute_name',
+    'activity',
+}
+
+ALL_PROFESSIONAL_EXPERIENCE_FIELDS = ALL_PROFESSIONAL_EXPERIENCE_FIELDS_EXCEPT_CERTIFICATE | {
+    'certificate',
+}
+
+PROFESSIONAL_EXPERIENCE_FIELDS_BY_CONTEXT = {
+    'doctorate': ALL_PROFESSIONAL_EXPERIENCE_FIELDS,
+    'general-education': ALL_PROFESSIONAL_EXPERIENCE_FIELDS,
+    'continuing-education': ALL_PROFESSIONAL_EXPERIENCE_FIELDS_EXCEPT_CERTIFICATE,
+}
+
+
+class AdmissionCurriculumProfessionalExperienceForm(ByContextAdmissionForm, forms.Form):
+    FIELDS_BY_CONTEXT = PROFESSIONAL_EXPERIENCE_FIELDS_BY_CONTEXT
+
     start_date_month = forms.ChoiceField(
         choices=month_choices,
         label=_('Month'),
@@ -230,7 +312,7 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
         max_length=255,
     )
 
-    def __init__(self, experience, is_continuing, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         selected_years: set[int] = {
@@ -239,30 +321,9 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
             if self.initial.get(year_field)
         }
         self.fields['start_date_year'].choices = self.fields['end_date_year'].choices = year_choices(selected_years)
-        self.is_continuing = is_continuing
-        if self.is_continuing:
-            self.fields['certificate'].disabled = True
-            self.fields['certificate'].widget = forms.MultipleHiddenInput()
-
-        if experience and (experience.get('valuated_from_trainings') or experience.get('external_id')):
-            self.disable_valuated_fields(experience['valuated_from_trainings'])
 
     class Media:
         js = ('js/dependsOn.min.js',)
-
-    def disable_valuated_fields(self, valuated_education_types: List[str]):
-        """Disable valuated fields"""
-        # For now, all fields but the certificate one are valuated
-        valuated_contexts = set(
-            ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE.get(training) for training in valuated_education_types
-        )
-        for field in self.fields:
-            if field != 'certificate' and self.initial.get(field):
-                self.fields[field].disabled = True
-        if 'doctorate' in valuated_contexts or 'general-education' in valuated_contexts:
-            if self.initial.get('certificate'):
-                self.fields['certificate'].disabled = True
-                self.fields['certificate'].widget = HiddenFileWidget(display_visualizer=True)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -301,54 +362,10 @@ class AdmissionCurriculumProfessionalExperienceForm(forms.Form):
         else:
             cleaned_data['activity'] = ''
 
-        if not self.is_continuing:
-            if not cleaned_data['certificate']:
-                self.add_error('certificate', FIELD_REQUIRED_MESSAGE)
+        if not cleaned_data['certificate']:
+            self.add_error('certificate', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data
-
-
-class ByContextAdmissionForm(forms.Form):
-    """
-    Hide and disable the fields that are not in the current context and disable the fields valuated by other contexts.
-    """
-
-    def __init__(self, educational_experience, current_context, fields_by_context, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields_by_context = fields_by_context
-        self.current_context_fields = self.fields_by_context[current_context]
-
-        self.disable_fields_other_contexts()
-
-        if educational_experience and educational_experience.get('valuated_from_trainings'):
-            self.disable_valuated_fields(educational_experience['valuated_from_trainings'])
-
-    def disable_fields_other_contexts(self):
-        """Disable and hide fields specific to other contexts."""
-        for field in self.fields:
-            if field not in self.current_context_fields:
-                self.fields[field].disabled = True
-                self.fields[field].widget = self.fields[field].hidden_widget()
-
-    def disable_valuated_fields(self, valuated_education_types: List[str]):
-        """Disable valuated fields"""
-        valuated_contexts = set(
-            ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE.get(training) for training in valuated_education_types
-        )
-
-        valuated_fields = set()
-        for context in valuated_contexts:
-            valuated_fields |= self.fields_by_context[context]
-
-        for field in self.current_context_fields & valuated_fields:
-            self.fields[field].disabled = True
-            if isinstance(self.fields[field], FileUploadField):
-                self.fields[field].widget = HiddenFileWidget(display_visualizer=True)
-
-    def add_error(self, field, error):
-        if field and self.fields[field].disabled:
-            return
-        super().add_error(field, error)
 
 
 EDUCATIONAL_EXPERIENCE_BASE_FIELDS = {
@@ -394,6 +411,8 @@ EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT = {
 
 
 class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
+    FIELDS_BY_CONTEXT = EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT
+
     start = forms.ChoiceField(
         label=_('Start'),
         widget=autocomplete.Select2(),
@@ -572,21 +591,10 @@ class AdmissionCurriculumEducationalExperienceForm(ByContextAdmissionForm):
             'jquery.mask.min.js',
         )
 
-    def __init__(self, educational_experience, person, *args, **kwargs):
-        kwargs.setdefault('initial', educational_experience)
+    def __init__(self, experience, person, *args, **kwargs):
+        kwargs.setdefault('initial', experience)
 
-        kwargs['fields_by_context'] = deepcopy(EDUCATIONAL_EXPERIENCE_FIELDS_BY_CONTEXT)
-
-        if (
-            educational_experience
-            and educational_experience['valuated_from_trainings']
-            and not educational_experience['graduate_degree']
-        ):
-            # If the experience has been valuated from a continuing admission and the graduate degree hasn't been set,
-            # it is possible to set it once.
-            kwargs['fields_by_context']['continuing-education'].remove('graduate_degree')
-
-        super().__init__(educational_experience, *args, **kwargs)
+        super().__init__(experience=experience, *args, **kwargs)
 
         # Initialize the field with dynamic choices
         already_selected_years = (
@@ -759,6 +767,8 @@ EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT = {
 
 
 class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
+    FIELDS_BY_CONTEXT = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
+
     academic_year = forms.IntegerField(
         initial=FORM_SET_PREFIX,
         label=_('Academic year'),
@@ -796,7 +806,6 @@ class AdmissionCurriculumEducationalExperienceYearForm(ByContextAdmissionForm):
     )
 
     def __init__(self, current_year, prefix_index_start=0, initial_years=None, **kwargs):
-        kwargs['fields_by_context'] = EDUCATIONAL_EXPERIENCE_YEAR_FIELDS_BY_CONTEXT
         super().__init__(**kwargs)
         academic_year = self.data.get(self.add_prefix('academic_year'), self.initial.get('academic_year'))
         if academic_year and int(academic_year) < current_year:

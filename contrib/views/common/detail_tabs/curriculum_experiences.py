@@ -51,7 +51,6 @@ from admission.utils import format_address
 
 __all__ = [
     'initialize_field_texts',
-    'experience_can_be_updated',
     'get_educational_experience_year_set_with_lost_years',
     'AdmissionCurriculumMixin',
     'AdmissionCurriculumProfessionalExperienceDetailView',
@@ -88,7 +87,7 @@ class AdmissionCurriculumMixin(LoadDossierViewMixin):
         )
 
     @cached_property
-    def experiences_are_read_only(self):
+    def experiences_cannot_be_created(self):
         return self.is_general and self.ucl_enrolment_information.est_inscrit_recemment
 
 
@@ -100,10 +99,7 @@ class AdmissionCurriculumProfessionalExperienceDetailView(AdmissionCurriculumMix
         context = super().get_context_data(**kwargs)
         context['experience'] = self.professional_experience
         context['CURRICULUM_ACTIVITY_LABEL'] = CURRICULUM_ACTIVITY_LABEL
-        context['can_be_updated'] = professional_experience_can_be_updated(
-            self.professional_experience,
-            self.current_context,
-        )
+        context['can_be_updated'] = self.professional_experience.can_be_updated
         return context
 
 
@@ -204,58 +200,3 @@ def initialize_field_texts(person, curriculum_experiences, context):
                 postal_code=institute.zipcode,
                 city=institute.city,
             )
-
-        experience.can_be_updated = experience_can_be_updated(experience, context)
-
-
-def experience_can_be_updated(experience, context):
-    """Return if the educational experience can be updated in the specific context."""
-    # An experience can be updated...
-    return (
-        # ... if it is not valuated
-        not getattr(experience, 'valuated_from_trainings', [])
-        # ... or, for a doctorate admission, if it hasn't been valuated by another doctorate admission
-        or context == 'doctorate'
-        and not any(
-            training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['doctorate']
-            for training in experience.valuated_from_trainings
-        )
-        # ... or, for a general admission, if the experience has only been valuated by continuing admissions
-        or context == 'general-education'
-        and all(
-            training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
-            for training in experience.valuated_from_trainings
-        )
-    ) and not getattr(
-        experience,
-        'external_id',
-        None,
-    )  # ... and if the experience doesn't come from EPC
-
-
-def professional_experience_can_be_updated(experience, context):
-    """Return if the educational experience can be updated in the specific context."""
-    is_certificate_missing = context in ['doctorate', 'general-education'] and not experience['certificate']
-    # An experience can be updated...
-    return (
-        # ... if it is not valuated
-        not getattr(experience, 'valuated_from_trainings', [])
-        # ... or, for a doctorate / general admission,
-        #     if it hasn't been valuated by another doctorate / general admission
-        or (
-            context in ['doctorate', 'general-education']
-            and all(
-                training in ADMISSION_EDUCATION_TYPE_BY_ADMISSION_CONTEXT['continuing-education']
-                for training in experience.valuated_from_trainings
-            )
-        )
-        # ... or, for a doctorate / general admission, certificate is missing
-        or is_certificate_missing
-    ) and (
-        is_certificate_missing
-        or not getattr(
-            experience,
-            'external_id',
-            None,
-        )  # ... and if the experience doesn't come from EPC or needs a certificate
-    )

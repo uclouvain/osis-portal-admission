@@ -64,10 +64,8 @@ from admission.contrib.forms.curriculum import (
 )
 from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
     AdmissionCurriculumMixin,
-    experience_can_be_updated,
     get_educational_experience_year_set_with_lost_years,
     initialize_field_texts,
-    professional_experience_can_be_updated,
 )
 from admission.services.mixins import WebServiceFormMixin
 
@@ -94,7 +92,7 @@ class AdmissionCurriculumFormExperienceMixin(AdmissionCurriculumFormMixin, ABC):
     }
 
     def test_func(self):
-        return super().test_func() and not self.experiences_are_read_only
+        return super().test_func() and (bool(self.experience_id) or not self.experiences_cannot_be_created)
 
     def get_success_url(self):
         messages.info(self.request, _("Your data have been saved"))
@@ -138,10 +136,7 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
         ):
             return super().get_success_url()
         messages.info(self.request, _("Your data have been saved"))
-        if not professional_experience_can_be_updated(
-            self.updated_experience,
-            self.current_context,
-        ):
+        if not self.updated_experience.can_be_updated:
             url = self.request.resolver_match.view_name.replace('update:', '').replace(
                 'professional_update',
                 'professional_read',
@@ -155,20 +150,17 @@ class AdmissionCurriculumProfessionalExperienceFormView(AdmissionCurriculumFormE
 
         if self.experience_id:
             experience = self.professional_experience.to_dict()
-            experience['can_be_updated'] = professional_experience_can_be_updated(
-                self.professional_experience,
-                self.current_context,
-            )
 
             if not experience['can_be_updated']:
                 raise PermissionDenied
+
             context['experience'] = experience
 
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['is_continuing'] = self.is_continuing
+        kwargs['current_context'] = self.current_context
 
         if self.experience_id:
             kwargs['experience'] = self.professional_experience.to_dict()
@@ -292,10 +284,6 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
 
         if self.experience_id:
             educational_experience = self.educational_experience.to_dict()
-            educational_experience['can_be_updated'] = experience_can_be_updated(
-                self.educational_experience,
-                self.current_context,
-            )
 
             if not educational_experience['can_be_updated']:
                 raise PermissionDenied
@@ -311,7 +299,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
             ]
 
         base_form = AdmissionCurriculumEducationalExperienceForm(
-            educational_experience=educational_experience,
+            experience=educational_experience,
             person=self.request.user.person,
             current_context=self.current_context,
             data=self.request.POST or None,
@@ -332,7 +320,7 @@ class AdmissionCurriculumEducationalExperienceFormView(AdmissionCurriculumFormEx
                         base_form.initial['end'] if all_educational_experience_years else 0,
                     )
                 ),
-                'educational_experience': educational_experience,
+                'experience': educational_experience,
                 'current_context': self.current_context,
                 'initial_years': all_educational_experience_years_by_year,
             },

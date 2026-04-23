@@ -36,11 +36,6 @@
     {% endif %}
     {% include 'admission/includes/curriculum_experience_header.html' with on_update=True title=header_title %}
     <div class="panel-body">
-      {% if experience.valuated_from_trainings and experience.can_be_updated %}
-        <div class="alert alert-warning">
-          {% translate 'This experience has been partially completed so only few fields are editable.' %}
-        </div>
-      {% endif %}
       <div class="row">
         <div class="col-md-6 form-group">
           <fieldset class="custom-fieldset">

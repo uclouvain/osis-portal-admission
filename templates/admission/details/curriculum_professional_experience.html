@@ -30,7 +30,7 @@
   <div class="panel panel-default">
     {% include 'admission/includes/curriculum_experience_header.html' with on_reading=True title=_("View non-academic activity") %}
     <div class="panel-body">
-      {% if not can_be_updated and not view.experiences_are_read_only %}
+      {% if not can_be_updated %}
         <p class="alert alert-warning">
           {% blocktranslate trimmed %}
             This non-academic activity in your curriculum cannot be modified. If you wish to modify it, please add an

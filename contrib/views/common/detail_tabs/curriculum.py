@@ -35,7 +35,6 @@ from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms.curriculum import TRAINING_TYPES_WITH_EQUIVALENCE
 from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
     initialize_field_texts,
-    professional_experience_can_be_updated,
 )
 from admission.contrib.views.mixins import LoadDossierViewMixin
 from admission.services.person import (
@@ -96,16 +95,10 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
 
         initialize_field_texts(self.request.user.person, context_data['educational_experiences'], self.current_context)
 
-        for professional_experience in context_data['professional_experiences']:
-            professional_experience.can_be_updated = professional_experience_can_be_updated(
-                professional_experience,
-                self.current_context,
-            )
-
         return context_data
 
     @cached_property
-    def experiences_are_read_only(self):
+    def experiences_cannot_be_created(self):
         return self.is_general and self.ucl_enrolment_information.est_inscrit_recemment
 
     @cached_property

@@ -103,3 +103,13 @@ CURRICULUM_ACTIVITY_LABEL = {
         'Certificate justifying your activity, mentioning this activity, for the period concerned'
     ),
 }
+
+
+class ChoixStatutValidationExperience(ChoiceEnum):
+    EN_BROUILLON = _('In draft')
+    A_TRAITER = _('To be processed')
+    A_COMPLETER = _('To be completed')
+    AUTHENTIFICATION = _('Authentication')
+    AVIS_EXPERT = _('Expert advice')
+    A_COMPLETER_APRES_INSCRIPTION = _('To complete after enrolment')
+    VALIDEE = _('Validated')
