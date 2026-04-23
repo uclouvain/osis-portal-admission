@@ -60,19 +60,19 @@ from osis_admission_sdk.model.result_enum import ResultEnum
 from osis_admission_sdk.model.sector_enum import SectorEnum
 from osis_admission_sdk.model.study_system_enum import StudySystemEnum
 from osis_admission_sdk.model.type_enum import TypeEnum
-from osis_reference_sdk.model.academic_year import AcademicYear
-from osis_reference_sdk.model.country import Country
-from osis_reference_sdk.model.diploma import Diploma
-from osis_reference_sdk.model.language import Language
-from osis_reference_sdk.model.paginated_country import PaginatedCountry
-from osis_reference_sdk.model.paginated_diploma import PaginatedDiploma
-from osis_reference_sdk.model.paginated_language import PaginatedLanguage
-from osis_reference_sdk.model.paginated_superior_non_university import (
+from osis_reference_sdk.models.academic_year import AcademicYear
+from osis_reference_sdk.models.country import Country
+from osis_reference_sdk.models.diploma import Diploma
+from osis_reference_sdk.models.language import Language
+from osis_reference_sdk.models.paginated_country import PaginatedCountry
+from osis_reference_sdk.models.paginated_diploma import PaginatedDiploma
+from osis_reference_sdk.models.paginated_language import PaginatedLanguage
+from osis_reference_sdk.models.paginated_superior_non_university import (
     PaginatedSuperiorNonUniversity,
 )
-from osis_reference_sdk.model.paginated_university import PaginatedUniversity
-from osis_reference_sdk.model.superior_non_university import SuperiorNonUniversity
-from osis_reference_sdk.model.university import University
+from osis_reference_sdk.models.paginated_university import PaginatedUniversity
+from osis_reference_sdk.models.superior_non_university import SuperiorNonUniversity
+from osis_reference_sdk.models.university import University
 
 from admission.contrib.enums.admission_type import AdmissionType
 from admission.contrib.enums.projet import (
