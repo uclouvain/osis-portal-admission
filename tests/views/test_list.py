@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 import datetime
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock
 
 import freezegun
 from django.shortcuts import resolve_url
@@ -36,6 +36,7 @@ from admission.contrib.enums import (
     ChoixStatutPropositionDoctorale,
     ChoixStatutPropositionGenerale,
     TrainingType,
+    EligibiliteReinscription,
 )
 from base.tests.factories.person import PersonFactory
 from base.tests.test_case import OsisPortalTestCase
@@ -73,7 +74,10 @@ class ListTestCase(OsisPortalTestCase):
         api.return_value.propositions_ucl_enrolments_list.return_value = []
         api.return_value.propositions_re_enrolment_period_retrieve.return_value.date_debut = datetime.date(2023, 6, 15)
         api.return_value.propositions_re_enrolment_period_retrieve.return_value.date_fin = datetime.date(2023, 10, 31)
-        api.return_value.propositions_candidate_re_enrolment_eligibity_retrieve.return_value.est_eligible_a_la_reinscription = False
+        api.return_value.propositions_candidate_re_enrolment_eligibity_retrieve.return_value = MagicMock(
+            decision=EligibiliteReinscription.NON_ELIGIBLE_EN_ATTENTE_RESULTATS.name,
+            raison_non_eligibilite='My error',
+        )
 
         response = self.client.get(self.list_url)
 
@@ -377,8 +381,9 @@ class ListTestCase(OsisPortalTestCase):
         )
         api.return_value.propositions_re_enrolment_period_retrieve.return_value = re_enrolment_period
 
-        re_enrolment_eligibility = Mock(
-            est_eligible_a_la_reinscription=True,
+        re_enrolment_eligibility = MagicMock(
+            decision=EligibiliteReinscription.EST_ELIGIBLE.name,
+            raison_non_eligibilite='',
         )
         api.return_value.propositions_candidate_re_enrolment_eligibity_retrieve.return_value = re_enrolment_eligibility
 
@@ -393,7 +398,7 @@ class ListTestCase(OsisPortalTestCase):
         # In the enrolment period
         with freezegun.freeze_time('2023-06-15'):
             # > eligible
-            re_enrolment_eligibility.est_eligible_a_la_reinscription = True
+            re_enrolment_eligibility.decision=EligibiliteReinscription.EST_ELIGIBLE.name
 
             # > with the right to create a proposition
             response = self.client.get(self.list_url)
@@ -427,7 +432,8 @@ class ListTestCase(OsisPortalTestCase):
 
             # > not eligible with the right to create a proposition
             api.return_value.list_propositions.return_value.links = valid_action_links
-            re_enrolment_eligibility.est_eligible_a_la_reinscription = False
+            re_enrolment_eligibility.decision = EligibiliteReinscription.NON_ELIGIBLE_EN_ATTENTE_RESULTATS.name
+            re_enrolment_eligibility.raison_non_eligibilite = 'My error 2'
 
             response = self.client.get(self.list_url)
 
@@ -443,7 +449,7 @@ class ListTestCase(OsisPortalTestCase):
             self.assertEqual(response.context['can_create_re_enrolment_proposition'], False)
             self.assertEqual(
                 response.context['re_enrolment_error_message'],
-                gettext('You have not been deliberated yet.'),
+                'My error 2',
             )
 
     @patch('osis_admission_sdk.api.propositions_api.PropositionsApi')
