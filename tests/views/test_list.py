@@ -285,18 +285,89 @@ class ListTestCase(OsisPortalTestCase):
         api.return_value.list_propositions.return_value = Mock(
             doctorate_propositions=[],
             continuing_education_propositions=[],
-            general_education_propositions=[],
+            general_education_propositions=[
+                Mock(
+                    uuid='5c5cdc60-2537-4a12-a396-64d2e9e34871',
+                    links={'retrieve_training_choice': {'url': 'access granted'}},
+                    erreurs=[],
+                    statut=ChoixStatutPropositionGenerale.CONFIRMEE.name,
+                    formation=Mock(
+                        type=TrainingType.BACHELOR.name,
+                        annee=2024,
+                        sigle='F5',
+                    ),
+                    doctorat=None,
+                    creee_le=datetime.datetime(2023, 1, 6),
+                    soumise_le=datetime.datetime(2024, 1, 1),
+                    annee_calculee=2024,
+                ),
+                Mock(
+                    uuid='5c5cdc60-2537-4a12-a396-64d2e9e34871',
+                    links={'retrieve_training_choice': {'url': 'access granted'}},
+                    erreurs=[],
+                    statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
+                    formation=Mock(
+                        type=TrainingType.BACHELOR.name,
+                        annee=2024,
+                        sigle='F6',
+                    ),
+                    doctorat=None,
+                    creee_le=datetime.datetime(2023, 1, 6),
+                    soumise_le=datetime.datetime(2024, 1, 1),
+                    annee_calculee=2024,
+                ),
+                Mock(
+                    uuid='5c5cdc60-2537-4a12-a396-64d2e9e34871',
+                    links={'retrieve_training_choice': {'url': 'access granted'}},
+                    erreurs=[],
+                    statut=ChoixStatutPropositionGenerale.ANNULEE.name,
+                    formation=Mock(
+                        type=TrainingType.BACHELOR.name,
+                        annee=2024,
+                        sigle='F7',
+                    ),
+                    doctorat=None,
+                    creee_le=datetime.datetime(2023, 1, 6),
+                    soumise_le=datetime.datetime(2024, 1, 1),
+                    annee_calculee=2024,
+                ),
+            ],
             links=valid_action_links,
         )
 
-        not_graduated_ucl_enrolment_2020 = Mock(annee=2023, est_diplome=False)
-        graduated_ucl_enrolment_2020 = Mock(annee=2023, est_diplome=True)
-        not_graduated_ucl_enrolment_2021 = Mock(annee=2024, est_diplome=False)
+        # Included
+        not_graduated_ucl_enrolment_2023_f1 = Mock(annee=2023, est_diplome=False, sigle_formation='F1')
+        # Graduated => excluded
+        graduated_ucl_enrolment_2023_f2 = Mock(annee=2023, est_diplome=True, sigle_formation='F2')
+        # Future year => excluded
+        not_graduated_ucl_enrolment_2024_f3 = Mock(annee=2024, est_diplome=False, sigle_formation='F3')
+        # Already enrolled => excluded
+        not_graduated_ucl_enrolment_2023_f4 = Mock(annee=2023, est_diplome=False, sigle_formation='F4')
+        not_graduated_ucl_enrolment_2024_f4 = Mock(annee=2024, est_diplome=False, sigle_formation='F4')
+        # Admission already submitted => excluded
+        not_graduated_ucl_enrolment_2023_f5 = Mock(annee=2023, est_diplome=False, sigle_formation='F5')
+        # Admission already created but not submitted => included
+        not_graduated_ucl_enrolment_2023_f6 = Mock(annee=2023, est_diplome=False, sigle_formation='F6')
+        # PHD => excluded
+        not_graduated_ucl_enrolment_2023_f7 = Mock(
+            annee=2023,
+            est_diplome=False,
+            sigle_formation='F7',
+            type_formation=TrainingType.PHD.name,
+        )
+        # Admission already created but cancelled => included
+        not_graduated_ucl_enrolment_2023_f8 = Mock(annee=2023, est_diplome=False, sigle_formation='F8')
 
         api.return_value.propositions_ucl_enrolments_list.return_value = [
-            not_graduated_ucl_enrolment_2020,
-            graduated_ucl_enrolment_2020,
-            not_graduated_ucl_enrolment_2021,
+            not_graduated_ucl_enrolment_2023_f1,
+            graduated_ucl_enrolment_2023_f2,
+            not_graduated_ucl_enrolment_2024_f3,
+            not_graduated_ucl_enrolment_2023_f4,
+            not_graduated_ucl_enrolment_2024_f4,
+            not_graduated_ucl_enrolment_2023_f5,
+            not_graduated_ucl_enrolment_2023_f6,
+            not_graduated_ucl_enrolment_2023_f7,
+            not_graduated_ucl_enrolment_2023_f8,
         ]
 
         re_enrolment_period = Mock(
@@ -327,7 +398,14 @@ class ListTestCase(OsisPortalTestCase):
             # > with the right to create a proposition
             response = self.client.get(self.list_url)
 
-            self.assertEqual(response.context['ucl_enrolments_list'], [not_graduated_ucl_enrolment_2020])
+            self.assertEqual(
+                response.context['ucl_enrolments_list'],
+                [
+                    not_graduated_ucl_enrolment_2023_f1,
+                    not_graduated_ucl_enrolment_2023_f6,
+                    not_graduated_ucl_enrolment_2023_f8,
+                ],
+            )
             self.assertEqual(response.context['can_create_re_enrolment_proposition'], True)
             self.assertEqual(response.context['re_enrolment_error_message'], '')
 
@@ -336,7 +414,14 @@ class ListTestCase(OsisPortalTestCase):
 
             response = self.client.get(self.list_url)
 
-            self.assertEqual(response.context['ucl_enrolments_list'], [not_graduated_ucl_enrolment_2020])
+            self.assertEqual(
+                response.context['ucl_enrolments_list'],
+                [
+                    not_graduated_ucl_enrolment_2023_f1,
+                    not_graduated_ucl_enrolment_2023_f6,
+                    not_graduated_ucl_enrolment_2023_f8,
+                ],
+            )
             self.assertEqual(response.context['can_create_re_enrolment_proposition'], False)
             self.assertEqual(response.context['re_enrolment_error_message'], '')
 
@@ -348,7 +433,12 @@ class ListTestCase(OsisPortalTestCase):
 
             self.assertEqual(
                 response.context['ucl_enrolments_list'],
-                [not_graduated_ucl_enrolment_2020, graduated_ucl_enrolment_2020],
+                [
+                    not_graduated_ucl_enrolment_2023_f1,
+                    graduated_ucl_enrolment_2023_f2,
+                    not_graduated_ucl_enrolment_2023_f6,
+                    not_graduated_ucl_enrolment_2023_f8,
+                ],
             )
             self.assertEqual(response.context['can_create_re_enrolment_proposition'], False)
             self.assertEqual(
