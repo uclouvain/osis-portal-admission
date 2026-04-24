@@ -759,6 +759,7 @@ class FormationGeneraleBusinessException(Enum):
     InformationsBama15NonCompleteesException = "FORMATION-GENERALE-42"
     CandidatNonEligibleALaReinscriptionException = "FORMATION-GENERALE-43"
     CandidatDejaDiplomeFormationException = "FORMATION-GENERALE-44"
+    DejaInscritFormationAnnualiseeException = "FORMATION-GENERALE-45"
 
 
 class FormationContinueBusinessException(Enum):
@@ -851,6 +852,7 @@ BUSINESS_EXCEPTIONS_BY_TAB = {
         GlobalPropositionBusinessException.AucunPoolCorrespondantException,
         GlobalPropositionBusinessException.NombrePropositionsSoumisesDepasseException,
         DoctorateBusinessException.MaximumPropositionsDoctoralesAtteintException,
+        FormationGeneraleBusinessException.DejaInscritFormationAnnualiseeException,
     },
     'confirmation-paper': set(),
     'extension-request': set(),
