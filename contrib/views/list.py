@@ -26,8 +26,7 @@
 import datetime
 
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from django.views.generic import TemplateView
 
 from admission.constants import (
@@ -40,6 +39,7 @@ from admission.contrib.enums import (
     CANCELLED_STATUSES,
     IN_PROGRESS_OR_IN_PAYMENT_STATUSES,
     IN_PROGRESS_STATUSES,
+    TrainingType,
 )
 from admission.services.person import AdmissionPersonService
 from admission.services.proposition import AdmissionPropositionService
@@ -80,6 +80,7 @@ class AdmissionListView(TemplateView):
         submitted_propositions = {}
         draft_propositions = []
         draft_or_in_payment_propositions = {}
+        enrolled_or_with_submitted_proposition_trainings: set[tuple[str, int]] = set()
 
         for admission_context, propositions, training_field_name in [
             ('general-education', result.general_education_propositions, 'formation'),
@@ -89,19 +90,19 @@ class AdmissionListView(TemplateView):
             for proposition in propositions:
                 training = getattr(proposition, training_field_name)
                 training_acronym = training.sigle
+                training_year = proposition.annee_calculee or training.annee
                 proposition.admission_context = admission_context
                 if proposition.statut in IN_PROGRESS_OR_IN_PAYMENT_STATUSES:
                     # Group by training acronym
                     draft_or_in_payment_propositions[training_acronym] = proposition
+                elif proposition.statut not in CANCELLED_STATUSES:
+                    enrolled_or_with_submitted_proposition_trainings.add((training_acronym, training_year))
                 if proposition.statut in IN_PROGRESS_STATUSES:
                     # Group by status
                     draft_propositions.append(proposition)
                 else:
                     # Group by year
-                    submitted_propositions.setdefault(
-                        proposition.annee_calculee or training.annee,
-                        [],
-                    ).append(proposition)
+                    submitted_propositions.setdefault(training_year, []).append(proposition)
 
         context['draft_propositions'] = sorted(draft_propositions, key=lambda elt: elt.creee_le, reverse=True)
         context['draft_or_in_payment_propositions'] = draft_or_in_payment_propositions
@@ -123,12 +124,25 @@ class AdmissionListView(TemplateView):
                 person=self.request.user.person,
             )
 
+            for enrolment in all_ucl_enrolments_list:
+                enrolled_or_with_submitted_proposition_trainings.add((enrolment.sigle_formation, enrolment.annee))
+
             if re_enrolment_eligibility.est_eligible_a_la_reinscription:
                 context['can_create_re_enrolment_proposition'] = context['can_create_proposition']
                 context['ucl_enrolments_list'] = [
                     ucl_enrolment
                     for ucl_enrolment in all_ucl_enrolments_list
-                    if ucl_enrolment.annee == re_enrolment_period.annee_formation - 1 and not ucl_enrolment.est_diplome
+                    if ucl_enrolment.annee == re_enrolment_period.annee_formation - 1
+                    and not ucl_enrolment.est_diplome
+                    and ucl_enrolment.type_formation
+                    not in {
+                        TrainingType.PHD.name,
+                        TrainingType.FORMATION_PHD.name,
+                    }
+                    and (
+                        (ucl_enrolment.sigle_formation, re_enrolment_period.annee_formation)
+                        not in enrolled_or_with_submitted_proposition_trainings
+                    )
                 ]
 
             else:
@@ -137,6 +151,15 @@ class AdmissionListView(TemplateView):
                     ucl_enrolment
                     for ucl_enrolment in all_ucl_enrolments_list
                     if ucl_enrolment.annee == re_enrolment_period.annee_formation - 1
+                    and ucl_enrolment.type_formation
+                    not in {
+                        TrainingType.PHD.name,
+                        TrainingType.FORMATION_PHD.name,
+                    }
+                    and (
+                        (ucl_enrolment.sigle_formation, re_enrolment_period.annee_formation)
+                        not in enrolled_or_with_submitted_proposition_trainings
+                    )
                 ]
 
         # Sort submitted propositions by dates
