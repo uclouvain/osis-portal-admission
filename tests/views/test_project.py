@@ -78,17 +78,20 @@ class ProjectViewTestCase(OsisPortalTestCase):
             cls.doctorate_international_scholarship,
         ]
 
+        cls.uuid_1 = uuid.uuid4()
+        cls.uuid_2 = uuid.uuid4()
+
     def setUp(self):
         self.mock_entities = [
             Entite(
-                uuid='uuid1',
+                uuid=self.uuid_1,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of technology',
                 acronym='IT',
             ),
             Entite(
-                uuid='uuid2',
+                uuid=self.uuid_2,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of foreign languages',
@@ -429,7 +432,7 @@ class ProjectViewTestCase(OsisPortalTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "Something")
-        self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
+        self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0].to_dict()))
         self.assertContains(response, _("ECONOMY"))
 
         self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = Mock(

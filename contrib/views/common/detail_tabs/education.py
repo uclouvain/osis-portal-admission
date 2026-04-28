@@ -82,12 +82,12 @@ class AdmissionEducationDetailView(LoadDossierViewMixin, TemplateView):
                     uuid=institute_uuid,
                     person=self.request.user.person,
                 )
-                context_data['belgian_diploma']['institute_name'] = institute['name']
+                context_data['belgian_diploma']['institute_name'] = institute.name
                 context_data['belgian_diploma']['institute_address'] = format_address(
-                    street=institute['street'],
-                    street_number=institute['street_number'],
-                    postal_code=institute['zipcode'],
-                    city=institute['city'],
+                    street=institute.street,
+                    street_number=institute.street_number,
+                    postal_code=institute.zipcode,
+                    city=institute.city,
                 )
             else:
                 context_data['belgian_diploma']['institute_name'] = context_data['belgian_diploma'].pop(
