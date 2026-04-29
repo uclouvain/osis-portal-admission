@@ -34,8 +34,7 @@ from dal import forward
 from django import forms
 from django.forms import BaseFormSet
 from django.utils.dates import MONTHS_ALT
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy as __
+from django.utils.translation import gettext_lazy as _, pgettext_lazy as __
 from osis_document_components.widgets import HiddenFileWidget
 
 from admission.constants import (
@@ -46,10 +45,10 @@ from admission.constants import (
 )
 from admission.contrib.enums import ADMISSION_CONTEXT_BY_ADMISSION_EDUCATION_TYPE
 from admission.contrib.enums.curriculum import *
-from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.forms import (
     EMPTY_CHOICE,
     FORM_SET_PREFIX,
+    AdmissionFileUploadField as FileUploadField,
     CustomDateInput,
     NoInput,
     RadioBooleanField,
@@ -61,7 +60,6 @@ from admission.contrib.forms import (
     get_past_academic_years_choices,
     get_superior_institute_initial_choices,
 )
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
 from admission.services.reference import CountriesService
 from admission.utils import mark_safe_lazy
@@ -86,11 +84,6 @@ DiplomaEquivalenceField = partial(
     required=False,
 )
 
-TRAINING_TYPES_WITH_EQUIVALENCE = {
-    TrainingType.AGGREGATION.name,
-    TrainingType.CAPAES.name,
-}
-
 REQUIRED_FIELD_CLASS = 'required_field'
 
 
@@ -104,24 +97,14 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
     configurable_form_field_name = 'reponses_questions_specifiques'
 
     curriculum = CurriculumField()
-    equivalence_diplome = DiplomaEquivalenceField()
 
     def __init__(
         self,
-        display_equivalence: bool,
         display_curriculum: bool,
-        has_belgian_diploma: bool,
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
-
-        if not display_equivalence:
-            self.fields['equivalence_diplome'].disabled = True
-            self.fields['equivalence_diplome'].widget = NoInput()
-
-        elif not has_belgian_diploma:
-            self.fields['equivalence_diplome'].widget.attrs['class'] = REQUIRED_FIELD_CLASS
 
         if not display_curriculum:
             self.fields['curriculum'].disabled = True
@@ -130,7 +113,7 @@ class GeneralAdmissionCurriculumFileForm(ConfigurableFormMixin):
     def clean(self):
         cleaned_data = super().clean()
 
-        for field in ['curriculum', 'equivalence_diplome']:
+        for field in ['curriculum']:
             if self.fields[field].disabled:
                 cleaned_data[field] = []
 

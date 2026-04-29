@@ -353,6 +353,9 @@ msgstr ""
 msgid "Application denied"
 msgstr ""
 
+msgid "Application numero:"
+msgstr ""
+
 msgid "Applications"
 msgstr ""
 
@@ -891,10 +894,10 @@ msgstr ""
 msgid "Create a new application"
 msgstr ""
 
-#, python-format
+#, python-brace-format
 msgid ""
-"Create an application for %(training_name)s (%(training_campus)s) "
-"%(training_acronym)s and cancel your other applications"
+"Create an application for <em>{training_name} ({training_campus}) "
+"{training_acronym}</em> and cancel your other applications"
 msgstr ""
 
 msgid "Create an application for another training"
@@ -1801,6 +1804,10 @@ msgstr ""
 msgid "Motivations"
 msgstr ""
 
+msgctxt "admission"
+msgid "My applications"
+msgstr ""
+
 msgid "My drafts"
 msgstr ""
 
@@ -1830,9 +1837,6 @@ msgid "My mother"
 msgstr ""
 
 msgid "My partner"
-msgstr ""
-
-msgid "My submitted applications"
 msgstr ""
 
 msgid "NO"
@@ -2418,6 +2422,11 @@ msgstr ""
 
 msgctxt "admission"
 msgid "Single"
+msgstr ""
+
+msgid ""
+"Some information related to your curriculum can no longer be updated. To "
+"make changes, please contact the Enrolment Office."
 msgstr ""
 
 msgid "Speaking ability"
@@ -3037,6 +3046,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"You can continue with your application as you do not need to provide any "
+"information regarding an entrance exam."
+msgstr ""
+
+msgid ""
 "You can find more information on the French Community webpage <a "
 "href=\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/"
 "</a>"
@@ -3132,11 +3146,6 @@ msgstr ""
 msgid ""
 "Your completed and signed reorientation form (<a href=\"{url}\" "
 "target=\"_blank\">{url}</a>)"
-msgstr ""
-
-msgid ""
-"Your course is not subject to an entrance exam, you can continue your "
-"application."
 msgstr ""
 
 msgid "Your data have been saved"

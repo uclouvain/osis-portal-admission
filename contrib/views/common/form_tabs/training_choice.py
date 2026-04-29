@@ -30,6 +30,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, resolve_url
 from django.utils.formats import date_format
 from django.utils.functional import cached_property
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
@@ -51,7 +52,11 @@ from admission.services.mixins import (
     WebServiceFormMixin,
 )
 from admission.services.person import AdmissionPersonService
-from admission.services.proposition import AdmissionPropositionService
+from admission.services.proposition import (
+    AdmissionPropositionService,
+    FormationGeneraleBusinessException,
+    GlobalPropositionBusinessException,
+)
 from admission.templatetags.admission import can_make_action
 from admission.utils import get_training_id, split_training_id
 
@@ -89,6 +94,23 @@ class AdmissionTrainingChoiceFormView(
             'can only be submitted from %(start_date)s.'
         ),
     }
+
+    def handle_form_exception(self, form, exception):
+        if exception.status_code in [
+            GlobalPropositionBusinessException.DemandeEnBrouillonDejaExistantePourCetteFormationException.value,
+            FormationGeneraleBusinessException.CandidatDejaDiplomeFormationException.value,
+        ]:
+            training_field = next(
+                (
+                    field
+                    for field in ['general_education_training', 'mixed_training', 'doctorate_training']
+                    if form.cleaned_data.get(field)
+                ),
+                None,
+            )
+            form.add_error(training_field, mark_safe(exception.detail))
+        else:
+            super().handle_form_exception(form, exception)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
