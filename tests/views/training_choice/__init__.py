@@ -47,7 +47,7 @@ from admission.contrib.enums import (
     ChoixCommissionProximiteCDSS,
     ChoixStatutPropositionContinue,
     ChoixStatutPropositionDoctorale,
-    ChoixStatutPropositionGenerale,
+    ChoixStatutPropositionGenerale, EligibiliteReinscription,
 )
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.specific_question import TypeItemFormulaire
@@ -813,7 +813,10 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             annee_formation=2024,
         )
         self.mock_proposition_api.return_value.propositions_candidate_re_enrolment_eligibity_retrieve.return_value = (
-            Mock(est_eligible_a_la_reinscription=False)
+            MagicMock(
+                decision=EligibiliteReinscription.NON_ELIGIBLE_EN_ATTENTE_RESULTATS.name,
+                raison_non_eligibilite='My error',
+            )
         )
 
         self.mock_candidate_ucl_enrolment_information = (

@@ -39,6 +39,7 @@ from admission.contrib.enums import (
     CANCELLED_STATUSES,
     IN_PROGRESS_OR_IN_PAYMENT_STATUSES,
     IN_PROGRESS_STATUSES,
+    EligibiliteReinscription,
     TrainingType,
 )
 from admission.services.person import AdmissionPersonService
@@ -127,7 +128,7 @@ class AdmissionListView(TemplateView):
             for enrolment in all_ucl_enrolments_list:
                 enrolled_or_with_submitted_proposition_trainings.add((enrolment.sigle_formation, enrolment.annee))
 
-            if re_enrolment_eligibility.est_eligible_a_la_reinscription:
+            if re_enrolment_eligibility.decision == EligibiliteReinscription.EST_ELIGIBLE.name:
                 context['can_create_re_enrolment_proposition'] = context['can_create_proposition']
                 context['ucl_enrolments_list'] = [
                     ucl_enrolment
@@ -146,7 +147,9 @@ class AdmissionListView(TemplateView):
                 ]
 
             else:
-                context['re_enrolment_error_message'] = _('You have not been deliberated yet.')
+                context['re_enrolment_error_message'] = re_enrolment_eligibility.raison_non_eligibilite or _(
+                    'You have not been deliberated yet.'
+                )
                 context['ucl_enrolments_list'] = [
                     ucl_enrolment
                     for ucl_enrolment in all_ucl_enrolments_list
