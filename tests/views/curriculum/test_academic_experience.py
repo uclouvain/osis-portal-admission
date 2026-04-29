@@ -294,8 +294,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'base_form-other_institute': True,
             'base_form-institute_name': 'UCL',
             'base_form-institute_address': 'Louvain-La-Neuve',
-            'base_form-institute': cls.institute.uuid,
-            'base_form-program': cls.first_diploma.uuid,
+            'base_form-institute': str(cls.institute.uuid),
+            'base_form-program': str(cls.first_diploma.uuid),
             'base_form-other_program': True,
             'base_form-education_name': 'Other computer science',
             'base_form-evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
@@ -378,10 +378,10 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': self.be_country.iso_code,
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
-                'institute': self.institute.uuid,
+                'institute': str(self.institute.uuid),
                 'institute_name': 'UCL',
                 'institute_address': "Place de l'Université",
-                'program': self.first_diploma.uuid,
+                'program': str(self.first_diploma.uuid),
                 'education_name': 'Other computer science',
                 'study_system': TeachingTypeEnum.FULL_TIME.name,
                 'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
@@ -396,7 +396,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': 'Title',
                 'dissertation_score': '15/20',
                 'dissertation_summary': [self.document_uuid],
-                'uuid': self.educational_experience.uuid,
+                'uuid': str(self.educational_experience.uuid),
                 'start': 2018,
                 'end': 2020,
                 'other_program': True,
@@ -1241,8 +1241,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'base_form-other_institute': False,
                 'base_form-institute_name': 'UCL',
                 'base_form-institute_address': 'Louvain-La-Neuve',
-                'base_form-institute': self.institute.uuid,
-                'base_form-program': self.second_diploma.uuid,
+                'base_form-institute': str(self.institute.uuid),
+                'base_form-program': str(self.second_diploma.uuid),
                 'base_form-other_program': False,
                 'base_form-education_name': 'New computer science',
                 'base_form-evaluation_type': EvaluationSystem.NON_EUROPEAN_CREDITS.name,
@@ -1299,7 +1299,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': 'FR',
                 'institute_name': '',
                 'institute_address': '',
-                'institute': self.institute.uuid,
+                'institute': str(self.institute.uuid),
                 'program': None,
                 'education_name': 'New computer science',
                 'obtained_diploma': True,
@@ -1354,7 +1354,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
     def test_with_admission_on_create_experience_form_with_continuing(self):
         self.mockapi.create_educational_experience_continuing_education_admission.return_value = {
-            'uuid': self.educational_experience.uuid,
+            'uuid': str(self.educational_experience.uuid),
         }
 
         url = resolve_url(
@@ -1455,8 +1455,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': 'BE',
                 'institute_name': '',
                 'institute_address': '',
-                'institute': self.institute.uuid,
-                'program': self.second_diploma.uuid,
+                'institute': str(self.institute.uuid),
+                'program': str(self.second_diploma.uuid),
                 'education_name': '',
                 'obtained_diploma': True,
                 'graduate_degree': ['f1.pdf'],
@@ -1526,7 +1526,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check that the API calls are done
         self.mockapi.update_educational_experience_admission.assert_called_once_with(
-            uuid=self.proposition.uuid,
+            uuid=str(self.proposition.uuid),
             experience_id=self.educational_experience.uuid,
             educational_experience={
                 'start': '2018',
@@ -1534,8 +1534,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': 'BE',
                 'institute_name': '',
                 'institute_address': '',
-                'institute': self.institute.uuid,
-                'program': self.first_diploma.uuid,
+                'institute': str(self.institute.uuid),
+                'program': str(self.first_diploma.uuid),
                 'education_name': '',
                 'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
                 'linguistic_regime': None,

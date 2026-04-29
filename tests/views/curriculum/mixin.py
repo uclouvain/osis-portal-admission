@@ -113,12 +113,12 @@ class MixinTestCase(OsisPortalTestCase):
         cls.language_with_translation = Language(code='IS', name='Islandais', name_en='Icelandic')
 
         # Diplomas
-        cls.first_diploma = Diploma(uuid=str(uuid.uuid4()), title="Computer science")
-        cls.second_diploma = Diploma(uuid=str(uuid.uuid4()), title="Biology")
+        cls.first_diploma = Diploma(uuid=uuid.uuid4(), title="Computer science")
+        cls.second_diploma = Diploma(uuid=uuid.uuid4(), title="Biology")
 
         # Institute
         cls.institute = SuperiorNonUniversity(
-            uuid=str(uuid.uuid4()),
+            uuid=uuid.uuid4(),
             name="Institute of Technology",
             city="Louvain-la-Neuve",
             zipcode="1348",
@@ -126,7 +126,7 @@ class MixinTestCase(OsisPortalTestCase):
             street_number="1",
         )
         cls.university = University(
-            uuid=str(uuid.uuid4()),
+            uuid=uuid.uuid4(),
             name="University of Technology",
             city="Louvain-la-Neuve",
             zipcode="1348",
@@ -164,10 +164,10 @@ class MixinTestCase(OsisPortalTestCase):
         cls.educational_experience = EducationalExperience._from_openapi_data(
             external_id='',
             country=cls.be_country.iso_code,
-            institute=cls.institute.uuid,
+            institute=str(cls.institute.uuid),
             institute_name='UCL',
             institute_address='Place de l\'Université',
-            program=cls.first_diploma.uuid,
+            program=str(cls.first_diploma.uuid),
             education_name='Other computer science',
             study_system=StudySystemEnum(value='FULL_TIME'),
             evaluation_type='ECTS_CREDITS',
@@ -207,7 +207,7 @@ class MixinTestCase(OsisPortalTestCase):
         )
 
         cls.lite_educational_experience = EducationalExperience._from_openapi_data(
-            uuid=cls.educational_experience.uuid,
+            uuid=str(cls.educational_experience.uuid),
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
@@ -230,7 +230,7 @@ class MixinTestCase(OsisPortalTestCase):
             obtained_diploma=True,
         )
         cls.foreign_lite_educational_experience = EducationalExperience._from_openapi_data(
-            uuid=cls.educational_experience.uuid,
+            uuid=str(cls.educational_experience.uuid),
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
@@ -262,7 +262,7 @@ class MixinTestCase(OsisPortalTestCase):
         )
 
         cls.lite_professional_experience = ProfessionalExperience._from_openapi_data(
-            uuid=cls.professional_experience.uuid,
+            uuid=str(cls.professional_experience.uuid),
             institute_name=cls.professional_experience.institute_name,
             type=cls.professional_experience.type,
             start_date=cls.professional_experience.start_date,
@@ -530,7 +530,7 @@ class MixinTestCase(OsisPortalTestCase):
         def get_diploma(**kwargs):
             diploma_uuid = kwargs.get('uuid')
             return next(
-                (diploma for diploma in [self.first_diploma, self.second_diploma] if diploma.uuid == diploma_uuid),
+                (diploma for diploma in [self.first_diploma, self.second_diploma] if str(diploma.uuid) == diploma_uuid),
                 None,
             )
 
@@ -550,7 +550,7 @@ class MixinTestCase(OsisPortalTestCase):
         def get_institute(**kwargs):
             institute_uuid = kwargs.get('uuid')
             try:
-                return next(institute for institute in [self.institute] if institute.uuid == institute_uuid)
+                return next(institute for institute in [self.institute] if str(institute.uuid) == institute_uuid)
             except StopIteration:
                 raise Http404
 

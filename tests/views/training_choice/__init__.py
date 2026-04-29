@@ -284,25 +284,25 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         cls.louvain_campus_uuid = str(uuid.uuid4())
         cls.mons_campus_uuid = str(uuid.uuid4())
         cls.first_question_uuid = str(uuid.uuid4())
-        cls.first_erasmus_mundus_scholarship = Scholarship._from_openapi_data(
+        cls.first_erasmus_mundus_scholarship = Scholarship(
             uuid=str(uuid.uuid4()),
             short_name="EM-1",
             long_name="Erasmus Mundus 1",
             type=TypeBourse.ERASMUS_MUNDUS.name,
         )
-        cls.second_erasmus_mundus_scholarship = Scholarship._from_openapi_data(
+        cls.second_erasmus_mundus_scholarship = Scholarship(
             uuid=str(uuid.uuid4()),
             short_name="EM-2",
             long_name="",
             type=TypeBourse.ERASMUS_MUNDUS.name,
         )
-        cls.double_degree_scholarship = Scholarship._from_openapi_data(
+        cls.double_degree_scholarship = Scholarship(
             uuid=str(uuid.uuid4()),
             short_name="DD-1",
             long_name="",
             type=TypeBourse.DOUBLE_TRIPLE_DIPLOMATION.name,
         )
-        cls.international_scholarship = Scholarship._from_openapi_data(
+        cls.international_scholarship = Scholarship(
             uuid=str(uuid.uuid4()),
             short_name="IN-2",
             long_name="",

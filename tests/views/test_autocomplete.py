@@ -73,6 +73,8 @@ DEFAULT_API_PARAMS = {
 class AutocompleteTestCase(OsisPortalTestCase):
     def setUp(self):
         self.client.force_login(PersonFactory().user)
+        self.uuid_1 = uuid.uuid4()
+        self.uuid_2 = uuid.uuid4()
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
@@ -378,14 +380,14 @@ class AutocompleteTestCase(OsisPortalTestCase):
     def test_autocomplete_institute_list(self, api):
         mock_entities = [
             Entite(
-                uuid='uuid1',
+                uuid=self.uuid_1,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of technology',
                 acronym='IT',
             ),
             Entite(
-                uuid='uuid2',
+                uuid=self.uuid_2,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of foreign languages',
@@ -399,11 +401,11 @@ class AutocompleteTestCase(OsisPortalTestCase):
         response = self.client.get(url, {'q': 'Institute'})
         expected = [
             {
-                'id': 'uuid1',
+                'id': str(self.uuid_1),
                 'text': 'Institute of technology (IT)',
             },
             {
-                'id': 'uuid2',
+                'id': str(self.uuid_2),
                 'text': 'Institute of foreign languages (IFL)',
             },
         ]
@@ -456,8 +458,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_reference_sdk.api.high_schools_api.HighSchoolsApi')
     def test_autocomplete_high_school_list(self, api):
-        self.first_high_school_uuid = str(uuid.uuid4())
-        self.second_high_school_uuid = str(uuid.uuid4())
+        self.first_high_school_uuid = uuid.uuid4()
+        self.second_high_school_uuid = uuid.uuid4()
         self.maxDiff = None
 
         mock_schools = [
@@ -494,12 +496,12 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
         expected = [
             {
-                'id': self.first_high_school_uuid,
+                'id': str(self.first_high_school_uuid),
                 'text': 'HighSchool 1 <span class="school-address">Place de l\'Université 1, '
                 '1348 Louvain-La-Neuve</span>',
             },
             {
-                'id': self.second_high_school_uuid,
+                'id': str(self.second_high_school_uuid),
                 'text': 'HighSchool 2 <span class="school-address">Boulevard du Triomphe 1, 1000 Bruxelles</span>',
             },
         ]
@@ -557,13 +559,13 @@ class AutocompleteTestCase(OsisPortalTestCase):
         second_scholarship_uuid = str(uuid.uuid4())
 
         mock_scholarships = [
-            Scholarship._from_openapi_data(
+            Scholarship(
                 uuid=first_scholarship_uuid,
                 short_name="EM-1",
                 long_name="Erasmus Mundus 1",
                 type=TypeBourse.ERASMUS_MUNDUS.name,
             ),
-            Scholarship._from_openapi_data(
+            Scholarship(
                 uuid=second_scholarship_uuid,
                 short_name="EM-2",
                 long_name="",

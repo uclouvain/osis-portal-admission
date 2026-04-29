@@ -28,21 +28,13 @@ import uuid
 from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
 from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
 from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_organisation_sdk.model.address import Address
-from osis_organisation_sdk.model.entite import Entite
-from osis_reference_sdk.model.scholarship import Scholarship
-from django.test import TestCase
 from osis_organisation_sdk.models.address import Address
 from osis_organisation_sdk.models.entite import Entite
+from osis_reference_sdk.models.scholarship import Scholarship
 
 from admission.contrib.enums.scholarship import TypeBourse
 from admission.contrib.enums.training_choice import TrainingType
 from admission.utils import *
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
-from osis_reference_sdk.models.scholarship import Scholarship
-
 from base.tests.test_case import OsisPortalTestCase
 
 
@@ -56,7 +48,7 @@ class UtilsTestCase(OsisPortalTestCase):
             state="Belgique",
         )
         self.entity = Entite(
-            uuid='uuid',
+            uuid=uuid.uuid4(),
             organization_name='Université Catholique de Louvain',
             organization_acronym='UCL',
             title='Institute of technology',
@@ -67,14 +59,14 @@ class UtilsTestCase(OsisPortalTestCase):
         """Return the concatenation of the entity name and acronym."""
         self.assertEqual(
             format_entity_title(entity=self.entity),
-            '{title} ({acronym})'.format_map(self.entity),
+            '{title} ({acronym})'.format_map(self.entity.to_dict()),
         )
 
     def test_format_address_with_street_and_city_and_state_parts(self):
         """Return the concatenation of the street number, street, postal code, city and state if they are defined"""
         self.assertEqual(
             format_entity_address(address=self.address),
-            '{street} {street_number}, {postal_code} {city}, {state}'.format_map(self.address),
+            '{street} {street_number}, {postal_code} {city}, {state}'.format_map(self.address.to_dict()),
         )
 
     def test_format_address_with_city_and_state_parts(self):
@@ -88,7 +80,7 @@ class UtilsTestCase(OsisPortalTestCase):
         )
         self.assertEqual(
             format_entity_address(address=address),
-            '{postal_code} {city}, {state}'.format_map(address),
+            '{postal_code} {city}, {state}'.format_map(address.to_dict()),
         )
 
     def test_format_address_with_state_part(self):
@@ -102,7 +94,7 @@ class UtilsTestCase(OsisPortalTestCase):
         )
         self.assertEqual(
             format_entity_address(address=address),
-            '{state}'.format_map(address),
+            '{state}'.format_map(address.to_dict()),
         )
 
     def test_force_title_empty_string(self):
@@ -138,6 +130,7 @@ class UtilsTestCase(OsisPortalTestCase):
             sigle_entite_gestion='CMC',
             campus_inscription='Mons',
             code='INFO-1',
+            active='ACTIVE',
         )
         self.assertEqual(
             format_training(formation),
@@ -157,6 +150,7 @@ class UtilsTestCase(OsisPortalTestCase):
             sigle_entite_gestion='CMG',
             campus_inscription='Mons',
             code='INFO-1',
+            active='ACTIVE',
         )
         self.assertEqual(
             format_training(formation),
