@@ -551,7 +551,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         self.assertContains(response, "Special school (Louvain-La-Neuve)")
 
         # With existing institute
-        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma']['institute'] = str(self.first_high_school_uuid)
+        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma']['institute'] = str(
+            self.first_high_school_uuid
+        )
 
         response = self.client.get(self.detail_url)
 
