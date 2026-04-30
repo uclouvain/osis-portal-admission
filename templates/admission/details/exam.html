@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain
+  * Copyright (C) 2015-2026 Université catholique de Louvain
   (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@
 
       {% else %}
         <div class="alert alert-info">
-          {% translate "Your course is not subject to an entrance exam, you can continue your application." %}
+          {% translate "You can continue with your application as you do not need to provide any information regarding an entrance exam." %}
         </div>
         <a class="btn btn-primary pull-right" href="{% url base_namespace|add:':update:accounting' view.kwargs.pk %}">
           <i class="fa-solid fa-forward-step"></i>

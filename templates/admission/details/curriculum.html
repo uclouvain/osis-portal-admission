@@ -63,6 +63,10 @@
           Provide the details of your most recent academic course and your most recent non-academic experience.
         {% endblocktranslate %}
       </p>
+    {% elif ucl_enrolment_information.est_inscrit_recemment %}
+      <p class="alert alert-warning" role="alert">
+        {% translate 'Some information related to your curriculum can no longer be updated. To make changes, please contact the Enrolment Office.' %}
+      </p>
     {% elif need_to_complete %}
       <p class="alert alert-info" role="alert">
         {% translate 'Please enter all academic courses you have attended.' %}

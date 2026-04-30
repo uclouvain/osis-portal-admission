@@ -135,4 +135,18 @@
 
   {% multiple_field_data specific_questions admission.reponses_questions_specifiques %}
 
+  {% if not admission|can_update_tab:"education" %}
+    <a
+      class="btn btn-primary pull-right"
+      {% if view.kwargs.pk %}
+      href="{% url base_namespace|add:':curriculum' view.kwargs.pk %}"
+      {% else %}
+      href="{% url base_namespace|add:':curriculum' %}"
+      {% endif %}
+    >
+      <i class="fa-solid fa-forward-step"></i>
+      {% translate "Continue" %}
+    </a>
+  {% endif %}
+
 {% endblock %}

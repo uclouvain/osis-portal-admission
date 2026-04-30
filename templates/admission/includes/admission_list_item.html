@@ -30,27 +30,29 @@
     {% if admission.doctorat %}
       {% display admission.doctorat.intitule " (" admission.doctorat.campus ")" as doctorate_title %}
       {% admission_status admission.statut admission.doctorat.type as admission_status %}
-      {{ doctorate_title }} ({{ admission.reference }}) <span class="small-text">{{ admission.doctorat.sigle }}</span>
+      {{ doctorate_title }} <span class="small-text">{{ admission.doctorat.sigle }}</span>
     {% elif admission.formation %}
       {% admission_status admission.statut admission.formation.type as admission_status %}
       {% display admission.formation.intitule " (" admission.formation.campus ")" as title %}
-      {{ title }} ({{ admission.reference }}) <span class="small-text">{{ admission.formation.sigle }}</span>
+      {{ title }} <span class="small-text">{{ admission.formation.sigle }}</span>
     {% endif %}
   </h3>
-  <div>
-    <em>
+  <div class="row">
+    <div class="col-md-4">
+      <em>{% translate "Application numero:" %} <b class="text-nowrap">{{ admission.reference }}</b></em>
+    </div>
+    <div class="col-md-4 text-md-center">
+      <em>{% trans "Status:" %} {{ admission_status }}</em>
+    </div>
+    <div class="col-md-4 text-md-end">
+      <em>
       {% if admission.soumise_le %}
         {% trans "Submitted on:" context "an admission" %} {{ admission.soumise_le }}
       {% else %}
         {% trans "Created on:" context "an admission" %} {{ admission.creee_le }}
       {% endif %}
-    </em>
-  </div>
-  <div>
-    <em>
-      {% trans "Status:" %}
-      {{ admission_status }}
-    </em>
+      </em>
+    </div>
   </div>
 
   {% footer %}

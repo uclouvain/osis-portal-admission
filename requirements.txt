@@ -1,1 +1,1 @@
-git+https://github.com/Osis-Uclouvain/osis-admission-sdk.git@build-1.1.19
+git+https://github.com/Osis-Uclouvain/osis-admission-sdk.git@wip-build-1.1.19dev1848
