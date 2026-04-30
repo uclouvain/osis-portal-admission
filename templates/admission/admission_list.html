@@ -182,7 +182,7 @@
 
   {% if submitted_propositions %}
     <div>
-      <h2>{% translate 'My submitted applications' %}</h2>
+      <h2>{% translate 'My applications' context 'admission' %}</h2>
       <div>
         <ul class="nav nav-tabs" role="tablist">
           {% for year in submitted_propositions %}
@@ -262,6 +262,13 @@
       a.btn.btn-primary.disabled {
           color: white;
       }
+
+      @media (min-width: 992px) {
+          .text-md-start { text-align: left; }
+          .text-md-end { text-align: right; }
+          .text-md-center { text-align: center; }
+      }
+
   </style>
 {% endblock %}
 

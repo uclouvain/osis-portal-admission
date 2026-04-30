@@ -32,7 +32,6 @@ from admission.constants import BE_ISO_CODE
 from admission.contrib.enums.curriculum import *
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
-from admission.contrib.forms.curriculum import TRAINING_TYPES_WITH_EQUIVALENCE
 from admission.contrib.views.common.detail_tabs.curriculum_experiences import (
     initialize_field_texts,
     professional_experience_can_be_updated,
@@ -80,8 +79,6 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
         context_data['educational_experiences'] = curriculum.educational_experiences
         context_data['minimal_date'] = curriculum.minimal_date
         context_data['need_to_complete'] = curriculum.minimal_date <= curriculum.maximal_date
-        if self.is_general:
-            context_data['need_to_complete'] &= not self.ucl_enrolment_information.est_inscrit_recemment
         context_data['access_conditions_not_met'] = any(
             error.get('status_code') == GlobalPropositionBusinessException.ConditionsAccessNonRempliesException.value
             for error in self.admission.erreurs
@@ -145,13 +142,7 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
 
     @cached_property
     def display_equivalence(self):
-        if self.current_context == 'general-education':
-            return (
-                not self.admission.est_en_poursuite
-                and self.admission.formation['type'] in TRAINING_TYPES_WITH_EQUIVALENCE
-                and self.has_foreign_diploma
-            )
-        elif self.current_context == 'continuing-education':
+        if self.current_context == 'continuing-education':
             return (
                 self.admission.formation['type'] == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
                 and self.has_foreign_diploma

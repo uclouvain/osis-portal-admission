@@ -439,6 +439,9 @@ msgstr "Demande confirmée"
 msgid "Application denied"
 msgstr "Inscription refusée"
 
+msgid "Application numero:"
+msgstr "Numéro de demande :"
+
 msgid "Applications"
 msgstr "Demandes d'inscription"
 
@@ -1067,13 +1070,14 @@ msgstr "Cours"
 msgid "Create a new application"
 msgstr "Introduire une nouvelle demande"
 
-#, python-format
+#, python-brace-format
 msgid ""
-"Create an application for %(training_name)s (%(training_campus)s) "
-"%(training_acronym)s and cancel your other applications"
+"Create an application for <em>{training_name} ({training_campus}) "
+"{training_acronym}</em> and cancel your other applications"
 msgstr ""
-"Introduire une demande d'inscription en %(training_name)s "
-"(%(training_campus)s) %(training_acronym)s et annuler vos autres demandes"
+"Introduire une demande d'inscription en <em>{training_name} "
+"({training_campus}) {training_acronym}</em> et annuler vos autres "
+"demandes"
 
 msgid "Create an application for another training"
 msgstr "Créer une demande pour une autre formation"
@@ -2097,6 +2101,10 @@ msgstr "Motivation de la cotutelle"
 msgid "Motivations"
 msgstr "Motivations"
 
+msgctxt "admission"
+msgid "My applications"
+msgstr "Mes demandes"
+
 msgid "My drafts"
 msgstr "Mes brouillons"
 
@@ -2130,9 +2138,6 @@ msgstr "Ma mère"
 
 msgid "My partner"
 msgstr "Mon conjoint"
-
-msgid "My submitted applications"
-msgstr "Mes demandes envoyées"
 
 msgid "NO"
 msgstr "Non"
@@ -2780,6 +2785,14 @@ msgstr "Demandes de signature envoyées"
 msgctxt "admission"
 msgid "Single"
 msgstr "Célibataire"
+
+msgid ""
+"Some information related to your curriculum can no longer be updated. To "
+"make changes, please contact the Enrolment Office."
+msgstr ""
+"Certaines informations relatives à votre curriculum ne sont plus "
+"modifiables. Si vous souhaitez y apporter des modifications, merci de "
+"contacter le Service des Inscriptions."
 
 msgid "Speaking ability"
 msgstr "Parler"
@@ -3496,6 +3509,13 @@ msgstr ""
 "pour votre dossier (justificatifs, preuve de niveau de langue, ...)."
 
 msgid ""
+"You can continue with your application as you do not need to provide any "
+"information regarding an entrance exam."
+msgstr ""
+"Vous pouvez poursuivre votre demande car vous ne devez fournir aucune "
+"information concernant un examen d'entrée."
+
+msgid ""
 "You can find more information on the French Community webpage <a "
 "href=\"https://equisup.cfwb.be/\" target=\"_blank\">https://equisup.cfwb.be/"
 "</a>"
@@ -3623,13 +3643,6 @@ msgid ""
 msgstr ""
 "Votre formulaire de réorientation complété et signé (<a href=\"{url}\" "
 "target=\"_blank\">{url}</a>)"
-
-msgid ""
-"Your course is not subject to an entrance exam, you can continue your "
-"application."
-msgstr ""
-"Votre formation n’est pas concernée par un examen d’entrée, vous pouvez "
-"poursuivre votre demande."
 
 msgid "Your data have been saved"
 msgstr "Vos données ont été enregistrées"
