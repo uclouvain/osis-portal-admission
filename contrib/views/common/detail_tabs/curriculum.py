@@ -136,7 +136,7 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
     def display_curriculum(self):
         if self.current_context == 'general-education':
             return (
-                self.admission.formation['type'] != TrainingType.BACHELOR.name
+                self.admission.formation.type != TrainingType.BACHELOR.name
                 and not self.ucl_enrolment_information.est_inscrit_recemment
             )
         elif self.current_context == 'continuing-education':
@@ -148,12 +148,12 @@ class AdmissionCurriculumDetailView(LoadDossierViewMixin, TemplateView):
         if self.current_context == 'general-education':
             return (
                 not self.admission.est_en_poursuite
-                and self.admission.formation['type'] in TRAINING_TYPES_WITH_EQUIVALENCE
+                and self.admission.formation.type in TRAINING_TYPES_WITH_EQUIVALENCE
                 and self.has_foreign_diploma
             )
         elif self.current_context == 'continuing-education':
             return (
-                self.admission.formation['type'] == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
+                self.admission.formation.type == TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
                 and self.has_foreign_diploma
             )
         return False

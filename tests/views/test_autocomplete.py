@@ -29,10 +29,10 @@ import uuid
 from unittest.mock import ANY, Mock, patch
 
 from django.urls import reverse
-from osis_admission_sdk.model.diplomatic_post import DiplomaticPost
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
+from osis_admission_sdk.models.diplomatic_post import DiplomaticPost
+from osis_admission_sdk.models.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.models.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.models.formation_generale_dto import FormationGeneraleDTO
 from osis_organisation_sdk.models.address import Address
 from osis_organisation_sdk.models.entite import Entite
 from osis_organisation_sdk.models.paginated_entites import PaginatedEntites
@@ -378,6 +378,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_organisation_sdk.api.entites_api.EntitesApi')
     def test_autocomplete_institute_list(self, api):
+        uuid1 = uuid.uuid4()
+        uuid2 = uuid.uuid4()
         mock_entities = [
             Entite(
                 uuid=self.uuid_1,
@@ -529,8 +531,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_reference_sdk.api.diplomas_api.DiplomasApi')
     def test_autocomplete_diploma_list(self, api):
-        self.first_diploma_uuid = str(uuid.uuid4())
-        self.second_diploma_uuid = str(uuid.uuid4())
+        self.first_diploma_uuid = uuid.uuid4()
+        self.second_diploma_uuid = uuid.uuid4()
 
         mock_diplomas = [
             Diploma(uuid=self.first_diploma_uuid, title="Computer science"),
@@ -778,8 +780,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
     def test_autocomplete_non_universities_list(self, api):
-        self.first_superior_school_uuid = str(uuid.uuid4())
-        self.second_superior_school_uuid = str(uuid.uuid4())
+        self.first_superior_school_uuid = uuid.uuid4()
+        self.second_superior_school_uuid = uuid.uuid4()
 
         mock_schools = [
             SuperiorNonUniversity(
@@ -851,8 +853,8 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
     @patch('osis_reference_sdk.api.universities_api.UniversitiesApi')
     def test_autocomplete_universities_list(self, api):
-        self.first_superior_school_uuid = str(uuid.uuid4())
-        self.second_superior_school_uuid = str(uuid.uuid4())
+        self.first_superior_school_uuid = uuid.uuid4()
+        self.second_superior_school_uuid = uuid.uuid4()
 
         mock_schools = [
             University(
@@ -925,10 +927,10 @@ class AutocompleteTestCase(OsisPortalTestCase):
     @patch('osis_reference_sdk.api.superior_non_universities_api.SuperiorNonUniversitiesApi')
     @patch('osis_reference_sdk.api.universities_api.UniversitiesApi')
     def test_autocomplete_superior_list(self, api_university, api_non_university):
-        self.first_superior_school_uuid = str(uuid.uuid4())
-        self.second_superior_school_uuid = str(uuid.uuid4())
-        self.third_superior_school_uuid = str(uuid.uuid4())
-        self.fourth_superior_school_uuid = str(uuid.uuid4())
+        self.first_superior_school_uuid = uuid.uuid4()
+        self.second_superior_school_uuid = uuid.uuid4()
+        self.third_superior_school_uuid = uuid.uuid4()
+        self.fourth_superior_school_uuid = uuid.uuid4()
 
         mock_universities = [
             University(
@@ -1028,21 +1030,21 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
         api.return_value.list_diplomatic_posts.return_value = {
             'results': [
-                DiplomaticPost._new_from_openapi_data(
+                DiplomaticPost(
                     code=self.first_diplomatic_post_code,
                     name_fr='Marseille',
                     name_en='Marseille',
                     email='marseille@example.be',
                     countries_iso_codes=['FR'],
                 ),
-                DiplomaticPost._new_from_openapi_data(
+                DiplomaticPost(
                     code=self.second_diplomatic_post_code,
                     name_fr='Paris',
                     name_en='Paris',
                     email='paris@example.be',
                     countries_iso_codes=['FR', 'GF'],
                 ),
-                DiplomaticPost._new_from_openapi_data(
+                DiplomaticPost(
                     code=self.third_diplomatic_post_code,
                     name_fr='Londres',
                     name_en='London',

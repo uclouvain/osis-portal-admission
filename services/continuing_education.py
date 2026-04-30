@@ -26,7 +26,7 @@
 
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import continuing_education_api
-from osis_admission_sdk.model.informations_specifiques_formation_continue_dto import (
+from osis_admission_sdk.models.informations_specifiques_formation_continue_dto import (
     InformationsSpecifiquesFormationContinueDTO,
 )
 

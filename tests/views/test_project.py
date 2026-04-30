@@ -82,6 +82,9 @@ class ProjectViewTestCase(OsisPortalTestCase):
         cls.uuid_2 = uuid.uuid4()
 
     def setUp(self):
+        uuid1 = uuid.uuid4()
+        uuid2 = uuid.uuid4()
+
         self.mock_entities = [
             Entite(
                 uuid=self.uuid_1,

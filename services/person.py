@@ -25,8 +25,8 @@
 # ##############################################################################
 from osis_admission_sdk import ApiClient, ApiException
 from osis_admission_sdk.api import person_api
-from osis_admission_sdk.model.identification_dto import IdentificationDTO
-from osis_admission_sdk.model.person_identification import PersonIdentification
+from osis_admission_sdk.models.identification_dto import IdentificationDTO
+from osis_admission_sdk.models.person_identification import PersonIdentification
 
 from admission.services.mixins import ServiceMeta
 from frontoffice.settings.osis_sdk import admission as admission_sdk

@@ -27,7 +27,7 @@ import datetime
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
-from osis_admission_sdk.model.result_enum import ResultEnum
+from osis_admission_sdk.models.result_enum import ResultEnum
 
 from admission.contrib.enums.training_choice import (
     VETERINARY_BACHELOR_CODE,

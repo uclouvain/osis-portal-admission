@@ -31,12 +31,12 @@ import freezegun
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
-from osis_admission_sdk.model.pool_enum import PoolEnum
+from osis_admission_sdk.models.pool_enum import PoolEnum
 from osis_admission_sdk.model.specifier_raison_plusieurs_demandes_meme_cycle_meme_annee_command import (
     SpecifierRaisonPlusieursDemandesMemeCycleMemeAnneeCommand,
 )
 from osis_admission_sdk.model.submit_general_proposition import SubmitGeneralProposition
-from osis_admission_sdk.model.submit_proposition import SubmitProposition
+from osis_admission_sdk.models.submit_proposition import SubmitProposition
 
 from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums import ChoixStatutPropositionGenerale

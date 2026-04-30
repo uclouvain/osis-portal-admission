@@ -29,9 +29,9 @@ from typing import Union
 
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
-from osis_admission_sdk.model.doctorat_dto import DoctoratDTO
-from osis_admission_sdk.model.formation_continue_dto import FormationContinueDTO
-from osis_admission_sdk.model.formation_generale_dto import FormationGeneraleDTO
+from osis_admission_sdk.models.doctorat_dto import DoctoratDTO
+from osis_admission_sdk.models.formation_continue_dto import FormationContinueDTO
+from osis_admission_sdk.models.formation_generale_dto import FormationGeneraleDTO
 from osis_organisation_sdk.models.address import Address
 from osis_organisation_sdk.models.entite import Entite
 from osis_reference_sdk.models.high_school import HighSchool
@@ -74,11 +74,11 @@ def format_school_title(school: Union[HighSchool, SuperiorNonUniversity, Univers
 
 
 def format_training(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
-    return '{intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training)
+    return '{intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training.to_dict())
 
 
 def format_training_with_year(training: Union[DoctoratDTO, FormationContinueDTO, FormationGeneraleDTO]):
-    return '{annee} - {intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training)
+    return '{annee} - {intitule} ({campus}) <span class="training-acronym">{sigle}</span>'.format_map(training.to_dict())
 
 
 def format_scholarship(scholarship: Scholarship):
