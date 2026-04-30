@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.shortcuts import resolve_url, render
+from django.shortcuts import render, resolve_url
 from django.views.generic import FormView
 
 from admission.contrib.enums.specific_question import Onglets
@@ -103,10 +103,9 @@ class AdmissionCurriculumFormView(
         kwargs = super().get_form_kwargs()
         if self.current_context == 'doctorate' or not self.admission_uuid:
             return kwargs
-        kwargs['display_equivalence'] = self.display_equivalence
         if self.current_context == 'general-education':
             kwargs['display_curriculum'] = self.display_curriculum
-            kwargs['has_belgian_diploma'] = self.has_belgian_diploma
         elif self.current_context == 'continuing-education':
             kwargs['display_curriculum'] = self.display_curriculum
+            kwargs['display_equivalence'] = self.display_equivalence
         return kwargs

@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
-from django.utils.translation import gettext_lazy as _
+from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _, gettext
 
 from base.models.utils.utils import ChoiceEnum
 
@@ -38,15 +38,15 @@ class RaisonPlusieursDemandesMemesCycleEtAnnee(ChoiceEnum):
         return (
             (
                 cls.ANNULER_PRECEDENTES_DEMANDES.name,
-                _(
-                    'Create an application for %(training_name)s (%(training_campus)s) '
-                    '%(training_acronym)s and cancel your other applications'
+                format_html(
+                    gettext(
+                        'Create an application for <em>{training_name} ({training_campus}) {training_acronym}</em> '
+                        'and cancel your other applications'
+                    ),
+                    training_name=training.intitule or training.intitule_fr,
+                    training_campus=training.campus,
+                    training_acronym=training.sigle,
                 )
-                % {
-                    'training_name': training.intitule or training.intitule_fr,
-                    'training_campus': training.campus,
-                    'training_acronym': training.sigle,
-                },
             ),
             (cls.SUIVRE_EN_PARALLELE.name, cls.SUIVRE_EN_PARALLELE.value),
         )
