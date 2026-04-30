@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -58,6 +58,7 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         'general-education': (
             AdmissionPropositionService.verify_general_proposition,
             AdmissionPropositionService.submit_general_proposition,
+            AdmissionPropositionService.specify_reason_multiple_applications_same_cycle_same_year,
         ),
         'continuing-education': (
             AdmissionPropositionService.verify_continuing_proposition,
@@ -71,10 +72,20 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
         self.submit_proposition_result = {}
 
     def get_initial(self):
-        return {
+        initial_data = {
             'pool': self.admission.pot_calcule,
             'annee': self.admission.annee_calculee,
         }
+
+        if self.is_general:
+            initial_data['raison_plusieurs_demandes_meme_cycle_meme_annee'] = (
+                self.admission.raison_plusieurs_demandes_meme_cycle_meme_annee
+            )
+            initial_data['justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee'] = (
+                self.admission.justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee
+            )
+
+        return initial_data
 
     def form_invalid(self, form):
         # If the form contains non_field errors, webservice has failed, redirect with error message
@@ -116,7 +127,7 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
 
                 # Tab related conditions
                 tab_name = TAB_OF_BUSINESS_EXCEPTION[error['status_code']]
-                if not error['status_code'] in errors_by_tab[tab_name]['errors']:
+                if error['status_code'] not in errors_by_tab[tab_name]['errors']:
                     errors_by_tab[tab_name]['errors'][error['status_code']] = []
                 errors_by_tab[tab_name]['errors'][error['status_code']].append(error['detail'])
 
@@ -138,30 +149,55 @@ class AdmissionConfirmSubmitFormView(LoadDossierViewMixin, WebServiceFormMixin, 
             "justificatifs",
             "declaration_sur_lhonneur",
             "droits_inscription_iufc",
+            "raison_plusieurs_demandes_meme_cycle_meme_annee",
+            "justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee",
         ]
 
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        admission = self.admission
         kwargs['elements'] = self.confirmation_conditions.get('elements_confirmation')
+        kwargs['display_several_applications_same_cycle_same_year_questions'] = self.confirmation_conditions.get(
+            'display_several_applications_same_cycle_same_year_questions',
+        )
+        kwargs['training'] = admission.doctorat if hasattr(admission, 'doctorat') else admission.formation
         return kwargs
 
     def get_success_url(self):
+        if 'multiple-applications-form' in self.request.POST:
+            return self.request.get_full_path()
+
         if self.submit_proposition_result.get('status') == ChoixStatutPropositionGenerale.FRAIS_DOSSIER_EN_ATTENTE.name:
             return resolve_url(f'admission:{self.current_context}:payment', pk=self.admission_uuid)
+
         self.request.session[PROPOSITION_JUST_SUBMITTED] = self.current_context
         return resolve_url(f'admission:{self.current_context}', pk=self.admission_uuid)
 
     def prepare_data(self, data):
-        return {
+        prepared_data = {
             'pool': data.pop('pool'),
             'annee': data.pop('annee'),
-            'elements_confirmation': data,
         }
 
+        if self.is_general:
+            prepared_data['raison_plusieurs_demandes_meme_cycle_meme_annee'] = data.pop(
+                'raison_plusieurs_demandes_meme_cycle_meme_annee',
+                '',
+            )
+            prepared_data['justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee'] = data.pop(
+                'justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee',
+                '',
+            )
+
+        prepared_data['elements_confirmation'] = data
+
+        return prepared_data
+
     def call_webservice(self, data):
-        self.submit_proposition_result = self.service_mapping[self.current_context][1](
+        service_to_call_number = 2 if 'multiple-applications-form' in self.request.POST else 1
+        self.submit_proposition_result = self.service_mapping[self.current_context][service_to_call_number](
             person=self.person,
             uuid=self.admission_uuid,
             **data,

@@ -60,7 +60,7 @@ class BaseEducationTestCase(OsisPortalTestCase):
         cls.person = PersonFactory()
         cls.proposition_uuid = uuid.uuid4()
         cls.proposition_uuid_str = str(cls.proposition_uuid)
-        cls.first_question_uuid = str(uuid.uuid4())
+        cls.first_question_uuid = uuid.uuid4()
 
         cls.proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -76,7 +76,9 @@ class BaseEducationTestCase(OsisPortalTestCase):
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
             statut=ChoixStatutPropositionGenerale.EN_BROUILLON.name,
-            links={},
+            links={
+                'update_secondary_studies': {'url': 'ok'},
+            },
             erreurs={},
             bourse_double_diplome=None,
             bourse_internationale=None,
@@ -194,9 +196,9 @@ class BaseEducationTestCase(OsisPortalTestCase):
         high_schools_api_patcher = patch("osis_reference_sdk.api.high_schools_api.HighSchoolsApi")
         self.mock_high_schools_api = high_schools_api_patcher.start()
 
-        self.first_high_school_uuid = str(uuid.uuid4())
-        self.second_high_school_uuid = str(uuid.uuid4())
-        self.third_high_school_uuid = str(uuid.uuid4())
+        self.first_high_school_uuid = uuid.uuid4()
+        self.second_high_school_uuid = uuid.uuid4()
+        self.third_high_school_uuid = uuid.uuid4()
 
         def get_high_schools(**kwargs):
             high_schools = [
@@ -226,7 +228,7 @@ class BaseEducationTestCase(OsisPortalTestCase):
                 ),
             ]
             if kwargs.get("uuid"):
-                return next((school for school in high_schools if school.uuid == kwargs["uuid"]), None)
+                return next((school for school in high_schools if str(school.uuid) == kwargs["uuid"]), None)
             return Mock(results=high_schools)
 
         self.mock_high_schools_api.return_value.high_schools_list.side_effect = get_high_schools
@@ -351,6 +353,11 @@ class EducationTestCase(BaseEducationTestCase):
             _("You must choose your course before entering your previous experience."),
         )
 
+    def test_form_without_edit_permission(self):
+        with patch.object(self.proposition, 'links', {}):
+            response = self.client.get(self.form_url)
+            self.assertRedirects(response, expected_url=self.detail_url)
+
     def test_form_initialization(self):
         response = self.client.get(self.form_url)
 
@@ -450,7 +457,7 @@ class EducationTestCase(BaseEducationTestCase):
         )
 
         # Check response status
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, expected_url=self.form_url)
 
         # Check api calls
         self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
@@ -474,7 +481,7 @@ class EducationTestCase(BaseEducationTestCase):
         )
 
         # Check response status
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, expected_url=self.form_url)
 
         # Check api calls
         self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
@@ -497,7 +504,7 @@ class EducationTestCase(BaseEducationTestCase):
         )
 
         # Check response status
-        self.assertRedirects(response, expected_url=self.detail_url)
+        self.assertRedirects(response, expected_url=self.form_url)
 
         # Check api calls
         self.mock_person_api.return_value.update_high_school_diploma_general_education_admission.assert_called_with(
@@ -544,7 +551,9 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
         self.assertContains(response, "Special school (Louvain-La-Neuve)")
 
         # With existing institute
-        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma']['institute'] = self.first_high_school_uuid
+        self.mock_retrieve_high_school_diploma_for_general['belgian_diploma']['institute'] = str(
+            self.first_high_school_uuid
+        )
 
         response = self.client.get(self.detail_url)
 
@@ -791,7 +800,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "high_school_diploma_0": "test",
                 "graduated_from_high_school_year": 2020,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
-                "belgian_diploma-institute": self.first_high_school_uuid,
+                "belgian_diploma-institute": str(self.first_high_school_uuid),
                 "belgian_diploma-other_institute": False,
                 "belgian_diploma-other_institute_name": "Special school",
                 # Even if we send data for foreign diploma, it should be stripped from data sent to WS
@@ -813,7 +822,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
                     "high_school_diploma": ["test"],
                     # Clean other institute
-                    "institute": self.first_high_school_uuid,
+                    "institute": str(self.first_high_school_uuid),
                     "other_institute_name": "",
                     "other_institute_address": "",
                     # Clean education type
@@ -839,7 +848,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "high_school_diploma_0": "test",
                 "graduated_from_high_school_year": 2020,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
-                "belgian_diploma-institute": self.first_high_school_uuid,
+                "belgian_diploma-institute": str(self.first_high_school_uuid),
                 "belgian_diploma-other_institute": False,
                 "belgian_diploma-other_institute_name": "Special school",
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
@@ -879,7 +888,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "high_school_diploma_0": "test",
                 "graduated_from_high_school_year": 2020,
                 "belgian_diploma-community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
-                "belgian_diploma-institute": self.first_high_school_uuid,
+                "belgian_diploma-institute": str(self.first_high_school_uuid),
                 "belgian_diploma-other_institute": False,
                 "belgian_diploma-other_institute_name": "Special school",
                 "foreign_diploma-foreign_diploma_type": ForeignDiplomaTypes.NATIONAL_BACHELOR.name,
@@ -899,7 +908,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                     "academic_graduation_year": 2020,
                     "community": BelgianCommunitiesOfEducation.FLEMISH_SPEAKING.name,
                     "high_school_diploma": ["test"],
-                    "institute": self.first_high_school_uuid,
+                    "institute": str(self.first_high_school_uuid),
                     # Clean other institute
                     "other_institute_name": "",
                     "other_institute_address": "",
@@ -919,7 +928,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
             "high_school_diploma_0": "test",
             "graduated_from_high_school_year": 2020,
             "belgian_diploma-community": BelgianCommunitiesOfEducation.FRENCH_SPEAKING.name,
-            "belgian_diploma-institute": self.first_high_school_uuid,
+            "belgian_diploma-institute": str(self.first_high_school_uuid),
             "belgian_diploma-other_institute": False,
             "belgian_diploma-other_institute_name": "Special school",
             "belgian_diploma-educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
@@ -935,7 +944,7 @@ class BachelorFormEducationTestCase(BaseEducationTestCase):
                 "high_school_diploma": ["test"],
                 "educational_type": EducationalType.TEACHING_OF_GENERAL_EDUCATION.name,
                 # Clean other institute
-                "institute": self.first_high_school_uuid,
+                "institute": str(self.first_high_school_uuid),
                 "other_institute_name": "",
                 "other_institute_address": "",
                 # Clean education type

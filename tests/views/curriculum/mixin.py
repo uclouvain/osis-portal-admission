@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ from unittest.mock import ANY, MagicMock, patch
 from django.http import Http404
 from django.test import override_settings
 from osis_admission_sdk.models.action_link import ActionLink
+from osis_admission_sdk.model.candidate_enrolment_information import CandidateEnrolmentInformation
 from osis_admission_sdk.models.continuing_education_proposition_dto import (
     ContinuingEducationPropositionDTO,
 )
@@ -161,6 +162,7 @@ class MixinTestCase(OsisPortalTestCase):
         )
 
         cls.educational_experience = EducationalExperience(
+            external_id='',
             country=cls.be_country.iso_code,
             institute=str(cls.institute.uuid),
             institute_name='UCL',
@@ -205,7 +207,7 @@ class MixinTestCase(OsisPortalTestCase):
         )
 
         cls.lite_educational_experience = EducationalExperience(
-            uuid=cls.educational_experience.uuid,
+            uuid=str(cls.educational_experience.uuid),
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
@@ -228,7 +230,7 @@ class MixinTestCase(OsisPortalTestCase):
             obtained_diploma=True,
         )
         cls.foreign_lite_educational_experience = EducationalExperience(
-            uuid=cls.educational_experience.uuid,
+            uuid=str(cls.educational_experience.uuid),
             institute_name=cls.educational_experience.institute_name,
             program=cls.educational_experience.program,
             education_name=cls.educational_experience.education_name,
@@ -260,7 +262,7 @@ class MixinTestCase(OsisPortalTestCase):
         )
 
         cls.lite_professional_experience = ProfessionalExperience(
-            uuid=cls.professional_experience.uuid,
+            uuid=str(cls.professional_experience.uuid),
             institute_name=cls.professional_experience.institute_name,
             type=cls.professional_experience.type,
             start_date=cls.professional_experience.start_date,
@@ -330,6 +332,7 @@ class MixinTestCase(OsisPortalTestCase):
                 sigle_entite_gestion="CMG",
                 campus_inscription="Mons",
                 code='TR1',
+                active='ACTIVE',
             ),
             reference='M-CMG20-000.002',
             matricule_candidat=cls.person.global_id,
@@ -360,6 +363,10 @@ class MixinTestCase(OsisPortalTestCase):
             pdf_recapitulatif=[],
             documents_additionnels=[],
             poste_diplomatique=None,
+            preuve_bama_15=[],
+            raison_plusieurs_demandes_meme_cycle_meme_annee='',
+            justification_textuelle_plusieurs_demandes_meme_cycle_meme_annee='',
+            est_en_poursuite=False,
         )
 
         cls.continuing_proposition = ContinuingEducationPropositionDTO(
@@ -377,6 +384,7 @@ class MixinTestCase(OsisPortalTestCase):
                 campus_inscription="Mons",
                 sigle_entite_gestion="CMC",
                 code='TR2',
+                active='ACTIVE',
             ),
             date_fin_pot=None,
             matricule_candidat=cls.person.global_id,
@@ -427,6 +435,31 @@ class MixinTestCase(OsisPortalTestCase):
         )
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value = (
             self.continuing_proposition
+        )
+        mock_proposition_api_return = self.mock_proposition_api.return_value
+        self.mock_general_candidate_ucl_enrolment_information = (
+            mock_proposition_api_return.propositions_general_education_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_general_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+        self.mock_doctorate_candidate_ucl_enrolment_information = (
+            mock_proposition_api_return.propositions_doctorate_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+        self.mock_continuing_candidate_ucl_enrolment_information = (
+            mock_proposition_api_return.propositions_continuing_education_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
         )
         self.addCleanup(propositions_api_patcher.stop)
 
@@ -513,7 +546,7 @@ class MixinTestCase(OsisPortalTestCase):
         def get_institute(**kwargs):
             institute_uuid = kwargs.get('uuid')
             try:
-                return next(institute for institute in [self.institute] if institute.uuid == institute_uuid)
+                return next(institute for institute in [self.institute] if str(institute.uuid) == institute_uuid)
             except StopIteration:
                 raise Http404
 

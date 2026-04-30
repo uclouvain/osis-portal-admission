@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -116,6 +116,47 @@ class CurriculumAcademicExperienceReadTestCase(MixinTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue("n'est pas modifiable" in response.rendered_content)
 
+    def test_with_admission_and_ucl_student_on_reading_experience(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:curriculum:educational_read',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:continuing-education:curriculum:educational_read',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:general-education:curriculum:educational_read',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse("n'est pas modifiable" in response.rendered_content)
+
     def test_with_admission_on_reading_experience_without_year_is_loaded(self):
         self.educational_experience.educationalexperienceyear_set = []
 
@@ -203,6 +244,44 @@ class CurriculumAcademicExperienceDeleteTestCase(MixinTestCase):
 
         self.assertEqual(response.status_code, 403)
 
+    def test_with_admission_and_ucl_student_on_delete_experience_can_be_forbidden(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(
+            resolve_url(
+                'admission:doctorate:update:curriculum:educational_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:continuing-education:update:curriculum:educational_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(
+            resolve_url(
+                'admission:general-education:update:curriculum:educational_delete',
+                pk=self.proposition.uuid,
+                experience_id=self.educational_experience.uuid,
+            )
+        )
+
+        # Check the request
+        self.assertEqual(response.status_code, 403)
+
 
 class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
     @classmethod
@@ -215,8 +294,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
             'base_form-other_institute': True,
             'base_form-institute_name': 'UCL',
             'base_form-institute_address': 'Louvain-La-Neuve',
-            'base_form-institute': cls.institute.uuid,
-            'base_form-program': cls.first_diploma.uuid,
+            'base_form-institute': str(cls.institute.uuid),
+            'base_form-program': str(cls.first_diploma.uuid),
             'base_form-other_program': True,
             'base_form-education_name': 'Other computer science',
             'base_form-evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
@@ -299,10 +378,10 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': self.be_country.iso_code,
                 'transcript_type': TranscriptType.ONE_FOR_ALL_YEARS.name,
                 'obtained_diploma': True,
-                'institute': self.institute.uuid,
+                'institute': str(self.institute.uuid),
                 'institute_name': 'UCL',
                 'institute_address': "Place de l'Université",
-                'program': self.first_diploma.uuid,
+                'program': str(self.first_diploma.uuid),
                 'education_name': 'Other computer science',
                 'study_system': TeachingTypeEnum.FULL_TIME.name,
                 'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
@@ -317,13 +396,14 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'dissertation_title': 'Title',
                 'dissertation_score': '15/20',
                 'dissertation_summary': [self.document_uuid],
-                'uuid': self.educational_experience.uuid,
+                'uuid': str(self.educational_experience.uuid),
                 'start': 2018,
                 'end': 2020,
                 'other_program': True,
                 'other_institute': True,
                 'can_be_updated': ANY,
                 'valuated_from_trainings': ANY,
+                'external_id': ANY,
             },
         )
         # Check the choices of the fields
@@ -541,6 +621,26 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
     def test_with_admission_on_update_epc_experience_form_is_forbidden_with_general(self):
         mock_retrieve_experience = self.mockapi.retrieve_educational_experience_general_education_admission
         mock_retrieve_experience.return_value.external_id = 'EPC_1'
+
+        response = self.client.get(self.general_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 403)
+
+    def test_with_admission_and_ucl_student_on_delete_experience_can_be_forbidden(self):
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(self.continuing_admission_update_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.get(self.general_admission_update_url)
 
@@ -1141,8 +1241,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'base_form-other_institute': False,
                 'base_form-institute_name': 'UCL',
                 'base_form-institute_address': 'Louvain-La-Neuve',
-                'base_form-institute': self.institute.uuid,
-                'base_form-program': self.second_diploma.uuid,
+                'base_form-institute': str(self.institute.uuid),
+                'base_form-program': str(self.second_diploma.uuid),
                 'base_form-other_program': False,
                 'base_form-education_name': 'New computer science',
                 'base_form-evaluation_type': EvaluationSystem.NON_EUROPEAN_CREDITS.name,
@@ -1199,7 +1299,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': 'FR',
                 'institute_name': '',
                 'institute_address': '',
-                'institute': self.institute.uuid,
+                'institute': str(self.institute.uuid),
                 'program': None,
                 'education_name': 'New computer science',
                 'obtained_diploma': True,
@@ -1254,7 +1354,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
     def test_with_admission_on_create_experience_form_with_continuing(self):
         self.mockapi.create_educational_experience_continuing_education_admission.return_value = {
-            'uuid': self.educational_experience.uuid,
+            'uuid': str(self.educational_experience.uuid),
         }
 
         url = resolve_url(
@@ -1355,8 +1455,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': 'BE',
                 'institute_name': '',
                 'institute_address': '',
-                'institute': self.institute.uuid,
-                'program': self.second_diploma.uuid,
+                'institute': str(self.institute.uuid),
+                'program': str(self.second_diploma.uuid),
                 'education_name': '',
                 'obtained_diploma': True,
                 'graduate_degree': ['f1.pdf'],
@@ -1426,7 +1526,7 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
 
         # Check that the API calls are done
         self.mockapi.update_educational_experience_admission.assert_called_once_with(
-            uuid=self.proposition.uuid,
+            uuid=str(self.proposition.uuid),
             experience_id=self.educational_experience.uuid,
             educational_experience={
                 'start': '2018',
@@ -1434,8 +1534,8 @@ class CurriculumAcademicExperienceFormTestCase(MixinTestCase):
                 'country': 'BE',
                 'institute_name': '',
                 'institute_address': '',
-                'institute': self.institute.uuid,
-                'program': self.first_diploma.uuid,
+                'institute': str(self.institute.uuid),
+                'program': str(self.first_diploma.uuid),
                 'education_name': '',
                 'evaluation_type': EvaluationSystem.ECTS_CREDITS.name,
                 'linguistic_regime': None,

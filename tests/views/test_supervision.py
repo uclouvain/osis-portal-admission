@@ -143,6 +143,7 @@ class SupervisionTestCase(OsisPortalTestCase):
                         code_pays="FR",
                         pays="France",
                         est_externe=True,
+                        langue='fr-be',
                     ),
                     statut=ChoixEtatSignature.APPROVED.name,
                 ),

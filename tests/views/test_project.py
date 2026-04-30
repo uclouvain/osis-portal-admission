@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,11 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 import uuid
 from unittest.mock import MagicMock, Mock, patch
 
 from django.shortcuts import resolve_url
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.utils.translation import gettext_lazy as _
 from osis_organisation_sdk.models.entite import Entite
 from osis_organisation_sdk.models.paginated_entites import PaginatedEntites
@@ -77,20 +78,23 @@ class ProjectViewTestCase(OsisPortalTestCase):
             cls.doctorate_international_scholarship,
         ]
 
+        cls.uuid_1 = uuid.uuid4()
+        cls.uuid_2 = uuid.uuid4()
+
     def setUp(self):
         uuid1 = uuid.uuid4()
         uuid2 = uuid.uuid4()
 
         self.mock_entities = [
             Entite(
-                uuid=uuid1,
+                uuid=self.uuid_1,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of technology',
                 acronym='IT',
             ),
             Entite(
-                uuid=uuid2,
+                uuid=self.uuid_2,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of foreign languages',
@@ -111,7 +115,15 @@ class ProjectViewTestCase(OsisPortalTestCase):
             links={'update_project': {'url': 'ok'}, 'retrieve_project': {'url': 'ok'}},
             bourse_recherche=dict(uuid=self.doctorate_international_scholarship.uuid),
             erreurs=[],
+            creee_le=datetime.datetime(2023, 1, 1),
         )
+        self.mock_proposition_api.return_value.propositions_re_enrolment_period_retrieve.return_value.date_debut = (
+            datetime.date(2023, 6, 15)
+        )
+        self.mock_proposition_api.return_value.propositions_re_enrolment_period_retrieve.return_value.date_fin = (
+            datetime.date(2023, 10, 31)
+        )
+        self.mock_proposition_api.return_value.propositions_ucl_enrolments_list.return_value = []
         self.addCleanup(propositions_api_patcher.stop)
 
         # Mock admission sdk api
@@ -193,6 +205,11 @@ class ProjectViewTestCase(OsisPortalTestCase):
         self.addCleanup(languages_api_patcher.stop)
 
         self.client.force_login(self.person.user)
+
+        # Mock person api
+        api_person_patcher = patch("osis_admission_sdk.api.person_api.PersonApi")
+        self.mock_person_api = api_person_patcher.start()
+        self.addCleanup(api_person_patcher.stop)
 
     def test_get_field_label_classes(self):
         url = resolve_url('admission:doctorate:update:project', pk="3c5cdc60-2537-4a12-a396-64d2e9e34876")
@@ -412,12 +429,13 @@ class ProjectViewTestCase(OsisPortalTestCase):
             sigle_institut_these=self.mock_entities[0].acronym,
             links={},
             erreurs=[],
+            creee_le=datetime.datetime(2023, 1, 1),
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "osis-document.umd.min.js")
         self.assertContains(response, "Something")
-        self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0]))
+        self.assertContains(response, "{title} ({acronym})".format_map(self.mock_entities[0].to_dict()))
         self.assertContains(response, _("ECONOMY"))
 
         self.mock_proposition_api.return_value.retrieve_doctorate_proposition.return_value = Mock(

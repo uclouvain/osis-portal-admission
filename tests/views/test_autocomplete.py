@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import json
 import uuid
 from unittest.mock import ANY, Mock, patch
 
-from django.test import TestCase
 from django.urls import reverse
 from osis_admission_sdk.models.diplomatic_post import DiplomaticPost
 from osis_admission_sdk.models.doctorat_dto import DoctoratDTO
@@ -74,6 +73,8 @@ DEFAULT_API_PARAMS = {
 class AutocompleteTestCase(OsisPortalTestCase):
     def setUp(self):
         self.client.force_login(PersonFactory().user)
+        self.uuid_1 = uuid.uuid4()
+        self.uuid_2 = uuid.uuid4()
 
     @patch('osis_admission_sdk.api.autocomplete_api.AutocompleteApi')
     def test_autocomplete_doctorate(self, api):
@@ -381,14 +382,14 @@ class AutocompleteTestCase(OsisPortalTestCase):
         uuid2 = uuid.uuid4()
         mock_entities = [
             Entite(
-                uuid=uuid1,
+                uuid=self.uuid_1,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of technology',
                 acronym='IT',
             ),
             Entite(
-                uuid=uuid2,
+                uuid=self.uuid_2,
                 organization_name='Université Catholique de Louvain',
                 organization_acronym='UCL',
                 title='Institute of foreign languages',
@@ -402,11 +403,11 @@ class AutocompleteTestCase(OsisPortalTestCase):
         response = self.client.get(url, {'q': 'Institute'})
         expected = [
             {
-                'id': uuid1,
+                'id': str(self.uuid_1),
                 'text': 'Institute of technology (IT)',
             },
             {
-                'id': uuid2,
+                'id': str(self.uuid_2),
                 'text': 'Institute of foreign languages (IFL)',
             },
         ]
@@ -497,12 +498,12 @@ class AutocompleteTestCase(OsisPortalTestCase):
 
         expected = [
             {
-                'id': self.first_high_school_uuid,
+                'id': str(self.first_high_school_uuid),
                 'text': 'HighSchool 1 <span class="school-address">Place de l\'Université 1, '
                 '1348 Louvain-La-Neuve</span>',
             },
             {
-                'id': self.second_high_school_uuid,
+                'id': str(self.second_high_school_uuid),
                 'text': 'HighSchool 2 <span class="school-address">Boulevard du Triomphe 1, 1000 Bruxelles</span>',
             },
         ]
@@ -603,6 +604,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
                 code='FOOBAR',
+                active='ACTIVE',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -616,6 +618,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
                 code='BARBAZ',
+                active='ACTIVE',
             ),
         ]
         url = reverse('admission:autocomplete:general-education')
@@ -628,12 +631,14 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'FOOBAR',
             },
             {
                 'id': 'BARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'BARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
@@ -653,12 +658,14 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">FOOBAR</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'FOOBAR',
             },
             {
                 'id': 'BARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">BARBAZ</span>',
                 'training_type': TrainingType.MASTER_M1.name,
                 'domain_code': '10C',
+                'acronym': 'BARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})
@@ -686,6 +693,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMC',
                 code='CONFOOBAR',
+                active='ACTIVE',
             ),
             FormationContinueDTO(
                 sigle='CONBARBAZ',
@@ -699,6 +707,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMC',
                 code='CONBARBAZ',
+                active='ACTIVE',
             ),
         ]
         api.return_value.list_formation_generale_dtos.return_value = [
@@ -714,6 +723,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
                 code='GENFOOBAR',
+                active='ACTIVE',
             ),
             FormationGeneraleDTO(
                 sigle='GENBARBAZ',
@@ -727,6 +737,7 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 campus_inscription='Mons',
                 sigle_entite_gestion='CMG',
                 code='GENBARBAZ',
+                active='ACTIVE',
             ),
         ]
         url = reverse('admission:autocomplete:mixed-training')
@@ -741,24 +752,28 @@ class AutocompleteTestCase(OsisPortalTestCase):
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">CONFOOBAR</span>',
                 'training_type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 'domain_code': '10C',
+                'acronym': 'CONFOOBAR',
             },
             {
                 'id': 'CONBARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">CONBARBAZ</span>',
                 'training_type': TrainingType.CERTIFICATE_OF_PARTICIPATION.name,
                 'domain_code': '10C',
+                'acronym': 'CONBARBAZ',
             },
             {
                 'id': 'GENFOOBAR-2021',
                 'text': 'Foobar (Louvain-La-Neuve) <span class="training-acronym">GENFOOBAR</span>',
                 'training_type': TrainingType.CERTIFICATE.name,
                 'domain_code': '10C',
+                'acronym': 'GENFOOBAR',
             },
             {
                 'id': 'GENBARBAZ-2021',
                 'text': 'Barbaz (Mons) <span class="training-acronym">GENBARBAZ</span>',
                 'training_type': TrainingType.CERTIFICATE.name,
                 'domain_code': '10C',
+                'acronym': 'GENBARBAZ',
             },
         ]
         self.assertDictEqual(response.json(), {'results': results})

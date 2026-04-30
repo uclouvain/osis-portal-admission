@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -151,8 +151,36 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 to_dict=lambda: {
                     'acronym': 'SC3DP',
                     'academic_year': year,
-                    'title': 'Formation 5',
-                    'title_en': 'Training 5',
+                    'title': 'Formation 6',
+                    'title_en': 'Training 6',
+                    'main_teaching_campus': {
+                        'name': 'Louvain-La-Neuve',
+                    },
+                    'education_group_type': 'PHD',
+                    'management_entity': 'ME3',
+                    'domain_code': '10A',
+                },
+            ),
+            'GEST3DP': Mock(
+                to_dict=lambda: {
+                    'acronym': 'GEST3DP',
+                    'academic_year': year,
+                    'title': 'Formation 7',
+                    'title_en': 'Training 7',
+                    'main_teaching_campus': {
+                        'name': 'Louvain-La-Neuve',
+                    },
+                    'education_group_type': 'PHD',
+                    'management_entity': 'ME3',
+                    'domain_code': '10A',
+                },
+            ),
+            'ECON3DP': Mock(
+                to_dict=lambda: {
+                    'acronym': 'ECON3DP',
+                    'academic_year': year,
+                    'title': 'Formation 8',
+                    'title_en': 'Training 8',
                     'main_teaching_campus': {
                         'name': 'Louvain-La-Neuve',
                     },
@@ -217,7 +245,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 if training.sigle_formation == acronym and training.annee == year
             )
         except StopIteration:
-            return InformationsSpecifiquesFormationContinueDTO(
+            return InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
                 sigle_formation=acronym,
                 annee=int(year),
                 aide_a_la_formation=True,
@@ -287,7 +315,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             cls.international_scholarship,
         ]
 
-        cls.first_diplomatic_post = DiplomaticPost(
+        cls.first_diplomatic_post = DiplomaticPost._from_openapi_data(
             code=1,
             name_fr="Bruxelles",
             name_en="Brussels",
@@ -295,7 +323,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             email='brussels@example.be',
         )
 
-        cls.second_diplomatic_post = DiplomaticPost(
+        cls.second_diplomatic_post = DiplomaticPost._from_openapi_data(
             code=2,
             name_fr="Paris",
             name_en="Paris",
@@ -303,7 +331,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             email='paris@example.fr',
         )
 
-        cls.third_diplomatic_post = DiplomaticPost(
+        cls.third_diplomatic_post = DiplomaticPost._from_openapi_data(
             code=3,
             name_fr="Londres",
             name_en="London",
@@ -328,6 +356,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'campus_inscription': 'Mons',
             },
             reference='M-CMG20-000.001',
+            annee_calculee=None,
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
@@ -360,6 +389,8 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             },
             documents_additionnels=['uuid-documents-additionnels'],
             poste_diplomatique=None,
+            est_concerne_par_le_bama_15=None,
+            preuve_bama_15=[],
         )
         cls.bachelor_proposition = Mock(
             uuid=cls.proposition_uuid,
@@ -376,6 +407,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'campus_inscription': 'Mons',
             },
             reference='M-CMG20-000.002',
+            annee_calculee=None,
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
             nom_candidat=cls.person.last_name,
@@ -393,6 +425,8 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             },
             documents_additionnels=['uuid-documents-additionnels'],
             poste_diplomatique=None,
+            est_concerne_par_le_bama_15=None,
+            preuve_bama_15=[],
         )
 
         cls.continuing_proposition_dict = {
@@ -410,6 +444,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'sigle_entite_gestion': 'CMC',
                 'campus_inscription': 'Mons',
             },
+            'annee_calculee': None,
             'matricule_candidat': cls.person.global_id,
             'prenom_candidat': cls.person.first_name,
             'nom_candidat': cls.person.last_name,
@@ -460,6 +495,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'sigle_entite_gestion': 'CMC',
                 'campus_inscription': 'Mons',
             },
+            annee_calculee=None,
             reference='M-CMC20-000.003',
             matricule_candidat=cls.person.global_id,
             prenom_candidat=cls.person.first_name,
@@ -506,11 +542,12 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 'intitule': 'Formation',
                 'campus': 'Louvain-La-Neuve',
                 'campus_uuid': cls.louvain_campus_uuid,
-                'sigle': 'TR3',
+                'sigle': 'TR4',
                 'type': TrainingType.PHD.name,
-                'sigle_entite_gestion': 'CDE',
+                'sigle_entite_gestion': 'TR4',
                 'campus_inscription': 'Mons',
             },
+            annee_calculee=None,
             reference='M-CDE20-000.004',
             code_secteur_formation="SSH",
             documents_projet=[],
@@ -519,7 +556,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
             projet_formation_complementaire=[],
             lettres_recommandation=[],
             links={'update_project': {'url': 'ok'}, 'update_training_choice': {'url': 'ok'}},
-            commission_proximite='MANAGEMENT',
+            commission_proximite=ChoixCommissionProximiteCDSS.MOTR.name,
             statut=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
             reponses_questions_specifiques={
                 cls.first_question_uuid: 'My answer',
@@ -527,7 +564,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         )
 
         cls.specific_questions = [
-            SpecificQuestion(
+            SpecificQuestion._from_openapi_data(
                 uuid=str(uuid.uuid4()),
                 type=TypeItemFormulaire.MESSAGE.name,
                 title={},
@@ -537,7 +574,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 required=True,
                 values=[],
             ),
-            SpecificQuestion(
+            SpecificQuestion._from_openapi_data(
                 uuid=cls.first_question_uuid,
                 type=TypeItemFormulaire.TEXTE.name,
                 title={'en': 'My first question', 'fr-be': 'Ma première question'},
@@ -607,6 +644,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
                 code='FOOBAR',
+                active='ACTIVE',
             ),
             FormationContinueDTO(
                 sigle='BARBAZ',
@@ -620,11 +658,12 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMG',
                 campus_inscription='Mons',
                 code='BARBAZ',
+                active='ACTIVE',
             ),
         ]
 
         cls.continuing_trainings_informations = [
-            InformationsSpecifiquesFormationContinueDTO(
+            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
                 sigle_formation='FOOBAR',
                 annee=2021,
                 aide_a_la_formation=True,
@@ -632,7 +671,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 etat=StateIUFC.OPEN.name,
                 lien_informations_pratiques_formation='https://test.be/FOOBAR/2021/info',
             ),
-            InformationsSpecifiquesFormationContinueDTO(
+            InformationsSpecifiquesFormationContinueDTO._from_openapi_data(
                 sigle_formation='BARBAZ',
                 annee=2021,
                 aide_a_la_formation=True,
@@ -655,6 +694,7 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
                 code='FOOBAR',
+                active='ACTIVE',
             ),
             FormationGeneraleDTO(
                 sigle='BARBAZ',
@@ -668,25 +708,26 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 sigle_entite_gestion='CMC',
                 campus_inscription='Mons',
                 code='BARBAZ',
+                active='ACTIVE',
             ),
         ]
 
         cls.campuses = [
-            Campus(name='Louvain-La-Neuve', uuid=cls.louvain_campus_uuid),
-            Campus(name='Mons', uuid=cls.mons_campus_uuid),
+            Campus._from_openapi_data(name='Louvain-La-Neuve', uuid=cls.louvain_campus_uuid),
+            Campus._from_openapi_data(name='Mons', uuid=cls.mons_campus_uuid),
         ]
 
         cls.doctorate_pre_admissions = [
-            DoctoratePreAdmissionSearchDTO(
+            DoctoratePreAdmissionSearchDTO._from_openapi_data(
                 uuid=str(uuid.uuid4()),
                 reference='1',
-                doctorat=DoctoratSearchDTO(
+                doctorat=DoctoratSearchDTO._from_openapi_data(
                     sigle='S-1',
                     code='C-1',
                     annee=2024,
                     intitule='Doctorat 1',
                     sigle_entite_gestion='SEG-1',
-                    campus=CampusDTO(
+                    campus=CampusDTO._from_openapi_data(
                         uuid=cls.campuses[0].uuid,
                         nom=cls.campuses[0].name,
                     ),
@@ -694,16 +735,16 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 code_secteur_formation='SSH',
                 intitule_secteur_formation='ISF-1',
             ),
-            DoctoratePreAdmissionSearchDTO(
+            DoctoratePreAdmissionSearchDTO._from_openapi_data(
                 uuid=str(uuid.uuid4()),
                 reference='2',
-                doctorat=DoctoratSearchDTO(
+                doctorat=DoctoratSearchDTO._from_openapi_data(
                     sigle='S-2',
                     code='C-2',
                     annee=2024,
                     intitule='Doctorat 2',
                     sigle_entite_gestion='SEG-2',
-                    campus=CampusDTO(
+                    campus=CampusDTO._from_openapi_data(
                         uuid=cls.campuses[1].uuid,
                         nom=cls.campuses[1].name,
                     ),
@@ -711,16 +752,16 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
                 code_secteur_formation='SST',
                 intitule_secteur_formation='ISF-2',
             ),
-            DoctoratePreAdmissionSearchDTO(
+            DoctoratePreAdmissionSearchDTO._from_openapi_data(
                 uuid=str(uuid.uuid4()),
                 reference='3',
-                doctorat=DoctoratSearchDTO(
+                doctorat=DoctoratSearchDTO._from_openapi_data(
                     sigle='S-3',
                     code='C-3',
                     annee=2024,
                     intitule='Doctorat 3',
                     sigle_entite_gestion='SEG-3',
-                    campus=CampusDTO(
+                    campus=CampusDTO._from_openapi_data(
                         uuid=cls.campuses[0].uuid,
                         nom=cls.campuses[0].name,
                     ),
@@ -764,6 +805,49 @@ class AdmissionTrainingChoiceFormViewTestCase(OsisPortalTestCase):
         self.mock_proposition_api.return_value.list_continuing_specific_questions.side_effect = (
             self.get_specific_questions
         )
+        self.mock_proposition_api.return_value.propositions_ucl_enrolments_list.return_value = []
+        self.mock_proposition_api.return_value.propositions_re_enrolment_period_retrieve.return_value = Mock(
+            date_debut=datetime.date(2023, 6, 15),
+            date_fin=datetime.date(2023, 10, 31),
+            annee_formation=2024,
+        )
+        self.mock_proposition_api.return_value.propositions_candidate_re_enrolment_eligibity_retrieve.return_value = (
+            Mock(est_eligible_a_la_reinscription=False)
+        )
+
+        self.mock_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_general_candidate_ucl_enrolment_information = self.mock_proposition_api.return_value.propositions_general_education_candidate_ucl_enrolment_information_retrieve
+        self.mock_doctorate_candidate_ucl_enrolment_information = (
+            self.mock_proposition_api.return_value.propositions_doctorate_candidate_ucl_enrolment_information_retrieve
+        )
+        self.mock_continuing_candidate_ucl_enrolment_information = self.mock_proposition_api.return_value.propositions_continuing_education_candidate_ucl_enrolment_information_retrieve
+
+        self.mock_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_doctorate_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value = (
+            CandidateEnrolmentInformation._new_from_openapi_data(
+                est_inscrit_recemment=False,
+            )
+        )
+
         self.addCleanup(propositions_api_patcher.stop)
 
         # Mock autocomplete sdk api

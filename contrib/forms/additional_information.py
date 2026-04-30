@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,8 +31,11 @@ from admission.constants import FIELD_REQUIRED_MESSAGE
 from admission.contrib.enums.additional_information import ChoixInscriptionATitre, ChoixTypeAdresseFacturation
 from admission.contrib.forms import (
     AdmissionFileUploadField as FileUploadField,
-    get_diplomatic_post_initial_choices,
+)
+from admission.contrib.forms import (
+    RadioBooleanField,
     autocomplete,
+    get_diplomatic_post_initial_choices,
 )
 from admission.contrib.forms.coordonnees import DoctorateAdmissionAddressForm
 from admission.contrib.forms.specific_question import ConfigurableFormMixin
@@ -62,8 +65,36 @@ class GeneralSpecificQuestionForm(ConfigurableFormMixin, forms.Form):
         ),
     )
 
-    def __init__(self, display_visa: bool, residential_country: str, person, *args, **kwargs):
+    est_concerne_par_le_bama_15 = RadioBooleanField(
+        label=_(
+            "According to our analysis, you have a maximum of 15 remaining credits from your bachelor's "
+            "degree to complete in %(year)s. Do you confirm this analysis?"
+        ),
+        required=False,
+    )
+
+    preuve_bama_15 = FileUploadField(
+        label=_("Proof of re-enrolment for your %(year)s bachelor's degree"),
+        required=False,
+        max_files=10,
+    )
+
+    class Media:
+        js = ('js/dependsOn.min.js',)
+
+    def __init__(
+        self,
+        display_visa: bool,
+        residential_country: str,
+        display_bama_15_questions: bool,
+        formatted_training_year: str,
+        person,
+        *args,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
+
+        self.display_bama_15_questions = display_bama_15_questions
 
         if display_visa:
             self.fields['poste_diplomatique'].required = True
@@ -83,6 +114,28 @@ class GeneralSpecificQuestionForm(ConfigurableFormMixin, forms.Form):
             self.fields['poste_diplomatique'].widget.choices = self.fields['poste_diplomatique'].choices
         else:
             self.fields['poste_diplomatique'].disabled = True
+
+        if self.display_bama_15_questions:
+            label_interpolation_variable = {'year': formatted_training_year}
+            self.fields['est_concerne_par_le_bama_15'].required = True
+            self.fields['est_concerne_par_le_bama_15'].label = (
+                self.fields['est_concerne_par_le_bama_15'].label % label_interpolation_variable
+            )
+            self.fields['preuve_bama_15'].label = self.fields['preuve_bama_15'].label % label_interpolation_variable
+        else:
+            self.fields['est_concerne_par_le_bama_15'].disabled = True
+            self.fields['preuve_bama_15'].disabled = True
+
+    def clean(self):
+        data = super().clean()
+
+        if not self.display_bama_15_questions:
+            data['est_concerne_par_le_bama_15'] = None
+
+        if not data.get('est_concerne_par_le_bama_15'):
+            data['preuve_bama_15'] = []
+
+        return data
 
 
 class ContinuingSpecificQuestionForm(ConfigurableFormMixin, DoctorateAdmissionAddressForm):

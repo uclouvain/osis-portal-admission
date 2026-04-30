@@ -204,7 +204,7 @@ class HighSchoolService(metaclass=ServiceMeta):
     @classmethod
     def get_high_school(cls, person, uuid):
         return HighSchoolAPIClient().high_school_read(
-            uuid=uuid,
+            uuid=str(uuid),
             **build_mandatory_auth_headers(person),
         )
 

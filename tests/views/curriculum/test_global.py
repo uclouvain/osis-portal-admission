@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -206,6 +206,16 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
             ],
         )
 
+    def test_with_admission_on_reading_curriculum_with_ucl_student(self):
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_read_url)
+
+        # Check the request
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(response.context.get('need_to_complete'), False)
+
     def test_with_admission_on_update_curriculum_is_loaded_with_master(self):
         response = self.client.get(self.admission_update_url)
 
@@ -241,9 +251,41 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_master(self):
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_bachelor(self):
@@ -270,9 +312,41 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_bachelor(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
             TrainingType.BACHELOR.name
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
         )
 
         response = self.client.get(self.admission_read_url)
@@ -306,6 +380,22 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_bachelor_without_success(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
             TrainingType.BACHELOR.name
@@ -313,6 +403,20 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         mock_return = self.mock_person_api.return_value
         xp = mock_return.retrieve_curriculum_details_general_education_admission.return_value.educational_experiences[0]
         xp.educationalexperienceyear_set[0].result = ResultEnum(value='WAITING_RESULT')
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
 
         response = self.client.get(self.admission_read_url)
         self.assertFalse(response.context['display_curriculum'])
@@ -344,12 +448,44 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertTrue(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_veterinary_bachelor(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
             TrainingType.BACHELOR.name
         )
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.sigle = (
             VETERINARY_BACHELOR_CODE
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
         )
 
         response = self.client.get(self.admission_read_url)
@@ -377,6 +513,24 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['equivalence_diplome'].disabled)
         self.assertEqual(form.fields['equivalence_diplome'].widget.attrs.get('class'), REQUIRED_FIELD_CLASS)
 
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertFalse(form.fields['equivalence_diplome'].disabled)
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_aggregation_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
             TrainingType.AGGREGATION.name
@@ -389,6 +543,20 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
         self.assertTrue(response.context['display_equivalence'])
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertTrue(response.context['display_equivalence'])
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_aggregation_and_be_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
@@ -406,6 +574,22 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_aggregation_and_be_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
             TrainingType.AGGREGATION.name
@@ -413,6 +597,20 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
 
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
 
     def test_with_admission_on_update_curriculum_is_loaded_with_capes_and_be_and_foreign_studies(self):
@@ -437,6 +635,24 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['equivalence_diplome'].disabled)
         self.assertNotEqual(form.fields['equivalence_diplome'].widget.attrs.get('class'), REQUIRED_FIELD_CLASS)
 
+        self.mock_general_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertFalse(form.fields['equivalence_diplome'].disabled)
+
+        self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.est_en_poursuite = (
+            True
+        )
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertTrue(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_capes_and_be_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_general_education_proposition.return_value.formation.type = (
             TrainingType.CAPAES.name
@@ -446,6 +662,12 @@ class GeneralEducationGlobalCurriculumTestCase(MixinTestCase):
             self.foreign_lite_educational_experience,
             self.lite_educational_experience,
         ]
+
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertTrue(response.context['display_equivalence'])
+
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
 
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
@@ -742,7 +964,21 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_certificate_of_participation(self):
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
@@ -750,6 +986,12 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
     def test_with_admission_on_reading_curriculum_is_loaded_with_short_training(self):
         mock_continuing_proposition = self.mock_proposition_api.return_value.retrieve_continuing_education_proposition
         mock_continuing_proposition.return_value.inscription_au_role_obligatoire = False
+        response = self.client.get(self.admission_read_url)
+        self.assertFalse(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
         response = self.client.get(self.admission_read_url)
         self.assertFalse(response.context['display_curriculum'])
         self.assertFalse(response.context['display_equivalence'])
@@ -778,10 +1020,24 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertTrue(form.fields['equivalence_diplome'].disabled)
 
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertTrue(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_first_cycle_certificate(self):
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
             TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
         )
+
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertFalse(response.context['display_equivalence'])
+
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
 
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])
@@ -807,6 +1063,14 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         self.assertFalse(form.fields['curriculum'].disabled)
         self.assertFalse(form.fields['equivalence_diplome'].disabled)
 
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
+
+        response = self.client.get(self.admission_update_url)
+
+        form = response.context.get('form')
+        self.assertFalse(form.fields['curriculum'].disabled)
+        self.assertFalse(form.fields['equivalence_diplome'].disabled)
+
     def test_with_admission_on_reading_curriculum_is_loaded_with_first_cycle_certificate_and_foreign_studies(self):
         self.mock_proposition_api.return_value.retrieve_continuing_education_proposition.return_value.formation.type = (
             TrainingType.UNIVERSITY_FIRST_CYCLE_CERTIFICATE.name
@@ -815,6 +1079,12 @@ class ContinuingEducationGlobalCurriculumTestCase(MixinTestCase):
         mock_return.retrieve_curriculum_details_continuing_education_admission.return_value.educational_experiences = [
             self.foreign_lite_educational_experience,
         ]
+
+        response = self.client.get(self.admission_read_url)
+        self.assertTrue(response.context['display_curriculum'])
+        self.assertTrue(response.context['display_equivalence'])
+
+        self.mock_continuing_candidate_ucl_enrolment_information.return_value.est_inscrit_recemment = True
 
         response = self.client.get(self.admission_read_url)
         self.assertTrue(response.context['display_curriculum'])

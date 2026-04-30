@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -42,9 +42,8 @@ from admission.contrib.enums.proximity_commission import (
     ChoixSousDomaineSciences,
 )
 from admission.contrib.enums.scholarship import TypeBourse
-from admission.contrib.forms import EMPTY_CHOICE
-from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.forms import (
+    EMPTY_CHOICE,
     CustomDateInput,
     RadioBooleanField,
     SelectOrOtherField,
@@ -53,15 +52,13 @@ from admission.contrib.forms import (
     get_scholarship_choices,
     get_thesis_location_initial_choices,
 )
+from admission.contrib.forms import AdmissionFileUploadField as FileUploadField
 from admission.contrib.views.autocomplete import LANGUAGE_UNDECIDED
-from admission.services.autocomplete import AdmissionAutocompleteService
 from admission.utils import mark_safe_lazy
 
 SCIENCE_DOCTORATE = 'SC3DP'
 
 COMMISSION_CDSS = 'CDSS'
-
-COMMISSIONS_CDE_CLSM = ['CDE', 'CLSM']
 
 
 class DoctorateAdmissionProjectForm(forms.Form):

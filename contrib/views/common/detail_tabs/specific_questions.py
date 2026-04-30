@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,14 +26,14 @@
 from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
-from admission.constants import PLUS_5_ISO_CODES, BE_ISO_CODE
+from admission.constants import BE_ISO_CODE, PLUS_5_ISO_CODES
 from admission.contrib.enums.specific_question import Onglets
 from admission.contrib.enums.training_choice import TrainingType
 from admission.contrib.views.mixins import LoadDossierViewMixin
+from admission.services.proposition import AdmissionPropositionService
+from admission.utils import format_academic_year
 
 __all__ = ['SpecificQuestionDetailView']
-
-from admission.services.proposition import AdmissionPropositionService
 
 
 class SpecificQuestionViewMixin(LoadDossierViewMixin):
@@ -61,7 +61,21 @@ class SpecificQuestionViewMixin(LoadDossierViewMixin):
             and identification.pays_nationalite_europeen is False
             and identification.pays_nationalite not in PLUS_5_ISO_CODES
             and identification.pays_residence != BE_ISO_CODE
+            and not self.ucl_enrolment_information.est_inscrit_recemment
         )
+
+    @cached_property
+    def display_bama_15_questions(self):
+        identification = self.identification
+        return (
+            identification is not None
+            and identification.est_potentiellement_concerne_par_le_bama_15 is True
+            and not self.ucl_enrolment_information.est_inscrit_recemment
+        )
+
+    @cached_property
+    def formatted_training_year(self):
+        return format_academic_year(self.admission.annee_calculee or self.admission.formation['annee'])
 
 
 class SpecificQuestionDetailView(SpecificQuestionViewMixin, TemplateView):
